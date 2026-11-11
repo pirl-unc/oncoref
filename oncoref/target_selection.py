@@ -15,10 +15,20 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-09.1"
+POLICY_ID = "oncoref.target-selection.2026-11-10.1"
 DETECTION_FLOOR = 1.0
-SINGLE_TUMOR_FOLD = 5.0
+SINGLE_TUMOR_FOLD = 10.0
 REPEATED_TUMORS = 2
+#: Separate nominal caps for native TPM and HPA nTPM; never a unit conversion.
+DISPOSABLE_CAP = 32.0
+#: Rare normal-cell RNA, per adult donor and named cell population.
+RARE_CELL_DETECTION_PCT = 1.0
+RARE_CELL_MIN_CELLS = 10
+RARE_CELL_MULTI_MOLECULES = 2
+RARE_CELL_REPLICATE_STUDIES = 2
+#: Without replication, only a frequent multi-molecule signal is consequential.
+RARE_CELL_SINGLE_STUDY_PCT = 5.0
+RARE_CELL_STATUSES = ("established", "unresolved", "below_screen", "unassessed")
 EVIDENCE_STATUSES = ("qualifies", "does_not_qualify", "unassessed")
 CATEGORIES = ("CTA", "Cancer Antigen only", "Reproductive Antigen only", "Other", "Unsafe")
 SHARED_CHECKS = (
@@ -26,8 +36,11 @@ SHARED_CHECKS = (
     "required_coverage_complete",
     "identity_translation_pass",
     "evidence_resolved",
+    "expression_bounds_pass",
     "sequence_pass",
 )
+#: Failing one of these is Other:Review; bounds and sequence have their own subtypes.
+REVIEW_CHECKS = SHARED_CHECKS[:4]
 
 
 def definition() -> dict:
@@ -48,14 +61,76 @@ def definition() -> dict:
         "other_subtypes": {
             "Review": "Required evidence is missing, unresolved, or fails a shared admission check.",
             "Sequence": "Nested protein without independent support or >=95% Unsafe 9-mer containment.",
-            "Expression": "Shared checks pass; neither positive expression route qualifies.",
+            "Expression": (
+                "Neither positive expression route qualifies, or the target maximum or "
+                "Disposable cap fails."
+            ),
+        },
+        "expression_bounds": {
+            "target_maximum": (
+                "max(tumor, adult reproductive, developmental) >= 1 and above every measured "
+                "nonreproductive normal and Disposable value on the comparison scale."
+            ),
+            "disposable_cap_tpm": DISPOSABLE_CAP,
+            "disposable_cap_ntpm": DISPOSABLE_CAP,
+            "cap_scope": "Each source scale separately; a screening convention, not a tolerance.",
+            "failure": "Other:Expression",
+        },
+        "rare_cell_rna": {
+            "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
+            "signal": (
+                f">= {RARE_CELL_DETECTION_PCT:g}% of a donor's cells and >= {RARE_CELL_MIN_CELLS} "
+                f"cells carry >= {RARE_CELL_MULTI_MOLECULES} molecules."
+            ),
+            "replication": (
+                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} independent studies of the same "
+                "organ. Donors of one study share its libraries and reference."
+            ),
+            "single_study": (
+                f"Without replication, a signal counts only when >= {RARE_CELL_SINGLE_STUDY_PCT:g}% "
+                "of a donor's cells carry multiple molecules. It can reach review, never Unsafe."
+            ),
+            "single_molecules": (
+                "Cells with one molecule never change a category. A mis-assigned read from a "
+                "paralog, pseudogene or overlapping gene produces exactly this pattern."
+            ),
+            "mapping_risk": (
+                "Shared transcript sequence with another locus, or an exon inside another "
+                "same-strand gene. A flagged gene cannot be established from counts."
+            ),
+            "confirmation": (
+                f"Bulk RNA >= {DETECTION_FLOOR:g} native TPM in the same organ in both the HPA and "
+                "GTEx sample sets. Accepted protein evidence is assessed by its own rules."
+            ),
+            "established": "Replicated signal, no mapping risk, and confirmation.",
+            "unresolved": (
+                "A replicated signal lacking a clean mapping or confirmation, or a frequent "
+                "signal from one study."
+            ),
+            "consequences": {
+                "established Vital": "Unsafe",
+                "established Protected": "Other:Review",
+                "unresolved Vital": "Other:Review",
+                "unresolved Protected": "recorded; no category effect",
+                "below_screen": "No finding. Not a demonstration of absence or safety.",
+                "unassessed": "Recorded as unmeasured; never treated as negative.",
+            },
+            "reported_sensitivity_cutoffs_pct": [1, 2, 5],
+            "release": (
+                "Read-level review settles an unresolved signal: unique alignment and exonic or "
+                "splice-spanning reads establish it; their absence dismisses it with the evidence."
+            ),
+            "interpretation": (
+                "Detection frequency measures captured RNA, not the fraction of cells producing "
+                "protein. No cutoff is a calibrated toxicity threshold."
+            ),
         },
         "cancer_rna": {
             "detection_floor": DETECTION_FLOOR,
             "independent_participants_required": REPEATED_TUMORS,
             "repeated_rule": "T >= 1 AND T > N in at least two independent participants",
             "single_tumor_fold": SINGLE_TUMOR_FOLD,
-            "single_rule": "T >= 5 * max(N, 1) in at least one qualified tumor sample",
+            "single_rule": "T >= 10 * max(N, 1) in at least one qualified tumor sample",
             "normal_reference": (
                 "Maximum QC-passing, identity-resolved measurement in the declared compatible "
                 "normal panel, excluding specifically allowed Disposable and reproductive compartments."
@@ -150,7 +225,7 @@ def _require_booleans(frame: pd.DataFrame, columns) -> None:
 def classify(facts: pd.DataFrame) -> pd.DataFrame:
     """Assign sets to assessed proteins, retaining every input evidence column.
 
-    Required columns are ``unsafe``, the five ``SHARED_CHECKS``, and
+    Required columns are ``unsafe``, the six ``SHARED_CHECKS``, and
     ``cancer_evidence``/``reproductive_evidence`` (``EVIDENCE_STATUSES``).
     Protein IDs, source links, findings and publication annotations pass through.
     An unassessed positive association does not erase the other set's membership;
@@ -180,7 +255,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     other = d.category.eq("Other")
     d.loc[other, "subtype"] = "Expression"
     d.loc[other & ~d.sequence_pass, "subtype"] = "Sequence"
-    review = ~d[list(SHARED_CHECKS[:-1])].all(axis=1) | (
+    review = ~d[list(REVIEW_CHECKS)].all(axis=1) | (
         eligible & d[["cancer_evidence", "reproductive_evidence"]].eq("unassessed").any(axis=1)
     )
     d.loc[other & review, "subtype"] = "Review"
@@ -308,7 +383,7 @@ def assess_cancer_rna(
     if participants >= REPEATED_TUMORS:
         receipt["routes"].append("two_independent_tumors_above_normal")
     if t.single_sample_pass.any():
-        receipt["routes"].append("one_tumor_fivefold_above_normal")
+        receipt["routes"].append("one_tumor_tenfold_above_normal")
     receipt["status"] = "qualifies" if receipt["routes"] else "does_not_qualify"
     receipt["reason"] = (
         "Cancer RNA route qualifies" if receipt["routes"] else "No cancer RNA route qualifies"
@@ -318,4 +393,142 @@ def assess_cancer_rna(
         receipt["reason"] = (
             "Patient identity is unresolved for potentially qualifying repeated tumor samples"
         )
+    return deepcopy(receipt)
+
+
+def assess_rare_cell_rna(
+    observations: pd.DataFrame, *, mapping_risk: bool, confirmed_tissues: set[str]
+) -> dict:
+    """Grade sparse normal-cell RNA for one gene from donor-resolved molecule counts.
+
+    Each row is one adult donor in one named cell population of primary normal
+    tissue: ``gene_id, source_id, donor_id, tissue, cell_type, tier, n_cells,
+    n_positive, n_multi``. ``source_id`` identifies an independent study and
+    ``tissue`` the organ. ``n_multi`` counts cells with at least
+    ``RARE_CELL_MULTI_MOLECULES`` deduplicated molecules; supply UMI counts only.
+
+    A signal needs multi-molecule cells in at least 1% of a donor population.
+    Single-molecule detection is
+    reported and never graded: one mis-assigned read per cell is what a paralog
+    or overlapping gene produces. ``mapping_risk`` says the reference makes such
+    mis-assignment possible for this gene; ``confirmed_tissues`` lists organs with
+    orthogonal bulk-RNA support. A signal is ``established`` only when two
+    independent studies of the organ show it, without the risk and with
+    confirmation. A replicated signal lacking those, or a single-study signal in
+    at least 5% of a donor's cells, is ``unresolved``. A weaker single-study
+    signal is below the screen.
+    """
+    columns = {
+        "gene_id",
+        "source_id",
+        "donor_id",
+        "tissue",
+        "cell_type",
+        "tier",
+        "n_cells",
+        "n_positive",
+        "n_multi",
+    }
+    _require_columns(observations, columns)
+    if not isinstance(mapping_risk, (bool, np.bool_)):
+        raise ValueError("mapping_risk requires an explicit boolean")
+    d = observations.copy()
+    if d.gene_id.nunique() > 1:
+        raise ValueError("Assess one gene at a time; never add frequencies across paralogs")
+    if not d.tier.isin(["vital", "protected"]).all():
+        raise ValueError("Rare-cell tiers must be vital or protected")
+    for field in ("source_id", "donor_id", "tissue", "cell_type"):
+        if not d[field].map(lambda v: isinstance(v, str) and bool(v.strip())).all():
+            raise ValueError(f"Every observation requires {field}")
+    if d.duplicated(["source_id", "donor_id", "tissue", "cell_type"]).any():
+        raise ValueError("One row per donor and cell population")
+    counts = d[["n_cells", "n_positive", "n_multi"]].apply(pd.to_numeric, errors="raise")
+    if (
+        counts.isna().any().any()
+        or (counts < 0).any().any()
+        or (counts.n_multi > counts.n_positive).any()
+        or (counts.n_positive > counts.n_cells).any()
+    ):
+        raise ValueError("Counts must satisfy 0 <= n_multi <= n_positive <= n_cells")
+    d[["n_cells", "n_positive", "n_multi"]] = counts
+    receipt = {
+        "policy_id": POLICY_ID,
+        "gene_id": d.gene_id.iloc[0] if len(d) else None,
+        "status": "unassessed",
+        "tier": "",
+        "action": "none",
+        "mapping_risk": bool(mapping_risk),
+        "assessable_donor_populations": 0,
+        "max_detection_pct": None,
+        "max_multi_molecule_pct": None,
+        "findings": [],
+    }
+    # A donor population too small to reach ten cells at 1% cannot be assessed.
+    floor = RARE_CELL_MIN_CELLS * 100 / RARE_CELL_DETECTION_PCT
+    d = d[d.n_cells.ge(floor)].copy()
+    if d.empty:
+        return receipt
+    d["detection_pct"] = 100 * d.n_positive / d.n_cells
+    d["multi_molecule_pct"] = 100 * d.n_multi / d.n_cells
+    d["detected"] = d.n_positive.ge(RARE_CELL_MIN_CELLS) & d.detection_pct.ge(
+        RARE_CELL_DETECTION_PCT
+    )
+    d["multi_molecule"] = d.n_multi.ge(RARE_CELL_MIN_CELLS) & d.multi_molecule_pct.ge(
+        RARE_CELL_DETECTION_PCT
+    )
+    d["donor"] = d.source_id + ":" + d.donor_id
+    findings = []
+    for (tier, tissue), group in d.groupby(["tier", "tissue"], sort=True):
+        multi = group[group.multi_molecule]
+        replicated = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
+        frequent = multi.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT).any()
+        if not replicated and not frequent:
+            continue
+        confirmed = tissue in confirmed_tissues
+        top = multi.sort_values("multi_molecule_pct", ascending=False).iloc[0]
+        findings.append(
+            {
+                "status": (
+                    "established" if replicated and confirmed and not mapping_risk else "unresolved"
+                ),
+                "replicated": replicated,
+                "tier": tier,
+                "tissue": tissue,
+                "orthogonal_confirmation": confirmed,
+                "studies_multi_molecule": int(multi.source_id.nunique()),
+                "donors_multi_molecule": int(multi.donor.nunique()),
+                "studies_detected": int(group.loc[group.detected, "source_id"].nunique()),
+                "donors_detected": int(group.loc[group.detected, "donor"].nunique()),
+                "donors_assessed": int(group.donor.nunique()),
+                "cell_types_multi_molecule": int(multi.cell_type.nunique()),
+                "top_cell_type": top.cell_type,
+                "top_donor": top.donor,
+                "top_n_cells": int(top.n_cells),
+                "top_n_positive": int(top.n_positive),
+                "top_n_multi": int(top.n_multi),
+                "top_detection_pct": float(top.detection_pct),
+                "top_multi_molecule_pct": float(top.multi_molecule_pct),
+            }
+        )
+    order = {
+        ("established", "vital"): 0,
+        ("established", "protected"): 1,
+        ("unresolved", "vital"): 2,
+        ("unresolved", "protected"): 3,
+    }
+    findings.sort(key=lambda f: (order[f["status"], f["tier"]], -f["top_multi_molecule_pct"]))
+    receipt["assessable_donor_populations"] = len(d)
+    receipt["max_detection_pct"] = float(d.detection_pct.max())
+    receipt["max_multi_molecule_pct"] = float(d.multi_molecule_pct.max())
+    receipt["findings"] = findings
+    receipt["status"] = findings[0]["status"] if findings else "below_screen"
+    receipt["tier"] = findings[0]["tier"] if findings else ""
+    key = (receipt["status"], receipt["tier"])
+    receipt["action"] = (
+        "unsafe"
+        if key == ("established", "vital")
+        else "review"
+        if key in {("established", "protected"), ("unresolved", "vital")}
+        else "none"
+    )
     return deepcopy(receipt)

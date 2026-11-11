@@ -1,0 +1,7 @@
+tier,detection_cutoff_pct,proteins_any_donor,proteins_two_or_more_studies,proteins_multi_molecule_any_donor,proteins_multi_molecule_two_or_more_studies
+vital,1,982,811,468,340
+vital,2,870,701,409,278
+vital,5,695,508,309,183
+protected,1,438,239,123,65
+protected,2,414,210,114,55
+protected,5,266,141,77,37

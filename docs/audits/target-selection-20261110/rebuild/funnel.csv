@@ -1,0 +1,6 @@
+step,result,removed,remaining
+Accepted normal-tissue exclusion,Unsafe,18130,1763
+Unresolved rare-cell RNA,Other:Review,270,1493
+"Other normal evidence, coverage, identity or translation review",Other:Review,548,945
+Nested or Unsafe-contained sequence,Other:Sequence,40,905
+"No qualifying expression, target maximum or Disposable cap",Other:Expression,15,890

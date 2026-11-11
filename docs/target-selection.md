@@ -4,35 +4,42 @@
 Antigens. Both sets use the same normal-tissue, coverage, translation and sequence
 requirements. Their union is called Target candidates.**
 
-The catalog has been rebuilt under `oncoref.target-selection.2026-11-09.1`:
-**638 CTA, 260 Cancer Antigen only, 22 Reproductive Antigen only, 714 Other and
-18,259 Unsafe**. That gives 898 Cancer Antigens, 660 Reproductive Antigens and
-920 Target candidates. [Browse every protein and category change](audits/target-selection-20261109/rebuild/report.html).
+The catalog is built under `oncoref.target-selection.2026-11-10.1`:
+**616 CTA, 244 Cancer Antigen only, 30 Reproductive Antigen only, 873 Other and
+18,130 Unsafe**. That gives 860 Cancer Antigens, 646 Reproductive Antigens and
+890 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+[Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
-downloads as a separate versioned snapshot.
+downloads as a separate versioned snapshot. The counts describe rule matches, not
+experimentally validated tumor antigens.
 
-The [published-target and category audit](audits/target-selection-20261109/category-profiles/index.md) lists every curated published nomination, all Cancer Antigen only and Reproductive Antigen only genes, and the highest 20 normal-expression values in each category, including Disposable tissues.
+[Illustrated rules](audits/target-selection-20261110/report.html) ·
+[Machine-readable definition](audits/target-selection-20261110/definition.json) ·
+[Donor-level rare-cell evidence](audits/normal-cell-atlas-20261110/rare-cell/index.md)
 
-The [threshold inventory, patient-mapping correction and named CTA placements](audits/target-selection-20261109/policy-reference/index.md) explain the complete rules and current calls.
+![Cancer and Reproductive Antigen sets](audits/target-selection-20261110/sets.svg)
 
-**The rebuild remains draft.** [The original 250-protein audit](audits/target-selection-20261109/scrutiny/index.md)
-identifies tumor-source dependence, low-abundance matches and specialized normal
-compartments requiring review. The counts describe rule matches, not experimentally
-validated tumor antigens. Exact source-table claims now separate published target
-nominations from reproductive-only background lists.
+## What changed from the 2026-11-09 draft
 
-The [threshold comparison](audits/target-selection-20261109/thresholds/index.md)
-tests 516 combinations of abundance, enrichment, percentile and Disposable-cap
-rules. Its recommended next draft keeps the two-patient route, raises the
-single-tumor requirement from fivefold to tenfold, and adds independent Disposable
-caps of 32 TPM and 32 nTPM in their respective panels. That would give **630 CTA, 250 Cancer Antigen only,
-30 Reproductive Antigen only, 724 Other and 18,259 Unsafe**. These are proposed
-counts; the current rebuilt catalog above has not been relabeled.
+| Filter | Draft | Final |
+|---|---|---|
+| One-tumor cancer route | T ≥ 5 × max(N, 1) | T ≥ 10 × max(N, 1) |
+| Target maximum | Not applied | Highest tumor, reproductive or developmental value above every measured nonreproductive and Disposable value |
+| Disposable cap | Not applied | At most 32 TPM and 32 nTPM, each on its own scale |
+| Rare normal-cell RNA | ≥1% detection pooled across donors, studies and ages → Unsafe | Per adult donor; multi-molecule cells only; replication across studies; mapping risk; bulk confirmation |
+| Sequence containment | Against the released Unsafe set | Recomputed against the new Unsafe set |
 
-[Illustrated report](audits/target-selection-20261109/report.html) ·
-[Machine-readable definition](audits/target-selection-20261109/definition.json)
+The draft and the analyses behind these choices stay available as dated audits:
+[threshold comparison](audits/target-selection-20261109/thresholds/index.md),
+[patient identities and named placements](audits/target-selection-20261109/policy-reference/index.md),
+[published targets and normal peaks](audits/target-selection-20261109/category-profiles/index.md),
+[expression maxima and Disposable caps](audits/target-selection-20261109/expression-maxima/index.md),
+[250-protein scrutiny](audits/target-selection-20261109/scrutiny/index.md) and the
+[draft catalog](audits/target-selection-20261109/rebuild/index.md). Their counts
+describe the draft.
 
-![Cancer and Reproductive Antigen sets](audits/target-selection-20261109/sets.svg)
+**Still open before release:** tumor-source comparability, read-level review of the
+unresolved rare-cell signals, and the hair-follicle normal-protein replay.
 
 ## One shared eligibility screen
 
@@ -45,6 +52,7 @@ exclusion establishes Unsafe.** Missing or conflicting evidence does not.
 | Normal expression | Pass all applicable bulk, cell, immune, rare-cell, protein and reviewed-knowledge rules | Unsafe for accepted exclusions; otherwise Other:Review |
 | Required coverage | Complete combined normal bulk panel for every member locus; retain observed findings from supplemental panels | Other:Review |
 | Identity and translation | Qualifying coding reference or supported noncanonical ORF; complete approved representative; resolve conflicting coding evidence | Other:Review |
+| Expression bounds | Target maximum above every measured nonreproductive and Disposable value; Disposable expression at most 32 TPM and 32 nTPM | Other:Expression |
 | Sequence | Resolve nested proteins independently; fewer than 95% of 9-mers contained in Unsafe proteins | Other:Sequence |
 
 The [tissue and cell registry](tissue-hazards.md) and
@@ -59,14 +67,54 @@ Expression in a Disposable compartment can coexist with either membership.
 Immune cells, blood vessels and other protected cells inside a reproductive organ
 retain their own cell-specific assessment. An organ label does not exempt them.
 
-The [expression-maxima and Disposable-cap audit](audits/target-selection-20261109/expression-maxima/index.md)
-tests two additional requirements: cancer or reproductive/developmental expression
-must exceed every measured nonreproductive value, and Disposable expression must
-stay below a fixed cap. The maximum rule removes zero of the 920 candidates in
-the current native-TPM panel; a 16-TPM Disposable cap removes LCE3C. This panel
-contains appendix, gallbladder and tonsil, with no isolated hair-follicle TPM
-measurements. The audit reports single-cell nTPM separately. These are
-counterfactual counts; no new cap has been applied to the catalog.
+**Expression bounds.** Cancer or reproductive/developmental expression must exceed
+every measured nonreproductive value, including Disposable tissues, and Disposable
+expression must stay at or below 32 TPM and 32 nTPM. The two caps are separate
+source scales, not a unit conversion, and continue the 4/8/16/32 ordering of
+tier ceilings as a screening convention. The native-TPM Disposable panel contains
+appendix, gallbladder and tonsil, with no isolated hair-follicle measurements.
+Both checks currently remove no candidate. [Audit](audits/target-selection-20261109/expression-maxima/index.md).
+
+### Rare normal-cell RNA
+
+Pooled panels average away rare cells, so each adult donor is assessed separately
+in each named Vital or Protected cell population of brain, spinal cord, heart and
+selected lung populations. **A count matrix cannot show where a read aligned.** One
+mis-assigned read per cell, from a paralog, a pseudogene or an overlapping gene,
+looks exactly like sparse expression. The grade therefore asks four questions.
+
+| Question | Requirement |
+|---|---|
+| Is there a signal? | At least 1% of a donor's cells, and at least ten, carry two or more molecules. Cells with one molecule never change a category. |
+| Is it replicated? | The signal appears in two or more independent studies of the same organ. Donors of one study share its libraries and reference. Without replication, only a signal in at least 5% of a donor's cells counts. |
+| Could the reads belong elsewhere? | The gene shares at least 10% of its transcript 31-mers, or of its 3′ kilobase, with another locus, or has an exon inside another same-strand gene. |
+| Does another assay agree? | Bulk RNA of at least 1 TPM in the same organ in both the HPA and GTEx sample sets. |
+
+| Grade | Meaning | Vital | Protected |
+|---|---|---|---|
+| Established | Replicated signal, no mapping risk, bulk confirmation | Unsafe | Other:Review |
+| Unresolved | Replicated signal lacking either, or a frequent single-study signal | Other:Review | Recorded |
+| Below the screen | Neither | No finding | No finding |
+
+Below the screen is not evidence of absence or safety, and no cutoff is a measured
+toxicity threshold. Detection at 1%, 2% and 5% stays in the evidence tables as a
+comparison. Read-level review settles an unresolved signal: unique alignment with
+exonic or splice-spanning reads establishes it; their absence dismisses it with
+the evidence.
+
+Of the 1,804 graded proteins, 13 are established and 287 unresolved, of which
+282 are held for review and five in Protected populations are recorded only.
+1,468 are below the screen and 36 have no measured gene. CBY3 becomes Unsafe. 60 draft candidates
+move to Other:Review, including ADAM7, HHLA1, TMEM269, TAS2R1 and KRTAP5-11. PLAC1
+moves from Unsafe to Other:Review: its signal is replicated and unflagged, but bulk
+RNA does not confirm it. PRAME, MAGE-A4, CTAG2, NUTM1 and SSX2 stay CTA.
+
+**34 proteins that were Unsafe only through the pooled 1% flag are candidates
+again, including MAGEA12, CSAG1 and PABPC3.** Their donor-level signal is
+single-molecule, or multi-molecule in one study below 5% of cells. That is the rule
+working as written. It is not a demonstration that they are absent from normal
+tissue, and the MAGEA12 clinical history remains in its evidence record.
+[All 34 and every other change](audits/target-selection-20261110/rebuild/changes-from-draft.csv).
 
 Reference selection remains [MANE Select first, Ensembl canonical second, with
 completeness checks and reviewed exceptions](audits/cta-transcript-selection-20261108/index.md).
@@ -84,28 +132,34 @@ tumor sample. RNA qualifies through either route:
 1. **Repeated expression:** at least two independent patients each have
    `T ≥ 1` and `T > N`.
 2. **One strongly enriched tumor:** at least one sample has
-   `T ≥ 5 × max(N, 1)`.
+   `T ≥ 10 × max(N, 1)`.
 
 The values use the panel's declared native TPM, nTPM or pTPM scale. The second
-route therefore requires at least 5 units when N is below 1. The floor prevents
+route therefore requires at least 10 units when N is below 1. The floor prevents
 trace expression from qualifying against a zero normal measurement. Equality to
-N does not pass the repeated route; equality to the fivefold threshold passes
+N does not pass the repeated route; equality to the tenfold threshold passes
 the single-tumor route. Two samples from the same patient count once.
 
 | Highest eligible normal value | Two independent tumors | One tumor |
 |---:|---|---|
-| 0 | Each ≥1 | ≥5 |
-| 0.4 | Each ≥1 | ≥5 |
-| 1 | Each >1 | ≥5 |
-| 3 | Each >3 | ≥15 |
-| 8 | Each >8 | ≥40 |
+| 0 | Each ≥1 | ≥10 |
+| 0.4 | Each ≥1 | ≥10 |
+| 1 | Each >1 | ≥10 |
+| 3 | Each >3 | ≥30 |
+| 8 | Each >8 | ≥80 |
 
 These are selection conventions. Passing either route still requires the shared
 eligibility screen. A tumor at 100 does not cancel an exclusion from normal cells
 at 20. The two-tumor route can pass with a small difference above N; it establishes
 repeated elevation, not a large fold change or statistical significance.
 
-![Tumor expression thresholds](audits/target-selection-20261109/tumor-rule.svg)
+![Tumor expression thresholds](audits/target-selection-20261110/tumor-rule.svg)
+
+The [threshold comparison](audits/target-selection-20261109/thresholds/index.md)
+tested 516 combinations of abundance, enrichment, percentile and cap rules. Moving
+the one-tumor route from fivefold to tenfold kept 431 of 432 published cancer
+nominations in the draft and reduced the proteins that depend on their single
+largest sample from 45 to 35.
 
 **Use compatible measurements.** A comparison records its source versions,
 quantification and normalization methods, context panel and sample identities.
@@ -217,13 +271,15 @@ h2bw2 = target_selection.results("H2BW2")
 links = cta_literature.attestations("ENSG00000183128")
 # target_selection.assess_cancer_rna(tumors, normals, ...) returns a cited receipt.
 # target_selection.classify(assessed_facts) returns both memberships and one category.
+# target_selection.assess_rare_cell_rna(donor_rows, mapping_risk=..., confirmed_tissues=...)
+# grades one gene; results() carries rare_cell_status and the reason a signal is unresolved.
 ```
 
 The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
 1 unit, resolves tumor locus identities and counts confirmed independent patients.
-All 957 proteins passing the shared screen have complete native-TPM comparison
+All 936 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
 The 130 included tumor cohort views are deduplicated by physical sample and known
@@ -233,9 +289,9 @@ These are source-native gene TPM comparisons, without cross-study batch correcti
 N is the maximum of supported context summaries: tissue means, GTEx donor medians
 and supported immune statistics. It is not the maximum across all healthy donors.
 The stored three-sample NUTM matrix fails the nonnegative-TPM check and is excluded.
-[Comparison methods](audits/target-selection-20261109/rebuild/comparison.json) ·
-[Cohort coverage](audits/target-selection-20261109/rebuild/tumor-source-coverage.csv) ·
-[Input hashes](audits/target-selection-20261109/rebuild/inputs.json).
+[Comparison methods](audits/target-selection-20261110/rebuild/comparison.json) ·
+[Cohort coverage](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv) ·
+[Input hashes](audits/target-selection-20261110/rebuild/inputs.json).
 
 The new `target_selection.results()` includes selected transcript IDs, sequence
 hashes, measurements and linked paper records. `cta_selection.results()` and
@@ -243,7 +299,7 @@ sequence downloads retain the 1.36.0 snapshot and its policy identity; the new
 catalog does not silently change those assets.
 
 The [normal-cell reassessment](audits/normal-cell-atlas-20261110/index.md) records
-the source inventory, donor-level cerebellum results and sensitivity to 1%, 2%
-and 5% RNA detection cutoffs. It separates RNA assignments from protein evidence,
-checks age and feature coverage, and documents the QC still needed before rare-cell
-findings change a category. Its results do not modify this catalog snapshot.
+the source inventory and the first cerebellum comparison that motivated the
+rare-cell rule; it predates the donor-level grading and changes no category itself.
+The [PLAC1 brain audit](audits/plac1-brain-20261110/index.md) retains the PCR, atlas
+and IHC evidence for that protein.

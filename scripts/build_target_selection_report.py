@@ -18,7 +18,7 @@ from matplotlib.patches import Ellipse, FancyBboxPatch
 from oncoref import target_selection
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "docs/audits/target-selection-20261109"
+OUT = ROOT / "docs/audits/target-selection-20261110"
 
 
 def save(fig, name):
@@ -42,7 +42,7 @@ def figures():
     ax.text(
         5.5,
         6.25,
-        "All proteins → normal screen + coverage + identity/translation + sequence",
+        "All proteins → normal screen + coverage + identity/translation + bounds + sequence",
         ha="center",
     )
     ax.add_patch(
@@ -103,13 +103,13 @@ def figures():
         target_selection.SINGLE_TUMOR_FOLD * np.maximum(n, target_selection.DETECTION_FLOOR),
         color="#a36a20",
         lw=2.5,
-        label="One sample: ≥5 × max(normal maximum, 1)",
+        label=f"One sample: ≥{target_selection.SINGLE_TUMOR_FOLD:g} × max(normal maximum, 1)",
     )
     ax.set(
         xlabel="Highest eligible normal value N (same comparison scale)",
         ylabel="Tumor expression required",
         xlim=(0, 10),
-        ylim=(0, 53),
+        ylim=(0, 105),
     )
     ax.set_title("Cancer RNA evidence: repeated elevation or one strong tumor", loc="left", pad=15)
     ax.spines[["right", "top"]].set_visible(False)
@@ -144,6 +144,8 @@ def build():
         f"<td>≥{target_selection.SINGLE_TUMOR_FOLD * max(n, target_selection.DETECTION_FLOOR):g}</td></tr>"
         for n in (0, 0.4, 1, 3, 8)
     )
+    rare = definition["rare_cell_rna"]
+    fold, cap = target_selection.SINGLE_TUMOR_FOLD, target_selection.DISPOSABLE_CAP
     page = f"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cancer and Reproductive Antigens — OncoRef</title>
@@ -165,13 +167,31 @@ The released 1.36.0 catalog remains a separate snapshot under its earlier policy
 <p>Accepted normal-tissue or applicable clinical exclusion → <strong>Unsafe</strong>.
 Required coverage, identity, translation or unresolved evidence → <strong>Other:Review</strong>.
 Nested or Unsafe-contained sequence → <strong>Other:Sequence</strong>.
+Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
 The remaining proteins enter the two independent association checks.</p>
-<p>The same defined Disposable and reproductive compartment allowances apply to both
-sets. Immune or other protected cells do not inherit an allowance from their organ.</p>
+<h2>Rare normal-cell RNA</h2>
+<p>Each adult donor is assessed separately in each named Vital or Protected cell population.
+A count matrix cannot show where a read aligned: one mis-assigned read per cell from a paralog,
+pseudogene or overlapping gene looks like sparse expression. Cells with a single molecule
+therefore never change a category.</p>
+<table><thead><tr><th>Question</th><th>Requirement</th></tr></thead><tbody>
+<tr><td>Is there a signal?</td><td>{html.escape(rare["signal"])}</td></tr>
+<tr><td>Is it replicated?</td><td>{html.escape(rare["replication"])} {html.escape(rare["single_study"])}</td></tr>
+<tr><td>Could the reads belong elsewhere?</td><td>{html.escape(rare["mapping_risk"])}</td></tr>
+<tr><td>Does another assay agree?</td><td>{html.escape(rare["confirmation"])}</td></tr></tbody></table>
+<table><thead><tr><th>Grade</th><th>Meaning</th><th>Vital</th><th>Protected</th></tr></thead>
+<tbody><tr><td>Established</td><td>{html.escape(rare["established"])}</td><td>Unsafe</td><td>Other:Review</td></tr>
+<tr><td>Unresolved</td><td>{html.escape(rare["unresolved"])}</td><td>Other:Review</td><td>Recorded</td></tr>
+<tr><td>Below the screen</td><td>Neither</td><td colspan="2">No finding. This is not evidence of absence or safety.</td></tr></tbody></table>
+<p>1%, 2% and 5% detection remain reported comparison metrics. {html.escape(rare["release"])}
+<a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
 comparison panel. Two independent patients each need T ≥1 and T &gt;N; alternatively,
-one tumor needs T ≥5 × max(N, 1). Sample quality and exact protein identity must pass.</p>
+one tumor needs T ≥{fold:g} × max(N, 1). Sample quality and exact protein identity must pass.
+The highest tumor, reproductive or developmental value must also exceed every measured
+nonreproductive normal and Disposable value, and Disposable expression must stay at or
+below {cap:g} TPM and {cap:g} nTPM, each on its own scale.</p>
 <table><thead><tr><th>Normal maximum N</th><th>Two independent tumors</th><th>One tumor</th></tr></thead>
 <tbody>{rows}</tbody></table>
 <figure>{svg("tumor-rule")}</figure>

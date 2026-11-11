@@ -24,6 +24,7 @@ from cta_report_common import sha256, write_csv  # noqa: E402
 
 from oncoref import (  # noqa: E402
     cta_literature,
+    cta_sequence_overlap,
     reference_data,
     source_matrices,
     target_selection,
@@ -40,10 +41,16 @@ from oncoref.gene_matching import (  # noqa: E402
 BASE = ROOT / "docs/audits/cta-selection-20261028"
 FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 RAW = ROOT / "tmp/target-rebuild-inputs"
-OUT = ROOT / "docs/audits/target-selection-20261109/rebuild"
+OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
 COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-09.1"
 INPUTS = {}
+#: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
+LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
+RARE_UNSAFE = "Established rare Vital-cell RNA"
+#: Checks that must pass before tumor evidence and expression bounds are assessed.
+PRIOR_CHECKS = [c for c in target_selection.SHARED_CHECKS if c != "expression_bounds_pass"]
+DISPOSABLE_NTPM_TISSUES = ["appendix", "gallbladder", "tonsil"]
 
 
 def read(path, **kwargs):
@@ -69,7 +76,42 @@ def shared_facts():
     f["legacy_exclusion_reasons"] = f.exclusion_reasons
     f["curation_replay_category"] = f.category
     f["entity_id"] = f.protein_equivalence_group_id
-    f["unsafe"] = f.category.eq("Unsafe")
+    layers = [c[7:] for c in f if c.startswith("unsafe:")]
+    if not f.category.eq("Unsafe").eq(f[["unsafe:" + n for n in layers]].any(axis=1)).all():
+        raise ValueError("Unsafe calls do not decompose into their evidence layers")
+    for name in ["rare-cell-evidence.csv.gz", "rare-cell-evidence.json"]:
+        INPUTS[f"oncoref/data/{name}"] = sha256(ROOT / "oncoref/data" / name)
+    provenance = json.loads((ROOT / "oncoref/data/rare-cell-evidence.json").read_text())
+    if provenance["sha256"] != INPUTS["oncoref/data/rare-cell-evidence.csv.gz"]:
+        raise ValueError("Rare-cell evidence does not match its provenance")
+    if provenance["policy_id"] != target_selection.POLICY_ID:
+        raise ValueError("Rare-cell evidence was graded under another policy")
+    rare = pd.read_csv(ROOT / "oncoref/data/rare-cell-evidence.csv.gz").set_index("entity_id")
+    kept = [n for n in layers if n not in LEGACY_RARE]
+    other_unsafe = f[["unsafe:" + n for n in kept]].any(axis=1)
+    if not other_unsafe[~f.entity_id.isin(rare.index)].all():
+        raise ValueError("A protein without another exclusion lacks rare-cell evidence")
+    rare_columns = [c for c in rare if c not in {"protein_group_label", "member_gene_ids"}]
+    f = f.drop(columns=[c for c in rare_columns if c in f]).join(rare[rare_columns], on="entity_id")
+    f["rare_cell_status"] = f.rare_cell_status.fillna("not_extracted")
+    f["rare_cell_action"] = f.rare_cell_action.fillna("none")
+    # A pooled flag that the donor build could not measure stays unresolved.
+    f["rare_cell_legacy_only"] = (
+        f["hold:Rare vital-tissue cell expression"]
+        & f.rare_cell_status.eq("unassessed")
+        & ~other_unsafe
+    )
+    rare_unsafe = f.rare_cell_action.eq("unsafe")
+    rare_review = f.rare_cell_action.eq("review") | f.rare_cell_legacy_only
+    f["unsafe"] = other_unsafe | rare_unsafe
+    f["Unsafe_reasons"] = [
+        " | ".join([n for n, on in zip(kept, row) if on] + ([RARE_UNSAFE] if rare_hit else []))
+        for row, rare_hit in zip(f[["unsafe:" + n for n in kept]].to_numpy(), rare_unsafe)
+    ]
+    ninemers = cta_sequence_overlap.group_ninemers(f.member_gene_ids)
+    overlap = cta_sequence_overlap.unsafe_overlap(ninemers, f.index)
+    f["released_unsafe_sequence_overlap_pct"] = f.unsafe_sequence_overlap_pct
+    f["unsafe_sequence_overlap_pct"] = (100 * overlap(f.unsafe)).round(2)
     admission = {
         "Reproductive / embryonic association",
         "Cancer expression",
@@ -77,8 +119,8 @@ def shared_facts():
         "Translation qualification",
         "Required RNA coverage",
     }
-    normal_holds = [c for c in f if c.startswith("hold:") and c[5:] not in admission]
-    f["normal_screen_pass"] = ~f[normal_holds].any(axis=1)
+    normal_holds = [c for c in f if c.startswith("hold:") and c[5:] not in admission | LEGACY_RARE]
+    f["normal_screen_pass"] = ~f[normal_holds].any(axis=1) & ~rare_review
     f["required_coverage_complete"] = f.required_coverage
     f["identity_translation_pass"] = f[
         [
@@ -89,7 +131,7 @@ def shared_facts():
     ].all(axis=1)
     f["evidence_resolved"] = ~f.unresolved_evidence
     f["sequence_pass"] = ~f.nested_microprotein & f.unsafe_sequence_overlap_pct.lt(95)
-    f["shared_eligible"] = ~f.unsafe & f[list(target_selection.SHARED_CHECKS)].all(axis=1)
+    f["shared_eligible"] = ~f.unsafe & f[PRIOR_CHECKS].all(axis=1)
     branches = {
         "reproductive_bulk": f.reproductive_ntpm.ge(1),
         "reproductive_cells": f.reproductive_cell_ntpm.ge(1),
@@ -132,7 +174,7 @@ def group_normal_rows(raw, facts, *, source, statistic, gene_col="gene_id"):
     return grouped.assign(source_id=source, statistic=statistic, unit="TPM", cell_type="bulk")
 
 
-def normal_panel(facts):
+def normal_panel(facts, write=True):
     rows = []
     downloads = OUT / "downloaded-hpa-sources.json"
     INPUTS[str(downloads.relative_to(ROOT))] = sha256(downloads)
@@ -277,8 +319,58 @@ def normal_panel(facts):
         .sort_values(["entity_id", "source_id", "source_context"])
         .reset_index(drop=True)
     )
-    write_csv(normal, OUT / "normal-comparison.csv.gz")
+    if write:
+        write_csv(normal, OUT / "normal-comparison.csv.gz")
     return normal, required
+
+
+def disposable_ntpm(candidates):
+    """HPA consensus nTPM in Disposable bulk tissues; a separate scale from TPM."""
+    source = Path(reference_data.local_path("hpa_rna_consensus", "v23"))
+    identities = read(BASE / "hpa_rna_consensus-accepted-identities.csv.gz")
+    lookup = {
+        g: r.entity_id for r in candidates.itertuples() for g in json.loads(r.member_gene_ids)
+    }
+    raw = read(source, sep="\t")
+    raw = raw[raw.Tissue.isin(DISPOSABLE_NTPM_TISSUES)].copy()
+    raw["entity_id"] = raw.Gene.map(identities.set_index("source_gene_id").canonical_gene_id).map(
+        lookup
+    )
+    rows = raw.groupby(["entity_id", "Tissue"]).nTPM.agg(["sum", "count"]).reset_index()
+    expected = candidates.set_index("entity_id").member_count
+    rows["value"] = rows["sum"].where(rows["count"].eq(rows.entity_id.map(expected)))
+    return rows.groupby("entity_id").value.max()
+
+
+def expression_bounds(selected, evidence, normal):
+    """Target maximum and Disposable caps for proteins passing the prior checks."""
+    rows = normal[normal.qc_pass & normal.identity_resolved & normal.value.notna()]
+    by_scope = rows.groupby(["scope", "entity_id"]).value.max()
+    b = selected[["entity_id", "developmental_mean_tpm"]].merge(
+        evidence[["entity_id", "normal_reference_tpm", "tumor_max_tpm"]], on="entity_id"
+    )
+    b["disposable_max_tpm"] = b.entity_id.map(by_scope.get("disposable", pd.Series(dtype=float)))
+    b["reproductive_max_tpm"] = b.entity_id.map(
+        by_scope.get("reproductive", pd.Series(dtype=float))
+    )
+    b["disposable_max_ntpm"] = b.entity_id.map(disposable_ntpm(selected))
+    b["target_peak_tpm"] = b[
+        ["tumor_max_tpm", "developmental_mean_tpm", "reproductive_max_tpm"]
+    ].max(axis=1)
+    measured = b[["normal_reference_tpm", "disposable_max_tpm", "disposable_max_ntpm"]].notna()
+    ceiling = b[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1)
+    b["target_maximum_pass"] = b.target_peak_tpm.ge(target_selection.DETECTION_FLOOR) & b[
+        "target_peak_tpm"
+    ].gt(ceiling)
+    b["disposable_cap_pass"] = b.disposable_max_tpm.le(
+        target_selection.DISPOSABLE_CAP
+    ) & b.disposable_max_ntpm.le(target_selection.DISPOSABLE_CAP)
+    b["expression_bounds_status"] = np.where(
+        ~measured.all(axis=1),
+        "unassessed",
+        np.where(b.target_maximum_pass & b.disposable_cap_pass, "pass", "fail"),
+    )
+    return b.drop(columns=["developmental_mean_tpm", "normal_reference_tpm", "tumor_max_tpm"])
 
 
 def participant_id(namespace, sample):
@@ -544,7 +636,17 @@ def build():
             }
         )
     evidence = pd.DataFrame(summaries)
+    evidence = evidence.merge(
+        expression_bounds(selected, evidence, normal), on="entity_id", validate="one_to_one"
+    )
     facts = facts.merge(evidence, on="entity_id", how="left", validate="one_to_one")
+    facts["expression_bounds_status"] = facts.expression_bounds_status.fillna("unassessed")
+    # Unassessed bounds never pass; an eligible protein without them needs review.
+    facts["expression_bounds_pass"] = facts.expression_bounds_status.eq("pass")
+    facts["evidence_resolved"] &= ~(
+        facts.shared_eligible & facts.expression_bounds_status.eq("unassessed")
+    )
+    facts["shared_eligible"] &= facts.expression_bounds_pass
     facts["cancer_evidence"] = facts.cancer_evidence.fillna("unassessed")
     facts["cancer_assessment_reason"] = facts.cancer_assessment_reason.fillna(
         "Shared eligibility fails; positive cancer membership cannot be assigned"
@@ -557,10 +659,24 @@ def build():
         "evidence_resolved": "Evidence is unresolved",
         "sequence_pass": "Nested or Unsafe-contained sequence",
     }
+    bounds_failed = decisions.expression_bounds_status.eq("fail")
+    rare_text = {
+        "established": "Established rare-cell RNA in a Protected population",
+        "unresolved": "Unresolved rare Vital-cell RNA needs mapping, background or protein review",
+    }
     decisions["decision_reason"] = [
         str(r.Unsafe_reasons)
         if r.category == "Unsafe"
-        else " | ".join(text for field, text in reasons.items() if not getattr(r, field))
+        else " | ".join(
+            [text for field, text in reasons.items() if not getattr(r, field)]
+            + ([rare_text[r.rare_cell_status]] if r.rare_cell_action == "review" else [])
+            + (
+                ["Pooled rare-cell flag could not be assessed per donor"]
+                if r.rare_cell_legacy_only
+                else []
+            )
+            + (["Target maximum or Disposable cap fails"] if failed else [])
+        )
         if not r.shared_eligible
         else "Cancer and reproductive/developmental evidence qualify"
         if r.category == "CTA"
@@ -569,7 +685,7 @@ def build():
         else "Reproductive/developmental evidence qualifies; " + r.cancer_assessment_reason
         if r.category == "Reproductive Antigen only"
         else "Neither positive association qualifies; " + r.cancer_assessment_reason
-        for r in decisions.itertuples()
+        for r, failed in zip(decisions.itertuples(), bounds_failed)
     ]
     decisions["exclusion_reasons"] = decisions.decision_reason.where(
         decisions.category.isin(["Other", "Unsafe"]), ""
@@ -595,7 +711,13 @@ def build():
     ]
     decisions = decisions.rename(columns={c: "legacy_" + c for c in old_logic if c in decisions})
     decisions = decisions.rename(
-        columns={c: "legacy_" + c for c in decisions if c.startswith(("hold:", "unsafe:"))}
+        columns={
+            c: "legacy_" + c
+            for c in decisions
+            if c.startswith(("hold:", "unsafe:"))
+            or c in {"rare_cell_flag", "rare_cell_hold", "rare_cell_max_pct", "rare_cell_type"}
+            or c in {"rare_cell_detail", "rare_cell_screened"}
+        }
     )
     decisions["policy"] = target_selection.POLICY_ID
     decisions["assessment_status"] = np.where(
@@ -622,7 +744,22 @@ def build():
         .size()
         .reset_index(name="proteins")
         .to_dict("records"),
-        "shared_eligible": len(selected),
+        "shared_eligible": int(decisions.eligible.sum()),
+        "assessed_for_cancer_evidence": len(selected),
+        "unsafe_changes": {
+            "released_unsafe_now_other": int(
+                (decisions.released_category.eq("Unsafe") & decisions.category.ne("Unsafe")).sum()
+            ),
+            "newly_unsafe": int(
+                (decisions.released_category.ne("Unsafe") & decisions.category.eq("Unsafe")).sum()
+            ),
+        },
+        "rare_cell": {
+            "status": decisions.rare_cell_status.value_counts().to_dict(),
+            "action": decisions.rare_cell_action.value_counts().to_dict(),
+            "legacy_flag_unassessed": int(decisions.rare_cell_legacy_only.sum()),
+        },
+        "expression_bounds": decisions.expression_bounds_status.value_counts().to_dict(),
         "comparison_required_contexts": sorted(required),
         "assessed_cancer_statuses": evidence.cancer_evidence.value_counts().to_dict(),
         "published_nomination_by_category": decisions.groupby("category")
@@ -642,6 +779,8 @@ def build():
             "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
             "Complete 36-context combined nonreproductive normal anatomy panel, plus observed native-TPM normal immune and brain measurements",
         ],
+        "expression_bounds": target_selection.definition()["expression_bounds"],
+        "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,
         "normal_statistic": "Maximum supported context statistic: tissue/subregion means, GTEx v11 donor medians, and supported immune summaries including DICE third-highest TPM",
         "batch_corrected": False,
         "limitations": [
@@ -688,6 +827,31 @@ def build():
         "reproductive_ntpm",
         "reproductive_cell_ntpm",
         "developmental_mean_tpm",
+        "rare_cell_status",
+        "rare_cell_action",
+        "rare_cell_tier",
+        "rare_cell_gene_id",
+        "rare_cell_unresolved_because",
+        "finding_tissue",
+        "finding_top_cell_type",
+        "finding_studies_multi_molecule",
+        "finding_donors_multi_molecule",
+        "finding_studies_detected",
+        "finding_top_multi_molecule_pct",
+        "finding_top_detection_pct",
+        "finding_bulk_tpm",
+        "finding_bulk_context",
+        "paralog_ambiguous",
+        "host_overlapped",
+        "sequence_partners",
+        "same_strand_hosts",
+        "max_detection_pct",
+        "max_multi_molecule_pct",
+        "rare_cell_legacy_only",
+        "expression_bounds_status",
+        "target_peak_tpm",
+        "disposable_max_tpm",
+        "disposable_max_ntpm",
         "normal_reference_tpm",
         "normal_reference_contexts",
         "normal_reference_tied_contexts",
@@ -735,12 +899,13 @@ def build():
         "release_ready": False,
         "open_reviews": [
             "Tumor-source comparability and outlier support",
-            "Rare normal and developmental coverage",
+            "Mapping, background and protein review of unresolved rare-cell RNA",
+            "Hair-follicle normal-protein replay (#687)",
         ],
         "summary": summary,
         "comparison": comparison,
         "data_sha256": sha256(ROOT / "oncoref/data/target-selection.csv.gz"),
-        "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261109/rebuild/report.html",
+        "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
     }
     (ROOT / "oncoref/data/target-selection.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(json.dumps(summary, indent=2), flush=True)

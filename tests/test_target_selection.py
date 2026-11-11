@@ -95,7 +95,8 @@ def test_every_shared_check_blocks_both_sets_without_creating_unsafe(check):
     row = policy.classify(pd.DataFrame([facts(**{check: False})])).iloc[0]
     assert row.category == "Other"
     assert not row.is_target_candidate
-    assert row.subtype == ("Sequence" if check == "sequence_pass" else "Review")
+    expected = {"sequence_pass": "Sequence", "expression_bounds_pass": "Expression"}
+    assert row.subtype == expected.get(check, "Review")
     row = policy.classify(pd.DataFrame([facts(unsafe=True, **{check: False})])).iloc[0]
     assert row.category == "Unsafe"
 
@@ -130,17 +131,17 @@ def test_unknown_or_coerced_boolean_cannot_clear_an_eligibility_check(bad):
     [
         (0, [0.02, 0.03], "does_not_qualify", []),
         (0, [1, 1], "qualifies", ["two_independent_tumors_above_normal"]),
-        (0.4, [4.99, 0], "does_not_qualify", []),
-        (0.4, [5, 0], "qualifies", ["one_tumor_fivefold_above_normal"]),
+        (0.4, [9.99, 0], "does_not_qualify", []),
+        (0.4, [10, 0], "qualifies", ["one_tumor_tenfold_above_normal"]),
         (3, [3, 3], "does_not_qualify", []),
         (3, [3.01, 3.01], "qualifies", ["two_independent_tumors_above_normal"]),
-        (3, [14.99, 0], "does_not_qualify", []),
-        (3, [15, 0], "qualifies", ["one_tumor_fivefold_above_normal"]),
+        (3, [29.99, 0], "does_not_qualify", []),
+        (3, [30, 0], "qualifies", ["one_tumor_tenfold_above_normal"]),
         (
             3,
-            [15, 4],
+            [30, 4],
             "qualifies",
-            ["two_independent_tumors_above_normal", "one_tumor_fivefold_above_normal"],
+            ["two_independent_tumors_above_normal", "one_tumor_tenfold_above_normal"],
         ),
     ],
 )
@@ -160,8 +161,8 @@ def test_replicates_and_duplicate_cohort_views_are_one_participant():
     assert result["independent_participants_above_normal"] == 1
     tumors["participant_id"] = None
     assert assess(tumors, normals)["status"] == "unassessed"
-    tumors.loc[0, "value"] = 5
-    assert assess(tumors, normals)["routes"] == ["one_tumor_fivefold_above_normal"]
+    tumors.loc[0, "value"] = 10
+    assert assess(tumors, normals)["routes"] == ["one_tumor_tenfold_above_normal"]
 
 
 @pytest.mark.parametrize(
@@ -208,8 +209,89 @@ def test_rejected_tumor_qc_and_conflicting_sample_identity():
         assess(tumors, normals)
 
 
+def rare(rows):
+    """Donor populations as (study, donor, tier, n_cells, n_positive, n_multi)."""
+    return pd.DataFrame(
+        [
+            {
+                "gene_id": "ENSG1",
+                "source_id": study,
+                "donor_id": donor,
+                "tissue": "brain",
+                "cell_type": "cerebellar granule cell",
+                "tier": tier,
+                "n_cells": cells,
+                "n_positive": positive,
+                "n_multi": multi,
+            }
+            for study, donor, tier, cells, positive, multi in rows
+        ]
+    )
+
+
+def grade(rows, risk=False, confirmed=("brain",)):
+    frame = rare(rows) if rows else rare([("s", "a", "vital", 1, 0, 0)]).iloc[:0]
+    receipt = policy.assess_rare_cell_rna(
+        frame, mapping_risk=risk, confirmed_tissues=set(confirmed)
+    )
+    return receipt["status"], receipt["action"]
+
+
+TWO_STUDIES = [("s1", "a", "vital", 5000, 400, 50), ("s2", "b", "vital", 5000, 400, 50)]
+
+
+def test_rare_cell_signal_needs_molecules_replication_mapping_and_confirmation():
+    assert grade(TWO_STUDIES) == ("established", "unsafe")
+    # The same counts cannot establish a gene whose reads may belong elsewhere.
+    assert grade(TWO_STUDIES, risk=True) == ("unresolved", "review")
+    assert grade(TWO_STUDIES, confirmed=()) == ("unresolved", "review")
+    assert grade(TWO_STUDIES, confirmed=("heart",)) == ("unresolved", "review")
+    # Two donors of one study share its libraries and reference: a signal, not proof.
+    one_study = [("s1", d, *rest) for _, d, *rest in TWO_STUDIES]
+    assert grade(one_study) == ("below_screen", "none")
+    # Unreplicated, a signal must be frequent: 5% of one donor's cells.
+    assert grade([("s1", "a", "vital", 5000, 400, 249)]) == ("below_screen", "none")
+    assert grade([("s1", "a", "vital", 5000, 400, 250)]) == ("unresolved", "review")
+    protected = [(s, d, "protected", *rest) for s, d, _, *rest in TWO_STUDIES]
+    assert grade(protected) == ("established", "review")
+    assert grade(protected, risk=True) == ("unresolved", "none")
+
+
+@pytest.mark.parametrize(
+    "rows",
+    [
+        # Single molecules, however frequent or replicated, are not a signal.
+        [("s1", "a", "vital", 10000, 9000, 9), ("s2", "b", "vital", 10000, 9000, 9)],
+        [("s1", "a", "vital", 14102, 459, 8), ("s1", "b", "vital", 2731, 55, 0)],
+        # 0.99% of cells, or nine cells, with two molecules.
+        [("s1", "a", "vital", 10000, 500, 99), ("s2", "b", "vital", 10000, 500, 99)],
+        [("s1", "a", "vital", 1000, 500, 9), ("s2", "b", "vital", 1000, 500, 9)],
+    ],
+)
+def test_rare_cell_patterns_that_stay_below_the_screen(rows):
+    assert grade(rows) == ("below_screen", "none")
+
+
+def test_rare_cell_inputs_are_never_pooled_or_guessed():
+    # Too few cells to place ten at 1%: unmeasured, never negative.
+    assert grade([("s1", "a", "vital", 999, 999, 999)]) == ("unassessed", "none")
+    assert grade([]) == ("unassessed", "none")
+    frame = rare(TWO_STUDIES)
+    with pytest.raises(ValueError, match="explicit boolean"):
+        policy.assess_rare_cell_rna(frame, mapping_risk=None, confirmed_tissues=set())
+    with pytest.raises(ValueError, match="One row per donor"):
+        policy.assess_rare_cell_rna(
+            pd.concat([frame, frame]), mapping_risk=False, confirmed_tissues=set()
+        )
+    frame.loc[1, "gene_id"] = "ENSG2"
+    with pytest.raises(ValueError, match="one gene at a time"):
+        policy.assess_rare_cell_rna(frame, mapping_risk=False, confirmed_tissues=set())
+    with pytest.raises(ValueError, match="n_multi <= n_positive"):
+        grade([("s1", "a", "vital", 100, 5, 6)])
+
+
 def test_generated_definition_is_the_runtime_contract():
-    path = Path(__file__).parents[1] / "docs/audits/target-selection-20261109/definition.json"
+    path = Path(__file__).parents[1] / "docs/audits/target-selection-20261110/definition.json"
     assert json.loads(path.read_text()) == policy.definition()
 
 
@@ -227,7 +309,7 @@ def test_report_embeds_both_figures_without_conflicting_svg_ids():
                 self.ids.append(dict(attrs)["id"])
 
     parser = Parser()
-    path = Path(__file__).parents[1] / "docs/audits/target-selection-20261109/report.html"
+    path = Path(__file__).parents[1] / "docs/audits/target-selection-20261110/report.html"
     parser.feed(path.read_text())
     assert parser.figures == 2
     assert len(parser.ids) == len(set(parser.ids))

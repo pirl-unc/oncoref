@@ -7,7 +7,9 @@ theme:
 nav:
   - Home: index.md
   - Cancer and Reproductive Antigens: target-selection.md
-  - Rebuilt antigen catalog: audits/target-selection-20261109/rebuild/index.md
+  - Antigen catalog and curation funnel: audits/target-selection-20261110/rebuild/index.md
+  - Rare normal-cell RNA by donor: audits/normal-cell-atlas-20261110/rare-cell/index.md
+  - Draft catalog 2026-11-09: audits/target-selection-20261109/rebuild/index.md
   - Cancer antigen support audit: audits/target-selection-20261109/scrutiny/index.md
   - Thresholds and patient identity: audits/target-selection-20261109/policy-reference/index.md
   - Published targets and normal peaks: audits/target-selection-20261109/category-profiles/index.md

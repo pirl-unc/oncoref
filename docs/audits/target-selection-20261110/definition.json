@@ -1,0 +1,105 @@
+{
+  "policy_id": "oncoref.target-selection.2026-11-10.1",
+  "status": "research_catalog_rebuilt",
+  "species": "human",
+  "categories": [
+    "CTA",
+    "Cancer Antigen only",
+    "Reproductive Antigen only",
+    "Other",
+    "Unsafe"
+  ],
+  "shared_checks": [
+    "normal_screen_pass",
+    "required_coverage_complete",
+    "identity_translation_pass",
+    "evidence_resolved",
+    "expression_bounds_pass",
+    "sequence_pass"
+  ],
+  "sets": {
+    "Cancer Antigens": "eligible AND cancer evidence qualifies",
+    "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
+    "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
+    "Target candidates": "Cancer Antigens UNION Reproductive Antigens"
+  },
+  "precedence": [
+    "Unsafe",
+    "Other:Review",
+    "Other:Sequence",
+    "set memberships"
+  ],
+  "other_subtypes": {
+    "Review": "Required evidence is missing, unresolved, or fails a shared admission check.",
+    "Sequence": "Nested protein without independent support or >=95% Unsafe 9-mer containment.",
+    "Expression": "Neither positive expression route qualifies, or the target maximum or Disposable cap fails."
+  },
+  "expression_bounds": {
+    "target_maximum": "max(tumor, adult reproductive, developmental) >= 1 and above every measured nonreproductive normal and Disposable value on the comparison scale.",
+    "disposable_cap_tpm": 32.0,
+    "disposable_cap_ntpm": 32.0,
+    "cap_scope": "Each source scale separately; a screening convention, not a tolerance.",
+    "failure": "Other:Expression"
+  },
+  "rare_cell_rna": {
+    "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
+    "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
+    "replication": "The signal in >= 2 independent studies of the same organ. Donors of one study share its libraries and reference.",
+    "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. It can reach review, never Unsafe.",
+    "single_molecules": "Cells with one molecule never change a category. A mis-assigned read from a paralog, pseudogene or overlapping gene produces exactly this pattern.",
+    "mapping_risk": "Shared transcript sequence with another locus, or an exon inside another same-strand gene. A flagged gene cannot be established from counts.",
+    "confirmation": "Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets. Accepted protein evidence is assessed by its own rules.",
+    "established": "Replicated signal, no mapping risk, and confirmation.",
+    "unresolved": "A replicated signal lacking a clean mapping or confirmation, or a frequent signal from one study.",
+    "consequences": {
+      "established Vital": "Unsafe",
+      "established Protected": "Other:Review",
+      "unresolved Vital": "Other:Review",
+      "unresolved Protected": "recorded; no category effect",
+      "below_screen": "No finding. Not a demonstration of absence or safety.",
+      "unassessed": "Recorded as unmeasured; never treated as negative."
+    },
+    "reported_sensitivity_cutoffs_pct": [
+      1,
+      2,
+      5
+    ],
+    "release": "Read-level review settles an unresolved signal: unique alignment and exonic or splice-spanning reads establish it; their absence dismisses it with the evidence.",
+    "interpretation": "Detection frequency measures captured RNA, not the fraction of cells producing protein. No cutoff is a calibrated toxicity threshold."
+  },
+  "cancer_rna": {
+    "detection_floor": 1.0,
+    "independent_participants_required": 2,
+    "repeated_rule": "T >= 1 AND T > N in at least two independent participants",
+    "single_tumor_fold": 10.0,
+    "single_rule": "T >= 10 * max(N, 1) in at least one qualified tumor sample",
+    "normal_reference": "Maximum QC-passing, identity-resolved measurement in the declared compatible normal panel, excluding specifically allowed Disposable and reproductive compartments.",
+    "comparability": "One documented comparison scale and complete required normal contexts. Equal unit names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling.",
+    "missing_reference": "unassessed, never zero",
+    "alternative": "Reviewed reliable tumor protein with exact identity and source scope."
+  },
+  "reproductive_evidence": {
+    "branches": [
+      "adult reproductive",
+      "placental",
+      "extraembryonic",
+      "embryonic",
+      "fetal"
+    ],
+    "rna_detection_floor": 1.0,
+    "bulk": "Mapped human reproductive compartment >=1 native TPM/nTPM.",
+    "cell": "Mapped reproductive cells >=1 native TPM/nTPM and >=20 reads.",
+    "developmental": "Human stage/lineage mean >=1 TPM, >=20 cells, >=5 cells at >=1 TPM, and >=10% cells at >=1 TPM. Retain embryos, donors and stage.",
+    "protein": "Reliable mapped reproductive IHC or reviewed human reproductive protein.",
+    "concentration": "Descriptive measurement; not an admission gate for either set."
+  },
+  "shared_normal_policy": {
+    "policy_id": "oncoref.cta-selection.2026-11-08.1",
+    "scope": "Normal assessment only; legacy cancer, reproductive and concentration gates excluded.",
+    "allowances": "Same resolved reproductive and Disposable compartment allowances for both sets. Immune, endothelial and other protected cells do not inherit an organ's allowance.",
+    "threshold_interpretation": "RNA/IHC cutoffs are screening conventions, not measured injury thresholds. Negative IHC does not establish a calibrated safety margin."
+  },
+  "translation": "Qualifying coding reference or supported noncanonical ORF plus complete approved MANE-first/canonical representative; resolve conflicting coding evidence. Experimental protein detection is retained separately.",
+  "published_target_support": "Positive evidence annotation for a curated, exact-scope target nomination. Preserve every protein-paper link and its attested claim; biology or background-table coverage alone is not a target nomination. Publication cannot override an exclusion or hold.",
+  "only_meaning": "Membership in one qualified set, not proven absence from the other context."
+}

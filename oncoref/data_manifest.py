@@ -418,6 +418,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "unreviewed single-cell screen of rare normal-cell expression for CTA and Held proteins, with source rules and limits",
     ),
+    "target-selection": (
+        "cta",
+        "Cancer and Reproductive Antigen catalog for every human protein record, with set memberships, evidence receipts and paper links",
+    ),
+    "rare-cell-evidence": (
+        "cta-evidence",
+        "per-donor rare normal-cell RNA grades with multi-molecule support, study replication, mapping-risk flags and bulk confirmation",
+    ),
+    "gene-mapping-risk": (
+        "cta-evidence",
+        "per-gene shared transcript sequence and same-strand host overlap that can mis-assign sparse single-cell reads",
+    ),
     "cta-ihc-compartments": (
         "cta-evidence",
         "source-specific RNA/IHC compartment correspondences with citations and coverage limits",

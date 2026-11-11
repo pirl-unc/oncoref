@@ -20,7 +20,11 @@ def profiles():
 
 
 def test_audit_does_not_reclassify_proteins(profiles):
-    current = target_selection.results().set_index("entity_id")
+    # A dated audit of the 2026-11-09.1 draft; compare with that preserved catalog.
+    current = pd.read_csv(
+        ROOT / "docs/audits/target-selection-20261109/rebuild/packaged-catalog-2026-11-09.1.csv.gz",
+        low_memory=False,
+    ).set_index("entity_id")
     observed = profiles.set_index("entity_id")
     assert observed.index.is_unique and set(observed.index) == set(current.index)
     assert observed.classification.equals(current.classification.reindex(observed.index))

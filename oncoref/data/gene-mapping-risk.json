@@ -1,0 +1,19 @@
+{
+  "schema": "oncoref.gene-mapping-risk",
+  "ensembl_release": 115,
+  "k": 31,
+  "three_prime_window": 1000,
+  "shared_fraction_flag": 0.1,
+  "strand": "sense k-mers only; the assays are stranded",
+  "genes": 1862,
+  "unannotated": 0,
+  "paralog_ambiguous": 612,
+  "host_overlapped": 638,
+  "mapping_risk": 1113,
+  "limitations": [
+    "Exact shared k-mers; diverged or unannotated paralogous sequence is not found",
+    "A flag marks a possible confounder, not a demonstrated mis-assignment",
+    "An unflagged gene can still collect intronic or genomic-DNA reads"
+  ],
+  "sha256": "01df20663a0e4860862e49082d5cbe8dc404c57cbc1d408548a1f64efeb90154"
+}

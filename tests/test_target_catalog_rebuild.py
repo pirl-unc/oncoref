@@ -13,7 +13,7 @@ from oncoref import samples as sample_api
 from oncoref import target_selection as policy
 
 ROOT = Path(__file__).parents[1]
-OUT = ROOT / "docs/audits/target-selection-20261109/rebuild"
+OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 sys.path.insert(0, str(ROOT / "scripts"))
 from rebuild_target_catalog import group_normal_rows, participant_id  # noqa: E402
 
@@ -28,19 +28,24 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     genes = [g for ids in catalog.member_gene_ids for g in json.loads(ids)]
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
-        "Unsafe": 18259,
-        "Other": 714,
-        "CTA": 638,
-        "Cancer Antigen only": 260,
-        "Reproductive Antigen only": 22,
+        "Unsafe": 18130,
+        "Other": 873,
+        "CTA": 616,
+        "Cancer Antigen only": 244,
+        "Reproductive Antigen only": 30,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
         catalog.is_cancer_antigen | catalog.is_reproductive_antigen
     )
     assert catalog.loc[catalog.is_target_candidate, list(policy.SHARED_CHECKS)].all().all()
-    assert catalog.category.eq("Unsafe").equals(catalog.released_category.eq("Unsafe"))
-    assert len(policy.results(changed_only=True)) == 347
+    # Only the rare-cell regrade changes Unsafe membership.
+    unsafe, released = catalog.category.eq("Unsafe"), catalog.released_category.eq("Unsafe")
+    assert (released & ~unsafe).sum() == 130
+    assert catalog.loc[released & ~unsafe, "legacy_exclusion_reasons"].str.contains("Rare").all()
+    assert catalog.loc[unsafe & ~released, "protein_group_label"].tolist() == ["CBY3"]
+    assert catalog.loc[unsafe & ~released, "rare_cell_status"].tolist() == ["established"]
+    assert len(policy.results(changed_only=True)) == 507
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -48,15 +53,27 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
-    for name in ["H2BW2", "HUS1B", "OR2B2", "TMEM269", "SSU72L2"]:
+    for name in ["H2BW2", "HUS1B", "OR2B2", "SSU72L2", "PRAME", "MAGEA4", "CTAG2"]:
         assert by_name.loc[name, "category"] == "CTA"
+    # Replicated multi-molecule RNA that mapping or bulk evidence cannot yet settle.
+    for name in ["TMEM269", "PLAC1", "KRTAP5-11", "TAS2R1"]:
+        assert by_name.loc[name, "classification"] == "Other:Review"
+        assert by_name.loc[name, "rare_cell_status"] == "unresolved"
+    assert "same-strand gene" in by_name.loc["TAS2R1", "rare_cell_unresolved_because"]
+    assert "another locus" in by_name.loc["KRTAP5-11", "rare_cell_unresolved_because"]
+    # Single-molecule detection alone no longer excludes.
+    assert by_name.loc["MAGEA12", "rare_cell_status"] == "below_screen"
+    assert by_name.loc["MAGEA12", "max_multi_molecule_pct"] < 1
+    assert by_name.loc["MAGEA12", "category"] == "CTA"
     assert by_name.loc["EGFL6", "category"] == "Unsafe"
-    assert set(
+    held = set(
         catalog.loc[
             catalog.released_category.eq("CTA") & catalog.category.eq("Other"),
             "protein_group_label",
         ]
-    ) == {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
+    )
+    assert len(held) == 50
+    assert held >= {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
     assert by_name.loc["CDY1B", "cancer_evidence"] == "does_not_qualify"
     assert by_name.loc["CDY1B", "tumor_max_tpm"] < 1
     assert by_name.loc["CDY1B", "category"] == "Reproductive Antigen only"
@@ -74,7 +91,13 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
-    assert len(maxima) == summary["shared_eligible"] == 957
+    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 936
+    assert summary["shared_eligible"] == 926
+    assert summary["expression_bounds"]["fail"] == 10
+    failed = catalog[catalog.expression_bounds_status.eq("fail")]
+    assert (
+        not failed.is_target_candidate.any() and failed.classification.eq("Other:Expression").all()
+    )
     for _, group in normal.groupby("entity_id"):
         assert required <= set(group.context_id)
     assessed = catalog[catalog.normal_reference_tpm.notna()].set_index("entity_id")
@@ -90,7 +113,7 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
             observations.value.ge(1) & observations.value.gt(row.normal_reference_tpm)
         ]
         patients = above.loc[above.participant_id.ne(""), "participant_id"].nunique()
-        single = observations.value.ge(5 * max(row.normal_reference_tpm, 1)).any()
+        single = observations.value.ge(10 * max(row.normal_reference_tpm, 1)).any()
         assert patients >= 2 or single, row.protein_group_label
     samples = pd.read_csv(OUT / "tumor-samples.csv.gz")
     assert samples.sample_key.is_unique
@@ -98,7 +121,8 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
 
 
 def test_missing_comparison_is_not_reported_as_zero(catalog):
-    failed = ~catalog[list(policy.SHARED_CHECKS)].all(axis=1) | catalog.category.eq("Unsafe")
+    prior = [c for c in policy.SHARED_CHECKS if c != "expression_bounds_pass"]
+    failed = ~catalog[prior].all(axis=1) | catalog.category.eq("Unsafe")
     assert catalog.loc[failed, "normal_reference_tpm"].isna().all()
     assert catalog.loc[failed, "tumor_max_tpm"].isna().all()
     coverage = pd.read_csv(OUT / "tumor-source-coverage.csv")
@@ -123,7 +147,7 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 408
+    assert catalog[catalog.is_cta].published_nomination.sum() == 401
     assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 24
 
 

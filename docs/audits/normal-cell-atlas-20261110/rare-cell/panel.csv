@@ -1,0 +1,9 @@
+tissue,tier,cells,cell_types,collections
+brain,protected,9072,1,5
+brain,vital,2529631,54,25
+heart,protected,51,1,1
+heart,vital,667110,24,12
+lung,protected,38764,12,14
+lung,vital,277182,27,15
+spinal cord,protected,147,1,1
+spinal cord,vital,4812,9,2

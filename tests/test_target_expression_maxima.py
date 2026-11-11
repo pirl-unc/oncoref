@@ -67,4 +67,7 @@ def test_counterfactual_report_counts_and_fingerprints():
         ("outputs_sha256", OUT),
     ]:
         for path, expected in manifest[section].items():
+            if path == "oncoref/data/target-selection.csv.gz":
+                # The audit read the 2026-11-09.1 draft catalog, preserved beside it.
+                path = "docs/audits/target-selection-20261109/rebuild/packaged-catalog-2026-11-09.1.csv.gz"
             assert hashlib.sha256((base / path).read_bytes()).hexdigest() == expected, path
