@@ -16,7 +16,7 @@ Policy `oncoref.target-selection.2026-11-10.1`. **641 CTA, 248 Cancer Antigen on
 | Nested or Unsafe-contained sequence | Other:Sequence | 42 | 935 |
 | No qualifying expression, target maximum or Disposable cap | Other:Expression | 15 | 920 |
 
-The 920 remaining Target candidates are 641 CTA, 248 Cancer Antigen only and 31 Reproductive Antigen only. [Funnel table](funnel.csv).
+The 920 remaining Target candidates are 641 CTA, 248 Cancer Antigen only and 31 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
 
 ![Rebuilt counts](counts.png)
 

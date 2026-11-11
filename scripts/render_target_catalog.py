@@ -17,6 +17,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+import render_curation_summary  # noqa: E402
+
 from oncoref import cta_literature, target_selection  # noqa: E402
 
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
@@ -341,7 +343,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         + funnel_rows
         + f"\n\nThe {members['is_target_candidate']} remaining Target candidates are "
         f"{counts['CTA']} CTA, {counts['Cancer Antigen only']} Cancer Antigen only and "
-        f"{counts['Reproductive Antigen only']} Reproductive Antigen only. [Funnel table](funnel.csv).\n\n"
+        f"{counts['Reproductive Antigen only']} Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).\n\n"
         "![Rebuilt counts](counts.png)\n\n"
         "## The filters\n\n"
         "| Filter | Rule | Failure |\n|---|---|---|\n"
@@ -458,9 +460,11 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         + "\n\nSummaries, every evidence item and its quote are in "
         "`oncoref/data/normal-expression-literature.json`.\n"
     )
+    render_curation_summary.build()
     implementation = [
         "scripts/rebuild_target_catalog.py",
         "scripts/render_target_catalog.py",
+        "scripts/render_curation_summary.py",
         "scripts/build_rare_cell_evidence.py",
         "scripts/build_gene_mapping_risk.py",
         "scripts/build_cta_candidate_evidence.py",
