@@ -2,8 +2,8 @@
 
 **1,804 proteins were graded from 13,581,391 adult cells and nuclei of
 1,779 donors in 93 collections, plus the directly analysed
-Siletti cerebellar granule nuclei. 132 have established normal-cell RNA and are
-Unsafe; 264 have a signal that is dismissed with its reason.** Category
+Siletti cerebellar granule nuclei. 129 have established normal-cell RNA and are
+Unsafe; 267 have a signal that is dismissed with its reason.** Category
 consequences are in the [catalog rebuild](../../target-selection-20261110/rebuild/index.md).
 
 A count matrix cannot show where a read aligned. One mis-assigned read per cell, from a
@@ -14,7 +14,7 @@ terminal; nothing waits for review.
 | Question | Requirement |
 |---|---|
 | Is there a signal? | >= 1% of a donor's cells and >= 10 cells carry >= 2 molecules. Protected populations need 2 times these frequencies. |
-| Is it replicated? | The signal in >= 2 independent studies of the same organ. Donors of one study share its libraries and reference. Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. |
+| Is it replicated? | The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. |
 | Could the reads belong elsewhere? | Shared transcript sequence with another locus, or an exon inside another same-strand gene. Counts for a flagged gene cannot be attributed to it. |
 | Does another assay agree? | Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment. |
 | Is it published? | Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts. |
@@ -37,9 +37,9 @@ genes stay unassessed.
 |---|---|---|---:|
 | below_screen | — | none | 1,372 |
 | dismissed | protected | none | 12 |
-| dismissed | vital | none | 252 |
+| dismissed | vital | none | 255 |
 | established | protected | unsafe | 5 |
-| established | vital | unsafe | 127 |
+| established | vital | unsafe | 124 |
 | unassessed | — | none | 36 |
 
 ## Mapping risk
@@ -155,7 +155,6 @@ not graded.
 | C9orf57 | brain: oligodendrocyte | 3 / 21 | 74/1,608 (4.6%) | 0 | replicated signal at a locus without mapping risk |
 | AADACL4 | eye: retinal pigment epithelial cell | 2 / 8 | 126/2,751 (4.6%) | — | replicated signal at a locus without mapping risk |
 | ASZ1 | brain: oligodendrocyte | 2 / 53 | 50/1,141 (4.4%) | 0 | replicated signal at a locus without mapping risk |
-| LRRIQ4 | brain: astrocyte | 2 / 2 | 65/1,508 (4.3%) | 0.052 | replicated signal at a locus without mapping risk |
 | GARIN1B | brain: dopaminergic neuron | 3 / 8 | 82/1,912 (4.3%) | 0.73 | replicated signal at a locus without mapping risk |
 | C16orf96 | eye: Mueller cell | 8 / 25 | 57/1,361 (4.2%) | — | replicated signal at a locus without mapping risk |
 | LRRC72 | brain: GABAergic neuron | 3 / 8 | 46/1,174 (3.9%) | 0.04 | replicated signal at a locus without mapping risk |
@@ -197,11 +196,9 @@ not graded.
 | ROPN1B | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 8 | 30/1,938 (1.5%) | 1.7 | signal confirmed by bulk RNA (sequence shared with another locus) |
 | LRRC74A | heart: cardiac endothelial cell | 2 / 3 | 44/2,891 (1.5%) | 0 | replicated signal at a locus without mapping risk |
 | C18orf63 | lung: pulmonary alveolar type 2 cell | 2 / 4 | 49/3,297 (1.5%) | 0.055 | replicated signal at a locus without mapping risk |
-| PRAME | eye: melanocyte | 2 / 2 | 15/1,026 (1.5%) | — | replicated signal at a locus without mapping risk |
 | MGAT4D | brain: astrocyte | 3 / 3 | 22/1,612 (1.4%) | 0.02 | replicated signal at a locus without mapping risk |
 | C1orf94 | brain: oligodendrocyte | 2 / 3 | 16/1,198 (1.3%) | 0.58 | replicated signal at a locus without mapping risk |
 | ACRV1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 3 | 18/1,362 (1.3%) | 1.6 | replicated signal at a locus without mapping risk |
-| EXD1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 2 | 16/1,285 (1.2%) | 0.16 | replicated signal at a locus without mapping risk |
 | AWAT1 | eye: retinal cone cell | 2 / 2 | 17/1,447 (1.2%) | — | replicated signal at a locus without mapping risk |
 | MAGEA12 | brain: pericyte | 0 / 0 | 5/1,263 (0.4%) | 0.3 | detection confirmed by a published gene-specific assay (sequence shared with another locus | exon inside another same-strand gene) |
 
@@ -414,8 +411,8 @@ not graded.
 | BTNL2 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 1 / 16 | 61/1,093 (5.6%) | 0.27 | one study only; no bulk RNA |
 | ENSG00000259066 | brain: dopaminergic neuron | 5 / 45 | 106/1,912 (5.5%) | 0 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | ENSG00000198211 | eye: amacrine cell | 1 / 4 | 82/1,529 (5.4%) | — | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus | exon inside another same-strand gene) |
-| ENSG00000254553 | brain: dopaminergic neuron | 6 / 78 | 100/1,912 (5.2%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | POM121L2 | brain: dopaminergic neuron | 1 / 5 | 100/1,912 (5.2%) | 0.048 | one study only; no bulk RNA |
+| ENSG00000254553 | brain: dopaminergic neuron | 6 / 78 | 100/1,912 (5.2%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | ENSG00000267477 | eye: amacrine cell | 1 / 3 | 94/1,805 (5.2%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | ENSG00000269179 | eye: conjunctival epithelial cell | 2 / 3 | 64/1,249 (5.1%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | RGSL1 | brain: lamp5 GABAergic cortical interneuron | 4 / 26 | 102/2,004 (5.1%) | 0.012 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
@@ -423,13 +420,14 @@ not graded.
 | ENSG00000267881 | colon: intestinal crypt stem cell of colon | 1 / 1 | 66/1,305 (5.1%) | 0 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | ENSG00000286239 | eye: melanocyte | 2 / 6 | 149/2,953 (5.0%) | — | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus | exon inside another same-strand gene) |
 | ENSG00000286022 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 65 | 68/1,362 (5.0%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
-| ENSG00000267179 | brain: glutamatergic neuron | 3 / 19 | 79/1,621 (4.9%) | 0 | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus | exon inside another same-strand gene) |
 | ENSG00000249773 | brain: glutamatergic neuron | 4 / 35 | 79/1,621 (4.9%) | 0.5 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
+| ENSG00000267179 | brain: glutamatergic neuron | 3 / 19 | 79/1,621 (4.9%) | 0 | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus | exon inside another same-strand gene) |
 | DUX4 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 14 | 63/1,326 (4.8%) | 0 | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus) |
 | ZNF99 | kidney: kidney loop of Henle thick ascending limb epithelial cell | 4 / 8 | 54/1,165 (4.6%) | 0.1 | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus) |
 | OOSP1 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 3 / 16 | 687/15,320 (4.5%) | 0.11 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | VCX3B | eye: retinal ganglion cell | 2 / 3 | 315/7,102 (4.4%) | — | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus) |
 | ENSG00000260371 | brain: glutamatergic neuron | 4 / 23 | 70/1,621 (4.3%) | 0.1 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
+| LRRIQ4 | brain: astrocyte | 2 / 2 | 65/1,508 (4.3%) | 0.052 | two donors in different cell types; no bulk RNA |
 | CTAG2 | lung: pulmonary alveolar type 2 cell | 2 / 3 | 166/3,865 (4.3%) | 0 | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus) |
 | ENSG00000272442 | brain: glutamatergic neuron | 4 / 40 | 110/2,606 (4.2%) | — | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus | exon inside another same-strand gene) |
 | FAM90A26 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 3 / 13 | 46/1,093 (4.2%) | 0.026 | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus) |
@@ -469,7 +467,9 @@ not graded.
 | ENSG00000285446 | eye: conjunctival epithelial cell | 2 / 2 | 27/1,740 (1.6%) | — | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus | exon inside another same-strand gene) |
 | ZNF705G | eye: Mueller cell | 2 / 4 | 18/1,221 (1.5%) | — | counts cannot be attributed to this locus; no bulk RNA (sequence shared with another locus) |
 | ENSG00000258064 | brain: dopaminergic neuron | 2 / 4 | 28/1,912 (1.5%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
+| PRAME | eye: melanocyte | 2 / 2 | 15/1,026 (1.5%) | — | two donors in different cell types; no bulk RNA |
 | ENSG00000256966 | brain: glutamatergic neuron | 3 / 5 | 35/2,606 (1.3%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
+| EXD1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 2 | 16/1,285 (1.2%) | 0.16 | two donors in different cell types; no bulk RNA |
 | ENSG00000248993 | brain: dopaminergic neuron | 2 / 3 | 24/2,117 (1.1%) | 0 | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | ENSG00000283580 | brain: glutamatergic neuron | 2 / 4 | 13/1,168 (1.1%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |
 | ENSG00000272647 | brain: astrocyte | 2 / 2 | 16/1,508 (1.1%) | — | counts cannot be attributed to this locus; no bulk RNA (exon inside another same-strand gene) |

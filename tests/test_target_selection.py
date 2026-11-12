@@ -250,6 +250,19 @@ def test_rare_cell_outcomes_are_terminal_and_explained():
     # Two donors of one study share its libraries and reference.
     one_study = [("s1", d, *rest) for _, d, *rest in TWO_STUDIES]
     assert grade(one_study) == ("below_screen", "none")
+    # One donor in each of two studies, in different cell types, agrees only on the organ.
+    apart = rare(TWO_STUDIES)
+    apart.loc[1, "cell_type"] = "astrocyte"
+    kwargs = {"mapping_risk": False, "confirmed_tissues": set()}
+    lone = policy.assess_rare_cell_rna(apart, **kwargs)
+    assert (lone["status"], lone["action"]) == ("dismissed", "none")
+    assert "different cell types" in lone["findings"][0]["basis"]
+    assert not lone["findings"][0]["replicated"]
+    confirmed = policy.assess_rare_cell_rna(apart, mapping_risk=False, confirmed_tissues={"brain"})
+    assert confirmed["status"] == "established"
+    # A third donor replicates it, whatever the cell type.
+    third = pd.concat([apart, apart.iloc[[1]].assign(donor_id="c", cell_type="oligodendrocyte")])
+    assert policy.assess_rare_cell_rna(third, **kwargs)["status"] == "established"
     # Unreplicated, a signal must be frequent, and still needs bulk confirmation.
     assert grade([("s1", "a", "vital", 5000, 400, 249)]) == ("below_screen", "none")
     assert grade([("s1", "a", "vital", 5000, 400, 250)]) == ("established", "unsafe")

@@ -5,9 +5,9 @@ Antigens. Both sets use the same normal-tissue, coverage, translation and sequen
 requirements. Their union is called Target candidates.**
 
 The catalog is built under `oncoref.target-selection.2026-11-10.1`:
-**623 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
-18,244 Unsafe**. That gives 868 Cancer Antigens, 654 Reproductive Antigens and
-899 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+**626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
+18,241 Unsafe**. That gives 871 Cancer Antigens, 657 Reproductive Antigens and
+902 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot. The counts describe rule matches, not
@@ -91,7 +91,7 @@ looks exactly like sparse expression. The grade therefore asks four questions.
 | Question | Requirement |
 |---|---|
 | Is there a signal? | At least 1% of a donor's cells, and at least ten, carry two or more molecules. Cells with one molecule never change a category. Protected populations need twice the frequency. |
-| Is it replicated? | The signal appears in two or more independent studies of the same organ. Donors of one study share its libraries and reference. Without replication, only a signal in at least 5% of a donor's cells counts. |
+| Is it replicated? | The signal appears in two or more independent studies of the same organ, and the studies agree on a cell type or include at least three donors. Donors of one study share its libraries and reference. One donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, only a signal in at least 5% of a donor's cells counts. |
 | Could the reads belong elsewhere? | The gene shares at least 10% of its transcript 31-mers, or of its 3′ kilobase, with another locus, or has an exon inside another same-strand gene. |
 | Does another assay agree? | Bulk RNA of at least 1 TPM in the same organ in both the HPA and GTEx sample sets. |
 | Is it published? | A reviewed paper reports the gene in the same organ by a gene-specific assay. |
@@ -109,25 +109,31 @@ toxicity threshold. Detection at 1%, 2% and 5% stays in the evidence tables as a
 comparison. The mapping flags are properties of the reference, not checks of the
 reads themselves.
 
-Of the 1,804 graded proteins, 132 are established, 264 dismissed and 1,372 below
-the screen; 36 have no measured gene. 70 draft proteins become Unsafe, including
+Of the 1,804 graded proteins, 129 are established, 267 dismissed and 1,372 below
+the screen; 36 have no measured gene. 68 draft proteins become Unsafe, including
 ADAM7, CBY3, ERICH6, TOPAZ1 and WNT8A. PLAC1 stays Unsafe: its signal is replicated
 in four studies at a locus with no mapping risk. TMEM269, TAS2R1 and HHLA1 carry
 dismissed signals and stay candidates. MAGE-A4, CTAG2, NUTM1 and SSX2 stay CTA.
 
-**PRAME is Unsafe under this rule, on thin evidence.** Two donors in two studies of
-the eye carry it in 1.2–1.5% of cells, in different populations (melanocytes and
-optic-nerve oligodendrocytes). That is the minimum the rule accepts. Photoreceptor
-and retinal genes such as CCDC172, SPINT4 and C7orf33 are established on tens of
-donors. The largest remaining gap is the mapping-risk dismissal: DCST1 is seen in
-36% of cone cells across 73 donors and five studies, and stays a candidate because
-one of its exons lies inside another gene.
+**A dismissed signal is a warning, not an exclusion.** It stays on the protein's row
+with its tissue, cell type, donors and reason, so a candidate can be chosen with the
+possible toxicity in view. Exclusion is kept for signals that studies agree on, that
+bulk RNA confirms or that a publication reports. PRAME shows where the line falls.
+Two donors in two studies of the eye carry it in 1.2–1.5% of cells, in different
+populations (melanocytes and optic-nerve oligodendrocytes). Counting that as
+replication made PRAME Unsafe, although PRAME-directed T-cell therapies are given
+to patients. Two lone donors in different cell types are now dismissed; EXD1 and
+LRRIQ4 are released by the same change. Photoreceptor and retinal genes such as
+CCDC172, SPINT4 and C7orf33 stay Unsafe on tens of donors. The largest remaining
+gap is the mapping-risk dismissal: DCST1 is seen in 36% of cone cells across 73
+donors and five studies, and stays a candidate because one of its exons lies inside
+another gene.
 
 ### Published normal expression
 
 A dismissal or a release from the old pooled flag leaves a protein's candidacy
 resting on the absence of evidence, so each such protein is taken through a
-literature review with a fixed rubric. 96 proteins were reviewed.
+literature review with a fixed rubric. 99 proteins were reviewed.
 
 | Rule | Requirement | Effect |
 |---|---|---|
@@ -313,7 +319,7 @@ The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
 1 unit, resolves tumor locus identities and counts confirmed independent patients.
-All 946 proteins passing the prior shared checks have complete native-TPM comparison
+All 949 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
 The 130 included tumor cohort views are deduplicated by physical sample and known

@@ -69,7 +69,7 @@ def test_every_signal_is_established_or_dismissed_with_a_basis(evidence):
 def test_literature_review_covers_every_dependent_candidate_and_follows_its_rubric():
     document = json.loads((DATA / "normal-expression-literature.json").read_text())
     entries = pd.DataFrame(document["entries"])
-    assert entries.entity_id.is_unique and len(entries) == 96
+    assert entries.entity_id.is_unique and len(entries) == 99
     catalog = policy.results()
     reviewed = catalog[catalog.literature_effect.ne("not_reviewed")]
     assert set(reviewed.entity_id) == set(entries.entity_id)

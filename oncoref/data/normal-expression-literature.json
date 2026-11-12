@@ -9,7 +9,7 @@
   "R3": "Human loss of function causes disease of a Vital tissue, and the ortholog is expressed in that adult tissue. Unsafe.",
   "none": "No publication, restriction to germline, placenta or embryo, conflicting reports, assays shared with paralogs, cultured or diseased samples, other species alone, or database annotation alone. Recorded; no category effect."
  },
- "method": "Web literature search by Claude subagents on 2026-11-10, and on 2026-11-11 for the 21 proteins whose signal the whole-body panel dismissed; each claim carries the URL opened and the quote returned.",
+ "method": "Web literature search by Claude subagents on 2026-11-10, and on 2026-11-11 for the 21 proteins whose signal the whole-body panel dismissed, and for the 3 proteins released when two lone donors in different cell types stopped counting as replication; each claim carries the URL opened and the quote returned.",
  "limitations": [
   "Many pages were read through a fetch tool that summarizes, so quotes are as that tool relayed them",
   "Several papers were read at abstract level because full text was blocked; each evidence item says so",
@@ -4947,6 +4947,320 @@
      "quote": "Estimation of protein expression could not be performed.",
      "paralog_specific": null,
      "limitations": "RNA category is derived from HPA/GTEx bulk data already used as a numeric filter; not new evidence."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:92c0ae3f131964f8a71d",
+   "protein": "PRAME",
+   "gene_ids": [
+    "ENSG00000185686"
+   ],
+   "verdict": "conflicting_or_nonspecific",
+   "reported_tissue": "brain, kidney, skin (RT-PCR, Ikeda 1997 as curated by UniProt; full text not opened); adrenal cortex (IHC, Lezcano 2021); each contradicted by the Kaczorowski 2022 IHC panel. No report in normal retina or uvea.",
+   "summary": "Reports conflict. Positive side: UniProt, citing the discovery paper (Ikeda 1997), says PRAME is expressed in testis and 'detected in samples of kidney, brain and skin'; the paper's abstract says only 'some normal tissues, albeit at a lower level' and I could not open its full text (publisher 403, no open copy), so tissue-level amounts are unverified. Later reviews cite the same paper for low RNA in adrenal, ovary and endometrium, and Lezcano 2021 (abstract only) reports PRAME protein by IHC 'at low levels in the endometrium, adrenal cortex, and adult as well as fetal ovary'. Negative side: Kaczorowski 2022 (full text; EP461 antibody, 70 normal tissues) found nuclear staining only in testis, endometrium, placental decidua and corpus luteum granulosa cells, and states kidney, adrenal, liver, lung alveoli and brain were negative; a SAGE plus real-time PCR study (Boon 2003, abstract) lists PRAME among genes with little or no expression in normal adult brain regions; HPA IHC (Enhanced) annotates testis only. Eye: no source reports PRAME in normal retina, choroid or uveal melanocytes; short-term cultured normal uveal melanocytes had undetectable PRAME RNA with a hypermethylated promoter, and conjunctival/cutaneous findings are limited to rare PRAME-positive junctional melanocytes in nevi, solar lentigines and sun-damaged skin (lesional or adjacent-to-melanoma tissue). Kidney: PRAME-specific T cells showed low reactivity to cultured kidney epithelial cells (Amir 2011) and the IMA203 TCR gave a very low signal on cultured renal cortical epithelial cells from one of two donors. No human loss-of-function disease is listed in UniProt. Clinically, PRAME TCR-T cells (IMA203, 40 patients, up to 8.8e9 cells) were reported safe with no specific renal toxicity; the trial papers do not attribute any event to on-target, off-tumour recognition.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Conflicting reports, so no rule fires. Brain, kidney and skin are attributed to the 1997 discovery paper only through UniProt's annotation; its full text was not opened, so tissue levels are unverified. A 70-tissue IHC series (Kaczorowski 2022) found no staining in brain, kidney or adrenal, and Boon 2003 found little or no RNA in normal brain. Low adrenal staining (Lezcano 2021, abstract) is contradicted by the same series. No report in normal eye. PRAME-directed T-cell therapy trials report no dose-limiting on-target toxicity in these tissues. Neither negative series excludes a 1-4% neuronal subpopulation.",
+   "evidence": [
+    {
+     "source_title": "UniProt P78395 (PRAME_HUMAN) tissue specificity",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:PRAME+AND+organism_id:9606+AND+reviewed:true&fields=accession,gene_names,cc_tissue_specificity,cc_disease",
+     "assay": "curated annotation with experimental evidence code, citing PubMed 9047241 (RT-PCR/northern in the original paper)",
+     "tissue": "testis; kidney, brain, skin",
+     "finding": "States testis expression and detection in kidney, brain and skin samples; disease field empty.",
+     "quote": "TISSUE SPECIFICITY: Expressed in testis. Detected in samples of kidney, brain and skin. {ECO:0000269|PubMed:9047241}.",
+     "paralog_specific": null,
+     "limitations": "Curated summary, not the primary data; gives no level, sample number or donor age. Does not mention adrenal, ovary or endometrium, which reviews attribute to the same paper."
+    },
+    {
+     "source_title": "Ikeda H et al. Characterization of an antigen that is recognized on a melanoma showing partial HLA loss by CTL expressing an NK inhibitory receptor. Immunity 1997 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/9047241/",
+     "assay": "abstract only (paper used RT-PCR; details not in abstract)",
+     "tissue": "some normal tissues (unnamed in abstract)",
+     "finding": "PRAME expressed in many tumours and in some normal tissues at lower level.",
+     "quote": "It is expressed in a large proportion of tumors and also in some normal tissues, albeit at a lower level.",
+     "paralog_specific": null,
+     "limitations": "FULL TEXT NOT OPENED: cell.com returned HTTP 403 and the only repository copy (UCLouvain DIAL) is restricted. The tissue list and levels (adrenal, ovary, endometrium, kidney, brain, skin) are therefore known only through UniProt and reviews."
+    },
+    {
+     "source_title": "Kaczorowski M et al. PRAME Expression in Cancer. A Systematic Immunohistochemical Study of >5800 Epithelial and Nonepithelial Tumors. Am J Surg Pathol 2022 (full text)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9588667/",
+     "assay": "IHC, EP461 monoclonal, 70 normal tissues in multi-tissue blocks/TMAs; IHC cross-validated by qPCR in 23 tumours",
+     "tissue": "kidney, adrenal, liver, colon, thyroid, prostate, breast, salivary gland (negative)",
+     "finding": "Vital-organ epithelia and mesenchyme including kidney and adrenal were negative.",
+     "quote": "Neither epithelial nor mesenchymal structures of the colonic mucosa, liver, kidney, prostate, breast, thyroid, adrenal and salivary glands were positive.",
+     "paralog_specific": true,
+     "limitations": "Number of samples per normal tissue not given (70 normal tissues in total); TMA cores could miss focal or rare-cell expression; directly contradicts Lezcano 2021 for adrenal cortex. No eye tissue listed. (PMC full text read through NCBI E-utilities efetch, tags stripped.)"
+    },
+    {
+     "source_title": "Kaczorowski 2022 (same paper), brain and lung",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9588667/",
+     "assay": "IHC, EP461",
+     "tissue": "brain, peripheral ganglia, nerves, lung (negative)",
+     "finding": "No staining in brain; alveolar epithelium negative, respiratory epithelium only apical cilia staining; sebaceous glands cytoplasmic staining.",
+     "quote": "No staining was present in the brain, peripheral ganglia, and nerves.",
+     "paralog_specific": true,
+     "limitations": "Brain region and number of samples not stated; a 1-4% subpopulation of cortical neurons with weak nuclear signal could be missed on tissue cores."
+    },
+    {
+     "source_title": "Kaczorowski 2022 (same paper), positive normal tissues",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9588667/",
+     "assay": "IHC, EP461",
+     "tissue": "testis, endometrium, placenta decidua, ovarian corpus luteum",
+     "finding": "Positive normal tissues were all reproductive.",
+     "quote": "Focal and weak PRAME expression was observed in decidua basalis of the placenta and granulosa cells of the ovarian corpus luteum.",
+     "paralog_specific": true,
+     "limitations": "Abstract summarises as 'In normal tissues, PRAME was expressed in the testis and proliferative endometrium.'"
+    },
+    {
+     "source_title": "Lezcano C et al. Immunohistochemical Detection of Cancer-Testis Antigen PRAME. Int J Surg Pathol 2021 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/33890816/",
+     "assay": "IHC with a monoclonal antibody on FFPE normal and tumour tissues (antibody clone not named in abstract)",
+     "tissue": "testis; endometrium, adrenal cortex, adult and fetal ovary (low)",
+     "finding": "PRAME protein at low levels in adrenal cortex, a vital tissue.",
+     "quote": "PRAME protein expression in normal tissues is congruent with original molecular data being present in the testis, and at low levels in the endometrium, adrenal cortex, and adult as well as fetal ovary.",
+     "paralog_specific": true,
+     "limitations": "Abstract only; full text not open access. Extent/intensity in adrenal, number of adrenal samples and which other normal tissues (brain, eye, kidney) were tested are not in the abstract. Contradicted by Kaczorowski 2022 (adrenal negative)."
+    },
+    {
+     "source_title": "Lezcano C et al. PRAME Expression in Melanocytic Tumors. Am J Surg Pathol 2018 (full text, author manuscript)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6631376/",
+     "assay": "IHC, EPR20330 monoclonal, 400 melanocytic tumours plus solar lentigines and non-lesional skin",
+     "tissue": "skin melanocytes",
+     "finding": "Rare isolated PRAME-positive junctional melanocytes in solar lentigines and benign non-lesional sun-damaged skin; no nuclear labelling of other skin cells; sebaceous cytoplasmic labelling judged artefact.",
+     "quote": "Rare isolated junctional melanocytes with immunoreactivity for PRAME were also seen in solar lentigines and benign nonlesional skin.",
+     "paralog_specific": true,
+     "limitations": "Non-lesional skin came from re-excisions of lentigo maligna (sun-damaged, adjacent to melanoma), so not strictly normal. Paper's statement that normal expression includes 'testis, ovary, placenta, adrenals, and endometrium' is cited from earlier RNA work, not tested here. No eye tissue. (PMC full text read through NCBI E-utilities efetch, tags stripped.)"
+    },
+    {
+     "source_title": "Boon K et al. Comparison of medulloblastoma and normal neural transcriptomes identifies a restricted set of activated genes. Oncogene 2003 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/14576832/",
+     "assay": "SAGE across normal adult and paediatric brain regions, real-time PCR verification of selected genes",
+     "tissue": "normal cerebellum and other brain regions",
+     "finding": "PRAME named among genes highly expressed in medulloblastoma within a set selected for little or no expression in normal brain.",
+     "quote": "revealing 30 transcripts with high expression in multiple tumors and little or no expression in the normal cerebellum and other adult and pediatric brain regions",
+     "paralog_specific": null,
+     "limitations": "Abstract only; it does not state that PRAME itself was one of the genes verified by real-time PCR in normal brain. SAGE is not gene-specific and is insensitive to rare cells."
+    },
+    {
+     "source_title": "Gentien D et al. Multi-omics comparison of malignant and normal uveal melanocytes reveals molecular features of uveal melanoma. Cell Rep 2023 (full text)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10598242/",
+     "assay": "RNA-seq and promoter methylation of short-term cultures of normal uveal (choroidal) melanocytes versus uveal melanoma PDX",
+     "tissue": "normal uveal melanocytes (eye)",
+     "finding": "PRAME RNA undetectable and promoter hypermethylated in normal uveal melanocytes.",
+     "quote": "PRAME is associated with a particularly high fold change from undetectable in NM to highly expressed in both PDXs",
+     "paralog_specific": false,
+     "limitations": "Cultured cells and RNA-seq, so not a gene-specific assay on tissue; authors note in vivo profiles remain to be verified. Bears on the donor with PRAME-positive eye melanocytes: literature gives no support for normal uveal melanocyte expression. (PMC full text read through NCBI E-utilities efetch, tags stripped.)"
+    },
+    {
+     "source_title": "LeBlanc RE et al. PRAME immunohistochemistry is useful in the evaluation of conjunctival melanomas, nevi, and primary acquired melanosis. J Cutan Pathol 2021 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/34089198/",
+     "assay": "IHC on 30 conjunctival melanocytic lesions",
+     "tissue": "conjunctiva (benign nevi)",
+     "finding": "Scattered faintly PRAME-positive intraepithelial melanocytes in 6 conjunctival nevi.",
+     "quote": "Scattered, faintly PRAME-positive intraepithelial melanocyte nuclei were identified in six nevi.",
+     "paralog_specific": true,
+     "limitations": "Abstract only; lesional (nevus) tissue, not normal eye; conjunctiva, not retina or uvea. A larger series (Mudhar 2023, abstract, https://pubmed.ncbi.nlm.nih.gov/36804828/) scored 96% of conjunctival nevi and 96% of benign melanoses PRAME score 0."
+    },
+    {
+     "source_title": "Amir AL et al. PRAME-specific Allo-HLA-restricted T cells with potent antitumor reactivity useful for therapeutic T-cell receptor gene transfer. Clin Cancer Res 2011 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/21771875/",
+     "assay": "T-cell reactivity against a panel of non-malignant cell types, with PRAME expression measured in the reactive cells",
+     "tissue": "kidney epithelial cells, mature dendritic cells",
+     "finding": "High-avidity PRAME-specific T cells spared most non-malignant cells but showed low reactivity to kidney epithelial cells and mature DCs, attributed to low PRAME expression.",
+     "quote": "These T cells, however, also exerted low reactivity against mature dendritic cells (DC) and kidney epithelial cells, which was shown to be because of low PRAME expression.",
+     "paralog_specific": true,
+     "limitations": "Abstract only; cultured primary cells, not tissue (rubric: cultured samples do not count). Unfavourable signal nonetheless, and consistent with UniProt's 'kidney'."
+    },
+    {
+     "source_title": "Wermke M et al. Autologous T cell therapy for PRAME+ advanced solid tumors in HLA-A*02+ patients: a phase 1 trial (IMA203). Nat Med 2025 (full text), preclinical section",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12283372/",
+     "assay": "Mass-spectrometry immunopeptidomics of HLA-A*02 normal tissues; IFN-gamma release against primary normal cells",
+     "tissue": "41 normal tissue types (peptide not quantifiable); renal cortical epithelial cells (very low signal)",
+     "finding": "PRAME SLLQHLIGL peptide not quantifiable by MS on normal tissues; TCR unreactive to normal primary cells except very low signal on renal cortical epithelial cells from 1 of 2 donors.",
+     "quote": "Abundant PRAME-004 presentation could be demonstrated on patient-derived native (that is, unmodified, shock-frozen) primary tumor tissue and metastases while not quantifiable on 41 different normal tissue types",
+     "paralog_specific": true,
+     "limitations": "Sponsor-authored; 'not quantifiable' is a sensitivity-limited statement about one HLA-A*02 peptide, not absence of the protein; the list of 41 tissues is in a supplement I did not open. Introduction of the same paper states expression 'is limited to testis and at low RNA levels in the endometrium, ovaries, adrenal glands and a few other tissues'. (PMC full text read through NCBI E-utilities efetch, tags stripped.)"
+    },
+    {
+     "source_title": "Human Protein Atlas PRAME (JSON record and tissue page)",
+     "url": "https://www.proteinatlas.org/ENSG00000185686-PRAME/tissue",
+     "assay": "IHC, reliability Enhanced (antibodies HPA045153, HPA068562, CAB080138); RNA summaries",
+     "tissue": "testis",
+     "finding": "Protein annotated in testis seminiferous ducts only; RNA tissue enriched testis 102.1 nTPM; single-nuclei brain 'Cell type enriched' inhibitory neurons 2.3 nCPM.",
+     "quote": "Cytoplasmic expression in seminiferous ducts in testis.",
+     "paralog_specific": null,
+     "limitations": "Read through a summarising fetch tool; per-tissue staining for adrenal, kidney, cortex and skin is shown only graphically and was not extracted; retina marked N/A. Cytoplasmic rather than nuclear pattern differs from the diagnostic antibodies. RNA values are database counts, not literature."
+    },
+    {
+     "source_title": "NCBI Gene 23532 PRAME (RefSeq summary)",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/23532",
+     "assay": "database annotation",
+     "tissue": "normal tissues",
+     "finding": "RefSeq summary asserts testis-only expression.",
+     "quote": "It is not expressed in normal tissues, except testis.",
+     "paralog_specific": null,
+     "limitations": "Database annotation; contradicted by every primary source above for endometrium/ovary."
+    }
+   ],
+   "toxicity_reports": "IMA203 / anzutresgene autoleucel (affinity-enhanced PRAME TCR-T; Wermke et al., Nat Med 2025, full text https://pmc.ncbi.nlm.nih.gov/articles/PMC12283372/; 41 in safety set, 40 infused, up to 8.8e9 cells): 'IMA203 T cells were safe, and the MTD was not reached.' 'The most common TEAEs with higher severity (≥grade 3) were cytopenias associated with lymphodepletion'; CRS in 92.7% (grade 3 in 4.9%, 'grade 3 CRS being defined by grade 3 rash and grade 4 transaminitis, respectively'); ICANS in 12.2%, 'No grade 3 or higher neurotoxicities occurred'; 'A single dose-limiting toxicity (DLT) was observed with a patient treated at DL2 experiencing grade 3 atrial fibrillation, hypotension with hemodynamic instability'; 'no treatment-related patient deaths were reported'. On kidney: 'no reactivity toward non-malignant human primary cells ..., except for a very low signal on human cortical renal epithelial cells with one of two donors. It is noteworthy that, so far, no specific renal toxicity has been observed in patients of the ongoing clinical trial.' The paper does not use the phrase on-target/off-tumour for any event and does not discuss adrenal, ocular or testicular toxicity. Unexplained in the main text (preferred terms are in a supplement I did not open): Table 2 lists Endocrine disorders 2 patients (1 grade ≥3), Eye disorders 1 patient (grade ≥3), Renal and urinary disorders 6 (2 grade ≥3, at least one after a second infusion), Skin disorders 9 (2 grade ≥3), 'regardless of relatedness'. MDG1011 (PRAME TCR-T, myeloid/lymphoid neoplasms, 9 treated; Cancers 2025, full text https://pmc.ncbi.nlm.nih.gov/articles/PMC12468345/): 'The treatment was well tolerated. No dose-limiting toxicities (DLTs) were observed, and the most common serious adverse events were associated with lymphodepleting chemotherapy and/or disease progression.' Brenetafusp / IMC-F106C (PRAME x CD3 ImmTAC): no peer-reviewed report found; only news coverage of conference abstracts, read through a summarising fetch tool. OncLive on ESMO 2022 (https://www.onclive.com/view/imc-f106c-shows-potential-as-t-cell-receptor-driven-therapy-in-melanoma): 77% of 55 patients had CRS in the first 3 doses, 35% had a grade ≥3 adverse event, and the investigator is quoted '[Overall, there was] no treatment-related discontinuation nor grade 5 toxicity [originating] from this therapy.' JNCCN360 on ASCO 2024 abstract 9507 (https://jnccn360.org/advanced-skin-cancers/news/asco-2024-phase-i-findings-on-novel-bispecific-protein-for-cutaneous-melanoma): 'Cytokine-release syndrome of grades 1 and 2 (50%) was the most common adverse event.' Search snippets (not opened) add rash as a frequent treatment-related event; none of the coverage attributes an event to normal-tissue PRAME. The ESMO abstract page returned 404. Preclinical warning: Amir 2011 (abstract) 'Clinical studies have to determine the significance of the reactivity observed against mature DCs and kidney epithelial cells'; Gezgin 2017 (https://pmc.ncbi.nlm.nih.gov/articles/PMC5509351/) 'This reactivity could lead to nephrotoxicity and long-term depletion of mature dendritic cells'. No clinical report opened confirms either."
+  },
+  {
+   "entity_id": "PEG:bf74b1d1a638e14f9344",
+   "protein": "EXD1",
+   "gene_ids": [
+    "ENSG00000178997"
+   ],
+   "verdict": "no_normal_expression_evidence",
+   "reported_tissue": null,
+   "summary": "All gene-specific literature places EXD1 in the male germline: mouse studies define it as a piRNA-biogenesis partner of TDRD12 in the PET complex localised to intermitochondrial cement of spermatocytes, and two human genetics papers link EXD1 variants to male infertility, one measuring EXD1 mRNA by RT-qPCR in human testis biopsies. No publication reporting EXD1 RNA or protein in normal adult human brain or any other somatic tissue by a gene-specific assay was found, and equally no gene-specific multi-tissue panel showing its absence there. UniProt has no tissue-specificity or disease comment; HPA has no antibody or IHC, calls bulk RNA testis enriched (11.7 nTPM) but summarises single-nuclei brain RNA as 'Low cell type specificity / Detected in many', which is database count data in line with, not independent of, the donor-level signal.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Sources describe germline restriction or did not test adult somatic tissue; the only brain statement is HPA database RNA annotation. Human loss of function causes male infertility (testis, not a vital tissue), so R3 does not fire.",
+   "evidence": [
+    {
+     "source_title": "Yang Z et al. PIWI Slicing and EXD1 Drive Biogenesis of Nuclear piRNAs from Cytosolic Targets of the Mouse piRNA Pathway. Mol Cell 2016 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/26669262/",
+     "assay": "mouse knockout, biochemistry, small-RNA sequencing",
+     "tissue": "mouse testis (germ cells)",
+     "finding": "Defines EXD1 as a germline piRNA factor; loss de-represses LINE1.",
+     "quote": "We also identify Exonuclease domain-containing 1 (EXD1) as a partner of the MIWI2 piRNA biogenesis factor TDRD12.",
+     "paralog_specific": true,
+     "limitations": "Mouse; abstract only; no somatic tissue survey reported in the abstract."
+    },
+    {
+     "source_title": "Olotu O et al. Intermitochondrial cement (IMC) harbors piRNA biogenesis machinery and exonuclease domain-containing proteins EXD1 and EXD2 in mouse spermatocytes. Andrology 2023 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/36624638/",
+     "assay": "PIWIL2 interactome, expression and localisation in mouse testis",
+     "tissue": "mouse spermatocytes",
+     "finding": "EXD1 localises to intermitochondrial cement of spermatocytes.",
+     "quote": "We further characterized the expression and localization of two of the identified proteins, Exonuclease 3'-5' domain-containing proteins EXD1 and EXD2, and confirmed their localization to the IMC.",
+     "paralog_specific": true,
+     "limitations": "Mouse; abstract only."
+    },
+    {
+     "source_title": "Hu K et al. Novel homozygous variants in piRNA pathway factors lead to male infertility in humans. Reprod Biomed Online 2025 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/40645105/",
+     "assay": "whole-exome sequencing of 592 infertile men, functional follow-up",
+     "tissue": "human testis / sperm (phenotype)",
+     "finding": "Homozygous EXD1 stop-gain in a man with oligoasthenoteratozoospermia; no extra-gonadal phenotype mentioned.",
+     "quote": "the fourth patient harboured the first reported loss-of-function variant of EXD1 (c.550C>T, p.R184*), and exhibited oligoasthenoteratozoospermia characterized by acrosomal hypoplasia",
+     "paralog_specific": true,
+     "limitations": "Abstract only; single patient; abstract is silent on, rather than excluding, neurological or other findings."
+    },
+    {
+     "source_title": "Zhang B et al. Pathogenic Variants in PET Complex Encoding Genes TDRD12 and EXD1 Impair piRNA Biogenesis and Cause Male Infertility. Hum Mutat 2026 (full text)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13495564/",
+     "assay": "exome sequencing; RT-qPCR of piRNA-pathway genes including EXD1 on human testicular biopsies; EXD1 variants expressed in HEK293T",
+     "tissue": "human testis",
+     "finding": "EXD1 variants in an oligoasthenozoospermia patient; EXD1 mRNA assayed only in testis; EXD1 protein studied only by overexpression.",
+     "quote": "We identified eight variants in PET (PIWI‐EXD1‐TDRD12) complex encoding genes TDRD12 and EXD1 from three NOA patients and one oligoasthenozoospermia patient.",
+     "paralog_specific": true,
+     "limitations": "No somatic tissue examined; authors note 'we were unable to perform EXD1 expression analysis in the OAT patient'. (PMC full text read through NCBI E-utilities efetch, tags stripped.)"
+    },
+    {
+     "source_title": "UniProt Q8NHP7 (EXD1_HUMAN)",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:EXD1+AND+organism_id:9606+AND+reviewed:true&fields=accession,gene_names,cc_tissue_specificity,cc_disease",
+     "assay": "curated annotation",
+     "tissue": null,
+     "finding": "Tissue-specificity and disease fields are empty.",
+     "quote": "Q8NHP7 EXD1 EXDL1 (tissue specificity and involvement in disease fields empty)",
+     "paralog_specific": null,
+     "limitations": "Absence of annotation."
+    },
+    {
+     "source_title": "Human Protein Atlas gene record EXD1 (JSON)",
+     "url": "https://www.proteinatlas.org/ENSG00000178997.json",
+     "assay": "HPA summary annotation (RNA-seq; no antibody, no IHC)",
+     "tissue": "testis; brain (single-nuclei RNA)",
+     "finding": "Bulk RNA testis enriched; single-cell enriched in primary spermatocytes; single-nuclei brain RNA 'detected in many' cell types with low specificity; brain regional specificity 'Region enriched' (region not retrieved).",
+     "quote": "RNA tissue specificity: Tissue enriched; RNA tissue specific nTPM: testis 11.7; RNA single nuclei brain specificity: Low cell type specificity; RNA single nuclei brain distribution: Detected in many",
+     "paralog_specific": false,
+     "limitations": "Read through a summarising fetch tool. Count data, not a gene-specific assay and not literature; it does show that HPA's own brain nuclei data also contain EXD1 reads."
+    },
+    {
+     "source_title": "NCBI Gene 161829 EXD1 (summary)",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/161829",
+     "assay": "database annotation",
+     "tissue": null,
+     "finding": "Predicted function only.",
+     "quote": "Predicted to be involved in piRNA processing. Predicted to be located in P granule. Predicted to be part of PET complex.",
+     "paralog_specific": null,
+     "limitations": "Automated prediction."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:75fb921e968fe1f658d7",
+   "protein": "LRRIQ4",
+   "gene_ids": [
+    "ENSG00000188306"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No publication characterising LRRIQ4 (LRRC64) expression or function in any human tissue was found. PubMed returns two title/abstract hits (a mouse telomere-length SNP study and an LRRC8 evolution paper that names the LRRIQ4 family only as a relative), and the roughly 60 Europe PMC hits whose titles I screened are GWAS loci near TERC, methylation or gene-list mentions. UniProt has no tissue-specificity, function or disease comment and NCBI Gene carries only a predicted location. HPA has an antibody used for immunofluorescence only (no tissue IHC), calls bulk RNA testis enriched (2.5 nTPM, early spermatids) and summarises single-nuclei brain RNA as 'Cell type enhanced' in ependymal cells (6.0 nCPM), 'Detected in many' - database counts that neither confirm nor refute the astrocyte signal. No human loss-of-function disease was found.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication on expression in any tissue; only database RNA annotation. No loss-of-function disease.",
+   "evidence": [
+    {
+     "source_title": "UniProt A6NIV6 (LRRIQ4_HUMAN)",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:LRRIQ4+AND+organism_id:9606+AND+reviewed:true&fields=accession,gene_names,cc_tissue_specificity,cc_disease",
+     "assay": "curated annotation",
+     "tissue": null,
+     "finding": "Tissue-specificity and disease fields are empty.",
+     "quote": "A6NIV6 LRRIQ4 LRRC64 (tissue specificity and involvement in disease fields empty)",
+     "paralog_specific": null,
+     "limitations": "Absence of annotation."
+    },
+    {
+     "source_title": "Human Protein Atlas gene record LRRIQ4 (JSON)",
+     "url": "https://www.proteinatlas.org/ENSG00000188306.json",
+     "assay": "HPA summary annotation (RNA-seq; antibody HPA036271 with IF 'Approved', no tissue IHC reliability)",
+     "tissue": "testis; brain ependymal cells (single-nuclei RNA)",
+     "finding": "Bulk RNA testis enriched; single-cell enriched in early spermatids; single-nuclei brain 'Cell type enhanced' ependymal cells, 'Detected in many'; brain regional specificity low.",
+     "quote": "RNA tissue specificity: Tissue enriched; RNA tissue specific nTPM: testis 2.5; RNA single nuclei brain specificity: Cell type enhanced; RNA single nuclei brain specific nCPM: Ependymal cells 6.0",
+     "paralog_specific": false,
+     "limitations": "Read through a summarising fetch tool. Count data, not a gene-specific assay and not literature. Ependymal (ciliated) rather than astrocyte enrichment; a spermatid/ependymal pattern would fit a cilia- or flagella-related gene, but that is my inference, not a published finding."
+    },
+    {
+     "source_title": "NCBI Gene 344657 LRRIQ4 (summary)",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/344657",
+     "assay": "database annotation",
+     "tissue": null,
+     "finding": "Predicted location only.",
+     "quote": "Predicted to be active in cytoplasm.",
+     "paralog_specific": null,
+     "limitations": "Automated prediction; no expression statement."
+    },
+    {
+     "source_title": "Zeid D et al. Terc Gene Cluster Variants Predict Liver Telomere Length in Mice. Cells 2021 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/34685603/",
+     "assay": "SNP association in inbred mouse strains",
+     "tissue": "none (no expression data)",
+     "finding": "Lrriq4 appears only as a gene carrying SNPs near Terc.",
+     "quote": "candidate single nucleotide polymorphisms (SNPs) in the murine Terc gene cluster (within genes Lrrc31, Lrriq4 and Mynn) co-varying with aTL in our panel",
+     "paralog_specific": true,
+     "limitations": "Mouse genetics; no expression assay. Shown to document that the literature on this gene is positional only."
+    },
+    {
+     "source_title": "Abascal F, Zardoya R. LRRC8 proteins share a common ancestor with pannexins... Bioessays 2012 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/22532330/",
+     "assay": "sequence phylogenetics",
+     "tissue": "none (no expression data)",
+     "finding": "Names the LRRIQ4 family as a relative of the LRRC8 LRR domain.",
+     "quote": "most likely related to the SHOC2, LAP, RSU1 and LRRIQ4 protein families",
+     "paralog_specific": true,
+     "limitations": "No expression data."
     }
    ],
    "toxicity_reports": null

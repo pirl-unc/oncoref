@@ -28,7 +28,7 @@
   "rules": {
     "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
     "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
-    "replication": "The signal in >= 2 independent studies of the same organ. Donors of one study share its libraries and reference.",
+    "replication": "The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
     "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules.",
     "protected": "Protected populations need 2 times these frequencies.",
     "single_molecules": "Cells with one molecule never change a category. A mis-assigned read from a paralog, pseudogene or overlapping gene produces exactly this pattern.",
@@ -76,7 +76,7 @@
     "rna_tissue_gtex:v23",
     "rna_tissue_hpa:v23"
   ],
-  "literature_sha256": "7a9e7c6e24ef09a464899fa95e1b8f937dda3e6aebcfcae8d746a2a8d7b26b4d",
+  "literature_sha256": "f14dd6376d79dcdbfa2f3dfbc70c3255ec75bb71049b7e9bfc44f09697bbb1ec",
   "panel": {
     "scope": "adult, known donor, UMI protocol, primary normal tissue",
     "tissues": [
@@ -184,13 +184,13 @@
   ],
   "status_counts": {
     "below_screen": 1372,
-    "dismissed": 264,
-    "established": 132,
+    "dismissed": 267,
+    "established": 129,
     "unassessed": 36
   },
   "action_counts": {
-    "none": 1672,
-    "unsafe": 132
+    "none": 1675,
+    "unsafe": 129
   },
   "limitations": [
     "A gene-count matrix cannot check alignment, strand or exonic support; the mapping-risk flags are reference properties, not read-level checks",
@@ -198,5 +198,5 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "eb61341e8a1e81a06c4983476682dde41eb99aa9e8171402253111a6692484fb"
+  "sha256": "fd1a1bb05f56c710b9c61f7214c49cfe4c4101849529eb9319e5fc4ecaf8106d"
 }

@@ -1,11 +1,11 @@
 # Gene-by-gene sanity review of the candidate sets
 
-Every one of the 899 Target candidates was checked against four sources that the classification does not use in this form: GTEx v11 tissue medians, HPA v23 single-cell clusters, HPA v23 immunohistochemistry and all 1,093,048 Tabula Sapiens UMI cells (23 donors, 30 tissue groups, immune and stromal cells included). Review notes are hand-written, one per protein, in [manual-notes.csv](manual-notes.csv). [Full table](candidates.csv). These are outputs of screening rules, not validated tumor antigens.
+Every one of the 902 Target candidates was checked against four sources that the classification does not use in this form: GTEx v11 tissue medians, HPA v23 single-cell clusters, HPA v23 immunohistochemistry and all 1,093,048 Tabula Sapiens UMI cells (23 donors, 30 tissue groups, immune and stromal cells included). Review notes are hand-written, one per protein, in [manual-notes.csv](manual-notes.csv). [Full table](candidates.csv). These are outputs of screening rules, not validated tumor antigens.
 
 ## Result
 
-- **660 of 899** candidates show nothing in any of the four sources: under 1 TPM in every non-reproductive GTEx tissue, under 3 nTPM in every non-reproductive HPA cell cluster, no positive normal IHC and no Tabula Sapiens population with 1% of cells carrying two molecules.
-- **108** proteins have a review note; 95 of them are candidates in the current catalog.
+- **660 of 902** candidates show nothing in any of the four sources: under 1 TPM in every non-reproductive GTEx tissue, under 3 nTPM in every non-reproductive HPA cell cluster, no positive normal IHC and no Tabula Sapiens population with 1% of cells carrying two molecules.
+- **108** proteins have a review note; 96 of them are candidates in the current catalog.
 - **116** Cancer Antigens rest on a tumor maximum under 5 TPM or on at most two patients.
 
 ## Families whose normal tissue no panel samples
@@ -161,13 +161,13 @@ Absence from the sampled tissues is not absence from the body. These families pa
 
 ### Explained by a permitted tissue or a known technical effect
 
-8 reviewed; 7 are candidates in the current catalog.
+8 reviewed; 8 are candidates in the current catalog.
 
 | Protein | Current class | What I saw |
 |---|---|---|
 | BTN1A1 | CTA | Milk-fat globule protein; plasma cells 10% in 3 donors is unexplained |
 | LALBA | CTA | Milk protein of lactating breast; breast tumors reach 79,700 TPM |
-| PRAME | Unsafe | Known low adrenal and endometrial expression (GTEx adrenal 2.5 TPM); clinically targeted |
+| PRAME | CTA | Known low adrenal and endometrial expression (GTEx adrenal 2.5 TPM); clinically targeted |
 | PRM1 | CTA | Protamine; GTEx >= 1 TPM in 10 tissues is spill-over from very high testis signal in sequencing batches |
 | PRM2 | CTA | Protamine; as PRM1 |
 | RLN1 | CTA | Prostate relaxin |

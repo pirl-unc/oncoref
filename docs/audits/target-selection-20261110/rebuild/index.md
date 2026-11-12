@@ -1,6 +1,6 @@
 # Rebuilt antigen catalog
 
-Policy `oncoref.target-selection.2026-11-10.1`. **623 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and 18,244 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
+Policy `oncoref.target-selection.2026-11-10.1`. **626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and 18,241 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
 
 [Filterable protein table](report.html) · [Every change from the 2026-11-09 draft](changes-from-draft.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 
@@ -11,12 +11,12 @@ Policy `oncoref.target-selection.2026-11-10.1`. **623 CTA, 245 Cancer Antigen on
 | Filter | Result | Proteins removed | Remaining |
 |---|---|---:|---:|
 | Bulk, cluster, immune, protein or reviewed normal exclusion | Unsafe | 18,128 | 1,765 |
-| Established rare-cell RNA or published normal expression only | Unsafe | 116 | 1,649 |
-| Coverage, identity, translation or unresolved patient identity | Other:Review | 693 | 956 |
-| Nested or Unsafe-contained sequence | Other:Sequence | 42 | 914 |
-| No qualifying expression, target maximum or Disposable cap | Other:Expression | 15 | 899 |
+| Established rare-cell RNA or published normal expression only | Unsafe | 113 | 1,652 |
+| Coverage, identity, translation or unresolved patient identity | Other:Review | 693 | 959 |
+| Nested or Unsafe-contained sequence | Other:Sequence | 42 | 917 |
+| No qualifying expression, target maximum or Disposable cap | Other:Expression | 15 | 902 |
 
-The 899 remaining Target candidates are 623 CTA, 245 Cancer Antigen only and 31 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
+The 902 remaining Target candidates are 626 CTA, 245 Cancer Antigen only and 31 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
 
 ![Rebuilt counts](counts.png)
 
@@ -25,7 +25,7 @@ The 899 remaining Target candidates are 623 CTA, 245 Cancer Antigen only and 31 
 | Filter | Rule | Failure |
 |---|---|---|
 | Normal expression | Existing bulk, cluster, immune, cornea, protein and reviewed-knowledge rules, unchanged | Unsafe for accepted exclusions; otherwise Other:Review |
-| Rare normal-cell RNA | >= 1% of a donor's cells and >= 10 cells carry >= 2 molecules. The signal in >= 2 independent studies of the same organ. Donors of one study share its libraries and reference. | Established: Unsafe. Dismissed: no effect |
+| Rare normal-cell RNA | >= 1% of a donor's cells and >= 10 cells carry >= 2 molecules. The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. | Established: Unsafe. Dismissed: no effect |
 | Published normal expression | Gene-specific report in normal adult Vital or Protected tissue, by a fixed rubric | Unsafe |
 | Coverage, identity and translation | Unchanged | Other:Review |
 | Sequence | Fewer than 95% of 9-mers inside Unsafe proteins, recomputed for the new Unsafe set | Other:Sequence |
@@ -43,26 +43,26 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 - **Bulk confirmation:** Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.
 - **Literature:** Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts.
 
-70 draft non-Unsafe proteins become Unsafe, among them ADAM7, RBM46, C5orf47, SPINT4, MROH2A, CCDC172, SMIM23, MMP20, SPACA3, OR51D1, DGAT2L6, C5orf52, OOSP3, ERICH6. 65 candidates carry a dismissed signal, among them ENSG00000266202, PSG8, HHLA1, NKX2-6, DCST1, ARMH2, ENSG00000279983, ENSG00000267618, FKBP6, SATL1.
+68 draft non-Unsafe proteins become Unsafe, among them ADAM7, RBM46, C5orf47, SPINT4, MROH2A, CCDC172, SMIM23, MMP20, SPACA3, OR51D1, DGAT2L6, C5orf52, OOSP3, ERICH6. 68 candidates carry a dismissed signal, among them ENSG00000266202, PSG8, HHLA1, NKX2-6, DCST1, ARMH2, ENSG00000279983, ENSG00000267618, FKBP6, SATL1.
 
-**39 proteins that were Unsafe only through the pooled 1% detection flag are candidates again**: ADAD1, ADAM18, C12orf50, CDCP2, CHCT1, CSAG1, CXorf58, CYP26C1, DPPA2, EFCAB3, ENSG00000266202, ENSG00000267618, GFY, NKX2-6, NLRP8, OR2F1, OR5V1, OR8D4, PABPC3, POTEF, PPP1R2B, PRDM7, PRR5-ARHGAP8, PSG8, RAD21L1, RGPD3, RSPH6A, SATL1, SMIM9, SPAG11A, SPAG11B, SPATA3, TPTE, TRIM60, TUBB8, URGCP-MRPS24, VRTN, ZC3H11B, ZNF492. Each was taken through the literature review below and none has a gene-specific report of expression in vital normal tissue. That is a search result, not proof of absence. [Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).
+**40 proteins that were Unsafe only through the pooled 1% detection flag are candidates again**: ADAD1, ADAM18, C12orf50, CDCP2, CHCT1, CSAG1, CXorf58, CYP26C1, DPPA2, EFCAB3, ENSG00000266202, ENSG00000267618, EXD1, GFY, NKX2-6, NLRP8, OR2F1, OR5V1, OR8D4, PABPC3, POTEF, PPP1R2B, PRDM7, PRR5-ARHGAP8, PSG8, RAD21L1, RGPD3, RSPH6A, SATL1, SMIM9, SPAG11A, SPAG11B, SPATA3, TPTE, TRIM60, TUBB8, URGCP-MRPS24, VRTN, ZC3H11B, ZNF492. Each was taken through the literature review below and none has a gene-specific report of expression in vital normal tissue. That is a search result, not proof of absence. [Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).
 
 ## Literature review
 
-96 proteins were reviewed: every protein that would be a Target candidate while its rare-cell signal is dismissed, or after release from the pooled 1% detection flag. 9 are Unsafe on published evidence: AMBN (small intestine, R2); BTNL2 (small intestine, R2); GDF9 (bone marrow, R2); ITIH6 (kidney, R2); MAGEA12 (brain, R1); MYH13 (skeletal muscle, R2); OTOG (inner ear, R3); SCGB1D1 (eye, R1); SLC25A2 (liver, R2). [Every protein, rubric, sources and quotes](literature.md).
+99 proteins were reviewed: every protein that would be a Target candidate while its rare-cell signal is dismissed, or after release from the pooled 1% detection flag. 9 are Unsafe on published evidence: AMBN (small intestine, R2); BTNL2 (small intestine, R2); GDF9 (bone marrow, R2); ITIH6 (kidney, R2); MAGEA12 (brain, R1); MYH13 (skeletal muscle, R2); OTOG (inner ear, R3); SCGB1D1 (eye, R1); SLC25A2 (liver, R2). [Every protein, rubric, sources and quotes](literature.md).
 
 ## Changes from the 2026-11-09 draft
 
 | Draft | Now | Proteins |
 |---|---|---:|
 | CTA | Reproductive Antigen only | 8 |
-| CTA | Unsafe | 47 |
+| CTA | Unsafe | 45 |
 | Cancer Antigen only | Other:Review | 10 |
 | Cancer Antigen only | Unsafe | 8 |
 | Other:Review | CTA | 4 |
 | Other:Review | Unsafe | 15 |
 | Other:Sequence | CTA | 1 |
-| Unsafe | CTA | 35 |
+| Unsafe | CTA | 36 |
 | Unsafe | Cancer Antigen only | 3 |
 | Unsafe | Other:Review | 43 |
 | Unsafe | Other:Sequence | 3 |
@@ -70,30 +70,30 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 The tenfold single-tumor rule accounts for the moves to Reproductive Antigen only and for Cancer Antigens only whose remaining route depends on unresolved patient identity. The target-maximum and Disposable-cap checks remove no candidate.
 
-Cancer Antigens include 868 proteins; Reproductive Antigens include 654. Their intersection is CTA and their union contains 899 Target candidates.
+Cancer Antigens include 871 proteins; Reproductive Antigens include 657. Their intersection is CTA and their union contains 902 Target candidates.
 
-Other contains 693 review, 42 sequence, 15 expression. A curated published target nomination is retained for 399 CTAs and 24 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 693 review, 42 sequence, 15 expression. A curated published target nomination is retained for 402 CTAs and 24 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Changes from release 1.36.0
 
 | Released category | Rebuilt category | Proteins |
 |---|---|---:|
-| CTA | CTA | 531 |
+| CTA | CTA | 533 |
 | CTA | Other | 7 |
 | CTA | Reproductive Antigen only | 26 |
-| CTA | Unsafe | 43 |
+| CTA | Unsafe | 41 |
 | Other | CTA | 57 |
 | Other | Cancer Antigen only | 242 |
 | Other | Other | 697 |
 | Other | Reproductive Antigen only | 4 |
 | Other | Unsafe | 27 |
-| Unsafe | CTA | 35 |
+| Unsafe | CTA | 36 |
 | Unsafe | Cancer Antigen only | 3 |
 | Unsafe | Other | 46 |
 | Unsafe | Reproductive Antigen only | 1 |
-| Unsafe | Unsafe | 18174 |
+| Unsafe | Unsafe | 18173 |
 
-New CTAs: FKBP6, AMELY, H2BW2, PRSS54, RSPH6A, KRT37, ANKRD60, PSG8, SRMS, PRDM7, OR1E2, GALR3, VRTN, OCM2, TTLL8, CHCT1, CIB3, PABPC3, RGPD3, DPPA2, ADAD1, SPAG11B, CXorf58, C12orf50, POTED, OR2B2, ADAM18, PROKR1, HOXD12, EFCAB3, TRIM60, SPAG11A, DEFB125, NLRP8, NKX2-6, OR8D4, OR52D1, MAGEB17, SATL1, SPATA31A6, AADACL3, HUS1B, POTEF, OR14A16, OR51C1, KRTAP4-1, CSAG1, SMIM9, GLYATL3, TXNDC8, KRTAP5-10, MAS1L, ARSH, KRTAP19-8, KRTAP20-4, OR2F1, ZC3H11C, TRIM64C, ZNF705D, DEFB115, ZC3H11B, TRIM51G, ZNF816-ZNF321P, SUPT20HL1, ZNF492, PPP1R2B, RAB6D, PRR23C, OR5V1, KRTAP5-7, RAD21L1, PRR5-ARHGAP8, KRTAP5-9, ENSG00000255432, ENSG00000255835, ENSG00000258691, ARMH2, TUBB8, GFY, ENSG00000267140, ENSG00000267618, URGCP-MRPS24, TPTE, SPATA31A3, SPATA31A7, SPATA31A5, ENSG00000279983, RPS4Y2, FAM240B, OOSP1, ENSG00000285566, POTEB/2.
+New CTAs: FKBP6, AMELY, H2BW2, PRSS54, RSPH6A, KRT37, ANKRD60, PSG8, SRMS, PRDM7, OR1E2, GALR3, VRTN, OCM2, TTLL8, CHCT1, CIB3, PABPC3, RGPD3, DPPA2, ADAD1, SPAG11B, CXorf58, C12orf50, POTED, OR2B2, ADAM18, PROKR1, HOXD12, EFCAB3, TRIM60, SPAG11A, DEFB125, EXD1, NLRP8, NKX2-6, OR8D4, OR52D1, MAGEB17, SATL1, SPATA31A6, AADACL3, HUS1B, POTEF, OR14A16, OR51C1, KRTAP4-1, CSAG1, SMIM9, GLYATL3, TXNDC8, KRTAP5-10, MAS1L, ARSH, KRTAP19-8, KRTAP20-4, OR2F1, ZC3H11C, TRIM64C, ZNF705D, DEFB115, ZC3H11B, TRIM51G, ZNF816-ZNF321P, SUPT20HL1, ZNF492, PPP1R2B, RAB6D, PRR23C, OR5V1, KRTAP5-7, RAD21L1, PRR5-ARHGAP8, KRTAP5-9, ENSG00000255432, ENSG00000255835, ENSG00000258691, ARMH2, TUBB8, GFY, ENSG00000267140, ENSG00000267618, URGCP-MRPS24, TPTE, SPATA31A3, SPATA31A7, SPATA31A5, ENSG00000279983, RPS4Y2, FAM240B, OOSP1, ENSG00000285566, POTEB/2.
 
 Former CTAs now requiring review: CALHM3, TAF11L12, TRIM75, TAF11L14, PRAMEF18, TAF11L11, TAF11L13.
 

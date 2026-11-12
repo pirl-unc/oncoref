@@ -26,6 +26,8 @@ RARE_CELL_DETECTION_PCT = 1.0
 RARE_CELL_MIN_CELLS = 10
 RARE_CELL_MULTI_MOLECULES = 2
 RARE_CELL_REPLICATE_STUDIES = 2
+#: Two studies replicate a signal when they agree on the cell type, or with this many donors.
+RARE_CELL_REPLICATE_DONORS = 3
 #: Without replication, only a frequent multi-molecule signal is consequential.
 RARE_CELL_SINGLE_STUDY_PCT = 5.0
 #: Protected populations need twice the frequency, as their bulk ceiling is twice Vital's.
@@ -86,7 +88,9 @@ def definition() -> dict:
             ),
             "replication": (
                 f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} independent studies of the same "
-                "organ. Donors of one study share its libraries and reference."
+                f"organ, which agree on a cell type or include >= {RARE_CELL_REPLICATE_DONORS} "
+                "donors. Donors of one study share its libraries and reference; one donor in "
+                "each of two studies, in different cell types, agrees on nothing but the organ."
             ),
             "single_study": (
                 f"Without replication, a signal counts only when >= {RARE_CELL_SINGLE_STUDY_PCT:g}% "
@@ -426,6 +430,8 @@ def assess_rare_cell_rna(
     mis-assignment possible for this gene; ``confirmed_tissues`` lists organs with
     orthogonal bulk-RNA support. A signal is a multi-molecule frequency seen in
     two independent studies of the organ, or in at least 5% of one donor's cells.
+    Two studies replicate it when both find it in the same cell type, or when at
+    least ``RARE_CELL_REPLICATE_DONORS`` donors carry it.
     It is ``established`` when replicated at a locus without mapping risk, or
     when bulk RNA confirms it; otherwise it is ``dismissed`` with its reason.
     ``literature_tissues`` lists organs where a reviewed publication reports the
@@ -496,9 +502,14 @@ def assess_rare_cell_rna(
     findings = []
     for (tier, tissue), group in d.groupby(["tier", "tissue"], sort=True):
         multi = group[group.multi_molecule]
-        replicated = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
+        two_studies = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
+        # Two lone donors in different cell types share only the organ label.
+        replicated = two_studies and (
+            multi.donor.nunique() >= RARE_CELL_REPLICATE_DONORS
+            or multi.groupby("cell_type").source_id.nunique().max() >= RARE_CELL_REPLICATE_STUDIES
+        )
         published = tissue in literature_tissues and group.detected.any()
-        if not replicated and not group.frequent.any() and not published:
+        if not two_studies and not group.frequent.any() and not published:
             continue
         confirmed = tissue in confirmed_tissues
         if published:
@@ -509,6 +520,8 @@ def assess_rare_cell_rna(
             status, basis = "established", "signal confirmed by bulk RNA"
         elif mapping_risk:
             status, basis = "dismissed", "counts cannot be attributed to this locus; no bulk RNA"
+        elif two_studies:
+            status, basis = "dismissed", "two donors in different cell types; no bulk RNA"
         else:
             status, basis = "dismissed", "one study only; no bulk RNA"
         ranked = multi if len(multi) else group[group.detected]

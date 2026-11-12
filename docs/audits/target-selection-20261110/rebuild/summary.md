@@ -1,12 +1,12 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-10.1`, 19,893 human protein records. **623 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-10.1`, 19,893 human protein records. **626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Rule-derived sets and published nominations
 
 ![Set overlap](summary/venn.png)
 
-Of 623 CTA, 399 are published nominations and 224 are not. 1,804 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 36 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 626 CTA, 402 are published nominations and 224 are not. 1,801 published nominations are in neither set: 1,758 of all 2,233 nominations are Unsafe, 36 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
@@ -20,13 +20,13 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA above the tissue ceiling | 17,522 | 2,371 |
 | Cell-type cluster RNA (HPA single cell) | 424 | 1,947 |
 | Sorted immune-cell RNA | 96 | 1,851 |
-| Rare-cell RNA established by donor | 110 | 1,741 |
-| Normal-tissue protein (IHC) | 50 | 1,691 |
-| Curated or published normal expression | 37 | 1,654 |
-| Adult cornea RNA | 5 | 1,649 |
-| Incomplete coverage, identity or translation | 693 | 956 |
-| Nested or Unsafe-contained sequence | 42 | 914 |
-| No qualifying expression or bounds fail | 15 | 899 |
+| Rare-cell RNA established by donor | 107 | 1,744 |
+| Normal-tissue protein (IHC) | 50 | 1,694 |
+| Curated or published normal expression | 37 | 1,657 |
+| Adult cornea RNA | 5 | 1,652 |
+| Incomplete coverage, identity or translation | 693 | 959 |
+| Nested or Unsafe-contained sequence | 42 | 917 |
+| No qualifying expression or bounds fail | 15 | 902 |
 
 ![Published nominations](summary/funnel-published.png)
 
@@ -36,12 +36,12 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA above the tissue ceiling | 1,464 | 769 |
 | Cell-type cluster RNA (HPA single cell) | 174 | 595 |
 | Sorted immune-cell RNA | 25 | 570 |
-| Rare-cell RNA established by donor | 71 | 499 |
-| Normal-tissue protein (IHC) | 19 | 480 |
-| Curated or published normal expression | 7 | 473 |
-| Adult cornea RNA | 1 | 472 |
-| Incomplete coverage, identity or translation | 36 | 436 |
-| Nested or Unsafe-contained sequence | 7 | 429 |
+| Rare-cell RNA established by donor | 68 | 502 |
+| Normal-tissue protein (IHC) | 19 | 483 |
+| Curated or published normal expression | 7 | 476 |
+| Adult cornea RNA | 1 | 475 |
+| Incomplete coverage, identity or translation | 36 | 439 |
+| Nested or Unsafe-contained sequence | 7 | 432 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 
@@ -58,7 +58,7 @@ Steps that remove no published nomination are omitted from the second funnel. [A
 | Monaco immune | 11,264 | 19 |
 | HPA normal protein | 10,157 | 47 |
 | HPA immune | 7,973 | 14 |
-| Established rare normal-cell RNA | 132 | 109 |
+| Established rare normal-cell RNA | 129 | 106 |
 | Reviewed normal-cell knowledge | 32 | 31 |
 | Accepted normal-protein evidence | 8 | 2 |
 | Published normal-tissue expression | 7 | 6 |
