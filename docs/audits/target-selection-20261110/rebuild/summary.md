@@ -1,12 +1,12 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-10.1`, 19,893 human protein records. **641 CTA, 248 Cancer Antigen only, 31 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-10.1`, 19,893 human protein records. **623 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Rule-derived sets and published nominations
 
 ![Set overlap](summary/venn.png)
 
-Of 641 CTA, 415 are published nominations and 226 are not. 1,788 published nominations are in neither set: 1,745 of all 2,233 nominations are Unsafe, 36 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 623 CTA, 399 are published nominations and 224 are not. 1,804 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 36 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
@@ -20,13 +20,13 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA above the tissue ceiling | 17,522 | 2,371 |
 | Cell-type cluster RNA (HPA single cell) | 424 | 1,947 |
 | Sorted immune-cell RNA | 96 | 1,851 |
-| Rare-cell RNA established by donor | 85 | 1,766 |
-| Normal-tissue protein (IHC) | 50 | 1,716 |
-| Curated or published normal expression | 38 | 1,678 |
-| Adult cornea RNA | 5 | 1,673 |
-| Incomplete coverage, identity or translation | 696 | 977 |
-| Nested or Unsafe-contained sequence | 42 | 935 |
-| No qualifying expression or bounds fail | 15 | 920 |
+| Rare-cell RNA established by donor | 110 | 1,741 |
+| Normal-tissue protein (IHC) | 50 | 1,691 |
+| Curated or published normal expression | 37 | 1,654 |
+| Adult cornea RNA | 5 | 1,649 |
+| Incomplete coverage, identity or translation | 693 | 956 |
+| Nested or Unsafe-contained sequence | 42 | 914 |
+| No qualifying expression or bounds fail | 15 | 899 |
 
 ![Published nominations](summary/funnel-published.png)
 
@@ -36,12 +36,12 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA above the tissue ceiling | 1,464 | 769 |
 | Cell-type cluster RNA (HPA single cell) | 174 | 595 |
 | Sorted immune-cell RNA | 25 | 570 |
-| Rare-cell RNA established by donor | 55 | 515 |
-| Normal-tissue protein (IHC) | 19 | 496 |
-| Curated or published normal expression | 7 | 489 |
-| Adult cornea RNA | 1 | 488 |
-| Incomplete coverage, identity or translation | 36 | 452 |
-| Nested or Unsafe-contained sequence | 7 | 445 |
+| Rare-cell RNA established by donor | 71 | 499 |
+| Normal-tissue protein (IHC) | 19 | 480 |
+| Curated or published normal expression | 7 | 473 |
+| Adult cornea RNA | 1 | 472 |
+| Incomplete coverage, identity or translation | 36 | 436 |
+| Nested or Unsafe-contained sequence | 7 | 429 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 
@@ -58,10 +58,10 @@ Steps that remove no published nomination are omitted from the second funnel. [A
 | Monaco immune | 11,264 | 19 |
 | HPA normal protein | 10,157 | 47 |
 | HPA immune | 7,973 | 14 |
-| Established rare normal-cell RNA | 107 | 85 |
+| Established rare normal-cell RNA | 132 | 109 |
 | Reviewed normal-cell knowledge | 32 | 31 |
 | Accepted normal-protein evidence | 8 | 2 |
-| Published normal-tissue expression | 7 | 7 |
+| Published normal-tissue expression | 7 | 6 |
 
 ## Thresholds
 
@@ -94,7 +94,7 @@ One value per protein on each source's own scale; scales are never pooled. Count
 ![Stage detail](summary/stages.png)
 
 - Required normal coverage incomplete: 400
-- Identity or translation unresolved: 105
+- Identity or translation unresolved: 102
 - Normal signal blocks admission (not Unsafe): 159
 - Patient identity unresolved in tumor samples: 32
 

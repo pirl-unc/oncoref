@@ -5,9 +5,9 @@ Antigens. Both sets use the same normal-tissue, coverage, translation and sequen
 requirements. Their union is called Target candidates.**
 
 The catalog is built under `oncoref.target-selection.2026-11-10.1`:
-**641 CTA, 248 Cancer Antigen only, 31 Reproductive Antigen only, 753 Other and
-18,220 Unsafe**. That gives 889 Cancer Antigens, 672 Reproductive Antigens and
-920 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+**623 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
+18,244 Unsafe**. That gives 868 Cancer Antigens, 654 Reproductive Antigens and
+899 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot. The counts describe rule matches, not
@@ -27,7 +27,7 @@ experimentally validated tumor antigens.
 | One-tumor cancer route | T ≥ 5 × max(N, 1) | T ≥ 10 × max(N, 1) |
 | Target maximum | Not applied | Highest tumor, reproductive or developmental value above every measured nonreproductive and Disposable value |
 | Disposable cap | Not applied | At most 32 TPM and 32 nTPM, each on its own scale |
-| Rare normal-cell RNA | ≥1% detection pooled across donors, studies and ages → Unsafe | Per adult donor; multi-molecule cells only; replication across studies; mapping risk; bulk confirmation. Established or dismissed, never held for review |
+| Rare normal-cell RNA | ≥1% detection pooled across donors, studies and ages → Unsafe | Per adult donor across every sampled non-reproductive tissue; multi-molecule cells only; replication across studies; mapping risk; bulk confirmation. Established or dismissed, never held for review |
 | Published normal expression | Reviewed case by case | Fixed rubric applied to every candidate with a dismissed or released rare-cell signal |
 | Sequence containment | Against the released Unsafe set | Recomputed against the new Unsafe set |
 
@@ -80,8 +80,11 @@ Both checks currently remove no candidate. [Audit](audits/target-selection-20261
 ### Rare normal-cell RNA
 
 Pooled panels average away rare cells, so each adult donor is assessed separately
-in each named Vital or Protected cell population of brain, spinal cord, heart and
-selected lung populations. **A count matrix cannot show where a read aligned.** One
+in each named Vital or Protected cell population of every sampled non-reproductive
+tissue: brain, eye, heart, lung, kidney, liver, pancreas, gut and others, 13.6 million
+cells in all. Immune, stromal and developmental labels are left to the sorted-cell
+layers, and reproductive organs are left out because germ-cell RNA contaminates
+their somatic cells. **A count matrix cannot show where a read aligned.** One
 mis-assigned read per cell, from a paralog, a pseudogene or an overlapping gene,
 looks exactly like sparse expression. The grade therefore asks four questions.
 
@@ -106,17 +109,25 @@ toxicity threshold. Detection at 1%, 2% and 5% stays in the evidence tables as a
 comparison. The mapping flags are properties of the reference, not checks of the
 reads themselves.
 
-Of the 1,804 graded proteins, 107 are established, 193 dismissed and 1,468 below
-the screen; 36 have no measured gene. 49 draft proteins become Unsafe, including
+Of the 1,804 graded proteins, 132 are established, 264 dismissed and 1,372 below
+the screen; 36 have no measured gene. 70 draft proteins become Unsafe, including
 ADAM7, CBY3, ERICH6, TOPAZ1 and WNT8A. PLAC1 stays Unsafe: its signal is replicated
 in four studies at a locus with no mapping risk. TMEM269, TAS2R1 and HHLA1 carry
-dismissed signals and stay candidates. PRAME, MAGE-A4, CTAG2, NUTM1 and SSX2 stay CTA.
+dismissed signals and stay candidates. MAGE-A4, CTAG2, NUTM1 and SSX2 stay CTA.
+
+**PRAME is Unsafe under this rule, on thin evidence.** Two donors in two studies of
+the eye carry it in 1.2–1.5% of cells, in different populations (melanocytes and
+optic-nerve oligodendrocytes). That is the minimum the rule accepts. Photoreceptor
+and retinal genes such as CCDC172, SPINT4 and C7orf33 are established on tens of
+donors. The largest remaining gap is the mapping-risk dismissal: DCST1 is seen in
+36% of cone cells across 73 donors and five studies, and stays a candidate because
+one of its exons lies inside another gene.
 
 ### Published normal expression
 
 A dismissal or a release from the old pooled flag leaves a protein's candidacy
 resting on the absence of evidence, so each such protein is taken through a
-literature review with a fixed rubric. 75 proteins were reviewed.
+literature review with a fixed rubric. 96 proteins were reviewed.
 
 | Rule | Requirement | Effect |
 |---|---|---|
@@ -124,8 +135,9 @@ literature review with a fixed rubric. 75 proteins were reviewed.
 | R2 | A primary source reports the gene by a gene-specific assay in normal adult Vital or Protected tissue, uncontradicted by a gene-specific panel or reliable IHC | Unsafe |
 | R3 | Human loss of function causes disease of a Vital tissue, and the ortholog is expressed in that adult tissue | Unsafe |
 
-Eight are Unsafe on published evidence: MAGEA12 (brain RNA by sequenced qRT-PCR, with
-our own detection; a later in situ study disputes it), AMBN and BTNL2 (gut),
+Nine are Unsafe on published evidence: MAGEA12 (brain RNA by sequenced qRT-PCR, with
+our own detection; a later in situ study disputes it), SCGB1D1 (sequenced from normal
+tears, with our own detection in acinar cells of the eye), AMBN and BTNL2 (gut),
 GDF9 (bone marrow, pituitary), SLC25A2 (liver), ITIH6 (kidney), MYH13 (extraocular
 and laryngeal muscle) and OTOG (inner ear). Several rest on one report or on an
 abstract; the rubric excludes on that, and the limits are recorded with each item.
@@ -301,7 +313,7 @@ The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
 1 unit, resolves tumor locus identities and counts confirmed independent patients.
-All 967 proteins passing the prior shared checks have complete native-TPM comparison
+All 946 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
 The 130 included tumor cohort views are deduplicated by physical sample and known

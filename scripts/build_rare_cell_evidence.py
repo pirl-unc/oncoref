@@ -2,10 +2,9 @@
 """Grade rare normal-cell RNA per adult donor from the pinned Census count build.
 
 Replaces the pooled 1% detection screen for every protein that the count build
-measured. The panel keeps the earlier scope (brain, spinal cord, heart and
-selected lung populations; immune, stromal, generic and developmental labels
-excluded) so the change is in the evidence standard, not in coverage. Adult age,
-primary tissue and donor identity now come from metadata, not cell-type names.
+measured. The panel is every named Vital or Protected cell population of every
+non-reproductive tissue (immune, stromal, generic and developmental labels
+excluded). Adult age, primary tissue and donor identity come from metadata.
 """
 
 from __future__ import annotations
@@ -13,6 +12,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -22,16 +22,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from build_cta_rare_cell_screen import (  # noqa: E402
-    EXCLUDED_CELLS,
-    GENERIC,
-    LUNG_VITAL,
-    MAX_SHARE,
-    VITAL_TISSUES,
-)
+from build_cta_rare_cell_screen import EXCLUDED_CELLS, GENERIC  # noqa: E402
 
 from oncoref import target_selection  # noqa: E402
-from oncoref.cta_cell_tiers import cell_tiers, differentiated_airway  # noqa: E402
+from oncoref.cta_cell_tiers import cell_tiers  # noqa: E402
 from oncoref.tissue_hazards import registry as hazard_registry  # noqa: E402
 
 DATA = ROOT / "oncoref/data"
@@ -47,7 +41,24 @@ BRAIN_BULK = {
     "hippocampal formation", "hippocampus", "hypothalamus", "medulla oblongata", "midbrain",
     "pons", "substantia nigra", "thalamus", "white matter",
 }  # fmt: skip
-ORGAN_BULK = {"heart muscle": "heart", "lung": "lung", "spinal cord": "spinal cord"}
+ORGAN_BULK = {"heart muscle": "heart"} | {
+    organ: organ
+    for organ in [
+        "lung", "spinal cord", "kidney", "pancreas", "small intestine", "colon", "esophagus",
+        "stomach", "liver", "spleen", "urinary bladder", "adipose tissue", "adrenal gland",
+    ]
+}  # fmt: skip
+#: Immune, blood and precursor labels of the whole-body panel that the shared
+#: exclusion pattern, written for brain, heart and lung, does not name.
+EXCLUDED_BODY_CELLS = re.compile(
+    r"phagocyte|lymphoid|thymocyte|t-helper|helper cell|regulatory cell|\bbe cell|pre-b|"
+    r"plasmablast|antibody secreting|granulocyte|megakaryocyte|basophil|eosinophil|"
+    r"promyelocyte|kupffer|langerhans|blood cell|reticulocyte|myoblast|\bilc\d|mononuclear",
+    re.IGNORECASE,
+)
+REPRODUCTIVE_TISSUES = frozenset(
+    {"testis", "ovary", "uterus", "fallopian tube", "prostate gland", "placenta", "breast"}
+)
 
 
 def digest(path):
@@ -61,7 +72,13 @@ def write_csv(frame, path):
 
 
 def panel(populations: pd.DataFrame) -> pd.DataFrame:
-    """Adult, donor-resolved UMI populations inside the reviewed rare-cell panel."""
+    """Adult, donor-resolved UMI populations of every Vital or Protected cell type.
+
+    Every non-reproductive tissue is in scope and abundant populations are kept:
+    a replicated multi-molecule signal matters wherever the cell type sits.
+    Reproductive organs are left out because germ-cell RNA contaminates their
+    somatic cells; immune and stromal labels stay with the sorted-cell layers.
+    """
     d = populations[
         populations.age_scope.eq("adult")
         & populations.donor_identity_known
@@ -69,17 +86,12 @@ def panel(populations: pd.DataFrame) -> pd.DataFrame:
     ].copy()
     d["tissue"] = d.tissue_general.astype(str)
     d["cell_type"] = d.cell_type.astype(str)
-    tissue_cells = d.groupby("tissue").n_cells.sum()
-    type_cells = d.groupby(["tissue", "cell_type"]).n_cells.transform("sum")
-    airway = differentiated_airway(d.tissue, d.cell_type)
-    in_tissue = d.tissue.isin(VITAL_TISSUES) | (
-        d.tissue.eq("lung") & (d.cell_type.str.contains(LUNG_VITAL) | airway)
-    )
     keep = (
-        in_tissue
+        ~d.tissue.isin(REPRODUCTIVE_TISSUES)
         & ~d.cell_type.isin(GENERIC)
+        & d.cell_type.ne("unknown")
         & ~d.cell_type.str.contains(EXCLUDED_CELLS)
-        & type_cells.le(MAX_SHARE * d.tissue.map(tissue_cells))
+        & ~d.cell_type.str.contains(EXCLUDED_BODY_CELLS)
     )
     d = d[keep].copy()
     d["tier"] = cell_tiers(d.tissue, d.cell_type)
@@ -396,10 +408,12 @@ not graded.
 
 ## Scope and limits
 
-The panel keeps the scope of the earlier pooled screen: brain, spinal cord, heart and
-selected lung populations, without immune, stromal, generic, unknown or developmental
-labels, and without populations above {scope["max_tissue_share"]:.0%} of a tissue's sampled
-cells. Adult age, primary tissue and donor identity come from metadata. Only UMI protocols
+The panel is every named Vital or Protected cell population of {len(scope["tissues"])}
+non-reproductive tissues ({", ".join(scope["tissues"])}), without immune, stromal, generic,
+unknown or developmental labels. Abundant populations are included. Reproductive organs are
+left out because germ-cell RNA contaminates their somatic cells. Bulk confirmation is
+available only for organs sampled by both HPA and GTEx. Adult age, primary tissue and donor
+identity come from metadata. Only UMI protocols
 are graded. Census release {provenance["census_release"]}; filter `{provenance["filter"]}`.
 
 - {provenance["limitations"][0]}.
@@ -412,18 +426,42 @@ are graded. Census release {provenance["census_release"]}; filter `{provenance["
 [Proteins selected for extraction](selected-proteins.csv.gz)
 
 ```sh
-python scripts/extract_rare_cell_panel_counts.py --counts tmp/normal-atlas/counts-2025-11-08
+python scripts/build_rare_cell_evidence.py --counts tmp/normal-atlas/wholebody-2025-11-08 --prepare
+python scripts/extract_rare_cell_panel_counts.py --counts tmp/normal-atlas/wholebody-2025-11-08
 python scripts/build_gene_mapping_risk.py --proteins tmp/normal-atlas/counts-2025-11-08/selected-proteins.csv.gz
-python scripts/build_rare_cell_evidence.py --counts tmp/normal-atlas/counts-2025-11-08
+python scripts/build_rare_cell_evidence.py --counts tmp/normal-atlas/wholebody-2025-11-08
 ```
 """
     (AUDIT / "index.md").write_text(page)
 
 
+def prepare(counts: Path) -> None:
+    """Write the panel populations and their Census cell ids for the extraction."""
+    import numpy as np
+
+    scoped = panel(pd.read_parquet(counts / "populations.parquet"))
+    mapping = np.load(counts / "observation-population-map.npy", mmap_mode="r")
+    cells = np.flatnonzero(np.isin(mapping, scoped.population_id.to_numpy())).astype(np.int64)
+    if len(cells) != int(scoped.n_cells.sum()):
+        raise ValueError("Panel cells and population sizes disagree")
+    columns = ["population_id", "source_id", "donor_id", "tissue", "cell_type", "tier"]
+    scoped[[*columns, "n_cells", "dataset_id"]].to_parquet(
+        counts / "panel-populations.parquet", index=False
+    )
+    np.save(counts / "panel-obs-joinids.npy", cells)
+    print(json.dumps({"populations": len(scoped), "cells": len(cells)}))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--counts", type=Path, required=True)
+    parser.add_argument(
+        "--prepare", action="store_true", help="Write the panel cell list for extraction and stop"
+    )
     args = parser.parse_args()
+    if args.prepare:
+        prepare(args.counts)
+        return
     manifest = json.loads((args.counts / "manifest.json").read_text())
     features = pd.read_csv(args.counts / "selected-features.csv")
     extract = json.loads((args.counts / "panel-counts/manifest.json").read_text())
@@ -443,12 +481,11 @@ def main():
     )
     populations = pd.read_parquet(args.counts / "populations.parquet")
     scoped = panel(populations)
-    if extract["n_cells"] != int(scoped.n_cells.sum()) or extract["n_genes"] != len(features):
-        raise ValueError("Extracted cells or genes differ from the current panel")
-    if not set(counts.population_id) <= set(scoped.population_id):
-        raise ValueError("Counts outside the panel")
-    # Extracted with the panel, but an unlabelled population is not a named one.
-    scoped = scoped[scoped.cell_type.ne("unknown")]
+    extracted = set(pd.read_parquet(args.counts / "panel-populations.parquet").population_id)
+    if not set(scoped.population_id) <= extracted or extract["n_genes"] != len(features):
+        raise ValueError("The panel has populations or genes that were not extracted")
+    # The extraction may cover populations that the panel has since excluded.
+    counts = counts[counts.population_id.isin(scoped.population_id)]
     floor = target_selection.RARE_CELL_MIN_CELLS * 100 / target_selection.RARE_CELL_DETECTION_PCT
     keys = ["source_id", "donor_id", "tissue", "cell_type"]
     sizes = scoped.groupby(keys).n_cells.sum()
@@ -522,11 +559,11 @@ def main():
         "literature_sha256": digest(LITERATURE),
         "panel": {
             "scope": "adult, known donor, UMI protocol, primary normal tissue",
-            "vital_tissues": sorted(VITAL_TISSUES),
-            "lung_selector": LUNG_VITAL.pattern,
+            "tissues": sorted(scoped.tissue.unique()),
+            "excluded_reproductive_tissues": sorted(REPRODUCTIVE_TISSUES),
             "excluded_cell_types": EXCLUDED_CELLS.pattern,
+            "excluded_body_cell_types": EXCLUDED_BODY_CELLS.pattern,
             "excluded_generic_terms": sorted(GENERIC),
-            "max_tissue_share": MAX_SHARE,
             "cells": int(scoped.n_cells.sum()),
             "donors": int(scoped.groupby(["source_id", "donor_id"]).ngroups),
             "collections": int(scoped.source_id.nunique()),

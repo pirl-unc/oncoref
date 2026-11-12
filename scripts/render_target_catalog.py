@@ -421,7 +421,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "The [pinned HPA download receipt](downloaded-hpa-sources.json) supplies exact URLs, "
         "paths and SHA-256 hashes for the newly retrieved native-TPM tables. With the pinned "
         "source files in the paths listed in `inputs.json`, run:\n\n"
-        "```sh\npython scripts/build_rare_cell_evidence.py --counts tmp/normal-atlas/counts-2025-11-08\n"
+        "```sh\npython scripts/build_rare_cell_evidence.py --counts tmp/normal-atlas/wholebody-2025-11-08\n"
         "python scripts/rebuild_target_catalog.py\npython scripts/render_target_catalog.py\n"
         "python scripts/build_target_selection_report.py\n```\n\n"
         "The builder verifies the pinned tumor matrices, re-resolves source identities and assesses "

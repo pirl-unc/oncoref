@@ -18,9 +18,9 @@ The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-2026110
 The [normal-tissue hazard ontology](docs/tissue-hazards.md) centralizes evidence-linked
 bulk and cell-subset calls with generated reports, figures and a Python API.
 A would-be target with 95% or more of its 9-mers inside Unsafe proteins is
-`Other:Sequence`, as is a nested microprotein without independent support. Expression in at least 1% of a
-Vital cell type in the existing brain, spinal-cord, heart and lung panel supplies
-Unsafe evidence. Protected rare-cell findings create a candidate review hold.
+`Other:Sequence`, as is a nested microprotein without independent support. Replicated multi-molecule RNA in
+a Vital or Protected cell type of any sampled non-reproductive tissue, graded per
+adult donor, supplies Unsafe evidence.
 [Independent requirements](docs/cta-evidence-axes.md) separate normal exclusion,
 positive associations and published target support. Reproductive includes adult
 reproductive, placental, extraembryonic, embryonic and fetal contexts. The rebuilt

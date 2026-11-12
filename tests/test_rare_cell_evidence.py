@@ -54,7 +54,7 @@ def test_every_signal_is_established_or_dismissed_with_a_basis(evidence):
     assert bulk.finding_orthogonal_confirmation.all()
     assert bulk.finding_bulk_tpm.ge(policy.DETECTION_FLOOR).all()
     published = by_basis["detection confirmed by a published gene-specific assay"]
-    assert published.index.tolist() == ["MAGEA12"]
+    assert sorted(published.index) == ["MAGEA12", "SCGB1D1"]
     # A dismissed signal has a mapping risk or a single study, and no bulk confirmation.
     assert not dismissed.finding_orthogonal_confirmation.any()
     assert (risk[dismissed.index] | ~dismissed.finding_replicated.astype(bool)).all()
@@ -69,13 +69,13 @@ def test_every_signal_is_established_or_dismissed_with_a_basis(evidence):
 def test_literature_review_covers_every_dependent_candidate_and_follows_its_rubric():
     document = json.loads((DATA / "normal-expression-literature.json").read_text())
     entries = pd.DataFrame(document["entries"])
-    assert entries.entity_id.is_unique and len(entries) == 75
+    assert entries.entity_id.is_unique and len(entries) == 96
     catalog = policy.results()
     reviewed = catalog[catalog.literature_effect.ne("not_reviewed")]
     assert set(reviewed.entity_id) == set(entries.entity_id)
     acting = entries[entries.effect.ne("none")]
     assert set(acting.protein) == {
-        "AMBN", "BTNL2", "GDF9", "ITIH6", "MAGEA12", "MYH13", "OTOG", "SLC25A2"
+        "AMBN", "BTNL2", "GDF9", "ITIH6", "MAGEA12", "MYH13", "OTOG", "SCGB1D1", "SLC25A2"
     }  # fmt: skip
     assert acting.rule.isin(["R1", "R2", "R3"]).all() and acting.tissue_tier.eq("vital").all()
     assert catalog[catalog.entity_id.isin(acting.entity_id)].category.eq("Unsafe").all()
@@ -130,10 +130,15 @@ def test_panel_keeps_adult_donor_resolved_named_populations():
         dict(base, count_unit="assay_review"),
         dict(base, cell_type="neuron"),
         dict(base, cell_type="microglial cell"),
+        dict(base, cell_type="unknown"),
+        dict(base, tissue_general="testis", cell_type="Sertoli cell"),
+        dict(base, tissue_general="lymph node", cell_type="innate lymphoid cell"),
+        dict(base, tissue_general="liver", cell_type="Kupffer cell"),
+        # Every non-reproductive tissue is in scope, and abundance is no exclusion.
         dict(base, tissue_general="liver", cell_type="hepatocyte"),
         dict(base, cell_type="oligodendrocyte", n_cells=10**6),
     ]
     populations = pd.DataFrame(rows).assign(population_id=range(len(rows)))
     kept = panel(populations)
-    assert kept.population_id.tolist() == [0]
-    assert kept.tier.tolist() == ["vital"]
+    assert kept.population_id.tolist() == [0, 11, 12]
+    assert kept.tier.isin(["vital", "protected"]).all()

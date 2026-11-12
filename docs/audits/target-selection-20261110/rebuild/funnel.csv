@@ -1,6 +1,6 @@
 step,result,removed,remaining
 "Bulk, cluster, immune, protein or reviewed normal exclusion",Unsafe,18128,1765
-Established rare-cell RNA or published normal expression only,Unsafe,92,1673
-"Coverage, identity, translation or unresolved patient identity",Other:Review,696,977
-Nested or Unsafe-contained sequence,Other:Sequence,42,935
-"No qualifying expression, target maximum or Disposable cap",Other:Expression,15,920
+Established rare-cell RNA or published normal expression only,Unsafe,116,1649
+"Coverage, identity, translation or unresolved patient identity",Other:Review,693,956
+Nested or Unsafe-contained sequence,Other:Sequence,42,914
+"No qualifying expression, target maximum or Disposable cap",Other:Expression,15,899

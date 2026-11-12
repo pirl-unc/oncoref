@@ -1,9 +1,34 @@
 tissue,tier,cells,cell_types,collections
+adipose tissue,vital,5874,1,4
+adrenal gland,vital,57,4,1
+blood,vital,31,4,2
 brain,protected,9072,1,5
-brain,vital,2529631,54,25
-heart,protected,51,1,1
-heart,vital,667110,24,12
+brain,vital,5818168,56,25
+colon,protected,79974,33,6
+colon,vital,23272,9,5
+esophagus,protected,87602,22,4
+esophagus,vital,7213,6,4
+eye,protected,28694,1,2
+eye,vital,5208336,75,15
+heart,vital,911267,22,12
+kidney,protected,715,1,5
+kidney,vital,309522,45,11
+liver,protected,1334,2,4
+liver,vital,32195,11,4
 lung,protected,38764,12,14
-lung,vital,277182,27,15
+lung,vital,475962,58,15
+lymph node,protected,353,8,3
+lymph node,vital,1009,4,3
+pancreas,protected,100313,2,4
+pancreas,vital,125417,8,5
+small intestine,protected,149948,20,8
+small intestine,vital,24448,27,8
 spinal cord,protected,147,1,1
-spinal cord,vital,4812,9,2
+spinal cord,vital,29963,11,2
+stomach,protected,41122,19,3
+stomach,vital,3949,4,3
+tongue,protected,29326,8,1
+tongue,vital,97,1,1
+ureter,protected,19224,5,1
+urinary bladder,protected,16868,5,1
+urinary bladder,vital,1155,3,1

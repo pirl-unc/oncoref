@@ -7,16 +7,16 @@
   "panel_extract": {
     "census_release": "2025-11-08",
     "base_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",
-    "panel_populations_sha256": "6dc17a0b8cfd6d6b4c92d667c685d6b7ec0da3bfc777623e03fcc9fbd70ae5ff",
-    "panel_obs_sha256": "fc5677ee74d6b9418ad9ff65a57b416d76d5e22f2d1008c9360c7d7dd4de81a4",
-    "n_cells": 3569814,
+    "panel_populations_sha256": "180b6a858b8fab45879d13a5567f8803c631bbbfb30d979c45c64f6405d7d9f1",
+    "panel_obs_sha256": "992d513342a1b81e783fb89eefbb0489d415de8697dc5275dc6ed9270e9d0686",
+    "n_cells": 13922753,
     "n_genes": 1826,
     "chunk": 100000,
-    "chunks": 36,
+    "chunks": 140,
     "layer": "raw",
     "method_version": 1
   },
-  "count_parts_sha256": "21731fc4e697155bf3a66cc7eff98cad3a765955af2ecc7d2aa2766b8708acf0",
+  "count_parts_sha256": "d0d9288b208d841f66937562597a8216b5cd9db0f29b30833b602f1da9bf02e0",
   "fractional_count_cells": 0,
   "supplement": {
     "source_id": "283d65eb-dd53-496d-adb7-7570c7caa443",
@@ -76,16 +76,41 @@
     "rna_tissue_gtex:v23",
     "rna_tissue_hpa:v23"
   ],
-  "literature_sha256": "c9ea4de567f9b9431168898647f61920a6f2091525fe15b4f96dcb5d51c44c89",
+  "literature_sha256": "7a9e7c6e24ef09a464899fa95e1b8f937dda3e6aebcfcae8d746a2a8d7b26b4d",
   "panel": {
     "scope": "adult, known donor, UMI protocol, primary normal tissue",
-    "vital_tissues": [
+    "tissues": [
+      "adipose tissue",
+      "adrenal gland",
+      "blood",
       "brain",
+      "colon",
+      "esophagus",
+      "eye",
       "heart",
-      "spinal cord"
+      "kidney",
+      "liver",
+      "lung",
+      "lymph node",
+      "pancreas",
+      "small intestine",
+      "spinal cord",
+      "stomach",
+      "tongue",
+      "ureter",
+      "urinary bladder"
     ],
-    "lung_selector": "alveolar|pneumocyte|aerocyte|endothelial|basal",
+    "excluded_reproductive_tissues": [
+      "breast",
+      "fallopian tube",
+      "ovary",
+      "placenta",
+      "prostate gland",
+      "testis",
+      "uterus"
+    ],
     "excluded_cell_types": "macrophage|monocyte|microglia|\\bt cell|\\bb cell|\\bnk cell|natural killer|lymphocyte|leukocyte|dendritic|mast cell|neutrophil|plasma cell|myeloid|erythro|platelet|hematopoietic|immune|fibroblast|mesenchymal|stromal|adipocyte|neuroblast|precursor|progenitor|radial glia|immature|fetal|embryonic|primitive|cycling|proliferating|germinal|ganglionic eminence|malignant|neoplastic",
+    "excluded_body_cell_types": "phagocyte|lymphoid|thymocyte|t-helper|helper cell|regulatory cell|\\bbe cell|pre-b|plasmablast|antibody secreting|granulocyte|megakaryocyte|basophil|eosinophil|promyelocyte|kupffer|langerhans|blood cell|reticulocyte|myoblast|\\bilc\\d|mononuclear",
     "excluded_generic_terms": [
       "animal cell",
       "cardiac muscle cell",
@@ -113,11 +138,10 @@
       "supporting cell",
       "vascular associated smooth muscle cell"
     ],
-    "max_tissue_share": 0.1,
-    "cells": 3526769,
-    "donors": 955,
-    "collections": 49,
-    "assessable_donor_populations": 813
+    "cells": 13581391,
+    "donors": 1779,
+    "collections": 93,
+    "assessable_donor_populations": 2816
   },
   "proteins": 1804,
   "unavailable_gene_ids": [
@@ -159,14 +183,14 @@
     "ENSG00000310592"
   ],
   "status_counts": {
-    "below_screen": 1468,
-    "dismissed": 193,
-    "established": 107,
+    "below_screen": 1372,
+    "dismissed": 264,
+    "established": 132,
     "unassessed": 36
   },
   "action_counts": {
-    "none": 1697,
-    "unsafe": 107
+    "none": 1672,
+    "unsafe": 132
   },
   "limitations": [
     "A gene-count matrix cannot check alignment, strand or exonic support; the mapping-risk flags are reference properties, not read-level checks",
@@ -174,5 +198,5 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "5d8c1086758309db9ba3765805edc3b6a6768709f22880b15156bdd0774f1b8a"
+  "sha256": "eb61341e8a1e81a06c4983476682dde41eb99aa9e8171402253111a6692484fb"
 }

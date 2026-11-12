@@ -1,7 +1,7 @@
 {
  "schema": "oncoref.normal-expression-literature",
  "version": 1,
- "review_date": "2026-11-10",
+ "review_date": "2026-11-11",
  "scope": "Every protein that would be a Target candidate while its rare-cell signal is dismissed, or after release from the pooled 1% detection flag.",
  "rubric": {
   "R1": "A primary source reports the human gene in a panel organ by a gene-specific assay, and donor-level single-cell data detect it in that organ in at least 1% of one donor population. The rare-cell grade becomes established.",
@@ -9,7 +9,7 @@
   "R3": "Human loss of function causes disease of a Vital tissue, and the ortholog is expressed in that adult tissue. Unsafe.",
   "none": "No publication, restriction to germline, placenta or embryo, conflicting reports, assays shared with paralogs, cultured or diseased samples, other species alone, or database annotation alone. Recorded; no category effect."
  },
- "method": "Web literature search by Claude subagents on 2026-11-10; each claim carries the URL opened and the quote returned.",
+ "method": "Web literature search by Claude subagents on 2026-11-10, and on 2026-11-11 for the 21 proteins whose signal the whole-body panel dismissed; each claim carries the URL opened and the quote returned.",
  "limitations": [
   "Many pages were read through a fetch tool that summarizes, so quotes are as that tool relayed them",
   "Several papers were read at abstract level because full text was blocked; each evidence item says so",
@@ -18,9 +18,9 @@
   "HPA and GTEx bulk values are numeric filters elsewhere and were not counted as literature"
  ],
  "effects": {
-  "none": 67,
+  "none": 87,
   "exclude": 7,
-  "confirm_detection": 1
+  "confirm_detection": 2
  },
  "entries": [
   {
@@ -246,6 +246,54 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:4ec273108e0908d9e2f3",
+   "protein": "ATF7-NPFF",
+   "gene_ids": [
+    "ENSG00000267281"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No gene-specific publication on the ATF7-NPFF readthrough transcript was found; PubMed returns zero hits for the symbol and Europe PMC hits are only gene-list mentions in unrelated expression studies (titles seen, papers not opened). HPA lists it with evidence at transcript level only, bulk RNA tissue specificity 'Not detected', and no tissue IHC; the NCBI Gene summary is purely predicted function. Nothing separates this readthrough from its host genes ATF7 and NPFF.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene record ATF7-NPFF (JSON for ENSG00000267281)",
+     "url": "https://www.proteinatlas.org/ENSG00000267281.json",
+     "assay": "HPA summary annotation (bulk RNA-seq categories; antibody HPA003384 used for IF only)",
+     "tissue": "all profiled tissues",
+     "finding": "Evidence at transcript level; RNA tissue specificity and distribution both 'Not detected'; no tissue IHC reliability score; single-cell 'Cell type enhanced' with epididymal principal cells 3.6 nCPM.",
+     "quote": "Gene description: ATF7-NPFF readthrough; Evidence: Evidence at transcript level; RNA tissue specificity: Not detected; RNA tissue distribution: Not detected",
+     "paralog_specific": false,
+     "limitations": "Database summary of count data, not a gene-specific assay. The listed antibody (HPA003384) presumably recognises ATF7 sequence; it cannot distinguish readthrough from ATF7."
+    },
+    {
+     "source_title": "NCBI Gene 114108587 ATF7-NPFF readthrough (esummary)",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/114108587",
+     "assay": "database annotation",
+     "tissue": null,
+     "finding": "Only predicted functions; no expression statement.",
+     "quote": "Predicted to enable DNA binding activity; DNA-binding transcription factor activity; and zinc ion binding activity.",
+     "paralog_specific": null,
+     "limitations": "Automated prediction, no experimental data."
+    },
+    {
+     "source_title": "UniProt K7ELQ4 (ATF7-NPFF, unreviewed)",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:ATF7-NPFF+AND+organism_id:9606",
+     "assay": "database annotation",
+     "tissue": null,
+     "finding": "Unreviewed entry, no tissue-specificity comment.",
+     "quote": "K7ELQ4 ATF7-NPFF unreviewed",
+     "paralog_specific": null,
+     "limitations": "Empty tissue specificity field."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
    "entity_id": "PEG:01ba36c22e84d2cfe147",
    "protein": "BTNL2",
    "gene_ids": [
@@ -410,6 +458,64 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:62b40832b71778925612",
+   "protein": "CAGE1",
+   "gene_ids": [
+    "ENSG00000164304"
+   ],
+   "verdict": "no_normal_expression_evidence",
+   "reported_tissue": null,
+   "summary": "The discovery paper (SEREX, lung cancer sera) reports testis-specific expression among normal tissues, and UniProt and HPA repeat this (HPA: testis-enriched, spermatid/spermatocyte cluster, no IHC tissue profile). A mouse study places the protein in the acrosome of spermatids and spermatozoa. No opened source reports CAGE1 in adult brain or any other non-reproductive normal tissue; the discovery paper does note expression in non-cancerous tissue surrounding tumours, lower than in the tumour.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Sources describe germline, placental or embryonic restriction, or did not test adult somatic tissue.",
+   "evidence": [
+    {
+     "source_title": "Park S et al. 2003, Identification and characterization of a novel cancer/testis antigen gene CAGE-1. Biochim Biophys Acta 1625:173-82 (PubMed abstract, PMID 12531476)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/12531476/",
+     "assay": "Expression panel of normal and cancer tissues (assay not named in abstract); Western blot of in vitro translated protein",
+     "tissue": "normal tissue panel; testis",
+     "finding": "Testis-specific among normal tissues; wide expression in cancers; higher in cancer than surrounding non-cancerous tissue.",
+     "quote": "This gene displays testis-specific expression among normal tissues, and wide expression among various cancer tissues and cancer cell lines.",
+     "paralog_specific": null,
+     "limitations": "Abstract only (retrieved through NCBI E-utilities); the list of normal tissues tested and the assay are not stated in the abstract. 'Relatively higher in cancer tissues compared with their surrounding non-cancerous tissues' implies some signal in tumour-adjacent tissue."
+    },
+    {
+     "source_title": "Alsheimer M et al. 2005, The cancer/testis antigen CAGE-1 is a component of the acrosome of spermatids and spermatozoa. Eur J Cell Biol 84:445-52 (PubMed abstract, PMID 15819420)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/15819420/",
+     "assay": "RT-PCR, immunoblot, light and electron microscopic immunocytochemistry",
+     "tissue": "mouse testis",
+     "finding": "Predominantly postmeiotic expression; protein in acrosomal matrix and granule.",
+     "quote": "CAGE-1 localizes to the acrosomal matrix and acrosomal granule, as demonstrated by immunocytochemistry at the light and electron microscopic level.",
+     "paralog_specific": null,
+     "limitations": "Mouse, testis only; abstract only; does not test somatic tissues."
+    },
+    {
+     "source_title": "UniProt Q8TC20 (CAGE1_HUMAN), Tissue specificity comment",
+     "url": "https://rest.uniprot.org/uniprotkb/Q8TC20",
+     "assay": "Curated annotation",
+     "tissue": "normal tissues",
+     "finding": "Testis-specific in normal tissues.",
+     "quote": "Testis-specific expression in normal tissues, but wide expression among cancer tissues and cell lines.",
+     "paralog_specific": null,
+     "limitations": "Secondary annotation derived from the 2003 paper."
+    },
+    {
+     "source_title": "Human Protein Atlas, CAGE1 gene page",
+     "url": "https://www.proteinatlas.org/ENSG00000164304-CAGE1",
+     "assay": "RNA-seq summary; no IHC tissue profile",
+     "tissue": "testis",
+     "finding": "Tissue enriched (Testis); cluster 'Testis - Spermatogenesis'; single cell: early spermatids, late primary spermatocytes; protein tissue profile 'Not available'; brain RNA 'Not detected in human brain'.",
+     "quote": "Group enriched (Early spermatids, Late primary spermatocytes)",
+     "paralog_specific": null,
+     "limitations": "HPA RNA categories are the same bulk data already used as a numeric filter; no antibody staining to assess vital organs."
+    }
+   ],
+   "toxicity_reports": "No therapy targeting this gene and no on-target toxicity report was found (one combined web search across the batch genes returned only gene-database pages)."
+  },
+  {
    "entity_id": "PEG:f45a36c87b375c461e99",
    "protein": "CDCP2",
    "gene_ids": [
@@ -481,6 +587,44 @@
      "quote": "Nuclear expression in spermatocytes and spermatids in testis.",
      "paralog_specific": null,
      "limitations": "Antibody reliability label not shown on the fetched summary page. Database summary read through an automated page fetch; RNA classification derives from the HPA/GTEx bulk and single-cell data the catalog already uses, so it is not independent evidence."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:d576051097601567c804",
+   "protein": "CIMIP3",
+   "gene_ids": [
+    "ENSG00000287363"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No gene-specific publication was found for CIMIP3 (former symbol GUCA1ANB); Europe PMC title/abstract search returned zero hits and the single full-text hit was an unrelated zebrafish myocilin paper. The Human Protein Atlas lists it (as GUCA1ANB) as testis-enriched with no protein data and no IHC; UniProt (X6R8D5) has no tissue-specificity comment. Nothing published supports or refutes the retinal cone signal, which sits at the GUCA1A locus, a known photoreceptor gene.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene page GUCA1ANB (ENSG00000287363)",
+     "url": "https://www.proteinatlas.org/ENSG00000287363-CIMIP3",
+     "assay": "HPA consensus bulk RNA-seq / scRNA-seq summary",
+     "tissue": "testis",
+     "finding": "RNA tissue specificity 'Tissue enriched (Testis)' (testis 113.7 nTPM in the HPA JSON); single cell type specificity 'Not detected'; brain 'Not detected in human brain'; protein tissue profile not available.",
+     "quote": "Tissue enriched (Testis) ... Tissue expression cluster: Testis - Spermatogenesis (mainly)",
+     "paralog_specific": null,
+     "limitations": "Database summary of bulk/single-cell RNA-seq, not a gene-specific assay; HPA has no IHC tissue annotation for this gene, so no antibody reliability label applies. Page gave no retina/eye values in the text retrieved."
+    },
+    {
+     "source_title": "UniProtKB X6R8D5 (CIMIP3 / GUCA1ANB)",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:CIMIP3+AND+organism_id:9606",
+     "assay": "curated database",
+     "tissue": "n/a",
+     "finding": "Reviewed entry exists but has no 'Tissue specificity' and no 'Function' comment.",
+     "quote": "(no tissue specificity comment present)",
+     "paralog_specific": null,
+     "limitations": "Absence of annotation only."
     }
    ],
    "toxicity_reports": null
@@ -592,6 +736,74 @@
    "toxicity_reports": "None found."
   },
   {
+   "entity_id": "PEG:0c251c50f994bfdf3967",
+   "protein": "CTAG2",
+   "gene_ids": [
+    "ENSG00000126890"
+   ],
+   "verdict": "conflicting_or_nonspecific",
+   "reported_tissue": "brain (single RT-PCR report, contradicted by other sources)",
+   "summary": "The original LAGE-1 paper found testis as the only positive normal tissue, UniProt adds very low placenta and some uterus, and HPA IHC (reliability Enhanced) shows protein only in testis seminiferous ducts with other staining disregarded as off-target. One Brazilian multiple-myeloma group, however, reports normal brain positive for LAGE-1 by RT-PCR in an 18-tissue panel; the brain sample age is not stated and discrimination from CTAG1A/B (NY-ESO-1) is not explicitly documented, although NY-ESO-1 was scored negative in the same brain sample. No source opened reports CTAG2 in lung or alveolar cells. Because of the brain report this is classed as conflicting rather than silent.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Reports conflict, cannot separate the gene from paralogs, or come from cultured, diseased or fetal samples.",
+   "evidence": [
+    {
+     "source_title": "Lethe B et al. LAGE-1, a new gene with tumor specificity. Int J Cancer 1998 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/9626360/",
+     "assay": "RT-PCR (per abstract; details not in abstract)",
+     "tissue": "panel of normal tissues",
+     "finding": "Only testis positive among normal tissues.",
+     "quote": "The only normal tissue that expressed the gene was testis.",
+     "paralog_specific": null,
+     "limitations": "Abstract only; full text not opened, so the tissue list and primer specificity versus NY-ESO-1 were not verified. Authors cloned both genes and treat them separately."
+    },
+    {
+     "source_title": "de Carvalho F et al. Evaluation of LAGE-1 and NY-ESO-1 expression in multiple myeloma patients. Cancer Immun 2011",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3077292/",
+     "assay": "RT-PCR, 18 normal tissues (data from the group's earlier study, Andrade et al., ref 7)",
+     "tissue": "normal brain",
+     "finding": "Normal brain positive for LAGE-1; all other normal tissues negative; NY-ESO-1 positive only in mammary gland.",
+     "quote": "Normal brain was positive for LAGE-1 expression, while normal mammary gland was positive for NY-ESO-1 expression. All other normal tissues ... were negative for both CTAs evaluated.",
+     "paralog_specific": null,
+     "limitations": "Paper says primers amplify both LAGE-1a and -1b isoforms but does not state they exclude NY-ESO-1 (NY-ESO-1 was negative in brain, suggesting they do). Donor age, brain region and number of brain samples not given; the underlying Andrade et al. paper was not opened; end-point RT-PCR without quantitation."
+    },
+    {
+     "source_title": "UniProt O75638 (CTAG2_HUMAN) tissue specificity",
+     "url": "https://www.uniprot.org/uniprotkb/O75638/entry",
+     "assay": "curated annotation (from literature)",
+     "tissue": "testis, placenta, uterus",
+     "finding": "Testis; very low placenta and some uterus.",
+     "quote": "Testis and very low level in placenta and in some uterus samples.",
+     "paralog_specific": null,
+     "limitations": "Curated summary; uterus is reproductive tract and outside the vital list."
+    },
+    {
+     "source_title": "Human Protein Atlas CTAG2 tissue page (antibody HPA071467)",
+     "url": "https://www.proteinatlas.org/ENSG00000126890-CTAG2/tissue",
+     "assay": "IHC, reliability score Enhanced",
+     "tissue": "testis",
+     "finding": "Protein annotated only in testis; other staining judged off-target. Tissue expression cluster: 'Cluster 35: Non-specific - Mixed function'; RNA tissue specificity 'Tissue enhanced' (testis).",
+     "quote": "Cytoplasmic expression in a subset of cells in seminiferous ducts of testis. ... Medium consistency between antibody staining and RNA expression data. Presumed off target binding observed and disregarded.",
+     "paralog_specific": null,
+     "limitations": "HPA does not say whether the antibody cross-reacts with NY-ESO-1 (CTAG1A/B); 'off target' staining in other tissues was dismissed by curators, not shown absent."
+    },
+    {
+     "source_title": "De Smet C et al. DNA methylation is the primary silencing mechanism for a set of germ line- and tumor-specific genes. Mol Cell Biol 1999 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/10523621/",
+     "assay": "promoter CpG methylation analysis",
+     "tissue": "somatic tissues vs male germ cells",
+     "finding": "LAGE-1 promoter highly methylated in somatic tissues, unmethylated in germ cells (supports silencing).",
+     "quote": "those of MAGE-A1 and LAGE-1 were highly methylated in somatic tissues. In contrast, they were largely unmethylated in male germ cells.",
+     "paralog_specific": null,
+     "limitations": "Abstract only; methylation is indirect evidence for absence of expression."
+    }
+   ],
+   "toxicity_reports": "No on-target normal-tissue toxicity attributable to LAGE-1/NY-ESO-1 recognition was found in the one clinical paper opened: Lopez et al. 2025 phase 1 of IMCnyeso (NY-ESO-1/LAGE-1A x CD3 bispecific; https://pmc.ncbi.nlm.nih.gov/articles/PMC12047507/) states 'There are no treatment-related discontinuations or deaths. The most common adverse events are grade 1/2 cytokine release syndrome and associated symptoms.' Web-search snippets (not opened) for lete-cel and the NCI NY-ESO-1 TCR trial likewise describe no off-tumor target toxicity; these therapies target the shared SLLMWITQC/HLA-A*02 epitope, so they inform on LAGE-1A as well as NY-ESO-1."
+  },
+  {
    "entity_id": "PEG:8fe4e4afaf1b041a17b7",
    "protein": "CXorf58",
    "gene_ids": [
@@ -698,6 +910,84 @@
    "toxicity_reports": "No CYP26C1-targeted therapy toxicity found. (A pan-CYP26 inhibitor, talarozole, appeared in search results for topical skin use; I did not open it for safety data and it is not CYP26C1-selective.)"
   },
   {
+   "entity_id": "PEG:941a08a702068efc8f35",
+   "protein": "DAZL",
+   "gene_ids": [
+    "ENSG00000092345"
+   ],
+   "verdict": "no_normal_expression_evidence",
+   "reported_tissue": null,
+   "summary": "The 1996 cloning papers describe DAZL (DAZLA/SPGYLA/DAZH) as germ-cell or testis restricted, UniProt states 'Testis specific', and NCBI RefSeq describes expression in germ cells of both sexes. HPA rates its IHC (two antibodies) as Enhanced with the overview 'High expression in testis'; HPA text gave no staining in brain, retina or other vital organs (retina is N/A, i.e. not assessed). No opened source reports DAZL in adult eye, astrocytes or any somatic tissue.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Sources describe germline, placental or embryonic restriction, or did not test adult somatic tissue.",
+   "evidence": [
+    {
+     "source_title": "Shan Z et al. 1996, A SPGY copy homologous to the mouse gene Dazla and the Drosophila gene boule is autosomal and expressed only in the human male gonad. Hum Mol Genet 5:2005-11 (PubMed abstract, PMID 8968755)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/8968755/",
+     "assay": "cDNA cloning and tissue expression analysis (assay not named in abstract)",
+     "tissue": "human tissues; testis",
+     "finding": "Expressed only in the male gonad; sequence features (single 72 bp DAZ repeat, specific 130 bp domain) distinguish it from Y-linked DAZ.",
+     "quote": "SPGYLA encodes an RNA binding protein expressed only in the human male gonad.",
+     "paralog_specific": true,
+     "limitations": "Abstract only; tissue panel not listed in abstract; ovary expression (reported later) not captured."
+    },
+    {
+     "source_title": "Yen PH et al. 1996, The human autosomal gene DAZLA: testis specificity and a candidate for male infertility. Hum Mol Genet 5:2013-7 (PubMed abstract, PMID 8968756)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/8968756/",
+     "assay": "cDNA cloning; expression analysis (details not in abstract)",
+     "tissue": "testis",
+     "finding": "Title asserts testis specificity of DAZLA; abstract text itself only states DAZ's exclusive testis expression.",
+     "quote": "Its role in spermatogenesis is supported by its exclusive expression in testis",
+     "paralog_specific": null,
+     "limitations": "The quoted sentence refers to DAZ; the DAZLA testis-specificity claim is in the title only. Full text not opened."
+    },
+    {
+     "source_title": "Saxena R et al. 1996, The DAZ gene cluster on the human Y chromosome arose from an autosomal gene... Nat Genet 14:292-9 (PubMed abstract, PMID 8896558)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/8896558/",
+     "assay": "Expression analysis (details not in abstract)",
+     "tissue": "germ cells",
+     "finding": "DAZ family including autosomal DAZH appears expressed in germ cells.",
+     "quote": "The entire gene family appears to be expressed in germ cells.",
+     "paralog_specific": null,
+     "limitations": "Abstract only."
+    },
+    {
+     "source_title": "UniProt Q92904 (DAZL_HUMAN), Tissue specificity comment",
+     "url": "https://rest.uniprot.org/uniprotkb/Q92904",
+     "assay": "Curated annotation citing PMIDs 8896558, 8968755, 8968756",
+     "tissue": "testis",
+     "finding": "Testis specific.",
+     "quote": "Testis specific.",
+     "paralog_specific": null,
+     "limitations": "Secondary annotation."
+    },
+    {
+     "source_title": "NCBI Gene 1618 DAZL RefSeq summary",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/1618",
+     "assay": "Curated summary",
+     "tissue": "germ cells (testis, ovary, fetal gonad)",
+     "finding": "Family expressed in pre- and postnatal germ cells of both sexes.",
+     "quote": "encodes potential RNA binding proteins that are expressed in prenatal and postnatal germ cells of males and females",
+     "paralog_specific": null,
+     "limitations": "Secondary summary (retrieved via E-utilities)."
+    },
+    {
+     "source_title": "Human Protein Atlas, DAZL tissue page",
+     "url": "https://www.proteinatlas.org/ENSG00000092345-DAZL/tissue",
+     "assay": "IHC with HPA019777 and HPA047113; reliability Enhanced",
+     "tissue": "44 normal tissues; testis",
+     "finding": "Protein overview is high expression in testis; RNA testis-enriched; brain RNA 'Not detected in human brain'; retina protein score N/A.",
+     "quote": "High expression in testis.",
+     "paralog_specific": true,
+     "limitations": "Per-tissue staining levels were not readable in the fetched text, so absence in each vital organ was not individually confirmed; retina and several CNS regions are N/A (not stained)."
+    }
+   ],
+   "toxicity_reports": "No therapy targeting this gene and no on-target toxicity report was found (one combined web search across the batch genes returned only gene-database pages)."
+  },
+  {
    "entity_id": "PEG:c3e68b6addf66e379e7d",
    "protein": "DCAF8L2",
    "gene_ids": [
@@ -731,6 +1021,64 @@
      "quote": "DCAF8L2 was aberrantly expressed in breast cancer cell lines.",
      "paralog_specific": null,
      "limitations": "Abstract only; cultured cancer cells, not normal tissue; full text not opened."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:85c1d55282c3a1dd9b19",
+   "protein": "DCST1",
+   "gene_ids": [
+    "ENSG00000163357"
+   ],
+   "verdict": "conflicting_or_nonspecific",
+   "reported_tissue": "retina (photoreceptors; RNA-seq database evidence only)",
+   "summary": "No primary paper was found that assays DCST1 in normal adult human non-reproductive tissue. The only human expression paper opened (Nair 2016) used HEK293T cells, and mouse RT-PCR surveys describe Dcst1 as testis-abundant; however HPA independently classifies bulk RNA as 'Group enriched (Retina, Skin, Testis)' and single-cell RNA as enriched in cone and rod photoreceptors, and one HPA mass-spectrometry dataset flags heart muscle while another does not detect it. Retinal expression is therefore plausible but unconfirmed by any gene-specific assay; HPA has no IHC annotation.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Reports conflict, cannot separate the gene from paralogs, or come from cultured, diseased or fetal samples.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene page DCST1 (ENSG00000163357)",
+     "url": "https://www.proteinatlas.org/ENSG00000163357-DCST1",
+     "assay": "HPA consensus bulk RNA-seq, scRNA-seq, MS proteomics summaries",
+     "tissue": "retina, skin, testis; heart muscle (MS)",
+     "finding": "RNA 'Group enriched (Retina, Skin, Testis)'; HPA JSON gives retina 2.4, skin 2.9, testis 6.3 nTPM; single cell enriched in cone (50.8 nCPM) and rod (47.3 nCPM) photoreceptors, late primary spermatocytes, early spermatids, Paneth cells; MS 'Tissue enriched (Heart muscle)' in MannLab data but 'Not detected' in ProteinTalks DB; brain 'Not detected in human brain'.",
+     "quote": "Group enriched (Retina, Skin, Testis) ... Group enriched (Late primary spermatocytes, Cone photoreceptor cells, Rod photoreceptor cells, Early spermatids, Paneth cells)",
+     "paralog_specific": null,
+     "limitations": "RNA-seq database summaries subject to the same same-strand-host (ADAM15) read-assignment concern as the Census data; low bulk nTPM; IHC is 'Pending normal tissue annotation' (antibody HPA060314 has IF reliability 'Approved' only); the two MS datasets disagree."
+    },
+    {
+     "source_title": "Nair S et al. Global functional profiling of human ubiquitome identifies E3 ubiquitin ligase DCST1 as a novel negative regulator of Type-I interferon signaling. Sci Rep 2016",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5080589",
+     "assay": "qPCR, Western blot, co-IP",
+     "tissue": "HEK293T cell line (not normal tissue)",
+     "finding": "Endogenous DCST1 mRNA and protein detected in HEK293T cells and induced by IFN-beta; no normal tissue survey.",
+     "quote": "Endogenous DCST1 expression was upregulated in HEK293T cells at the protein level after IFNβ treatment.",
+     "paralog_specific": true,
+     "limitations": "Transformed cell line only; Western detection needed MG132; says nothing about normal adult tissue."
+    },
+    {
+     "source_title": "Noda T et al. Sperm membrane proteins DCST1 and DCST2 are required for sperm-egg interaction in mice and fish. Commun Biol 2022",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8989947/fullTextXML",
+     "assay": "multi-tissue RT-PCR",
+     "tissue": "mouse tissues",
+     "finding": "Dcst1 mRNA abundant in mouse testis; authors call DCST1/2 testis-enriched.",
+     "quote": "RT-PCR analysis with multiple mouse tissues showed that Dcst1 and Dcst2 mRNAs are abundantly expressed in mouse testis",
+     "paralog_specific": true,
+     "limitations": "Mouse, not human; I did not see whether eye/retina was in the tissue panel."
+    },
+    {
+     "source_title": "UniProtKB Q5T197 (DCST1)",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:DCST1+AND+organism_id:9606",
+     "assay": "curated database",
+     "tissue": "n/a",
+     "finding": "No 'Tissue specificity' comment; function annotated as STAT2 E3 ligase and sperm-egg fusion protein.",
+     "quote": "Essential sperm cell-surface protein required for sperm-egg fusion and fertilization (By similarity).",
+     "paralog_specific": null,
+     "limitations": "Annotation only."
     }
    ],
    "toxicity_reports": null
@@ -898,6 +1246,34 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:77b7441a6ed178e9779c",
+   "protein": "ENSG00000256349",
+   "gene_ids": [
+    "ENSG00000256349"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No gene-specific literature exists for this unnamed locus ('Novel protein') overlapping BBS1 and DPP3; Europe PMC returns two hits that are gene-list mentions in unrelated studies (not opened). HPA's own RNA data call it tissue enhanced in retina (2.1 nTPM) and enriched in rod photoreceptors, in the 'Brain & retina - Neuronal signaling' cluster, but that is count data subject to the same host-gene (BBS1, a photoreceptor cilium gene) assignment problem and is not an independent assay. No tissue IHC is available.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene record ENSG00000256349 (JSON)",
+     "url": "https://www.proteinatlas.org/ENSG00000256349.json",
+     "assay": "HPA summary annotation (bulk and single-cell RNA-seq; antibody HPA058283 used for IF in cell lines only)",
+     "tissue": "retina",
+     "finding": "RNA tissue specificity 'Tissue enhanced' (retina 2.1 nTPM); single-cell 'Cell type enriched' rod photoreceptor cells 11.5 nCPM; expression cluster 'Brain & retina - Neuronal signaling'; no tissue IHC reliability score.",
+     "quote": "Gene description: Novel protein; RNA tissue specificity: Tissue enhanced; RNA tissue specific nTPM: retina 2.1; Tissue expression cluster: Cluster 46: Brain & retina - Neuronal signaling",
+     "paralog_specific": false,
+     "limitations": "Sequencing counts only; locus shares exons with same-strand BBS1/DPP3, so reads may belong to the hosts. Not new evidence beyond numeric filters, but note the retina call agrees with the single-cell signal."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
    "entity_id": "PEG:d3d1dc2af2ae72ee0df0",
    "protein": "ENSG00000256825",
    "gene_ids": [
@@ -1020,6 +1396,44 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:c1dae3de595eae0de6bb",
+   "protein": "ENSG00000284779",
+   "gene_ids": [
+    "ENSG00000284779"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "Ensembl lists this as an unnamed 'novel protein' gene (single transcript ENST00000643349, chr11:2,129,112-2,149,603, minus strand) overlapping IGF2/INS-IGF2; UniProt has only an unreviewed 149-aa 'Uncharacterized protein' entry (A0A2R8Y747) with no tissue annotation. No gene-specific publication was found. HPA gives only RNA categories (liver-enriched), which cannot be separated from IGF2 transcription and is not new evidence.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Ensembl REST lookup ENSG00000284779",
+     "url": "https://rest.ensembl.org/lookup/id/ENSG00000284779?content-type=application/json;expand=1",
+     "assay": "Genome annotation",
+     "tissue": "n/a",
+     "finding": "Protein-coding 'novel protein', one transcript, no gene symbol.",
+     "quote": "novel protein",
+     "paralog_specific": null,
+     "limitations": "Annotation only; no expression evidence."
+    },
+    {
+     "source_title": "Human Protein Atlas, ENSG00000284779",
+     "url": "https://www.proteinatlas.org/ENSG00000284779",
+     "assay": "RNA-seq summary; no IHC tissue profile",
+     "tissue": "liver (RNA category)",
+     "finding": "Tissue enriched (Liver), cluster 'Liver - Metabolism & Coagulation'; single cell 'Not detected'; tissue protein profile not available.",
+     "quote": "Tissue enriched (Liver)",
+     "paralog_specific": false,
+     "limitations": "Bulk RNA category for a locus nested in same-strand IGF2/INS-IGF2 (IGF2 is highly transcribed in adult liver); reads cannot be attributed to this gene. Same data class as the existing numeric filter."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
    "entity_id": "PEG:95d1f13dacc136c845a1",
    "protein": "FAM90A26",
    "gene_ids": [
@@ -1063,6 +1477,74 @@
      "quote": "Not detected - no cluster assigned",
      "paralog_specific": null,
      "limitations": "HPA page read through a fetch-and-summarize tool; RNA specificity labels derive from the same HPA/GTEx bulk RNA already used as numeric filters, so not independent evidence. No normal-tissue IHC reliability label was shown on the summary page."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:eff1a5bc29533898a35b",
+   "protein": "FBXO47",
+   "gene_ids": [
+    "ENSG00000204952"
+   ],
+   "verdict": "conflicting_or_nonspecific",
+   "reported_tissue": "kidney, liver, pancreas (single 2005 report, contradicted by later data)",
+   "summary": "The 2005 cloning paper (the source of UniProt's 'Widely expressed, with highest levels in kidney, liver and pancreas') reports FBXO47 expression in normal kidney, liver, pancreas, thyroid, stomach and small intestine. This conflicts with HPA (RNA 'Tissue enriched (Testis)', early primary spermatocytes) and with mouse qPCR/RT-PCR studies that find Fbxo47 abundant in testis and functionally meiosis-specific. I only had access to the 2005 abstract, which does not state the assay, so the vital-organ claim could not be verified as gene-specific; nothing was found on cornea/keratocytes.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Reports conflict, cannot separate the gene from paralogs, or come from cultured, diseased or fetal samples.",
+   "evidence": [
+    {
+     "source_title": "Simon-Kayser B et al. Molecular cloning and characterization of FBXO47, a novel gene containing an F-box domain, located in the 17q12 band deleted in papillary renal cell carcinoma. Genes Chromosomes Cancer 2005 (PMID 15723337)",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:15723337%20AND%20SRC:MED&resultType=core&format=json",
+     "assay": "not stated in abstract (expression comparison of normal vs matched tumor tissue)",
+     "tissue": "normal kidney, liver, pancreas; lesser thyroid, stomach, small intestine",
+     "finding": "Reports preferential expression in normal versus tumor tissue in several vital organs.",
+     "quote": "FBXO47 is preferentially expressed in normal tissue relative to the corresponding tumor tissue, particularly in the kidney, liver, and pancreas and to a lesser extent in the thyroid gland, stomach, and small intestine.",
+     "paralog_specific": null,
+     "limitations": "Abstract only; assay, quantitation and whether testis was included are unknown to me; not replicated by HPA/mouse data."
+    },
+    {
+     "source_title": "UniProtKB Q5MNV8 (FBXO47)",
+     "url": "https://rest.uniprot.org/uniprotkb/search?query=gene_exact:FBXO47+AND+organism_id:9606",
+     "assay": "curated database citing PubMed:15723337",
+     "tissue": "kidney, liver, pancreas",
+     "finding": "Tissue specificity comment derived from the 2005 paper.",
+     "quote": "Widely expressed, with highest levels in kidney, liver and pancreas. Down-regulated in tumors.",
+     "paralog_specific": null,
+     "limitations": "Secondary; same single source."
+    },
+    {
+     "source_title": "Human Protein Atlas gene page FBXO47 (ENSG00000204952)",
+     "url": "https://www.proteinatlas.org/ENSG00000204952-FBXO47",
+     "assay": "HPA consensus bulk RNA-seq / scRNA-seq summary",
+     "tissue": "testis",
+     "finding": "RNA 'Tissue enriched (Testis)' (testis 3.6 nTPM in JSON); single cell 'Cell type enriched (Early primary spermatocytes)'; protein 'Not detected' by MS; brain 'Not detected in human brain' (single-nuclei brain data list Schwann cells 8.8 nCPM).",
+     "quote": "Tissue enriched (Testis) ... Cell type enriched (Early primary spermatocytes)",
+     "paralog_specific": null,
+     "limitations": "Database summary of bulk/single-cell RNA-seq, not a gene-specific assay; HPA has no IHC tissue annotation for this gene, so no antibody reliability label applies."
+    },
+    {
+     "source_title": "Hua R et al. FBXO47 regulates telomere-inner nuclear envelope integration by stabilizing TRF2 during meiosis. Nucleic Acids Res 2019",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC7145685/fullTextXML",
+     "assay": "real-time qPCR across mouse tissues",
+     "tissue": "mouse tissues",
+     "finding": "Fbxo47 transcripts abundant in testis; expressed specifically during meiotic prophase I.",
+     "quote": "The expression pattern of Fbxo47 transcripts in mouse tissues was analyzed by real-time q-PCR. Fbxo47 transcripts were found to be abundantly expressed in testis",
+     "paralog_specific": true,
+     "limitations": "Mouse, not human."
+    },
+    {
+     "source_title": "Tanno N et al. FBXO47 is essential for preventing the synaptonemal complex from premature disassembly in mouse male meiosis. iScience 2022",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8931362",
+     "assay": "RT-PCR tissue panel",
+     "tissue": "mouse adult organs",
+     "finding": "Higher expression in adult testis than in other adult organs examined.",
+     "quote": "Fbxo47 gene showed higher expression levels in adult testis compared to other adult organs that we examined.",
+     "paralog_specific": true,
+     "limitations": "Mouse, not human; 'higher' does not mean absent elsewhere."
     }
    ],
    "toxicity_reports": null
@@ -1318,6 +1800,74 @@
     }
    ],
    "toxicity_reports": "None found."
+  },
+  {
+   "entity_id": "PEG:9b159fa40f92ed2bde55",
+   "protein": "GSX2",
+   "gene_ids": [
+    "ENSG00000180613"
+   ],
+   "verdict": "no_normal_expression_evidence",
+   "reported_tissue": null,
+   "summary": "Human sources describe GSX2 as an embryonic ventral-telencephalon (ganglionic eminence) patterning factor; no opened source reports GSX2 RNA or protein in normal adult human tissue by a gene-specific assay, and nothing was found for retina or RPE. Caveat: in adult mouse brain Gsx2 protein is expressed in a restricted subset of subventricular-zone neural stem cells (antibody and knock-in reporter), and HPA bulk RNA lists human brain at 1.1 nTPM, so a small adult human SVZ population cannot be excluded. HPA has no tissue IHC and UniProt has no tissue-specificity comment.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Sources describe germline, placental or embryonic restriction, or did not test adult somatic tissue.",
+   "evidence": [
+    {
+     "source_title": "De Mori R et al. Agenesis of the putamen and globus pallidus caused by recessive mutations in the homeobox gene GSX2. Brain 2019 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/31412107/",
+     "assay": "review statement in a human genetics paper; patient fibroblast expression studies",
+     "tissue": "embryonic lateral/medial ganglionic eminences",
+     "finding": "Describes GSX2 as developmental; loss causes basal ganglia agenesis.",
+     "quote": "GSX2 is highly expressed in neural progenitors of the lateral and median ganglionic eminences, two protrusions of the ventral telencephalon from which the basal ganglia and olfactory tubercles originate",
+     "paralog_specific": null,
+     "limitations": "Abstract only; statement is about development, not a survey of adult tissues. Paper also measured GSX2 in cultured patient fibroblasts (cultured cells, not tissue)."
+    },
+    {
+     "source_title": "Lopez-Juarez A et al. Gsx2 controls region-specific activation of neural stem cells and injury-induced neurogenesis in the adult subventricular zone. Genes Dev 2013 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/23723414/",
+     "assay": "immunostaining / genetic reporter in mouse (per abstract and search summary)",
+     "tissue": "adult mouse brain subventricular zone",
+     "finding": "Gsx2 present in a subset of adult mouse SVZ neural stem cells and induced after injury.",
+     "quote": "In the intact brain, Gsx2 is expressed in a regionally restricted subset of NSCs and promotes the activation and lineage progression of stem cells",
+     "paralog_specific": true,
+     "limitations": "Mouse, not human; abstract only (full text XML could not be retrieved). Implies possible adult brain niche expression but no human confirmation found."
+    },
+    {
+     "source_title": "Dunwell TL, Holland PWH. Diversity of human and mouse homeobox gene expression in development and adult tissues. BMC Dev Biol 2016",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5094009/",
+     "assay": "meta-analysis of RNA-seq datasets",
+     "tissue": "neural tissues (dataset level)",
+     "finding": "GSX2 listed among ANTP-class homeobox genes in the 'neural-enriched' set.",
+     "quote": "it does include several other ANTP class genes including several implicated in specification and patterning of anterior brain regions in other vertebrates: BARHL1, BARHL2, EN1, EN2, TLX3, NKX6-2, NKX2-2, DLX1, DLX2, HMX1, VAX2, GSX2",
+     "paralog_specific": false,
+     "limitations": "RNA-seq compendium (includes developmental samples); not a gene-specific assay and I did not determine which samples drove the neural call."
+    },
+    {
+     "source_title": "Human Protein Atlas gene record GSX2 (JSON)",
+     "url": "https://www.proteinatlas.org/ENSG00000180613.json",
+     "assay": "HPA summary annotation",
+     "tissue": "brain",
+     "finding": "RNA tissue specificity 'Tissue enhanced' (brain 1.1 nTPM), cluster 'Brain - Neuronal signaling'; single-cell and single-nuclei brain 'Not detected'; no antibody / no IHC.",
+     "quote": "RNA tissue specificity: Tissue enhanced; RNA tissue specific nTPM: brain 1.1; RNA single cell type specificity: Not detected; RNA single nuclei brain specificity: Not detected",
+     "paralog_specific": false,
+     "limitations": "Count data already used as a numeric filter; no protein data."
+    },
+    {
+     "source_title": "UniProt Q9BZM3 (GSX2_HUMAN)",
+     "url": "https://www.uniprot.org/uniprotkb/Q9BZM3/entry",
+     "assay": "curated annotation",
+     "tissue": null,
+     "finding": "No tissue-specificity comment; function described as brain development.",
+     "quote": "regulates the expression of numerous genes including genes important for brain development",
+     "paralog_specific": null,
+     "limitations": "No adult expression statement."
+    }
+   ],
+   "toxicity_reports": null
   },
   {
    "entity_id": "PEG:6d42c5be7b9168a8aa85",
@@ -1602,6 +2152,44 @@
    "toxicity_reports": "Morgan et al. 2013: of nine patients given autologous T cells transduced with an affinity-enhanced HLA-A*0201-restricted anti-MAGE-A3 TCR (also recognizing MAGE-A9 and MAGE-A12 epitopes), three developed mental status changes and two died in coma with necrotizing leukoencephalopathy and CD3+/CD8+ T-cell infiltrates (these outcome details were read from the search-result summary of the abstract plus the opened full text). Authors attribute it to MAGE-A12 in brain ('We propose that the best explanation for the neurologic toxicity observed in three of the nine patients' is recognition of MAGE-A12 in a subset of neurons); Martin et al. 2021 argue an off-target EPS8L2 peptide is the more likely cause. Cause remains unresolved."
   },
   {
+   "entity_id": "PEG:2ada35b6f5f76e61df6d",
+   "protein": "MINDY4B",
+   "gene_ids": [
+    "ENSG00000214237"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No gene-specific expression paper exists: the only two PubMed hits for MINDY4B/FAM188B2/C3orf76 are an exome study and a plasma peptidomics study, and UniProt has no tissue-specificity comment. HPA classifies the RNA as brain-enriched (cluster 'Brain - Neuronal signaling'), with IHC 'Pending normal tissue annotation' and no retina or ciliary-body data. That HPA RNA call is database-level bulk evidence, not a gene-specific assay, so it is noted but does not establish vital-tissue expression.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas, MINDY4B gene and tissue pages",
+     "url": "https://www.proteinatlas.org/ENSG00000214237-MINDY4B/tissue",
+     "assay": "RNA-seq summary; IHC pending",
+     "tissue": "brain (RNA category)",
+     "finding": "Tissue enriched (Brain); spatial transcriptomics highest in spinal cord 4.2 nCPM; single-cell 'Low cell type specificity'; MS 'Not detected'; no IHC annotation.",
+     "quote": "Tissue enriched (Brain)",
+     "paralog_specific": null,
+     "limitations": "Low absolute levels; RNA-seq category only (same data class as the existing numeric filter); gene exon lies inside a same-strand gene, so read attribution is uncertain; no protein evidence."
+    },
+    {
+     "source_title": "NCBI Gene 646951 MINDY4B summary",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/646951",
+     "assay": "Predicted function annotation",
+     "tissue": "n/a",
+     "finding": "Function predicted only; no expression statement in the summary.",
+     "quote": "Predicted to enable K48-linked deubiquitinase activity.",
+     "paralog_specific": null,
+     "limitations": "No experimental data."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
    "entity_id": "PEG:bc8d26354119764562ee",
    "protein": "MYH13",
    "gene_ids": [
@@ -1819,6 +2407,34 @@
      "quote": "Not detected - no cluster assigned",
      "paralog_specific": null,
      "limitations": "RNA category is derived from HPA/GTEx bulk data already used as a numeric filter; not new evidence."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:a90c8529360aad1a85c2",
+   "protein": "OOSP4B",
+   "gene_ids": [
+    "ENSG00000255393"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No gene-specific publication was found (Europe PMC title/abstract search: 0 hits; full-text search for 'OOSP4B' only returned false matches on ATG4B). HPA reports bulk RNA 'Not detected' with single-cell RNA 'Cell type enriched (Oocytes)', and UniProt (A0A2R8Y4Y8) has no tissue or function comment. Nothing published supports cortical-neuron expression.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene page OOSP4B (ENSG00000255393)",
+     "url": "https://www.proteinatlas.org/ENSG00000255393-OOSP4B",
+     "assay": "HPA consensus bulk RNA-seq / scRNA-seq summary",
+     "tissue": "oocytes",
+     "finding": "Bulk RNA tissue specificity 'Not detected'; single cell 'Cell type enriched (Oocytes)' (23.7 nCPM in JSON); brain 'Not detected in human brain'; HPA evidence 'No human protein/transcript evidence'.",
+     "quote": "Single cell type specificity: Cell type enriched (Oocytes)",
+     "paralog_specific": null,
+     "limitations": "Database summary of bulk/single-cell RNA-seq, not a gene-specific assay; HPA has no IHC tissue annotation for this gene, so no antibody reliability label applies. HPA single-nuclei brain field lists inhibitory neurons at 1.1 nCPM and a spatial-transcriptomics tooltip (spinal cord 4 nCPM), both very low and not gene-specific assays."
     }
    ],
    "toxicity_reports": null
@@ -2176,6 +2792,84 @@
     }
    ],
    "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:4b7a013bbfca617fe9ff",
+   "protein": "POTEC",
+   "gene_ids": [
+    "ENSG00000183206"
+   ],
+   "verdict": "no_normal_expression_evidence",
+   "reported_tissue": null,
+   "summary": "Published POTE-family work describes normal expression as limited to prostate, ovary, testis and placenta, with brain, heart, liver and kidney negative by dot blot and a multi-tissue RT-PCR panel; paralog-resolved RNA-seq analysis (Barger 2018) classes POTEC (POTE-18, Group 2) as testis-specific in normal tissues. In the original cloning study transcripts from the chromosome 18 paralog were not among those recovered from prostate or testis cDNA. No source reports POTEC in cornea or other eye tissue; the UniProt 'prostate and testis' comment is inherited from the family-level paper and is not POTEC-specific.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Sources describe germline, placental or embryonic restriction, or did not test adult somatic tissue.",
+   "evidence": [
+    {
+     "source_title": "Barger CJ et al. Expression of the POTE gene family in human ovarian cancer. Sci Rep 2018",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6244393/",
+     "assay": "paralog-resolved RNA-seq (GTEx) across normal tissues",
+     "tissue": "normal tissue panel",
+     "finding": "Group 1 and 2 POTEs including POTEC are testis-specific; Table 1 marks POTEC (POTE18, group 2) as testis-specific.",
+     "quote": "We conclude that Groups 1 & 2 POTE s ( A , B , B2 , C , D ) have normal tissue expression consistent with CTAs, while Group 3 POTEs ... do not",
+     "paralog_specific": true,
+     "limitations": "Based on GTEx RNA-seq (the same kind of data as the catalog's numeric filter), so partly circular; multi-mapping among POTEB/B2/B3/C/D is not discussed; GTEx has no eye tissue."
+    },
+    {
+     "source_title": "Bera TK et al. POTE, a highly homologous gene family ... expressed in prostate, ovary, testis, placenta, and prostate cancer. PNAS 2002",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC139254/",
+     "assay": "multiple-tissue RNA dot blot (76 samples) and RT-PCR on normal tissue cDNA panel",
+     "tissue": "brain, heart, liver, kidney, lung, pancreas, colon (negative); testis, prostate, placenta, ovary (positive)",
+     "finding": "No signal in essential organs; RT-PCR positive only in testis, prostate, placenta and weakly ovary.",
+     "quote": "The expression of the C34AG cluster was not detected in any of the essential organs, including brain, heart, liver, and kidney.",
+     "paralog_specific": false,
+     "limitations": "Probe/primers derive from POTE-21 (POTED) and paralogs are 90-98% identical, so the assay is family-level; no eye tissue in panel."
+    },
+    {
+     "source_title": "Bera TK et al. PNAS 2002 (same paper, paralog cloning)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC139254/",
+     "assay": "RT-PCR cloning and sequencing of >24 clones from prostate and testis cDNA",
+     "tissue": "prostate, testis",
+     "finding": "Expressed paralogs mapped to chromosomes 2, 14, 15, 21, 22; chromosome 18 (POTEC) not among them.",
+     "quote": "POTE RNAs are transcribed from chromosomes 2, 14, 15, 21, and 22 in both prostate and testis.",
+     "paralog_specific": true,
+     "limitations": "Small clone sample (>24), so a low-abundance chr18 transcript could be missed."
+    },
+    {
+     "source_title": "Bera TK et al. POTE paralogs are induced and differentially expressed in many cancers. Cancer Res 2006 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/16397215/",
+     "assay": "RT-PCR and PCR-based cloning for paralog assignment",
+     "tissue": "normal tissues",
+     "finding": "Family-level normal expression restricted to four reproductive/prostate tissues.",
+     "quote": "The expression of POTE genes in normal tissues is restricted to prostate, ovary, testis, and placenta.",
+     "paralog_specific": null,
+     "limitations": "Abstract only; POTE-18 result not stated in abstract."
+    },
+    {
+     "source_title": "UniProt B2RU33 (POTEC_HUMAN) tissue specificity",
+     "url": "https://www.uniprot.org/uniprotkb/B2RU33/entry",
+     "assay": "curated annotation citing PubMed 12475935",
+     "tissue": "prostate, testis",
+     "finding": "Annotated as prostate and testis.",
+     "quote": "Expressed in prostate and testis.",
+     "paralog_specific": false,
+     "limitations": "Derived from the family-level 2002 paper, in which the chr18 paralog was not actually recovered."
+    },
+    {
+     "source_title": "Human Protein Atlas gene record POTEC (JSON)",
+     "url": "https://www.proteinatlas.org/ENSG00000183206.json",
+     "assay": "HPA summary annotation",
+     "tissue": "testis",
+     "finding": "RNA 'Tissue enriched' testis (1.8 nTPM), cluster 'Testis - Spermatogenesis'; no antibody/IHC for POTEC.",
+     "quote": "RNA tissue specificity: Tissue enriched; RNA tissue specific nTPM: testis 1.8; Tissue expression cluster: Cluster 6: Testis - Spermatogenesis",
+     "paralog_specific": false,
+     "limitations": "Count data; no protein data."
+    }
+   ],
+   "toxicity_reports": "None found; no POTE-directed therapy with clinical or preclinical toxicity data was identified in the searches run."
   },
   {
    "entity_id": "PEG:ce4f9e9638ede2dfd12e",
@@ -2758,6 +3452,54 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:1938d1f3a4e6859b8e67",
+   "protein": "RGPD4",
+   "gene_ids": [
+    "ENSG00000196862"
+   ],
+   "verdict": "conflicting_or_nonspecific",
+   "reported_tissue": "testis and HeLa cDNA (RT-PCR); ESTs from mixed tissues",
+   "summary": "The only primary expression data is the family paper (Ciccarelli 2005): RT-PCR fragments assigned to RGP1, 3, 4, 7, 8 were amplified from testis and HeLa cDNA libraries using primers common to all RGP copies, and ESTs for all copies come from mixed fetal, adult, normal and tumour tissues with no tissue survey. A short variant of RGP5/6/7 (not RGP4) is described as ubiquitous. HPA single-cell lists retinal bipolar cells and adrenal medulla cells alongside spermatids, but that is short-read data subject to the same multi-copy ambiguity; no antibody data and no retina-specific publication were found.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Reports conflict, cannot separate the gene from paralogs, or come from cultured, diseased or fetal samples.",
+   "evidence": [
+    {
+     "source_title": "Ciccarelli FD et al. 2005, Complex genomic rearrangements lead to novel primate gene function. Genome Res 15:343-51 (PMC551560)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC551560/",
+     "assay": "RT-PCR on cDNA libraries with sequencing of products; EST matching",
+     "tissue": "testis and HeLa cDNA libraries",
+     "finding": "Fragments corresponding to RGP4 (among others) amplified from testis and HeLa libraries.",
+     "quote": "by RT-PCR we could amplify DNA fragments specifically corresponding to RGP1, 3, 4, 7, 8",
+     "paralog_specific": null,
+     "limitations": "Primers sit in regions shared by all RGP genes; copy assignment is by product sequence and some copies are 100% identical in the amplified part. Only testis and a cancer cell line were tested; which library gave the RGP4 product is not stated."
+    },
+    {
+     "source_title": "Ciccarelli FD et al. 2005 (same paper)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC551560/",
+     "assay": "EST database matching",
+     "tissue": "unspecified fetal, adult, normal and tumour tissues",
+     "finding": "ESTs matching all copies exist, from varied tissue sources; a short variant of RGP5/6/7 is reported ubiquitous.",
+     "quote": "These ESTs derive from different human tissues, including fetal, adult, normal, and tumoral cells",
+     "paralog_specific": null,
+     "limitations": "No tissue named for RGP4 ESTs; the ubiquitous-expression statement concerns RGP5, 6 or 7, not RGP4."
+    },
+    {
+     "source_title": "Human Protein Atlas, RGPD4 single cell page",
+     "url": "https://www.proteinatlas.org/ENSG00000196862-RGPD4/single+cell",
+     "assay": "scRNA-seq summary",
+     "tissue": "testis germ cells; adrenal medulla; retina (bipolar cells)",
+     "finding": "Cell type enhanced in spermatids/spermatocytes, adrenal medulla cells and retinal bipolar cells; tissue RNA 'Tissue enhanced (Testis)'; no IHC profile.",
+     "quote": "Cell type enhanced (Early spermatids, Late primary spermatocytes, Adrenal medulla cells, Retinal bipolar cells)",
+     "paralog_specific": false,
+     "limitations": "Database short-read single-cell data of the same kind as the signal under review; RGPD3/5/6/8 and RANBP2 share sequence, and HPA gives no note on multi-mapping. Not an independent gene-specific assay."
+    }
+   ],
+   "toxicity_reports": "No therapy targeting this gene and no on-target toxicity report was found (one combined web search across the batch genes returned only gene-database pages)."
+  },
+  {
    "entity_id": "PEG:ba172ee518ba0c020809",
    "protein": "RGSL1",
    "gene_ids": [
@@ -2935,6 +3677,74 @@
      "quote": "Estimation of protein expression could not be performed.",
      "paralog_specific": null,
      "limitations": "Database summary read through an automated page fetch; RNA classification derives from the HPA/GTEx bulk and single-cell data the catalog already uses, so it is not independent evidence."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:c4287bfb2fc94398e3cf",
+   "protein": "SCGB1D1",
+   "gene_ids": [
+    "ENSG00000168515"
+   ],
+   "verdict": "specialized_tissue_expression",
+   "reported_tissue": "lacrimal gland (secreted into tears)",
+   "summary": "SCGB1D1 (lipophilin A) is an established secreted tear protein: it was purified and sequenced from normal human tears as a heterodimer with lipophilin C (SCGB2A1), and HPA single-cell data put its top RNA signal in lacrimal acinar cells, matching the Census 'eye: acinar cell' signal. UniProt additionally lists thymus, kidney, testis, ovary and salivary gland, and the 1999 cDNA paper says lipophilins were 'widely expressed in normal tissues', but I could only open that abstract and could not confirm that the assay separates lipophilin A from its close paralog lipophilin B (SCGB1D2). HPA MS data flag pancreas (large ducts) and thyroid/parathyroid, without IHC.",
+   "effect": "confirm_detection",
+   "rule": "R1",
+   "decision_tissue": "eye",
+   "tissue_tier": "vital",
+   "decision_reason": "The protein was purified and sequenced from normal human tears (Lehrer 1998); our donor-level data detect it in acinar cells of the eye. Read at abstract level; the producing cells are inferred from the secretion.",
+   "evidence": [
+    {
+     "source_title": "Lehrer RI et al. Lipophilin, a novel heterodimeric protein of human tears. FEBS Lett 1998 (PMID 9720917)",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:9720917%20AND%20SRC:MED&resultType=core&format=json",
+     "assay": "protein purification, sequencing and mass spectrometry",
+     "tissue": "human tears (lacrimal secretion)",
+     "finding": "Lipophilin A protein identified in human tears as a heterodimer with lipophilin C.",
+     "quote": "We identified a novel heterodimeric protein, lipophilin AC, in human tears. One of its components, lipophilin A (69 residues; mass, 7575.1; pI, 9.47) was homologous to the C1 and C2 components of prostatein",
+     "paralog_specific": true,
+     "limitations": "Abstract only; identifies the secreted protein in tear fluid, not the producing cells; UniProt records this paper as protein sequence of residues 22-90 plus mass spectrometry."
+    },
+    {
+     "source_title": "Stoeckelhuber M et al. Immunohistochemical analysis of secretoglobin SCGB 2A1 expression in human ocular glands and tissues. Histochem Cell Biol 2006 (PMID 16395610)",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:16395610%20AND%20SRC:MED&resultType=core&format=json",
+     "assay": "IHC (for the partner SCGB2A1, not SCGB1D1)",
+     "tissue": "human ocular glands, eyelid, conjunctiva",
+     "finding": "States SCGB1D1 is the tear heterodimer partner of SCGB2A1; the IHC itself is for SCGB2A1.",
+     "quote": "Human secretoglobin (SCGB) 2A1 (or lipophilin C, lacryglobin, mammaglobin B) is a small protein of unknown function that forms heterodimers with secretoglobin 1D1 (lipophilin A) in tears.",
+     "paralog_specific": false,
+     "limitations": "Abstract only; no SCGB1D1-specific staining reported."
+    },
+    {
+     "source_title": "Zhao C et al. Lipophilins: human peptides homologous to rat prostatein. Biochem Biophys Res Commun 1999 (PMID 10066439)",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:10066439%20AND%20SRC:MED&resultType=core&format=json",
+     "assay": "cDNA cloning and tissue expression (assay not stated in abstract)",
+     "tissue": "'normal tissues, especially endocrine-responsive organs'",
+     "finding": "Lipophilin A, B, C gene products reported as widely expressed.",
+     "quote": "Lipophilin gene products were widely expressed in normal tissues, especially in endocrine-responsive organs.",
+     "paralog_specific": null,
+     "limitations": "Abstract only; statement pools lipophilins A, B and C; could not check whether probes/primers distinguish SCGB1D1 from SCGB1D2."
+    },
+    {
+     "source_title": "UniProtKB O95968 (SCGB1D1)",
+     "url": "https://rest.uniprot.org/uniprotkb/O95968.json",
+     "assay": "curated database",
+     "tissue": "lacrimal gland, thymus, kidney, testis, ovary, salivary gland",
+     "finding": "Tissue specificity comment (no evidence code attached; the cDNA reference is PMID 10066439).",
+     "quote": "Expressed in lachrymal gland, thymus, kidney, testis, ovary and salivary gland",
+     "paralog_specific": null,
+     "limitations": "Secondary; includes kidney and thymus, which would be vital tissues, but primary data not verified by me."
+    },
+    {
+     "source_title": "Human Protein Atlas gene page SCGB1D1 (ENSG00000168515)",
+     "url": "https://www.proteinatlas.org/ENSG00000168515-SCGB1D1",
+     "assay": "HPA bulk RNA-seq, scRNA-seq, MS proteomics summaries",
+     "tissue": "lacrimal acinar cells; cervix; pancreas (MS)",
+     "finding": "RNA 'Tissue enhanced (Cervix)' (1.1 nTPM); single cell 'Cell type enhanced (Lacrimal acinar cells, Neutrophils, Plasma cells)' with lacrimal acinar 42.8, neutrophils 15.5, plasma cells 8.1 nCPM; MS 'Tissue enhanced (Pancreas)' (MannLab) and 'Group enriched (Parathyroid gland, Thyroid gland)' (ProteinTalks); brain not detected.",
+     "quote": "Cell type enhanced (Lacrimal acinar cells, Neutrophils, Plasma cells)",
+     "paralog_specific": null,
+     "limitations": "Database summaries; SCGB1D2 shares sequence so RNA and peptide assignment may be ambiguous; IHC 'Pending normal tissue annotation', no antibody listed; neutrophil signal is a blood-cell type but unconfirmed by any specific assay."
     }
    ],
    "toxicity_reports": null
@@ -3566,6 +4376,64 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:f0e0cd8711d5b74341cc",
+   "protein": "TSGA10IP",
+   "gene_ids": [
+    "ENSG00000175513"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No primary paper characterising human TSGA10IP (FAM161C) expression was found; PubMed has one hit for the symbol and Europe PMC hits are GWAS or gene-list mentions. HPA annotates RNA as testis-enriched (cluster 'Testis - Spermatogenesis') with an additional single-cell melanocyte signal, has no tissue IHC, and UniProt has no tissue-specificity comment; nothing was found on bladder urothelium. The only gene-specific assay located is RT-qPCR of Tsga10ip in rat retina in two disease-model studies, which is non-human and not normal-tissue evidence.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene record TSGA10IP (JSON)",
+     "url": "https://www.proteinatlas.org/ENSG00000175513.json",
+     "assay": "HPA summary annotation (antibody HPA049510 used for IF only; subcellular location 'Mid piece')",
+     "tissue": "testis; melanocytes (single-cell)",
+     "finding": "RNA 'Tissue enriched' testis 9.4 nTPM; single-cell 'Group enriched' in spermatocytes/spermatids and melanocytes (34.3 nCPM); no tissue IHC reliability score.",
+     "quote": "RNA tissue specificity: Tissue enriched; RNA tissue specific nTPM: testis 9.4; RNA single cell type specific nCPM: Early spermatids 41.5, Late primary spermatocytes 49.2, Late spermatids 26.9, Melanocytes 34.3",
+     "paralog_specific": null,
+     "limitations": "Count data, not a gene-specific assay. The melanocyte single-cell signal is unexplained and unverified by any publication found."
+    },
+    {
+     "source_title": "Levine TP. Structural bioinformatics predicts that the Retinitis Pigmentosa-28 protein of unknown function FAM161A is a homologue of the microtubule nucleation factor Tpx2. F1000Res 2020",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7551519/",
+     "assay": "sequence/structure bioinformatics",
+     "tissue": "none (no expression data)",
+     "finding": "Identifies TSGA10IP as FAM161C, a divergent homologue of the retinal ciliopathy protein FAM161A; function open.",
+     "quote": "FAM161C (also called testis-specific protein 10-interacting protein, TSGA10IP) in only found in a few mammals. ... This makes it an open question of whether FAM161C has a different function.",
+     "paralog_specific": true,
+     "limitations": "No expression data; homology to a retinal cilium protein is not evidence of retinal expression."
+    },
+    {
+     "source_title": "Wang M et al. Casein kinase-2 inhibition promotes retinal ganglion cell survival after acute intraocular pressure elevation. Neural Regen Res 2024",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10749609/",
+     "assay": "RNA-seq with RT-qPCR validation (Tsga10ip-specific primers)",
+     "tissue": "adult rat retina after experimental IOP elevation",
+     "finding": "Tsga10ip transcript measurable in rat retina and reduced by CK2 inhibitor.",
+     "quote": "Tsga10ip ( P = 0.0402), and Vstm21 ( P = 0.007) were downregulated in retinas from the IOP elevation and TBB treatment group compared with those in retinas from the IOP elevation group",
+     "paralog_specific": true,
+     "limitations": "Rat, injury model, relative qPCR only (no absolute level or normal baseline claim). A second rat-retina RNA-seq/qPCR study (diabetic rats, PMC7057111) also lists Tsga10ip primers. Neither is human or normal-tissue evidence."
+    },
+    {
+     "source_title": "UniProt Q3SY00 (T10IP_HUMAN)",
+     "url": "https://www.uniprot.org/uniprotkb/Q3SY00/entry",
+     "assay": "curated annotation",
+     "tissue": null,
+     "finding": "No tissue-specificity comment.",
+     "quote": "Q3SY00 TSGA10IP reviewed (tissue specificity field empty)",
+     "paralog_specific": null,
+     "limitations": "Absence of annotation."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
    "entity_id": "PEG:4bd36fd4f9ac768923ce",
    "protein": "TUBB8",
    "gene_ids": [
@@ -3642,6 +4510,74 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:c940c179516dcbce4382",
+   "protein": "VCX3B",
+   "gene_ids": [
+    "ENSG00000205642"
+   ],
+   "verdict": "no_normal_expression_evidence",
+   "reported_tissue": null,
+   "summary": "The VCX/Y family paper (Lahn and Page 2000) states that all members appear to be expressed exclusively in male germ cells; UniProt and NCBI RefSeq repeat this for VCX3B. HPA IHC (two antibodies, reliability Supported) shows nuclear staining in spermatogonia, spermatocytes and spermatids, with a caution that the antibodies target more than one gene. No opened source reports VCX3B or any VCX member in adult retina or brain; the proposed link of the paralog VCX3A (VCX-A) to intellectual disability is genetic (deletion mapping), not expression evidence in the abstracts opened.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Sources describe germline, placental or embryonic restriction, or did not test adult somatic tissue.",
+   "evidence": [
+    {
+     "source_title": "Lahn BT, Page DC 2000, A human sex-chromosomal gene family expressed in male germ cells and encoding variably charged proteins. Hum Mol Genet 9:311-9 (PubMed abstract, PMID 10607842; also OUP abstract page)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/10607842/",
+     "assay": "Tissue expression analysis (assay not named in abstract)",
+     "tissue": "male germ cells / testis",
+     "finding": "All VCX/VCY family members appear restricted to male germ cells.",
+     "quote": "this gene family has multiple members on both X and Y, and all appear to be expressed exclusively in male germ cells",
+     "paralog_specific": false,
+     "limitations": "Abstract only (full text paywalled); tissue panel and assay not seen; near-identical members are unlikely to be separable, so the statement is family-level."
+    },
+    {
+     "source_title": "UniProt Q9H321 (VCX3B_HUMAN), Tissue specificity comment",
+     "url": "https://rest.uniprot.org/uniprotkb/Q9H321",
+     "assay": "Curated annotation",
+     "tissue": "testis",
+     "finding": "Testis only.",
+     "quote": "Expressed exclusively in testis.",
+     "paralog_specific": null,
+     "limitations": "Secondary annotation."
+    },
+    {
+     "source_title": "NCBI Gene 425054 VCX3B RefSeq summary",
+     "url": "https://www.ncbi.nlm.nih.gov/gene/425054",
+     "assay": "Curated summary",
+     "tissue": "male germ cells",
+     "finding": "Family-level germ-cell restriction.",
+     "quote": "all are expressed exclusively in male germ cells",
+     "paralog_specific": false,
+     "limitations": "Secondary summary (retrieved via E-utilities)."
+    },
+    {
+     "source_title": "Human Protein Atlas, VCX3B tissue page",
+     "url": "https://www.proteinatlas.org/ENSG00000205642-VCX3B/tissue",
+     "assay": "IHC with HPA044996 and HPA049357; reliability Supported",
+     "tissue": "testis",
+     "finding": "Nuclear staining in spermatogenic cells; RNA testis-enriched; brain RNA 'Not detected in human brain'; retina protein N/A.",
+     "quote": "Nuclear expression in spermatogonia, spermatocytes and spermatids.",
+     "paralog_specific": false,
+     "limitations": "HPA caution: 'targets protein from more than one gene'. Per-tissue staining levels for vital organs not readable in fetched text; retina not stained."
+    },
+    {
+     "source_title": "Fukami M et al. 2000, A member of a gene family on Xp22.3, VCX-A, is deleted in patients with X-linked nonspecific mental retardation. Am J Hum Genet 67:563-73 (PubMed abstract, PMID 10903929)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/10903929/",
+     "assay": "Deletion mapping in patients",
+     "tissue": "n/a (genetic)",
+     "finding": "VCX-A deletion tracks with intellectual disability; presence or absence of VCX-C (VCX3B) does not.",
+     "quote": "There is no correlation between the presence or absence of VCX-B1, -B, and VCX-C and mental status in our patients.",
+     "paralog_specific": true,
+     "limitations": "Genetic association for the paralog, not expression data; full text (which may contain an expression panel) could not be opened (PMC and publisher pages blocked)."
+    }
+   ],
+   "toxicity_reports": "No therapy targeting this gene and no on-target toxicity report was found (one combined web search across the batch genes returned only gene-database pages)."
+  },
+  {
    "entity_id": "PEG:311145eaa2423ba10cea",
    "protein": "VRTN",
    "gene_ids": [
@@ -3685,6 +4621,112 @@
      "quote": "Protein tissue specificity: Tissue enriched (Kidney)",
      "paralog_specific": null,
      "limitations": "MS from one donor without visible values; IHC Uncertain ('RNA-based expert annotation gave inconclusive results'); RNA is the existing filter. A search snippet (not opened) also listed hair-follicle cell-type enrichment in HPA single-cell data."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:03bda62781abc827aec1",
+   "protein": "WFDC13",
+   "gene_ids": [
+    "ENSG00000168634"
+   ],
+   "verdict": "specialized_tissue_expression",
+   "reported_tissue": "epididymis (male reproductive tract; not testis)",
+   "summary": "WFDC13 has no dedicated human expression paper that I could open, but sources agree it is a male reproductive tract gene: HPA classifies RNA as 'Tissue enriched (Epididymis)' in epididymal principal cells, and a 2024 PNAS study lists WFDC13 among 'reproductive tract-specific genes in humans' (mouse cluster knockout affects sperm motility). No published evidence was found for retina/rod expression; the 2002 paper describing the chromosome 20 WAP locus says some locus genes show high transcripts in trachea and neural tissues, but I could not access its full text to see the WAP13-specific result.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Evidence is from another species, a database annotation or an assay shared with a paralog, or the tissue is reproductive.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene page WFDC13 (ENSG00000168634)",
+     "url": "https://www.proteinatlas.org/ENSG00000168634-WFDC13",
+     "assay": "HPA consensus bulk RNA-seq / scRNA-seq summary",
+     "tissue": "epididymis",
+     "finding": "RNA 'Tissue enriched (Epididymis)' (84.5 nTPM in JSON); single cell 'Cell type enriched (Epididymal principal cells)'; protein not detected by MS; brain 'Not detected in human brain'.",
+     "quote": "Tissue enriched (Epididymis) ... Cell type enriched (Epididymal principal cells)",
+     "paralog_specific": null,
+     "limitations": "Database summary of bulk/single-cell RNA-seq, not a gene-specific assay; HPA has no IHC tissue annotation for this gene, so no antibody reliability label applies. A spatial-transcriptomics tooltip gives cerebellum 2.4 nCPM, which HPA still classes as not detected in brain."
+    },
+    {
+     "source_title": "Jain A et al. Large-scale CRISPR/Cas9 deletions within the WFDC gene cluster uncover gene functionality and critical roles in mammalian reproduction. PNAS 2024 (PMID 39665756)",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11665854/fullTextXML",
+     "assay": "review of expression datasets; mouse multi-gene knockout",
+     "tissue": "human/mouse male reproductive tract",
+     "finding": "WFDC13 named among human reproductive tract-specific WFDC cluster genes; mouse 5-gene KO including Wfdc13 is infertile through sperm motility defects.",
+     "quote": "11 closely related reproductive tract-specific genes in humans— SPINT3 , WFDC6 , EPPIN , WFDC8 , WFDC9 , WFDC10A , WFDC11 , WFDC10B , WFDC13 , SPINT4 , and WFDC3",
+     "paralog_specific": null,
+     "limitations": "Characterization rests on RNA-seq dataset analysis cited by the authors, not a WFDC13-specific human assay; functional data are mouse."
+    },
+    {
+     "source_title": "Clauss A et al. A locus on human chromosome 20 contains several genes expressing protease inhibitor domains with homology to whey acidic protein. Biochem J 2002 (PMID 12206714)",
+     "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EXT_ID:12206714%20AND%20SRC:MED&resultType=core&format=json",
+     "assay": "transcript-level survey of the 14 locus genes (assay not stated in abstract)",
+     "tissue": "epididymis, testis, trachea, neural tissues",
+     "finding": "General statement for the locus; no WAP13-specific result visible in the abstract.",
+     "quote": "in most cases, the highest transcript levels are found in epididymis followed by testis and trachea. Some of the genes also display high transcript levels in neural tissues.",
+     "paralog_specific": null,
+     "limitations": "Abstract only; full text is a scanned PDF I could not read, so which genes show trachea/neural transcripts is unknown; this is an unresolved caveat for WFDC13."
+    }
+   ],
+   "toxicity_reports": null
+  },
+  {
+   "entity_id": "PEG:be8d3025c80ff866d72a",
+   "protein": "WFDC8",
+   "gene_ids": [
+    "ENSG00000158901"
+   ],
+   "verdict": "specialized_tissue_expression",
+   "reported_tissue": "epididymis",
+   "summary": "HPA IHC (reliability Enhanced, two antibodies) shows WFDC8 protein in epididymal glandular cells and sperm, and RNA is epididymis-enriched; recent mouse knockout work treats WFDC8 as one of a cluster of reproductive-tract-specific genes. UniProt, however, carries the comment 'Expressed ubiquitously, the highest levels are found in the epididymis followed by testis and trachea', which appears to derive from Clauss et al. 2002, whose abstract makes that statement for the WAP locus genes collectively; I could not open that paper's full text to check WFDC8 (WAP8) specifically or its tissue panel. No published evidence for retina or bipolar cells was found.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Evidence is from another species, a database annotation or an assay shared with a paralog, or the tissue is reproductive.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas WFDC8 tissue page (antibodies HPA042710, HPA071119)",
+     "url": "https://www.proteinatlas.org/ENSG00000158901-WFDC8/tissue",
+     "assay": "IHC, reliability score Enhanced",
+     "tissue": "epididymis, sperm",
+     "finding": "Protein in epididymis glandular cells and sperm; RNA 'Tissue enriched' epididymis (387.3 nTPM), cluster 'Epididymis - Male reproductive secretion'.",
+     "quote": "Cytoplasmic expression in epididymis glandular cells and in sperm cells. ... High consistency between antibody staining and RNA expression data. Secreted protein, tissue location of RNA and protein is expected to differ.",
+     "paralog_specific": true,
+     "limitations": "HPA summary; I did not review individual tissue images for brain/eye/lung. HPA JSON lists 'Protein tissue specificity: Not detected' (no quantitative protein profile)."
+    },
+    {
+     "source_title": "UniProt Q8IUA0 (WFDC8_HUMAN) tissue specificity",
+     "url": "https://www.uniprot.org/uniprotkb/Q8IUA0/entry",
+     "assay": "curated annotation",
+     "tissue": "ubiquitous; epididymis > testis > trachea",
+     "finding": "States ubiquitous expression with highest epididymis, then testis and trachea.",
+     "quote": "Expressed ubiquitously, the highest levels are found in the epididymis followed by testis and trachea.",
+     "paralog_specific": null,
+     "limitations": "Wording matches the locus-wide sentence in the Clauss 2002 abstract; gene-specific basis not verified. If taken at face value it implies low-level expression in airway (trachea) and other tissues."
+    },
+    {
+     "source_title": "Clauss A, Lilja H, Lundwall A. A locus on human chromosome 20 contains several genes expressing protease inhibitor domains with homology to whey acidic protein. Biochem J 2002 (PubMed abstract)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/12206714/",
+     "assay": "transcript quantification across tissues (method not stated in abstract)",
+     "tissue": "epididymis, testis, trachea, neural tissues (locus-wide)",
+     "finding": "Several WAP locus genes ubiquitous, highest in epididymis/testis/trachea; some high in neural tissues. Not attributed to WAP8 in the abstract.",
+     "quote": "Several of the genes appear to be expressed ubiquitously, but, in most cases, the highest transcript levels are found in epididymis followed by testis and trachea. Some of the genes also display high transcript levels in neural tissues.",
+     "paralog_specific": null,
+     "limitations": "Abstract only: PMC full text (PMC1222987) is a scanned PDF that could not be retrieved, so WAP8-specific values and whether WAP8 is among the 'neural' genes are unverified."
+    },
+    {
+     "source_title": "Kent K et al. Large-scale CRISPR/Cas9 deletions within the WFDC gene cluster uncover gene functionality and critical roles in mammalian reproduction. PNAS 2024",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11665854/",
+     "assay": "mouse multi-gene knockout; expression characterisation of the cluster",
+     "tissue": "male reproductive tract",
+     "finding": "Describes human WFDC8 among reproductive tract-specific genes; mouse deletion including Wfdc8 causes spermatogenic arrest.",
+     "quote": "11 closely related reproductive tract-specific genes in humans— SPINT3 , WFDC6 , EPPIN , WFDC8 , WFDC9 , WFDC10A , WFDC11 , WFDC10B , WFDC13 , SPINT4 , and WFDC3",
+     "paralog_specific": true,
+     "limitations": "'Reproductive tract-specific' is the authors' characterisation; phenotype is from a 4-gene deletion, not Wfdc8 alone."
     }
    ],
    "toxicity_reports": null
@@ -3738,6 +4780,74 @@
    "toxicity_reports": null
   },
   {
+   "entity_id": "PEG:71fe1f30ebae17ffbd03",
+   "protein": "ZNF280A",
+   "gene_ids": [
+    "ENSG00000169548"
+   ],
+   "verdict": "conflicting_or_nonspecific",
+   "reported_tissue": "tumour-adjacent colorectal and lung tissue (commercial antibody / unvalidated primers)",
+   "summary": "No normal-tissue expression survey exists and UniProt has no tissue comment. Several cancer papers detect ZNF280A in tumour-adjacent 'normal' colorectal tissue (qPCR, Western) and score all 70 para-normal lung samples as 'low' by IHC, but these use commercial antibodies (BIOSS bs-12839R, Thermo Fisher) with no validation against paralogs ZNF280B/D, and adjacent tissue is not healthy tissue. HPA lists RNA as adrenal-enriched with single-cell 'Not detected' and IHC pending; nothing was found on conjunctiva or other eye tissue.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "Reports conflict, cannot separate the gene from paralogs, or come from cultured, diseased or fetal samples.",
+   "evidence": [
+    {
+     "source_title": "Wang X et al. 2019, ZNF280A Promotes Proliferation and Tumorigenicity via Inactivating the Hippo-Signaling Pathway in Colorectal Cancer. Mol Ther Oncolytics 12:204-13 (PMC6389780, full text via Europe PMC)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6389780/",
+     "assay": "Real-time PCR and Western blot (antibody from Thermo Fisher Scientific); TCGA RNA-seq",
+     "tissue": "8 paired CRC and matched adjacent normal colorectal tissues; cultured normal colon epithelial cells",
+     "finding": "ZNF280A measurable in adjacent normal tissue and a normal colon epithelial cell line, lower than in tumour in 6 of 8 pairs.",
+     "quote": "mRNA and protein expression levels of ZNF280A in 6/8 CRC tissues were upregulated compared with the matched adjacent normal tissues",
+     "paralog_specific": null,
+     "limitations": "Relative comparison only; tumour-adjacent tissue and a cultured line, not healthy tissue; primers in a supplementary table not seen; antibody specificity versus ZNF280B/D not shown."
+    },
+    {
+     "source_title": "Liu H et al. 2021, ZNF280A promotes lung adenocarcinoma development by regulating the expression of EIF3C. Cell Death Dis 12:39 (PMC7791122, full text via Europe PMC)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7791122/",
+     "assay": "IHC on tissue microarray with BIOSS bs-12839R polyclonal antibody",
+     "tissue": "92 LUAD and 70 para-normal lung tissues",
+     "finding": "All 70 normal tissues scored 'Low' (0 'High'); 54.3% of tumours 'High'.",
+     "quote": "IHC staining of 92 LUAD tissues and 70 normal tissues showed the existence of ZNF280A in LUAD tissues, and further indicated the higher level of ZNF280A in LUAD tissues relative to normal ones",
+     "paralog_specific": null,
+     "limitations": "'Low' category may include negative staining (cut-off not separating zero from weak); para-tumour tissue; unvalidated commercial polyclonal antibody."
+    },
+    {
+     "source_title": "Zheng W et al. 2025, ZNF280A promotes malignant melanoma development... Discov Oncol 16:563 (PMC12008104, full text via Europe PMC)",
+     "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12008104/",
+     "assay": "IHC",
+     "tissue": "130 melanoma and 18 para-carcinoma tissues",
+     "finding": "Higher in melanoma than para-carcinoma tissue.",
+     "quote": "The level of ZNF280A was significantly higher in the 130 MM tissues than in 18 para-carcinoma tissues.",
+     "paralog_specific": null,
+     "limitations": "Relative comparison; antibody not identified in text seen; para-tumour skin only."
+    },
+    {
+     "source_title": "Human Protein Atlas, ZNF280A gene and tissue pages",
+     "url": "https://www.proteinatlas.org/ENSG00000169548-ZNF280A/tissue",
+     "assay": "RNA-seq summary; IHC pending",
+     "tissue": "adrenal gland (RNA category)",
+     "finding": "Tissue enriched (Adrenal gland), tau 0.98; single cell 'Not detected'; brain 'Not detected in human brain'; IHC 'Pending normal tissue annotation'.",
+     "quote": "Tissue enriched (Adrenal gland)",
+     "paralog_specific": null,
+     "limitations": "Bulk RNA category (same data class as existing numeric filter); no protein data; retina protein N/A."
+    },
+    {
+     "source_title": "Clarke TL et al. 2025, ZNF280A links DNA double-strand break repair to human 22q11.2 distal deletion syndrome. Nat Cell Biol 27:1006-20 (PubMed abstract, PMID 40523937)",
+     "url": "https://pubmed.ncbi.nlm.nih.gov/40523937/",
+     "assay": "cDNA library screen, cell-based functional assays, patient-derived cells",
+     "tissue": "cultured cells",
+     "finding": "Functional role in DNA-end resection; hemizygous deletion in 22q11.2 distal deletion syndrome with multi-organ features.",
+     "quote": "cells from individuals with a 22q11.2 distal deletion have defects in DNA-end resection and homologous recombination",
+     "paralog_specific": null,
+     "limitations": "Abstract only; implies function in somatic patient cells but gives no tissue expression data; cultured cells."
+    }
+   ],
+   "toxicity_reports": "No therapy targeting this gene and no on-target toxicity report was found (one combined web search across the batch genes returned only gene-database pages)."
+  },
+  {
    "entity_id": "PEG:423de197bb86ba7742af",
    "protein": "ZNF492",
    "gene_ids": [
@@ -3784,6 +4894,34 @@
     }
    ],
    "toxicity_reports": "None found. No therapy targeting this gene surfaced in the searches run; no dedicated toxicity query was run beyond those listed."
+  },
+  {
+   "entity_id": "PEG:483fad15f8dc18722e45",
+   "protein": "ZNF705G",
+   "gene_ids": [
+    "ENSG00000215372"
+   ],
+   "verdict": "no_literature",
+   "reported_tissue": null,
+   "summary": "No gene-specific publication was found (Europe PMC title/abstract search: 0 hits; full-text mentions are incidental gene lists in CNV, exome and machine-learning papers). HPA reports bulk RNA 'Not detected' with single-cell RNA enriched in early and late spermatids; UniProt (A8MUZ8) has no tissue-specificity comment. The ZNF705 family is highly similar across paralogs on 8p23.1, so no source separates ZNF705G from ZNF705A/B/D.",
+   "effect": "none",
+   "rule": null,
+   "decision_tissue": null,
+   "tissue_tier": null,
+   "decision_reason": "No gene-specific publication found.",
+   "evidence": [
+    {
+     "source_title": "Human Protein Atlas gene page ZNF705G (ENSG00000215372)",
+     "url": "https://www.proteinatlas.org/ENSG00000215372-ZNF705G",
+     "assay": "HPA consensus bulk RNA-seq / scRNA-seq summary",
+     "tissue": "spermatids",
+     "finding": "Bulk RNA 'Not detected'; single cell 'Group enriched (Early spermatids, Late spermatids)' (29.2 and 10.1 nCPM in JSON); brain 'Not detected in human brain'; protein not detected; HPA evidence 'No human protein/transcript evidence'.",
+     "quote": "Single cell type specificity: Group enriched (Early spermatids, Late spermatids)",
+     "paralog_specific": false,
+     "limitations": "Database summary of bulk/single-cell RNA-seq, not a gene-specific assay; HPA has no IHC tissue annotation for this gene, so no antibody reliability label applies. HPA single-nuclei brain field lists oligodendrocytes at 1.3 nCPM and a spatial tooltip (spinal cord 4.5 nCPM); very low and paralog-ambiguous."
+    }
+   ],
+   "toxicity_reports": null
   },
   {
    "entity_id": "PEG:4f82cc85ed024fd890e9",
