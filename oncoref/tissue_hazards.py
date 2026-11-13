@@ -289,13 +289,38 @@ def context_tiers(contexts: pd.DataFrame) -> pd.Series:
 
 
 def anatomy_inventory() -> pd.DataFrame:
-    """Every canonical human concept, including explicitly unreviewed contexts."""
-    from .normal_tissues import normal_tissue_taxonomy
+    """Human anatomy with separate selection scope and adult injury assessment.
+
+    Reproductive includes placental, extraembryonic, embryonic and fetal
+    contexts. Broad location labels require localization; they are neither a
+    fifth hazard tier nor a Disposable allowance. This inventory describes
+    canonical concepts, not completeness of measured expression coverage.
+    """
+    from .normal_tissues import normal_tissue_taxonomy, resolve_normal_tissue
 
     rows = []
     for cid, concept in normal_tissue_taxonomy()["concepts"].items():
         if 9606 not in concept.get("taxon_ids", [9606, 9615, 10090]):
             continue
-        r = assess(cid)
-        rows.append({"concept_id": cid, "label": concept["label"], **r})
+        stage = {"embryo": "embryonic", "fetus": "fetal"}.get(cid, "adult")
+        annotation = resolve_normal_tissue(cid, species="human", stage=stage)
+        r = assess(cid, stage=stage)
+        reproductive = "reproductive" in annotation.scopes
+        broad = cid in {"soft_tissue", "head", "foot"}
+        rows.append(
+            {
+                "concept_id": cid,
+                "label": concept["label"],
+                **r,
+                "anatomical_membership": list(annotation.scopes),
+                "selection_category": "Reproductive"
+                if reproductive
+                else r["tier"].title()
+                if r["tier"] in TIERS
+                else None,
+                "context_kind": "broad_location" if broad else "specific_context",
+                "requires_localization": broad,
+                "requires_hazard_review": not reproductive and not broad and r["tier"] not in TIERS,
+            }
+        )
     return pd.DataFrame(rows)

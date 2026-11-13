@@ -3005,10 +3005,10 @@ def per_sample_expression(
 
     The packaged references are summaries — per-gene percentile vectors, bounded
     medoid :func:`representative_cohort_samples`, within-sample top fractions. This
-    returns the raw material behind them: one column per individual sample, so a
-    consumer can ask per-patient questions a summary can't answer ("in what
-    fraction of patients is this gene expressed", greedy antigen co-occurrence
-    coverage, …). It fetches the cohort's per-sample matrix via
+    returns the raw material behind them: one column per individual sample or
+    library. Columns are not necessarily independent patients. Join
+    :func:`sample_metadata` by sample_id and group resolved participant_id values
+    for patient-level analyses. It fetches the cohort's per-sample matrix via
     :mod:`oncoref.source_matrices` (a per-cohort release asset, tens of MB) and
     normalizes it.
 
@@ -3073,6 +3073,36 @@ def per_sample_expression(
     elif normalize == "tpm_clean_hk":
         out = _housekeeping_normalize(out, samples)
     return _apply_sample_qc_filter(out, str(code), sample_qc=sample_qc, auto_fetch=auto_fetch)
+
+
+def sample_metadata(
+    cancer_type, *, auto_fetch: bool = True, sample_qc: str = "all"
+) -> pd.DataFrame:
+    """Patient identity and source metadata aligned to actual expression columns.
+
+    Uses the same cached matrix and QC selection as :func:`per_sample_expression`.
+    Returns one row per retained sample in matrix-column order, with sample_id,
+    cancer_code, source_cohort, physical sample_key, participant_id and identity
+    provenance. Blank participant_id means unresolved; it must not count as an
+    independent donor. Unknown identities can still supply single-sample evidence.
+    """
+    from .samples import sample_identities
+
+    code = resolve_cancer_type(cancer_type, strict=False) or cancer_type
+    matrix = per_sample_expression(
+        code, normalize="tpm_raw", auto_fetch=auto_fetch, sample_qc=sample_qc
+    )
+    info = source_matrices.cohort_info(code)
+    rows = pd.DataFrame(
+        {
+            "sample_id": sample_columns(matrix),
+            "cancer_code": str(code),
+            "source_cohort": info["source_cohort"],
+        }
+    )
+    result = sample_identities(rows)
+    result.attrs["sample_qc"] = sample_qc
+    return result
 
 
 @lru_cache(maxsize=_PER_SAMPLE_CACHE_SIZE)

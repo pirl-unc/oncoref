@@ -1,0 +1,196 @@
+protein_group_label,ctpedia_symbols,category,Unsafe_reasons,off_target_tpm,off_target_ntpm,independent_patients_above_normal,papers_cta,curated_tier,curated_compartments,loose,standard,strict
+ACRBP,ACRBP,Unsafe,Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune,,,,2,,,—,—,—
+ACTL7A,ACTL7A,CTA,,0.957716653859,0.5,91.0,3,,,✓,✓,✓
+ACTL7B,ACTL7B,CTA,,0.920173702739,0.2,27.0,3,,,✓,✓,✓
+ACTL8,ACTL8,CTA,,0.2,1.6,1205.0,4,,,✓,✓,✓
+ADAD1,ADAD1,CTA,,0.403983082272,0.2,69.0,2,,,✓,✓,papers
+ADAM2,ADAM2,CTA,,0.6,0.5,421.0,4,,,✓,✓,✓
+ADAM29,ADAM29,Unsafe,Established rare normal-cell RNA,,,,3,,,—,—,—
+AKAP4,AKAP4,CTA,,0.0787800445618,0.0,77.0,3,,,✓,✓,✓
+BOLL,BOLL,Unsafe,Established rare normal-cell RNA,,,,3,,,—,—,—
+BRDT,BRDT,Unsafe,Normal bulk | HPA tissue clusters | Monaco immune,,,,5,,,—,—,—
+BSPH1,BSPH1,Unsafe,Normal bulk | HPA tissue clusters,,,,0,,,—,—,—
+CABS1,CABS1,CTA,,3.0,3.9,9.0,3,,,✓,✓,sets
+CABYR,CABYR,Unsafe,Normal bulk | HPA tissue clusters | Monaco immune,,,,3,,,—,—,—
+CAGE1,CAGE1,CTA,,1.0561671494299998,3.6,213.0,3,,,✓,✓,✓
+CALR3,CALR3,CTA,,0.500857891305,0.5,37.0,1,,,✓,papers,papers
+CATSPER4,CATSPER4,CTA,,0.567544523299,0.2,47.0,1,,,✓,papers,sets
+CATSPERD,CATSPERD,Unsafe,HPA tissue clusters,,,,1,,,—,—,—
+CBLL2,CBLL2,CTA,,1.0,1.2,178.0,3,,,✓,✓,✓
+CCDC33,CCDC33,Unsafe,Normal bulk | HPA tissue clusters,,,,0,,,—,—,—
+CCDC42,CCDC42,CTA,,2.96588580316,1.9,52.0,3,,,✓,✓,✓
+CGB3/5/8,CGB8,Unsafe,Normal bulk | HPA tissue clusters,,,,2,,,—,—,—
+CIMAP1A,ODF3,CTA,,1.58219506479,0.7,67.0,4,,,✓,✓,sets
+CIMIP4,TEX33,CTA,,0.2,0.2,7.0,1,,,✓,papers,papers
+CPXCR1,CPXCR1,CTA,,0.0,0.1,19.0,3,,,✓,✓,sets
+CRISP2,CRISP2,Unsafe,Normal bulk | HPA tissue clusters,,,,4,,,—,—,—
+CSH2,CSH2,Other,,,,,2,,,—,—,—
+CT45A2/8/9,CT45A2,CTA,,0.2,0.8,253.0,3,,,✓,✓,✓
+CT45A5/6/7,CT45A7,Unsafe,Normal bulk,,,,3,,,—,—,—
+CT47A1/10/11/12/2/3/4/5/6/7/8/9,"CT47A1, CT47A11, CT47A12, CT47A2, CT47A3, CT47A4, CT47A5, CT47A6, CT47A7",CTA,,0.9,0.4,29.0,2,,,✓,✓,papers
+CT47B1,CT47B1,CTA,,0.0,0.0,26.0,2,,,✓,✓,papers
+CT83,CT83,CTA,,1.7,2.6,1187.0,5,,,✓,✓,✓
+CTAGE1,CTAGE1,CTA,,0.2173282552189999,1.3,9.0,1,,,✓,papers,papers
+CTAGE6,CTAGE6,CTA,,0.8,1.0,33.0,1,,,✓,papers,papers
+CTAGE9,CTAGE9,Unsafe,HPA tissue clusters,,,,2,,,—,—,—
+CTCFL,CTCFL,Unsafe,Normal bulk,,,,6,,,—,—,—
+DAZ1,DAZ1,Unsafe,HPA tissue clusters,,,,2,,,—,—,—
+DAZ3,DAZ3,Other,,,,,2,,,—,—,—
+DAZL,DAZL,CTA,,8.01000299086,0.9,73.0,5,,,✓,off_target,off_target
+DDX4,DDX4,Unsafe,Normal bulk | HPA tissue clusters,,,,3,,,—,—,—
+DDX53,DDX53,Unsafe,Normal bulk,,,,4,,,—,—,—
+DKKL1,DKKL1,Unsafe,Adult cornea,,,,4,,,—,—,—
+DMRT1,DMRT1,CTA,,0.4,0.7,544.0,5,,,✓,✓,✓
+DMRTB1,DMRTB1,CTA,,0.3,0.1,140.0,3,,,✓,✓,✓
+DMRTC2,DMRTC2,CTA,,0.7,0.9,160.0,4,,,✓,✓,✓
+DNAJB8,DNAJB8,CTA,,0.772686277234,0.1,50.0,3,,,✓,✓,✓
+DPPA2,DPPA2,CTA,,1.17944179351,0.5,536.0,6,,,✓,✓,✓
+DPPA3,DPPA3,CTA,,4.0,1.1,170.0,2,,,✓,✓,off_target
+DPPA5,DPPA5,CTA,,0.9,0.5,206.0,2,,,✓,✓,papers
+EGFL6,EGFL6,Unsafe,Normal bulk | HPA tissue clusters | Adult cornea,,,,0,,,—,—,—
+EPPIN,EPPIN,Unsafe,Normal bulk | HPA tissue clusters | Monaco immune,,,,3,,,—,—,—
+FATE1,FATE1,Unsafe,HPA tissue clusters,,,,4,,,—,—,—
+FKBP6,FKBP6,CTA,,2.86690663915,0.4,35.0,3,,,✓,✓,✓
+FMR1NB,FMR1NB,CTA,,0.67570504146,0.7,184.0,5,,,✓,✓,✓
+FTHL17,FTHL17,CTA,,0.110466,0.1,255.0,5,,,✓,✓,✓
+GAGE1,GAGE1,CTA,,0.7,0.5,859.0,6,,,✓,✓,✓
+GAGE12C/D/E,GAGE12E,CTA,,0.3,0.3,288.0,4,,,✓,✓,✓
+GAGE12H,GAGE12H,CTA,,0.0,0.0,222.0,3,,,✓,✓,✓
+GAGE12J,GAGE12J,CTA,,3.1,2.2,236.0,6,,,✓,✓,✓
+GAGE13,GAGE13,CTA,,2.0,1.4,619.0,3,,,✓,✓,✓
+GAGE2A,GAGE2A,CTA,,1.1,0.8,830.0,6,,,✓,✓,✓
+HORMAD1,HORMAD1,Unsafe,HPA tissue clusters | DICE immune | Adult cornea | Established rare normal-cell RNA,,,,6,,,—,—,—
+HORMAD2,HORMAD2,Unsafe,Established rare normal-cell RNA,,,,4,,,—,—,—
+LDHC,LDHC,Unsafe,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA,,,,4,,,—,—,—
+LEMD1,LEMD1,Unsafe,Normal bulk | HPA tissue clusters | Adult cornea,,,,6,,,—,—,—
+LIN28B,LIN28B,Unsafe,Normal bulk | HPA tissue clusters,,,,6,,,—,—,—
+LIPI,LIPI,Unsafe,HPA tissue clusters | Established rare normal-cell RNA,,,,0,,,—,—,—
+LUZP4,LUZP4,CTA,,0.030238,0.0,184.0,4,,,✓,✓,✓
+MAEL,MAEL,Unsafe,Normal bulk | HPA tissue clusters,,,,4,,,—,—,—
+MAGEA1,MAGEA1,CTA,,0.0,0.0,1394.0,7,,,✓,✓,exclusions
+MAGEA10,MAGEA10,CTA,,2.2,2.4,890.0,6,,,✓,✓,exclusions
+MAGEA11,MAGEA11,CTA,,0.146599,0.1,1253.0,6,,,✓,✓,exclusions
+MAGEA12,MAGEA12,Unsafe,Established rare normal-cell RNA,,,,7,,,—,—,—
+MAGEA2/B,MAGEA2,CTA,,0.6000000000000001,0.8,1677.0,4,,,✓,✓,exclusions
+MAGEA3,MAGEA3,Unsafe,HPA tissue clusters,,,,8,,,—,—,—
+MAGEA4,MAGEA4,CTA,,0.7,0.6,1711.0,8,,,✓,✓,✓
+MAGEA6,MAGEA6,CTA,,0.2,0.2,2150.0,6,,,✓,✓,exclusions
+MAGEA8,MAGEA8,CTA,,0.989010976255,1.0,308.0,4,,,✓,✓,exclusions
+MAGEA9/B,"MAGEA9, MAGEA9B",CTA,,0.2,0.2,1441.0,4,,,✓,✓,exclusions
+MAGEB1,MAGEB1,CTA,,0.0,0.0,552.0,6,,,✓,✓,exclusions
+MAGEB10,MAGEB10,CTA,,1.9,2.4,19.0,2,,,✓,✓,sets
+MAGEB16,MAGEB16,CTA,,0.0,0.0,145.0,4,,,✓,✓,exclusions
+MAGEB18,MAGEB18,CTA,,0.0,0.0,16.0,2,,,✓,✓,papers
+MAGEB2,MAGEB2,Unsafe,HPA tissue clusters,,,,7,,,—,—,—
+MAGEB3,MAGEB3,CTA,,0.2,0.3,47.0,3,,,✓,✓,sets
+MAGEB5,MAGEB5,Reproductive Antigen only,,0.039186,0.0,1.0,0,,,papers,papers,sets
+MAGEB6,MAGEB6,Unsafe,HPA normal protein,,,,5,,,—,—,—
+MAGEB6B,MAGEB6B,Cancer Antigen only,,0.0,0.0,4.0,0,,,papers,papers,sets
+MAGEC1,MAGEC1,CTA,,0.5,0.6,890.0,5,,,✓,✓,exclusions
+MAGEC2,MAGEC2,Other,,,,,6,,,—,—,—
+MEIOB,MEIOB,Unsafe,HPA tissue clusters,,,,4,,,—,—,—
+MORC1,MORC1,Unsafe,Established rare normal-cell RNA,,,,4,,,—,—,—
+NANOS2,NANOS2,CTA,,1.3,0.8,40.0,3,,,✓,✓,✓
+NUTM1,NUTM1,CTA,,0.9,1.1,109.0,3,,,✓,✓,✓
+NY-ESO-1,"CTAG1A, CTAG1B",CTA,,0.30000000000000004,0.5,976.0,5,,,✓,✓,✓
+ODF1,ODF1,CTA,,0.623562,3.4,35.0,2,,,✓,✓,papers
+ODF4,ODF4,CTA,,0.474254625609,5.2,78.0,3,,,✓,✓,✓
+PAGE1,PAGE1,CTA,,0.0,0.0,464.0,4,,,✓,✓,✓
+PAGE2,PAGE2,CTA,,1.6,7.7,886.0,5,,,✓,✓,✓
+PAGE2B,PAGE2B,Unsafe,HPA tissue clusters,,,,4,,,—,—,—
+PAGE3,PAGE3,CTA,,0.3,1.9,48.0,1,,,✓,papers,papers
+PAGE5,PAGE5,Unsafe,HPA tissue clusters,,,,5,,,—,—,—
+PASD1,PASD1,CTA,,0.014938,0.5,242.0,5,,,✓,✓,✓
+PATE1,PATE1,CTA,,1.2,1.6,18.0,0,,,✓,papers,papers
+PATE4,PATE4,Unsafe,Normal bulk,,,,0,,,—,—,—
+PHF7,PHF7,Unsafe,Normal bulk | HPA tissue clusters | Monaco immune | DICE immune | Adult cornea,,,,3,,,—,—,—
+PIWIL1,PIWIL1,Unsafe,HPA tissue clusters | Established rare normal-cell RNA,,,,4,,,—,—,—
+PLAC1,PLAC1,Unsafe,Established rare normal-cell RNA,,,,2,,,—,—,—
+PRAME,PRAME,CTA,,3.0,20.3,4851.0,6,disposable,melanocytes,✓,✓,✓
+PRAMEF18,PRAMEF18,Other,,,,,0,,,—,—,—
+PRAMEF20,PRAMEF20,CTA,,0.1,0.6,34.0,1,,,✓,✓,papers
+PRM1,PRM1,CTA,,5.3,5.6,34.0,1,,,✓,off_target,off_target
+PRM2,PRM2,CTA,,4.4,4.5,25.0,2,,,✓,✓,off_target
+PRM3,PRM3,Unsafe,Normal bulk,,,,1,,,—,—,—
+PRSS54,PRSS54,CTA,,1.2,1.7,26.0,3,,,✓,✓,sets
+PSG1,PSG1,Unsafe,Normal bulk,,,,0,,,—,—,—
+PSG11,PSG11,CTA,,0.9,2.5,71.0,1,,,✓,papers,papers
+PSG3,PSG3,CTA,,1.0,7.1,60.0,1,,,✓,papers,papers
+PSG5,PSG5,Unsafe,Normal bulk | HPA tissue clusters,,,,0,,,—,—,—
+PSG8,PSG8,CTA,,0.3,2.3,203.0,1,,,✓,papers,papers
+PSG9,PSG9,Unsafe,HPA tissue clusters,,,,0,,,—,—,—
+RAD21L1,RAD21L1,CTA,,1.23593731127,1.6,93.0,4,,,✓,✓,✓
+RIMBP3,RIMBP3,Unsafe,Normal bulk,,,,3,,,—,—,—
+ROPN1B,ROPN1B,Unsafe,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA,,,,6,,,—,—,—
+SAGE1,SAGE1,CTA,,0.918586020006,0.7,638.0,5,,,✓,✓,✓
+SLCO6A1,SLCO6A1,Unsafe,Established rare normal-cell RNA,,,,4,,,—,—,—
+SMC1B,SMC1B,Unsafe,Established rare normal-cell RNA,,,,5,,,—,—,—
+SPACA1,SPACA1,CTA,,0.2,0.5,62.0,4,,,✓,✓,✓
+SPACA3,SPACA3,Unsafe,Established rare normal-cell RNA,,,,4,,,—,—,—
+SPAG11A,SPAG11A,CTA,,0.3,0.3,94.0,2,,,✓,✓,papers
+SPAM1,SPAM1,CTA,,0.4,0.4,2.0,3,,,✓,✓,sets
+SPANXA1/2,"SPANXA1, SPANXA2",CTA,,3.0,3.4,244.0,3,,,✓,✓,✓
+SPANXB1,SPANXB1,CTA,,2.1,1.7,529.0,2,,,✓,✓,papers
+SPANXC,SPANXC,CTA,,2.7,1.9,164.0,6,,,✓,✓,✓
+SPANXD,SPANXD,CTA,,2.6,3.3,114.0,3,,,✓,✓,✓
+SPANXN1,SPANXN1,CTA,,0.236171581965,0.0,24.0,1,,,✓,papers,papers
+SPANXN2,SPANXN2,CTA,,0.0,0.0,4.0,0,,,papers,papers,sets
+SPANXN3,SPANXN3,CTA,,0.8,0.8,27.0,2,,,✓,✓,papers
+SPANXN4,SPANXN4,CTA,,0.5,0.9,8.0,0,,,papers,papers,papers
+SPANXN5,SPANXN5,CTA,,0.0,0.0,3.0,2,,,✓,✓,sets
+SPATA12,SPATA12,Unsafe,Normal bulk,,,,4,,,—,—,—
+SPATA16,SPATA16,Unsafe,HPA tissue clusters,,,,3,,,—,—,—
+SPATA19,SPATA19,CTA,,0.5,1.3,31.0,3,,,✓,✓,✓
+SPATA22,SPATA22,Unsafe,Normal bulk | HPA tissue clusters,,,,4,,,—,—,—
+SPATA31A1,SPATA31A1,CTA,,0.0,0.0,25.0,0,,,papers,papers,papers
+SPATA31A3,SPATA31A3,CTA,,0.0,0.0,6.0,1,,,✓,papers,papers
+SPATA31A5,SPATA31A5,CTA,,0.1,0.0,2.0,1,,,✓,papers,sets
+SPATA31A6,SPATA31A6,CTA,,0.3,0.3,4.0,2,,,✓,✓,sets
+SPATA31A7,SPATA31A7,CTA,,0.10434002266,0.2,42.0,0,,,papers,papers,papers
+SPATA31D3,SPATA31D3,CTA,,0.0,0.0,2.0,0,,,papers,papers,sets
+SPATA31D4,SPATA31D4,CTA,,0.0,0.0,2.0,1,,,✓,papers,sets
+SPATA31E1,SPATA31E1,Unsafe,Normal bulk,,,,3,,,—,—,—
+SPATA32,SPATA32,Unsafe,DICE immune,,,,3,,,—,—,—
+SPATA4,SPATA4,Unsafe,Normal bulk | HPA tissue clusters,,,,4,,,—,—,—
+SPEM1,SPEM1,CTA,,0.5874481531669999,0.2,15.0,2,,,✓,✓,sets
+SPMAP2,THEG,Unsafe,Established rare normal-cell RNA,,,,4,,,—,—,—
+SPMIP9,TEX37,CTA,,0.2,0.3,146.0,3,,,✓,✓,✓
+SPO11,SPO11,CTA,,0.136234470525,0.0,23.0,1,,,✓,papers,papers
+SSX1,SSX1,CTA,,1.2,1.3,1164.0,5,,,✓,✓,✓
+SSX2/B,"SSX2, SSX2B",CTA,,2.4000000000000004,2.8000000000000003,677.0,6,,,✓,✓,✓
+SSX3,SSX3,CTA,,1.5,2.2,113.0,5,,,✓,✓,✓
+SSX4/B,SSX4,CTA,,0.2,0.2,687.0,2,,,✓,✓,papers
+SYCE2,SYCE2,Unsafe,Normal bulk | DICE immune,,,,3,,,—,—,—
+SYCP1,SYCP1,CTA,,1.93779948619,1.8,103.0,4,,,✓,✓,✓
+SYCP3,SYCP3,Unsafe,HPA tissue clusters | DICE immune | Established rare normal-cell RNA,,,,5,,,—,—,—
+TDRD1,TDRD1,Unsafe,Established rare normal-cell RNA,,,,4,,,—,—,—
+TEKT5,TEKT5,Unsafe,HPA tissue clusters,,,,4,,,—,—,—
+TENT5D,TENT5D,CTA,,0.1,1.4,3.0,3,,,✓,✓,sets
+TEX101,TEX101,Unsafe,Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | Established rare normal-cell RNA,,,,4,,,—,—,—
+TEX13A,TEX13A,CTA,,0.1,0.1,15.0,0,,,papers,papers,sets
+TEX14,TEX14,Unsafe,HPA tissue clusters,,,,4,,,—,—,—
+TEX15,TEX15,Unsafe,HPA tissue clusters,,,,3,,,—,—,—
+TEX19,TEX19,CTA,,1.1300257928,0.2,271.0,4,,,✓,✓,✓
+TEX35,TEX35,Unsafe,Normal bulk | Monaco immune,,,,3,,,—,—,—
+TEX38,TEX38,CTA,,3.2493651313,1.4,117.0,3,,,✓,✓,✓
+TEX44,TEX44,CTA,,0.7351227898109999,0.3,24.0,2,,,✓,✓,papers
+TFDP3,TFDP3,CTA,,0.0,0.0,331.0,4,,,✓,✓,✓
+TNP2,TNP2,CTA,,0.467821065317,0.3,50.0,1,,,✓,papers,papers
+TPTE,TPTE,CTA,,2.0,2.5,357.0,3,,,✓,✓,✓
+TRIM64,TRIM64,Unsafe,Monaco immune,,,,0,,,—,—,—
+TSKS,TSKS,Unsafe,DICE immune,,,,2,,,—,—,—
+TSPY1,TSPY1,CTA,,0.0,0.0,174.0,3,,,✓,✓,✓
+TSPY10/3,"TSPY10, TSPY3",CTA,,0.2,0.2,203.0,2,,,✓,✓,papers
+TSPY2,TSPY2,CTA,,0.4,0.4,250.0,3,,,✓,✓,✓
+TSPY4,TSPY4,CTA,,0.2,0.2,234.0,2,,,✓,✓,papers
+TSPY8,TSPY8,CTA,,0.0,0.0,99.0,0,,,papers,papers,papers
+TSPY9,TSPY9,CTA,,0.2,0.2,5.0,1,,,✓,papers,sets
+TSPYL6,TSPYL6,Unsafe,Normal bulk,,,,4,,,—,—,—
+TULP2,TULP2,Unsafe,Normal bulk | HPA tissue clusters | DICE immune,,,,2,,,—,—,—
+UTF1,UTF1,Unsafe,HPA tissue clusters,,,,4,,,—,—,—
+XAGE1A/B,"XAGE1A, XAGE1B",CTA,,1.8,1.6,1843.0,2,,,✓,✓,papers
+XAGE2,XAGE2,Unsafe,Normal bulk | HPA tissue clusters | Established rare normal-cell RNA,,,,0,,,—,—,—
+XAGE3,XAGE3,CTA,,3.1,4.5,118.0,1,,,✓,papers,papers
+XAGE5,XAGE5,CTA,,1.64097441476,0.1,272.0,3,,,✓,✓,✓
+ZPBP,ZPBP,Unsafe,Normal bulk | HPA tissue clusters,,,,3,,,—,—,—
+ZPBP2,ZPBP2,Unsafe,Normal bulk,,,,4,,,—,—,—

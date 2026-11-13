@@ -1,0 +1,71 @@
+{
+  "policy_id": "oncoref.target-selection.2026-11-09.1",
+  "status": "research_catalog_rebuilt",
+  "species": "human",
+  "categories": [
+    "CTA",
+    "Cancer Antigen only",
+    "Reproductive Antigen only",
+    "Other",
+    "Unsafe"
+  ],
+  "shared_checks": [
+    "normal_screen_pass",
+    "required_coverage_complete",
+    "identity_translation_pass",
+    "evidence_resolved",
+    "sequence_pass"
+  ],
+  "sets": {
+    "Cancer Antigens": "eligible AND cancer evidence qualifies",
+    "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
+    "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
+    "Target candidates": "Cancer Antigens UNION Reproductive Antigens"
+  },
+  "precedence": [
+    "Unsafe",
+    "Other:Review",
+    "Other:Sequence",
+    "set memberships"
+  ],
+  "other_subtypes": {
+    "Review": "Required evidence is missing, unresolved, or fails a shared admission check.",
+    "Sequence": "Nested protein without independent support or >=95% Unsafe 9-mer containment.",
+    "Expression": "Shared checks pass; neither positive expression route qualifies."
+  },
+  "cancer_rna": {
+    "detection_floor": 1.0,
+    "independent_participants_required": 2,
+    "repeated_rule": "T >= 1 AND T > N in at least two independent participants",
+    "single_tumor_fold": 5.0,
+    "single_rule": "T >= 5 * max(N, 1) in at least one qualified tumor sample",
+    "normal_reference": "Maximum QC-passing, identity-resolved measurement in the declared compatible normal panel, excluding specifically allowed Disposable and reproductive compartments.",
+    "comparability": "One documented comparison scale and complete required normal contexts. Equal unit names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling.",
+    "missing_reference": "unassessed, never zero",
+    "alternative": "Reviewed reliable tumor protein with exact identity and source scope."
+  },
+  "reproductive_evidence": {
+    "branches": [
+      "adult reproductive",
+      "placental",
+      "extraembryonic",
+      "embryonic",
+      "fetal"
+    ],
+    "rna_detection_floor": 1.0,
+    "bulk": "Mapped human reproductive compartment >=1 native TPM/nTPM.",
+    "cell": "Mapped reproductive cells >=1 native TPM/nTPM and >=20 reads.",
+    "developmental": "Human stage/lineage mean >=1 TPM, >=20 cells, >=5 cells at >=1 TPM, and >=10% cells at >=1 TPM. Retain embryos, donors and stage.",
+    "protein": "Reliable mapped reproductive IHC or reviewed human reproductive protein.",
+    "concentration": "Descriptive measurement; not an admission gate for either set."
+  },
+  "shared_normal_policy": {
+    "policy_id": "oncoref.cta-selection.2026-11-08.1",
+    "scope": "Normal assessment only; legacy cancer, reproductive and concentration gates excluded.",
+    "allowances": "Same resolved reproductive and Disposable compartment allowances for both sets. Immune, endothelial and other protected cells do not inherit an organ's allowance.",
+    "threshold_interpretation": "RNA/IHC cutoffs are screening conventions, not measured injury thresholds. Negative IHC does not establish a calibrated safety margin."
+  },
+  "translation": "Qualifying coding reference or supported noncanonical ORF plus complete approved MANE-first/canonical representative; resolve conflicting coding evidence. Experimental protein detection is retained separately.",
+  "published_target_support": "Positive evidence annotation for a curated, exact-scope target nomination. Preserve every protein-paper link and its attested claim; biology or background-table coverage alone is not a target nomination. Publication cannot override an exclusion or hold.",
+  "only_meaning": "Membership in one qualified set, not proven absence from the other context."
+}

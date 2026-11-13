@@ -1,0 +1,14 @@
+age_group,author_stage,development_stage,n_cells,n_positive,n_ge2,max_raw_count,total_counts,pct_positive
+Adult,adult (42 years),42-year-old stage,14102,459,8,2,467,3.254857467025954
+Adult,adult (52 years),52-year-old stage,2731,55,0,1,55,2.0139143170999634
+Postnatal child,infant (6 months),6-month-old stage,2969,337,30,3,369,11.3506231054227
+Postnatal child,infant (7 months),7-month-old stage,4589,70,0,1,70,1.5253867945086075
+Postnatal child,infant (9 months),9-month-old stage,4070,124,6,2,130,3.0466830466830466
+Postnatal child,newborn,newborn stage (0-28 days),7537,330,16,3,348,4.378399893856972
+Postnatal child,toddler (2.8 years),3-year-old stage,8174,135,6,3,142,1.6515781747002691
+Postnatal child,toddler (3.5 years),3-year-old stage,5258,127,1,2,128,2.415367059718524
+Prenatal,11 wpc,11th week post-fertilization stage,857,47,0,1,47,5.484247374562427
+Prenatal,17 wpc,17th week post-fertilization stage,2859,120,2,2,122,4.197271773347325
+Prenatal,20 wpc,20th week post-fertilization stage,2005,28,0,1,28,1.3965087281795512
+Prenatal,9 wpc,9th week post-fertilization stage,358,22,0,1,22,6.145251396648045
+Prenatal,CS22,Carnegie stage 22,424,33,4,3,38,7.783018867924528

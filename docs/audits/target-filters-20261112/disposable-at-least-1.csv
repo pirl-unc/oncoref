@@ -1,0 +1,14 @@
+protein_group_label,category,off_target_tpm,off_target_tpm_tissue,off_target_ntpm,disposable_max_tpm,disposable_max_ntpm,tumor_max_tpm,independent_patients_above_normal,reproductive_best,papers_cta,papers_oncofetal,papers_tumor,rare_cell_status,mapping_risk
+LCE3C,Cancer Antigen only,21.4,Disposable,23.4,21.4,23.4,284.5613009825911,101.0,0.2,1,0,0,below_screen,False
+NLRP4,CTA,4.74827427848,blood,4.9,4.6,4.9,280.5005,235.0,660.1610470388655,5,0,0,below_screen,False
+IL36B,Cancer Antigen only,7.5,skin,7.9,3.3,3.7,498.45000000138293,70.0,0.9,0,0,0,below_screen,False
+LCE3B,Cancer Antigen only,2.7,Disposable,3.0,2.7,3.0,3.6600039960468296,8.0,0.0,0,0,0,below_screen,False
+ENSG00000267140,CTA,5.1,lymph node,4.7,2.6,1.7,62.910994115172514,0.0,4.928569078992287,0,0,0,below_screen,True
+PSMA8,CTA,5.5603071674599995,blood,2.3,1.5,1.7,90.1265,168.0,243.7,4,0,0,below_screen,False
+ENSG00000273155,CTA,1.8,blood,2.1,1.5,1.0,50.92278376031669,17.0,23.090832358632824,0,0,0,below_screen,True
+ENSG00000274944,Reproductive Antigen only,2.8,lymph node,3.1,1.2,0.8,13.536047963262552,0.0,52.16146956810557,0,0,0,below_screen,True
+MAS1L,CTA,1.1,esophagus,1.0,1.1,0.7,19.3856,16.0,3.0,0,0,0,below_screen,True
+ENSG00000248235,Cancer Antigen only,3.6,spleen,2.6,1.1,0.8,183.84038615724447,0.0,0.5,0,0,0,below_screen,True
+ENSG00000267618,CTA,1.5,cerebral cortex,1.6,1.0,0.6,72.39564577240236,0.0,4.2,0,0,0,dismissed,True
+ENSG00000289809,Reproductive Antigen only,4.5,adipose tissue,4.5,1.0,0.6,0.06789252887224798,0.0,9.8,0,0,0,below_screen,True
+XAGE1A/B,CTA,1.8,lung,1.6,1.0,1.0,4068.6393117828993,1843.0,98.80000000000001,2,0,0,below_screen,False

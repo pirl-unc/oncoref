@@ -1,0 +1,517 @@
+[
+  {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000258",
+    "lang": "en",
+    "description": [
+      "HPO (Human Phenotype Ontology) considers HP:0003581 (adult onset) as 'at the age of 16 years or later', but this adult stage directly follows the pediatric onset (HP:0410280) defined 'as before the age of 15 years' (see https://github.com/obophenotype/human-phenotype-ontology/issues/6099). To be consistent, we consider adult stage as starting at 15 years.",
+      "Human developmental stage that refers to a sexually mature human."
+    ],
+    "synonyms": [
+      "mature stage"
+    ],
+    "annotation": {
+      "database_cross_reference": [
+        "HP:0003581",
+        "UBERON:0000113"
+      ],
+      "has_obo_namespace": [
+        "human_developmental_stage"
+      ],
+      "id": [
+        "HsapDv:0000258"
+      ],
+      "start, years post birth": [
+        "15.0"
+      ]
+    },
+    "label": "adult stage",
+    "ontology_name": "hsapdv",
+    "ontology_prefix": "HsapDv",
+    "ontology_iri": "http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl",
+    "is_obsolete": false,
+    "term_replaced_by": null,
+    "is_defining_ontology": true,
+    "has_children": true,
+    "is_root": false,
+    "short_form": "HsapDv_0000258",
+    "obo_id": "HsapDv:0000258",
+    "in_subset": null,
+    "obo_definition_citation": [
+      {
+        "definition": "Human developmental stage that refers to a sexually mature human.",
+        "oboXrefs": [
+          {
+            "database": "Bgee",
+            "id": "curator",
+            "description": null,
+            "url": null
+          }
+        ]
+      }
+    ],
+    "obo_xref": [
+      {
+        "database": "HP",
+        "id": "0003581",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/HP_0003581"
+      },
+      {
+        "database": "UBERON",
+        "id": "0000113",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/UBERON_0000113"
+      }
+    ],
+    "obo_synonym": null,
+    "is_preferred_root": false,
+    "_links": {
+      "self": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258?lang=en"
+      },
+      "parents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/parents"
+      },
+      "ancestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/ancestors"
+      },
+      "hierarchicalParents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/hierarchicalAncestors"
+      },
+      "jstree": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/jstree"
+      },
+      "children": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/children"
+      },
+      "descendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/descendants"
+      },
+      "hierarchicalChildren": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/hierarchicalDescendants"
+      },
+      "graph": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/graph"
+      },
+      "part_of": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "immediately_preceded_by": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000258/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002087"
+      }
+    }
+  },
+  {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000266",
+    "lang": "en",
+    "description": [
+      "A prime adult stage that refers to an adult who is under 40 years old."
+    ],
+    "synonyms": [],
+    "annotation": {
+      "database_cross_reference": [
+        "HP:0011462"
+      ],
+      "end, years post birth": [
+        "40.0"
+      ],
+      "has_obo_namespace": [
+        "human_developmental_stage"
+      ],
+      "id": [
+        "HsapDv:0000266"
+      ],
+      "start, years post birth": [
+        "15.0"
+      ]
+    },
+    "label": "young adult stage",
+    "ontology_name": "hsapdv",
+    "ontology_prefix": "HsapDv",
+    "ontology_iri": "http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl",
+    "is_obsolete": false,
+    "term_replaced_by": null,
+    "is_defining_ontology": true,
+    "has_children": true,
+    "is_root": false,
+    "short_form": "HsapDv_0000266",
+    "obo_id": "HsapDv:0000266",
+    "in_subset": null,
+    "obo_definition_citation": [
+      {
+        "definition": "A prime adult stage that refers to an adult who is under 40 years old.",
+        "oboXrefs": [
+          {
+            "database": "Bgee",
+            "id": "curator",
+            "description": null,
+            "url": null
+          }
+        ]
+      }
+    ],
+    "obo_xref": [
+      {
+        "database": "HP",
+        "id": "0011462",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/HP_0011462"
+      }
+    ],
+    "obo_synonym": null,
+    "is_preferred_root": false,
+    "_links": {
+      "self": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266?lang=en"
+      },
+      "parents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/parents"
+      },
+      "ancestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/ancestors"
+      },
+      "hierarchicalParents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/hierarchicalAncestors"
+      },
+      "jstree": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/jstree"
+      },
+      "children": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/children"
+      },
+      "descendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/descendants"
+      },
+      "hierarchicalChildren": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/hierarchicalDescendants"
+      },
+      "graph": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/graph"
+      },
+      "part_of": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000266/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      }
+    }
+  },
+  {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000226",
+    "lang": "en",
+    "description": [
+      "We start this stage at 15 years to follow the Human Phenotype Ontology defintion of adult onset (HP:0003581), and we ends the stage at 60 years, the start of late onset in HPO (HP:0003584).",
+      "A life cycle stage that starts at sexual maturity of the human adult, and ends before senescence."
+    ],
+    "synonyms": [],
+    "annotation": {
+      "database_cross_reference": [
+        "UBERON:0018241"
+      ],
+      "end, years post birth": [
+        "60.0"
+      ],
+      "has_obo_namespace": [
+        "human_developmental_stage"
+      ],
+      "id": [
+        "HsapDv:0000226"
+      ],
+      "start, years post birth": [
+        "15.0"
+      ]
+    },
+    "label": "prime adult stage",
+    "ontology_name": "hsapdv",
+    "ontology_prefix": "HsapDv",
+    "ontology_iri": "http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl",
+    "is_obsolete": false,
+    "term_replaced_by": null,
+    "is_defining_ontology": true,
+    "has_children": true,
+    "is_root": false,
+    "short_form": "HsapDv_0000226",
+    "obo_id": "HsapDv:0000226",
+    "in_subset": null,
+    "obo_definition_citation": [
+      {
+        "definition": "A life cycle stage that starts at sexual maturity of the human adult, and ends before senescence.",
+        "oboXrefs": [
+          {
+            "database": "Bgee",
+            "id": "curator",
+            "description": null,
+            "url": null
+          }
+        ]
+      }
+    ],
+    "obo_xref": [
+      {
+        "database": "UBERON",
+        "id": "0018241",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/UBERON_0018241"
+      }
+    ],
+    "obo_synonym": null,
+    "is_preferred_root": false,
+    "_links": {
+      "self": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226?lang=en"
+      },
+      "parents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/parents"
+      },
+      "ancestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/ancestors"
+      },
+      "hierarchicalParents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/hierarchicalAncestors"
+      },
+      "jstree": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/jstree"
+      },
+      "children": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/children"
+      },
+      "descendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/descendants"
+      },
+      "hierarchicalChildren": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/hierarchicalDescendants"
+      },
+      "graph": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/graph"
+      },
+      "part_of": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000226/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      }
+    }
+  },
+  {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000267",
+    "lang": "en",
+    "description": [
+      "Late adulthood that refers to an adult who is over 40 and under 60 years old."
+    ],
+    "synonyms": [],
+    "annotation": {
+      "database_cross_reference": [
+        "HP:0003596"
+      ],
+      "end, years post birth": [
+        "60.0"
+      ],
+      "has_obo_namespace": [
+        "human_developmental_stage"
+      ],
+      "id": [
+        "HsapDv:0000267"
+      ],
+      "start, years post birth": [
+        "40.0"
+      ]
+    },
+    "label": "middle aged stage",
+    "ontology_name": "hsapdv",
+    "ontology_prefix": "HsapDv",
+    "ontology_iri": "http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl",
+    "is_obsolete": false,
+    "term_replaced_by": null,
+    "is_defining_ontology": true,
+    "has_children": true,
+    "is_root": false,
+    "short_form": "HsapDv_0000267",
+    "obo_id": "HsapDv:0000267",
+    "in_subset": null,
+    "obo_definition_citation": [
+      {
+        "definition": "Late adulthood that refers to an adult who is over 40 and under 60 years old.",
+        "oboXrefs": [
+          {
+            "database": "Bgee",
+            "id": "curator",
+            "description": null,
+            "url": null
+          }
+        ]
+      }
+    ],
+    "obo_xref": [
+      {
+        "database": "HP",
+        "id": "0003596",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/HP_0003596"
+      }
+    ],
+    "obo_synonym": null,
+    "is_preferred_root": false,
+    "_links": {
+      "self": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267?lang=en"
+      },
+      "parents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/parents"
+      },
+      "ancestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/ancestors"
+      },
+      "hierarchicalParents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/hierarchicalAncestors"
+      },
+      "jstree": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/jstree"
+      },
+      "children": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/children"
+      },
+      "descendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/descendants"
+      },
+      "hierarchicalChildren": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/hierarchicalDescendants"
+      },
+      "graph": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/graph"
+      },
+      "part_of": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "immediately_preceded_by": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000267/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002087"
+      }
+    }
+  },
+  {
+    "iri": "http://purl.obolibrary.org/obo/HsapDv_0000227",
+    "lang": "en",
+    "description": [
+      "Age-related hearing loss (presbycusis) is one of the most common conditions affecting older and elderly adults(see https://www.nidcd.nih.gov/health/age-related-hearing-loss#1). We follow Human Phenotype Ontology (HPO) late onset definition (HP:0003584) to start this stage at 60 years.",
+      "Late adult stage that refers to an individu who is over 60 and starts to have some age-related impairments."
+    ],
+    "synonyms": [
+      "60+ years",
+      "elderly"
+    ],
+    "annotation": {
+      "database_cross_reference": [
+        "HP:0003584",
+        "UBERON:0007222"
+      ],
+      "has_obo_namespace": [
+        "human_developmental_stage"
+      ],
+      "id": [
+        "HsapDv:0000227"
+      ],
+      "start, years post birth": [
+        "60.0"
+      ]
+    },
+    "label": "late adult stage",
+    "ontology_name": "hsapdv",
+    "ontology_prefix": "HsapDv",
+    "ontology_iri": "http://purl.obolibrary.org/obo/life-stages/components/hsapdv.owl",
+    "is_obsolete": false,
+    "term_replaced_by": null,
+    "is_defining_ontology": true,
+    "has_children": true,
+    "is_root": false,
+    "short_form": "HsapDv_0000227",
+    "obo_id": "HsapDv:0000227",
+    "in_subset": null,
+    "obo_definition_citation": [
+      {
+        "definition": "Late adult stage that refers to an individu who is over 60 and starts to have some age-related impairments.",
+        "oboXrefs": [
+          {
+            "database": "Bgee",
+            "id": "curator",
+            "description": null,
+            "url": null
+          }
+        ]
+      }
+    ],
+    "obo_xref": [
+      {
+        "database": "HP",
+        "id": "0003584",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/HP_0003584"
+      },
+      {
+        "database": "UBERON",
+        "id": "0007222",
+        "description": null,
+        "url": "http://purl.obolibrary.org/obo/UBERON_0007222"
+      }
+    ],
+    "obo_synonym": null,
+    "is_preferred_root": false,
+    "_links": {
+      "self": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227?lang=en"
+      },
+      "parents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/parents"
+      },
+      "ancestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/ancestors"
+      },
+      "hierarchicalParents": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/hierarchicalParents"
+      },
+      "hierarchicalAncestors": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/hierarchicalAncestors"
+      },
+      "jstree": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/jstree"
+      },
+      "children": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/children"
+      },
+      "descendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/descendants"
+      },
+      "hierarchicalChildren": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/hierarchicalChildren"
+      },
+      "hierarchicalDescendants": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/hierarchicalDescendants"
+      },
+      "graph": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/graph"
+      },
+      "part_of": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FBFO_0000050"
+      },
+      "immediately_preceded_by": {
+        "href": "http://www.ebi.ac.uk/ols4/api/ontologies/hsapdv/terms/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FHsapDv_0000227/http%253A%252F%252Fpurl.obolibrary.org%252Fobo%252FRO_0002087"
+      }
+    }
+  }
+]

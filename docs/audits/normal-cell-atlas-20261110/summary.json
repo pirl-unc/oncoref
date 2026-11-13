@@ -1,0 +1,15 @@
+{
+  "inventory_observations": 59076311,
+  "adult_observations": 41630983,
+  "adult_brain_observations": 9432853,
+  "source_collections": 215,
+  "source_datasets": 452,
+  "expression_blocks_complete": 0,
+  "expression_blocks_expected": 19,
+  "expression_proteins_selected": 1804,
+  "expression_genes_available": 1826,
+  "classification_changed": false,
+  "independent_cerebellum_unique_nuclei": 151947,
+  "independent_granule_nuclei": 88302,
+  "independent_catalog_proteins_audited": 19893
+}

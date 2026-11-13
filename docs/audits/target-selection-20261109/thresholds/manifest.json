@@ -1,0 +1,34 @@
+{
+  "implementation_sha256": {
+    "scripts/build_target_sample_ranks.py": "81ed938dd48369b2b9bc645bb32ff6886324ea763e50d86c7cde9468434d45fb",
+    "scripts/audit_target_thresholds.py": "4aa467816b9d4f5c749c148e1185a219918494f61b1db608f02cfae2141ac588",
+    "scripts/render_target_thresholds.py": "7e14953bb071399be93687a1622c0bfb1cf49784840fb235191d8539d7042a9b",
+    "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32"
+  },
+  "inputs_sha256": {
+    "tmp/target-catalog-cache/tumor-comparison.parquet": "acec47c3eff58530fae12a06b68ff451a00dfce4073d49a5c069f143bac0e7f4",
+    "docs/audits/target-selection-20261109/rebuild/normal-comparison.csv.gz": "3c3c296748775e4dcd9e0ddc35a762b5576d9cb593f74318622c6669bf7dbc3f",
+    "oncoref/data/target-selection.csv.gz": "cf00eee8cfa7985fa3ce95d682aca4b05e0c857fb480e5f8aa41ab19de1c7c1e",
+    "tmp/target-threshold-cache/sample-ranks.parquet": "035fff7ba7237cf54b9315039374b60df27f625467f70de0f9850aabb990eba3"
+  },
+  "outputs_sha256": {
+    "cancer-rule-decisions.csv.gz": "515dfa14c8a89fe2637b5d56a7c54a5ad4e60898269d512201fb8d65d83c2bbe",
+    "disposable-bulk-ntpm.csv": "43a36e2f1eb77510dec37379e5a30ec084d2a4265022b37cc0a67c085f946479",
+    "enrichment-grid.png": "ef63656b60c2baf55fee00f3b04adaecd67d4eb96b5122333cc39ec30c6cca59",
+    "enrichment-grid.svg": "b55a0fe2b9baabb7fba562fb9ad904249c8b2c9b24207ed387346fbaa1659232",
+    "index.md": "10ad32240e8c0936d5623f992851235fc893391db76495d505b506bb9a497222",
+    "patient-coverage.csv": "d4519c072e0cba5ce3d17f5a6e969eb78209cfdc63e3a049aae046e570a05282",
+    "percentile-comparison.png": "5fd78bb89aa505b549b4a45fd2a81e3d977580329a654b3b786b2f5c75459d0d",
+    "percentile-comparison.svg": "52b202e8d409eacea7db8db055d2bbf664810ba56dcf44701ca24639cea8faf3",
+    "protein-threshold-evidence.csv.gz": "8bae56d652189aca9b277131a892aea3fb0d0f3afbb658437c7972438a9e1f43",
+    "rank-build-receipt.json": "9dca91b3e7bdee1dcda4192aecf607bc238586c44ddd1a656d0060b1b5f0cac5",
+    "recommended-category-changes.csv": "b201ab1ad9f01b62ef8d38137f94f2333b319b84c219a9df1e5b69760c17976a",
+    "recommended-eligible-inventory.csv.gz": "da521d53ee7bc72accccf3947c17bd71cb09d15c4d228794102d08fabd1c7deb",
+    "report.html": "9cc090916c02bd6817e75bc755feb3271d7dbfe4d6e43b3558bafb3e71aee103",
+    "sample-rank-cutoffs.csv.gz": "dc38d5e5c20179abae28dbe3265cec8881c7785d239a50a5da5fd8e84ceb2840",
+    "selected-rules.csv": "6a0145ea7acaf967ca7f6c9c58bed053036f670d78d42ee81e90bd3183a917d4",
+    "summary.json": "52b08c07d92958a1d97d46e88c550a6c0dbd3eefd0c3e1872aa08880fb65e110",
+    "threshold-grid.csv": "93d35d57dd05dc930c6fa82b335d88e99233ad91853743256e55405492bf8cdf",
+    "within-sample-cutoff-summary.csv": "ce63a033d7f691cdb70edc0b61bd1ddb0235dbdf4f28ef0cf807dfcf55cae5a0"
+  }
+}

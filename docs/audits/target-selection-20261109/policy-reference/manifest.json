@@ -1,0 +1,22 @@
+{
+  "baseline_commit": "2e24b126",
+  "patient_identity_policy": "oncoref.patient-identity.2026-11-10.1",
+  "inputs_sha256": {
+    "oncoref/data/target-selection.csv.gz": "cf00eee8cfa7985fa3ce95d682aca4b05e0c857fb480e5f8aa41ab19de1c7c1e",
+    "docs/audits/target-selection-20261109/rebuild/tumor-samples.csv.gz": "ff1dbc5cee60eb9e042d97562631b43340491ffc531a82fd14854d70c5dcc0d0",
+    "docs/audits/target-selection-20261109/thresholds/recommended-eligible-inventory.csv.gz": "da521d53ee7bc72accccf3947c17bd71cb09d15c4d228794102d08fabd1c7deb",
+    "docs/audits/target-selection-20261109/rebuild/paper-attestations.json.gz": "f7b873f75f069829f344395ea575f50d90c1c5b49c85e51e986445e1ddd682f7"
+  },
+  "implementation_sha256": {
+    "scripts/build_target_policy_reference.py": "5b6f9694e76048c64b3c91d655a7228f1837f7ca285a493b6f55589adbb382b7"
+  },
+  "outputs_sha256": {
+    "patient-mapping-category-changes.csv": "f058ddd1125a2f37598fa3862cee26f6b4cdfd7f7e402492d663f07d4ae7c91a",
+    "patient-mapping-proposed-changes.csv": "6d6d9353bc104575bf5508c508ff2bc9023cc2bfbdd49f3f7a3bb904a4df948d",
+    "thresholds.csv": "60c7f5ee9c33b3e5df060cd5b92c5fe1837ddd8529e219cd416f53f956a11aef",
+    "named-cta-proteins.csv": "24698a06e323cb1b3fd4c6e5e9ad70f657a7343d0dc4c07eecf4aa47dba1b70e",
+    "named-ctas.md": "53138e3736d57fcc65dfe2ad45721a57874fdc804ea666b10532ce330d1019cd",
+    "index.md": "1932ce25c34273fe45f3820b66bec379844d9f66c5a82850559060f1cac58857",
+    "patient-coverage.csv": "a5f0e92ef0e8dfb0573ba418f677a8814e5b662a1f5d60bf4638680c2c8a5c5f"
+  }
+}

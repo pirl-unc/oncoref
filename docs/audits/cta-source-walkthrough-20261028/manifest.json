@@ -146,11 +146,12 @@
   },
   "input_snapshots": [
     "docs/audits/cta-selection-20261028/manifest.json",
-    "docs/audits/cta-tcr-trials-20261029/manifest.json"
+    "docs/audits/cta-tcr-trials-20261029/manifest.json",
+    "docs/cta-evidence-axes.md"
   ],
   "input_snapshot_archive": {
     "path": "release-inputs.zip",
-    "sha256": "770aca7c194dc994c928845311613d53cf07995a8b25ad34c7cc891d25b5b9b6",
+    "sha256": "b6ad63af928399a2955170be2fe3be10058e298bd42ca67ec68de6b164ff5662",
     "reason": "Original scientific inputs preserved byte-for-byte as the live implementation advances."
   }
 }

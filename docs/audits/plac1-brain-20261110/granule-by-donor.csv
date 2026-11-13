@@ -1,0 +1,22 @@
+age_group,donor_id,development_stage,sex,n_cells,n_positive,n_ge2,max_raw_count,total_counts,pct_positive
+Adult,#105,42-year-old stage,female,14102,459,8,2,467,3.254857467025954
+Adult,#138,52-year-old stage,male,2731,55,0,1,55,2.0139143170999634
+Postnatal child,1791,3-year-old stage,male,8174,135,6,3,142,1.6515781747002691
+Postnatal child,2008267,newborn stage (0-28 days),female,3411,268,16,3,286,7.856933450600997
+Postnatal child,200978,3-year-old stage,male,5258,127,1,2,128,2.415367059718524
+Postnatal child,2012220,6-month-old stage,female,2969,337,30,3,369,11.3506231054227
+Postnatal child,2012258,newborn stage (0-28 days),female,4126,62,0,1,62,1.502666020358701
+Postnatal child,49819 Maryl_121,7-month-old stage,male,4589,70,0,1,70,1.5253867945086075
+Postnatal child,49844 Maryl_774,9-month-old stage,male,4070,124,6,2,130,3.0466830466830466
+Prenatal,11858,Carnegie stage 22,male,247,22,2,3,25,8.906882591093117
+Prenatal,11921,17th week post-fertilization stage,male,988,48,1,2,49,4.8582995951417
+Prenatal,11930,11th week post-fertilization stage,female,176,8,0,1,8,4.545454545454546
+Prenatal,13802,11th week post-fertilization stage,male,428,23,0,1,23,5.373831775700935
+Prenatal,13846,17th week post-fertilization stage,female,812,28,0,1,28,3.4482758620689653
+Prenatal,13949,Carnegie stage 22,female,177,11,2,2,13,6.214689265536723
+Prenatal,14144,9th week post-fertilization stage,female,73,5,0,1,5,6.8493150684931505
+Prenatal,14201,9th week post-fertilization stage,male,194,17,0,1,17,8.762886597938145
+Prenatal,14278,11th week post-fertilization stage,male,253,16,0,1,16,6.324110671936759
+Prenatal,14409,17th week post-fertilization stage,male,1059,44,1,2,45,4.1548630783758265
+Prenatal,14471,9th week post-fertilization stage,female,91,0,0,0,0,0.0
+Prenatal,15293,20th week post-fertilization stage,male,2005,28,0,1,28,1.3965087281795512

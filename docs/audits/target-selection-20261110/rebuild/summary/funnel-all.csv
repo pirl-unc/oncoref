@@ -1,0 +1,12 @@
+step,removed,remaining,flagged_in_total
+All assessed proteins,0,19893,
+Bulk tissue RNA above the tissue ceiling,17522,2371,17522.0
+Cell-type cluster RNA (HPA single cell),424,1947,17053.0
+Sorted immune-cell RNA,96,1851,12880.0
+Rare-cell RNA established by donor,107,1744,129.0
+Normal-tissue protein (IHC),50,1694,10165.0
+Curated or published normal expression,37,1657,39.0
+Adult cornea RNA,5,1652,12095.0
+"Incomplete coverage, identity or translation",693,959,
+Nested or Unsafe-contained sequence,42,917,
+No qualifying expression or bounds fail,15,902,

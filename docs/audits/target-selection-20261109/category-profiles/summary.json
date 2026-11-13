@@ -1,0 +1,26 @@
+{
+  "categories": {
+    "Unsafe": 18259,
+    "Other": 714,
+    "CTA": 638,
+    "Cancer Antigen only": 260,
+    "Reproductive Antigen only": 22
+  },
+  "curated_published_nomination_proteins": 2233,
+  "published_nomination_categories": {
+    "Unsafe": 1745,
+    "CTA": 408,
+    "Other": 52,
+    "Cancer Antigen only": 24,
+    "Reproductive Antigen only": 4
+  },
+  "published_sources": 10,
+  "cancer_only_proteins": 260,
+  "cancer_only_loci": 261,
+  "reproductive_only_proteins": 22,
+  "reproductive_only_cancer_status": {
+    "unassessed": 15,
+    "does_not_qualify": 7
+  },
+  "ranking_scope": "All supported nonreproductive normal contexts, including Disposable; each unit separate; classifications unchanged"
+}

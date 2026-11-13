@@ -1,0 +1,89 @@
+{
+  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-09.1",
+  "unit": "TPM",
+  "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
+  "compatibility_basis": [
+    "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
+    "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
+    "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
+    "Complete 36-context combined nonreproductive normal anatomy panel, plus observed native-TPM normal immune and brain measurements"
+  ],
+  "normal_statistic": "Maximum supported context statistic: tissue/subregion means, GTEx v11 donor medians, and supported immune summaries including DICE third-highest TPM",
+  "batch_corrected": false,
+  "limitations": [
+    "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
+    "A maximum of tissue summaries is not a maximum over every healthy donor",
+    "Other assay scales continue to enforce the existing shared normal screen independently"
+  ],
+  "participant_identity": "Shared sample_identities API joins curated case/donor mappings and documented TCGA, TARGET, MMRF and Treehouse identifiers. Every sample retains identity status, basis and references. Unresolved or conflicting identities support only the single-sample route.",
+  "participant_identity_policy": "oncoref.patient-identity.2026-11-10.1",
+  "normal_sources": [
+    {
+      "source": "rna_tissue_hpa",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
+      "path": "tmp/target-rebuild-inputs/rna_tissue_hpa.tsv.zip",
+      "sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
+      "bytes": 6661353
+    },
+    {
+      "source": "rna_tissue_gtex",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
+      "path": "tmp/target-rebuild-inputs/rna_tissue_gtex.tsv.zip",
+      "sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
+      "bytes": 5960172
+    },
+    {
+      "source": "rna_brain_gtex",
+      "version": "v23",
+      "url": "https://v23.proteinatlas.org/download/rna_brain_gtex.tsv.zip",
+      "path": "tmp/target-rebuild-inputs/rna_brain_gtex.tsv.zip",
+      "sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
+      "bytes": 1633631
+    }
+  ],
+  "method_references": [
+    "https://v23.proteinatlas.org/about/assays%2Bannotation",
+    "https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/"
+  ],
+  "required_contexts": [
+    "adipose tissue",
+    "adrenal gland",
+    "amygdala",
+    "basal ganglia",
+    "bone marrow",
+    "cerebellum",
+    "cerebral cortex",
+    "choroid plexus",
+    "colon",
+    "duodenum",
+    "esophagus",
+    "heart muscle",
+    "hippocampal formation",
+    "hypothalamus",
+    "kidney",
+    "liver",
+    "lung",
+    "lymph node",
+    "midbrain",
+    "pancreas",
+    "parathyroid gland",
+    "pituitary gland",
+    "rectum",
+    "retina",
+    "salivary gland",
+    "skeletal muscle",
+    "skin",
+    "small intestine",
+    "smooth muscle",
+    "spinal cord",
+    "spleen",
+    "stomach",
+    "thymus",
+    "thyroid gland",
+    "tongue",
+    "urinary bladder"
+  ],
+  "tumor_matrix_cache_sha256": "acec47c3eff58530fae12a06b68ff451a00dfce4073d49a5c069f143bac0e7f4"
+}

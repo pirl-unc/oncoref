@@ -1,0 +1,11 @@
+step,removed,remaining,flagged_in_total
+Published CTA / oncofetal nominations,0,2233,
+Bulk tissue RNA above the tissue ceiling,1464,769,1464.0
+Cell-type cluster RNA (HPA single cell),174,595,1453.0
+Sorted immune-cell RNA,25,570,898.0
+Rare-cell RNA established by donor,68,502,85.0
+Normal-tissue protein (IHC),19,483,619.0
+Curated or published normal expression,7,476,7.0
+Adult cornea RNA,1,475,628.0
+"Incomplete coverage, identity or translation",36,439,
+Nested or Unsafe-contained sequence,7,432,

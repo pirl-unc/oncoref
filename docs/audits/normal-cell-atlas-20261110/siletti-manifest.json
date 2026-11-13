@@ -1,0 +1,31 @@
+{
+  "sources": [
+    {
+      "dataset_id": "a59ba9fa-1407-4f15-8c56-d3637421570d",
+      "title": "Dissection: Cerebellum (CB) - Lateral hemisphere of cerebellum - CBL",
+      "url": "https://datasets.cellxgene.cziscience.com/8e5b2509-5b4c-4a9e-895e-b3749849ae1a.h5ad",
+      "sha256": "cdd14302eff0bd1496693c7e336366e06e7dfe426faad66749c2b5ad68391ace",
+      "bytes": 163960775
+    },
+    {
+      "dataset_id": "4976b234-9028-4b4b-8a2f-8ac59d636219",
+      "title": "Dissection: Cerebellum (CB) - Cerebellar Vermis - CBV",
+      "url": "https://datasets.cellxgene.cziscience.com/d8c637a7-1dba-40e1-90f2-ddfdbe03fd3b.h5ad",
+      "sha256": "3f46424fc7a9a1362c69f42293a89e0cd3076388fdc7997b0171237a05e9e041",
+      "bytes": 431306414
+    },
+    {
+      "dataset_id": "095940cb-7422-4510-96e2-cbafd961eb88",
+      "title": "Dissection: Cerebellum (CB) - Cerebellar deep nuclei - CbDN",
+      "url": "https://datasets.cellxgene.cziscience.com/25fc7a45-fd9c-470c-8631-3ea159cd8da0.h5ad",
+      "sha256": "a78ebda913919fc76dbec6d42b144cf22434b38dce898f6697415110b4e7bfea",
+      "bytes": 320300397
+    }
+  ],
+  "unique_nuclei": 151947,
+  "catalog_proteins": 19893,
+  "classification_changed": false,
+  "raw_count_unit": "integer counts from 10x UMI assay; X is source raw layer",
+  "replication": "one independent study, three donors, disjoint anatomical partitions; not three studies",
+  "remaining_QC": "alignment, ambient correction, upstream gene filtering and donor pathology review"
+}

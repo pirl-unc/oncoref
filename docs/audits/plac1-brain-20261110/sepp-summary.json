@@ -1,0 +1,15 @@
+{
+  "gene_id": "ENSG00000170965",
+  "source_sha256": "099a96d362cc11d18870476933d5abe62745284cdc6c56e35403f070ee47ce52",
+  "source_bytes": 840038932,
+  "input_cells": 180956,
+  "normal_granule_cells": 55933,
+  "normal_granule_positive": 1887,
+  "adult_normal_granule_cells": 16833,
+  "adult_normal_granule_positive": 514,
+  "adult_normal_granule_positive_donors": 2,
+  "adult_positive_count_distribution": {
+    "1": 506,
+    "2": 8
+  }
+}

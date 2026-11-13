@@ -1,0 +1,401 @@
+# Literature curation layer for Target candidates.
+#
+# This file does not change the catalog or the tissue hazard registry
+# (normal-tissue-hazards.yaml). It records (1) the compartments a curated finding can
+# point to, (2) proposed tiers for compartments the registry leaves unresolved, and
+# (3) family rules. Per-protein findings live in target-normal-function-findings.csv.
+#
+# Tier meanings follow the registry: vital, protected, manageable, disposable describe
+# the consequence of sustained immune injury. Proposed tiers are policy judgments made
+# from the cited literature on 2026-11-12; abstracts were read, full texts were not.
+policy: oncoref.target-curation.2026-11-12.1
+
+# Compartments whose tier comes from the existing registry: tissue_hazards.assess(tissue, cell).
+registry_compartments:
+  skin: {label: Skin, tissue: skin}
+  sweat_gland: {label: Eccrine sweat gland, tissue: skin, cell: sweat gland cells}
+  melanocytes: {label: Cutaneous melanocytes, tissue: skin, cell: melanocytes}
+  hair_follicle: {label: Hair follicle, tissue: hair follicle}
+  cns: {label: Brain neurons, tissue: substantia nigra}
+  eye: {label: Eye, tissue: eye}
+  cartilage: {label: Cartilage, tissue: cartilage}
+  stomach: {label: Stomach, tissue: stomach}
+  lung: {label: Lung, tissue: lung}
+  pancreas: {label: Pancreas, tissue: pancreas}
+  adrenal: {label: Adrenal gland, tissue: adrenal gland}
+  kidney: {label: Kidney, tissue: kidney}
+  thyroid_c: {label: Thyroid C cells, tissue: thyroid gland, cell: parafollicular cells}
+  adipose: {label: Adipose tissue, tissue: adipose tissue}
+  breast: {label: Lactating breast, tissue: breast}
+  skeletal_muscle: {label: Skeletal muscle, tissue: skeletal muscle}
+  myeloid: {label: Monocytes and macrophages, tissue: blood, cell: macrophages}
+  megakaryocyte: {label: Megakaryocytes and platelets, tissue: blood, cell: platelets}
+  lymph_node: {label: Lymph node, tissue: lymph node}
+  salivary: {label: Salivary gland, tissue: salivary gland}
+  oral: {label: Tongue and oral mucosa, tissue: tongue}
+
+# Compartments the registry returns as unresolved. Tiers here are proposals.
+proposed_compartments:
+  olfactory_epithelium:
+    label: Olfactory epithelium and olfactory sensory neurons
+    tier: protected
+    confidence: medium
+    persistent_loss: >-
+      Permanent anosmia: lost warning sense for smoke, gas and spoiled food, reduced food
+      enjoyment. Associated with higher 5-year mortality in older adults, not shown causal.
+    repair: >-
+      Neurons are replaced from basal stem cells, but mouse ablation shows the progenitors
+      can be exhausted, leaving aneuronal epithelium.
+    management: Behavioural only (detectors, food dating). No restorative therapy.
+    rationale: >-
+      Permanent loss of a sensory modality with documented safety consequences and no
+      established compensation, but not life-threatening. Protected rather than vital.
+    references:
+      - key: santos2004
+        pmid: "15023839"
+        title: Hazardous events associated with impaired olfactory function
+        model: human
+        design: Retrospective cohort, 445 smell and taste clinic patients
+        finding: >-
+          At least one olfactory-related hazardous event in 45.2% of anosmic patients
+          against 19.0% with normal olfaction.
+        limitation: Self-reported events in a referral clinic; no injury or mortality outcomes.
+      - key: pinto2014
+        pmid: "25271633"
+        title: Olfactory dysfunction predicts 5-year mortality in older adults
+        model: human
+        design: Prospective cohort (NSHAP), 3,005 adults aged 57-85
+        finding: Anosmia carried adjusted OR 3.37 (95% CI 2.04-5.57) for 5-year death.
+        limitation: Observational; the authors read anosmia as a marker, not a cause.
+      - key: child2018
+        pmid: "29934351"
+        title: "The Neuroregenerative Capacity of Olfactory Stem Cells Is Not Limitless: Implications for Aging"
+        model: mouse
+        design: Transgenic ablation of mature olfactory neurons
+        finding: >-
+          Sustained neuron death exhausted globose basal cells, leaving aneuronal
+          epithelium or respiratory metaplasia.
+        limitation: Mouse genetic ablation, not immune-mediated.
+  taste_buds:
+    label: Taste buds and taste receptor cells
+    tier: protected
+    confidence: medium
+    persistent_loss: >-
+      Sustained ageusia with loss of appetite, weight loss and malnutrition risk. About
+      25% of patients have long-term taste dysfunction after head and neck radiotherapy.
+    repair: >-
+      Good if the insult stops and progenitors survive (mouse: function back within 14
+      days of stopping a Hedgehog inhibitor). No recovery window under sustained killing.
+    management: Supportive only. No replacement therapy.
+    rationale: >-
+      Tolerated when transient, but permanent ageusia has no established compensation.
+      Chosen over manageable because the reassuring precedents are reversible, and bitter
+      receptors are also reported in airway cells.
+    references:
+      - key: gunn2021
+        pmid: "33545253"
+        title: "Taste dysfunction following radiotherapy to the head and neck: A systematic review"
+        model: human
+        design: Systematic review and meta-analysis, 31 studies
+        finding: >-
+          Acute dysfunction in most patients; long-term dysfunction in about 25%;
+          associated with weight loss and reduced quality of life.
+        limitation: Radiation also damages salivary glands and mucosa.
+      - key: kumari2017
+        pmid: "29133390"
+        title: Recovery of taste organs and sensory function after severe loss from Hedgehog/Smoothened inhibition with cancer drug sonidegib
+        model: mouse
+        design: Drug treatment and conditional deletion with nerve recordings
+        finding: >-
+          Near-complete taste bud loss by 16 days; responses restored within 14 days of
+          stopping, with about 55% of buds recovering.
+        limitation: Mouse; reversible pharmacological block.
+      - key: kinnamon2012
+        pmid: "21481196"
+        title: Taste receptor signalling - from tongues to lungs
+        model: review
+        design: Narrative review
+        finding: >-
+          Bitter receptors are expressed in airway solitary chemosensory cells, ciliated
+          cells and smooth muscle.
+        limitation: Mostly rodent; no data on the consequence of losing those cells.
+  dental_pulp:
+    label: Tooth, dental pulp and odontoblasts
+    tier: manageable
+    confidence: medium
+    persistent_loss: Non-vital teeth, more prone to fracture, and eventual loss of some teeth.
+    repair: None once necrotic (standard teaching; no source opened).
+    management: >-
+      Root canal treatment keeps a pulpless tooth functional (pooled survival 86-93% over
+      2-10 years). Extraction with dentures or implants is the fallback.
+    rationale: >-
+      Pulp loss has a well-established treatment precedent and loss of the dentition has
+      routine prosthetic compensation. Simultaneous necrosis of all teeth is unstudied.
+    references:
+      - key: ng2010
+        pmid: "20158529"
+        title: "Tooth survival following non-surgical root canal treatment: a systematic review of the literature"
+        model: human
+        design: Systematic review and meta-analysis, 14 studies
+        finding: Root-filled tooth survival 86% at 2-3 years, 93% at 4-5 and 87% at 8-10.
+        limitation: Single teeth with infective disease, not dentition-wide immune necrosis.
+      - key: aminoshariae2024
+        pmid: "38945200"
+        title: "Tooth Loss is a Risk Factor for Cardiovascular Disease Mortality: A Systematic Review with Meta-analyses"
+        model: human
+        design: Systematic review and meta-analysis, 12 cohorts
+        finding: Edentulism or fewer than 10 teeth associated with cardiovascular death, HR 1.66.
+        limitation: Observational and confounded; causality not established.
+      - key: gupta2019
+        pmid: "29573048"
+        title: "Rehabilitation of Edentulism and Mortality: A Systematic Review"
+        model: human
+        design: Systematic review, 5 studies
+        finding: Four of five studies showed poorer survival without complete dentures.
+        limitation: Very few non-wearers; authors draw no definite conclusion.
+  sensory_ganglion:
+    label: Dorsal root and trigeminal ganglion sensory neurons
+    tier: vital
+    confidence: high
+    persistent_loss: >-
+      Permanent deafferentation with sensory ataxia. In a 54-patient series 67% had
+      modified Rankin score 3 or more at a median 24 months.
+    repair: None. The lesion is death of the neuronal cell body.
+    management: Rehabilitation and pain control; immunotherapy at best stabilises.
+    rationale: >-
+      Human disease analogues of this lesion (paraneoplastic anti-Hu and cisplatin
+      ganglionopathy) are irreversible and severely disabling, matching the registry's
+      treatment of neurons.
+    references:
+      - key: sanchosaldana2021
+        pmid: "33491284"
+        title: "Sensory neuronopathies: A case series and literature review"
+        model: human
+        design: Retrospective series, 54 patients
+        finding: >-
+          At median 24 months 67% had mRS 3 or more and 15% had died; 35% of treated
+          patients improved or stabilised.
+        limitation: Mixed aetiologies; some deaths from the underlying cancer.
+      - key: graus2001
+        pmid: "11353730"
+        title: "Anti-Hu-associated paraneoplastic encephalomyelitis: analysis of 200 patients"
+        model: human
+        design: Retrospective series, 200 patients
+        finding: Sensory neuropathy was the predominant syndrome in 54%.
+        limitation: Anti-Hu disease also involves CNS and autonomic neurons.
+      - key: camdessanche2009
+        pmid: "19506068"
+        title: "The pattern and diagnostic criteria of sensory neuronopathy: a case-control study"
+        model: human
+        design: Case-control, 78 against 56 patients
+        finding: Paraneoplastic, cisplatin and dysimmune ganglionopathies share one pattern.
+        limitation: Diagnostic study without outcome data.
+  nasal_mucosa:
+    label: Nasal respiratory mucosa and its glands
+    tier: protected
+    confidence: low
+    persistent_loss: >-
+      An atrophic rhinitis picture: progressive mucosal atrophy, crusting and congestion,
+      described as debilitating. Not life-threatening in the sources read.
+    repair: Epithelium regenerates from basal cells; established atrophy is chronic.
+    management: Palliative (irrigation, lubricants, surgery in selected patients).
+    rationale: >-
+      Chronic loss causes a persistent condition whose treatments are symptomatic and
+      poorly evidenced. Evidence is by analogy to surgical or infective atrophy.
+    references:
+      - key: moore2001
+        pmid: "11777241"
+        title: "Atrophic rhinitis: a review of 242 cases"
+        model: human
+        design: Retrospective series, 242 patients
+        finding: A debilitating disease with progressive mucosal atrophy and crusting.
+        limitation: No quantitative outcomes in the abstract; different aetiology.
+      - key: hussain2025
+        pmid: "39126290"
+        title: "A Systematic Review and Meta-Analysis of Management Options for Empty Nose Syndrome: A Proposed Management Algorithm"
+        model: human
+        design: Systematic review and meta-analysis, 35 articles, 957 patients
+        finding: Symptom scores improved after intervention at up to 1 year; no randomised trials.
+        limitation: Loss of turbinate volume, not selective epithelial loss.
+      - key: sumaily2023
+        pmid: "37449389"
+        title: An Updated Review on Atrophic Rhinitis and Empty Nose Syndrome
+        model: human
+        design: Narrative review
+        finding: Conservative treatment controls symptoms of secondary atrophic rhinitis.
+        limitation: No pooled outcomes; symptom control, not restoration.
+  lacrimal:
+    label: Lacrimal gland
+    tier: protected
+    confidence: medium
+    persistent_loss: >-
+      Severe aqueous-deficient dry eye. A small fraction progress to sterile corneal
+      ulceration or perforation (4 of 243 ocular GVHD patients in one cohort).
+    repair: No established regeneration of the human gland.
+    management: Lifelong and palliative (lubricants, punctal occlusion, serum, scleral lenses).
+    rationale: >-
+      Compatible with life and usually with retained vision under intensive care, but
+      treatment is palliative and there is a tail risk of corneal melt.
+    references:
+      - key: stevenson2013
+        pmid: "24204119"
+        title: Bilateral corneal ulceration in ocular graft-versus-host disease
+        model: human
+        design: Case series within a 243-patient cohort
+        finding: 4 of 243 patients developed corneal ulceration, all bilateral.
+        limitation: Ocular GVHD also damages conjunctiva and meibomian glands.
+      - key: zhang2021
+        pmid: "34805617"
+        title: Corneal perforation in ocular graft-versus-host disease
+        model: human
+        design: Retrospective multicentre series, 14 eyes
+        finding: All eyes had moderate or poor visual outcomes despite gluing and keratoplasty.
+        limitation: Selected severe cases with no denominator.
+      - key: veernala2022
+        pmid: "35753665"
+        title: "Lacrimal gland regeneration: The unmet challenges and promise for dry eye therapy"
+        model: review
+        design: Narrative review
+        finding: Current dry eye treatments are palliative; gland regeneration is an unmet need.
+        limitation: Abstract only.
+  bone:
+    label: Bone, osteoblasts and osteocytes
+    tier: vital
+    confidence: medium
+    persistent_loss: >-
+      Loss of bone formation and microdamage repair, expected to give fragility
+      fractures. Inferred from mouse ablation and focal human osteocyte apoptosis.
+    repair: Osteoblasts can be replenished from progenitors; osteocytes are long-lived.
+    management: No replacement for the lineage.
+    rationale: >-
+      The skeleton's only formation and repair compartment. Human evidence is indirect,
+      so vital is chosen over protected on the conservative rule.
+    references:
+      - key: tatsumi2007
+        pmid: "17550781"
+        title: Targeted ablation of osteocytes induces osteoporosis with defective mechanotransduction
+        model: mouse
+        design: Diphtheria toxin receptor ablation of osteocytes
+        finding: Killing 70-80% of osteocytes produced fragile bone with microfractures.
+        limitation: Mouse, single-dose ablation.
+      - key: weinstein2000
+        pmid: "10946902"
+        title: Apoptosis of osteocytes in glucocorticoid-induced osteonecrosis of the hip
+        model: human
+        design: Histology of femoral heads from 14 patients
+        finding: Osteocyte apoptosis described as a cumulative and irreparable defect.
+        limitation: Small, focal and drug-induced.
+
+# Family rules. A rule applies to every candidate whose label matches `pattern`.
+# `acts: true` rules set a curated tier; `acts: false` rules are recorded only.
+families:
+  - id: olfactory_receptor
+    label: Olfactory receptors
+    pattern: '^OR\d+[A-Z]+\d+'
+    compartment: olfactory_epithelium
+    acts: true
+    basis: >-
+      Family-level. 356 olfactory receptor loci were profiled by TaqMan array in whole
+      olfactory mucosa from 26 adults; 273 were detected on average. Per-gene values are
+      in that paper's supplement and were not checked for each candidate.
+    sources: ["PMID 24800820"]
+  - id: bitter_taste_receptor
+    label: Bitter taste receptors
+    pattern: '^TAS2R'
+    compartment: taste_buds
+    acts: true
+    basis: >-
+      UniProt curates TAS2R1, 7, 13, 41, 50 and 60 as expressed in gustducin-positive
+      taste receptor cells of the tongue, citing Behrens et al. 2007. Extended to the
+      other TAS2R candidates as a family.
+    sources: ["PMID 18003842"]
+  - id: hair_keratin
+    label: Hair keratins and keratin-associated proteins
+    pattern: '^(KRTAP|KRT3[1-9]|KRT40|KRT8[1-6])'
+    compartment: hair_follicle
+    acts: true
+    basis: >-
+      Gene-specific in situ hybridisation and RT-PCR place KAP5, KAP10, KAP12 and KAP24
+      members and the hair keratins K37 and K39 in the hair follicle. Extended to the
+      other candidates of these families.
+    sources: ["PMID 15028290", "PMID 14962103", "PMID 15144888", "PMID 17235325", "PMID 15086535", "PMID 17301834"]
+  - id: trace_amine_receptor
+    label: Trace-amine receptors
+    pattern: '^TAAR'
+    compartment: olfactory_epithelium
+    acts: false
+    basis: >-
+      UniProt annotates an olfactory function by similarity to mouse only. No human
+      tissue evidence was found, so the rule is recorded and does not act.
+    sources: ["UniProt Q9P1P5", "UniProt Q96RI9"]
+  - id: sweet_umami_taste_receptor
+    label: Sweet and umami taste receptors
+    pattern: '^TAS1R'
+    compartment: taste_buds
+    acts: false
+    basis: No human gene-specific source was opened in the sweep; recorded only.
+    sources: []
+  - id: late_cornified_envelope
+    label: Late cornified envelope proteins
+    pattern: '^LCE'
+    compartment: skin
+    acts: false
+    basis: >-
+      Induction in normal epidermis after barrier disruption is reported for the LCE
+      group, with a pan-LCE3 antibody. Not gene-specific, so recorded only.
+    sources: ["PMID 19169253", "PMID 15854049", "PMID 26556599"]
+
+# Compartments assigned to each confirmed per-protein finding from the literature sweep.
+# The most protective compartment sets the protein's curated tier.
+finding_compartments:
+  CCN6: [cartilage]
+  LRRC52: [skeletal_muscle]
+  DEFB118: [pancreas]
+  GALR3: [adrenal, pancreas]
+  GFRA4: [thyroid_c]
+  KLF14: [adipose]
+  LALBA: [breast]
+  KRT37: [hair_follicle]
+  KRT39: [hair_follicle]
+  KRTAP10-6: [hair_follicle]
+  KRTAP10-8: [hair_follicle]
+  KRTAP12-4: [hair_follicle]
+  KRTAP24-1: [hair_follicle]
+  KRTAP29-1: [hair_follicle]
+  KRTAP5-3: [hair_follicle]
+  KRTAP5-4: [hair_follicle]
+  KRTAP5-5: [hair_follicle]
+  KRTAP5-7: [hair_follicle]
+  KRTAP5-9: [hair_follicle]
+  DEFB104A/B: [stomach]
+  DEFB130A/B: [myeloid]
+  NLRP11: [myeloid]
+  ZNRF4: [myeloid]
+  PRKACG: [megakaryocyte]
+  SCGB1D4: [lymph_node]
+  DEFB106A/B: [lung]
+  SULT6B1: [kidney]
+  BPIFB3: [olfactory_epithelium]
+  BPIFB6: [olfactory_epithelium, oral, salivary]
+  OBP2A: [nasal_mucosa, salivary, lacrimal, lung]
+  SCGB1C1: [nasal_mucosa]
+  ADAM30: [cns]
+  BECN2: [cns]
+  SRY: [cns]
+  GALP: [eye]
+  MRGPRX1: [sensory_ganglion]
+  AADACL3: [skin]
+  ASCL4: [skin]
+  TCHHL1: [skin]
+  OR51A7: [sweat_gland]
+  PRAME: [melanocytes]
+  RTP2: [taste_buds]
+  TAS2R1: [taste_buds]
+  TAS2R7: [taste_buds]
+  TAS2R13: [taste_buds]
+  TAS2R41: [taste_buds]
+  TAS2R50: [taste_buds]
+  TAS2R60: [taste_buds]
+  DSPP: [dental_pulp]
+  PANX3: [dental_pulp]
+  # SPANXN3: the source names no tissue, so no compartment is assigned.

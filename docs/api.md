@@ -672,6 +672,7 @@ cta_literature.cta_coverage()  # Frozen 602-protein catalog from 1.31.0.
 cta_literature.current_coverage()  # Current CTAs; exact member-locus scope retained.
 cta_literature.followup_findings()  # Dated corrections and review recommendations.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
+cta_literature.attestations()  # All occurrences joined to citations and original claim scope.
 cta_literature.gap_assessments()  # The historical 33 gaps, before current remapping.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
@@ -743,7 +744,7 @@ retain all 66 starting matches, the 47 selected proteins, exact olfactory assay
 identities, supporting tumor observations and source receipts. These reviews are
 an evidence overlay on the named 1.35.0 classification snapshot.
 
-The uniform human decision view uses three categories and three Other reasons:
+The released human decision view uses three categories and three Other reasons:
 
 ```python
 from oncoref import cta_selection, cta_decision_flow
@@ -760,7 +761,40 @@ Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
 
-The current research set is available through the same species-scoped API:
+The rebuilt [Cancer and Reproductive Antigen catalog](target-selection.md) has a
+separate API with 632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only,
+724 Other and 18,259 Unsafe:
+
+```python
+from oncoref import target_selection
+
+contract = target_selection.definition()
+counts = target_selection.metadata()["summary"]
+catalog = target_selection.results()
+changes = target_selection.results(changed_only=True)
+cancer_only = target_selection.results(category="Cancer Antigen only")
+protein = target_selection.results("H2BW2")  # Exact protein label or member Ensembl ID.
+# evidence = target_selection.assess_cancer_rna(tumors, normals, ...)
+# decisions = target_selection.classify(assessed_facts)
+```
+
+The new evaluator returns Cancer Antigen and Reproductive Antigen memberships,
+their intersection (CTA), their union (Target candidates), and one display
+category. It requires the new assessed inputs; it does not reinterpret released
+presence flags. `cta_literature.attestations()` preserves the paper links and
+claim scope independently of category.
+
+Paper occurrences include `publication_claims` (exact source-table records) and
+`nomination_gene_ids` (the supported member loci). Background-only rows retain their
+paper links with `published_nomination=False`; the paper's overall topic does not
+promote every listed gene to a target nomination.
+
+`results()` includes the selected transcripts and sequence hashes, tumor maximum,
+normal comparison maximum and its source contexts, patient support, reproductive
+measurements and paper references. Missing measurements stay missing. The 1.36.0
+`cta_selection` API and sequence assets remain a separate compatibility snapshot.
+
+The 1.36.0 compatibility snapshot is also available through the species-scoped API:
 
 ```python
 from oncoref import human, canine, mouse
@@ -770,7 +804,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-The human release selects **607 proteins / 655 loci**. Dog nominations remain
+That human snapshot selects **607 proteins / 655 loci**. Dog nominations remain
 unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
 evidence; quantitative mouse selection remains unavailable. The
 [selection guide](cta-selection.md) documents common fields, native units,
@@ -1266,6 +1300,35 @@ diagnosis-only Treehouse sample.
   confirmation status, expression availability, and access level.
 - `oncoref.samples.molecular_sample_counts(code)` reports libraries and distinct
   donors separately for each physical source cohort.
+- `oncoref.expression.sample_metadata(code, sample_qc="all")` returns one row
+  for each actual matrix column, in the same order and with the same QC selection
+  as `per_sample_expression`. It includes the physical sample key, patient ID,
+  identity status, mapping basis and source references. `oncoref.sample_metadata`
+  exposes the same function at the package root.
+- `oncoref.samples.sample_identities(rows)` applies that same patient mapping to
+  an existing table with `source_cohort` and `sample_id`. Use this when replaying
+  pinned matrices. It preserves unknown and conflicting identities explicitly.
+
+```python
+from oncoref import expression
+
+matrix = expression.per_sample_expression("LAML", normalize="tpm_raw", sample_qc="pass")
+metadata = expression.sample_metadata("LAML", sample_qc="pass")
+assert metadata.sample_id.tolist() == expression.sample_columns(matrix)
+known = metadata[metadata.patient_identity_status.eq("resolved")]
+# One patient may have several libraries or biopsies. Choose and record the
+# aggregation appropriate to the analysis; antigen screening uses a maximum.
+per_patient = matrix.set_index("Ensembl_Gene_ID")[known.sample_id].T.groupby(
+    known.set_index("sample_id").participant_id
+).max().T
+```
+
+Matrix columns represent samples/libraries, not necessarily independent patients.
+Patient mapping uses curated case/donor manifests and documented project IDs;
+a GEO `case_id` copied from its sample label is insufficient. Unresolved identity
+does not discard expression: a sample can still satisfy a single-tumor rule.
+Mappings cover the identifiers documented by each source; cross-study donors
+without a shared identifier are not automatically linked.
 
 The eleven historical `legacy-compat` tables remain importable but frozen.
 Typed accessors emit one `DeprecationWarning` per dataset per process and name

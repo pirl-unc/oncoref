@@ -1,0 +1,207 @@
+source,scope,tissue,nTPM
+HPA v25.1 XML,humanBrain,Amygdala,0.0
+HPA v25.1 XML,humanBrain,Angular gyrus,0.2
+HPA v25.1 XML,humanBrain,Angular gyrus (white matter),0.1
+HPA v25.1 XML,humanBrain,"Anterior cingulate cortex, supragenual-dorsal",0.0
+HPA v25.1 XML,humanBrain,"Anterior cingulate cortex, supragenual-ventral",0.0
+HPA v25.1 XML,humanBrain,"Anterior cochlear nucleus, ventral",0.0
+HPA v25.1 XML,humanBrain,Anterior funiculus (white matter),0.0
+HPA v25.1 XML,humanBrain,"Anterior insular cortex, dorsal",0.2
+HPA v25.1 XML,humanBrain,"Anterior insular cortex, ventral",0.0
+HPA v25.1 XML,humanBrain,"Anterior thalamic nucleus, ventral",0.0
+HPA v25.1 XML,humanBrain,Arcuate nucleus,0.0
+HPA v25.1 XML,humanBrain,"Area parastriata, inferior",0.1
+HPA v25.1 XML,humanBrain,"Area parastriata, parietal",0.1
+HPA v25.1 XML,humanBrain,"Area parastriata, superior",0.0
+HPA v25.1 XML,humanBrain,"Area parastriata, temporal",0.1
+HPA v25.1 XML,humanBrain,Area postrema,0.0
+HPA v25.1 XML,humanBrain,Area striata,0.1
+HPA v25.1 XML,humanBrain,Area striata (white matter),0.0
+HPA v25.1 XML,humanBrain,Basal amygdala,0.1
+HPA v25.1 XML,humanBrain,Caudate nucleus,0.0
+HPA v25.1 XML,humanBrain,Central amygdala,0.1
+HPA v25.1 XML,humanBrain,Centromedial thalamic nucleus,0.0
+HPA v25.1 XML,humanBrain,Cerebellar cortex,0.0
+HPA v25.1 XML,humanBrain,Cerebellar nuclei,0.0
+HPA v25.1 XML,humanBrain,Cerebellar white matter,0.0
+HPA v25.1 XML,humanBrain,"Cervical spinal cord, central gray",0.0
+HPA v25.1 XML,humanBrain,"Cervical spinal cord, dorsal horn",0.0
+HPA v25.1 XML,humanBrain,"Cervical spinal cord, ventral horn",0.0
+HPA v25.1 XML,humanBrain,Choroid plexus,0.3
+HPA v25.1 XML,humanBrain,Claustrum,0.0
+HPA v25.1 XML,humanBrain,"Corpus callosum, genu (white matter)",0.0
+HPA v25.1 XML,humanBrain,"Corpus callosum, splenium (white matter)",0.0
+HPA v25.1 XML,humanBrain,Corticomedial amygdala,0.1
+HPA v25.1 XML,humanBrain,Cuneiform nucleus,0.0
+HPA v25.1 XML,humanBrain,Dentate gyrus,0.1
+HPA v25.1 XML,humanBrain,Dorsal cochlear nucleus,0.0
+HPA v25.1 XML,humanBrain,Dorsal funiculus (white matter),0.0
+HPA v25.1 XML,humanBrain,Dorsal medullary reticular nucleus,0.0
+HPA v25.1 XML,humanBrain,Dorsal motor vagal complex,0.0
+HPA v25.1 XML,humanBrain,Dorsal raphe nucleus,0.0
+HPA v25.1 XML,humanBrain,Dorsal tegmental nucleus,0.0
+HPA v25.1 XML,humanBrain,Dorsolateral tegmental area,0.0
+HPA v25.1 XML,humanBrain,Dorsomedial nucleus,0.0
+HPA v25.1 XML,humanBrain,Entorhinal gyrus,0.1
+HPA v25.1 XML,humanBrain,Flocculonodular lobe,0.0
+HPA v25.1 XML,humanBrain,Frontal eye field,0.1
+HPA v25.1 XML,humanBrain,Frontal operculum,0.1
+HPA v25.1 XML,humanBrain,Fusiform gyrus,0.1
+HPA v25.1 XML,humanBrain,"Gigantocellular reticular nuclei, medullary",0.0
+HPA v25.1 XML,humanBrain,"Gigantocellular reticular nuclei, pars",0.0
+HPA v25.1 XML,humanBrain,"Globus pallidus, externus",0.0
+HPA v25.1 XML,humanBrain,"Globus pallidus, internus",0.0
+HPA v25.1 XML,humanBrain,Habenula,0.0
+HPA v25.1 XML,humanBrain,Hippocampus,0.1
+HPA v25.1 XML,humanBrain,"Hippocampus, CA1",0.0
+HPA v25.1 XML,humanBrain,"Hippocampus, CA2",0.0
+HPA v25.1 XML,humanBrain,"Hippocampus, CA3",0.0
+HPA v25.1 XML,humanBrain,Inferior colliculus,0.0
+HPA v25.1 XML,humanBrain,"Inferior frontal gyrus, opercular",0.0
+HPA v25.1 XML,humanBrain,Inferior olive,0.0
+HPA v25.1 XML,humanBrain,Inferior parietal lobule,0.1
+HPA v25.1 XML,humanBrain,Inferior temporal gyrus,0.1
+HPA v25.1 XML,humanBrain,Intraparietal deep sulcus,0.1
+HPA v25.1 XML,humanBrain,Kolliker-Fuse nucleus,0.0
+HPA v25.1 XML,humanBrain,Lateral amygdala,0.0
+HPA v25.1 XML,humanBrain,Lateral funiculus (white matter),0.0
+HPA v25.1 XML,humanBrain,Lateral geniculate body,0.0
+HPA v25.1 XML,humanBrain,Lateral hypothalamic area,0.0
+HPA v25.1 XML,humanBrain,Lateral lemniscal nuclei,0.0
+HPA v25.1 XML,humanBrain,Lateral medullary reticular nucleus,0.0
+HPA v25.1 XML,humanBrain,Lateral parabrachial nucleus,0.0
+HPA v25.1 XML,humanBrain,Lateral thalamic nuclei,0.0
+HPA v25.1 XML,humanBrain,Lateral vestibular nucleus,0.0
+HPA v25.1 XML,humanBrain,Lingual gyrus,0.1
+HPA v25.1 XML,humanBrain,Locus coeruleus,0.0
+HPA v25.1 XML,humanBrain,Mammillary body,0.0
+HPA v25.1 XML,humanBrain,Medial dorsal thalamic nucleus,0.0
+HPA v25.1 XML,humanBrain,Medial geniculate body,0.0
+HPA v25.1 XML,humanBrain,Medial olivary nucleus,0.0
+HPA v25.1 XML,humanBrain,Medial parabrachial nucleus,0.0
+HPA v25.1 XML,humanBrain,Medial periolivary nuclei,0.0
+HPA v25.1 XML,humanBrain,Medial vestibular nucleus,0.0
+HPA v25.1 XML,humanBrain,Median raphe nucleus,0.0
+HPA v25.1 XML,humanBrain,Middle cingulate cortex,0.1
+HPA v25.1 XML,humanBrain,Middle temporal gyrus,0.1
+HPA v25.1 XML,humanBrain,Motor facial nucleus,0.0
+HPA v25.1 XML,humanBrain,Motor hypoglossal nucleus,0.0
+HPA v25.1 XML,humanBrain,Motor trigeminal nucleus,0.0
+HPA v25.1 XML,humanBrain,Nuclei of the trapezoid body,0.0
+HPA v25.1 XML,humanBrain,Nucleus accumbens,0.0
+HPA v25.1 XML,humanBrain,Nucleus ambiguus,0.0
+HPA v25.1 XML,humanBrain,Nucleus basalis of Meynert,0.0
+HPA v25.1 XML,humanBrain,Nucleus cuneatus,0.0
+HPA v25.1 XML,humanBrain,Nucleus gracilis,0.0
+HPA v25.1 XML,humanBrain,Nucleus of the diagonal band,0.1
+HPA v25.1 XML,humanBrain,Nucleus raphe magnus,0.0
+HPA v25.1 XML,humanBrain,Nucleus raphe obscurus,0.0
+HPA v25.1 XML,humanBrain,Nucleus raphe pallidus,0.0
+HPA v25.1 XML,humanBrain,Nucleus reuniens,0.0
+HPA v25.1 XML,humanBrain,Nucleus rhomboideus,0.0
+HPA v25.1 XML,humanBrain,Nucleus tractus solitarii,0.0
+HPA v25.1 XML,humanBrain,Occipital cortex,0.1
+HPA v25.1 XML,humanBrain,Occipital cortex (white matter),0.0
+HPA v25.1 XML,humanBrain,Olfactory area,0.0
+HPA v25.1 XML,humanBrain,Olfactory tubercle,0.0
+HPA v25.1 XML,humanBrain,"Orbitofrontal gyrus, anterior",0.0
+HPA v25.1 XML,humanBrain,"Paracentral lobule, anterior",0.0
+HPA v25.1 XML,humanBrain,"Paracentral lobule, posterior",0.0
+HPA v25.1 XML,humanBrain,Parahippocampal cortex,0.0
+HPA v25.1 XML,humanBrain,Parahippocampal cortex (white matter),0.1
+HPA v25.1 XML,humanBrain,Paramedian reticular nucleus,0.0
+HPA v25.1 XML,humanBrain,Paraventricular nucleus,0.0
+HPA v25.1 XML,humanBrain,Parietal operculum,0.1
+HPA v25.1 XML,humanBrain,Parieto-insular cortex,0.1
+HPA v25.1 XML,humanBrain,Parieto-occipital transitional area,0.0
+HPA v25.1 XML,humanBrain,Parieto-temporal junction (white matter),0.0
+HPA v25.1 XML,humanBrain,Parvicellular reticular nuclei,0.0
+HPA v25.1 XML,humanBrain,"Parvicellular reticular nuclei, medullary",0.0
+HPA v25.1 XML,humanBrain,Pedunculopontine tegmental nucleus,0.0
+HPA v25.1 XML,humanBrain,"Periaquaductal grey, anterior",0.0
+HPA v25.1 XML,humanBrain,"Periaquaductal grey, dorsal",0.0
+HPA v25.1 XML,humanBrain,"Periaquaductal grey, lateral",0.0
+HPA v25.1 XML,humanBrain,Perirhinal gyrus,0.1
+HPA v25.1 XML,humanBrain,Peritrigeminal nucleus,0.0
+HPA v25.1 XML,humanBrain,Piriform cortex,0.0
+HPA v25.1 XML,humanBrain,Pontine nuclei,0.0
+HPA v25.1 XML,humanBrain,Pontine raphe nucleus,0.0
+HPA v25.1 XML,humanBrain,Postcentral gyrus,0.2
+HPA v25.1 XML,humanBrain,"Postcentral gyrus, dorsal",0.1
+HPA v25.1 XML,humanBrain,"Postcentral gyrus, middle",0.0
+HPA v25.1 XML,humanBrain,"Postcentral gyrus, ventral",0.1
+HPA v25.1 XML,humanBrain,Posterior cingulate cortex,0.0
+HPA v25.1 XML,humanBrain,"Posterior cingulate cortex, dorsal",0.1
+HPA v25.1 XML,humanBrain,"Posterior cingulate cortex, ventral",0.1
+HPA v25.1 XML,humanBrain,Posterior insular cortex,0.0
+HPA v25.1 XML,humanBrain,Posterior thalamic nucleus,0.0
+HPA v25.1 XML,humanBrain,Posteroventral cochlear nucleus,0.0
+HPA v25.1 XML,humanBrain,Precentral gyrus,0.2
+HPA v25.1 XML,humanBrain,"Precentral gyrus, dorsal",0.0
+HPA v25.1 XML,humanBrain,"Precentral gyrus, middle",0.1
+HPA v25.1 XML,humanBrain,"Precentral gyrus, ventral",0.0
+HPA v25.1 XML,humanBrain,Precuneus,0.1
+HPA v25.1 XML,humanBrain,"Premotor cortex, dorsal",0.0
+HPA v25.1 XML,humanBrain,"Premotor cortex, ventral",0.1
+HPA v25.1 XML,humanBrain,Preoptic area,0.0
+HPA v25.1 XML,humanBrain,Prepositus hypoglossal nucleus,0.0
+HPA v25.1 XML,humanBrain,Pretectal area,0.0
+HPA v25.1 XML,humanBrain,Principal sensory trigeminal nucleus,0.0
+HPA v25.1 XML,humanBrain,Pulvinar,0.0
+HPA v25.1 XML,humanBrain,Putamen,0.0
+HPA v25.1 XML,humanBrain,Red nucleus,0.0
+HPA v25.1 XML,humanBrain,"Reticular pontine nucleus, caudal",0.0
+HPA v25.1 XML,humanBrain,"Reticular pontine nucleus, oral",0.0
+HPA v25.1 XML,humanBrain,Reticulotegmental nucleus,0.0
+HPA v25.1 XML,humanBrain,Retrosplenial cortex,0.1
+HPA v25.1 XML,humanBrain,Septal nuclei,0.1
+HPA v25.1 XML,humanBrain,"Somatomor cortex, precentral gyrus (white matter)",0.0
+HPA v25.1 XML,humanBrain,"Somatosensory cortex, postcentral gyrus, ventral (white matter)",0.1
+HPA v25.1 XML,humanBrain,"Spinal trigeminal nucleus, caudal",0.0
+HPA v25.1 XML,humanBrain,"Spinal trigeminal nucleus, interpolar",0.0
+HPA v25.1 XML,humanBrain,"Spinal trigeminal nucleus, oral",0.0
+HPA v25.1 XML,humanBrain,Spinal vestibular nucleus,0.0
+HPA v25.1 XML,humanBrain,"Stria terminalis, bed nucleus",0.0
+HPA v25.1 XML,humanBrain,"Subcentral gyrus, S2",0.1
+HPA v25.1 XML,humanBrain,Subcoeruleus area,0.0
+HPA v25.1 XML,humanBrain,Subiculum,0.0
+HPA v25.1 XML,humanBrain,Substantia nigra,0.0
+HPA v25.1 XML,humanBrain,Subthalamic nucleus,0.0
+HPA v25.1 XML,humanBrain,Superior colliculus,0.0
+HPA v25.1 XML,humanBrain,Superior olive,0.0
+HPA v25.1 XML,humanBrain,Superior parietal lobule,0.0
+HPA v25.1 XML,humanBrain,Superior temporal gyrus,0.2
+HPA v25.1 XML,humanBrain,Superior vestibular nucleus,0.0
+HPA v25.1 XML,humanBrain,Supplementary motor cortex,0.0
+HPA v25.1 XML,humanBrain,Supramarginal gyrus,0.1
+HPA v25.1 XML,humanBrain,Supraoptic nucleus,0.0
+HPA v25.1 XML,humanBrain,Temporal pole,0.1
+HPA v25.1 XML,humanBrain,Temporal white matter,0.0
+HPA v25.1 XML,humanBrain,"Temporo-insular cortex, parainsular gyrus",0.1
+HPA v25.1 XML,humanBrain,Temporo-occipital transitional zone,0.1
+HPA v25.1 XML,humanBrain,"Transversal temporal gyrus, anterior",0.1
+HPA v25.1 XML,humanBrain,"Transversal temporal gyrus, posterior",0.2
+HPA v25.1 XML,humanBrain,Ventral medullary reticular nucleus,0.0
+HPA v25.1 XML,humanBrain,Ventral periolivary nuclei,0.0
+HPA v25.1 XML,humanBrain,Ventral posterolateral thalamic nucleus,0.0
+HPA v25.1 XML,humanBrain,Ventral posteromedial thalamic nucleus,0.0
+HPA v25.1 XML,humanBrain,Ventral tegmental area,0.0
+HPA v25.1 XML,humanBrain,Ventral thalamic nuclei,0.0
+HPA v25.1 XML,humanBrain,"Ventrolateral medulla, A1-C1 cell groups",0.0
+HPA v25.1 XML,humanBrain,"Ventrolateral tegmental area, A5 NE cell group",0.0
+HPA v25.1 XML,humanBrain,Ventromedial nucleus,0.1
+HPA v25.1 XML,humanBrain,Vermis,0.1
+HPA v25.1 XML,humanBrain,Zona incerta,0.0
+HPA v25.1 XML,humanBrainRegional,Amygdala,0.1
+HPA v25.1 XML,humanBrainRegional,Basal ganglia,0.1
+HPA v25.1 XML,humanBrainRegional,Cerebellum,0.1
+HPA v25.1 XML,humanBrainRegional,Cerebral cortex,0.2
+HPA v25.1 XML,humanBrainRegional,Choroid plexus,0.3
+HPA v25.1 XML,humanBrainRegional,Hippocampal formation,0.1
+HPA v25.1 XML,humanBrainRegional,Hypothalamus,0.1
+HPA v25.1 XML,humanBrainRegional,Medulla oblongata,0.0
+HPA v25.1 XML,humanBrainRegional,Midbrain,0.0
+HPA v25.1 XML,humanBrainRegional,Pons,0.0
+HPA v25.1 XML,humanBrainRegional,Spinal cord,0.0
+HPA v25.1 XML,humanBrainRegional,Thalamus,0.0
+HPA v25.1 XML,humanBrainRegional,White matter,0.1

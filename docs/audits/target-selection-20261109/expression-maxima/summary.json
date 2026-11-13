@@ -1,0 +1,131 @@
+{
+  "policy_id": "oncoref.target-selection.2026-11-09.1",
+  "catalog_sha256": "cf00eee8cfa7985fa3ce95d682aca4b05e0c857fb480e5f8aa41ab19de1c7c1e",
+  "normal_panel_sha256": "3c3c296748775e4dcd9e0ddc35a762b5576d9cb593f74318622c6669bf7dbc3f",
+  "candidate_proteins": 920,
+  "maximum_status": {
+    "passes": 920
+  },
+  "disposable_tpm_contexts": [
+    "appendix",
+    "gallbladder",
+    "tonsil"
+  ],
+  "anatomy_selection_categories": {
+    "Vital": 49,
+    "Reproductive": 46,
+    "Protected": 18,
+    "Disposable": 5,
+    "Needs localization": 3,
+    "Manageable": 2
+  },
+  "specific_registered_contexts_needing_hazard_review": [],
+  "broad_location_labels": [
+    "soft_tissue",
+    "head",
+    "foot"
+  ],
+  "hpa_cell_audit": {
+    "source": "hpa_single_cell_tissue:v23",
+    "source_sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7",
+    "identity_catalog_sha256": "3f6e446737df45838a3f086418b740040b34e047969ca0fa0ceb0c210c84c702",
+    "unit": "nTPM",
+    "disposable_contexts": [
+      {
+        "tissue": "skin",
+        "cell_type": "melanocytes",
+        "tier": "disposable",
+        "reason": "cell_rule"
+      }
+    ],
+    "proteins_with_any_mapped_observation": 918,
+    "missing_member_loci": 2,
+    "proteins_with_supported_positive_observation": 0,
+    "unsupported_positive_member_observations": 16,
+    "strongest_observed_signal": [
+      {
+        "protein": "TSGA10IP",
+        "Tissue": "skin",
+        "Cell type": "melanocytes",
+        "Read count": 14,
+        "nTPM": 24.0,
+        "read_support_pass": false
+      }
+    ],
+    "supported_cap_exceedances": {
+      "1": 0,
+      "4": 0,
+      "8": 0,
+      "16": 0,
+      "32": 0,
+      "64": 0,
+      "128": 0
+    }
+  },
+  "cap_scenarios": [
+    {
+      "disposable_cap_tpm": null,
+      "moved_to_other": 0,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 638,
+      "Cancer Antigen only": 260,
+      "Reproductive Antigen only": 22
+    },
+    {
+      "disposable_cap_tpm": 1.0,
+      "moved_to_other": 10,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 633,
+      "Cancer Antigen only": 256,
+      "Reproductive Antigen only": 21
+    },
+    {
+      "disposable_cap_tpm": 4.0,
+      "moved_to_other": 2,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 637,
+      "Cancer Antigen only": 259,
+      "Reproductive Antigen only": 22
+    },
+    {
+      "disposable_cap_tpm": 8.0,
+      "moved_to_other": 1,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 638,
+      "Cancer Antigen only": 259,
+      "Reproductive Antigen only": 22
+    },
+    {
+      "disposable_cap_tpm": 16.0,
+      "moved_to_other": 1,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 638,
+      "Cancer Antigen only": 259,
+      "Reproductive Antigen only": 22
+    },
+    {
+      "disposable_cap_tpm": 32.0,
+      "moved_to_other": 0,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 638,
+      "Cancer Antigen only": 260,
+      "Reproductive Antigen only": 22
+    },
+    {
+      "disposable_cap_tpm": 64.0,
+      "moved_to_other": 0,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 638,
+      "Cancer Antigen only": 260,
+      "Reproductive Antigen only": 22
+    },
+    {
+      "disposable_cap_tpm": 128.0,
+      "moved_to_other": 0,
+      "unassessed_in_measured_panel": 0,
+      "CTA": 638,
+      "Cancer Antigen only": 260,
+      "Reproductive Antigen only": 22
+    }
+  ]
+}

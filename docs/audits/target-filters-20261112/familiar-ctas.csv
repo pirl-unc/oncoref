@@ -1,0 +1,47 @@
+Group,Name,Catalog,Off-target TPM,in,Off-target nTPM,Tumors above normal,CTA papers,Flags,`loose`,`standard`,`strict`,Unsafe reasons
+MAGE-A,MAGEA1,CTA,0.0,,0.0,1394,7,,✓,✓,exclusions,
+MAGE-A,MAGEA2,CTA,0.6000000000000001,white matter,0.8,1677,4,mapping risk,✓,✓,exclusions,
+MAGE-A,MAGEA3,Unsafe,,,53.1,,8,mapping risk,—,—,—,HPA tissue clusters
+MAGE-A,MAGEA4,CTA,0.7,lymph node,0.6,1711,8,,✓,✓,✓,
+MAGE-A,MAGEA6,CTA,0.2,adipose tissue,0.2,2150,6,mapping risk,✓,✓,exclusions,
+MAGE-A,MAGEA10,CTA,2.2,white matter,2.4,890,6,mapping risk,✓,✓,exclusions,
+MAGE-A,MAGEA12,Unsafe,,,0.5,,7,mapping risk,—,—,—,Established rare normal-cell RNA
+MAGE-B/C,MAGEB1,CTA,0.0,,0.0,552,6,mapping risk,✓,✓,exclusions,
+MAGE-B/C,MAGEB2,Unsafe,,,118.4,,7,,—,—,—,HPA tissue clusters
+MAGE-B/C,MAGEB4,CTA,0.0,,0.0,48,1,,✓,papers,papers,
+MAGE-B/C,MAGEC1,CTA,0.5,white matter,0.6,890,5,,✓,✓,exclusions,
+MAGE-B/C,MAGEC2,Other,,,0.1,,6,,—,—,—,
+NY-ESO / LAGE / PRAME,NY-ESO-1,CTA,0.30000000000000004,cerebellum,0.5,976,5,mapping risk,✓,✓,✓,
+NY-ESO / LAGE / PRAME,CTAG2,CTA,3.9,thymus,24.9,947,3,"dismissed rare-cell, mapping risk, literature conflict",✓,✓,✓,
+NY-ESO / LAGE / PRAME,PRAME,CTA,3.0,adrenal gland,20.3,4851,6,"dismissed rare-cell, literature conflict",✓,✓,✓,
+NY-ESO / LAGE / PRAME,LAGE3,Unsafe,,,136.4,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea
+SSX / GAGE / PAGE / XAGE,SSX1,CTA,1.2,cerebellum,1.3,1164,5,mapping risk,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,SSX2,CTA,2.4000000000000004,hypothalamus,2.8000000000000003,677,6,mapping risk,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,SSX4,CTA,0.2,cerebral cortex,0.2,687,2,mapping risk,✓,✓,papers,
+SSX / GAGE / PAGE / XAGE,GAGE1,CTA,0.7,retina,0.5,859,6,mapping risk,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,GAGE2A,CTA,1.1,retina,0.8,830,6,mapping risk,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,PAGE1,CTA,0.0,,0.0,464,4,,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,PAGE4,Unsafe,,,23.3,,0,,—,—,—,Normal bulk
+SSX / GAGE / PAGE / XAGE,XAGE1A/B,CTA,1.8,lung,1.6,1843,2,,✓,✓,papers,
+Testis / meiosis,SYCP1,CTA,1.93779948619,blood,1.8,103,4,,✓,✓,✓,
+Testis / meiosis,TEX14,Unsafe,,,28.4,,4,,—,—,—,HPA tissue clusters
+Testis / meiosis,AKAP4,CTA,0.0787800445618,blood,0.0,77,3,,✓,✓,✓,
+Testis / meiosis,ODF1,CTA,0.623562,basal ganglia,3.4,35,2,,✓,✓,papers,
+Testis / meiosis,ADAM2,CTA,0.6,midbrain,0.5,421,4,,✓,✓,✓,
+Testis / meiosis,TDRD1,Unsafe,,,10.8,,4,,—,—,—,Established rare normal-cell RNA
+Testis / meiosis,HORMAD1,Unsafe,,,14.8,,6,,—,—,—,HPA tissue clusters | DICE immune | Adult cornea | Established rare normal-cell RNA
+Testis / meiosis,MAEL,Unsafe,,,57.0,,4,,—,—,—,Normal bulk | HPA tissue clusters
+Testis / meiosis,PIWIL2,Unsafe,,,16.0,,3,,—,—,—,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
+Testis / meiosis,DDX43,Unsafe,,,6.6,,3,,—,—,—,HPA normal protein | HPA tissue clusters | Monaco immune | DICE immune | Established rare normal-cell RNA
+Others,CTCFL,Unsafe,,,15.0,,6,,—,—,—,Normal bulk
+Others,SPA17,Unsafe,,,345.8,,3,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
+Others,SPAG9,Unsafe,,,480.1,,1,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea | Established rare normal-cell RNA
+Others,PBK,Unsafe,,,157.7,,3,,—,—,—,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
+Others,CEP55,Unsafe,,,106.0,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | DICE immune | Adult cornea | Established rare normal-cell RNA
+Others,TPTE,CTA,2.0,white matter,2.5,357,3,mapping risk,✓,✓,✓,
+Others,CT45A1,CTA,0.9,retina,0.8,785,3,mapping risk,✓,✓,✓,
+Others,CT83,CTA,1.7,salivary gland,2.6,1187,5,,✓,✓,✓,
+Others,PLAC1,Unsafe,,,2.4,,2,,—,—,—,Established rare normal-cell RNA
+Others,CSAG1,CTA,1.35216,basal ganglia,1.9,2164,1,"mapping risk, literature conflict",✓,papers,papers,
+Others,LY6K,Unsafe,,,106.2,,2,,—,—,—,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
+Others,NUTM1,CTA,0.9,cerebellum,1.1,109,3,,✓,✓,✓,

@@ -1,0 +1,27 @@
+rule,threshold,status,meaning
+Cancer: repeated,≥2 documented patients; each tumor ≥1 TPM and strictly above N,Current draft,"N is the largest supported nonreproductive, non-Disposable normal context statistic; repeated libraries count once."
+Cancer: single tumor,"≥5 × max(N, 1) TPM in ≥1 sample",Current draft,"One strong sample suffices, including one without a resolved patient ID."
+Reproductive bulk RNA,≥1 native nTPM,Current draft,"Includes reproductive, placental and developmental scope; normal exclusions still apply."
+Reproductive-cell RNA,≥1 nTPM and ≥20 reads,Current draft,"Indirect sites also require complete outside-cluster coverage, every outside value <1, and no curated normal-induction conflict."
+Developmental RNA,"Mean ≥1 TPM; ≥20 cells, ≥5 positive and ≥10% positive; positive means ≥1 TPM",Current draft,Qualifying developmental lineage/stage; bulk fetal/reproductive scope is retained separately.
+Reproductive protein,Reliable mapped positive IHC or reviewed human reproductive protein for every member,Current draft,An alternative to RNA association; antibody/identity conflicts remain unresolved.
+Normal RNA ceilings,Vital 4/8/16/32; Protected 8/16/32/64; Manageable 16/32/64/128,Retained normal screen,"Columns are missing/uncertain, Approved, Supported, Enhanced matched negative IHC. Units remain native TPM or nTPM."
+Reviewed clinical RNA credit,"One IHC rank increment, capped at rank 3",Retained normal screen,Only qualifying product-specific evidence; no stacking or override of injury/protein exclusions.
+Normal RNA consequence,Above Vital/Protected ceiling → Unsafe; above Manageable ceiling → hold; Manageable >128 → Unsafe,Retained normal screen,Equality to the ceiling passes. Disposable and reproductive scope have no current numerical ceiling in this gate.
+HPA tissue-cell support,≥20 reads,Retained normal screen,Cell-specific tier; only exact/declared compartment-matched IHC can supply credit.
+HPA/Monaco immune,Cell-specific 4/8/16 bases on native nTPM/TPM,Retained normal screen,No matched negative-IHC credit; a reproductive location does not exempt shared immune cells.
+DICE immune,Third-highest reported TPM; ≥3 observations,Retained normal screen,Apply cell-specific ceiling; unpaired distributions keep their bounds.
+Adult cornea,≥5 positive cells and ≥20 counts in ≥2 sample groups; RNA ceilings divided by 100,Retained normal screen,"Native CP10K screening scale, not a TPM conversion."
+Rare-cell detection,"≥1% detected, ≥3,000 cells and ≥10 expressing cells",Retained normal screen,Existing brain/spinal cord/heart/lung panel: Vital → Unsafe; Protected → review hold.
+Normal protein,Reliable non-Low positive in Vital/Protected → Unsafe; Manageable → hold,Retained normal screen,"Low is flagged; uncertain is unresolved. Reviewed/external findings retain reagent, cell and identity scope."
+Required RNA coverage,Every nonreproductive combined-bulk tissue concept for every member,Retained normal screen,The comparison uses 36 concepts. Missing optional cell/immune/cornea panels alone does not block; observed exclusions still apply.
+Translation entry,"Reference coding CDS, or supported ncORF: MS peptide or ≥2 independent Ribo-seq studies",Current draft,All proteins still undergo the normal screen.
+Representative translation,"Complete primary-locus coding sequence; no LoF/NMD, incomplete tags, internal stops or non-AA20 residues",Current draft,"MANE Select first, Ensembl canonical second; conflicting evidence requires review. X is not allowed."
+Nested coding sequence,<50 amino acids inside a same-strand coding gene without independent ncORF evidence,Current draft,Other:Sequence.
+Unsafe sequence overlap,≥95% of 9-mers occur in Unsafe proteins,Current draft,Other:Sequence; this does not create expression-based Unsafe evidence.
+Reproductive concentration,Recorded normal/(normal + reproductive maximum); previous >10% veto removed,Descriptive only,Developmental and adult reproductive association now share the same admission flow.
+Published nomination,Exact-member claim in a curated CA/CTA/oncofetal target source,Annotation,"Retain source, table and claim; neither automatic admission nor exemption from normal findings."
+Proposed single-tumor rule,"≥10 × max(N, 1) TPM",Counterfactual; not adopted,Repeated route remains ≥2 patients at ≥1 TPM and above N.
+Proposed target maximum,"max(cancer, reproductive/developmental) ≥1 and strictly above every measured nonreproductive value",Counterfactual; not adopted,Source-compatible values only; missing compartments are not zeros.
+Proposed Disposable caps,"≤32 TPM and ≤32 nTPM, assessed separately",Counterfactual; not adopted,No unit conversion or IHC-derived numerical allowance for these proposed caps.
+Percentile alternatives,Within-tumor p80/p90/p95; across-patient p80/p90/p95 with ≥20 measured patients,Sensitivity analysis,Within-tumor ranks use the full measured catalog; across-patient values use the lower observed order statistic.

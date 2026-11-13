@@ -1,0 +1,57 @@
+age_group,cell_type,n_cells,n_positive,n_ge2,max_raw_count,total_counts,pct_positive
+Adult,Bergmann glial cell,476,17,0,1,17,3.5714285714285716
+Adult,T cell,4,0,0,0,0,0.0
+Adult,brain vascular cell,10,2,0,1,2,20.0
+Adult,cerebellar granule cell,16833,514,8,2,522,3.0535258123923246
+Adult,committed oligodendrocyte precursor,421,9,0,1,9,2.137767220902613
+Adult,erythroid lineage cell,1,0,0,0,0,0.0
+Adult,immature astrocyte,1,0,0,0,0,0.0
+Adult,interneuron,356,16,1,2,17,4.49438202247191
+Adult,leukocyte,9,1,0,1,1,11.11111111111111
+Adult,macroglial cell,367,5,0,1,5,1.3623978201634876
+Adult,meningeal macrophage,15,0,0,0,0,0.0
+Adult,microglial cell,394,6,0,1,6,1.5228426395939085
+Adult,oligodendrocyte,5309,100,1,2,101,1.8835938971557733
+Adult,unknown,743,13,0,1,13,1.749663526244953
+Postnatal child,Bergmann glial cell,554,38,1,2,39,6.859205776173285
+Postnatal child,T cell,40,0,0,0,0,0.0
+Postnatal child,brain vascular cell,8,0,0,0,0,0.0
+Postnatal child,central nervous system macrophage,24,0,0,0,0,0.0
+Postnatal child,cerebellar granule cell,32597,1123,59,3,1187,3.4451023100285303
+Postnatal child,cerebellar granule cell precursor,1201,19,0,1,19,1.582014987510408
+Postnatal child,committed oligodendrocyte precursor,53,2,0,1,2,3.7735849056603774
+Postnatal child,erythroid lineage cell,9,2,0,1,2,22.22222222222222
+Postnatal child,glioblast,4,0,0,0,0,0.0
+Postnatal child,immature astrocyte,331,4,0,1,4,1.2084592145015105
+Postnatal child,interneuron,914,27,1,2,28,2.9540481400437635
+Postnatal child,leukocyte,18,0,0,0,0,0.0
+Postnatal child,macroglial cell,766,24,0,1,24,3.133159268929504
+Postnatal child,meningeal macrophage,161,2,0,1,2,1.2422360248447204
+Postnatal child,microglial cell,111,3,0,1,3,2.7027027027027026
+Postnatal child,neuroblast (sensu Vertebrata),36,0,0,0,0,0.0
+Postnatal child,oligodendrocyte,367,3,0,1,3,0.8174386920980926
+Postnatal child,oligodendrocyte precursor cell,251,8,1,2,9,3.187250996015936
+Postnatal child,progenitor cell,4,0,0,0,0,0.0
+Postnatal child,unipolar brush cell,43,4,0,1,4,9.30232558139535
+Postnatal child,unknown,477,9,1,2,10,1.8867924528301887
+Prenatal,GABAergic neuron,3828,201,7,2,208,5.2507836990595615
+Prenatal,Purkinje cell,42188,2438,95,4,2540,5.778894472361809
+Prenatal,T cell,1,0,0,0,0,0.0
+Prenatal,brain vascular cell,59,5,0,1,5,8.474576271186441
+Prenatal,central nervous system macrophage,15,1,0,1,1,6.666666666666667
+Prenatal,cerebellar granule cell,6503,250,6,3,257,3.8443795171459327
+Prenatal,cerebellar granule cell precursor,1209,44,1,2,45,3.6393713813068653
+Prenatal,erythroid lineage cell,27,1,0,1,1,3.7037037037037037
+Prenatal,glioblast,536,10,0,1,10,1.8656716417910448
+Prenatal,glutamatergic neuron,2739,261,13,2,274,9.529025191675794
+Prenatal,interneuron,4849,162,4,2,166,3.3408950299030726
+Prenatal,leukocyte,54,4,0,1,4,7.407407407407407
+Prenatal,macroglial cell,18083,750,29,3,781,4.147541890173091
+Prenatal,meningeal macrophage,42,1,0,1,1,2.380952380952381
+Prenatal,microglial cell,359,11,0,1,11,3.064066852367688
+Prenatal,neuroblast (sensu Vertebrata),7194,279,8,3,288,3.878231859883236
+Prenatal,noradrenergic cell,138,4,0,1,4,2.898550724637681
+Prenatal,oligodendrocyte precursor cell,392,20,0,1,20,5.1020408163265305
+Prenatal,progenitor cell,96,3,0,1,3,3.125
+Prenatal,unipolar brush cell,3789,108,5,2,113,2.8503562945368173
+Prenatal,unknown,8274,448,18,3,467,5.414551607445008

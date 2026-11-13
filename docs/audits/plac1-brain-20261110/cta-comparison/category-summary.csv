@@ -1,0 +1,6 @@
+category,n_proteins,complete,partial,unmeasured,zero_detected_measured,below_1pct_positive,at_least_1pct,at_least_1pct_ge2_counts
+CTA,638,213,2,423,67,102,46,0
+Cancer Antigen only,260,25,0,235,17,6,2,0
+Other,3,0,0,3,0,0,0,0
+Reproductive Antigen only,22,3,0,19,3,0,0,0
+Unsafe,43,27,0,16,3,7,17,5

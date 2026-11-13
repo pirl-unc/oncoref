@@ -1,10 +1,20 @@
 # oncoref
 
+[Cancer and Reproductive Antigens](target-selection.md) defines the current policy:
+CTA is their intersection and Target candidates is their union, with the same
+normal-expression, coverage, translation, expression-bound and sequence checks. The
+[catalog](audits/target-selection-20261110/rebuild/index.md) contains
+**626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
+18,241 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
+[Illustrated rules](audits/target-selection-20261110/report.html) ·
+[Rare normal-cell RNA by donor](audits/normal-cell-atlas-20261110/rare-cell/index.md).
+Curated protein–paper links remain attached to their specific claims.
+
 [Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
 
 [OncoRef 1.36.0](cta-release-1.36.0.md) adds the [47-protein cancer-only audit](audits/cancer-only-20261109/report.html), individual source-linked normal-tissue reviews and a filterable table. No member establishes cancer-only production.
 
-The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role. CTA denotes a research candidate under the declared policy.
+The [released 1.36.0 CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). These are the earlier policy's counts. All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role.
 
 [Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript table](audits/cta-transcript-selection-20261108/table.html) · [Current paper gaps and judgments](audits/cta-current-review-20261108/index.md) · [PRAMEF18, SSU72-like proteins and other candidate evidence](audits/cta-candidate-evidence-20261108/index.md) · [Historical 602-CTA evidence explorer](audits/cta-evidence-guide-20261106/report.html) · [Verified sequence records](sequence-bundle.md).
 

@@ -1,0 +1,22 @@
+protein_group_label,gene_id,parent_genes,basis
+ZNF816-ZNF321P,ENSG00000221874,,NCBI Gene name: ZNF816-ZNF321P readthrough
+ENSG00000241690,ENSG00000241690,C20orf141 (2 exons); TMEM239 (1 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000248235,ENSG00000248235,C8orf58 (5 exons); PDLIM2 (6 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+PRR5-ARHGAP8,ENSG00000248405,ARHGAP8 (13 exons); PRR5 (9 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+EPPIN-WFDC6,ENSG00000249139,EPPIN (4 exons); WFDC6 (2 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000249773,ENSG00000249773,MRPS17 (2 exons); ZNF713 (6 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000255432,ENSG00000255432,C11orf98 (3 exons); INTS5 (1 exons); LBHD1 (2 exons),Ensembl 115: exons overlap 3 other protein-coding genes on the same strand
+ENSG00000255835,ENSG00000255835,LEFTY1 (3 exons); PYCR2 (5 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000256349,ENSG00000256349,BBS1 (16 exons); DPP3 (1 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000256825,ENSG00000256825,ZNF10 (5 exons); ZNF268 (6 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000258417,ENSG00000258417,HHLA1 (3 exons); OC90 (13 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000258691,ENSG00000258691,BDKRB1 (2 exons); BDKRB2 (2 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000266202,ENSG00000266202,LYRM9 (3 exons); NOS2 (1 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ATF7-NPFF,ENSG00000267281,ATF7 (11 exons); NPFF (2 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000267618,ENSG00000267618,RAD51D (10 exons); RFFL (4 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000270299,ENSG00000270299,SCRT2 (1 exons); SRXN1 (1 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+URGCP-MRPS24,ENSG00000270617,MRPS24 (3 exons); URGCP (4 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000273155,ENSG00000273155,LIPT1 (2 exons); MRPL30 (4 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000274944,ENSG00000274944,GJA9 (1 exons); MYCBP (4 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000279983,ENSG00000279983,PCDHB14 (1 exons); PCDHB15 (1 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand
+ENSG00000284779,ENSG00000284779,IGF2 (5 exons); INS-IGF2 (2 exons),Ensembl 115: exons overlap 2 other protein-coding genes on the same strand

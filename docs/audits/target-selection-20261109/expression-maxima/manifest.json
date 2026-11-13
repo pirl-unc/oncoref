@@ -1,0 +1,30 @@
+{
+  "implementation_sha256": {
+    "scripts/audit_target_expression_maxima.py": "9ce47a6f7dfeda875b181926b78979e871817b800dc2f8515e5822f158f5b3a4",
+    "oncoref/tissue_hazards.py": "1191edcf20737bad612c39a9f1761f9c10cb00dc7e208fff689ba535c2650b61",
+    "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32"
+  },
+  "inputs_sha256": {
+    "oncoref/data/target-selection.csv.gz": "cf00eee8cfa7985fa3ce95d682aca4b05e0c857fb480e5f8aa41ab19de1c7c1e",
+    "docs/audits/target-selection-20261109/rebuild/normal-comparison.csv.gz": "3c3c296748775e4dcd9e0ddc35a762b5576d9cb593f74318622c6669bf7dbc3f",
+    "oncoref/data/normal-tissue-taxonomy.yaml": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
+    "oncoref/data/normal-tissue-hazards.yaml": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda"
+  },
+  "external_input": {
+    "source": "hpa_single_cell_tissue:v23",
+    "path": "/Users/iskander/.cache/oncoref/sources/hpa_single_cell_tissue/v23/rna_single_cell_type_tissue.tsv",
+    "sha256": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7"
+  },
+  "outputs_sha256": {
+    "anatomy-inventory.csv": "9768521ac84fc6ec90510d40c6121ca1c34e26e2c10f98b2b8e6159431e379fc",
+    "cap-scenarios.csv": "91c76abf7115056c9a99f1f30f20db1c8078e55909a07808230d5109c4d9f192",
+    "hpa-cell-contexts.csv": "3f67354880e2a0dcdfcdab6f27304cb8b4615e8ddc228fb18a511affd6070980",
+    "hpa-disposable-cell-missing-members.csv": "e8fb9691b012ad0689ec49dc3433da5de66a24a7421e3421fd23ff264c3d0674",
+    "hpa-disposable-cell-observations.csv": "36d76887f31ecd2531cdd49d1b65b85ac459e52af01057563741b2907b4dcf3b",
+    "hpa-disposable-identity-decisions.csv.gz": "6045cf455c670d41514f779d908c37c363d90cf27d59b8c1422f250d252e78f5",
+    "index.md": "0294af23de9e859dfefa611a7c9f56835a6a9449bbc8b9582a7826ba4dc49144",
+    "protein-maxima.csv": "55a1a9c9763338478793f3a0b7ae92e3dcc22f7418bebb04e3ebd737bb2a6362",
+    "proteins-moved-to-other.csv": "11069619211ba852abe4e8194d327f399bc7dab5a7ac81acfe68ae0437dccb8b",
+    "summary.json": "e9458075b21a9c3719d1da0aa46b52765c1510beaaaa21ec1f127bc5ca0aec1e"
+  }
+}

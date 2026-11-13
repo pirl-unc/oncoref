@@ -1,0 +1,62 @@
+tissue_general,adult,child,prenatal,unresolved
+adipose tissue,450876,0,0,7126
+adrenal gland,29839,5863,402187,0
+bladder organ,75433,0,0,0
+blood,13044755,331239,0,446668
+bone marrow,522973,5563,116939,83047
+brain,9432853,816927,5823310,382573
+breast,1326492,0,0,1027916
+central nervous system,590099,31365,121409,0
+colon,438171,14274,106087,59094
+cortex,0,0,149766,0
+digestive system,50160,0,2710,0
+embryo,0,0,199250,0
+endocrine gland,101205,371709,214882,0
+esophagogastric junction,12771,0,0,0
+esophagus,162742,0,4716,0
+exocrine gland,177208,0,0,0
+eye,6322249,600548,717044,122862
+fallopian tube,211975,0,0,1790
+forelimb,0,0,38983,0
+gallbladder,9769,0,0,0
+head,0,0,6801,0
+heart,1780173,15835,167029,0
+hindlimb,0,0,86972,0
+immune system,0,49874,0,0
+intestine,8747,625,76692,0
+kidney,402078,22059,233912,0
+lamina propria,23687,0,0,0
+large intestine,185584,0,0,0
+liver,264843,30907,370537,215840
+lung,1501449,161473,1019019,218758
+lymph node,892452,0,8174,18800
+milk,43085,0,0,5393
+mucosa,84999,0,0,6459
+musculature,418452,0,141076,23345
+nervous system,1837,0,0,0
+nose,117636,31031,0,82775
+omentum,13409,0,0,0
+ovary,147385,0,6941,20676
+pancreas,252826,17318,64399,0
+peripheral nervous system,658,0,0,0
+placenta,0,0,219237,268654
+pleura,19695,0,0,0
+prostate gland,81730,0,0,0
+reproductive system,0,0,364425,0
+respiratory system,387761,113600,7228,4534
+scalp,3029,0,0,0
+sensory system,2397,0,0,0
+skeletal system,11785,0,11121,11635
+skin of body,206843,24982,187922,254458
+small intestine,722286,33758,273840,31620
+spinal cord,43840,0,5916,0
+spleen,432402,0,145275,0
+stomach,220944,0,41823,13915
+tendon of semitendinosus,10533,0,0,0
+testis,7513,0,13211,0
+tongue,38754,0,0,0
+ureter,37470,0,0,0
+urinary bladder,29834,0,0,0
+uterus,136217,0,0,52901
+vasculature,139080,0,0,0
+yolk sac,0,0,56706,0

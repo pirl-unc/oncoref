@@ -1,0 +1,114 @@
+entity_id,protein,category,classification,familiar_target,published_nomination,member_gene_ids,available_gene_ids,missing_gene_ids,coverage,scope,max_member_gene_id,dataset_symbol,n_cells,n_positive,n_ge2,total_counts,max_raw_count,pct_positive,pct_ge2,detection_screen_hit
+PEG:ff1945913ca6c491259a,SPAG9,Unsafe,Unsafe,True,True,"[""ENSG00000008294""]","[""ENSG00000008294""]",[],complete,adult_granule,ENSG00000008294,SPAG9,16833.0,11740.0,6871.0,25313.0,12.0,69.74395532584803,40.81863007188261,True
+PEG:fc75f2d2d10c28db78b7,TSGA10,Unsafe,Unsafe,True,True,"[""ENSG00000135951""]","[""ENSG00000135951""]",[],complete,adult_granule,ENSG00000135951,TSGA10,16833.0,6447.0,2193.0,9680.0,8.0,38.299768312243806,13.0279807520941,True
+PEG:8656c909cf1632c3e5ef,SPAG1,Unsafe,Unsafe,True,True,"[""ENSG00000104450""]","[""ENSG00000104450""]",[],complete,adult_granule,ENSG00000104450,SPAG1,16833.0,4562.0,1243.0,6266.0,11.0,27.101526762906197,7.384304639695835,True
+PEG:9a3096d4d558fd2c3da2,SYCP2,Unsafe,Unsafe,True,True,"[""ENSG00000196074""]","[""ENSG00000196074""]",[],complete,adult_granule,ENSG00000196074,SYCP2,16833.0,2430.0,339.0,2825.0,5.0,14.435929424345037,2.0139012653715915,True
+PEG:6ebb41664cfbd7d5edf5,SYCP3,Unsafe,Unsafe,True,True,"[""ENSG00000139351""]","[""ENSG00000139351""]",[],complete,adult_granule,ENSG00000139351,SYCP3,16833.0,2348.0,335.0,2722.0,5.0,13.948791065169607,1.9901384185825461,True
+PEG:ae3c3eb560d28f54f7d1,OIP5,Unsafe,Unsafe,True,True,"[""ENSG00000104147""]","[""ENSG00000104147""]",[],complete,adult_granule,ENSG00000104147,OIP5,16833.0,1178.0,110.0,1304.0,4.0,6.998158379373849,0.6534782866987465,True
+PEG:ea4bb3b4c07c68b90caf,IGF2BP3,Unsafe,Unsafe,True,True,"[""ENSG00000136231""]","[""ENSG00000136231""]",[],complete,adult_granule,ENSG00000136231,IGF2BP3,16833.0,894.0,33.0,929.0,3.0,5.310996257351631,0.19604348600962396,True
+PEG:5212bde95849de6aa672,PIWIL2,Unsafe,Unsafe,True,True,"[""ENSG00000197181""]","[""ENSG00000197181""]",[],complete,adult_granule,ENSG00000197181,PIWIL2,16833.0,778.0,42.0,828.0,4.0,4.621873700469316,0.24950989128497594,True
+PEG:dd46807f3cc220e644e0,PIWIL4,Unsafe,Unsafe,True,False,"[""ENSG00000134627""]","[""ENSG00000134627""]",[],complete,adult_granule,ENSG00000134627,PIWIL4,16833.0,775.0,82.0,872.0,4.0,4.6040515653775325,0.4871383591754292,True
+PEG:f0572db6c19c2e532885,PLAC1,Unsafe,Unsafe,True,True,"[""ENSG00000170965""]","[""ENSG00000170965""]",[],complete,adult_granule,ENSG00000170965,PLAC1,16833.0,514.0,8.0,522.0,2.0,3.0535258123923246,0.04752569357809065,True
+PEG:61a6addb9232f8b9672e,DDX43,Unsafe,Unsafe,True,True,"[""ENSG00000080007""]","[""ENSG00000080007""]",[],complete,adult_granule,ENSG00000080007,DDX43,16833.0,344.0,4.0,348.0,2.0,2.043604823857898,0.023762846789045326,True
+PEG:62b40832b71778925612,CAGE1,CTA,CTA,True,True,"[""ENSG00000164304""]","[""ENSG00000164304""]",[],complete,adult_granule,ENSG00000164304,CAGE1,16833.0,337.0,10.0,347.0,2.0,2.0020198419770687,0.05940711697261332,True
+PEG:743587175ca0f22142df,LIPI,Unsafe,Unsafe,True,False,"[""ENSG00000188992""]","[""ENSG00000188992""]",[],complete,adult_granule,ENSG00000188992,LIPI,16833.0,328.0,16.0,346.0,3.0,1.9485534367017168,0.0950513871561813,True
+PEG:8c6fb58053678bcf3bc1,LDHC,Unsafe,Unsafe,True,True,"[""ENSG00000166796""]","[""ENSG00000166796""]",[],complete,adult_granule,ENSG00000166796,LDHC,16833.0,311.0,7.0,318.0,2.0,1.8475613378482743,0.041584981880829326,True
+PEG:7544f542fe4ce417bcb7,ACRBP,Unsafe,Unsafe,True,True,"[""ENSG00000111644""]","[""ENSG00000111644""]",[],complete,adult_granule,ENSG00000111644,ACRBP,16833.0,275.0,14.0,291.0,3.0,1.6336957167468662,0.08316996376165865,True
+PEG:6c92be8652526652bdbd,MAGEC3,Unsafe,Unsafe,True,False,"[""ENSG00000165509""]","[""ENSG00000165509""]",[],complete,adult_granule,ENSG00000165509,MAGEC3,16833.0,242.0,33.0,280.0,4.0,1.4376522307372424,0.19604348600962396,True
+PEG:dc3fe86d8f1d0f1ed671,SYCP1,CTA,CTA,True,True,"[""ENSG00000198765""]","[""ENSG00000198765""]",[],complete,adult_granule,ENSG00000198765,SYCP1,16833.0,207.0,3.0,210.0,2.0,1.2297273213330957,0.017822135091783996,True
+PEG:d6c9dda2a6fc2a9a7d95,CEP55,Unsafe,Unsafe,True,False,"[""ENSG00000138180""]","[""ENSG00000138180""]",[],complete,adult_granule,ENSG00000138180,CEP55,16833.0,203.0,4.0,207.0,2.0,1.2059644745440503,0.023762846789045326,True
+PEG:068d631b4ac56d221e79,TEX101,Unsafe,Unsafe,True,True,"[""ENSG00000131126""]","[""ENSG00000131126""]",[],complete,adult_granule,ENSG00000131126,TEX101,16833.0,182.0,2.0,184.0,2.0,1.0812095289015624,0.011881423394522663,True
+PEG:58fcf76fe60f29e8c6f8,PBK,Unsafe,Unsafe,True,True,"[""ENSG00000168078""]","[""ENSG00000168078""]",[],complete,adult_granule,ENSG00000168078,PBK,16833.0,161.0,0.0,161.0,1.0,0.9564545832590744,0.0,False
+PEG:cc6eaddd8688a2869fb1,CTCFL,Unsafe,Unsafe,True,True,"[""ENSG00000124092""]","[""ENSG00000124092""]",[],complete,adult_granule,ENSG00000124092,CTCFL,16833.0,127.0,0.0,127.0,1.0,0.7544703855521891,0.0,False
+PEG:f737a5fe893f1a649971,ROPN1L,Unsafe,Unsafe,True,True,"[""ENSG00000145491""]","[""ENSG00000145491""]",[],complete,adult_granule,ENSG00000145491,ROPN1L,16833.0,112.0,1.0,113.0,2.0,0.6653597100932692,0.005940711697261332,False
+PEG:df31cc9d924e30fe379e,HORMAD1,Unsafe,Unsafe,True,True,"[""ENSG00000143452""]","[""ENSG00000143452""]",[],complete,adult_granule,ENSG00000143452,HORMAD1,16833.0,92.0,0.0,92.0,1.0,0.5465454761480425,0.0,False
+PEG:ea4a5b47e25b6870bbb5,SSX2/B,CTA,CTA,True,True,"[""ENSG00000241476"",""ENSG00000268447""]","[""ENSG00000268447""]","[""ENSG00000241476""]",partial,adult_granule,ENSG00000268447,SSX2B,16833.0,84.0,0.0,84.0,1.0,0.4990197825699519,0.0,False
+PEG:03390ed98092aa8e9c91,SPA17,Unsafe,Unsafe,True,True,"[""ENSG00000064199""]","[""ENSG00000064199""]",[],complete,adult_granule,ENSG00000064199,SPA17,16833.0,75.0,3.0,78.0,2.0,0.4455533772945999,0.017822135091783996,False
+PEG:0ce9d1558e4f2196247b,PIWIL1,Unsafe,Unsafe,True,True,"[""ENSG00000125207""]","[""ENSG00000125207""]",[],complete,adult_granule,ENSG00000125207,PIWIL1,16833.0,59.0,0.0,59.0,1.0,0.3505019901384186,0.0,False
+PEG:a0d15d06ec81781f8dc7,ROPN1B,Unsafe,Unsafe,True,True,"[""ENSG00000114547""]","[""ENSG00000114547""]",[],complete,adult_granule,ENSG00000114547,ROPN1B,16833.0,30.0,2.0,32.0,2.0,0.17822135091783994,0.011881423394522663,False
+PEG:ff6ca79ef71390f04eab,MAGEB10,CTA,CTA,True,True,"[""ENSG00000177689""]","[""ENSG00000177689""]",[],complete,adult_granule,ENSG00000177689,MAGEB10,16833.0,23.0,0.0,23.0,1.0,0.13663636903701062,0.0,False
+PEG:8ce02989695ec9165acd,SAGE1,CTA,CTA,True,True,"[""ENSG00000181433""]","[""ENSG00000181433""]",[],complete,adult_granule,ENSG00000181433,SAGE1,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:92c0ae3f131964f8a71d,PRAME,CTA,CTA,True,True,"[""ENSG00000185686""]","[""ENSG00000185686""]",[],complete,adult_granule,ENSG00000185686,PRAME,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:b38f1355c0f87f695720,SSX7,Unsafe,Unsafe,True,True,"[""ENSG00000187754""]","[""ENSG00000187754""]",[],complete,adult_granule,ENSG00000187754,SSX7,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:4f31cbeb9f6478dca57c,SPACA1,CTA,CTA,True,True,"[""ENSG00000118434""]","[""ENSG00000118434""]",[],complete,adult_granule,ENSG00000118434,SPACA1,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:733beec808eac61287db,ROPN1,Unsafe,Unsafe,True,True,"[""ENSG00000065371""]","[""ENSG00000065371""]",[],complete,adult_granule,ENSG00000065371,ROPN1,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:b2df069d528c8939900e,GAGE10,CTA,CTA,True,True,"[""ENSG00000215274""]","[""ENSG00000215274""]",[],complete,adult_granule,ENSG00000215274,GAGE10,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:f4cf98e214e9d59ea6fa,HSPB9,Unsafe,Unsafe,True,False,"[""ENSG00000260325""]","[""ENSG00000260325""]",[],complete,adult_granule,ENSG00000260325,HSPB9,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:920d0159760a0213ac1d,CT45A1,CTA,CTA,True,True,"[""ENSG00000268940""]","[""ENSG00000268940""]",[],complete,adult_granule,ENSG00000268940,CT45A1,16833.0,0.0,0.0,0.0,0.0,0.0,0.0,False
+PEG:e22edf3f87a3d915d864,CT45A2/8/9,CTA,CTA,True,True,"[""ENSG00000270946"",""ENSG00000271449"",""ENSG00000278085""]",[],"[""ENSG00000270946"", ""ENSG00000271449"", ""ENSG00000278085""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:c1a0b7fad14344725ae1,CT45A5/6/7,Unsafe,Unsafe,True,True,"[""ENSG00000228836"",""ENSG00000273696"",""ENSG00000278289""]",[],"[""ENSG00000228836"", ""ENSG00000273696"", ""ENSG00000278289""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:a6d54b048ef7d0e56cc8,CT47A1/10/11/12/2/3/4/5/6/7/8/9,CTA,CTA,True,True,"[""ENSG00000224089"",""ENSG00000226023"",""ENSG00000226600"",""ENSG00000226685"",""ENSG00000226929"",""ENSG00000228517"",""ENSG00000230347"",""ENSG00000230594"",""ENSG00000236126"",""ENSG00000236371"",""ENSG00000237957"",""ENSG00000242362""]",[],"[""ENSG00000224089"", ""ENSG00000226023"", ""ENSG00000226600"", ""ENSG00000226685"", ""ENSG00000226929"", ""ENSG00000228517"", ""ENSG00000230347"", ""ENSG00000230594"", ""ENSG00000236126"", ""ENSG00000236371"", ""ENSG00000237957"", ""ENSG00000242362""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:f53f189c7f70e6ff446c,MAGEC2,Other,Other:Review,True,True,"[""ENSG00000046774""]",[],"[""ENSG00000046774""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:c21666d5191d73e4197c,PAGE1,CTA,CTA,True,True,"[""ENSG00000068985""]",[],"[""ENSG00000068985""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:7a8c4b71c1f5087b54ac,MAGEB2,Unsafe,Unsafe,True,True,"[""ENSG00000099399""]",[],"[""ENSG00000099399""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:ed1b1e65de6653861982,PAGE4,Unsafe,Unsafe,True,False,"[""ENSG00000101951""]",[],"[""ENSG00000101951""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:974275dcf5f28e756be3,MAGEB4,CTA,CTA,True,True,"[""ENSG00000120289""]",[],"[""ENSG00000120289""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:95dd8009b871f73d0c90,MAGEA10,CTA,CTA,True,True,"[""ENSG00000124260""]",[],"[""ENSG00000124260""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:3f0fdec9e70a78efaeb9,SSX1,CTA,CTA,True,True,"[""ENSG00000126752""]",[],"[""ENSG00000126752""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:0c251c50f994bfdf3967,CTAG2,CTA,CTA,True,True,"[""ENSG00000126890""]",[],"[""ENSG00000126890""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:041f1ff03424cee9d8cb,DPEP3,Unsafe,Unsafe,True,True,"[""ENSG00000141096""]",[],"[""ENSG00000141096""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:3e415b8708d7e20a9f7b,AKAP4,CTA,CTA,True,True,"[""ENSG00000147081""]",[],"[""ENSG00000147081""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:8dfd338f5ff487a2053d,FATE1,Unsafe,Unsafe,True,True,"[""ENSG00000147378""]",[],"[""ENSG00000147378""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:70dd37fba425999495d4,MAGEA4,CTA,CTA,True,True,"[""ENSG00000147381""]",[],"[""ENSG00000147381""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:ae53a3d6f93ae7321fa2,MAGEC1,CTA,CTA,True,True,"[""ENSG00000155495""]",[],"[""ENSG00000155495""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:af535126643394ac91e5,XAGE2,Unsafe,Unsafe,True,False,"[""ENSG00000155622""]",[],"[""ENSG00000155622""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:6c6694b9a6cab11b5870,MAGEA8,CTA,CTA,True,True,"[""ENSG00000156009""]",[],"[""ENSG00000156009""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:34f3dd120b97566c8975,PAGE5,Unsafe,Unsafe,True,True,"[""ENSG00000158639""]",[],"[""ENSG00000158639""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:5832d57a327d100b034d,LY6K,Unsafe,Unsafe,True,True,"[""ENSG00000160886""]",[],"[""ENSG00000160886""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:5fb4991ec0006787d238,SSX5,CTA,CTA,True,True,"[""ENSG00000165583""]",[],"[""ENSG00000165583""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:1f21f17e7986e978e490,SSX3,CTA,CTA,True,True,"[""ENSG00000165584""]",[],"[""ENSG00000165584""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:7c074032b67de5e03839,TSPY2,CTA,CTA,True,True,"[""ENSG00000168757""]",[],"[""ENSG00000168757""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:be4bdc46d0e5ea42f9bd,XAGE3,CTA,CTA,True,True,"[""ENSG00000171402""]",[],"[""ENSG00000171402""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:aa54325a2c15acb4bc72,XAGE5,CTA,CTA,True,True,"[""ENSG00000171405""]",[],"[""ENSG00000171405""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:4550f958113094cc63c1,MAGEB6,Unsafe,Unsafe,True,True,"[""ENSG00000176746""]",[],"[""ENSG00000176746""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:d01200d6e14c01061f02,MAGEB18,CTA,CTA,True,True,"[""ENSG00000176774""]",[],"[""ENSG00000176774""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:773ae6144c5f0318c61f,MAGEB17,CTA,CTA,True,False,"[""ENSG00000182798""]",[],"[""ENSG00000182798""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:5285dadd3b9e3cf5c6ac,MAGEA11,CTA,CTA,True,True,"[""ENSG00000185247""]",[],"[""ENSG00000185247""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:f6e567cce64c26bff223,MAGEB5,Reproductive Antigen only,Reproductive Antigen only,True,False,"[""ENSG00000188408""]",[],"[""ENSG00000188408""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:4ee4200daaae88fa4f43,MAGEB16,CTA,CTA,True,True,"[""ENSG00000189023""]",[],"[""ENSG00000189023""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:661176833bb1045f4b47,GAGE2A,CTA,CTA,True,True,"[""ENSG00000189064""]",[],"[""ENSG00000189064""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:d5e208a0b3217f4518b9,SPANXN3,CTA,CTA,True,True,"[""ENSG00000189252""]",[],"[""ENSG00000189252""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:e0a0340cd928b0b7f698,SPANXN4,CTA,CTA,True,False,"[""ENSG00000189326""]",[],"[""ENSG00000189326""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:e49963d2191c309469a5,SPANXD,CTA,CTA,True,True,"[""ENSG00000196406""]",[],"[""ENSG00000196406""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:638fead1035aabd2b6af,MAGEA6,CTA,CTA,True,True,"[""ENSG00000197172""]",[],"[""ENSG00000197172""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:a9a473303522068aa2ff,SPANXC,CTA,CTA,True,True,"[""ENSG00000198573""]",[],"[""ENSG00000198573""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:d8f87170210d6b4f6fc0,MAGEA1,CTA,CTA,True,True,"[""ENSG00000198681""]",[],"[""ENSG00000198681""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:b911e6df81a7b0aec3ae,MAGEB3,CTA,CTA,True,True,"[""ENSG00000198798""]",[],"[""ENSG00000198798""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:e07ae591e4fb35a4e33d,CSAG1,Unsafe,Unsafe,True,True,"[""ENSG00000198930""]",[],"[""ENSG00000198930""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:f4e199758b9cecc8a9c2,SPANXN1,CTA,CTA,True,True,"[""ENSG00000203923""]",[],"[""ENSG00000203923""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:39184a6829a33b6ab2b8,CT83,CTA,CTA,True,True,"[""ENSG00000204019""]",[],"[""ENSG00000204019""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:5b69e1c86d08d8c1272f,PAGE3,CTA,CTA,True,True,"[""ENSG00000204279""]",[],"[""ENSG00000204279""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:6e3f4e1bee75fa212591,SPANXN5,CTA,CTA,True,True,"[""ENSG00000204363""]",[],"[""ENSG00000204363""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:d8cf88f75a5754894d60,GAGE1,CTA,CTA,True,True,"[""ENSG00000205777""]",[],"[""ENSG00000205777""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:c0abd30a13b99ebc9cc1,CTAGE1,CTA,CTA,True,True,"[""ENSG00000212710""]",[],"[""ENSG00000212710""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:4182d88ed01f30868284,MAGEA12,Unsafe,Unsafe,True,True,"[""ENSG00000213401""]",[],"[""ENSG00000213401""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:7784a5fafb85cb45af00,MAGEB1,CTA,CTA,True,True,"[""ENSG00000214107""]",[],"[""ENSG00000214107""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:8fe6e7c0c5898d381def,MAGEA3,Unsafe,Unsafe,True,True,"[""ENSG00000221867""]",[],"[""ENSG00000221867""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:b43d4cc507839ce4f3b6,GAGE12J,CTA,CTA,True,True,"[""ENSG00000224659""]",[],"[""ENSG00000224659""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:308f233ec195d71bcb44,GAGE12H,CTA,CTA,True,True,"[""ENSG00000224902""]",[],"[""ENSG00000224902""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:f5c225ed205f6e5908eb,SPANXB1,CTA,CTA,True,True,"[""ENSG00000227234""]",[],"[""ENSG00000227234""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:fa81376c2a4ab4604f70,TSPY8,CTA,CTA,True,False,"[""ENSG00000229549""]",[],"[""ENSG00000229549""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:e369a8dc0d171a3fdb96,MAGEB6B,Cancer Antigen only,Cancer Antigen only,True,False,"[""ENSG00000232030""]",[],"[""ENSG00000232030""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:d0dd056a1d4a24fa21b3,TSPY4,CTA,CTA,True,True,"[""ENSG00000233803""]",[],"[""ENSG00000233803""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:2dee2bda40dc2bcb386f,PAGE2,CTA,CTA,True,True,"[""ENSG00000234068""]",[],"[""ENSG00000234068""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:0ea2a7e902a820ab27e6,GAGE12B,Unsafe,Unsafe,True,True,"[""ENSG00000236737""]",[],"[""ENSG00000236737""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:7fa570e3c69cb31cb94a,TSPY9,CTA,CTA,True,True,"[""ENSG00000238074""]",[],"[""ENSG00000238074""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:83893bfb1c6f8ef78f2c,PAGE2B,Unsafe,Unsafe,True,True,"[""ENSG00000238269""]",[],"[""ENSG00000238269""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:63379e2baad0e69de742,TSPY1,CTA,CTA,True,True,"[""ENSG00000258992""]",[],"[""ENSG00000258992""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:3f3fe81f53ed02c80b26,CSAG2,CTA,CTA,True,True,"[""ENSG00000268902""]",[],"[""ENSG00000268902""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:329582e7e7912b5cf014,CSAG3,CTA,CTA,True,True,"[""ENSG00000268916""]",[],"[""ENSG00000268916""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:2e8b622596f38971496e,SPANXN2,CTA,CTA,True,False,"[""ENSG00000268988""]",[],"[""ENSG00000268988""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:36af1f6cb3ba7dd7e4b1,CT45A3,Other,Other:Sequence,True,True,"[""ENSG00000269096""]",[],"[""ENSG00000269096""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:407c48435bee489ef3ba,CT45A10,CTA,CTA,True,True,"[""ENSG00000269586""]",[],"[""ENSG00000269586""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:5d5f21e4179d339bfbca,GAGE13,CTA,CTA,True,True,"[""ENSG00000274274""]",[],"[""ENSG00000274274""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:b2c016f61cfe6ece76e2,TPTE,Unsafe,Unsafe,True,True,"[""ENSG00000274391""]",[],"[""ENSG00000274391""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:93bc6accf191415a17a9,GAGE2E,Other,Other:Review,True,True,"[""ENSG00000275113""]",[],"[""ENSG00000275113""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:851aaf4e3c822c932ec3,GAGE12C/D/E,CTA,CTA,True,True,"[""ENSG00000216649"",""ENSG00000227488"",""ENSG00000237671""]",[],"[""ENSG00000216649"", ""ENSG00000227488"", ""ENSG00000237671""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:90f36e06ce4a7c18eaea,GAGE12F/G,Unsafe,Unsafe,True,True,"[""ENSG00000215269"",""ENSG00000236362""]",[],"[""ENSG00000215269"", ""ENSG00000236362""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:ff307cf4bea16101da1d,MAGEA2/B,CTA,CTA,True,True,"[""ENSG00000183305"",""ENSG00000268606""]",[],"[""ENSG00000183305"", ""ENSG00000268606""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:ca70118423066be99dc8,MAGEA9/B,CTA,CTA,True,True,"[""ENSG00000123584"",""ENSG00000267978""]",[],"[""ENSG00000123584"", ""ENSG00000267978""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:dde00652f75f5114eae1,NY-ESO-1,CTA,CTA,True,True,"[""ENSG00000184033"",""ENSG00000268651""]",[],"[""ENSG00000184033"", ""ENSG00000268651""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:1d20071f2b6ad9942bb5,SPANXA1/2,CTA,CTA,True,True,"[""ENSG00000198021"",""ENSG00000203926""]",[],"[""ENSG00000198021"", ""ENSG00000203926""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:027b04888fd9198d31ce,SSX4/B,CTA,CTA,True,True,"[""ENSG00000268009"",""ENSG00000269791""]",[],"[""ENSG00000268009"", ""ENSG00000269791""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:bdf212495c2e09f2fdbe,TSPY10/3,CTA,CTA,True,True,"[""ENSG00000228927"",""ENSG00000236424""]",[],"[""ENSG00000228927"", ""ENSG00000236424""]",unmeasured,adult_granule,,,,,,,,,,
+PEG:61d3553743c78ae41bd5,XAGE1A/B,CTA,CTA,True,True,"[""ENSG00000204379"",""ENSG00000204382""]",[],"[""ENSG00000204379"", ""ENSG00000204382""]",unmeasured,adult_granule,,,,,,,,,,

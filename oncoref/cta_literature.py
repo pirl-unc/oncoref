@@ -11,9 +11,30 @@ from __future__ import annotations
 import gzip
 import json
 from collections import defaultdict
+from copy import deepcopy
 from importlib.resources import files
 
 import pandas as pd
+
+NOMINATION_SOURCE_TAGS = frozenset(
+    {
+        "Wang2016_CT",
+        "Bruggeman2018_GC",
+        "daSilva2017_CT",
+        "Jamin2021_CT",
+        "Jamin2021_core",
+        "Chang2019_TGCT",
+        "Carter2023_CT",
+        "Seager2024_CTA",
+        "Loriot2025_S1",
+        "Loriot2025_S2",
+        "Bai2016_EGFL6",
+        "Boel1995_BAGE",
+        "Bradley2020_CPA",
+        "Garg2007_SPAG9",
+        "Sasaroli2011_vascular",
+    }
+)
 
 
 def registry() -> dict:
@@ -56,6 +77,128 @@ def reviews(gene: str | None = None) -> pd.DataFrame:
 def memberships() -> pd.DataFrame:
     """All paper-to-protein links, including unresolved and noncoverage links."""
     return pd.DataFrame(registry()["memberships"])
+
+
+def attestations(gene: str | None = None) -> pd.DataFrame:
+    """Protein-paper occurrences with their citations and original claim scope.
+
+    Includes current nominations, the frozen literature collection and subsequent
+    corrections, for every category. Nothing is dropped because a paper is
+    supplementary, redundant, adverse, or cannot resolve a related copy.
+    ``published_nomination`` is a curated catalog membership, not arbitrary paper
+    coverage. Source-level roles are explicitly distinguished from the claim on
+    the protein-paper link. Original records retain assay/identity limitations.
+    """
+    from . import cta_selection
+    from .cta_provenance import paper_membership
+
+    literature = registry()
+    followup = followup_findings()
+    audit = cta_selection.audit()
+    catalog_sources = {r["source_id"]: r for r in audit.sources.to_dict("records")}
+    paper_sources = {r["source_id"]: r for r in literature["sources"]}
+    followup_sources = {r["source_id"]: r for r in followup["sources"]}
+    # A DOI can contain a reproductive background, a tumor-positive catalog,
+    # and proteomics. Preserve and evaluate the exact table, not the DOI's role.
+    claims = defaultdict(list)
+    publication_rows = paper_membership().fillna("")
+    mapped_papers = set(publication_rows.doi)
+    claim_columns = [
+        "source_tag",
+        "Ensembl_Gene_ID",
+        "source_file",
+        "source_sheet",
+        "source_rows",
+        "source_subset",
+        "validation_scope",
+        "assay_resolution",
+    ]
+    for record in publication_rows.to_dict("records"):
+        if record["Ensembl_Gene_ID"]:
+            claims[(record["doi"], record["Ensembl_Gene_ID"])].append(
+                {key: record[key] for key in claim_columns}
+            )
+    collections = [
+        ("current_nomination", audit.memberships.to_dict("records"), catalog_sources),
+        ("literature_registry", literature["memberships"], paper_sources),
+        ("literature_followup", followup["memberships"], followup_sources),
+    ]
+    rows = []
+    for origin, links, source_records in collections:
+        for link in links:
+            genes = list(link["gene_ids"])
+            protein = link.get("protein", link.get("label", ""))
+            if gene is not None and gene != protein and gene not in genes:
+                continue
+            sid = link["source_id"]
+            source = source_records[sid]
+            paper = paper_sources.get(sid, {})
+            nomination = (
+                (origin == "current_nomination" or link.get("kind") == "historical_catalog")
+                and link.get("eligible_for_coverage", True)
+                and "catalog_nomination" in paper.get("roles", [])
+            )
+            exact_claims = [claim for g in genes for claim in claims[(sid, g)]]
+            nomination_genes = (
+                (
+                    sorted(
+                        {
+                            claim["Ensembl_Gene_ID"]
+                            for claim in exact_claims
+                            if claim["source_tag"] in NOMINATION_SOURCE_TAGS
+                        }
+                    )
+                    if sid in mapped_papers
+                    else genes
+                )
+                if nomination
+                else []
+            )
+            rows.append(
+                {
+                    "origin": origin,
+                    "source_id": sid,
+                    "source_url": source.get("url", source.get("source_url", "")),
+                    "citation": source.get("citation", ""),
+                    "title": source.get("title", paper.get("title", "")),
+                    "source_roles": list(source.get("roles", paper.get("roles", []))),
+                    "collection": paper.get("collection", ""),
+                    "protein": protein,
+                    "gene_ids": genes,
+                    "entity_id": link.get("entity_id", ""),
+                    "published_nomination": bool(nomination_genes),
+                    "nomination_gene_ids": nomination_genes,
+                    "publication_claims": deepcopy(exact_claims),
+                    "eligible_for_coverage": bool(
+                        link.get("eligible_for_coverage", origin == "current_nomination")
+                    ),
+                    "claim_scope": link.get("scope", source.get("evidence_scope", "")),
+                    "source_scope": source.get("scope", source.get("evidence_scope", "")),
+                    "membership_record": deepcopy(link),
+                    "source_record": deepcopy(source),
+                }
+            )
+    columns = [
+        "origin",
+        "source_id",
+        "source_url",
+        "citation",
+        "title",
+        "source_roles",
+        "collection",
+        "protein",
+        "gene_ids",
+        "entity_id",
+        "published_nomination",
+        "nomination_gene_ids",
+        "publication_claims",
+        "eligible_for_coverage",
+        "claim_scope",
+        "source_scope",
+        "membership_record",
+        "source_record",
+    ]
+    return pd.DataFrame(rows, columns=columns)
 
 
 def cta_coverage() -> pd.DataFrame:

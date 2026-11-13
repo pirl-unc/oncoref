@@ -6,12 +6,30 @@ theme:
   name: mkdocs
 nav:
   - Home: index.md
+  - Cancer and Reproductive Antigens: target-selection.md
+  - Filtering Target candidates: target-filters.md
+  - Target filter web summary: audits/target-filters-20261112/report.html
+  - Target filter report: audits/target-filters-20261112/index.md
+  - Normal-function literature sweep: audits/target-filters-20261112/normal-function-sweep.md
+  - Antigen catalog and curation funnel: audits/target-selection-20261110/rebuild/index.md
+  - Curation summary in figures: audits/target-selection-20261110/rebuild/summary.md
+  - Gene-by-gene sanity review: audits/target-selection-20261110/sanity-review/index.md
+  - Rare normal-cell RNA by donor: audits/normal-cell-atlas-20261110/rare-cell/index.md
+  - Literature review of normal expression: audits/target-selection-20261110/rebuild/literature.md
+  - Draft catalog 2026-11-09: audits/target-selection-20261109/rebuild/index.md
+  - Cancer antigen support audit: audits/target-selection-20261109/scrutiny/index.md
+  - Thresholds and patient identity: audits/target-selection-20261109/policy-reference/index.md
+  - Published targets and normal peaks: audits/target-selection-20261109/category-profiles/index.md
+  - Named CTA placements: audits/target-selection-20261109/policy-reference/named-ctas.md
+  - Expression maxima and Disposable caps: audits/target-selection-20261109/expression-maxima/index.md
+  - Threshold comparison: audits/target-selection-20261109/thresholds/index.md
   - CTA reports:
       - CTA definition and illustrated report: audits/cta-definition-20261104/index.md
       - Translation qualification: audits/translation-qualification-20261104/index.md
       - Verified sequence records: sequence-bundle.md
       - Historical evidence dispositions: audits/cta-evidence-migration-20261104/index.md
-      - Current release 1.36.0: cta-release-1.36.0.md
+      - Current release 1.37.0: cta-release-1.37.0.md
+      - Previous release 1.36.0: cta-release-1.36.0.md
       - Complete candidate inventory: audits/cta-inventory-20261105/index.md
       - Candidate evidence explorer and 122-protein review: audits/cta-evidence-guide-20261106/index.md
       - Individual reviews and core paper sources: audits/cta-literature-20261107/index.md
@@ -42,7 +60,7 @@ nav:
       - Source and decision audit API: audits/cta-source-walkthrough-20261028/api.md
       - Historical release 1.21.0: audits/cta-release-1.21.0/index.md
       - Selection API across species: cta-selection.md
-      - Safety and CTA identity: cta-evidence-axes.md
+      - Shared screen and antigen sets: cta-evidence-axes.md
       - TCR-T trial evidence and serious events: audits/cta-tcr-trials-20261029/index.md
       - Reviewed 463-group proposal: audits/cta-compartment-policy-20261027/index.md
       - Prior 343-group harmonized funnel: audits/cta-harmonized-20261027/index.md

@@ -1,0 +1,883 @@
+entity_id,protein,category,without_hl,without_merkel,without_both
+PEG:0f48f42f615fc0455d9a,BPY2/B/C,CTA,True,True,True
+PEG:020e4b93f993a54a4be8,CDY2A/B,CTA,False,True,False
+PEG:e22edf3f87a3d915d864,CT45A2/8/9,CTA,True,True,True
+PEG:a6d54b048ef7d0e56cc8,CT47A1/10/11/12/2/3/4/5/6/7/8/9,CTA,True,True,True
+PEG:d35f44079cd3778ab244,CXorf49/B,CTA,True,True,True
+PEG:ad1b7c2ba58859365a95,CXorf51A/B,CTA,True,True,True
+PEG:6a035227c8b07685ea2c,DEFB104A/B,CTA,True,True,True
+PEG:eaac8e2ede9534315e3b,DEFB107A/B,CTA,True,True,True
+PEG:2df2bef7153337b21963,DEFB130A/B,CTA,False,True,False
+PEG:82e7cb02a7cfdb88fc50,SPO11,CTA,True,True,True
+PEG:82bbfdb131c123c8ed0c,WNT8A,CTA,True,True,True
+PEG:c6efb305abe4ecf59e14,GSC2,CTA,True,True,True
+PEG:c21666d5191d73e4197c,PAGE1,CTA,True,True,True
+PEG:0add72edc5eb37ab78f4,ADAM7,CTA,True,True,True
+PEG:00b71bccd0d1c545be54,FNDC8,CTA,True,True,True
+PEG:b951c836671b7f8134af,WNT8B,Cancer Antigen only,True,True,True
+PEG:19355eaa66f9ef3fc3bf,DEFB127,CTA,True,True,True
+PEG:941a08a702068efc8f35,DAZL,CTA,True,True,True
+PEG:90fd94e49593855ed245,AMELY,CTA,True,True,True
+PEG:c48e51911d592e36dd19,CST9L,CTA,True,True,True
+PEG:e2a2fb77e366f5a9bab2,H2BW2,CTA,True,True,True
+PEG:42449dcdd148a437927e,LUZP4,CTA,True,True,True
+PEG:74b6fd912e5c44211d1c,ADAM2,CTA,True,True,True
+PEG:c374a2fe6e21bcd73f84,ZNRF4,CTA,True,True,True
+PEG:31b55de6cd45d0f4b35b,SPMAP2,CTA,True,True,True
+PEG:4386ffaec87dfd475b81,EVX1,CTA,True,True,True
+PEG:e683c4922f31769eb320,SPAM1,CTA,True,True,True
+PEG:612045266ac53328445a,FSCN3,CTA,True,True,True
+PEG:ef923d269534e28a7f52,RLN1,CTA,True,True,True
+PEG:bd87d5943adb64f4e420,KRT37,CTA,True,True,True
+PEG:2634f42fc681d00f7804,UCP1,CTA,True,True,True
+PEG:9fac95b13d17e0e6dd6e,DBX1,Cancer Antigen only,True,True,True
+PEG:ecefedfa27281c0491d5,HDGFL1,CTA,True,True,True
+PEG:b2c45b9ba3b1d3c5bd17,OR12D3,Cancer Antigen only,True,True,True
+PEG:81c71816f5781582b4c0,CCN6,CTA,True,True,True
+PEG:5bd7c1e983aad991155f,NEU2,Cancer Antigen only,True,True,True
+PEG:5be5d5923c21fa202181,PRAMEF1,CTA,True,True,True
+PEG:f91756cbc2d34669ae1a,ZP4,CTA,True,True,True
+PEG:07221993570b34fd66cf,ACTL8,CTA,True,True,True
+PEG:4f31cbeb9f6478dca57c,SPACA1,CTA,True,True,True
+PEG:616f17194f8722d560c9,HOXB1,CTA,True,True,True
+PEG:974275dcf5f28e756be3,MAGEB4,CTA,True,True,True
+PEG:1dc2e7075282314c6200,TTLL2,CTA,True,True,True
+PEG:0ba32829b34832ee9da3,LYZL1,CTA,True,True,True
+PEG:d092efb1e1461312b656,PRAMEF2,CTA,True,True,True
+PEG:c648256148a190aa5ff2,TAS2R8,Cancer Antigen only,True,True,True
+PEG:e27067edd093fddb2a49,TAS2R7,Cancer Antigen only,True,True,True
+PEG:794f5ca59d67d3897701,TAS2R9,Cancer Antigen only,True,True,True
+PEG:ba172ee518ba0c020809,RGSL1,CTA,True,True,True
+PEG:71c7273c6a0553fab3f1,OBP2A,CTA,True,True,True
+PEG:fdf69ee4dc400ab5e8e1,TBX22,CTA,True,True,True
+PEG:59d63e36958214a05e64,PRM2,CTA,True,True,True
+PEG:699f7f412f5d5e1ca302,CCDC70,CTA,True,True,True
+PEG:63789119d6d996a3ab4b,HOXC12,Cancer Antigen only,True,True,True
+PEG:ef026481aff64f1a22f2,H2BW1,CTA,True,True,True
+PEG:f672b06f1a1ea0c1d3dd,ESX1,CTA,True,True,True
+PEG:d65e5f3155ca5ba0a88e,ATXN3L,CTA,True,True,True
+PEG:9c971079475b9f68ce59,HMGB1P1,CTA,True,True,True
+PEG:93cbe02d0a8decdb1264,SEMG2,CTA,True,True,True
+PEG:b0d6c8f02d3c93179b43,ANKRD60,CTA,True,True,True
+PEG:95dd8009b871f73d0c90,MAGEA10,CTA,True,True,True
+PEG:d4fc093cace3e8ca27cc,IRGC,CTA,True,True,True
+PEG:e3c5120a397732c8324b,BTN1A1,CTA,True,True,True
+PEG:1adaeac42e6978eaec27,TCP11,CTA,True,True,True
+PEG:fb3a7be3d39d2f1018d2,CRISP1,CTA,True,True,True
+PEG:8cb08d77873181e36a0f,AMELX,Cancer Antigen only,True,True,True
+PEG:07bc57d4c7d89e5e3ca7,SRMS,CTA,True,True,True
+PEG:77f4a99f285b5f75f8e3,BHLHE23,Cancer Antigen only,True,True,True
+PEG:4b48e393fa355b05f6f6,DEFB126,CTA,True,True,True
+PEG:ce693e8e18efbcefdd4a,CST8,CTA,True,True,True
+PEG:6bb3cdb872a5c86206d4,CSTL1,CTA,True,True,True
+PEG:db99ef5b43a7c07dff3e,CST11,CTA,True,True,True
+PEG:4a182001281af71194cc,GFRA4,Cancer Antigen only,True,True,True
+PEG:4ee63c310acd2bc719e5,DEFB129,CTA,True,True,True
+PEG:4557257ab96a76597bbe,C20orf173,CTA,True,True,True
+PEG:3f0fdec9e70a78efaeb9,SSX1,CTA,True,True,True
+PEG:0c251c50f994bfdf3967,CTAG2,CTA,True,True,True
+PEG:36b3e39382ca508e7042,OR7C2,Cancer Antigen only,True,True,True
+PEG:acd544ce0020891334de,OR1E2,CTA,True,True,True
+PEG:cdbe9acee094e4d6bdc1,RFPL3,CTA,True,True,True
+PEG:ba6798466117b944e46d,GALR3,CTA,True,True,True
+PEG:aa9605f08e757d3afb77,APOL5,Cancer Antigen only,True,True,True
+PEG:b8381968c624a7a365ef,FUT5,Cancer Antigen only,True,True,True
+PEG:19fa7af455f6fe1ee17f,BMP15,CTA,True,True,True
+PEG:add389c4abd0006b8650,PKDREJ,CTA,True,True,True
+PEG:c10beeb1fcc1ed59ac51,BPIFA3,CTA,True,True,True
+PEG:7245989ea58361ca88c1,DEFB118,CTA,True,True,True
+PEG:7d3f2ee2de49d72c9bd8,CDX4,CTA,True,True,True
+PEG:6d42c5be7b9168a8aa85,HHLA1,CTA,True,True,True
+PEG:d773babea9298212fadd,FTHL17,CTA,True,True,True
+PEG:5014bc3fef7bb406669c,SCP2D1,CTA,True,True,True
+PEG:1b1f84762d9a3e07d092,ADAM30,CTA,True,True,True
+PEG:41db39bdc828cb59639b,USP26,CTA,True,True,True
+PEG:9a4474f82b95215088a3,ACRV1,CTA,True,True,True
+PEG:cd8871e0d60a430d9f23,OCM2,CTA,True,True,True
+PEG:88b9b98a82cf6d580716,IL36B,Cancer Antigen only,True,True,True
+PEG:be561c09d6c5c65842f3,OR1J1,Cancer Antigen only,True,False,False
+PEG:711abe235ce2b8ff6b8a,OR13C9,Cancer Antigen only,True,True,True
+PEG:64833961e033a9fb0acd,DMRT1,CTA,True,True,True
+PEG:f8dbad8589abd378c1d3,MMP20,CTA,True,True,True
+PEG:f588a3582d09d613e19e,SULT6B1,CTA,True,True,True
+PEG:435e399a81660ec4beae,C4orf17,CTA,True,True,True
+PEG:efa0b2560c10d0e05eec,TTLL8,CTA,True,True,True
+PEG:7f57e0dfd6dfb0e68d19,ANP32D,Cancer Antigen only,True,True,True
+PEG:724807581f6b8e5b8988,GOLGA6D,CTA,True,True,True
+PEG:8ea530b33a6734f55ab9,SPACA3,CTA,True,True,True
+PEG:013bdbe363b632ff9882,ZIM3,CTA,True,True,True
+PEG:581dc1d036bbdddf6a43,CIB3,CTA,True,True,True
+PEG:1bc1b74fd2c82bfe1e90,DMRTC2,CTA,True,True,True
+PEG:d7cf0111102154b3f829,C1orf94,CTA,True,True,True
+PEG:9fa862159f9a422158b9,DMRTB1,CTA,True,True,True
+PEG:b6999d59062476d2ec3b,HHIPL2,CTA,True,True,True
+PEG:c6d710818578b9caa5ba,TRIM43B,CTA,True,True,True
+PEG:e1e8ab36d7564447b99e,TRIM43,CTA,True,True,True
+PEG:e1dbbc633e8e8a78b9a8,CABS1,CTA,True,True,True
+PEG:384ee9aacd7da5a6beb8,H2BC1,CTA,True,True,True
+PEG:f79625e4353fc36e4bc3,TAAR2,Cancer Antigen only,True,True,True
+PEG:3e415b8708d7e20a9f7b,AKAP4,CTA,True,True,True
+PEG:86c0573ac5b314924664,CPXCR1,CTA,True,True,True
+PEG:70dd37fba425999495d4,MAGEA4,CTA,True,True,True
+PEG:8eaa75aa8eea0c091f66,PRDM14,CTA,True,True,True
+PEG:850fdd96c5da06df3e19,CER1,CTA,True,True,True
+PEG:bd63265f8609999ad0eb,OR13C4,Cancer Antigen only,True,True,True
+PEG:f55a6a3b5a5984740c6c,ACTL7B,CTA,True,True,True
+PEG:70f59520a0e26b23f88e,LCN9,CTA,True,True,True
+PEG:7770df6b90b72315c09e,OR5F1,Cancer Antigen only,True,True,True
+PEG:45f711ef3e3c20ef8c71,OOSP2,CTA,True,True,True
+PEG:9c9200f89ae350c330e9,C20orf144,CTA,True,True,True
+PEG:f6b10f942ca940facba4,OCSTAMP,Cancer Antigen only,True,True,True
+PEG:34f328e2f5b6313189c0,SPINT4,CTA,True,True,True
+PEG:b0a3fa4ff2fcd422c314,TRIM48,CTA,True,True,True
+PEG:9189d3831fe1538d828b,OR8K1,Cancer Antigen only,True,True,True
+PEG:668c4e0e27533b8ec392,CCDC83,CTA,True,True,True
+PEG:806210ba409a35d812aa,LYZL2,CTA,True,True,True
+PEG:c820dbcb6ceebd07aa60,MSGN1,CTA,True,True,True
+PEG:d47c472d5edde3832f80,RBM46,CTA,True,True,True
+PEG:30dd9c54ba4ec034ad07,BOLL,CTA,True,True,True
+PEG:73f6dd0372ef2623a590,DSPP,Cancer Antigen only,True,True,True
+PEG:e30a096128e28b0c48e6,OR14K1,Cancer Antigen only,True,True,True
+PEG:3f1c67d26be556e71b13,GOLGA8F,CTA,True,True,True
+PEG:a856de25085b6dedc768,TGIF2LX,CTA,True,True,True
+PEG:cc7eba9b12cc8cce7017,ASB17,CTA,True,True,True
+PEG:14585aa9d288c68201f2,PANX3,Cancer Antigen only,True,True,True
+PEG:b11d7047767cef633d42,ASZ1,CTA,True,True,True
+PEG:fde80137566ffd0d0929,PSMA8,CTA,True,True,True
+PEG:ebd4911cd2b365cf945e,ODF1,CTA,True,True,True
+PEG:bbf4a3ed54f6e4acc61b,OR4K1,Cancer Antigen only,True,True,True
+PEG:ae53a3d6f93ae7321fa2,MAGEC1,CTA,True,True,True
+PEG:d91813094c65100d30ac,CYLC2,CTA,True,True,True
+PEG:c0a233013895f4db4877,TRIM42,CTA,True,True,True
+PEG:6c6694b9a6cab11b5870,MAGEA8,CTA,True,True,True
+PEG:b36d0170ab35318112b5,NLRP14,CTA,True,True,True
+PEG:3a612f49857841d76af3,POM121L2,CTA,True,True,True
+PEG:be8d3025c80ff866d72a,WFDC8,CTA,True,True,True
+PEG:0f83d2917f567efa9e1e,GOLGA6A,CTA,True,True,True
+PEG:05a844733a1507c9ef3a,NLRP4,CTA,True,True,True
+PEG:8eb0e469ac55688e0022,CCDC116,CTA,True,True,True
+PEG:1d43701ff33b06a08fdb,KLHL10,CTA,True,True,True
+PEG:42232b8b0bac1990df60,IZUMO2,CTA,True,True,True
+PEG:cbedbc9da5ceed0124b5,OR7G1,Cancer Antigen only,True,True,True
+PEG:2dc63a0676e5f9e8db88,CCDC42,CTA,True,True,True
+PEG:e2ca455e029b4f35eb39,CCDC27,CTA,True,True,True
+PEG:0cb36841692fbc8278aa,LRRC52,CTA,True,True,True
+PEG:f2e5dda48c5a399c7bdc,PDHA2,CTA,True,True,True
+PEG:5f7f44ada6c4691db55b,SMCP,CTA,True,True,True
+PEG:85c1d55282c3a1dd9b19,DCST1,CTA,True,True,True
+PEG:2b26525eeed8d741fdea,TEX55,CTA,True,True,True
+PEG:93b004e8607aca9cd834,ERICH6,CTA,True,True,True
+PEG:1e1807a736855e4a0438,TGM4,CTA,True,True,True
+PEG:cfbd871fd81368e25d03,OTOP1,Cancer Antigen only,True,True,True
+PEG:2367ecece9042c588f37,PRDM9,CTA,True,True,True
+PEG:62b40832b71778925612,CAGE1,CTA,True,True,True
+PEG:a8b525b8c5ab45301a94,FAM170A,CTA,True,True,True
+PEG:95e7249f96b06e2f63c5,TBXT,CTA,True,True,True
+PEG:9d19df174ac5883c0670,SLC35G3,CTA,True,True,True
+PEG:8207f245c6ee08405e1e,PRKACG,CTA,True,True,True
+PEG:49748f3eb4584f9106e6,PRSS37,CTA,True,True,True
+PEG:86d9c72e9d338dfe96a9,SSMEM1,CTA,True,True,True
+PEG:67baa8a3a81322e48901,OR1K1,Cancer Antigen only,True,True,True
+PEG:5fb4991ec0006787d238,SSX5,CTA,True,True,True
+PEG:1f21f17e7986e978e490,SSX3,CTA,True,True,True
+PEG:f0ba7590c9bb29333f4b,ERICH6B,CTA,True,True,True
+PEG:169cdeb7cf5ad79e72b7,PASD1,CTA,True,True,True
+PEG:f8aa24f2175e062396ff,TMCO5A,CTA,True,True,True
+PEG:ba180054e19e985881aa,SPATA19,CTA,True,True,True
+PEG:e55e30b50a6da22124c1,C16orf78,CTA,True,True,True
+PEG:e57cfc2d58651769b4b1,CCDC182,CTA,True,True,True
+PEG:d77c5aa334908accb44f,POTED,CTA,True,True,True
+PEG:f5d56ff8693048474c2c,OR2D2,Cancer Antigen only,True,True,True
+PEG:afbead2d0e36e2b19703,OR4D6,Cancer Antigen only,True,True,True
+PEG:5ef9a7ec35d248e457a9,SUN5,CTA,True,True,True
+PEG:9dcbd41c904dce5fd3d0,BPIFB6,Cancer Antigen only,True,True,True
+PEG:678f2ecbe016609aa47d,TBC1D21,CTA,True,True,True
+PEG:e1480e78c9563ba52a76,GOLGA6C,CTA,True,True,True
+PEG:e813900ce8e0e1293b0d,OR51I1,Cancer Antigen only,True,True,True
+PEG:21212838bcfa67d0df3e,OR51Q1,Cancer Antigen only,True,True,True
+PEG:89f20b287c5756513eb6,LALBA,CTA,True,True,True
+PEG:f97f563c819bff14c9ee,OR2B2,CTA,True,True,True
+PEG:ebc4f4ff432ef5190505,OR2C1,Cancer Antigen only,True,True,True
+PEG:c4287bfb2fc94398e3cf,SCGB1D1,CTA,True,True,True
+PEG:03bda62781abc827aec1,WFDC13,CTA,True,True,True
+PEG:7c074032b67de5e03839,TSPY2,CTA,True,True,True
+PEG:7aaac9e721e000424fdf,TRIM49,CTA,True,True,True
+PEG:9d11cdb449d832d924a5,VCX3A,CTA,True,True,True
+PEG:1eebb52a87d2599b843e,GOT1L1,CTA,True,True,True
+PEG:4e6ed0a98e0f954e4366,OR10G3,CTA,True,True,True
+PEG:896fc711daef8a8d3f11,OR6F1,CTA,True,True,True
+PEG:71fe1f30ebae17ffbd03,ZNF280A,CTA,True,True,True
+PEG:8d7b58fe9c5c1c52d5f3,CT55,CTA,True,True,True
+PEG:de08c7c6995dfe5f18c0,PROKR1,CTA,True,True,True
+PEG:0994d8e7a1a605307a37,ACTRT2,CTA,True,True,True
+PEG:3689bb7432a99c8ba155,TAS2R1,CTA,True,True,True
+PEG:eddea217c73d85d69679,HOXD12,CTA,True,True,True
+PEG:79087723ce5efad5143f,MRGPRX1,CTA,True,True,True
+PEG:c30008d71e8df708306b,SP7,CTA,True,True,True
+PEG:44c15cfece6fa14d5fb0,COX7B2,CTA,True,True,True
+PEG:3a0df6283a1fa862e67d,OR10A3,Cancer Antigen only,True,True,True
+PEG:4836452a3271d4294b34,RBMXL2,CTA,True,True,True
+PEG:286be314f730b68fa82d,TPD52L3,CTA,True,True,True
+PEG:9b8b505b9cf0f570629b,OR7G3,Cancer Antigen only,True,True,True
+PEG:7bdab475d6ba9c050915,TEX13B,Cancer Antigen only,True,True,True
+PEG:8f174438c4fb21866c3e,PGK2,CTA,True,True,True
+PEG:ea7b89c4998f06b9ef0d,DDI1,CTA,True,True,True
+PEG:3b4b854365f27e3984cc,OR4D5,Cancer Antigen only,True,True,True
+PEG:4acc57a9981e19fe6d10,PATE1,CTA,True,True,True
+PEG:8b1b82b563ef8391d944,C8orf74,CTA,True,True,True
+PEG:e441cc9e09046ab5f289,OR2K2,Cancer Antigen only,True,True,True
+PEG:be4bdc46d0e5ea42f9bd,XAGE3,CTA,True,True,True
+PEG:aa54325a2c15acb4bc72,XAGE5,CTA,True,True,True
+PEG:36508d4cb8246ba7c638,OR1L6,Cancer Antigen only,True,True,True
+PEG:bd78cc82f7e1017cbab2,MROH2B,CTA,True,True,True
+PEG:c21f04ffd1837d868563,OR1N2,Cancer Antigen only,True,True,True
+PEG:ce254373243f5169317f,OR1N1,CTA,True,True,True
+PEG:4510280f0b1d23f9b706,OR10H3,Cancer Antigen only,True,True,True
+PEG:ba0e896af1cb75774bf6,OR10H2,Cancer Antigen only,True,True,True
+PEG:191c8094bb8dfa420a8d,SPMIP9,CTA,True,True,True
+PEG:ca5adeaf6dd2bb3471c0,OR1A2,Cancer Antigen only,True,True,True
+PEG:cd4ccb1e1b2cdcaea842,OR8I2,Cancer Antigen only,True,True,True
+PEG:97946b86a007e004d03d,OR4C11,Cancer Antigen only,True,True,True
+PEG:9d88fc2e6232ab7a4d70,OR8U1,Cancer Antigen only,True,True,True
+PEG:c80153e96bd6a4eeaf1f,OR10V1,Cancer Antigen only,True,True,True
+PEG:b3739345aefad3e7e111,OR5B12,Cancer Antigen only,True,True,True
+PEG:b9665c31aed09d2c94ed,OR5AR1,Cancer Antigen only,True,True,True
+PEG:01906e950380407e5c16,OR5AP2,Cancer Antigen only,True,True,True
+PEG:1583eee636b852d85113,OR5T3,Cancer Antigen only,True,True,True
+PEG:e2a9e6fdb6e94c2489f9,FAM170B,CTA,True,True,True
+PEG:5adf7b85a8c9c99dff7c,MOS,CTA,True,True,True
+PEG:b672de0435fcbade6881,OR10W1,Cancer Antigen only,True,True,True
+PEG:6cd40ac662055cd0a70c,XKR3,CTA,True,True,True
+PEG:b7624fb69977bc4eb3a2,CCDC63,CTA,True,True,True
+PEG:4acf4c9fc4f8867db2bd,IQCF1,CTA,True,True,True
+PEG:28b48bdbe037d3761acb,RNASE11,CTA,True,True,True
+PEG:7278598ea06d972facdd,NLRP13,CTA,True,True,True
+PEG:7745d1207dccb8cc49c2,HES3,Cancer Antigen only,True,True,True
+PEG:b6707155dfcaebb74182,TOPAZ1,CTA,True,True,True
+PEG:0568ca40e698adbdf0c1,CBY2,CTA,True,True,True
+PEG:3c6a74a74c79eeb3d20f,TENT5D,CTA,True,True,True
+PEG:1441077618a78a1ab218,EVX2,CTA,True,True,True
+PEG:208ec59e3e24a5d480a4,OR2Y1,Cancer Antigen only,True,True,True
+PEG:5a69da32a1701c66b70c,STARD6,CTA,True,True,True
+PEG:3dae9cc5ff43af038bb1,GOLGA6L2,CTA,True,True,True
+PEG:8d2f657e1d82f70c4a7f,OR5J2,Cancer Antigen only,True,True,True
+PEG:93ccfe77340021170d40,OR10AG1,Cancer Antigen only,True,True,True
+PEG:835f2cda298454afab81,TEX36,CTA,True,True,True
+PEG:18b7d701f8e3b7faa226,HIGD2B,CTA,True,True,True
+PEG:2a2c696d7f80b3530323,OR52W1,Cancer Antigen only,True,False,False
+PEG:f0e0cd8711d5b74341cc,TSGA10IP,CTA,True,True,True
+PEG:6ccc7c56f014bb0947ea,GPR152,Cancer Antigen only,True,True,True
+PEG:848c77e5c200f8ad57c8,UBQLN3,CTA,True,True,True
+PEG:83be4326a94c389cc0f0,OR4B1,Cancer Antigen only,True,True,True
+PEG:630ddd31edc8c33b698a,PRM1,CTA,True,True,True
+PEG:e911442ed120405107f6,CCDC197,CTA,True,True,True
+PEG:d8e3f84a5319fba61ef9,RBMXL3,CTA,True,True,True
+PEG:c523571568bf4afbcb43,CBLL2,CTA,True,True,True
+PEG:3bbf0de86cc3ce4286cc,TMEM270,CTA,True,True,True
+PEG:d068d88207e419043054,OR11H4,Cancer Antigen only,True,True,True
+PEG:d1512254c962184b5843,OR4D11,Cancer Antigen only,True,True,True
+PEG:44db881018a23c4bdf84,OR10H4,Cancer Antigen only,True,True,True
+PEG:4ac015d6bd01c1a5ba7e,OR4L1,Cancer Antigen only,True,True,True
+PEG:be0a00d24bc923a21671,HMGB4,CTA,True,True,True
+PEG:a7bee535e36dba7b28f5,OR4N2,CTA,True,True,True
+PEG:e84425e36cba586a4a1f,OR4M1,CTA,True,True,True
+PEG:b8157994b26aa9a4215b,FOXR1,CTA,True,True,True
+PEG:1cf3993482be8c188ad3,OR4C5,Cancer Antigen only,True,True,True
+PEG:8ac70c93fe068f810281,OR4C3,Cancer Antigen only,True,True,False
+PEG:bef309c3b45e894eef09,DCAF4L2,CTA,True,True,True
+PEG:ecc5352ad0667c6560f5,TGIF2LY,CTA,True,True,True
+PEG:d01200d6e14c01061f02,MAGEB18,CTA,True,True,True
+PEG:dca6ce5e3092779c0cac,OR52E2,Cancer Antigen only,True,True,True
+PEG:bf26b51ff2c788f2d2e8,OR51A7,Cancer Antigen only,True,True,True
+PEG:df8864a9d7792ef611e0,OR51T1,Cancer Antigen only,True,True,True
+PEG:061259600c0d9d05846e,OR51F2,Cancer Antigen only,True,True,True
+PEG:3195614c064f3ffbe723,FMR1NB,CTA,True,True,True
+PEG:a1250dfbbd12865ef40c,CETN1,CTA,True,True,True
+PEG:d1c58b67e4eb50226703,OR2T35,Cancer Antigen only,False,True,False
+PEG:759069a169cc76548c65,OR14C36,Cancer Antigen only,True,True,True
+PEG:7e6065a833b3787635cd,OR2M7,Cancer Antigen only,True,True,True
+PEG:f0d69a56026efc7d33f1,OR2T33,Cancer Antigen only,True,True,True
+PEG:31b11058c4668e984f98,OR2G3,Cancer Antigen only,True,True,True
+PEG:fbeb9070c7299c096846,OR2G2,Cancer Antigen only,True,True,True
+PEG:3caeae10a57e223498f2,VCX2,CTA,True,True,True
+PEG:b5b818ea3fbfe3d39c6e,FAM187B,CTA,True,True,True
+PEG:33248728f87ff35a21f9,TEX44,CTA,True,True,True
+PEG:347a3da362089d499e50,DEFB114,CTA,True,True,True
+PEG:ff6ca79ef71390f04eab,MAGEB10,CTA,True,True,True
+PEG:280811cfacab82ee6aaf,SLC35G5,CTA,True,True,True
+PEG:b71a458a83abcd084c15,CAPZA3,CTA,True,True,True
+PEG:b73782407298087864f8,CIMAP1A,CTA,True,True,True
+PEG:54b3b8164715f120e743,TNP2,CTA,True,True,True
+PEG:46c968d17d72de1e5ff9,OR2D3,Cancer Antigen only,True,True,True
+PEG:3eebda895441ae357e0c,CCDC185,CTA,True,True,True
+PEG:5c608c51ffe82240b4c0,DEFB125,CTA,True,True,True
+PEG:02053e37f8d52dcfddad,H1-8,CTA,True,True,True
+PEG:4150dfcc4851b8bcda36,TPRX1,CTA,True,True,True
+PEG:314963d49c30c2168526,TAS1R2,Cancer Antigen only,True,True,True
+PEG:58d58aae40b0dd869998,HNRNPCL1,CTA,True,True,True
+PEG:2dfd7b59ac0396ea17d0,SIGLECL1,CTA,True,True,True
+PEG:eaf999bce6d91518e573,TMEM31,CTA,True,True,True
+PEG:8bb65b3eadf9cf1f957a,DNAJB8,CTA,True,True,True
+PEG:7d9952b5d9f27ee43651,RNF151,CTA,True,True,True
+PEG:a759e456881ad198e08c,NLRP11,CTA,True,True,True
+PEG:160dd90e1f4534d500b9,OR10A7,Cancer Antigen only,False,True,False
+PEG:da8a8effec6b100bd7a6,ZNF648,Cancer Antigen only,True,True,True
+PEG:fd22ed0a7c36b0130000,GOLGA8J,CTA,True,True,True
+PEG:f3b1dd82a8df176ef6cd,OR1R1P,CTA,True,True,True
+PEG:4e5eca2fcc7bcc06882b,GARIN5B,CTA,True,True,True
+PEG:7feb7f0126d1f4774ba4,WFDC9,CTA,True,True,True
+PEG:fd473eca661c5ed4b350,WFDC10A,CTA,True,True,True
+PEG:6aa6c074ed27b813e20a,KRTAP9-7,Cancer Antigen only,True,True,True
+PEG:d513ec8dcc9515ec00d4,DEFB123,CTA,True,True,True
+PEG:ff1c4a175b7c69ed88b8,OR10Q1,Cancer Antigen only,True,True,True
+PEG:9b159fa40f92ed2bde55,GSX2,Cancer Antigen only,True,True,True
+PEG:5c1a79c2d4d3b92d541e,C3orf22,CTA,True,True,True
+PEG:600c83d1025a1092f9fd,DEFB112,CTA,True,True,True
+PEG:549fe4942b7efbc2d759,OR56B4,Cancer Antigen only,True,True,True
+PEG:537dccecc12fd2371130,SPEM1,CTA,True,True,True
+PEG:7e15bddb33d03193328f,OR5M8,Cancer Antigen only,True,True,True
+PEG:8ce02989695ec9165acd,SAGE1,CTA,True,True,True
+PEG:fc828752cbf171dc0945,OR6T1,Cancer Antigen only,True,True,True
+PEG:62073e5e572e0df91a05,EDDM3B,CTA,True,True,True
+PEG:b4146a0778fb414ac81f,EDDM3A,CTA,True,True,True
+PEG:c47c62ec9be49c4d3aed,OR52D1,CTA,True,True,True
+PEG:10333675d213d9198a86,OR8K5,Cancer Antigen only,True,True,True
+PEG:0bd24b047756a6b60662,ACTL9,CTA,True,True,True
+PEG:869e120ed72458d9a4d1,OR4C6,Cancer Antigen only,True,True,True
+PEG:d16473fe90211fd2c7d9,ADIG,CTA,True,True,True
+PEG:653a82d225d0924f8133,TRIM49B,CTA,True,True,True
+PEG:930374b7e0499edcd1a1,ZNF716,CTA,True,True,True
+PEG:5977c2891edd87c9b795,MRGPRG,Cancer Antigen only,True,True,True
+PEG:804ae30c92f9107b8cfe,DCAF4L1,CTA,True,True,True
+PEG:17c92f499d8151570b01,MBD3L3,CTA,True,True,True
+PEG:c69c14c598a60f51cb71,TEX19,CTA,True,True,True
+PEG:68531d99ec11adc539fa,VCX,CTA,True,True,True
+PEG:673448700641048dadb6,CCDC172,CTA,True,True,True
+PEG:20897ac4793845e783d3,OR4Q3,Cancer Antigen only,True,True,True
+PEG:273557e5db9ada688d75,OR2T29,Cancer Antigen only,True,True,True
+PEG:1daf8f4fb7c9daf625df,CCDC87,CTA,True,True,True
+PEG:773ae6144c5f0318c61f,MAGEB17,CTA,True,True,True
+PEG:c47b3c9ed57af3efe662,TMEM95,CTA,True,True,True
+PEG:4b9bf601c35e9c3ff131,TCHHL1,Cancer Antigen only,True,True,True
+PEG:2097b73cb386bcdc1146,OR4M2B,Cancer Antigen only,True,True,True
+PEG:501825951b91aba924ba,CYLC1,CTA,True,True,True
+PEG:ac3a8190661cefefa614,RIPPLY3,CTA,True,True,True
+PEG:4b7a013bbfca617fe9ff,POTEC,CTA,True,True,True
+PEG:3458f199fafcd1f43bd9,OR51B4,Cancer Antigen only,True,True,True
+PEG:0679f9e7591a931eb660,FAM9A,CTA,True,True,True
+PEG:9d16694535a4a23bf3c4,OR2T34,Cancer Antigen only,True,True,True
+PEG:d7323dfea27777939878,OR52L1,Cancer Antigen only,True,True,True
+PEG:4fb0581fe00c24197d99,TMEM89,CTA,True,True,True
+PEG:d0883cce9450b14b25ae,TFDP3,CTA,True,True,True
+PEG:b88bf3e1d0b3dfd99182,C10orf120,CTA,True,True,True
+PEG:2822479cf57db6bcc766,IZUMO1R,CTA,True,True,True
+PEG:678dfbaf132aac2274b8,GOLGA8G,CTA,True,True,True
+PEG:ab528d81df8561b86c52,KRTAP20-2,Cancer Antigen only,True,True,True
+PEG:26ffac09c4378b5122f6,TRIML1,CTA,True,True,True
+PEG:422e47b7b7257ba76470,DGAT2L6,CTA,True,True,True
+PEG:051bbf6103905dd73ad1,DEFB108B,CTA,True,True,True
+PEG:87e90f256f771ad4e002,IQCF2,CTA,True,True,True
+PEG:727c9cb20e039c51da1e,OR56A3,CTA,True,True,True
+PEG:51c85790ace1fbbbd8c4,NUTM1,CTA,True,True,True
+PEG:86d6c90705879eea185b,SPEM2,CTA,True,True,True
+PEG:b63da3318f685ccaa319,PIWIL3,CTA,True,True,True
+PEG:b25c4b1e7f362e01f330,ODF4,CTA,True,True,True
+PEG:7090977fa5f42635531d,OR51M1,CTA,True,True,True
+PEG:f8d3b34fddec7c9eabbe,KRTAP6-1,Cancer Antigen only,True,True,True
+PEG:adcf19afb9ea7e46e7b1,PRR23B,CTA,True,True,True
+PEG:6dba5bd9860eb7893ea1,SRY,CTA,True,True,True
+PEG:d9207c3130b911fa84ac,OR6C70,Cancer Antigen only,True,True,True
+PEG:37a961a3e0206d84a75f,MROH2A,CTA,True,True,True
+PEG:ba19aea49415fa14f0c4,C5orf47,CTA,True,True,True
+PEG:133f4501087b4e404615,ZNF479,CTA,True,True,True
+PEG:5285dadd3b9e3cf5c6ac,MAGEA11,CTA,True,True,True
+PEG:7d0f1203d9b572ba779d,CIMIP4,CTA,True,True,True
+PEG:203f36725815106c3e6b,SPPL2C,CTA,True,True,True
+PEG:bde1214e6a8994368a6a,FAM47A,CTA,True,True,True
+PEG:5dc4054a4eba0cc9abdc,SPATA45,CTA,True,True,True
+PEG:1fb7e51b15889d306f19,SMIM23,CTA,True,True,True
+PEG:92c0ae3f131964f8a71d,PRAME,CTA,True,True,True
+PEG:925b1135a1c9b56b2aad,SPATA31A6,CTA,True,True,True
+PEG:472b297b7ac2cbe12ae0,PRSS38,CTA,True,True,True
+PEG:e7b041e1a54b62d3d052,TAS2R60,Cancer Antigen only,True,True,True
+PEG:f171a4af218f38a59217,OR4C46,Cancer Antigen only,False,True,False
+PEG:b90a1092a1050c60153a,KRTAP5-5,Cancer Antigen only,True,True,True
+PEG:6be626847ed8ab1f7700,DEFB128,CTA,True,True,True
+PEG:9569eb17b61d7104fbeb,OR4F5,Cancer Antigen only,False,True,False
+PEG:556381ec020a12682a53,TEX38,CTA,True,True,True
+PEG:b6eb4b04f8ce0ee19f78,PRR30,CTA,True,True,True
+PEG:e34b080aaf16906dea32,BPIFB3,Cancer Antigen only,True,True,True
+PEG:7119a3bdef7e15f573fc,OR10T2,Cancer Antigen only,True,True,True
+PEG:79b2a44aafbc0f87340f,SLC36A3,CTA,True,True,True
+PEG:b9b441535d9c64118526,OR6P1,Cancer Antigen only,True,True,True
+PEG:2bef9ea650cd82da1af9,DEFB132,CTA,True,True,True
+PEG:f4b3e7f47871bedfe1a3,SPATA31D3,CTA,True,True,True
+PEG:46f51d5f504103a886dc,OR13F1,Cancer Antigen only,True,True,True
+PEG:313c9b313be37a1e5dcc,P2RY4,Cancer Antigen only,True,True,True
+PEG:70142db47caa200b3cf0,ZACN,CTA,True,True,True
+PEG:ea2c11982daef2ea3593,KRTAP22-1,Cancer Antigen only,True,True,True
+PEG:e1e1c2b62c9681ff71cf,KRTAP19-6,Cancer Antigen only,True,True,True
+PEG:7858c8373d1b9167fba0,KRTAP6-2,Cancer Antigen only,True,True,True
+PEG:a97500ce2f1c5504d812,OR13C8,Cancer Antigen only,True,True,True
+PEG:6827634ee8cef8e74e49,KRTAP19-4,Cancer Antigen only,True,True,True
+PEG:ca44323dfb543a3789f2,KRTAP13-4,Cancer Antigen only,True,True,True
+PEG:99a5b4ca824047dd7005,KRTAP23-1,Cancer Antigen only,True,True,True
+PEG:5a5405c3f89923172747,ACTL7A,CTA,True,True,True
+PEG:f9bac9ec8f55cf359c58,KRTAP21-1,Cancer Antigen only,True,True,True
+PEG:d89b534c216297fb1376,KRTAP21-2,CTA,True,True,True
+PEG:ab6932bd51e145d88ec1,TMEM262,CTA,True,True,True
+PEG:5086805cf7ba0cc93a98,LCE3B,Cancer Antigen only,True,True,True
+PEG:458fa9b331e81401b839,H2AP,CTA,True,True,True
+PEG:65698b2ad8732f761478,PRAMEF10,CTA,True,True,True
+PEG:db0577d12e4a0472f261,DPPA3,CTA,True,True,True
+PEG:5197ccb744d3ee794b6f,C5orf52,CTA,True,True,True
+PEG:759747b6de5c18ade15b,OR2T27,Cancer Antigen only,False,True,False
+PEG:ea3027e02aea40704cc0,OR52B6,Cancer Antigen only,True,True,True
+PEG:812850a0b365174ca979,KRTAP10-8,Cancer Antigen only,True,False,False
+PEG:f393a59ff75ef1b44a6b,SPATA31F3,CTA,True,True,True
+PEG:62f78e99df2c787962c3,TMEM202,CTA,True,True,True
+PEG:ad90c6f72865cfdfbe62,C2orf78,CTA,True,True,True
+PEG:69e5aa05cd540dea58e8,ASCL4,Cancer Antigen only,True,True,True
+PEG:7bc57196b0ee6af689af,OR51I2,Cancer Antigen only,True,True,True
+PEG:a8499b20f9bac7488674,CPSF4L,CTA,True,True,True
+PEG:b35eea8470b5a7f0068b,ZCCHC13,CTA,True,True,True
+PEG:c9baacc9350165c111b6,C19orf67,CTA,True,True,True
+PEG:7a74873628fdefbecda2,SCGB1C1,Cancer Antigen only,True,True,True
+PEG:88a52b4f5b15f1776c75,KRTAP10-6,Cancer Antigen only,True,True,True
+PEG:9e300be3199771464257,CIMIP2A,CTA,True,True,True
+PEG:75fb921e968fe1f658d7,LRRIQ4,CTA,True,True,True
+PEG:c720ddd281173f729c89,PPP3R2,CTA,True,True,True
+PEG:648f8ac4b36dda41f189,NANOS2,CTA,True,True,True
+PEG:3cdd79364a9a25250cf2,RNASE9,CTA,True,True,False
+PEG:20fd0b963a82f5c51ebb,KRTAP24-1,CTA,True,True,True
+PEG:b154c71e081fc3b57ffc,CATSPER4,CTA,True,True,True
+PEG:76724d8b08f6658ae9ba,TMCO2,CTA,True,True,True
+PEG:c23adbbf2642bbadced3,AADACL3,CTA,True,True,True
+PEG:0ea3771c4ce1cd37abb3,HUS1B,CTA,True,True,True
+PEG:4ee4200daaae88fa4f43,MAGEB16,CTA,True,True,True
+PEG:1001f66621e033eaa521,VHLL,Cancer Antigen only,True,True,True
+PEG:0bf6a14f6a5bd6d11340,DUSP21,CTA,True,True,True
+PEG:661176833bb1045f4b47,GAGE2A,CTA,True,True,True
+PEG:91cd1cd6df574d8287e8,FSCB,CTA,True,True,True
+PEG:8ae529289f1345c1dd48,ZAR1L,CTA,True,True,True
+PEG:c3e68b6addf66e379e7d,DCAF8L2,CTA,True,True,True
+PEG:d5e208a0b3217f4518b9,SPANXN3,CTA,True,True,True
+PEG:3a41dd6838b9ba5f6c2a,FOXR2,CTA,True,True,True
+PEG:e0a0340cd928b0b7f698,SPANXN4,CTA,True,True,True
+PEG:f181f56d8fe05eff74df,FAM90A27P,CTA,True,True,True
+PEG:b8d836f0ac2e64d02d0f,SPATA31D4,CTA,True,True,True
+PEG:04996ba6c73572abce32,TBC1D28,CTA,True,True,True
+PEG:181517e5a383f0bf1364,OTUD6A,CTA,True,True,True
+PEG:701460e8465c923a9bf3,OR5K4,Cancer Antigen only,False,True,False
+PEG:53a1f1f19eb6188b7a32,OR6M1,Cancer Antigen only,True,True,True
+PEG:d9d512f54bbead47daa6,OR6K2,Cancer Antigen only,True,True,True
+PEG:e97d79eedf2a12367f30,OR10J1,CTA,True,True,True
+PEG:7e2f5ae97b46d76a4df1,KRTAP5-3,Cancer Antigen only,True,True,True
+PEG:2c482a4113c63ba21c2a,OR10S1,Cancer Antigen only,True,True,True
+PEG:d6a41ae2c249d16b2cd8,BECN2,CTA,True,True,True
+PEG:5b1d33deb154a336b233,ZNF729,CTA,True,True,True
+PEG:e49963d2191c309469a5,SPANXD,CTA,True,True,True
+PEG:c9943bf0786aa8eeadd9,GK2,CTA,True,True,True
+PEG:dd556c429c8858209eda,OR2T3,Cancer Antigen only,True,True,True
+PEG:afca4babb2435c4e1845,PFN3,CTA,True,True,True
+PEG:dfc588b14c71b0fcb98b,OR5AC2,Cancer Antigen only,True,True,True
+PEG:c5ea92999c5095d9ede4,MBD3L2B,CTA,True,True,True
+PEG:d9cf6d78c81edd4368a8,OR14A16,CTA,True,True,True
+PEG:e6f9936f2e6e01faf564,KRT39,Cancer Antigen only,True,True,True
+PEG:f07ecf8f77fe25ae3184,TOMM20L,CTA,True,True,True
+PEG:1938d1f3a4e6859b8e67,RGPD4,CTA,True,True,True
+PEG:6b55aa07e152f11869ae,SPMIP10,CTA,True,True,True
+PEG:61916c8400f8f0bb9028,OR2T4,Cancer Antigen only,True,True,True
+PEG:7c6e38af19070fb45130,ZNF705A,CTA,True,True,True
+PEG:c5b9c4a7f11c6c98f1d6,ZNF679,CTA,True,True,True
+PEG:638fead1035aabd2b6af,MAGEA6,CTA,True,True,True
+PEG:623c7e783bb0a6fa9dbc,OR10D3,Cancer Antigen only,True,True,True
+PEG:dad1ad9a267cca4e9d78,OR51D1,Cancer Antigen only,False,True,False
+PEG:e647362949877722eda0,OR13G1,Cancer Antigen only,True,True,True
+PEG:150a14451459722067c0,GALP,CTA,True,True,True
+PEG:c2b19b4cec3bf11dace2,OR11L1,Cancer Antigen only,True,True,True
+PEG:38b1f070bfd60bf02e4f,CCER1,CTA,True,True,True
+PEG:913384bfcd8cc2059749,OR51C1,CTA,True,True,True
+PEG:f8ba1f7eca054d1fa5fa,SCGB1D4,CTA,True,True,True
+PEG:d99133e742eda2e7a2b9,STPG3,CTA,True,True,True
+PEG:3262e45a716056f20777,OR5B17,Cancer Antigen only,False,True,False
+PEG:f14b8e7ff1b430cf0d2a,OR52M1,Cancer Antigen only,True,True,True
+PEG:ea856621f7d828a2a46d,OR1S2,Cancer Antigen only,True,True,True
+PEG:44727e449624e698c03d,OR5H2,Cancer Antigen only,False,True,False
+PEG:ffa2d8c61740a26ab9bc,ZNF560,CTA,True,True,True
+PEG:1e5b54aa692177205899,POTEH,CTA,True,True,True
+PEG:1ac1217d44625fc4d960,OR2T6,Cancer Antigen only,True,True,True
+PEG:1ce49b609c14617d859b,FAM47C,CTA,True,True,True
+PEG:0c22b6eba5761e88a886,OR5B21,Cancer Antigen only,True,True,True
+PEG:2dfc49831d2db9b9e908,TMEM239,CTA,True,True,True
+PEG:2762ab9ca5b098b6e195,KRTAP4-1,CTA,True,True,True
+PEG:b059bf0cc05ee59b83ee,CCT8L2,CTA,True,True,True
+PEG:3a7c755d67864d8953c9,RTP2,CTA,True,True,True
+PEG:a9a473303522068aa2ff,SPANXC,CTA,True,True,True
+PEG:7feb41cbb40a09a55308,OR10G6,Cancer Antigen only,True,True,True
+PEG:4b837dd0066f2f6d115a,OR5BS1,Cancer Antigen only,True,True,True
+PEG:d8f87170210d6b4f6fc0,MAGEA1,CTA,True,True,True
+PEG:dc3fe86d8f1d0f1ed671,SYCP1,CTA,True,True,True
+PEG:b911e6df81a7b0aec3ae,MAGEB3,CTA,True,True,True
+PEG:2bd8bd3da7a973c2d536,OR2T5,Cancer Antigen only,True,True,True
+PEG:6c783a0d5f840cd1c046,TEDDM1,CTA,True,True,True
+PEG:235bb56fb29642ee9400,GJE1,Cancer Antigen only,True,True,True
+PEG:eec632c6d4c08cd01b5c,LELP1,CTA,True,True,True
+PEG:ffb703da6bd8af07d969,FAM24A,CTA,True,True,True
+PEG:0b80bfb8f0f37b51ff32,KHDC3L,CTA,True,True,True
+PEG:22b36adf4dff15d65281,DPPA5,CTA,True,True,True
+PEG:f4e199758b9cecc8a9c2,SPANXN1,CTA,True,True,True
+PEG:e8cea931328feeacaeb4,CXorf66,CTA,True,True,True
+PEG:093c601762f8ba6c7f05,C10orf62,CTA,True,True,True
+PEG:457da4aa4353f3ec4164,DEFB110,CTA,True,True,True
+PEG:1a661c7b77f20467112d,GLYATL3,CTA,True,True,True
+PEG:c8249b13045a01050cf6,RHOXF2B,CTA,True,True,True
+PEG:078e251f335ff1fbd8d2,C1orf185,CTA,True,True,True
+PEG:7ff3fa6dd5e74a1c7f21,GLT6D1,CTA,True,True,True
+PEG:39184a6829a33b6ab2b8,CT83,CTA,True,True,True
+PEG:0231b5ee21e134c51a02,LIPJ,CTA,True,True,True
+PEG:a725303b429256f685ac,AWAT1,Cancer Antigen only,True,True,True
+PEG:3de0af3add47bdecb320,OR13C3,Cancer Antigen only,True,True,True
+PEG:5b69e1c86d08d8c1272f,PAGE3,CTA,True,True,True
+PEG:01ba36c22e84d2cfe147,BTNL2,Cancer Antigen only,True,True,True
+PEG:b316acb8908c8b621e01,TMEM225,CTA,True,True,True
+PEG:6e3f4e1bee75fa212591,SPANXN5,CTA,True,True,True
+PEG:0ab4035e060ebf8abc06,TRIM49C,CTA,True,True,True
+PEG:4557785da7c5fac1becc,PRAMEF20,CTA,True,True,True
+PEG:9c53c0a8e90756eaa5f0,PRAMEF17,CTA,True,True,True
+PEG:e65bd518f6aa889dcbf6,PRAMEF19,CTA,True,True,True
+PEG:4eacdc84da3e2f9d669a,PRAMEF14,CTA,True,True,True
+PEG:e117dd2585f92f17170c,PRAMEF15,CTA,True,True,True
+PEG:6e7112235272d2009d94,AADACL4,Cancer Antigen only,True,True,True
+PEG:a7e05daf09c9a46f9515,DEFB121,CTA,True,True,True
+PEG:5a499b42b6fd2a8e583c,KRTAP5-11,Cancer Antigen only,True,True,True
+PEG:6b3c05a8fabada3c1536,KRTAP5-10,CTA,True,True,True
+PEG:fe8beeaeb5ae8ef751db,DPRX,CTA,True,True,True
+PEG:72efb5f8cffda4ad1aec,CBY3,CTA,True,True,True
+PEG:eacf7d3f430df59c2574,C9orf57,CTA,True,True,True
+PEG:a4fd7b31c64bc8928480,MAS1L,CTA,True,True,True
+PEG:037f1d7b1fdaaa4d69c0,OR2H1,CTA,True,True,True
+PEG:544cc5de018bd6d38343,OR11A1,CTA,True,True,True
+PEG:b790ec30ad8620f726ca,OR2J2,Cancer Antigen only,True,True,True
+PEG:ee4fb7d21c04da1ca37a,OR2J3,CTA,True,True,True
+PEG:ea5309d0cbb3dc817286,OR2B3,Cancer Antigen only,True,True,True
+PEG:336d006059eecb2cf247,SPATA31A1,CTA,True,True,True
+PEG:f143084271d3e8fb9afb,KRTAP1-4,Cancer Antigen only,True,True,True
+PEG:eff1a5bc29533898a35b,FBXO47,CTA,True,True,True
+PEG:1a92fb62ff88120a4cea,PABPN1L,CTA,True,True,True
+PEG:8b21472014a64cb2e7de,OR5L2,Cancer Antigen only,True,True,True
+PEG:43694d13ceb82e0c2017,SPATA31F1,CTA,True,True,True
+PEG:aedba7beafdec5e50def,ACCSL,CTA,True,True,True
+PEG:9a91206f7a724f5836cf,MGAT4D,CTA,True,True,True
+PEG:9b646fe0a51ccd676851,OR6C68,Cancer Antigen only,True,True,True
+PEG:f1745eba973ec7e218cc,OR6C65,Cancer Antigen only,True,True,True
+PEG:9520487d82356ae71fb5,SLCO6A1,CTA,True,True,True
+PEG:c671ad31e79641fce871,OR52J3,Cancer Antigen only,True,True,True
+PEG:c940c179516dcbce4382,VCX3B,CTA,True,True,True
+PEG:614a720247abb9707729,ARSH,CTA,True,True,True
+PEG:665416af37123848366d,MANSC4,CTA,True,True,True
+PEG:4dc11aaf5c48c5f399fc,MBD3L4,CTA,True,True,True
+PEG:d8cf88f75a5754894d60,GAGE1,CTA,True,True,True
+PEG:0ffd0cd4b3717b5a62ce,NANOGNB,CTA,True,True,True
+PEG:cc8f812ef5e0970f4a81,LRRC72,CTA,True,True,True
+PEG:84fe3b024fcf7d745435,KRTAP5-6,Cancer Antigen only,True,True,True
+PEG:3a1766aa2475acad4bd4,DEFB135,CTA,True,True,True
+PEG:77e8d2e6a3e7d5fd510e,DEFB136,CTA,True,True,True
+PEG:d1351146b7d65265d391,SMIM21,CTA,True,True,True
+PEG:196808c67fa73ae11428,C18orf63,CTA,True,True,True
+PEG:26ff43d9bcd3fb095cf7,KRTAP19-8,CTA,True,True,True
+PEG:389fb70279c51523bab7,KRTAP20-3,Cancer Antigen only,True,True,True
+PEG:cafc20d65ce6100c7d28,KRTAP20-4,CTA,True,True,True
+PEG:54802c785c5fc9bdc752,KRTAP22-2,Cancer Antigen only,True,True,True
+PEG:184c674270a9ea087616,RNASE13,CTA,True,True,True
+PEG:c844633e53f9544199bb,TSSK2,CTA,True,True,True
+PEG:99c8e4ce9caf969f3854,PRR23A,CTA,True,True,True
+PEG:20c809db36b05ed0b532,OR5K3,Cancer Antigen only,True,False,False
+PEG:febc559642ec8d6cb719,TSSK1B,CTA,True,True,True
+PEG:a2d700fea4bf0dc987e9,TAS2R50,Cancer Antigen only,True,True,True
+PEG:f442483c291ac45afe99,TAS2R13,Cancer Antigen only,True,True,True
+PEG:c2650c6e33236dccf15f,KRTAP29-1,Cancer Antigen only,True,True,True
+PEG:d9c186e07a9847164ac0,KRTAP9-6,Cancer Antigen only,True,True,True
+PEG:c0abd30a13b99ebc9cc1,CTAGE1,CTA,True,True,True
+PEG:d4180e1de0a87058593c,KRTAP12-4,Cancer Antigen only,True,True,True
+PEG:304293b1e73c98c37e5b,KRTAP6-3,Cancer Antigen only,True,True,True
+PEG:8da94b831a581419c9e1,TSGA13,CTA,True,True,True
+PEG:bc5d75e2764895f22d89,TTLL13,CTA,True,True,True
+PEG:a4d1a78a6bc4d94dfff5,LEUTX,CTA,True,True,True
+PEG:4f82cc85ed024fd890e9,ZNF99,CTA,True,True,True
+PEG:38a0d9c3e5559e612c04,WEE2,CTA,True,True,True
+PEG:7784a5fafb85cb45af00,MAGEB1,CTA,True,True,True
+PEG:c42a4661fdc914a4a12c,PRR23E,CTA,True,True,True
+PEG:4bfc72faaa60a3db6ad7,EFCAB9,CTA,True,True,True
+PEG:9949fb47c4aa9a7cbc00,TRIM77,CTA,True,True,True
+PEG:0c7f80687adb3c0d82e7,NOTO,CTA,True,True,True
+PEG:4a3e51ccb29346c93b26,IQCF5,CTA,True,True,True
+PEG:c5870dfdb478bd40b986,IQCF6,CTA,True,True,True
+PEG:0e0c68a00f86804e1e28,C12orf71,CTA,True,True,True
+PEG:2794f50e6c794311fa72,CDRT15L2,CTA,True,True,True
+PEG:34902909b93023b09371,TRIM64C,CTA,True,True,True
+PEG:6dff97203d2b0a8dee46,PNMA6E,CTA,True,True,True
+PEG:2f26bcbe794c55fbbe39,SPATA31D1,CTA,True,True,True
+PEG:b4ec2d7535050e985fa1,TCP11X2,CTA,True,True,True
+PEG:97f71843ac3a51b578a3,C16orf90,CTA,True,True,True
+PEG:e97f493190cbbdd4eadf,GOLGA6B,CTA,True,True,True
+PEG:ef99bd8c40a789b06a79,GRXCR1,CTA,True,True,True
+PEG:c54d94a5d85ec2225220,KCNU1,CTA,True,True,True
+PEG:b2df069d528c8939900e,GAGE10,CTA,True,True,True
+PEG:98ef0bcf47d9683cb231,ZNF705D,CTA,True,True,True
+PEG:483fad15f8dc18722e45,ZNF705G,CTA,True,True,True
+PEG:79f4837fb0e64646a23c,DEFB116,Cancer Antigen only,True,True,True
+PEG:36f2f7c5e0bd89eee45c,DEFB115,CTA,True,True,True
+PEG:a2516258969c680cbea6,GAB4,CTA,True,True,True
+PEG:d2cde6343aa40f2cacbc,TRIM51G,CTA,True,True,True
+PEG:9fb6804f0d3ba6105827,PSG3,CTA,True,True,True
+PEG:d01bbd754006308c7ab4,OR4A5,Cancer Antigen only,False,True,False
+PEG:24ec994ea5c9d6083de3,TAS2R41,Cancer Antigen only,True,True,True
+PEG:425a365bfe1d99a15b43,ZNF816-ZNF321P,CTA,True,True,True
+PEG:78559dedca662dbe64d5,PSG7,CTA,True,True,True
+PEG:3af933942e94b5931ad6,POM121L12,CTA,True,True,True
+PEG:e5cacc58f0340235d366,OR6X1,Cancer Antigen only,True,True,False
+PEG:d24566e0d7dc7732ec2e,OR2A14,Cancer Antigen only,False,True,False
+PEG:f78ef5d6c5887fab2655,OR4C12,Cancer Antigen only,False,True,False
+PEG:2dd7f6565acceb5ac221,OR4E2,Cancer Antigen only,True,True,True
+PEG:4e44b1c9844b75393a5b,OR2A2,Cancer Antigen only,True,True,False
+PEG:a1c215c00c2a9cc3f7a6,OR52B4,Cancer Antigen only,True,True,True
+PEG:4b932d0db9d26fbc0722,EBLN1,CTA,True,True,True
+PEG:1d16658bc8a8de4aa0b8,ZNF735,CTA,True,True,True
+PEG:aa67c5a714c761d22402,SUPT20HL1,CTA,True,True,True
+PEG:7d51770a8c6cc1cc8b19,GPX5,CTA,True,True,True
+PEG:b43d4cc507839ce4f3b6,GAGE12J,CTA,True,True,True
+PEG:308f233ec195d71bcb44,GAGE12H,CTA,True,True,True
+PEG:ed4defa367797bb90954,PPP4R3C,CTA,True,True,True
+PEG:6d6bfad2bcb8265bd118,USP17L3,Cancer Antigen only,True,True,True
+PEG:5f39382f943b65a979ef,CRIPTO3,CTA,True,True,True
+PEG:8ab545e1ce83f5c885aa,DCAF8L1,CTA,True,True,True
+PEG:89c0e0b28de74cd66ebe,USP17L7,Cancer Antigen only,True,True,True
+PEG:bd43ced0621bec3dc007,KIF4B,CTA,True,True,False
+PEG:79e4b75bdef4defd0ff3,PGAM4,CTA,True,True,True
+PEG:5869d59754a49330c9b8,ANHX,CTA,True,True,True
+PEG:f5c225ed205f6e5908eb,SPANXB1,CTA,True,True,True
+PEG:db9dd693692e1353abe8,GOLGA6L25,CTA,False,True,False
+PEG:be6cfcb4b17bcd06e297,TEX46,CTA,True,True,True
+PEG:525452ed69c9a06a2fc2,BOD1L2,CTA,True,True,True
+PEG:3225faa4eec7acbba9eb,VN1R4,Cancer Antigen only,True,True,True
+PEG:39fb57911bfe12d5c8b2,RFPL4AL1,CTA,True,True,True
+PEG:fa81376c2a4ab4604f70,TSPY8,CTA,True,True,True
+PEG:1f7bf599544a9c9ab7ee,SSU72L6,CTA,True,True,True
+PEG:111c9582f99378c219ce,OR5H6,Cancer Antigen only,False,True,False
+PEG:cdf522cfec902f448978,MBD3L2,CTA,True,True,True
+PEG:a9e62f1dc21bb534c8f9,USP17L1,Cancer Antigen only,True,False,False
+PEG:c994566a7cccef66e89d,KRTAP21-3,Cancer Antigen only,True,True,True
+PEG:d939ca2aef9707c2138e,OR5K2,Cancer Antigen only,True,True,True
+PEG:e369a8dc0d171a3fdb96,MAGEB6B,Cancer Antigen only,True,True,True
+PEG:0bf48dca16886adcee97,TEX50,CTA,True,True,True
+PEG:9b86bd31ccb4705f8a74,KRTAP25-1,Cancer Antigen only,True,True,True
+PEG:a61b46dd5a4faadbdb2c,PRAMEF6,CTA,True,True,True
+PEG:2e8abb92a91dd411e114,RAB6D,CTA,True,True,True
+PEG:79201d664a6639b98efb,AK4P3,CTA,True,True,True
+PEG:eddbd8a51aa21ab73610,OR5H15,Cancer Antigen only,True,True,True
+PEG:c0fa6589ee4f4179ecac,PRR23C,CTA,True,True,True
+PEG:d0dd056a1d4a24fa21b3,TSPY4,CTA,True,True,True
+PEG:2dee2bda40dc2bcb386f,PAGE2,CTA,True,True,True
+PEG:319687183f4ce9523f0d,C16orf82,CTA,True,True,True
+PEG:5cb7d70a4785f1027e35,RBMY1A1,CTA,True,True,True
+PEG:47e3215b33542f9a5ea6,CLDN34,CTA,True,True,True
+PEG:25bb16f51bb1cd045e1f,OR10G8,Cancer Antigen only,True,True,True
+PEG:2c493fd8f6f6aa4785d3,FREY1,CTA,True,True,True
+PEG:29f1df1e3da30b75812f,PATE3,CTA,True,True,True
+PEG:2a6efed445350c0412c4,USP17L4,Cancer Antigen only,True,False,False
+PEG:7dd3e001866399600b88,SLC35G4,Cancer Antigen only,True,True,True
+PEG:544399ffd396d2433254,CT47B1,CTA,True,True,True
+PEG:422f22924539f6e72bdd,CIMIP7,CTA,True,True,True
+PEG:e1070f7ae3057ff22a7c,OR10G9,Cancer Antigen only,True,True,True
+PEG:624865d2ad1603fc6135,TAAR9,Cancer Antigen only,True,True,True
+PEG:b98b541b3ae2b70d3800,MBD3L5,CTA,True,True,True
+PEG:ad22a7bf35b45ca0ec8a,ENSG00000237378,CTA,True,True,True
+PEG:e8f730295e65ae6a3326,MEIOSIN,CTA,True,True,True
+PEG:0a4b2bf7732910a4788a,OR7E24,CTA,True,True,True
+PEG:c42361808df3c56a8cf7,TEX51,CTA,True,True,True
+PEG:54260593d74f297a3fc5,PRAMEF33,Cancer Antigen only,False,True,False
+PEG:02aeb82fd849bdf4a4be,GOLGA6L24,CTA,False,True,False
+PEG:7fa570e3c69cb31cb94a,TSPY9,CTA,True,True,True
+PEG:d8491e11e76a62c057c7,MPC1L,CTA,True,True,True
+PEG:1109af29e98f51dbc077,OR1J4,Cancer Antigen only,True,True,True
+PEG:8966d1986e8b2d8a0e4d,PRR20G,CTA,True,True,True
+PEG:b8af9754429d3017a4ae,PRAMEF11,CTA,True,True,True
+PEG:e08bbfc10f3bfb4ed25d,KRTAP13-3,Cancer Antigen only,True,True,True
+PEG:ac7748994a12c2c94b9a,KRTAP9-1,Cancer Antigen only,True,True,True
+PEG:57c7058ae548c3a25c68,OR14A2,CTA,True,True,True
+PEG:1efc9bfce4998b736e65,ZNF722,CTA,True,True,True
+PEG:8f568c4799fe295b1ed3,KRTAP4-16,Cancer Antigen only,True,True,True
+PEG:ac754e060b3294e4cd63,KRTAP5-4,Cancer Antigen only,True,True,True
+PEG:7a81a2cf3631c7adb27c,ENSG00000241690,CTA,False,True,False
+PEG:3c4275978dcfdf840f9e,RBMY1E,CTA,True,True,True
+PEG:8683edcee4e284d8b165,RBMY1B,CTA,True,True,True
+PEG:82c48d108f0ba43e9915,PRAMEF4,CTA,True,True,True
+PEG:98713b3b7bb00023638b,PSG11,CTA,True,True,True
+PEG:00e7a18a1fe6181e14ed,LCE3C,Cancer Antigen only,True,True,True
+PEG:cb43c14ce326f03602ec,KRTAP19-7,Cancer Antigen only,True,True,True
+PEG:bf75b24ff665964e18de,RBMY1D,CTA,True,True,True
+PEG:aaf161dc2692824ec94c,KRTAP5-7,CTA,True,True,True
+PEG:6e46b848b9cf5571eaf2,KRTAP20-1,Cancer Antigen only,True,True,True
+PEG:3a2ca59b8f56b758d1ec,MARCOL,Cancer Antigen only,True,True,True
+PEG:4f985bc9efb6eea886ce,ENSG00000248235,Cancer Antigen only,True,True,True
+PEG:a52d9c710604f10c4805,FOXL3,CTA,True,True,True
+PEG:7c05ea54d8510c796222,EPPIN-WFDC6,CTA,True,True,True
+PEG:889ec83922adca026c9e,ENSG00000249773,CTA,True,True,True
+PEG:4b6a43d9bd197a079a22,LGALS16,CTA,True,True,True
+PEG:65d2e038c688a823b5e0,GOLGA8K,CTA,True,True,True
+PEG:116e4dd8138e6c26d50c,KIAA1210,CTA,True,True,True
+PEG:5e2318ea560079897c32,EXOC1L,CTA,True,True,True
+PEG:a5658864fead669c91f1,RFPL4B,CTA,True,True,True
+PEG:02f41390c76fe3d915fe,KRTAP5-9,CTA,True,True,True
+PEG:49474c33cb94125c2178,UBTFL1,CTA,True,True,True
+PEG:29987fca346e54d25f35,OR5M1,Cancer Antigen only,True,True,True
+PEG:9a79156dcbaf6854efb9,CCDC166,CTA,True,True,True
+PEG:0ff4c1c604444fae91c1,OR5M11,Cancer Antigen only,True,True,True
+PEG:dfc2f1b039107844a54a,CCDC179,CTA,True,True,True
+PEG:a90c8529360aad1a85c2,OOSP4B,CTA,True,True,True
+PEG:592a5a5a692d322baf49,ENSG00000255432,CTA,True,True,True
+PEG:09cf4a0d44d008dedb24,OR4D2,Cancer Antigen only,False,True,False
+PEG:d9a9b30d4e07f9ba4fc3,ENSG00000255835,CTA,True,True,True
+PEG:ca4f969017b0c7d23967,KDM4F,CTA,True,True,True
+PEG:77b7441a6ed178e9779c,ENSG00000256349,Cancer Antigen only,True,True,True
+PEG:ceee96d9598d409a0417,OR13A1,Cancer Antigen only,True,True,True
+PEG:d3d1dc2af2ae72ee0df0,ENSG00000256825,Cancer Antigen only,True,True,True
+PEG:f9a42776af304f6808d7,ZNF878,CTA,True,True,True
+PEG:a8ddbdb759bf6d99e10e,PRSS58,CTA,True,True,True
+PEG:24c69136cf11d62d3f1a,ENSG00000258417,CTA,False,True,False
+PEG:a034aba396598b149c46,RNASE12,CTA,True,True,True
+PEG:513004a64a1dd7274552,ENSG00000258691,CTA,True,True,True
+PEG:7481241a750055d80dbd,C20orf141,CTA,True,True,True
+PEG:46851e6f1fed76681cb5,DUXA,CTA,True,True,True
+PEG:63379e2baad0e69de742,TSPY1,CTA,True,True,True
+PEG:f2094e3bf21340e3cefd,TPRX2,CTA,True,True,True
+PEG:3a11a68e97f14f13a77f,SLC35G6,CTA,True,True,True
+PEG:5fa0d20468b9241ac78f,TLE7,CTA,True,True,True
+PEG:cef2f2b2102163b3f577,GOLGA8T,CTA,True,True,True
+PEG:cf76a95a78d9079ba8a9,SMIM28,Cancer Antigen only,True,True,True
+PEG:20e20c875c149d1602c0,OR1D5,Cancer Antigen only,True,True,True
+PEG:b2d830f3aab3341e1f9d,KLF14,CTA,True,True,True
+PEG:6176aa2810a16ba8ed15,IGBP1C,CTA,True,True,True
+PEG:08e651ae6837afe111f9,ENSG00000267140,CTA,True,True,True
+PEG:4ec273108e0908d9e2f3,ATF7-NPFF,CTA,True,True,True
+PEG:3e0a4447822671dc1ca8,TCP11X1,CTA,True,True,True
+PEG:37b7d959243ba5c5a004,TEX13A,CTA,True,True,True
+PEG:252232cf7ddad4db3109,ZNF723,CTA,True,True,True
+PEG:3f3fe81f53ed02c80b26,CSAG2,CTA,True,True,True
+PEG:329582e7e7912b5cf014,CSAG3,CTA,True,True,True
+PEG:920d0159760a0213ac1d,CT45A1,CTA,True,True,True
+PEG:e863555590d406f752e2,ERVV-2,CTA,True,True,True
+PEG:2e8b622596f38971496e,SPANXN2,CTA,False,True,False
+PEG:4753ba2350adae457d1d,CALR3,CTA,True,True,True
+PEG:7c617bafd5f15ec944ca,H3Y1,CTA,True,True,True
+PEG:9d6abe9ca1723310d8dc,ERVV-1,CTA,True,True,True
+PEG:407c48435bee489ef3ba,CT45A10,CTA,True,True,True
+PEG:72decc3729f89c0260dd,ENSG00000270299,Cancer Antigen only,True,True,True
+PEG:b0b59d55889c6e0379e1,PRAMEF5,Cancer Antigen only,True,True,True
+PEG:a8f90dfeb55ae984bf17,CTAGE15,CTA,True,True,True
+PEG:dd68ac906575435478c2,CTAGE6,CTA,True,True,True
+PEG:7aa56a2ec41d8777523d,LYPD4,CTA,True,True,True
+PEG:1f1a10caec58d2d32020,ENSG00000273155,CTA,True,True,True
+PEG:3aafe2a9e2c211edafef,GOLGA6L26,Cancer Antigen only,False,True,False
+PEG:9bc060a090ec3172dd0c,GOLGA6L1,CTA,True,True,True
+PEG:5d195117e7b36ac9e150,OR4M2,CTA,True,True,True
+PEG:db2a8f86284c0400657b,H2AB1,CTA,True,True,True
+PEG:fc07fc97ea162202bc26,ANTXRL,CTA,True,True,True
+PEG:5d5f21e4179d339bfbca,GAGE13,CTA,True,True,True
+PEG:faca81e4e6e3b4de73a7,TMEM269,CTA,True,True,True
+PEG:04029cbc857d8779ee32,SEBOX,Cancer Antigen only,True,False,False
+PEG:747bf588dddf2f9ab40c,SPMAP1,CTA,True,True,True
+PEG:39bcae6d3ad7d62b8040,XKR5,CTA,True,True,True
+PEG:2939d234d20796b00c1b,LYZL6,CTA,True,True,True
+PEG:ab75db1824a341158b3d,HNRNPCL2,CTA,True,True,True
+PEG:3f200e6b28ff10e757df,SPATA31A3,CTA,True,True,True
+PEG:773944eeea567587ce84,SPATA31A7,CTA,True,True,True
+PEG:efbce240c9d576fc0186,OR13C2,Cancer Antigen only,True,True,True
+PEG:f472d8d74e4dd3442127,OR4E1,Cancer Antigen only,False,True,False
+PEG:7cd695fcb26e001c4f48,SPATA31A5,CTA,True,True,True
+PEG:8d61aa4f005bc0d29280,GSTT4,CTA,True,True,True
+PEG:44bc888d980455c66565,GOLGA6L6,CTA,True,True,True
+PEG:7ab61497af43a7904af1,CT47C1,CTA,True,True,True
+PEG:321c34900cb2f885edb8,OR13C5,Cancer Antigen only,True,True,True
+PEG:405660bcaf527bbecd7d,GOLGA6L22,CTA,True,True,True
+PEG:26ca3e8bb761b2d4e27b,TEX28,CTA,True,True,True
+PEG:a379338b5c2e18bf8464,POTEB3,CTA,True,True,True
+PEG:c03a52804d8b5f913d38,IQCA1L,CTA,True,True,True
+PEG:ec1aa95e35c25ac363c1,OR51G1,Cancer Antigen only,False,True,False
+PEG:0b0efb5a1a646353dec6,OR10X1,Cancer Antigen only,True,True,True
+PEG:ebb6fbc6c6ce721f7982,OR8D2,Cancer Antigen only,True,True,True
+PEG:c696e4c52957c204d9f2,OR52R1,Cancer Antigen only,True,True,True
+PEG:f5ac97c70042098dac34,OR5L1,Cancer Antigen only,True,True,True
+PEG:c255e34cb002ea3a0436,OR2AG1,Cancer Antigen only,True,True,True
+PEG:a27fb107029e3f328e0d,OR4C16,Cancer Antigen only,False,True,False
+PEG:a06fa9dae0a073ec62f7,OR5D13,Cancer Antigen only,False,True,False
+PEG:883a50299cb53b6ba4a1,ENSG00000279983,CTA,True,True,True
+PEG:d5614a7c132b1bccfc49,OR51F1,Cancer Antigen only,True,True,True
+PEG:42439763ade6ffb1ecf0,OR8B4,Cancer Antigen only,True,True,True
+PEG:ca965c67c199082e3166,OR1B1,Cancer Antigen only,True,True,True
+PEG:66a589d540bd1e9e3755,OR1S1,Cancer Antigen only,False,True,False
+PEG:0a48677ce4d9f60fb792,RPS4Y2,CTA,True,True,True
+PEG:d391c5d8513f57517485,TEX13D,CTA,True,True,True
+PEG:d7c58dfc108d629cedf9,DUXB,CTA,True,True,True
+PEG:ca0cae010d8bb9499dfd,TEX13C,CTA,True,True,True
+PEG:d6516f95f1d583fd03f9,C1orf232,Cancer Antigen only,True,True,True
+PEG:c1785185f2736960b676,KLF18,CTA,True,True,True
+PEG:d6b7fa7edbcc4f53b3a0,ENSG00000283205,CTA,True,True,True
+PEG:7bad8fb4daf83a0e99c7,CTXND2,CTA,True,True,True
+PEG:67511d2c2b4245685d15,FAM240B,CTA,True,True,True
+PEG:681f6031fd1d237e6454,CCDC195,Cancer Antigen only,True,True,True
+PEG:cd2842396310af70f932,SPEM3,CTA,True,True,True
+PEG:b2854c9d92a5f00ad8d1,HSFX4,CTA,True,True,True
+PEG:dcf96e813b46e0ebc77e,LITAFD,CTA,True,True,True
+PEG:239b064b509fe82b6379,C19orf85,CTA,True,True,True
+PEG:31c0e7ae49ba8a3975db,CIROP,CTA,True,True,True
+PEG:8379cf8330d2c11fd9d7,CPHXL,CTA,True,True,True
+PEG:3e30ee46e0d41ed85f6a,PMIS2,CTA,True,True,True
+PEG:b6708d76c220960f3383,SSU72L4,CTA,True,True,True
+PEG:77d4ac745a2951e13e16,SSU72L5,CTA,True,True,True
+PEG:47dcb3ce7255d1e1ffcd,C1orf202,CTA,True,True,True
+PEG:28a89961ee80474f1996,SSU72L2,CTA,True,True,True
+PEG:f9b97c7f8faf5a7950b0,SSU72L1,CTA,True,True,True
+PEG:276090530a257361d2f0,SSU72L3,CTA,True,True,True
+PEG:ef4058d9283487564667,OR8B3,CTA,True,True,True
+PEG:2c6db6330fccee6eb8e2,SCYGR8,Cancer Antigen only,True,True,True
+PEG:587fb02c7d1c6a6edf9a,SCYGR2,Cancer Antigen only,True,True,True
+PEG:9a196c5ba0eac5717094,SCYGR5,Cancer Antigen only,True,True,True
+PEG:0997d42d0e78d26d7ac4,OR8B2,CTA,True,True,True
+PEG:c86358a255b4d69370ab,SCYGR3,Cancer Antigen only,True,True,True
+PEG:5ab43225697425e63d1a,SCYGR7,Cancer Antigen only,True,True,True
+PEG:b379a102a32da2004fa4,OR8S1,Cancer Antigen only,True,True,True
+PEG:3c5c0682871b98ba6cf7,SCYGR6,Cancer Antigen only,True,True,True
+PEG:c1dae3de595eae0de6bb,ENSG00000284779,Cancer Antigen only,True,True,True
+PEG:3e290a3e78f3113dd5f9,OOSP1,CTA,True,True,True
+PEG:672e705b44fa7730dc51,ENSG00000284934,CTA,True,True,True
+PEG:05bbf618da433efbb276,OOSP3,CTA,True,True,True
+PEG:a2206bad8a66a6b6d03c,ENSG00000285566,CTA,True,True,True
+PEG:4154e3c3fb7219afd346,FAM90A9,Cancer Antigen only,True,True,True
+PEG:016334e0b1d75212638e,FAM90A10,Cancer Antigen only,True,True,True
+PEG:47ed981d53c2dfd72892,SPADH,CTA,True,True,True
+PEG:d6f9576e7d95508f6a95,ENSG00000286224,Cancer Antigen only,True,True,True
+PEG:d964f232e75684100532,ENSG00000287585,Cancer Antigen only,True,True,True
+PEG:8a28ffa790540fa9f225,SMIM42,CTA,True,True,True
+PEG:bb614b16d4e2122128ba,PPIAL4D,Cancer Antigen only,True,True,True
+PEG:715682ea750ffc430fb6,ETDA/B,CTA,True,True,True
+PEG:851aaf4e3c822c932ec3,GAGE12C/D/E,CTA,True,True,True
+PEG:dbb36c7b7cb6d0bc24f0,HNRNPCL3/4,CTA,True,True,True
+PEG:c49ec3bcce8825cfa2a6,HSFY1/2,CTA,True,True,True
+PEG:ff307cf4bea16101da1d,MAGEA2/B,CTA,True,True,True
+PEG:ca70118423066be99dc8,MAGEA9/B,CTA,True,True,True
+PEG:dde00652f75f5114eae1,NY-ESO-1,CTA,True,True,True
+PEG:cbaf0ecfdde342bff024,POTEB/2,CTA,True,True,True
+PEG:d9f5688c9ad58a26fe32,PPIAL4E/F,Cancer Antigen only,True,True,True
+PEG:e04fe268186dedc0faed,PRAMEF25/6,CTA,True,True,True
+PEG:f99b14bd4ed9be445a51,PRR20A/B/C/D/E,CTA,True,True,True
+PEG:b0388edb67a6f7b8d422,PRR23D1/2,CTA,True,True,True
+PEG:cd342fe2dc49a99094d1,RBMY1F/J,CTA,True,True,True
+PEG:1d20071f2b6ad9942bb5,SPANXA1/2,CTA,True,True,True
+PEG:ea4a5b47e25b6870bbb5,SSX2/B,CTA,True,True,True
+PEG:027b04888fd9198d31ce,SSX4/B,CTA,True,True,True
+PEG:d1f439cd5f7047003879,TP53TG3/B/C/D/E/F,CTA,True,True,True
+PEG:bdf212495c2e09f2fdbe,TSPY10/3,CTA,True,True,True
+PEG:46b4ee4436f1b3c1ec9c,VCY/1B,CTA,True,True,True
+PEG:61d3553743c78ae41bd5,XAGE1A/B,CTA,True,True,True

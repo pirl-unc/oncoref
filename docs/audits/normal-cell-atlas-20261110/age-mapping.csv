@@ -1,0 +1,185 @@
+development_stage,development_stage_ontology_term_id,age_scope,n_cells
+1-month-old stage,HsapDv:0000273,child,52088
+1-year-old stage,HsapDv:0000246,child,66146
+10-month-old stage,HsapDv:0000183,child,20768
+10-year-old stage,HsapDv:0000104,child,94917
+101-year-old stage,HsapDv:0000229,adult,37638
+10th week post-fertilization stage,HsapDv:0000047,prenatal,392343
+11-month-old stage,HsapDv:0000184,child,15423
+11-year-old stage,HsapDv:0000105,child,258257
+11th week post-fertilization stage,HsapDv:0000048,prenatal,406688
+12-month-old stage,HsapDv:0000185,child,4432
+12-year-old stage,HsapDv:0000106,child,93520
+12th week post-fertilization stage,HsapDv:0000049,prenatal,1168441
+13-year-old stage,HsapDv:0000107,child,138572
+13th week post-fertilization stage,HsapDv:0000050,prenatal,708428
+14-month-old stage,HsapDv:0000187,child,19100
+14-year-old stage,HsapDv:0000108,child,71371
+14th week post-fertilization stage,HsapDv:0000051,prenatal,353710
+15-19 year-old,HsapDv:0000268,unresolved,11139
+15-month-old stage,HsapDv:0000188,child,25845
+15-year-old stage,HsapDv:0000109,child,86605
+15th week post-fertilization stage,HsapDv:0000052,prenatal,2131676
+16-year-old stage,HsapDv:0000110,child,247717
+16th week post-fertilization stage,HsapDv:0000053,prenatal,867069
+17-year-old stage,HsapDv:0000111,child,69547
+17th week post-fertilization stage,HsapDv:0000054,prenatal,1131076
+18-year-old stage,HsapDv:0000112,adult,92581
+18th week post-fertilization stage,HsapDv:0000055,prenatal,273281
+19-month-old stage,HsapDv:0000192,child,586
+19-year-old stage,HsapDv:0000113,adult,150360
+19th week post-fertilization stage,HsapDv:0000056,prenatal,185002
+2-month-old stage,HsapDv:0000175,child,93424
+2-year-old stage,HsapDv:0000096,child,132366
+20-month-old stage,HsapDv:0000193,child,14369
+20-year-old stage,HsapDv:0000114,adult,857324
+20th week post-fertilization stage,HsapDv:0000057,prenatal,202253
+21-month-old stage,HsapDv:0000194,child,11961
+21-year-old stage,HsapDv:0000115,adult,393028
+21st week post-fertilization stage,HsapDv:0000058,prenatal,221797
+22-year-old stage,HsapDv:0000116,adult,118392
+22nd week post-fertilization stage,HsapDv:0000059,prenatal,201416
+23-year-old stage,HsapDv:0000117,adult,269181
+23rd week post-fertilization stage,HsapDv:0000060,prenatal,20725
+24-year-old stage,HsapDv:0000118,adult,225416
+24th week post-fertilization stage,HsapDv:0000061,prenatal,97476
+25-year-old stage,HsapDv:0000119,adult,420491
+25th week post-fertilization stage,HsapDv:0000062,prenatal,69754
+26-year-old stage,HsapDv:0000120,adult,408021
+26th week post-fertilization stage,HsapDv:0000063,prenatal,31643
+27-year-old stage,HsapDv:0000121,adult,577516
+27th week post-fertilization stage,HsapDv:0000064,prenatal,4033
+28-year-old stage,HsapDv:0000122,adult,612908
+29-year-old stage,HsapDv:0000123,adult,2021245
+3-month-old stage,HsapDv:0000176,child,102579
+3-year-old stage,HsapDv:0000097,child,112052
+30-year-old stage,HsapDv:0000124,adult,880941
+31-year-old stage,HsapDv:0000125,adult,920074
+31st week post-fertilization stage,HsapDv:0000068,prenatal,27452
+32-year-old stage,HsapDv:0000126,adult,920367
+32nd week post-fertilization stage,HsapDv:0000069,prenatal,2327
+33-year-old stage,HsapDv:0000127,adult,777880
+33rd week post-fertilization stage,HsapDv:0000070,prenatal,4367
+34-year-old stage,HsapDv:0000128,adult,550935
+34th week post-fertilization stage,HsapDv:0000071,prenatal,5569
+35-year-old stage,HsapDv:0000129,adult,630792
+36-year-old stage,HsapDv:0000130,adult,460304
+37-year-old stage,HsapDv:0000131,adult,343979
+38-year-old stage,HsapDv:0000132,adult,228037
+39-year-old stage,HsapDv:0000133,adult,297390
+4-month-old stage,HsapDv:0000177,child,17531
+4-year-old stage,HsapDv:0000098,child,67133
+40-year-old stage,HsapDv:0000134,adult,241248
+41-year-old stage,HsapDv:0000135,adult,308958
+42-year-old stage,HsapDv:0000136,adult,1520350
+43-year-old stage,HsapDv:0000137,adult,516343
+44-year-old stage,HsapDv:0000138,adult,161814
+45-year-old stage,HsapDv:0000139,adult,379786
+46-year-old stage,HsapDv:0000140,adult,388268
+47-year-old stage,HsapDv:0000141,adult,310217
+48-year-old stage,HsapDv:0000142,adult,387693
+49-year-old stage,HsapDv:0000143,adult,204611
+5-month-old stage,HsapDv:0000178,child,78563
+5-year-old stage,HsapDv:0000099,child,26066
+50-year-old stage,HsapDv:0000144,adult,1826490
+51-year-old stage,HsapDv:0000145,adult,335178
+52-year-old stage,HsapDv:0000146,adult,377662
+53-year-old stage,HsapDv:0000147,adult,387339
+54-year-old stage,HsapDv:0000148,adult,264355
+55-year-old stage,HsapDv:0000149,adult,520727
+56-year-old stage,HsapDv:0000150,adult,1035846
+57-year-old stage,HsapDv:0000151,adult,540926
+58-year-old stage,HsapDv:0000152,adult,363619
+59-year-old stage,HsapDv:0000153,adult,741178
+6-month-old stage,HsapDv:0000179,child,126724
+6-year-old stage,HsapDv:0000100,child,45298
+60-79 year-old stage,HsapDv:0000272,adult,97719
+60-year-old stage,HsapDv:0000154,adult,1119096
+61-year-old stage,HsapDv:0000155,adult,955395
+62-year-old stage,HsapDv:0000156,adult,690132
+63-year-old stage,HsapDv:0000157,adult,646787
+64-year-old stage,HsapDv:0000158,adult,907832
+65-year-old stage,HsapDv:0000159,adult,504677
+66-year-old stage,HsapDv:0000160,adult,483982
+67-year-old stage,HsapDv:0000161,adult,525646
+68-year-old stage,HsapDv:0000162,adult,456657
+69-year-old stage,HsapDv:0000163,adult,655334
+7-month-old stage,HsapDv:0000180,child,89332
+7-year-old stage,HsapDv:0000101,child,12637
+70-year-old stage,HsapDv:0000164,adult,300744
+71-year-old stage,HsapDv:0000165,adult,482015
+72-year-old stage,HsapDv:0000166,adult,436870
+73-year-old stage,HsapDv:0000167,adult,404053
+74-year-old stage,HsapDv:0000168,adult,196622
+75-year-old stage,HsapDv:0000169,adult,371377
+76-year-old stage,HsapDv:0000170,adult,203587
+77-year-old stage,HsapDv:0000171,adult,328874
+78-year-old stage,HsapDv:0000172,adult,238905
+79-year-old stage,HsapDv:0000173,adult,217359
+8-year-old stage,HsapDv:0000102,child,14276
+80 year-old and over stage,HsapDv:0000095,adult,1127714
+80-year-old stage,HsapDv:0000206,adult,188233
+81-year-old stage,HsapDv:0000207,adult,292910
+82-year-old stage,HsapDv:0000208,adult,438154
+83-year-old stage,HsapDv:0000209,adult,293303
+84-year-old stage,HsapDv:0000210,adult,201377
+85-year-old stage,HsapDv:0000211,adult,294252
+86-year-old stage,HsapDv:0000212,adult,300637
+87-year-old stage,HsapDv:0000213,adult,133608
+88-year-old stage,HsapDv:0000214,adult,178743
+89-year-old stage,HsapDv:0000215,adult,75496
+9-month-old stage,HsapDv:0000182,child,15913
+9-year-old stage,HsapDv:0000103,child,9195
+90 year-old and over stage,HsapDv:0000274,adult,396088
+90-year-old stage,HsapDv:0000216,adult,96448
+91-year-old stage,HsapDv:0000217,adult,73554
+92-year-old stage,HsapDv:0000218,adult,30154
+93-year-old stage,HsapDv:0000219,adult,2332
+94-year-old stage,HsapDv:0000220,adult,40442
+95-year-old stage,HsapDv:0000221,adult,33907
+96-year-old stage,HsapDv:0000222,adult,13926
+97-year-old stage,HsapDv:0000223,adult,976
+9th week post-fertilization stage,HsapDv:0000046,prenatal,538629
+Carnegie stage 09,HsapDv:0000016,prenatal,4946
+Carnegie stage 10,HsapDv:0000017,prenatal,8498
+Carnegie stage 11,HsapDv:0000018,prenatal,8198
+Carnegie stage 12,HsapDv:0000019,prenatal,13222
+Carnegie stage 13,HsapDv:0000020,prenatal,36594
+Carnegie stage 14,HsapDv:0000021,prenatal,35136
+Carnegie stage 15,HsapDv:0000022,prenatal,72556
+Carnegie stage 16,HsapDv:0000023,prenatal,137107
+Carnegie stage 17,HsapDv:0000024,prenatal,68837
+Carnegie stage 18,HsapDv:0000025,prenatal,174418
+Carnegie stage 19,HsapDv:0000026,prenatal,91457
+Carnegie stage 20,HsapDv:0000027,prenatal,794034
+Carnegie stage 21,HsapDv:0000028,prenatal,17391
+Carnegie stage 22,HsapDv:0000029,prenatal,148835
+Carnegie stage 23,HsapDv:0000030,prenatal,176215
+adult stage,HsapDv:0000258,unresolved,1286376
+child stage (1-4 yo),HsapDv:0000265,child,61975
+eighth LMP month stage,HsapDv:0000202,prenatal,48889
+eighth decade stage,HsapDv:0000242,adult,538700
+embryonic stage,HsapDv:0000002,prenatal,85638
+fifth LMP month stage,HsapDv:0000199,prenatal,288843
+fifth decade stage,HsapDv:0000239,adult,587831
+fourth LMP month stage,HsapDv:0000198,prenatal,30941
+fourth decade stage,HsapDv:0000238,adult,360624
+infant stage,HsapDv:0000261,child,34290
+juvenile stage (5-14 yo),HsapDv:0000271,child,93972
+late adult stage,HsapDv:0000227,adult,104386
+middle aged stage,HsapDv:0000267,adult,24222
+newborn stage (0-28 days),HsapDv:0000262,child,254400
+ninth LMP month stage,HsapDv:0000203,prenatal,34292
+ninth decade stage,HsapDv:0000243,adult,38939
+organogenesis stage,HsapDv:0000015,prenatal,25430
+pediatric stage,HsapDv:0000264,unresolved,80116
+postnatal stage,HsapDv:0010000,unresolved,63065
+prenatal stage,HsapDv:0000045,prenatal,2950
+prime adult stage,HsapDv:0000226,unresolved,820896
+seventh LMP month stage,HsapDv:0000201,prenatal,30112
+seventh decade stage,HsapDv:0000241,adult,963199
+sixth LMP month stage,HsapDv:0000200,prenatal,25845
+sixth decade stage,HsapDv:0000240,adult,1120675
+third decade stage,HsapDv:0000237,adult,449082
+unknown,unknown,unresolved,920602
+young adult stage,HsapDv:0000266,unresolved,178645

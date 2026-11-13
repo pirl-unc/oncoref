@@ -1,0 +1,179 @@
+{
+  "policy_id": "oncoref.target-selection.2026-11-10.1",
+  "proteins": 19893,
+  "categories": {
+    "Unsafe": 18241,
+    "Other": 750,
+    "CTA": 626,
+    "Cancer Antigen only": 245,
+    "Reproductive Antigen only": 31
+  },
+  "classifications": {
+    "Unsafe": 18241,
+    "Other:Review": 693,
+    "CTA": 626,
+    "Cancer Antigen only": 245,
+    "Other:Sequence": 42,
+    "Reproductive Antigen only": 31,
+    "Other:Expression": 15
+  },
+  "memberships": {
+    "is_cancer_antigen": 871,
+    "is_reproductive_antigen": 657,
+    "is_cta": 626,
+    "is_target_candidate": 902
+  },
+  "changes": [
+    {
+      "released_category": "CTA",
+      "category": "CTA",
+      "proteins": 533
+    },
+    {
+      "released_category": "CTA",
+      "category": "Other",
+      "proteins": 7
+    },
+    {
+      "released_category": "CTA",
+      "category": "Reproductive Antigen only",
+      "proteins": 26
+    },
+    {
+      "released_category": "CTA",
+      "category": "Unsafe",
+      "proteins": 41
+    },
+    {
+      "released_category": "Other",
+      "category": "CTA",
+      "proteins": 57
+    },
+    {
+      "released_category": "Other",
+      "category": "Cancer Antigen only",
+      "proteins": 242
+    },
+    {
+      "released_category": "Other",
+      "category": "Other",
+      "proteins": 697
+    },
+    {
+      "released_category": "Other",
+      "category": "Reproductive Antigen only",
+      "proteins": 4
+    },
+    {
+      "released_category": "Other",
+      "category": "Unsafe",
+      "proteins": 27
+    },
+    {
+      "released_category": "Unsafe",
+      "category": "CTA",
+      "proteins": 36
+    },
+    {
+      "released_category": "Unsafe",
+      "category": "Cancer Antigen only",
+      "proteins": 3
+    },
+    {
+      "released_category": "Unsafe",
+      "category": "Other",
+      "proteins": 46
+    },
+    {
+      "released_category": "Unsafe",
+      "category": "Reproductive Antigen only",
+      "proteins": 1
+    },
+    {
+      "released_category": "Unsafe",
+      "category": "Unsafe",
+      "proteins": 18173
+    }
+  ],
+  "shared_eligible": 939,
+  "assessed_for_cancer_evidence": 949,
+  "unsafe_changes": {
+    "released_unsafe_now_other": 86,
+    "newly_unsafe": 68
+  },
+  "rare_cell": {
+    "status": {
+      "not_extracted": 18089,
+      "below_screen": 1372,
+      "dismissed": 267,
+      "established": 129,
+      "unassessed": 36
+    },
+    "action": {
+      "none": 19764,
+      "unsafe": 129
+    },
+    "legacy_flag_unassessed": 0
+  },
+  "literature": {
+    "not_reviewed": 19794,
+    "none": 90,
+    "exclude": 7,
+    "confirm_detection": 2
+  },
+  "expression_bounds": {
+    "unassessed": 18944,
+    "pass": 939,
+    "fail": 10
+  },
+  "comparison_required_contexts": [
+    "adipose tissue",
+    "adrenal gland",
+    "amygdala",
+    "basal ganglia",
+    "bone marrow",
+    "cerebellum",
+    "cerebral cortex",
+    "choroid plexus",
+    "colon",
+    "duodenum",
+    "esophagus",
+    "heart muscle",
+    "hippocampal formation",
+    "hypothalamus",
+    "kidney",
+    "liver",
+    "lung",
+    "lymph node",
+    "midbrain",
+    "pancreas",
+    "parathyroid gland",
+    "pituitary gland",
+    "rectum",
+    "retina",
+    "salivary gland",
+    "skeletal muscle",
+    "skin",
+    "small intestine",
+    "smooth muscle",
+    "spinal cord",
+    "spleen",
+    "stomach",
+    "thymus",
+    "thyroid gland",
+    "tongue",
+    "urinary bladder"
+  ],
+  "assessed_cancer_statuses": {
+    "qualifies": 871,
+    "unassessed": 54,
+    "does_not_qualify": 24
+  },
+  "published_nomination_by_category": {
+    "CTA": 402,
+    "Cancer Antigen only": 24,
+    "Other": 43,
+    "Reproductive Antigen only": 6,
+    "Unsafe": 1758
+  }
+}

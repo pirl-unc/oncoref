@@ -1,0 +1,43 @@
+{
+  "gene_id": "ENSG00000170965",
+  "symbol": "PLAC1",
+  "retrieved": "2026-11-10",
+  "classification_changed": false,
+  "hpa_download_release": "25.1",
+  "hpa_ihc_policy_release": "v23",
+  "sepp_dataset_id": "bab7432a-5cfe-45ea-928c-422d03c45cdd",
+  "sepp_dataset_version_id": "30626c44-7a90-40ed-8f54-116bfaebc857",
+  "sepp_revised_at": "2026-06-11T16:52:32+00:00",
+  "wmg_snapshot_id": "1762972271",
+  "sources": [
+    {
+      "url": "https://datasets.cellxgene.cziscience.com/30626c44-7a90-40ed-8f54-116bfaebc857.h5ad",
+      "local_cache": "tmp/plac1-brain/sepp-human.h5ad",
+      "bytes": 840038932,
+      "sha256": "099a96d362cc11d18870476933d5abe62745284cdc6c56e35403f070ee47ce52"
+    },
+    {
+      "url": "https://www.proteinatlas.org/ENSG00000170965.xml",
+      "local_cache": "tmp/plac1-brain/hpa-plac1.xml",
+      "bytes": 640244,
+      "sha256": "bd3a27ec19a0c4aa36d423fa3d0b4883803a52b845b050af1dc448933d0a1af1"
+    },
+    {
+      "url": "https://www.proteinatlas.org/ENSG00000170965-PLAC1/tissue/cerebellum",
+      "local_cache": "tmp/plac1-brain/hpa-cerebellum.html",
+      "bytes": 370499,
+      "sha256": "765fcfc102ab91b488295e8826764035a76c70b6b1efc0fd1db1f545c00f9e87"
+    },
+    {
+      "url": "https://www.proteinatlas.org/download/tsv/rna_single_nuclei_brain_cluster.tsv.zip",
+      "bytes": 37047974,
+      "sha256": "6d60466e383e7e020bb9ffe04fe1fa10a1d9c0bd2fbd056684efda2f032883cc"
+    },
+    {
+      "url": "https://www.proteinatlas.org/download/tsv/rna_single_nuclei_cluster_type.tsv.zip",
+      "bytes": 3745564,
+      "sha256": "a287c1abab593c9d6802349a82f118efc0d4aea411be7d897b8feb0b31b02f2a"
+    }
+  ],
+  "verification": "Adult donor counts independently reproduced using anndata backed slicing; source matrix X is declared raw data; PLAC1 counts are nonnegative integers. The current H5AD does not reproduce the older WMG aggregate; this audit retains both without claiming reconciliation."
+}
