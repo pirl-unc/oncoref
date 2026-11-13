@@ -422,6 +422,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "Cancer and Reproductive Antigen catalog for every human protein record, with set memberships, evidence receipts and paper links",
     ),
+    "target-normal-function-findings": (
+        "cta-evidence",
+        "cited normal-function findings on Target candidates from an automated literature sweep, with tissue, tier, source and second-reader verdict; read only by the filter layer",
+    ),
+    "target-readthrough-loci": (
+        "cta-evidence",
+        "read-through loci among Target candidates whose exons overlap two or more other protein-coding genes, with parent genes; read only by the filter layer",
+    ),
     "rare-cell-evidence": (
         "cta-evidence",
         "per-donor rare normal-cell RNA grades with multi-molecule support, study replication, mapping-risk flags and bulk confirmation",

@@ -1,0 +1,19 @@
+MAGE,Catalog,Off-target TPM,Off-target nTPM,Tumors above normal,CTA papers,Mapping risk,`standard`,`strict` on its own data
+MAGEA1,CTA,0.0,0.0,1394,7,,✓,✓
+MAGEA10,CTA,2.2,2.4,890,6,yes,✓,✓
+MAGEA11,CTA,0.146599,0.1,1253,6,,✓,✓
+MAGEA2/B,CTA,0.6000000000000001,0.8,1677,4,yes,✓,✓
+MAGEA4,CTA,0.7,0.6,1711,8,,✓,✓
+MAGEA6,CTA,0.2,0.2,2150,6,yes,✓,✓
+MAGEA8,CTA,0.989010976255,1.0,308,4,,✓,✓
+MAGEA9/B,CTA,0.2,0.2,1441,4,,✓,✓
+MAGEB1,CTA,0.0,0.0,552,6,yes,✓,✓
+MAGEB10,CTA,1.9,2.4,19,2,yes,✓,sets
+MAGEB16,CTA,0.0,0.0,145,4,,✓,✓
+MAGEB17,CTA,1.85061,2.8,474,0,,papers,papers
+MAGEB18,CTA,0.0,0.0,16,2,,✓,papers
+MAGEB3,CTA,0.2,0.3,47,3,,✓,sets
+MAGEB4,CTA,0.0,0.0,48,1,,papers,papers
+MAGEB5,Reproductive Antigen only,0.039186,0.0,1,0,,papers,sets
+MAGEB6B,Cancer Antigen only,0.0,0.0,4,0,yes,papers,sets
+MAGEC1,CTA,0.5,0.6,890,5,,✓,✓

@@ -1,0 +1,456 @@
+protein_group_label,category,off_target_tpm,off_target_tpm_tissue,off_target_ntpm,disposable_max_tpm,disposable_max_ntpm,tumor_max_tpm,independent_patients_above_normal,reproductive_best,papers_cta,papers_oncofetal,papers_tumor,rare_cell_status,mapping_risk
+BPY2/B/C,CTA,0.30000000000000004,kidney,0.6000000000000001,0.30000000000000004,0.30000000000000004,7.512204705419542,8.0,3.3000000000000003,2,0,0,below_screen,False
+CDY2A/B,Reproductive Antigen only,0.0,,0.0,0.0,0.0,8.64083033574386,1.0,2.4,2,0,0,below_screen,True
+CT45A2/8/9,CTA,0.2,basal ganglia,0.8,0.0,0.0,171.30903107107494,253.0,2.0,3,0,0,below_screen,True
+CT47A1/10/11/12/2/3/4/5/6/7/8/9,CTA,0.9,blood,0.4,0.0,0.0,37.92473601715013,29.0,9.186448846350046,2,0,0,below_screen,True
+CXorf49/B,CTA,0.0,,0.0,0.0,0.0,811.2981296025938,1747.0,133.56161599418763,2,0,0,below_screen,True
+CXorf51A/B,CTA,0.0,,0.0,0.0,0.0,17.569803773620492,51.0,1233.4,1,0,0,below_screen,False
+DEFB106A/B,CTA,0.1,midbrain,0.1,0.0,0.0,1.510000000006877,2.0,3007.0,0,0,0,below_screen,False
+DEFB107A/B,CTA,0.0,,0.0,0.0,0.0,2.3992,5.0,654.7,0,0,0,below_screen,False
+SPO11,CTA,0.136234470525,blood,0.0,0.0,0.0,28.300468924479656,23.0,130.0,1,0,0,below_screen,False
+PAGE1,CTA,0.0,,0.0,0.0,0.0,1323.8265300466567,464.0,309.5,4,0,0,below_screen,False
+DEFB127,CTA,0.1,kidney,0.1,0.0,0.0,8.5317,11.0,1050.8,0,0,0,below_screen,False
+AMELY,CTA,0.430225,thyroid gland,0.3,0.1,0.0,9.580000000005125,75.0,1.1,1,0,0,below_screen,True
+CST9L,CTA,0.219938275656,blood,0.0,0.0,0.0,38.6411540719873,149.0,85.2,3,0,0,below_screen,False
+LUZP4,CTA,0.030238,pituitary gland,0.0,0.0,0.0,130.0087842613628,184.0,55.0,4,0,0,below_screen,False
+ADAM2,CTA,0.6,midbrain,0.5,0.0,0.0,100.3632330914491,421.0,250.1,4,0,0,below_screen,False
+ZNRF4,CTA,0.4,hypothalamus,0.3,0.0,0.0,13.290305419648087,12.0,883.0,3,0,0,below_screen,False
+SPAM1,CTA,0.4,duodenum,0.4,0.0,0.0,3.0572888132738743,2.0,438.3,3,0,0,below_screen,False
+DBX1,Cancer Antigen only,0.75466797449,blood,0.8,0.0,0.0,297.5108178501728,243.0,0.1,1,0,0,below_screen,False
+OR12D3,Cancer Antigen only,0.2,spinal cord,0.2,0.0,0.0,5.230416784771385,5.0,0.0,0,0,0,below_screen,True
+PRAMEF1,CTA,0.0,,0.0,0.0,0.0,36.43000000012356,28.0,89.22449806269412,2,2,0,below_screen,True
+ZP4,CTA,0.1,medulla oblongata,0.2,0.1,0.2,74.4387879843248,81.0,226.3096114933788,0,0,1,below_screen,False
+SPACA1,CTA,0.2,hypothalamus,0.5,0.0,0.0,23.64961476473798,62.0,1464.3,4,0,0,below_screen,False
+MAGEB4,CTA,0.0,,0.0,0.0,0.0,28.92921298176045,48.0,26.6,1,0,0,below_screen,False
+LYZL1,CTA,0.0346945,liver,0.1,0.0,0.0,28.9593002414657,14.0,788.5,2,0,0,below_screen,True
+PRAMEF2,CTA,0.0,,0.0,0.0,0.0,40.25000000011964,31.0,72.08421604631366,1,2,0,below_screen,True
+TAS2R7,Cancer Antigen only,0.439141517077,blood,0.4,0.0,0.0,42.7669695144415,18.0,0.0,0,0,0,below_screen,False
+RGSL1,CTA,0.330669695225,blood,0.9,0.1,0.1,33.59935606222753,85.0,155.1,3,0,0,dismissed,True
+H2BW1,CTA,0.4,cerebral cortex,0.5,0.0,0.0,29.941123662591,151.0,8.1,2,0,0,below_screen,False
+ESX1,CTA,0.0,,0.0,0.0,0.0,114.60378157464336,209.0,131.0,5,0,0,below_screen,False
+ATXN3L,CTA,0.5,hippocampal formation,0.5,0.0,0.0,5.9602898266093165,19.0,421.8,1,0,0,below_screen,False
+CRISP1,CTA,0.110336,salivary gland,0.3,0.0,0.0,49.13139976752136,22.0,1536.4,3,0,0,below_screen,False
+DEFB126,CTA,0.2,smooth muscle,0.1,0.0,0.0,31.1651,727.0,1251.1,2,0,0,below_screen,False
+CST8,CTA,0.1,retina,0.1,0.0,0.0,11.842447529733983,8.0,368.7,1,0,0,below_screen,False
+CST11,CTA,0.850149897443,blood,0.4,0.0,0.0,25.740161604677205,71.0,205.4,0,0,0,below_screen,False
+DEFB129,CTA,0.0,,0.0,0.0,0.0,30.749999999952337,7.0,1895.4,0,0,0,below_screen,False
+OR7C2,Cancer Antigen only,0.3,cerebral cortex,0.3,0.0,0.0,26.37494202565336,6.0,0.0,0,0,0,below_screen,True
+FUT5,Cancer Antigen only,0.814882133129,blood,0.5,0.0,0.0,28.381875963667515,496.0,0.9618337185937204,1,0,0,below_screen,True
+BMP15,CTA,0.1,cerebral cortex,0.1,0.0,0.0,3.3329,5.0,208.13565482063476,0,0,0,below_screen,False
+BPIFA3,CTA,0.0,,0.0,0.0,0.0,12.28984047848157,5.0,5432.1,1,0,0,below_screen,False
+DEFB118,CTA,0.0,,0.0,0.0,0.0,22.70035615178735,19.0,967.5,0,0,0,below_screen,False
+FTHL17,CTA,0.110466,skin,0.1,0.0,0.0,218.4308953739871,255.0,27.5,5,0,0,below_screen,False
+SCP2D1,CTA,0.1,pons,0.1,0.0,0.0,9.539116748127258,3.0,1774.7,1,0,0,below_screen,False
+VRTN,CTA,0.5,cerebellum,0.7,0.3,0.4,64.15009258677671,251.0,30.9,4,0,0,below_screen,False
+ADAM30,CTA,0.236375019281,blood,0.0,0.0,0.0,3.533,11.0,235.3,3,0,0,below_screen,False
+USP26,CTA,0.2,cerebral cortex,0.4,0.0,0.0,9.920802978803152,21.0,6.0,2,0,0,below_screen,False
+OCM2,CTA,0.710511653106,blood,0.0,0.0,0.0,24.13987439579664,16.0,1.2502384196914156,1,0,0,below_screen,True
+DMRT1,CTA,0.4,thyroid gland,0.7,0.0,0.0,60.6795,544.0,229.4,5,0,0,below_screen,False
+C4orf17,CTA,0.59281304975,blood,0.0,0.0,0.0,16.3897392396316,24.0,452.7,3,0,0,below_screen,False
+TTLL8,CTA,0.414681083691,blood,0.2,0.0,0.0,42.8615,97.0,4.5,2,0,0,below_screen,False
+GOLGA6D,CTA,0.546964071196,blood,0.7,0.0,0.0,10.03988328809789,17.0,19.5,1,0,0,below_screen,True
+DMRTC2,CTA,0.7,white matter,0.9,0.2,0.1,79.43943946918152,160.0,219.0,4,0,0,below_screen,False
+DMRTB1,CTA,0.3,thyroid gland,0.1,0.0,0.0,115.55924783277351,140.0,457.3,3,0,0,below_screen,False
+TRIM43B,CTA,0.6,amygdala,0.7,0.0,0.0,547.7299999984572,235.0,102.4386709809938,0,1,0,below_screen,True
+TRIM43,CTA,0.4,thymus,0.3,0.0,0.0,512.6800000003522,378.0,129.09236142739658,2,2,0,below_screen,True
+H2BC1,CTA,0.6,cerebellum,0.7,0.0,0.0,24.45672360536081,48.0,312.1,1,0,0,below_screen,True
+TAAR2,Cancer Antigen only,0.0,,0.0,0.0,0.0,7.738804431825242,2.0,0.2,0,0,0,below_screen,True
+AKAP4,CTA,0.0787800445618,blood,0.0,0.0,0.0,15.982379576226052,77.0,4130.7,3,0,0,below_screen,False
+CPXCR1,CTA,0.0,,0.1,0.0,0.0,3.3257,19.0,122.1,3,0,0,below_screen,False
+MAGEA4,CTA,0.7,lymph node,0.6,0.0,0.0,3201.684421825601,1711.0,203.60058681396848,8,0,0,below_screen,False
+ACTL7B,CTA,0.920173702739,blood,0.2,0.0,0.0,73.45162336039,27.0,2134.7,3,0,0,below_screen,False
+LCN9,CTA,0.322328,midbrain,0.2,0.0,0.0,85.4901,132.0,0.0,0,0,0,below_screen,False
+OR5F1,Cancer Antigen only,0.0,,0.0,0.0,0.0,14.58959382289666,3.0,0.0,0,0,0,below_screen,True
+OOSP2,CTA,0.2,blood,0.7,0.0,0.0,145.0672,17.0,539.7,2,0,0,below_screen,False
+OCSTAMP,Cancer Antigen only,0.2,white matter,0.4,0.0,0.0,37.46999999994959,167.0,0.2,0,0,0,below_screen,False
+TRIM48,CTA,0.2,skin,0.2,0.0,0.0,758.864410398614,146.0,12.582801151111516,1,2,0,below_screen,True
+OR8K1,Cancer Antigen only,0.1,white matter,0.1,0.0,0.0,3.5704504191911,3.0,0.0,0,0,0,below_screen,False
+LYZL2,CTA,0.0,,0.2,0.0,0.0,24.9715,89.0,904.7,4,0,0,below_screen,True
+DSPP,Cancer Antigen only,0.6,choroid plexus,0.8,0.0,0.0,1695.5799999960377,17.0,0.0,0,0,0,below_screen,False
+GOLGA8F,CTA,0.0558095336955,blood,0.1,0.0,0.0,8.734654077257456,11.0,12.2,0,0,0,below_screen,True
+TGIF2LX,CTA,0.0,,0.0,0.0,0.0,83.96170990707917,325.0,79.2,5,0,0,below_screen,True
+OR4K1,Cancer Antigen only,0.0,,0.0,0.0,0.0,9.2121,7.0,0.2,0,0,0,below_screen,False
+MAGEC1,CTA,0.5,white matter,0.6,0.0,0.0,312.54675129296817,890.0,28.4,5,0,0,below_screen,False
+TRIM42,CTA,0.5,choroid plexus,0.8,0.0,0.0,16.4189,14.0,503.7,2,0,0,below_screen,False
+POM121L2,CTA,0.3,blood,0.2,0.0,0.0,13.820718066625453,10.0,9.0,3,0,0,dismissed,False
+OR7G1,Cancer Antigen only,0.1,white matter,0.1,0.0,0.0,6.1286,12.0,0.0,0,0,0,below_screen,False
+CCDC27,CTA,0.570721465763,blood,0.7,0.0,0.0,13.204721090144522,31.0,392.6,4,0,0,below_screen,False
+PDHA2,CTA,0.1895079675389999,blood,0.0,0.0,0.0,9.430029666072784,6.0,832.4,2,0,0,below_screen,False
+OTOP1,Cancer Antigen only,0.318484,skin,0.4,0.0,0.0,15.840193417799618,50.0,0.0,0,0,0,below_screen,True
+ADAD1,CTA,0.403983082272,blood,0.2,0.0,0.0,18.31977027897254,69.0,1433.5,2,0,0,below_screen,False
+FAM170A,CTA,0.672442471296,blood,0.4,0.0,0.0,6.564222700310311,14.0,199.4,3,0,0,below_screen,True
+SPAG11B,CTA,0.8,cerebellum,0.9,0.0,0.0,957.4137368127977,174.0,1228.4,1,0,0,below_screen,True
+PRKACG,CTA,0.421276779971,blood,0.3,0.0,0.0,19.8637,11.0,141.2,3,0,0,below_screen,False
+SSMEM1,CTA,0.527292217179,blood,0.5,0.0,0.0,7.4023,19.0,680.9,2,0,0,below_screen,False
+PASD1,CTA,0.014938,hypothalamus,0.5,0.0,0.0,122.83597882754593,242.0,69.0,5,0,0,below_screen,False
+C16orf78,CTA,0.3,midbrain,0.3,0.0,0.0,5.590075311122745,10.0,2938.2,1,0,0,below_screen,False
+CCDC182,CTA,0.5,white matter,0.6,0.0,0.0,14.7202,78.0,303.9,2,0,0,below_screen,False
+OR4D6,Cancer Antigen only,0.123009,thyroid gland,0.0,0.0,0.0,23.430546115923633,5.0,0.1,0,0,0,below_screen,False
+SUN5,CTA,0.192108372188,blood,0.0,0.0,0.0,4.940089375536135,10.0,805.0,1,0,0,below_screen,False
+TBC1D21,CTA,0.603028842822,blood,0.5,0.0,0.0,26.799831296765124,7.0,1467.5,1,0,0,below_screen,False
+LALBA,CTA,0.2272332389559999,blood,0.2,0.0,0.0,79700.43698424404,91.0,542438.6,1,0,0,below_screen,False
+OR2B2,CTA,0.5,pons,0.5,0.0,0.0,246.268019510807,125.0,1.8396953235201716,0,0,0,below_screen,False
+ADAM18,CTA,0.0,,0.8,0.0,0.0,150.02835176116358,247.0,328.8,3,0,0,below_screen,False
+TSPY2,CTA,0.4,white matter,0.4,0.0,0.0,514.5964275270672,250.0,24.3,3,0,0,below_screen,True
+VCX3A,CTA,0.4,thalamus,0.6,0.0,0.0,955.8223233222537,736.0,391.0,5,0,0,below_screen,True
+OR6F1,CTA,0.5,pons,0.6,0.0,0.0,22.61104232298744,4.0,24.5,3,0,0,below_screen,True
+ACTRT2,CTA,0.035688,spinal cord,0.0,0.0,0.0,21.25954525602699,17.0,5810.3,3,0,0,below_screen,False
+MRGPRX1,CTA,0.1,basal ganglia,0.2,0.0,0.0,62.94000000018634,36.0,106.34061977094836,0,0,0,below_screen,True
+RBMXL2,CTA,0.5,spinal cord,0.6,0.0,0.0,47.913261767406496,248.0,361.5,4,0,0,below_screen,False
+TPD52L3,CTA,0.1,cerebral cortex,0.1,0.0,0.0,42.24110895717137,17.0,1643.1,3,0,0,below_screen,False
+OR7G3,Cancer Antigen only,0.0,,0.0,0.0,0.0,29.20690296088733,13.0,0.0,0,0,0,below_screen,False
+PGK2,CTA,0.343029120779,blood,0.0,0.0,0.0,18.110173589081075,11.0,4273.7,3,0,0,below_screen,False
+OR4D5,Cancer Antigen only,0.4,hypothalamus,0.3,0.0,0.0,18.878021544423216,10.0,0.0,0,0,0,below_screen,False
+C8orf74,CTA,0.2,cerebral cortex,0.3,0.0,0.0,3.9276994836483667,46.0,505.9,1,0,0,below_screen,False
+OR2K2,Cancer Antigen only,0.919628,spinal cord,0.9,0.0,0.0,9.0526,71.0,0.2,1,0,0,below_screen,False
+MROH2B,CTA,0.155791,colon,0.1,0.0,0.0,201.53599403004247,64.0,70.0,3,0,0,below_screen,False
+OR10H3,Cancer Antigen only,0.0,,0.0,0.0,0.0,10.236442890809123,3.0,0.0,0,0,0,below_screen,True
+OR10H2,Cancer Antigen only,0.2,hypothalamus,0.3,0.0,0.0,6.2372814701029595,3.0,0.0,0,0,0,below_screen,True
+SPMIP9,CTA,0.2,cerebral cortex,0.3,0.0,0.0,71.3263,146.0,5778.9,3,0,0,below_screen,True
+OR1A2,Cancer Antigen only,0.253017756083,blood,0.1,0.0,0.0,14.71472471150411,17.0,0.0,0,0,0,below_screen,False
+OR8I2,Cancer Antigen only,0.0,,0.0,0.0,0.0,10.344068932310975,3.0,0.0,0,0,0,below_screen,True
+OR4C11,Cancer Antigen only,0.0,,0.0,0.0,0.0,4.752333806102308,2.0,0.0,0,0,0,below_screen,False
+OR8U1,Cancer Antigen only,0.0,,0.0,0.0,0.0,2.5208542627946713,3.0,0.0,0,0,0,below_screen,False
+CDY1,Reproductive Antigen only,0.0,,0.0,0.0,0.0,1.5969690535873369,0.0,1.3,0,0,0,below_screen,True
+OR10V1,Cancer Antigen only,0.1,thalamus,0.1,0.0,0.0,30.915093498988384,6.0,0.0,0,0,0,below_screen,False
+CDY1B,Reproductive Antigen only,0.1,pons,0.1,0.0,0.0,0.3000926108008515,0.0,1.8,0,0,0,below_screen,True
+OR5B12,Cancer Antigen only,0.953976559878,blood,0.2,0.0,0.0,10.305551403684253,21.0,0.0,1,0,0,below_screen,False
+OR5AR1,Cancer Antigen only,0.0,,0.0,0.0,0.0,8.01727235235813,2.0,0.0,0,0,0,below_screen,False
+OR5AP2,Cancer Antigen only,0.0,,0.0,0.0,0.0,5.0013,6.0,0.0,0,0,0,below_screen,False
+OR5T3,Cancer Antigen only,0.0,,0.0,0.0,0.0,3.6600039960468296,6.0,0.0,0,0,0,below_screen,True
+MOS,CTA,0.5,basal ganglia,0.5,0.0,0.0,18.419999999939858,17.0,10.8,1,0,0,below_screen,False
+OR10W1,Cancer Antigen only,0.0,,0.0,0.0,0.0,5.180999556084626,3.0,0.0,0,0,0,below_screen,False
+IQCF1,CTA,0.7822278206509999,blood,0.4,0.0,0.0,12.94030649877181,72.0,4807.8,3,0,0,below_screen,False
+RNASE11,CTA,0.1,small intestine,0.1,0.0,0.0,19.9696329241597,64.0,643.4,2,0,0,below_screen,True
+NLRP13,CTA,0.0,,0.0,0.0,0.0,6.040153243760753,21.0,222.6942988698613,0,0,0,below_screen,False
+OR2Y1,Cancer Antigen only,0.1,cerebral cortex,0.2,0.0,0.0,10.950169916898151,4.0,0.0,0,0,0,below_screen,False
+OR10AG1,Cancer Antigen only,0.1,pons,0.1,0.0,0.0,12.09184073687542,3.0,0.0,0,0,0,below_screen,False
+HIGD2B,CTA,0.615677114493,blood,0.2,0.0,0.0,10.0594,107.0,53.2,1,0,0,below_screen,False
+OR4B1,Cancer Antigen only,0.134935994857,blood,0.0,0.0,0.0,31.819934487485163,3.0,0.0,0,0,0,below_screen,False
+TMEM270,CTA,0.607056,pituitary gland,0.3,0.0,0.0,29.564746424363364,1190.0,1176.7,4,0,0,below_screen,False
+OR11H4,Cancer Antigen only,0.786225506284,blood,0.5,0.0,0.0,14.006869107792129,28.0,0.0,1,0,0,below_screen,False
+OR4D11,Cancer Antigen only,0.0,,0.0,0.0,0.0,4.34792337654166,10.0,0.0,0,0,0,below_screen,True
+OR10H4,Cancer Antigen only,0.314054475503,blood,0.0,0.0,0.0,27.271059337811096,3.0,0.0,0,0,0,below_screen,True
+OR4L1,Cancer Antigen only,0.0,,0.0,0.0,0.0,5.754077349631335,3.0,0.0,0,0,0,below_screen,False
+OR4M1,CTA,0.0628123628525,blood,0.0,0.0,0.0,33.6732468154116,5.0,79.2,1,0,0,below_screen,True
+OR4C5,Cancer Antigen only,0.5,blood,0.0,0.0,0.0,3.856590953047157,4.0,0.0,0,0,0,below_screen,True
+OR4C3,Cancer Antigen only,0.464688750074,blood,0.0,0.0,0.0,9.069113796758586,2.0,0.0,0,0,0,dismissed,True
+DCAF4L2,CTA,0.1,hypothalamus,0.2,0.0,0.0,310.76545649061666,379.0,130.5,7,0,0,below_screen,False
+OR4X1,Cancer Antigen only,0.272134177397,blood,0.0,0.0,0.0,4.191430596407253,2.0,0.0,0,0,0,below_screen,False
+TGIF2LY,CTA,0.0,,0.0,0.0,0.0,24.4297,57.0,36.8,2,0,0,below_screen,True
+MAGEB18,CTA,0.0,,0.0,0.0,0.0,11.186498595909226,16.0,6.2,2,0,0,below_screen,False
+OR51A7,Cancer Antigen only,0.092591,blood,0.0,0.0,0.0,16.518170322648572,2.0,0.1,1,0,0,below_screen,True
+OR51T1,Cancer Antigen only,0.065085,blood,0.0,0.0,0.0,14.161541693509617,7.0,0.0,0,0,0,below_screen,True
+OR51F2,Cancer Antigen only,0.042913,blood,0.0,0.0,0.0,5.748726468412466,5.0,0.0,0,0,0,below_screen,True
+TRIM60,CTA,0.5,blood,0.8,0.0,0.0,31.429752345644992,124.0,188.59993337946963,2,1,0,below_screen,False
+FMR1NB,CTA,0.67570504146,blood,0.7,0.0,0.0,363.4057,184.0,853.7,5,0,0,below_screen,False
+CETN1,CTA,0.0,,0.0,0.0,0.0,22.940791822334443,25.0,2246.2,2,0,0,below_screen,False
+OR14C36,Cancer Antigen only,0.8,white matter,0.7,0.0,0.0,22.574047808435484,7.0,0.1,0,0,0,below_screen,False
+OR2M7,Cancer Antigen only,0.2,pons,0.3,0.0,0.0,8.035866643450658,6.0,0.0,0,0,0,below_screen,True
+OR2G3,Cancer Antigen only,0.5,blood,0.2,0.0,0.0,26.394349635679596,39.0,0.0,0,0,0,below_screen,False
+VCX2,CTA,0.313740857735,blood,0.3,0.0,0.0,169.8470590797921,124.0,262.4,3,0,0,below_screen,True
+FAM187B,CTA,0.607736038065,blood,0.4,0.0,0.0,48.060284274596924,18.0,5131.6,3,0,0,below_screen,False
+TEX44,CTA,0.7351227898109999,blood,0.3,0.0,0.0,29.830305995371877,24.0,5375.1,2,0,0,below_screen,False
+DEFB114,CTA,0.0,,0.0,0.0,0.0,7.6414,8.0,51.4,0,0,0,below_screen,False
+TNP2,CTA,0.467821065317,blood,0.3,0.0,0.0,19.846617554264053,50.0,1153.7,1,0,0,below_screen,False
+SPAG11A,CTA,0.3,cerebral cortex,0.3,0.0,0.0,472.24677364215773,94.0,4639.4,2,0,0,below_screen,True
+CCDC185,CTA,0.7,basal ganglia,0.9,0.0,0.0,20.487454793796516,72.0,677.2,3,0,0,below_screen,False
+DEFB125,CTA,0.1,retina,0.0,0.0,0.0,27.049907840381767,6.0,1.5,1,0,0,below_screen,False
+TAS1R2,Cancer Antigen only,0.220371,skin,0.1,0.0,0.0,12.2298,12.0,0.0,0,0,0,below_screen,False
+HNRNPCL1,CTA,0.731716160212,blood,0.0,0.0,0.0,34.99951743383226,241.0,140.55491565212816,0,1,0,below_screen,True
+DNAJB8,CTA,0.772686277234,blood,0.1,0.0,0.0,16.10050958378975,50.0,6020.9,3,0,0,below_screen,False
+OR10A7,Cancer Antigen only,0.0,,0.0,0.0,0.0,18.268866977377044,1.0,0.0,0,0,0,below_screen,False
+GARIN5B,CTA,0.418178,cerebellum,0.3,0.0,0.0,41.098386108567645,17.0,27.7,3,0,0,below_screen,True
+WFDC9,CTA,0.1,cerebral cortex,0.5,0.0,0.0,6.2764034124297465,7.0,964.7,0,0,0,below_screen,False
+WFDC10A,CTA,0.4,cerebral cortex,0.5,0.1,0.0,12.230349747216769,43.0,280.5,1,0,0,below_screen,False
+DEFB123,CTA,0.4,small intestine,0.4,0.1,0.1,50.4986901364739,110.0,155.0,3,0,0,below_screen,False
+OR10Q1,Cancer Antigen only,0.122358,adipose tissue,0.1,0.0,0.0,10.995524631257075,19.0,0.1,0,0,0,below_screen,False
+DEFB112,CTA,0.03947,basal ganglia,0.0,0.0,0.0,28.124201126404607,1.0,24.0,0,0,0,below_screen,False
+OR56B4,Cancer Antigen only,0.7891209448469999,blood,0.2,0.1,0.0,53.715376470722006,23.0,0.0,0,0,0,below_screen,True
+SPEM1,CTA,0.5874481531669999,blood,0.2,0.0,0.0,9.160066247718113,15.0,6738.9,2,0,0,below_screen,True
+OR5M8,Cancer Antigen only,0.0,,0.0,0.0,0.0,4.397186777747862,10.0,0.0,0,0,0,below_screen,True
+SAGE1,CTA,0.918586020006,blood,0.7,0.0,0.0,355.6539,638.0,11.6,5,0,0,below_screen,False
+OR8K5,Cancer Antigen only,0.0,,0.0,0.0,0.0,277.0294496278009,5.0,0.0,0,0,0,below_screen,False
+ACTL9,CTA,0.7538951911640001,blood,0.0,0.0,0.0,36.3504274493792,9.0,3206.8,2,0,0,below_screen,False
+OR4C6,Cancer Antigen only,0.2,blood,0.2,0.1,0.1,16.73993869727798,42.0,0.0,0,0,0,below_screen,False
+OR4C15,Cancer Antigen only,0.0,,0.0,0.0,0.0,2.5444370665123186,2.0,0.0,0,0,0,below_screen,False
+OR4A15,Cancer Antigen only,0.0,,0.0,0.0,0.0,3.1991536230197637,3.0,0.0,0,0,0,below_screen,True
+TRIM49B,CTA,0.1,cerebellum,0.1,0.0,0.0,308.14999999934645,99.0,12.501790047420474,0,2,0,below_screen,True
+MRGPRG,Cancer Antigen only,0.2,pons,0.3,0.0,0.0,10.867893038919599,10.0,0.7,0,0,0,below_screen,False
+MBD3L3,CTA,0.8,blood,0.8,0.0,0.0,207.29999999952582,100.0,3582.4011598891743,0,2,0,below_screen,True
+VCX,CTA,0.4,retina,0.4,0.2,0.1,843.0059680949709,911.0,701.0,5,0,0,below_screen,True
+OR4Q3,Cancer Antigen only,0.5,cerebellum,0.7,0.0,0.0,8.781634498495123,15.0,0.1,0,0,0,below_screen,True
+OR2T29,Cancer Antigen only,0.7,blood,0.3,0.0,0.0,7.120199266418991,11.0,0.2,0,0,0,below_screen,True
+TCHHL1,Cancer Antigen only,0.7,skin,0.7,0.0,0.0,174.41652660738288,91.0,0.1,1,0,0,below_screen,False
+OR4M2B,Cancer Antigen only,0.3,cerebellum,0.3,0.0,0.0,37.55802701115336,1.0,0.5,0,0,0,below_screen,True
+CYLC1,CTA,0.0,,0.3,0.0,0.0,2.617838525343277,3.0,2458.2,1,0,0,below_screen,False
+POTEC,CTA,0.286334085626,blood,0.1,0.0,0.0,33.121805068644264,107.0,54.7,4,0,0,dismissed,True
+OR52L1,Cancer Antigen only,0.429257243092,blood,0.2,0.0,0.0,45.905522252377786,5.0,0.1,1,0,0,below_screen,True
+TFDP3,CTA,0.0,,0.0,0.0,0.0,78.17216961551506,331.0,45.8,4,0,0,below_screen,False
+C10orf120,CTA,0.0671365,pancreas,0.1,0.0,0.0,17.62444465389972,10.0,1026.3,3,0,0,below_screen,False
+IZUMO1R,CTA,0.8,cerebellum,0.9,0.1,0.1,87.02469703754704,111.0,28.419661607980043,0,0,0,below_screen,False
+GOLGA8G,CTA,0.299497551149,blood,0.3,0.0,0.0,6.2401986041869675,45.0,22.0,2,0,0,below_screen,True
+TRIML1,CTA,0.0,,0.2,0.0,0.0,30.149390939493774,104.0,218.3,3,0,0,below_screen,False
+OR56A3,CTA,0.0836197596941,blood,0.0,0.0,0.0,28.509680103192057,169.0,7.1,2,0,0,below_screen,False
+SPEM2,CTA,0.506550791006,blood,0.2,0.0,0.0,33.45999999999466,35.0,4027.8,3,0,0,below_screen,True
+PIWIL3,CTA,0.577510835338,blood,0.4,0.1,0.1,37.85903232709708,141.0,40.8,2,0,0,below_screen,False
+PRR23B,CTA,0.0,,0.0,0.0,0.0,12.641969771519657,29.0,9.9,3,0,0,below_screen,True
+MAGEA11,CTA,0.146599,esophagus,0.1,0.0,0.0,109.40145470574325,1253.0,58.4,6,0,0,below_screen,False
+CIMIP4,CTA,0.2,hypothalamus,0.2,0.0,0.0,20.94003760473633,7.0,1036.3,1,0,0,below_screen,False
+SPATA31A6,CTA,0.3,hippocampal formation,0.3,0.0,0.0,59.72730974424115,4.0,1.9,2,0,0,below_screen,True
+OR4C46,Cancer Antigen only,0.0,,0.0,0.0,0.0,12.941745627817093,0.0,0.0,0,0,0,below_screen,True
+DEFB128,CTA,0.1,white matter,0.1,0.0,0.0,4.7643,6.0,1163.1,0,0,0,below_screen,False
+OR4F5,Cancer Antigen only,0.0757145,cerebral cortex,0.0,0.0,0.0,26.48567956521482,1.0,0.0,0,0,0,below_screen,True
+PRR30,CTA,0.3,cerebral cortex,0.3,0.0,0.0,13.870099775237199,12.0,1289.3,3,0,0,below_screen,False
+OR6P1,Cancer Antigen only,0.0,,0.0,0.0,0.0,13.919999999994692,2.0,0.0,0,0,0,below_screen,False
+SPATA31D3,CTA,0.0,,0.0,0.0,0.0,12.63012666544926,2.0,52.2,0,0,0,below_screen,True
+KRTAP22-1,Cancer Antigen only,0.4,medulla oblongata,0.5,0.0,0.0,6.6541,3.0,0.0,0,0,0,below_screen,True
+KRTAP19-6,Cancer Antigen only,0.1,pons,0.1,0.0,0.0,4.7652785787433025,10.0,0.0,0,0,0,below_screen,False
+KRTAP6-2,Cancer Antigen only,0.1,white matter,0.2,0.0,0.0,16.66698266789766,10.0,0.0,0,0,0,below_screen,False
+OR13C8,Cancer Antigen only,0.4,pons,0.5,0.0,0.0,141.71473909930583,7.0,0.0,0,0,0,below_screen,False
+KRTAP19-2,Cancer Antigen only,0.7,blood,0.5,0.0,0.0,4.619199520424538,4.0,0.0,0,0,0,below_screen,False
+KRTAP19-4,Cancer Antigen only,0.1,skin,0.2,0.0,0.0,9.956169654683528,7.0,0.0,0,0,0,below_screen,False
+KRTAP23-1,Cancer Antigen only,0.2,hypothalamus,0.2,0.0,0.0,9.486747717885402,8.0,0.0,0,0,0,below_screen,False
+ACTL7A,CTA,0.957716653859,blood,0.5,0.0,0.0,29.280240844565142,91.0,7051.6,3,0,0,below_screen,False
+KRTAP21-1,Cancer Antigen only,0.4905765465439999,blood,0.3,0.0,0.0,17.200520886022765,7.0,0.0,0,0,0,below_screen,True
+CYP26C1,Cancer Antigen only,0.6,medulla oblongata,0.7,0.0,0.0,15.869869577862016,225.0,0.1,0,0,0,dismissed,True
+OR2T27,Cancer Antigen only,0.5588571044780001,blood,0.2,0.0,0.0,18.475068261452385,1.0,0.0,0,0,0,below_screen,True
+TMEM202,CTA,0.2,blood,0.3,0.0,0.0,11.919823821397948,38.0,217.9,2,0,0,below_screen,False
+OR51I2,Cancer Antigen only,0.8,medulla oblongata,0.9,0.0,0.0,30.575976537178917,29.0,0.0,1,0,0,below_screen,False
+ZCCHC13,CTA,0.0,,0.0,0.0,0.0,32.6396,7.0,1111.7,1,0,0,below_screen,False
+MAGEB5,Reproductive Antigen only,0.039186,salivary gland,0.0,0.0,0.0,2.0947275959842115,1.0,10.7,0,0,0,below_screen,False
+RNASE9,CTA,0.0,,0.0,0.0,0.0,28.30789701538808,1.0,96.2,0,0,0,below_screen,False
+CATSPER4,CTA,0.567544523299,blood,0.2,0.0,0.0,8.0878,47.0,123.0,1,0,0,below_screen,False
+MAGEB16,CTA,0.0,,0.0,0.0,0.0,89.87110407490505,145.0,27.0,4,0,0,below_screen,False
+DUSP21,CTA,0.3609167556009999,blood,0.2,0.0,0.0,41.581,24.0,726.2,3,0,0,below_screen,False
+FAM47B,Reproductive Antigen only,0.0,,0.0,0.0,0.0,2.2541479381123106,1.0,72.2,1,0,0,below_screen,True
+DCAF8L2,CTA,0.4,white matter,0.5,0.0,0.0,25.55000000005905,222.0,19.3,2,0,0,dismissed,False
+SPANXN3,CTA,0.8,duodenum,0.8,0.0,0.0,20.310248529636006,27.0,521.2,2,0,0,below_screen,False
+FOXR2,CTA,0.0,,0.0,0.0,0.0,239.4205265548025,150.0,5.2,2,0,0,below_screen,True
+SPANXN4,CTA,0.5,hippocampal formation,0.9,0.0,0.0,32.99923728343275,8.0,504.4,0,0,0,below_screen,False
+FAM90A27P,CTA,0.0,,0.0,0.0,0.0,341.6900000006269,67.0,23.276463268232504,0,0,0,below_screen,True
+SPATA31D4,CTA,0.0,,0.0,0.0,0.0,1.656072810427506,2.0,48.9,1,0,0,below_screen,True
+OR5K4,Cancer Antigen only,0.0,,0.0,0.0,0.0,12.883759997540352,3.0,0.0,0,0,0,below_screen,True
+OR6M1,Cancer Antigen only,0.303241,pancreas,0.5,0.0,0.0,21.506507110553745,8.0,0.2,0,0,0,below_screen,False
+OR6K2,Cancer Antigen only,0.2,blood,0.0,0.0,0.0,4.930130103895267,3.0,0.0,0,0,0,below_screen,False
+OR10S1,Cancer Antigen only,0.2,hypothalamus,0.2,0.0,0.0,31.490215190840527,4.0,0.0,0,0,0,below_screen,False
+BECN2,CTA,0.0,,0.0,0.0,0.0,10.7125,39.0,267.323747770458,0,0,0,below_screen,False
+ZNF729,CTA,0.2,medulla oblongata,0.4,0.0,0.0,65.67188179021355,255.0,14.318805342777445,1,0,0,below_screen,True
+GK2,CTA,0.5,spinal cord,0.6,0.0,0.0,200.60021068644622,7.0,750.2,3,0,0,below_screen,False
+PFN3,CTA,0.9,kidney,0.9,0.0,0.0,19.7816,81.0,3155.0,4,0,0,below_screen,False
+OR5AC2,Cancer Antigen only,0.0,,0.0,0.0,0.0,18.971877878549204,5.0,0.2,0,0,0,below_screen,False
+MBD3L2B,CTA,0.0,,0.0,0.0,0.0,155.05910027582536,13.0,1378.7466549567953,0,1,0,below_screen,True
+OR14A16,CTA,0.4,hypothalamus,0.4,0.0,0.0,10.742407189948617,10.0,3.989601749173098,1,0,0,below_screen,False
+OR2T4,Cancer Antigen only,0.609821646876,blood,0.4,0.0,0.0,11.539521905609366,9.0,0.0,0,0,0,below_screen,True
+ZNF679,CTA,0.251756848155,blood,0.2,0.0,0.0,38.49000000011979,285.0,345.3545563742832,2,1,0,below_screen,True
+MAGEA6,CTA,0.2,adipose tissue,0.2,0.0,0.0,538.808542650006,2150.0,56.06862574409452,6,0,0,below_screen,True
+OR10D3,Cancer Antigen only,0.4,cerebral cortex,0.5,0.0,0.0,6.098416599023461,2.0,0.8,0,0,0,below_screen,False
+OR13G1,Cancer Antigen only,0.5,blood,0.5,0.0,0.0,21.7827599616176,20.0,0.3,1,0,0,below_screen,False
+GALP,CTA,0.6,cerebral cortex,0.7,0.0,0.0,1332.5600000431662,220.0,9.0,0,0,1,below_screen,False
+OR11L1,Cancer Antigen only,0.3,thyroid gland,0.4,0.0,0.0,63.302490029967124,6.0,0.0,0,0,0,below_screen,True
+CCER1,CTA,0.0,,0.0,0.0,0.0,106.3066336318698,8.0,626.6,2,0,0,below_screen,False
+OR51C1,CTA,0.414578,blood vessel,0.1,0.0,0.0,50.00193598524688,292.0,3.8,0,0,0,below_screen,True
+SCGB1D4,CTA,0.6,thymus,0.4,0.0,0.0,3576.1715125282867,174.0,3653.8,0,0,0,below_screen,False
+OR5B17,Cancer Antigen only,0.0,,0.0,0.0,0.0,14.702187789853118,0.0,0.0,0,0,0,below_screen,False
+OR52M1,Cancer Antigen only,0.28911480815,blood,0.0,0.0,0.0,3.9003,32.0,0.0,0,0,0,below_screen,False
+OR1S2,Cancer Antigen only,0.0,,0.0,0.0,0.0,5.9449,2.0,0.0,0,0,0,below_screen,True
+OR5H2,Cancer Antigen only,0.0,,0.0,0.0,0.0,6.841966146412518,2.0,0.0,0,0,0,below_screen,True
+POTEH,CTA,0.1,blood,0.0,0.0,0.0,211.54999999973302,343.0,16.1,2,0,0,below_screen,True
+FAM47C,CTA,0.280277,pituitary gland,0.2,0.0,0.0,16.129677435305183,2.0,15.3,3,0,0,below_screen,True
+CCT8L2,CTA,0.283351624998,blood,0.2,0.0,0.0,30.754974876957615,4.0,215.5,3,0,0,below_screen,True
+OR10G6,Cancer Antigen only,0.3,hypothalamus,0.3,0.0,0.0,3.1198,4.0,0.0,0,0,0,below_screen,False
+OR5BS1,Cancer Antigen only,0.1,cerebral cortex,0.2,0.0,0.0,8.9445,13.0,0.0,0,0,0,below_screen,False
+MAGEA1,CTA,0.0,,0.0,0.0,0.0,346.4349511513582,1394.0,47.6,7,0,0,below_screen,False
+MAGEB3,CTA,0.2,white matter,0.3,0.0,0.0,7.5509,47.0,18.9,3,0,0,below_screen,False
+OR2T5,Cancer Antigen only,0.534223145945,blood,0.1,0.0,0.0,17.824927339482738,27.0,0.0,0,0,0,below_screen,True
+GJE1,Cancer Antigen only,0.6,medulla oblongata,0.7,0.0,0.0,7.4296057460232445,9.0,0.0,0,0,0,below_screen,False
+LELP1,CTA,0.3,skin,0.4,0.0,0.0,119.06361811610738,28.0,32641.9,3,0,0,below_screen,False
+FAM24A,CTA,0.515215724222,blood,0.5,0.0,0.0,8.878004693880387,10.0,703.2,1,0,0,below_screen,False
+SMIM9,CTA,0.912493593077,blood,0.4,0.0,0.0,4.5781,34.0,37.4,0,0,0,below_screen,False
+DPPA5,CTA,0.9,lung,0.5,0.1,0.0,2792.9999943653806,206.0,8535.980183999412,2,0,0,below_screen,False
+SPANXN1,CTA,0.236171581965,blood,0.0,0.0,0.0,11.281661439585312,24.0,37.6,1,0,0,below_screen,True
+CXorf66,CTA,0.3,liver,0.6,0.0,0.0,14.520414887516786,13.0,185.6,2,0,0,below_screen,False
+DEFB110,CTA,0.2,pons,0.2,0.0,0.0,5.397929679261921,6.0,848.5,0,0,0,below_screen,False
+RHOXF2B,CTA,0.5,cerebellum,0.6,0.0,0.0,419.2297483776822,156.0,176.2348902335655,3,0,0,below_screen,True
+GLT6D1,CTA,0.8,midbrain,0.8,0.0,0.0,7.409999999997556,11.0,82.0,2,0,0,below_screen,False
+TMEM225,CTA,0.5,hypothalamus,0.4,0.0,0.0,18.25541306583108,41.0,306.2,1,0,0,below_screen,False
+SPANXN5,CTA,0.0,,0.0,0.0,0.0,7.9300841070456,3.0,464.2,2,0,0,below_screen,True
+PRAMEF20,CTA,0.1,cerebellum,0.6,0.0,0.0,17.170000000007672,34.0,273.06697042090127,1,1,0,below_screen,True
+PRAMEF17,CTA,0.2,hypothalamus,0.3,0.0,0.0,5.690169578504153,15.0,167.3838510854027,0,0,0,below_screen,True
+PRAMEF14,CTA,0.0,,0.0,0.0,0.0,34.499999999884785,38.0,169.27891231379024,1,2,0,below_screen,True
+PRAMEF15,CTA,0.0,,0.1,0.0,0.0,91.51181130667945,69.0,1184.9202654507967,0,1,0,below_screen,True
+DEFB121,CTA,0.1,blood,0.0,0.0,0.0,4.33251789538046,5.0,2536.7,0,0,0,below_screen,False
+OR2H1,CTA,0.258860684985,blood,0.1,0.0,0.0,3.4508981343099654,11.0,97.3,3,0,0,below_screen,False
+OR2B3,Cancer Antigen only,0.0,,0.0,0.0,0.0,9.615943201810742,7.0,0.0,0,0,0,below_screen,False
+SPATA31A1,CTA,0.0,,0.0,0.0,0.0,15.875549809241747,25.0,20.8,0,0,0,below_screen,True
+FBXO47,CTA,0.7831474785420001,blood,0.9,0.0,0.0,12.520293521666463,49.0,111.8,3,0,0,dismissed,False
+OR6C68,Cancer Antigen only,0.914967587434,blood,0.4,0.0,0.0,2.2853,6.0,0.0,0,0,0,below_screen,False
+OR6C65,Cancer Antigen only,0.0,,0.0,0.0,0.0,5.6300000000098205,4.0,0.0,0,0,0,below_screen,False
+OR52J3,Cancer Antigen only,0.2,cerebral cortex,0.4,0.0,0.0,61.80577346816375,3.0,0.0,0,0,0,below_screen,False
+VCX3B,CTA,0.5,retina,0.4,0.0,0.0,420.7433527041679,598.0,903.1,4,0,0,dismissed,True
+MBD3L4,CTA,0.0,,0.0,0.0,0.0,53.28946292235634,7.0,163.34110650176927,0,0,0,below_screen,True
+GAGE1,CTA,0.7,retina,0.5,0.0,0.0,1181.9049505121604,859.0,126.6,6,0,0,below_screen,True
+SMIM21,CTA,0.5,cerebral cortex,0.6,0.0,0.0,3.9800145245935203,5.0,83.9,3,0,0,below_screen,False
+KRTAP20-3,Cancer Antigen only,0.3,midbrain,0.6,0.0,0.0,37.267914656071376,7.0,0.0,0,0,0,below_screen,False
+KRTAP20-4,CTA,0.3,hippocampal formation,0.4,0.0,0.0,50.41146000162567,84.0,2.0,0,0,0,below_screen,False
+KRTAP22-2,Cancer Antigen only,0.2,skin,0.2,0.0,0.0,7.8426,10.0,0.0,0,0,0,below_screen,False
+TSSK2,CTA,0.6,white matter,0.7,0.4,0.2,18.499698151621782,351.0,4667.1,0,0,0,below_screen,True
+OR5K3,Cancer Antigen only,0.198955454979,blood,0.0,0.0,0.0,46.98384813078824,4.0,0.0,0,0,0,below_screen,True
+TSSK1B,CTA,0.4,midbrain,0.6,0.0,0.0,6.492902272299142,4.0,2004.0,3,0,0,below_screen,True
+KRTAP12-4,Cancer Antigen only,0.707042802905,blood,0.9,0.0,0.0,126.98544178504673,24.0,0.0,0,0,0,below_screen,True
+KRTAP6-3,Cancer Antigen only,0.1,midbrain,0.1,0.0,0.0,7.998538287034186,3.0,0.0,0,0,0,below_screen,True
+OR2F1,CTA,0.168164917714,blood,0.2,0.0,0.0,18.297687204899905,4.0,8.8,0,0,0,dismissed,True
+LEUTX,CTA,0.309210545831,blood,0.0,0.0,0.0,34.910000000001666,48.0,1081.413356373744,0,2,1,below_screen,False
+MAGEB1,CTA,0.0,,0.0,0.0,0.0,93.2056,552.0,23.0,6,0,0,below_screen,True
+PRR23E,CTA,0.106432971351,blood,0.0,0.0,0.0,52.634,200.0,140.85503857033473,0,0,0,below_screen,False
+TRIM77,CTA,0.4,cerebral cortex,0.9,0.0,0.0,7.572,6.0,42.36891944860645,0,0,0,dismissed,True
+DEFB113,Reproductive Antigen only,0.0,,0.0,0.0,0.0,2.2679,1.0,46.1,0,0,0,below_screen,False
+IQCF5,CTA,0.4,basal ganglia,0.6,0.0,0.0,15.065157282864917,33.0,4325.5,1,0,0,below_screen,False
+IQCF6,CTA,0.2,cerebral cortex,0.3,0.0,0.0,29.620752027633504,30.0,885.5,1,0,0,below_screen,False
+TRIM64C,CTA,0.2,blood,0.1,0.0,0.0,22.63999999995399,3.0,2.896332969235101,0,0,0,below_screen,True
+PNMA6E,CTA,0.317736,pituitary gland,0.3,0.0,0.0,71.61638055398758,12.0,50.9,0,0,0,below_screen,False
+SPATA31D1,CTA,0.0,,0.0,0.0,0.0,25.5479,9.0,111.8,2,0,0,below_screen,True
+TCP11X2,CTA,0.676419,pituitary gland,0.1,0.0,0.0,15.392226132901152,83.0,23.415122814994252,0,0,0,below_screen,True
+ZNF705D,CTA,0.3,choroid plexus,0.5,0.0,0.0,24.309469414491186,77.0,4.749238494288022,2,0,0,below_screen,True
+ZNF705B,Reproductive Antigen only,0.0,,0.0,0.0,0.0,3.7831748855889056,0.0,2.542183837693277,0,0,0,below_screen,True
+ZNF705G,CTA,0.2,retina,0.2,0.0,0.0,20.55419903091337,3.0,52.6,0,0,0,dismissed,True
+DEFB116,Cancer Antigen only,0.0,,0.2,0.0,0.0,6.5792,11.0,0.4,0,0,0,below_screen,False
+DEFB115,CTA,0.1,thalamus,0.2,0.0,0.0,29.272781684514445,6.0,1.1,0,0,0,below_screen,False
+GAB4,CTA,0.739367,peripheral nerve,0.7,0.0,0.0,43.4994,156.0,50.3,2,0,0,below_screen,False
+TRIM51G,CTA,0.3,blood,0.1,0.0,0.0,78.49999999976,35.0,2.0471741408906787,0,0,0,below_screen,True
+OR4A5,Cancer Antigen only,0.0,,0.0,0.0,0.0,25.6180452346302,0.0,0.0,0,0,0,below_screen,True
+POM121L12,CTA,0.0,,0.0,0.0,0.0,7.046515194697925,3.0,31.0,1,0,0,below_screen,False
+OR2A14,Cancer Antigen only,0.3517245763859999,blood,0.3,0.0,0.0,10.503122390482591,2.0,0.0,0,0,0,below_screen,True
+OR4E2,Cancer Antigen only,0.721974301124,blood,0.8,0.0,0.0,19.036763974778278,40.0,0.0,0,0,0,below_screen,False
+OR2A2,Cancer Antigen only,0.6965704387549999,blood,0.1,0.0,0.0,18.81362313035918,2.0,0.0,0,0,0,below_screen,True
+OR52B4,Cancer Antigen only,0.893699761925,blood,0.2,0.0,0.0,10.169311388835732,4.0,0.0,0,0,0,below_screen,False
+ZNF735,CTA,0.2147951343169999,blood,0.0,0.0,0.0,5.28995193257454,42.0,277.61077076794675,0,0,0,below_screen,True
+SUPT20HL1,CTA,0.8971,colon,0.6,0.1,0.0,18.139999999982738,52.0,3.9,0,0,0,below_screen,True
+GPX5,CTA,0.209690762296,blood,0.1,0.0,0.0,7.920194493996664,43.0,122.1,3,0,0,below_screen,False
+GAGE12H,CTA,0.0,,0.0,0.0,0.0,778.902045124366,222.0,319.4398409153606,3,0,0,below_screen,True
+PPP4R3C,CTA,0.0,,0.0,0.0,0.0,26.59072405819045,15.0,22.7,2,0,0,below_screen,False
+USP17L3,Cancer Antigen only,0.1,cerebral cortex,0.1,0.0,0.0,3.820231958846537,3.0,0.0,0,0,0,below_screen,True
+DCAF8L1,CTA,0.051277,urinary bladder,0.0,0.0,0.0,85.50310044547554,90.0,12.5,2,0,0,below_screen,False
+KIF4B,CTA,0.7,pons,0.8,0.0,0.0,11.703081422855274,15.0,33.1,3,0,0,below_screen,True
+ANHX,CTA,0.2,basal ganglia,0.3,0.0,0.0,45.661,189.0,30.1,1,0,0,below_screen,False
+GOLGA6L25,CTA,0.2,cerebral cortex,0.3,0.0,0.0,31.150156209098743,0.0,14.5,0,0,1,below_screen,True
+BOD1L2,CTA,0.17118350624,blood,0.1,0.0,0.0,35.67060788661166,10.0,7342.3,1,0,0,below_screen,False
+VN1R4,Cancer Antigen only,0.0,,0.0,0.0,0.0,17.795741346193495,7.0,0.5883184646158331,0,0,0,below_screen,True
+TSPY8,CTA,0.0,,0.0,0.0,0.0,1056.5161396742146,99.0,5.4,0,0,0,below_screen,True
+SSU72L6,CTA,0.2,white matter,0.2,0.0,0.0,82.90999999984743,14.0,66.17656496297754,0,0,0,below_screen,True
+OR5H6,Cancer Antigen only,0.0,,0.0,0.0,0.0,50.41972550131263,3.0,0.1,0,0,0,below_screen,True
+MBD3L2,CTA,0.0,,0.0,0.0,0.0,1562.2479746640856,138.0,1908.9339726472365,0,2,0,below_screen,True
+KRTAP21-3,Cancer Antigen only,0.2,medulla oblongata,0.2,0.0,0.0,28.149796406226248,19.0,0.0,0,0,0,below_screen,True
+MAGEB6B,Cancer Antigen only,0.0,,0.0,0.0,0.0,14.7944,4.0,0.5,0,0,0,below_screen,True
+KRTAP25-1,Cancer Antigen only,0.1,midbrain,0.1,0.0,0.0,5.307871351960943,3.0,0.0,0,0,0,below_screen,False
+PRAMEF6,CTA,0.0,,0.0,0.0,0.0,20.800000000006595,38.0,458.1761979298828,2,2,0,below_screen,True
+OR5H15,Cancer Antigen only,0.0,,0.0,0.0,0.0,9.6968,2.0,0.0,0,0,0,below_screen,True
+TSPY4,CTA,0.2,adipose tissue,0.2,0.1,0.0,1349.8640606505833,234.0,31.8,2,0,0,below_screen,True
+C16orf82,CTA,0.797352,pituitary gland,0.6,0.0,0.0,26.189999999999337,56.0,9679.0,1,0,0,below_screen,False
+RBMY1A1,CTA,0.0,,0.0,0.0,0.0,85.50784949955317,174.0,19.868894959452337,2,0,0,below_screen,True
+OR10G8,Cancer Antigen only,0.1,hypothalamus,0.2,0.0,0.0,7.924990765928229,2.0,0.0,0,0,0,below_screen,True
+SLC35G4,Cancer Antigen only,0.0,,0.0,0.0,0.0,14.262017137863312,11.0,0.8597582366616978,0,0,0,below_screen,True
+CT47B1,CTA,0.0,,0.0,0.0,0.0,116.65372491815481,26.0,199.8,2,0,0,below_screen,True
+OR10G9,Cancer Antigen only,0.0,,0.1,0.0,0.0,26.7028808719941,3.0,0.0,0,0,0,below_screen,True
+TAAR9,Cancer Antigen only,0.559385315096,blood,0.0,0.0,0.0,13.2498,9.0,0.0,0,0,0,below_screen,False
+MBD3L5,CTA,0.0,,0.0,0.0,0.0,316.78605099553096,23.0,596.4790727673408,1,2,0,below_screen,True
+ENSG00000237378,Reproductive Antigen only,0.7,pons,0.7,0.1,0.0,8.161501136696348,0.0,15.833605134005998,0,0,0,below_screen,True
+OR7E24,CTA,0.129189761913,blood,0.1,0.0,0.0,25.100578255864846,83.0,48.5,3,0,0,below_screen,True
+TEX51,CTA,0.3,kidney,0.3,0.0,0.0,16.331599914354108,3.0,541.5,1,0,0,below_screen,False
+GOLGA6L24,CTA,0.2,white matter,0.2,0.0,0.0,25.33557060095803,0.0,24.1,0,0,1,below_screen,True
+TSPY9,CTA,0.2,spleen,0.2,0.0,0.0,5.925619628509768,5.0,14.5,1,0,0,below_screen,True
+MPC1L,CTA,0.846181627941,blood,0.4,0.0,0.0,33.18963504457384,139.0,675.6,0,0,0,below_screen,False
+PRR20G,CTA,0.0,,0.0,0.0,0.0,7.7682946617579836,8.0,585.6030787421942,1,0,0,below_screen,False
+PRAMEF11,CTA,0.0,,0.0,0.0,0.0,7.240000000008603,15.0,151.39491001857763,1,2,0,below_screen,True
+KRTAP13-3,Cancer Antigen only,0.0,,0.0,0.0,0.0,29.706875801521072,2.0,0.0,0,0,0,below_screen,False
+OR14A2,CTA,0.5,blood,0.7,0.0,0.0,6.3480075097486806,12.0,21.0,0,0,0,below_screen,True
+ENSG00000241690,Reproductive Antigen only,0.5,retina,0.3,0.0,0.0,5.701219459796879,0.0,13.5,0,0,0,below_screen,True
+RBMY1E,CTA,0.0,,0.0,0.0,0.0,54.39999999992989,83.0,3.5369737302854904,2,0,0,below_screen,True
+RBMY1B,CTA,0.0,,0.0,0.0,0.0,12.060287010275601,23.0,3.8157613924770426,2,0,0,below_screen,True
+PRAMEF4,CTA,0.0,,0.0,0.0,0.0,110.33053872753919,74.0,222.55865557848745,1,2,0,below_screen,True
+KRTAP19-7,Cancer Antigen only,0.6,skin,0.7,0.0,0.0,66.3709490741377,12.0,0.0,0,0,0,below_screen,False
+RBMY1D,CTA,0.1,medulla oblongata,0.2,0.0,0.0,4.21,16.0,1.3,0,0,0,below_screen,True
+KRTAP20-1,Cancer Antigen only,0.4,skin,0.4,0.0,0.0,107.7906246516068,23.0,0.1,0,0,0,below_screen,True
+EPPIN-WFDC6,CTA,0.4,cerebral cortex,0.4,0.0,0.0,49.676571950881545,28.0,62.3,0,0,0,below_screen,True
+PTTG1IP2,Reproductive Antigen only,0.3,hypothalamus,0.8,0.0,0.0,3.2257464966703573,0.0,100.6,0,0,0,below_screen,True
+RFPL4B,CTA,0.414299,kidney,0.3,0.1,0.0,429.3782,331.0,132.08603633036864,4,2,0,below_screen,True
+UBTFL1,CTA,0.2,blood,0.4,0.0,0.0,26.997335816859287,7.0,47.189332806590066,0,0,0,below_screen,True
+OR5M1,Cancer Antigen only,0.0,,0.0,0.0,0.0,1.420093521030061,2.0,0.0,0,0,0,below_screen,True
+CCDC166,CTA,0.2314892726179999,blood,0.2,0.0,0.0,53.1680835254348,24.0,39.6,3,0,0,below_screen,False
+OR5M11,Cancer Antigen only,0.158782,urinary bladder,0.1,0.0,0.0,7.724727895310499,17.0,0.1,1,0,0,below_screen,False
+OR4D2,Cancer Antigen only,0.8238334350059999,blood,0.0,0.0,0.0,10.263349094393362,1.0,0.0,0,0,0,below_screen,False
+KDM4F,Reproductive Antigen only,0.0,,0.1,0.0,0.0,5.4853,1.0,2.5673133074066685,0,0,0,below_screen,True
+ENSG00000256825,Cancer Antigen only,0.1,cerebral cortex,0.2,0.0,0.0,24.062587194427103,0.0,0.7561602288402816,0,0,0,dismissed,True
+RNASE12,CTA,0.1,bone marrow,0.2,0.0,0.0,13.929841393653096,8.0,679.2,1,0,0,below_screen,True
+OR4C13,Cancer Antigen only,0.0,,0.0,0.0,0.0,3.7392937682233813,4.0,0.0,0,0,0,below_screen,True
+TSPY1,CTA,0.0,,0.0,0.0,0.0,285.0889941189258,174.0,7.1,3,0,0,below_screen,True
+TPRX2,CTA,0.9,retina,0.6,0.0,0.0,18.94852422266322,21.0,650.4500789827663,0,0,0,below_screen,True
+TLE7,CTA,0.188636482666,blood,0.0,0.0,0.0,2.3052522562366797,3.0,23.5,0,0,0,below_screen,False
+OR1D5,Cancer Antigen only,0.7,blood,0.6,0.0,0.0,55.49553568116533,56.0,0.0,0,0,0,below_screen,True
+IGBP1C,CTA,0.377278148755,blood,0.0,0.0,0.0,7.1032,62.0,53.4,0,0,0,below_screen,True
+TCP11X1,CTA,0.027311,pituitary gland,0.9,0.0,0.0,15.547761541010729,11.0,8.973400997489115,0,0,0,below_screen,True
+TEX13A,CTA,0.1,cerebral cortex,0.1,0.0,0.0,3.7747,15.0,227.6,0,0,0,below_screen,False
+ZNF723,CTA,0.7,cerebellum,0.9,0.1,0.0,51.97766939949365,215.0,66.2,1,0,0,below_screen,True
+CT45A1,CTA,0.9,retina,0.8,0.0,0.0,397.13806912340823,785.0,11.6,3,0,0,below_screen,True
+SPANXN2,CTA,0.0,,0.0,0.0,0.0,15.29173197538818,4.0,197.2,0,0,0,below_screen,True
+CALR3,CTA,0.500857891305,blood,0.5,0.0,0.0,14.630542617725403,37.0,63.0,1,0,0,below_screen,True
+H3Y1,CTA,0.2,cerebral cortex,0.1,0.0,0.0,82.9678,75.0,2721.115900124967,0,1,1,below_screen,True
+PRAMEF5,Cancer Antigen only,0.0,,0.0,0.0,0.0,9.199999999970776,23.0,0.0,0,1,0,below_screen,True
+LYPD4,CTA,0.792664176277,blood,0.5,0.0,0.0,73.67903884889455,69.0,1403.1,1,0,0,below_screen,False
+GOLGA6L1,CTA,0.3,cerebral cortex,0.5,0.0,0.0,57.691110273449894,227.0,27.6,1,0,0,below_screen,True
+OR4M2,CTA,0.0,,0.0,0.0,0.0,30.21925428290428,18.0,61.9,1,0,0,below_screen,True
+H2AB1,CTA,0.7,white matter,0.6,0.1,0.1,193.00484649664318,347.0,116.3,1,0,0,below_screen,True
+HNRNPCL2,CTA,0.280845588261,blood,0.0,0.0,0.0,14.480208529538292,14.0,55.7518302893752,1,0,0,below_screen,True
+SPATA31A3,CTA,0.0,,0.0,0.0,0.0,11.549733040505085,6.0,4.6,1,0,0,below_screen,True
+SPATA31A7,CTA,0.10434002266,blood,0.2,0.0,0.0,10.40000000002071,42.0,2.8,0,0,0,below_screen,True
+SPATA31A5,CTA,0.1,blood,0.0,0.0,0.0,3.2900404451995175,2.0,1.0,1,0,0,below_screen,True
+GSTT4,CTA,0.8851003159849999,blood,0.1,0.0,0.0,16.01,159.0,488.8,0,0,0,below_screen,True
+GOLGA6L6,CTA,0.2,hypothalamus,0.2,0.0,0.0,5.39021824840281,37.0,23.4,1,0,0,below_screen,True
+CT47C1,CTA,0.2,cerebral cortex,0.3,0.0,0.0,2.1672,3.0,126.7,0,0,0,below_screen,False
+GOLGA6L22,CTA,0.7939312564219999,blood,0.1,0.0,0.0,5.330077227027808,43.0,27.6,0,0,0,below_screen,True
+TEX28,CTA,0.2,cerebral cortex,0.5,0.0,0.0,15.41269824517807,11.0,92.7,0,0,0,below_screen,True
+OR10X1,Cancer Antigen only,0.1,blood,0.1,0.0,0.0,4.9664489510561,6.0,0.0,0,0,0,below_screen,False
+PRAMEF13,CTA,0.0,,0.1,0.0,0.0,4.530000000000067,2.0,33.99163647501005,0,1,0,below_screen,True
+OR52R1,Cancer Antigen only,0.090205,blood,0.0,0.0,0.0,28.8043,16.0,0.0,0,0,0,below_screen,False
+OR5L1,Cancer Antigen only,0.0,,0.0,0.0,0.0,11.26687116815881,0.0,0.0,0,0,0,below_screen,True
+ENSG00000279983,CTA,0.5,hypothalamus,0.5,0.3,0.2,34.41867121003656,2.0,1.6,0,0,0,dismissed,True
+OR51F1,Cancer Antigen only,0.056725,blood,0.0,0.0,0.0,11.149671960072006,4.0,0.0,0,0,0,below_screen,False
+OR1S1,Cancer Antigen only,0.0,,0.1,0.0,0.0,17.508479239193818,0.0,0.0,0,0,0,below_screen,True
+TEX13D,CTA,0.214487,esophagus,0.2,0.0,0.0,16.4001,6.0,26.3,0,0,0,below_screen,True
+TEX13C,CTA,0.3,basal ganglia,0.4,0.0,0.0,104.70466741505467,33.0,13.6,2,0,0,below_screen,False
+KLF18,CTA,0.0693211652913,blood,0.0,0.0,0.0,14.300000000049955,16.0,6.046564360622786,0,0,0,below_screen,False
+ENSG00000283205,CTA,0.8,pons,0.9,0.0,0.0,26.077730654578186,3.0,127.9,0,0,0,below_screen,True
+SPEM3,CTA,0.389772241309,blood,0.1,0.0,0.0,5.217391925468333,8.0,130.1,0,0,0,below_screen,True
+C19orf85,CTA,0.6,hypothalamus,0.6,0.0,0.0,92.82554995509331,50.0,23.032122439953287,0,1,0,below_screen,False
+SSU72L4,CTA,0.2,rectum,0.2,0.0,0.0,343.5100000007823,39.0,260.23705231913385,0,0,0,below_screen,True
+SSU72L5,CTA,0.1,rectum,0.1,0.0,0.0,413.8800000004113,25.0,218.65584782783264,0,0,0,below_screen,True
+SSU72L2,CTA,0.1,thymus,0.1,0.0,0.0,990.9100000014221,38.0,318.61060374288235,0,0,0,below_screen,True
+SSU72L1,CTA,0.0,,0.0,0.0,0.0,387.73999999887127,38.0,92.44953978167317,0,0,0,below_screen,True
+SSU72L3,CTA,0.3,blood,0.1,0.0,0.0,362.7899999998028,20.0,145.8824778264257,0,0,0,below_screen,True
+SCYGR8,Cancer Antigen only,0.2,pons,0.2,0.0,0.0,110.12010602907482,2.0,0.0,0,0,0,below_screen,True
+SCYGR3,Cancer Antigen only,0.2,white matter,0.2,0.0,0.0,39.61416355501371,8.0,0.0,0,0,0,below_screen,True
+SCYGR7,Cancer Antigen only,0.0,,0.0,0.0,0.0,82.49547461971927,3.0,0.0,0,0,0,below_screen,True
+OR8S1,Cancer Antigen only,0.6,pons,0.8,0.0,0.0,14.160578430582483,30.0,0.0,0,0,0,below_screen,True
+SCYGR6,Cancer Antigen only,0.5,medulla oblongata,0.8,0.0,0.0,7.82326118630868,5.0,0.0,0,0,0,below_screen,True
+ENSG00000284779,Cancer Antigen only,0.1,cerebral cortex,0.3,0.0,0.0,24.072376998363076,2.0,0.1,0,0,0,dismissed,True
+ENSG00000285566,CTA,0.2,pons,0.3,0.1,0.0,8.228244297597433,11.0,3.1,0,0,0,below_screen,True
+FAM90A9,Cancer Antigen only,0.3,white matter,0.1,0.0,0.0,1.7501254910206274,2.0,0.0,0,0,0,below_screen,True
+FAM90A10,Cancer Antigen only,0.8,white matter,0.4,0.0,0.0,2.5300000000086724,3.0,0.0,0,0,0,below_screen,True
+SPADH,CTA,0.1,thymus,0.1,0.0,0.0,11.735828000105624,3.0,115.4,0,0,0,below_screen,False
+FAM246B,Cancer Antigen only,0.7,cerebellum,0.4,0.0,0.0,2.8363578172603705,2.0,0.0,0,0,0,below_screen,True
+CIMIP3,Reproductive Antigen only,0.2,blood,0.1,0.0,0.0,1.201628736974337,0.0,4276.8,0,0,0,dismissed,True
+ENSG00000287585,Cancer Antigen only,0.0,,0.0,0.0,0.0,5.112764660379369,10.0,0.3,0,0,0,below_screen,True
+SMIM42,CTA,0.1,cerebellum,0.1,0.0,0.0,48.1152,32.0,102.6,0,0,0,below_screen,False
+PPIAL4D,Cancer Antigen only,0.7,pons,0.9,0.0,0.0,36.39691422132217,24.0,0.0,0,0,0,below_screen,True
+GAGE12C/D/E,CTA,0.3,cerebral cortex,0.3,0.0,0.0,714.2263327155213,288.0,766.2482622059774,4,0,0,below_screen,True
+HNRNPCL3/4,CTA,0.023785,peripheral nerve,0.0,0.0,0.0,191.23484855239894,323.0,607.2682370794545,0,0,0,below_screen,True
+MAGEA2/B,CTA,0.6000000000000001,white matter,0.8,0.0,0.0,233.598576286082,1677.0,163.85595002986526,4,0,0,below_screen,True
+MAGEA9/B,CTA,0.2,cerebellum,0.2,0.2,0.1,321.2373068103917,1441.0,52.8,4,0,0,below_screen,False
+NY-ESO-1,CTA,0.30000000000000004,cerebellum,0.5,0.0,0.0,944.3200000007066,976.0,15.5,5,0,0,below_screen,True
+POTEB/2,CTA,0.0,,0.0,0.0,0.0,9.489928414055457,16.0,2.6,0,0,0,below_screen,True
+PRR20A/B/C/D/E,CTA,0.0,,0.0,0.0,0.0,36.05000000005203,77.0,5.144969898832866,0,0,0,below_screen,False
+PRR23D1/2,CTA,0.30000000000000004,blood,0.2,0.0,0.0,618.3723219680892,65.0,181.8,0,0,0,below_screen,True
+RBMY1F/J,CTA,0.1,lung,0.0,0.0,0.0,39.97968073818117,75.0,7.567076437509743,1,0,0,below_screen,True
+SSX4/B,CTA,0.2,cerebral cortex,0.2,0.0,0.0,413.34000000083716,687.0,41.97847704761745,2,0,0,below_screen,True
+TSPY10/3,CTA,0.2,esophagus,0.2,0.1,0.0,600.7633359310342,203.0,13.8,2,0,0,below_screen,True
+VCY/1B,CTA,0.1,blood,0.2,0.0,0.0,2858.5769141378955,300.0,113.9,2,0,0,below_screen,True
