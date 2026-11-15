@@ -49,7 +49,7 @@ from . import (
     target_selection,
     tcr_trials,
     therapy_evidence,
-    tissue_hazards,
+    tissue_tiers,
 )
 from .apd1 import (
     cancer_apd1_response,
@@ -944,8 +944,8 @@ __all__ = [
     "tcga_deconvolved_expression",
     "therapy_benefit_toxicity_evidence",
     "therapy_evidence",
-    "tissue_hazards",
     "tissue_of_origin",
+    "tissue_tiers",
     "tmb_evidence_fields",
     "tpm_to_housekeeping_normalized",
     "tumor_reference_expression_provenance",

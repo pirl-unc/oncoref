@@ -52,6 +52,7 @@ OTHER = [
     ("Incomplete coverage, identity or translation", "Other:Review", REVIEW),
     ("Nested or Unsafe-contained sequence", "Other:Sequence", SEQUENCE),
     ("No qualifying expression or bounds fail", "Other:Expression", EXPRESSION),
+    ("Home tissue no panel resolves", "Other:Tissue", EXPRESSION),
 ]
 
 
@@ -442,14 +443,13 @@ def tumor_normal(data, path):
             x[mask], y[mask], s=9, alpha=0.6, color=color, label=f"{label} ({int(mask.sum())})"
         )
     grid = np.logspace(np.log10(floor), 2, 100)
-    fold = target_selection.SINGLE_TUMOR_FOLD
-    ax.plot(grid, np.maximum(grid, 1), "k--", lw=1, label="T = max(N, 1): repeated-patient rule")
+    fold = target_selection.TUMOR_FOLD
     ax.plot(
         grid,
         fold * np.maximum(grid, 1),
         "k:",
         lw=1.3,
-        label=f"T = {fold:g} × max(N, 1): single-tumor rule",
+        label=f"T = {fold:g} × max(N, 1): cancer rule",
     )
     ax.set_xscale("log")
     ax.set_yscale("log")

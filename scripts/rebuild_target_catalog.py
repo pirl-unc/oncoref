@@ -28,7 +28,7 @@ from oncoref import (  # noqa: E402
     reference_data,
     source_matrices,
     target_selection,
-    tissue_hazards,
+    tissue_tiers,
 )
 from oncoref import (  # noqa: E402
     samples as sample_api,
@@ -64,7 +64,10 @@ def shared_facts():
     for name in [
         "gene-knowledge.json",
         "gene-knowledge-updates.json",
-        "normal-tissue-hazards.yaml",
+        "normal-tissue-tiers.yaml",
+        "normal-tissue-tier-updates.yaml",
+        "readthrough-loci.csv",
+        "nose-skin-reference.csv",
         "transcript-selection.csv.gz",
         "translation-qualification.csv.gz",
     ]:
@@ -106,10 +109,71 @@ def shared_facts():
     INPUTS["oncoref/data/normal-expression-literature.json"] = sha256(path)
     if provenance["literature_sha256"] != sha256(path):
         raise ValueError("Rare-cell evidence was graded with another literature review")
-    literature = pd.DataFrame(json.loads(path.read_text())["entries"]).set_index("entity_id")
-    for field in ["verdict", "effect", "rule", "decision_tissue", "decision_reason"]:
+    document = json.loads(path.read_text())
+    literature = pd.DataFrame(document["entries"]).set_index("entity_id")
+    for field in [
+        "verdict",
+        "effect",
+        "rule",
+        "decision_tissue",
+        "decision_reason",
+        "recorded_tissue",
+        "recorded_tier",
+    ]:
         f["literature_" + field] = f.entity_id.map(literature[field])
     f["literature_effect"] = f.literature_effect.fillna("not_reviewed")
+    # A family rule names proteins by label and records the tissue the family shares.
+    f["literature_family"], f["literature_family_tier"] = "", ""
+    family_tissue = pd.Series("", index=f.index)
+    for rule in document["family_rules"]:
+        member = f.protein_group_label.str.contains(rule["pattern"]) & f.literature_family.eq("")
+        f.loc[member, "literature_family"] = rule["id"]
+        f.loc[member, "literature_family_tier"] = rule["tier"]
+        # Every family names its home tissue; filter_acts governs only the filters' tier.
+        family_tissue[member] = rule["tissue"]
+    # Nose and skin references record a tissue on the row.
+    reference = pd.read_csv(
+        ROOT / "oncoref/data/nose-skin-reference.csv", keep_default_na=False
+    ).set_index("entity_id")
+    reference = reference[reference.recorded_tissue.ne("")]
+    f["reference_recorded_tissue"] = f.entity_id.map(reference.recorded_tissue).fillna("")
+    f["reference_recorded_basis"] = f.entity_id.map(reference.recorded_basis).fillna("")
+    f["reference_recorded_tier"] = f.reference_recorded_tissue.map(
+        lambda text: next(
+            (
+                tier
+                for tier in tissue_tiers.TIERS
+                if tier in {tissue_tiers.assess(t)["tier"] for t in text.split("; ") if t}
+            ),
+            "",
+        )
+    )
+    # The recorded home, when it is a tissue no panel resolves (see classify).
+    recorded = (
+        family_tissue
+        + "; "
+        + f.literature_recorded_tissue.fillna("")
+        + "; "
+        + f.reference_recorded_tissue
+    )
+    f["home_tissue"] = recorded.map(
+        lambda text: "; ".join(
+            dict.fromkeys(
+                t
+                for t in (part.split(":")[0].strip() for part in text.split(";"))
+                if t in target_selection.UNMEASURED_HOME_TISSUES
+            )
+        )
+    )
+    f["home_tissue_unmeasured"] = f.home_tissue.ne("")
+    readthrough = (
+        pd.read_csv(ROOT / "oncoref/data/readthrough-loci.csv")
+        .fillna({"parent_genes": ""})
+        .groupby("entity_id")
+        .agg(parents=("parent_genes", "; ".join), basis=("basis", "first"))
+    )
+    f["readthrough_locus"] = f.entity_id.isin(readthrough.index)
+    f["readthrough_parents"] = f.entity_id.map(readthrough.parents).fillna("")
     literature_unsafe = f.literature_effect.eq("exclude")
     rare_unsafe = f.rare_cell_action.eq("unsafe")
     rare_review = f.rare_cell_action.eq("review") | f.rare_cell_legacy_only
@@ -146,7 +210,9 @@ def shared_facts():
         ]
     ].all(axis=1)
     f["evidence_resolved"] = ~f.unresolved_evidence
-    f["sequence_pass"] = ~f.nested_microprotein & f.unsafe_sequence_overlap_pct.lt(95)
+    f["sequence_pass"] = (
+        ~f.nested_microprotein & f.unsafe_sequence_overlap_pct.lt(95) & ~f.readthrough_locus
+    )
     f["shared_eligible"] = ~f.unsafe & f[PRIOR_CHECKS].all(axis=1)
     branches = {
         "reproductive_bulk": f.reproductive_ntpm.ge(1),
@@ -260,7 +326,7 @@ def normal_panel(facts, write=True):
         {"nucleus accumbens": "basal ganglia", "putamen": "basal ganglia"}
     )
     normal = anatomy(normal.rename(columns={"source_id": "source"}))
-    normal["category"] = tissue_hazards.context_tiers(normal)
+    normal["category"] = tissue_tiers.context_tiers(normal)
     normal = normal.rename(columns={"source": "source_id"})
     normal["scope"] = normal.category.where(
         normal.category.isin(["reproductive", "disposable"]), "normal"
@@ -274,7 +340,7 @@ def normal_panel(facts, write=True):
     )
     concepts = anatomy(pd.DataFrame({"tissue": sorted(consensus.Tissue.unique())}))
     concepts = concepts.assign(source="hpa_rna_consensus", cell_type="bulk")
-    concepts["category"] = tissue_hazards.context_tiers(concepts)
+    concepts["category"] = tissue_tiers.context_tiers(concepts)
     required = set(concepts.loc[~concepts.category.isin(["reproductive", "disposable"]), "tissue"])
 
     # DICE is already a supported native-TPM statistic. Unpaired protein groups
@@ -463,6 +529,16 @@ def tumors(facts):
         path, digest = paths[job.cancer_code]
         if sha256(path) != digest:
             raise ValueError(f"Changed tumor matrix: {path}")
+        if job.cancer_code in target_selection.GERM_CELL_TUMORS:
+            coverage.append(
+                {
+                    "cancer_code": job.cancer_code,
+                    "source_cohort": job.source_cohort,
+                    "status": "germ cell tumor: not cancer evidence for germline genes",
+                    "matrix_sha256": digest,
+                }
+            )
+            continue
         if job.status != "Used" or job.source_scale_class != "linear_rnaseq_tpm":
             coverage.append(
                 {
@@ -648,6 +724,11 @@ def build():
                 if values.notna().any()
                 else "",
                 "single_tumor_threshold_tpm": receipt["single_sample_threshold"],
+                # Highest tumor over max(N, Disposable, 1): the cancer rule needs >= 10.
+                "tumor_fold": values.max()
+                / (receipt["single_sample_threshold"] / target_selection.TUMOR_FOLD)
+                if values.notna().any() and receipt["single_sample_threshold"]
+                else None,
                 "cancer_assessment_reason": receipt["reason"],
             }
         )
@@ -673,7 +754,7 @@ def build():
         "required_coverage_complete": "Required normal coverage is incomplete",
         "identity_translation_pass": "Identity or translation requires review",
         "evidence_resolved": "Evidence is unresolved",
-        "sequence_pass": "Nested or Unsafe-contained sequence",
+        "sequence_pass": "Nested, read-through or Unsafe-contained sequence",
     }
     bounds_failed = decisions.expression_bounds_status.eq("fail")
 
@@ -690,6 +771,9 @@ def build():
             + (["Target maximum or Disposable cap fails"] if failed else [])
         )
         if not r.shared_eligible
+        else f"Normal home is {r.home_tissue}, which no expression panel resolves; tumor "
+        "expression alone does not admit it and no reproductive/developmental evidence qualifies"
+        if r.subtype == "Tissue"
         else "Cancer and reproductive/developmental evidence qualify"
         if r.category == "CTA"
         else "Cancer evidence qualifies; no qualifying reproductive/developmental association recorded"
@@ -867,6 +951,16 @@ def build():
         "literature_rule",
         "literature_decision_tissue",
         "literature_decision_reason",
+        "literature_recorded_tissue",
+        "literature_recorded_tier",
+        "literature_family",
+        "literature_family_tier",
+        "home_tissue",
+        "reference_recorded_tissue",
+        "reference_recorded_tier",
+        "reference_recorded_basis",
+        "readthrough_locus",
+        "readthrough_parents",
         "expression_bounds_status",
         "target_peak_tpm",
         "disposable_max_tpm",
@@ -880,6 +974,7 @@ def build():
         "samples_above_normal",
         "tumor_samples_measured",
         "tumor_max_tpm",
+        "tumor_fold",
         "tumor_top_sample",
         "tumor_top_cancer_code",
         "missing_comparison_contexts",

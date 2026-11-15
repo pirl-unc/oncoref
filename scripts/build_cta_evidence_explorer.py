@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from oncoref import cta_selection, gene_knowledge, tissue_hazards
+from oncoref import cta_selection, gene_knowledge, tissue_tiers
 from oncoref import cta_selection_policy as policy
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -597,9 +597,9 @@ def build(replay_contexts=False):
     data["comparison"] = comparison(rows)
     comparison_figure(data["comparison"])
     biology_figure(data["biology_counts"])
-    data["tier_definitions"] = tissue_hazards.registry()["tier_definitions"]
-    data["hazard_references"] = tissue_hazards.references().to_dict("records")
-    data["hazard_assessments"] = tissue_hazards.assessments().to_dict("records")
+    data["tier_definitions"] = tissue_tiers.registry()["tier_definitions"]
+    data["hazard_references"] = tissue_tiers.references().to_dict("records")
+    data["hazard_assessments"] = tissue_tiers.assessments().to_dict("records")
     write_json(OUT / "data.json.gz", data, True)
     write_json(OUT / "unlisted-ctas.json", subset)
     write_json(OUT / "comparison.json", data["comparison"])
@@ -666,7 +666,7 @@ def build(replay_contexts=False):
                     ROOT / "oncoref/data/cta-selection-human.csv.gz",
                     ROOT / "oncoref/data/cta-selection-profiles-human.csv.gz",
                     ROOT / "oncoref/data/gene-knowledge.json",
-                    ROOT / "oncoref/data/normal-tissue-hazards.yaml",
+                    ROOT / "oncoref/data/normal-tissue-tiers.yaml",
                     ROOT / "oncoref/data/cta-policy-findings.csv",
                     ROOT / "oncoref/data/normal-induction-evidence.csv",
                     ROOT / "oncoref/data/cta-selection-sources.csv",

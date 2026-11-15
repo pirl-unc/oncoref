@@ -30,7 +30,7 @@ The former maximum-versus-maximum restriction rule is removed. The
 [continuous diffuseness gate](audits/cta-unassigned-20261029/diffuseness-impact.md)
 uses **HPA v23 consensus**: average `N / (N + R)` over **29 equally weighted
 anatomical units / 38 contexts**. R is the highest adult/placental Reproductive
-nTPM in the same matrix. Disposable tissues count. **Thymus is excluded from both sides of this concentration score**; its hazard tier remains **Protected**.
+nTPM in the same matrix. Disposable tissues count. **Thymus is excluded from both sides of this concentration score**; its tier remains **Protected**.
 
 A score **above 10%** blocks a qualifying adult/placental route when R is positive
 and the full HPA comparison is measured. RNA-only admission still requires **5 nTPM**;
@@ -125,7 +125,7 @@ is assessed on its own expression. The separate HLA-A*01 a3a product implicated 
 
 ## Cell-type tiers and the rare vital-tissue screen
 
-The [central tissue-hazard ontology](tissue-hazards.md) supplies organ and cell calls
+The [central tissue-tier ontology](tissue-tiers.md) supplies organ and cell calls
 for RNA, IHC and the rare-cell screen. Its complete report provides the rationale,
 evidence designs and limitations for every rule.
 

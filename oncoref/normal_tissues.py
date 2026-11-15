@@ -36,12 +36,12 @@ def _registry():
     doc = yaml.safe_load(taxonomy)
     if doc.get("schema") != "oncoref.normal-tissue-taxonomy" or doc.get("schema_version") != 1:
         raise ValueError("Unsupported normal-tissue taxonomy schema")
-    from .tissue_hazards import screening_roots
+    from .tissue_tiers import screening_roots
 
-    hazard_bytes = (_DATA / "normal-tissue-hazards.yaml").read_bytes()
+    tier_bytes = (_DATA / "normal-tissue-tiers.yaml").read_bytes()
     for policy in doc.get("screening_policies", {}).values():
-        if policy.get("hazard_registry") != "normal-tissue-hazards.yaml":
-            raise ValueError("Screening policy must name the central hazard registry")
+        if policy.get("tier_registry") != "normal-tissue-tiers.yaml":
+            raise ValueError("Screening policy must name the central tissue-tier registry")
         for tier in SCREENED_NORMAL_TISSUE_TIERS:
             policy[tier]["roots"] = screening_roots()[tier]
     rows = list(csv.DictReader(mappings.decode().splitlines()))
@@ -180,7 +180,7 @@ def _registry():
         index[key] = row
     doc["taxonomy_id"] = (
         "oncoref:normal-tissues:v1:sha256:"
-        + hashlib.sha256(taxonomy + b"\0" + mappings + b"\0" + hazard_bytes).hexdigest()
+        + hashlib.sha256(taxonomy + b"\0" + mappings + b"\0" + tier_bytes).hexdigest()
     )
     return doc, aliases, scope_aliases, index
 
@@ -195,7 +195,7 @@ def normal_tissue_screening_policy(policy="tiered_cta", *, species="human") -> d
     try:
         result = deepcopy(_registry()[0]["screening_policies"][policy])
         if resolve_species(species).taxon_id != 9606:
-            from .tissue_hazards import registry
+            from .tissue_tiers import registry
 
             for tier, roots in registry()["legacy_nonhuman_screening_roots"].items():
                 result[tier]["roots"] = roots
@@ -462,7 +462,7 @@ def normal_tissue_screening_tier(annotation, policy="tiered_cta") -> str:
         return "unresolved"
     ancestors = _ancestors(annotation.concept_id)
     if annotation.taxon_id != 9606:
-        from .tissue_hazards import registry
+        from .tissue_tiers import registry
 
         legacy = registry()["legacy_nonhuman_screening_roots"]
         return next(
@@ -499,15 +499,15 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
     }
     doc = _registry()[0]
     category = normal_tissue_category(annotation, policy)
-    from .tissue_hazards import assess
+    from .tissue_tiers import assess
 
-    hazard = assess(
+    functional = assess(
         annotation.concept_id or "",
         taxon_id=annotation.taxon_id,
         stage=annotation.stage,
     )
     return {
-        "functional_hazard": hazard,
+        "functional_tier": functional,
         "tissue_category": category,
         "tissue_category_label": {
             "reproductive": "Reproductive",

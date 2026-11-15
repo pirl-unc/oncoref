@@ -1,6 +1,6 @@
 # Tissue injury and manageability: evidence for policy
 
-The [1.29.0 central ontology](tissue-hazards.md) is the current source of tissue and cell calls. The numerical grids below document the earlier tissue-scope screening API; the current CTA cascade is described in [CTA selection](cta-selection.md).
+The [1.29.0 central ontology](tissue-tiers.md) is the current source of tissue and cell calls. The numerical grids below document the earlier tissue-scope screening API; the current CTA cascade is described in [CTA selection](cta-selection.md).
 
 This review concerns **significant immune injury**, its consequences, persistence
 and control. Complete organ removal is one evidence source; it is not a model for

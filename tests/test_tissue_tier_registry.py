@@ -3,7 +3,7 @@ from copy import deepcopy
 import pandas as pd
 import pytest
 
-from oncoref import tissue_hazards as h
+from oncoref import tissue_tiers as h
 from oncoref.normal_tissues import normal_tissue_screening_tier, resolve_normal_tissue
 
 
@@ -38,7 +38,7 @@ from oncoref.normal_tissues import normal_tissue_screening_tier, resolve_normal_
         ("eye", "limbal progenitor cells", "vital"),
     ],
 )
-def test_compartment_hazards(tissue, cell, tier):
+def test_compartment_tiers(tissue, cell, tier):
     r = h.assess(tissue, cell, resolution="cell")
     assert r["tier"] == tier
     assert r["references"]
@@ -60,13 +60,13 @@ def test_no_species_age_or_reproductive_safety_inference():
     assert h.assess("unknown")["tier"] == "unresolved"
 
 
-def test_inventory_separates_reproductive_scope_from_missing_hazard_calls():
+def test_inventory_separates_reproductive_scope_from_missing_tier_calls():
     inventory = h.anatomy_inventory().set_index("concept_id")
     for concept in ["placenta", "trophoblast", "amnion", "yolk_sac", "embryo", "fetus"]:
         row = inventory.loc[concept]
         assert row.selection_category == "Reproductive"
         assert "reproductive" in row.anatomical_membership
-        assert not row.requires_hazard_review
+        assert not row.requires_tier_review
     assert inventory.loc["embryo", "stage"] == "embryonic"
     assert inventory.loc["fetus", "stage"] == "fetal"
     assert inventory.loc["ovary", "tier"] == "protected"

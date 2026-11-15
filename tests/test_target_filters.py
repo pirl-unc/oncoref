@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 902
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 670
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -53,24 +53,30 @@ def test_layers_report_first_failure_in_order(catalog):
     assert len(only_papers) and (only_papers.filter_failed == "papers").all()
 
 
-def test_off_target_knobs_are_per_scale_and_include_disposable(catalog):
+def test_off_target_knob_reads_tissue_tpm_and_includes_disposable(catalog):
     tissue = tf.select(tf.TargetFilter(max_off_target_tpm=1.0), catalog)
     assert tissue.normal_reference_tpm.lt(1.0).all() and tissue.disposable_max_tpm.lt(1.0).all()
-    assert tissue.healthy_maximum_ntpm.ge(1.0).any()  # the TPM knob does not read nTPM
-    both = tf.select(tf.TargetFilter(max_off_target_tpm=1.0, max_off_target_ntpm=1.0), catalog)
-    assert both.healthy_maximum_ntpm.lt(1.0).all() and both.disposable_max_ntpm.lt(1.0).all()
-    assert set(both.entity_id) < set(tissue.entity_id)
-    # PRAME is low at tissue level and high only on a single-cell cluster.
-    prame = catalog[catalog.protein_group_label == "PRAME"].iloc[0]
-    assert prame.off_target_tpm < 5 < prame.off_target_ntpm
+    assert tissue.healthy_maximum_ntpm.ge(1.0).any()  # the knob does not read nTPM
     # The catalog's reference N is never below the legacy bulk maximum.
     candidates = catalog[catalog.is_target_candidate]
     assert candidates.normal_reference_tpm.ge(candidates.healthy_maximum_tpm - 1e-9).all()
 
 
-def test_evidence_knobs_move_proteins_between_sets_not_out_of_the_union(catalog):
-    d = tf.apply(tf.TargetFilter(min_patients=5), catalog)
-    weak = d.is_cta & d.independent_patients_above_normal.lt(5)
+def test_every_cancer_antigen_has_a_tumor_at_tenfold(catalog):
+    antigens = catalog[catalog.is_cancer_antigen]
+    assert antigens.tumor_fold.ge(target_selection.TUMOR_FOLD).all()
+    floor = antigens[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=1)
+    assert (antigens.tumor_max_tpm / floor - antigens.tumor_fold).abs().lt(1e-6).all()
+    assert (
+        not catalog[catalog.is_target_candidate]
+        .tumor_top_cancer_code.isin(target_selection.GERM_CELL_TUMORS)
+        .any()
+    )
+
+
+def test_fold_knob_moves_proteins_between_sets_not_out_of_the_union(catalog):
+    d = tf.apply(tf.TargetFilter(min_tumor_fold=50.0), catalog)
+    weak = d.is_cta & d.tumor_fold.lt(50)
     assert weak.any()
     assert (d[weak].filtered_category == "Reproductive Antigen only").all()
     assert d[weak].keep.all()
@@ -78,7 +84,7 @@ def test_evidence_knobs_move_proteins_between_sets_not_out_of_the_union(catalog)
     ra_only = d.category.eq("Reproductive Antigen only")
     assert d[ra_only].keep.all()
     # Requiring both sets is the membership knob's job.
-    both = tf.apply(tf.TargetFilter(min_patients=5, membership="cta"), catalog)
+    both = tf.apply(tf.TargetFilter(min_tumor_fold=50.0, membership="cta"), catalog)
     assert not both[weak].keep.any()
 
 
@@ -96,13 +102,6 @@ def test_cta_list_papers_count_only_where_they_nominate(catalog):
     assert candidates.papers_cta.gt(0).sum() == candidates.published_nomination.astype(bool).sum()
 
 
-def test_exact_members_only_removes_partial_nominations_and_nothing_else(catalog):
-    d = tf.apply(tf.TargetFilter(exact_members_only=True), catalog)
-    removed = d[d.is_target_candidate & ~d.keep]
-    assert len(removed) == 6
-    assert (removed.nomination_scope == "some_members").all()
-
-
 def test_missing_values_never_pass_a_threshold(catalog):
     row = catalog[catalog.protein_group_label == "MAGEA4"].copy()
     assert tf.apply(tf.TargetFilter(max_off_target_tpm=1.0), row).keep.all()
@@ -114,15 +113,13 @@ def test_missing_values_never_pass_a_threshold(catalog):
 def test_bad_knobs_are_rejected():
     for bad in (
         {"membership": "everything"},
-        {"families": ("nope",)},
-        {"rare_cell": "some"},
-        {"mapping": "clean"},
         {"normal_function": "no_disposable"},
-        {"readthrough": "drop"},
-        {"min_families": 5},
+        {"readthrough": "exclude"},
+        {"min_patients": 5},
+        {"min_tumor_fold": 5.0},
         {"exclude_prefixes": "MAGE"},
     ):
-        with pytest.raises(ValueError):
+        with pytest.raises((ValueError, TypeError)):
             tf.TargetFilter(**bad)
 
 
@@ -130,7 +127,7 @@ def test_describe_states_every_active_knob():
     text = tf.describe("strict")
     for phrase in (
         "below 4 TPM",
-        "at least 5 independent tumors",
+        "Vital or Protected",
         "10 x",
         "in cta",
         "at least 3 distinct paper",
@@ -152,14 +149,19 @@ def test_mage_rule_drops_the_family_but_keeps_magea4(catalog):
     assert isinstance(d, pd.DataFrame)
 
 
-def test_readthrough_knob_removes_the_listed_loci_and_nothing_else(catalog):
+def test_readthrough_loci_are_resolved_by_the_catalog_not_by_a_filter(catalog):
     from oncoref import target_curation
 
-    d = tf.apply(tf.TargetFilter(readthrough="exclude"), catalog)
-    removed = set(d[d.is_target_candidate & ~d.keep].protein_group_label)
-    assert removed == set(target_curation.readthrough().protein_group_label)
-    assert {"ATF7-NPFF", "ENSG00000273155", "ENSG00000267618"} <= removed
-    assert (d[d.is_target_candidate & ~d.keep].filter_failed == "curation").all()
+    loci = set(target_curation.readthrough().entity_id)
+    rows = catalog[catalog.entity_id.isin(loci)]
+    assert len(rows) == len(loci) and rows.readthrough_locus.all()
+    assert not rows.is_target_candidate.any() and not rows.sequence_pass.any()
+    assert not catalog[~catalog.entity_id.isin(loci)].readthrough_locus.any()
+    named = catalog[
+        catalog.protein_group_label.isin(["ATF7-NPFF", "ENSG00000273155", "ENSG00000267618"])
+    ]
+    assert len(named) == 3 and named.classification.eq("Other:Sequence").all()
+    assert rows.readthrough_parents.str.len().gt(0).sum() >= len(rows) - 1
 
 
 def test_normal_function_knob_follows_the_tier_order(catalog):
@@ -167,7 +169,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 902 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 670 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()
@@ -179,18 +181,45 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
     assert loosest[loosest.protein_group_label == "PRAME"].curated_tier.item() == "disposable"
 
 
-def test_every_acting_curation_record_keeps_a_citation_and_a_tier():
+def test_filters_act_only_on_records_the_catalog_carries(catalog):
     from oncoref import target_curation as tc
+    from oncoref import tissue_tiers
 
-    found = tc.findings()
-    acting = found[found.acts.astype(str).str.lower() == "true"]
-    assert len(acting) and acting.best_source.str.len().gt(0).all()
-    assert acting.tier.isin(tc.TIERS).all()
-    assert acting.verdict.eq("confirmed").all()
-    families = tc.families()
-    assert families[families.acts].sources.str.len().gt(0).all()
-    compartments = tc.compartments()
-    proposed = compartments[compartments.tier_source == "proposed"]
-    assert len(proposed) == 7 and proposed.tier_references.str.contains("PMID").all()
-    resolved = compartments[compartments.tier_source != "proposed"]
-    assert resolved.tier_source.str.startswith("tissue_hazards:").all()
+    measured = tf.measures(catalog)
+    candidates = measured[measured.is_target_candidate]
+    # An excluding entry is Unsafe in the catalog, so no filter ever sees it.
+    entries = tc.entries()
+    excluded = entries[entries.effect.eq("exclude")]
+    assert catalog[catalog.entity_id.isin(excluded.entity_id)].category.eq("Unsafe").all()
+    # What layer 3 reads is the catalog's own recorded tier or an acting family rule.
+    families = tc.families().set_index("id")
+    acting = set(families.index[families.filter_acts])
+    for row in candidates[candidates.curated_tier.ne("")].itertuples():
+        own = row.literature_recorded_tier if isinstance(row.literature_recorded_tier, str) else ""
+        family = row.literature_family_tier if row.literature_family in acting else ""
+        measured = (
+            row.reference_recorded_tier if isinstance(row.reference_recorded_tier, str) else ""
+        )
+        assert row.curated_tier == tc.most_protective({own, family, measured} - {""})
+        assert row.curated_sources
+    assert candidates[candidates.curated_tier.eq("")].literature_recorded_tier.isna().all()
+    assert candidates[candidates.curated_tier.eq("")].reference_recorded_tier.isna().all()
+    # The nose and skin reference records a tissue only on agreement of people or datasets.
+    reference = tc.nose_skin()
+    rules = tc.nose_skin_provenance()["rules"]
+    recorded = reference[reference.recorded_tissue.ne("")]
+    assert set(candidates[candidates.reference_recorded_tier.notna()].entity_id) <= set(
+        recorded.entity_id
+    )
+    for row in recorded.itertuples():
+        assert (
+            row.olfactory_samples_ge1 >= rules["olfactory_min_samples"]
+            or row.nose_datasets_detected >= rules["cell_min_datasets"]
+            or row.skin_datasets_detected >= rules["cell_min_datasets"]
+        )
+    # Every family and recorded tissue resolves through the tissue-tier registry or its updates.
+    for rule in families.itertuples():
+        assert tissue_tiers.assess(rule.tissue)["tier"] == rule.tier
+    assert families[families.filter_acts].sources.str.len().gt(0).all()
+    added = tc.compartments()
+    assert len(added) == 7 and added.references.map(len).ge(2).all()

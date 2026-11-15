@@ -85,7 +85,7 @@ MAGEC2, LGALS13 and PLCZ1 are CTA in the current API, while the historical findi
 ledger retains unresolved records and the current `gene_knowledge` lookup has no
 records for them. That is an evidence-migration question; it does not predetermine
 an Unsafe conclusion. The old breadth panel also assigns skin, spleen and thymus
-to Manageable, while the new functional-hazard registry assigns them Protected.
+to Manageable, while the new functional tier registry assigns them Protected.
 
 ## PR sequence
 
@@ -157,7 +157,7 @@ are explicit. No gene-specific thresholds or required final categories.
 Issue: [#637](https://github.com/pirl-unc/oncoref/issues/637). Depends on PR 1;
 can be developed alongside PR 2.
 
-Make the current bulk breadth panel resolve tiers through `tissue_hazards` and
+Make the current bulk breadth panel resolve tiers through `tissue_tiers` and
 retain a named historical panel for the 26 October replay. Version anatomy,
 weights, ceilings and source identity together. Bulk measurements retain bulk
 tiers; a cell-specific exception cannot lower an organ-level observation.
@@ -303,7 +303,7 @@ independently because its acceptance condition is unchanged scientific output.
 - [Historical findings](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/data/cta-policy-findings.csv),
   [current knowledge API](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/gene_knowledge.py), and
   [clinical trial ledger](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/data/tcr-trial-evidence.json).
-- [Tissue registry](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/data/normal-tissue-hazards.yaml),
+- [Tissue registry](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/data/normal-tissue-tiers.yaml),
   [breadth calculation](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/normal_expression_breadth.py), and
   [reproductive concentration](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/expression_diffuseness.py).
 - [Current audit API](https://github.com/pirl-unc/oncoref/blob/v1.29.0/oncoref/cta_selection_audit.py),

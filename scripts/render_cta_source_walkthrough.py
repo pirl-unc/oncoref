@@ -839,7 +839,7 @@ evidence are separate requirements. Only safety evidence can establish Unsafe.**
 Cancer needs one qualifying measured sample, without a tumor-versus-normal ratio.
 The reproductive-versus-normal maximum veto has been removed. Whole-profile
 HPA diffuseness above 10% blocks a completely measured adult/placental identity
-route. Thymus is excluded from this score; its hazard tier remains Protected. Disposable tissues count. Supported
+route. Thymus is excluded from this score; its tier remains Protected. Disposable tissues count. Supported
 embryonic evidence remains independent and its concentration is unassessed.
 [Rule, changed proteins and sensitivity](../cta-unassigned-20261029/diffuseness-impact.md). [Definitions and logic](../../cta-evidence-axes.md).
 
@@ -873,7 +873,7 @@ single-nucleus clusters read near zero, but 293 of 19,760 midbrain dopaminergic 
 
 Every gene is screened (`scripts/build_cta_rare_cell_screen.py`) against CELLxGENE
 normal-sample summaries in brain, spinal cord, heart and selected lung populations.
-The [central tissue-hazard ontology](../tissue-hazards-1.29.0/index.md) assigns each
+The [central tissue-tier ontology](../tissue-hazards-1.29.0/index.md) assigns each
 resolved population. A cell type needs at least 3,000 cells and 10 expressing cells.
 Immune lineages, fibroblasts/stroma and developmental labels remain outside this
 panel; that is a coverage limit, not an allowance. At least 1% expression in a Vital

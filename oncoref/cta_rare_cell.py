@@ -10,7 +10,7 @@ A gene that reads near zero in bulk and cluster panels can still be expressed by
 small population of an essential tissue (MAGEA12 in rare midbrain dopaminergic
 neurons). ``scripts/build_cta_rare_cell_screen.py`` records, for every gene, the
 brain, spinal cord, heart and selected lung cell types with the highest fraction
-of expressing cells in CELLxGENE normal samples. Central hazard rules assign
+of expressing cells in CELLxGENE normal samples. Central tier rules assign
 Vital findings to the existing exclusion and Protected findings to a candidate
 review hold. Immune lineages, stroma and developmental labels remain outside this
 panel; their absence is missing coverage, not evidence of tolerance.
@@ -57,7 +57,7 @@ def annotate(facts: pd.DataFrame, *, member_column: str = "member_gene_ids") -> 
     screened = set(provenance()["screened_gene_ids"])
     current = cell_tiers(table.tissue, table.cell_type)
     if not current.eq(table.tier).all():
-        raise ValueError("Rare-cell tiers are stale; rebuild against the tissue-hazard registry")
+        raise ValueError("Rare-cell tiers are stale; rebuild against the tissue-tier registry")
     protected = table[table.tier.eq("protected") & table.pct_expressing.ge(FLAG_PCT)]
     table = table[table.tier.eq("vital")]
     top = (

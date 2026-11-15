@@ -26,7 +26,8 @@ from build_cta_rare_cell_screen import EXCLUDED_CELLS, GENERIC  # noqa: E402
 
 from oncoref import target_selection  # noqa: E402
 from oncoref.cta_cell_tiers import cell_tiers  # noqa: E402
-from oncoref.tissue_hazards import registry as hazard_registry  # noqa: E402
+from oncoref.tissue_tiers import policy_id as tier_policy_id  # noqa: E402
+from oncoref.tissue_tiers import registry as tier_registry  # noqa: E402
 
 DATA = ROOT / "oncoref/data"
 AUDIT = ROOT / "docs/audits/normal-cell-atlas-20261110/rare-cell"
@@ -552,7 +553,8 @@ def main():
             "sha256": digest(SILETTI),
             "reason": "Specific granule labels exist only in the dissection files",
         },
-        "hazard_registry_id": hazard_registry()["registry_id"],
+        "tier_registry_id": tier_registry()["registry_id"],
+        "tier_policy_id": tier_policy_id(),
         "rules": target_selection.definition()["rare_cell_rna"],
         "mapping_risk": risk_provenance,
         "confirmation_sources": sorted(bulk.bulk_source.unique()),

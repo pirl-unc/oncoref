@@ -9,6 +9,7 @@ import pandas as pd
 import pytest
 
 from oncoref import target_selection
+from tests import released_inputs
 
 ROOT = Path(__file__).parents[1]
 OUT = ROOT / "docs/audits/target-selection-20261109/category-profiles"
@@ -101,4 +102,7 @@ def test_provenance_covers_every_committed_output():
     assert manifest["classifications_changed"] is False
     for section, base in [("implementation_sha256", ROOT), ("outputs_sha256", OUT)]:
         for path, expected in manifest[section].items():
-            assert hashlib.sha256((base / path).read_bytes()).hexdigest() == expected, path
+            content = (
+                released_inputs.read(path, expected) if base == ROOT else (base / path).read_bytes()
+            )
+            assert hashlib.sha256(content).hexdigest() == expected, path

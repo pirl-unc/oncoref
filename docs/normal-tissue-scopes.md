@@ -1,6 +1,6 @@
 # Normal tissue scopes
 
-Current adult human hazard calls are centralized in the [tissue-hazard ontology](tissue-hazards.md), independently of reproductive membership.
+Current adult human tier calls are centralized in the [tissue-tier ontology](tissue-tiers.md), independently of reproductive membership.
 
 oncoref uses one cited anatomical vocabulary for human, dog and mouse. A **scope
 is a set of permitted normal anatomical/developmental contexts**. A detected
@@ -150,12 +150,12 @@ measurement never establishes the narrower compartment's restriction.
 |---|---|
 | **Reproductive** | Testis and male reproductive organs; ovary/oocytes and female reproductive tract; mammary; placenta; other extraembryonic; explicitly embryonic/fetal contexts, as defined above. |
 | **Disposable** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder. |
-| **Manageable** | Thyroid gland; adipose tissue. Mammary tissue retains Reproductive membership while its independent functional hazard is Manageable. Narrow cell rules are recorded separately in the central ontology. |
+| **Manageable** | Thyroid gland; adipose tissue. Mammary tissue retains Reproductive membership while its independent functional tier is Manageable. Narrow cell rules are recorded separately in the central ontology. |
 | **Protected** | Skin; spleen; thymus; salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
 | **Vital** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
-The current human [hazard inventory](audits/tissue-hazards-1.29.0/canonical-anatomy.csv) records functional tiers independently of permitted membership. The historical [human/dog/mouse inventories](audits/normal-tissue-registry-20261021-r2/index.md)
+The current human [tier inventory](audits/tissue-hazards-1.29.0/canonical-anatomy.csv) records functional tiers independently of permitted membership. The historical [human/dog/mouse inventories](audits/normal-tissue-registry-20261021-r2/index.md)
 list every concept and native source mapping, its category, species applicability,
 policy references and review flags. A concept's anatomy citation and the project's
 category-policy citations are kept in separate export fields. Mapping rows and

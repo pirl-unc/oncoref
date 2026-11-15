@@ -1,0 +1,55 @@
+{
+  "schema": "oncoref.data-file-renames",
+  "schema_version": 1,
+  "date": "2026-11-14",
+  "purpose": "Packaged data files that were renamed or reworded after released receipts and the pinned sequence bundle bound their bytes. Each record lists the exact text substitutions that separate the current file from the released one, so the released bytes can be reconstructed and checked by hash. Any other edit to the current file breaks the reconstruction.",
+  "files": {
+    "normal-tissue-hazards.yaml": {
+      "current_name": "normal-tissue-tiers.yaml",
+      "as_built_sha256": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+      "substitutions": [
+        {
+          "current": "schema: oncoref.normal-tissue-tiers",
+          "as_built": "schema: oncoref.normal-tissue-hazards",
+          "occurrences": 1
+        },
+        {
+          "current": "Adult human consequence of sustained tissue injury;",
+          "as_built": "Adult human functional hazard;",
+          "occurrences": 1
+        },
+        {
+          "current": "independent of the clinical tier.",
+          "as_built": "independent of clinical hazard.",
+          "occurrences": 2
+        },
+        {
+          "current": "Keep the tier separate from",
+          "as_built": "Keep hazard separate from",
+          "occurrences": 1
+        },
+        {
+          "current": "support a major consequence.",
+          "as_built": "support major hazard.",
+          "occurrences": 1
+        }
+      ]
+    },
+    "normal-tissue-taxonomy.yaml": {
+      "current_name": "normal-tissue-taxonomy.yaml",
+      "as_built_sha256": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
+      "substitutions": [
+        {
+          "current": "tier_registry: normal-tissue-tiers.yaml",
+          "as_built": "hazard_registry: normal-tissue-hazards.yaml",
+          "occurrences": 2
+        },
+        {
+          "current": "central normal-tissue tier registry",
+          "as_built": "central normal-tissue hazard registry",
+          "occurrences": 1
+        }
+      ]
+    }
+  }
+}

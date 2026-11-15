@@ -4,8 +4,15 @@
 belong to gene families whose normal site of action is a tissue the expression panels
 do not sample: nose, tongue, hair follicle and mucosal surfaces.**
 
-This is a screening aid produced by automated literature search. No category was
-changed. Every finding needs a human read of its source before it is used.
+This page describes the sweep as run on 2026-11-12, against the 902 candidates of
+catalog policy `oncoref.target-selection.2026-11-10.1`. It changed no category then.
+
+**On 2026-11-13 the sweep was folded into the catalog's literature review.** Fourteen
+proteins with a quote retrieved from the source became Unsafe, the other findings are
+recorded with their tissue and tier, and read-through loci fail the sequence check.
+[What the catalog does with it](../../target-selection.md#published-normal-expression) ·
+[coverage per protein](normal-function-sweep-coverage.csv) ·
+[tissue assigned to each confirmed finding](normal-function-sweep-tissues.csv).
 
 ## How it was done
 
@@ -80,16 +87,18 @@ their 9-mers lie in Unsafe proteins, just under the 95% cutoff, so all three are
 
 ## What was done with it
 
-- **A curation layer** now carries these findings into the filters. Each confirmed
-  finding is assigned a tissue compartment and that compartment's tier, with its
-  citation kept. `normal_function="no_vital"` (in `standard`) and `"no_protected"`
-  (in `strict`) act on it. [Layer and tiers](index.md#8-the-curation-layer).
-- **Family rules** extend three findings to whole families: olfactory receptors
-  (olfactory epithelium, Protected), bitter taste receptors (taste buds, Protected) and
-  hair keratins (hair follicle, Disposable). Trace-amine receptors, sweet and umami
-  receptors and late cornified envelope proteins are recorded without acting, because
-  the evidence is by similarity or not gene-specific.
-- **Read-through loci** are removed by `readthrough="exclude"` in every mode but `all`.
-- The catalog's categories are unchanged. Tiers for seven tissues the hazard registry
-  had no call for are proposals in `oncoref/data/target-curation.yaml`, with
-  references, and are not yet part of the registry.
+- **The findings are entries in the catalog's literature review**
+  (`normal-expression-literature.json`). Fourteen proteins with a quote retrieved from
+  the source are Unsafe. The other confirmed findings are recorded with their tissue and
+  tier; `normal_function="no_vital"` (in `standard`) and `"no_protected"` (in `strict`)
+  act on those. [What acts where](index.md#8-curation-what-the-catalog-decides-and-what-the-filters-add).
+- **Family rules** sit in the same file: olfactory receptors (olfactory epithelium,
+  Manageable since 2026-11-15), bitter taste receptors (taste buds, Protected) and hair keratins (hair
+  follicle, Disposable). Trace-amine receptors, sweet and umami receptors and late
+  cornified envelope proteins are recorded without acting, because the evidence is by
+  similarity or not gene-specific. Since 2026-11-14 a member of an acting family
+  without reproductive evidence is
+  [Other:Tissue](../../target-selection.md#home-tissue-the-panels-do-not-resolve).
+- **Read-through loci** fail the catalog's sequence check and are Other:Sequence.
+- **Tiers for seven tissues** the hazard registry had no call for are dated registry
+  updates (`normal-tissue-tier-updates.yaml`), with references.

@@ -20,6 +20,8 @@ from dataclasses import dataclass
 from importlib.resources import files
 from pathlib import Path
 
+from . import data_file_renames
+
 SCHEMA = "oncoref.sequence-bundle"
 PAYLOADS = frozenset(
     {"records.jsonl.gz", "coverage.json", "decisions.csv.gz", "orfdata-proteome.json.gz"}
@@ -158,7 +160,7 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
         for name, expected in manifest["package_dependencies"].items():
             if Path(name).name != name:
                 raise ValueError("Invalid package dependency name")
-            if digest(files("oncoref").joinpath("data", name).read_bytes()) != expected:
+            if digest(data_file_renames.as_released(name)) != expected:
                 raise ValueError(f"Mixed package/bundle policy: {name}")
     payloads = {}
     for name, entry in manifest["payloads"].items():

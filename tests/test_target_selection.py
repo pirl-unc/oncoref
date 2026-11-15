@@ -120,6 +120,28 @@ def test_unassessed_association_is_not_negative_or_a_global_safety_hold():
     ]
 
 
+def test_unmeasured_home_tissue_needs_reproductive_evidence():
+    result = policy.classify(
+        pd.DataFrame(
+            [
+                facts(reproductive_evidence="does_not_qualify", home_tissue_unmeasured=True),
+                facts(home_tissue_unmeasured=True),
+                facts(cancer_evidence="does_not_qualify", home_tissue_unmeasured=True),
+                facts(reproductive_evidence="unassessed", home_tissue_unmeasured=True),
+                facts(reproductive_evidence="does_not_qualify", home_tissue_unmeasured=False),
+            ]
+        )
+    )
+    assert result.classification.tolist() == [
+        "Other:Tissue",
+        "CTA",
+        "Reproductive Antigen only",
+        "Other:Review",
+        "Cancer Antigen only",
+    ]
+    assert not result.is_cancer_antigen.iloc[0]
+
+
 @pytest.mark.parametrize("bad", [None, float("nan"), "False", 0, 1])
 def test_unknown_or_coerced_boolean_cannot_clear_an_eligibility_check(bad):
     with pytest.raises(ValueError, match="explicit booleans"):
@@ -130,19 +152,14 @@ def test_unknown_or_coerced_boolean_cannot_clear_an_eligibility_check(bad):
     "normal,values,status,routes",
     [
         (0, [0.02, 0.03], "does_not_qualify", []),
-        (0, [1, 1], "qualifies", ["two_independent_tumors_above_normal"]),
+        # Two patients above the normal maximum no longer admit on their own.
+        (0, [1, 1], "does_not_qualify", []),
         (0.4, [9.99, 0], "does_not_qualify", []),
-        (0.4, [10, 0], "qualifies", ["one_tumor_tenfold_above_normal"]),
-        (3, [3, 3], "does_not_qualify", []),
-        (3, [3.01, 3.01], "qualifies", ["two_independent_tumors_above_normal"]),
+        (0.4, [10, 0], "qualifies", ["tumor_tenfold_above_nonreproductive_normal"]),
+        (3, [3.01, 3.01], "does_not_qualify", []),
         (3, [29.99, 0], "does_not_qualify", []),
-        (3, [30, 0], "qualifies", ["one_tumor_tenfold_above_normal"]),
-        (
-            3,
-            [30, 4],
-            "qualifies",
-            ["two_independent_tumors_above_normal", "one_tumor_tenfold_above_normal"],
-        ),
+        (3, [30, 0], "qualifies", ["tumor_tenfold_above_nonreproductive_normal"]),
+        (3, [30, 4], "qualifies", ["tumor_tenfold_above_nonreproductive_normal"]),
     ],
 )
 def test_ratio_boundaries_and_low_expression_floor(normal, values, status, routes):
@@ -159,10 +176,11 @@ def test_replicates_and_duplicate_cohort_views_are_one_participant():
     result = assess(tumors, normals)
     assert result["status"] == "does_not_qualify"
     assert result["independent_participants_above_normal"] == 1
+    # Patient identity is descriptive: one sample without a documented patient can admit.
     tumors["participant_id"] = None
-    assert assess(tumors, normals)["status"] == "unassessed"
+    assert assess(tumors, normals)["status"] == "does_not_qualify"
     tumors.loc[0, "value"] = 10
-    assert assess(tumors, normals)["routes"] == ["one_tumor_tenfold_above_normal"]
+    assert assess(tumors, normals)["routes"] == ["tumor_tenfold_above_nonreproductive_normal"]
 
 
 @pytest.mark.parametrize(
@@ -176,20 +194,27 @@ def test_missing_or_failed_required_normals_never_become_zero(field, bad):
     assert result["missing_normal_contexts"] == ["context-0"]
 
 
-def test_compartment_allowances_exclude_only_the_named_normal_compartment():
-    tumors, normals = observations()
+def test_reproductive_compartments_never_compare_but_disposable_does():
+    tumors, normals = observations((40, 0))
     extra = pd.DataFrame(
         [
-            dict(normals.iloc[0], context_id="hair", scope="disposable", value=100),
-            dict(normals.iloc[0], context_id="germ-cells", scope="reproductive", value=1000),
+            dict(normals.iloc[0], context_id="hair", scope="disposable", value=3.0),
+            dict(normals.iloc[0], context_id="germ-cells", scope="reproductive", value=1000.0),
         ]
     )
-    assert assess(tumors, pd.concat([normals, extra]))["status"] == "qualifies"
+    result = assess(tumors, pd.concat([normals, extra]))
+    assert result["status"] == "qualifies"
+    assert result["normal_maximum"] == 1 and result["disposable_maximum"] == 3
+    assert result["single_sample_threshold"] == 30
+    # Disposable tissue is non-reproductive, so it raises the bar.
+    extra.loc[0, "value"] = 5
+    assert assess(tumors, pd.concat([normals, extra]))["status"] == "does_not_qualify"
     # Immune cells in a reproductive organ retain their normal-cell scope.
-    extra.loc[1, ["context_id", "scope", "value"]] = ["testis-T-cells", "normal", 4]
+    extra.loc[0, "value"] = 3
+    extra.loc[1, ["context_id", "scope", "value"]] = ["testis-T-cells", "normal", 4.1]
     result = assess(tumors, pd.concat([normals, extra]))
     assert result["status"] == "does_not_qualify"
-    assert result["normal_maximum"] == 4
+    assert result["normal_maximum"] == 4.1
 
 
 @pytest.mark.parametrize("field,bad", [("unit", "nTPM"), ("comparison_id", "other-panel")])

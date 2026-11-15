@@ -1,0 +1,115 @@
+{
+  "purpose": "Frozen 1.37.0 input bytes of files renamed or reworded when tissue hazards became tissue tiers (2026-11-14). Dated receipts that bound these files are verified against these copies.",
+  "files": {
+    "README.md": {
+      "sha256": "94d5e3dbc46f1a8dc871f9b1da13142de0d2ae8672d4089c5d95e338c8f47601",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 17494
+    },
+    "docs/cta-selection.md": {
+      "sha256": "844933682eb6b073e2633f6aa00e43e5ee9b98222b39fdee26bf6280a86af6ab",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 34661
+    },
+    "docs/index.md": {
+      "sha256": "df606a58f40a21cebda84df6348d72392f49b003e60b4c2d14caaff31520c150",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 11602
+    },
+    "oncoref/cta_cell_tiers.py": {
+      "sha256": "017c3f252e0b37d85af2ee90610df015561d95c83376a132c0e2024dfb0bbf4d",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 1380
+    },
+    "oncoref/cta_selection_policy.py": {
+      "sha256": "ce6e72ecf3661636e2f95ae7a67e8e9d112153aaa84c97cf349258a6c4039e9e",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 30288
+    },
+    "oncoref/data/cta-rare-cell-screen.json": {
+      "sha256": "406824910be2a8f937e22b70dd654becaad6e5de1b99105f32b35ec0cfce5a8c",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 755956
+    },
+    "oncoref/data/normal-tissue-taxonomy.yaml": {
+      "sha256": "053f3fece72f34661e879d74d5b76693a4680e4f8da6bc871304bb9f78bffa9b",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 51170
+    },
+    "oncoref/data/normal-tissue-hazards.yaml": {
+      "sha256": "3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 144155
+    },
+    "oncoref/normal_expression_breadth.py": {
+      "sha256": "2bc596f606469a90715512484e2a0f4e1815c0fd5f8006b6bc8a268880229f2c",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 12258
+    },
+    "oncoref/normal_tissues.py": {
+      "sha256": "019c9d05cc86175b3de56140d4f4ce600d6624ec2351120d8565740cdf85ba84",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 27783
+    },
+    "oncoref/tissue_hazards.py": {
+      "sha256": "1191edcf20737bad612c39a9f1761f9c10cb00dc7e208fff689ba535c2650b61",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 12098
+    },
+    "scripts/audit_target_expression_maxima.py": {
+      "sha256": "9ce47a6f7dfeda875b181926b78979e871817b800dc2f8515e5822f158f5b3a4",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 17091
+    },
+    "scripts/build_cta_evidence_explorer.py": {
+      "sha256": "ef61beac117425243b746923d8ffa0a7fa222492971007f43dee9423633d5e95",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 32309
+    },
+    "scripts/build_cta_public_report.py": {
+      "sha256": "aa1eaf8f3fd5674d5404bd081e9a41b502de93af6091e37090bfd14dd3a1620f",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 67181
+    },
+    "scripts/build_cta_sequence_bundle.py": {
+      "sha256": "3cd3912f1613b251d37f1e3b4797566e2c58527328591cee405258f288794bc5",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 11109
+    },
+    "scripts/build_cta_source_slides.mjs": {
+      "sha256": "aadbc5ddda9b422eace6882c034eb1a07f41187497c99c001b9b42306c89e935",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 43133
+    },
+    "scripts/build_current_normal_breadth.py": {
+      "sha256": "9e6142a9c8728c42f1fd61c65a74ce325f383580644d9f76d68b7ccedeba7024",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 7365
+    },
+    "scripts/build_tissue_hazard_report.py": {
+      "sha256": "c2b93d141101ef3d64c98486b885c0fffa4820609596525eb431f987f50270e2",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 30473
+    },
+    "scripts/regenerate_cta_walkthrough.py": {
+      "sha256": "f4a2069cb6ab5eddc8509a7f937765ccb9bc67b9e799e588bca9168fac466c7d",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 8401
+    },
+    "scripts/render_cta_source_walkthrough.py": {
+      "sha256": "89a5e2da3041c647f68576102a1d9209460b1bc2d87a39007544cc975a895f7f",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 74820
+    },
+    "scripts/render_target_category_profiles.py": {
+      "sha256": "32cda038bab09d4acbd6431831287c1288600e919444ceb7f7bbd410b31d3822",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 30026
+    },
+    "scripts/replay_cta_selection.py": {
+      "sha256": "92c413f45bf07b3b18f5c8c39c07f0fc1088226adb79967cdce3a92165cda7f7",
+      "commit_or_tag": "ea76729e622c03274f95d8ff3fc0e438c68469d3",
+      "bytes": 56026
+    }
+  }
+}

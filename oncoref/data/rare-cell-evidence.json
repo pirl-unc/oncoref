@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.rare-cell-evidence",
-  "policy_id": "oncoref.target-selection.2026-11-10.1",
+  "policy_id": "oncoref.target-selection.2026-11-15.1",
   "census_release": "2025-11-08",
   "filter": "is_primary_data == True and disease == 'normal' and tissue_type == 'tissue'",
   "count_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",
@@ -24,7 +24,8 @@
     "sha256": "e9515ddf5627874360cf7e37dc69c70b3d487b059829ef25079c86a18af83a78",
     "reason": "Specific granule labels exist only in the dissection files"
   },
-  "hazard_registry_id": "oncoref:tissue-hazards:v1:sha256:3370cb388d11e33820e0332bb224eac576cb1ff9bd7e7536db1cae6dd212cbda",
+  "tier_registry_id": "oncoref:tissue-tiers:v1:sha256:e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd",
+  "tier_policy_id": "oncoref:tissue-tiers:v1:sha256:e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd+oncoref:tissue-tier-updates:v1:sha256:1a9e6e19735fa9722f7a8a18027691552f992859509a2ab5c4301b2084504028",
   "rules": {
     "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
     "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
@@ -76,7 +77,7 @@
     "rna_tissue_gtex:v23",
     "rna_tissue_hpa:v23"
   ],
-  "literature_sha256": "f14dd6376d79dcdbfa2f3dfbc70c3255ec75bb71049b7e9bfc44f09697bbb1ec",
+  "literature_sha256": "84aca72d34897bc01783a55fe66cb5e8e11871ca1e3708f056694c420b355f00",
   "panel": {
     "scope": "adult, known donor, UMI protocol, primary normal tissue",
     "tissues": [
@@ -198,5 +199,5 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "fd1a1bb05f56c710b9c61f7214c49cfe4c4101849529eb9319e5fc4ecaf8106d"
+  "sha256": "bc4851aaaa0a790f4a4a485adadcf912eb03205fd72ed96bc06efecb6fdd3554"
 }

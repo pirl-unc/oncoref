@@ -28,7 +28,8 @@ nav:
       - Translation qualification: audits/translation-qualification-20261104/index.md
       - Verified sequence records: sequence-bundle.md
       - Historical evidence dispositions: audits/cta-evidence-migration-20261104/index.md
-      - Current release 1.37.0: cta-release-1.37.0.md
+      - Current release 1.38.0: cta-release-1.38.0.md
+      - Previous release 1.37.0: cta-release-1.37.0.md
       - Previous release 1.36.0: cta-release-1.36.0.md
       - Complete candidate inventory: audits/cta-inventory-20261105/index.md
       - Candidate evidence explorer and 122-protein review: audits/cta-evidence-guide-20261106/index.md
@@ -100,7 +101,7 @@ nav:
       - Placental CTA sources: cta-publication-sources.md
       - Bradley CTA audit: cta-bradley-audit.md
   - Tissues:
-      - Tissue hazard ontology: tissue-hazards.md
+      - Tissue tiers: tissue-tiers.md
       - Normal tissue scopes: normal-tissue-scopes.md
       - Tissue injury and manageability: normal-tissue-manageability.md
       - Patient-context gene filters: normal-tissue-gene-filters.md

@@ -8,6 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from oncoref import cta_selection, sequence_bundle
+from tests import released_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "docs/audits/cta-definition-20261104"
@@ -51,7 +52,11 @@ def test_final_receipt_binds_source_audits_figures_and_public_documentation():
                 with zipfile.ZipFile(path) as archive:
                     content = archive.read(name)
             else:
-                content = (base / name).read_bytes()
+                content = (
+                    released_inputs.read(name, expected)
+                    if base == ROOT
+                    else (base / name).read_bytes()
+                )
             assert hashlib.sha256(content).hexdigest() == expected, name
     assert {"report.html", "report-data.json", "cta-definition.pdf"} <= set(receipt["outputs"])
     assert len([name for name in receipt["outputs"] if name.endswith(".svg")]) == 5

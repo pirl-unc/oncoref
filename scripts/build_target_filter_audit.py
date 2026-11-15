@@ -28,57 +28,44 @@ FAMILIAR = {
 }
 SWEEPS = {
     "max_off_target_tpm": [5.0, 2.0, 1.0, 0.5, 0.1],
-    "max_off_target_ntpm": [5.0, 2.0, 1.0, 0.5, 0.1],
-    "max_disposable": [10.0, 1.0],
-    "rare_cell": ["no_dismissed"],
-    "literature": ["no_conflict"],
-    "mapping": ["no_risk"],
     "normal_function": ["no_vital", "no_protected", "no_manageable"],
-    "readthrough": ["exclude"],
-    "min_patients": [2, 5, 10, 50],
-    "min_tumor_fold": [10.0, 30.0, 100.0],
-    "min_reproductive": [5.0, 10.0],
+    "min_tumor_fold": [20.0, 30.0, 50.0, 100.0],
     "membership": ["cancer_antigen", "reproductive_antigen", "cta"],
     "min_papers": [1, 2, 3, 4],
-    "min_families": [2],
-    "exact_members_only": [True],
 }
+#: Literature verdicts reported as a flag in the familiar-CTA table.
+LITERATURE_CONFLICTS = ("conflicting_or_nonspecific", "specialized_tissue_expression")
 CATALOG_RULES = {
     "CTA": "Passes the shared screen; cancer evidence and reproductive evidence both qualify",
     "Cancer Antigen only": "Passes the shared screen; only cancer evidence qualifies",
     "Reproductive Antigen only": "Passes the shared screen; only reproductive evidence qualifies",
-    "Other": "Not excluded, but fails coverage, identity, expression bounds, sequence or "
-    "both evidence routes",
+    "Other": "Not excluded, but fails coverage, identity, expression bounds, sequence, the "
+    "home-tissue rule or both evidence routes",
     "Unsafe": "An accepted normal-tissue or clinical exclusion",
 }
 LAYER_ROWS = [
     (
         "1 `off_target`",
         "How low must expression be outside tumors and reproductive tissue?",
-        "`max_off_target_tpm`, `max_off_target_ntpm`, `max_disposable`",
+        "`max_off_target_tpm`",
     ),
     (
-        "2 `warnings`",
-        "Should flags the catalog records, but does not exclude on, remove a protein?",
-        "`rare_cell`, `literature`, `mapping`",
+        "2 `curation`",
+        "Is the protein's recorded normal home in a tissue of this tier or above?",
+        "`normal_function`",
     ),
     (
-        "3 `curation`",
-        "Does cited literature place the protein in a normal tissue, or is it a read-through?",
-        "`normal_function`, `readthrough`",
+        "3 `sets`",
+        "How far above normal must the best tumor be, and which set do you want?",
+        "`min_tumor_fold`, `membership`",
     ),
     (
-        "4 `sets`",
-        "How strong must each set's evidence be, and which set do you want?",
-        "`min_patients`, `min_tumor_fold`, `min_reproductive`, `membership`",
+        "4 `papers`",
+        "How many papers nominate it or report it in tumors?",
+        "`min_papers`",
     ),
     (
-        "5 `papers`",
-        "How much published support?",
-        "`min_papers`, `families`, `min_families`, `exact_members_only`",
-    ),
-    (
-        "6 `exclusions`",
+        "5 `exclusions`",
         "Which gene families do you rule out by name?",
         "`exclude_prefixes`, `except_labels`",
     ),
@@ -111,6 +98,11 @@ def lookup(d, name):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     table = tf.measures(target_selection.results())
+    # Reported, not filtered on: HPA nTPM (single-cell clusters included) and mapping flags.
+    table["off_target_ntpm"] = table[["healthy_maximum_ntpm", "disposable_max_ntpm"]].max(
+        axis=1, skipna=False
+    )
+    table["mapping_risk"] = table.paralog_ambiguous.eq(True) | table.host_overlapped.eq(True)
     cand = table[table.is_target_candidate]
     cols = ["Kept", *SETS]
 
@@ -142,7 +134,7 @@ def main():
         "disposable_max_tpm",
         "disposable_max_ntpm",
         "tumor_max_tpm",
-        "independent_patients_above_normal",
+        "tumor_fold",
         "reproductive_best",
         "papers_cta",
         "papers_oncofetal",
@@ -185,18 +177,14 @@ def main():
                 "Off-target TPM": r.off_target_tpm,
                 "in": r.off_target_tpm_tissue if candidate else "",
                 "Off-target nTPM": r.healthy_maximum_ntpm if not candidate else r.off_target_ntpm,
-                "Tumors above normal": (
-                    ""
-                    if pd.isna(r.independent_patients_above_normal)
-                    else int(r.independent_patients_above_normal)
-                ),
+                "Tumor fold": "" if pd.isna(r.tumor_fold) else round(float(r.tumor_fold)),
                 "CTA papers": int(r.papers_cta),
                 "Flags": ", ".join(
                     flag
                     for flag, on in (
                         ("dismissed rare-cell", r.rare_cell_status == "dismissed"),
                         ("mapping risk", bool(r.mapping_risk)),
-                        ("literature conflict", r.literature_verdict in tf.LITERATURE_CONFLICTS),
+                        ("literature conflict", r.literature_verdict in LITERATURE_CONFLICTS),
                     )
                     if on
                 ),
@@ -221,7 +209,7 @@ def main():
             "Catalog": mage.category,
             "Off-target TPM": mage.off_target_tpm,
             "Off-target nTPM": mage.off_target_ntpm,
-            "Tumors above normal": mage.independent_patients_above_normal.astype(int),
+            "Tumor fold": mage.tumor_fold.round(),
             "CTA papers": mage.papers_cta,
             "Mapping risk": mage.mapping_risk.map({True: "yes", False: ""}),
             "`standard`": mage.entity_id.map(unnamed["standard"]),
@@ -230,48 +218,68 @@ def main():
     )
     mage_rows.to_csv(OUT / "mage-family.csv", index=False)
 
-    from oncoref import target_curation
+    from oncoref import target_curation, tissue_tiers
 
     loci = target_curation.readthrough()
-    comps = target_curation.compartments()
+    loci = loci.drop_duplicates("entity_id").merge(
+        table[["entity_id", "category", "classification"]], on="entity_id"
+    )
+    moved = loci[loci.classification.eq("Other:Sequence")]
+    document = target_curation.literature()
+    entries = target_curation.entries()
+    excluded = entries[entries.effect.eq("exclude") & entries.review.eq("candidate_sweep")]
+    excluded_rows = pd.DataFrame(
+        {
+            "Protein": excluded.protein,
+            "Tissue": excluded.decision_tissue,
+            "Tier": excluded.tissue_tier.str.capitalize(),
+            "Basis": excluded.decision_reason,
+        }
+    )
+    removal = ("`no_vital` and stricter", "`no_protected` and stricter", "`no_manageable`", "never")
     tier_rows = pd.DataFrame(
         [
             (
                 tier.capitalize(),
                 int(cand.curated_tier.eq(tier).sum()),
                 ", ".join(
-                    comps.set_index("compartment").label[
-                        sorted(
-                            {
-                                k
-                                for text in cand[cand.curated_tier.eq(tier)].curated_compartments
-                                for k in text.split("; ")
-                                if comps.set_index("compartment").tier[k] == tier
-                            }
-                        )
-                    ]
+                    sorted(
+                        {
+                            text.split(": ")[0]
+                            for text in cand[cand.curated_tier.eq(tier)].curated_compartments
+                            for text in text.split("; ")
+                        }
+                    )
                 ),
                 knob,
             )
-            for tier, knob in zip(
-                target_curation.TIERS,
-                (
-                    "`no_vital` and stricter",
-                    "`no_protected` and stricter",
-                    "`no_manageable`",
-                    "never",
-                ),
-            )
+            for tier, knob in zip(target_curation.TIERS, removal)
         ],
-        columns=["Curated tier", "Candidates", "Tissues", "Removed by `normal_function`"],
+        columns=["Recorded tier", "Candidates", "Tissues", "Removed by `normal_function`"],
     )
-    proposed = comps[comps.tier_source == "proposed"]
+    added = target_curation.compartments()
+    references = tissue_tiers.references().set_index("reference_id").url
     proposed_rows = pd.DataFrame(
         {
-            "Compartment": proposed.label,
-            "Proposed tier": proposed.tier.str.capitalize(),
-            "Confidence": proposed.confidence,
-            "References": proposed.tier_references,
+            "Tissue": added.label,
+            "Tier": added.tier.str.capitalize(),
+            "Confidence": added.confidence,
+            "References": added.references.map(
+                lambda keys: ", ".join(f"[{k}]({references[k]})" for k in keys)
+            ),
+        }
+    )
+    families = target_curation.families()
+    family_rows = pd.DataFrame(
+        {
+            "Family": families.label,
+            "Candidates": families.id.map(cand.literature_family.value_counts())
+            .fillna(0)
+            .astype(int),
+            "Tissue": families.tissue,
+            "Tier": families.tier.str.capitalize(),
+            "Used by filters": families.filter_acts.map({True: "yes", False: "no"}),
+            "Sources": families.sources,
         }
     )
     catalog_counts = table.category.value_counts()
@@ -297,8 +305,6 @@ def main():
         rule = "\n".join(f"- {line}" for line in tf.describe(name).splitlines()[1:])
         funnels.append(f"### `{name}`\n\n{rule}\n\n{chain}")
 
-    prame, ctag2 = lookup(table, "PRAME"), lookup(table, "CTAG2")
-    both_low = int((cand.off_target_tpm.lt(1) & ~cand.off_target_ntpm.lt(1)).sum())
     nominated = int(cand.papers_cta.gt(0).sum())
     pass_all = familiar[(familiar[[f"`{v}`" for v in VIEWS]] == "✓").all(axis=1)].Name
     is_candidate = familiar.Catalog.isin(SETS)
@@ -312,13 +318,24 @@ def main():
     dropped = set(mage.protein_group_label) - {"MAGEA4"}
     data_pass = mage_rows[mage_rows["`strict` on its own data"] == "✓"].MAGE
     data_pass = data_pass[data_pass != "MAGEA4"]
+    antigens = cand[cand.is_cancer_antigen]
+    fold_bands = pd.cut(
+        antigens.tumor_fold, [10, 20, 50, 100, 1000, float("inf")], right=False
+    ).value_counts(sort=False)
+    fold_text = ", ".join(
+        f"{int(n)} at {int(b.left)}"
+        + (f" to {int(b.right)}x" if b.right != float("inf") else "x or more")
+        for b, n in fold_bands.items()
+    )
+    top_samples = antigens.tumor_top_sample.value_counts()
+    other_tissue = table[table.classification.eq("Other:Tissue")]
 
     report = f"""# Target filters: categories, knobs and where proteins land
 
 **The catalog assigns five categories and they are not changed here. Filters only
-remove proteins from the {len(cand)} Target candidates, through six layers that
+remove proteins from the {len(cand)} Target candidates, through five layers that
 follow the catalog's own shape.** Filter policy `{tf.FILTER_POLICY_ID}`, applied to
-catalog `oncoref.target-selection.2026-11-10.1`. Every number below is computed by
+catalog `{target_selection.POLICY_ID}`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
 These are outputs of screening rules. They are not validated tumor antigens.
@@ -330,24 +347,30 @@ These are outputs of screening rules. They are not validated tumor antigens.
 Target candidates are the first three rows: {len(cand)} proteins. A filter never moves
 a protein into or out of Other or Unsafe.
 
-## 2. The six filter layers
+**One cancer rule.** A protein is a Cancer Antigen when one tumor sample, from any
+comparable TPM cohort except germ cell tumors, is at least 10 times its highest
+non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
+below 1 TPM count as 1). The {len(antigens)} Cancer Antigens: {fold_text}.
+{len(other_tissue)} proteins whose normal home is a tissue no panel resolves are
+Other:Tissue unless reproductive evidence qualifies.
 
-A protein is kept only if it passes all six. `filter_failed` names the first one it
+## 2. The five filter layers
+
+A protein is kept only if it passes all five. `filter_failed` names the first one it
 fails. `max_*` knobs mean **below** the value, `min_*` knobs mean **at least** the
 value, and a missing measurement never passes.
 
 {md(layers)}
 
-**Layer 4 works on the two sets separately.** `min_patients` and `min_tumor_fold`
-raise the bar for being a Cancer Antigen. `min_reproductive` raises it for being a
-Reproductive Antigen. A protein that loses one membership keeps the other, so a CTA
-with weak tumor evidence becomes Reproductive Antigen only and stays in the list.
-`membership` then picks the set: `membership="cta"` requires both.
+**Layer 3 tightens Cancer Antigens only.** `min_tumor_fold` raises the catalog's 10x;
+a protein that loses Cancer Antigen membership keeps its Reproductive Antigen
+membership, so a CTA with a weaker tumor becomes Reproductive Antigen only and stays in
+the list. `membership` then picks the set: `membership="cta"` requires both.
 
 ## 3. Each knob alone
 
 Target candidates kept with only that knob changed. Categories are the ones after
-layer 4 has tightened the evidence.
+layer 3 has tightened Cancer Antigens.
 
 {md(sweep)}
 
@@ -367,6 +390,7 @@ if a change to a mode drops one.
 candidates, {int(by_catalog.get("Unsafe", 0))} are Unsafe and
 {int(by_catalog.get("Other", 0))} Other. A mode column shows ✓ or the first layer
 that removes the protein. **{len(pass_all)} pass every mode:** {", ".join(pass_all)}.
+Flags and the nTPM column are reported for reading; no knob acts on them.
 
 {md(familiar[is_candidate].drop(columns=["Group", "Unsafe reasons"]))}
 
@@ -384,41 +408,60 @@ would pass ({", ".join(data_pass)}).
 
 {md(mage_rows)}
 
-The data-driven alternative is `mapping="no_risk"`, which drops proteins whose reads
-could belong to a paralog or a host gene. It removes the MAGEs marked above and keeps
-MAGEA4, but it also removes {int(cand.mapping_risk.sum())} of the {len(cand)}
-candidates, including most SSX, GAGE and CT45 proteins.
-
 ## 7. Disposable tissue and the "below 1 everywhere" list
 
 - **Disposable.** {len(disposable)} of {len(cand)} candidates reach 1 TPM or 1 nTPM in
   appendix, gallbladder or tonsil. The highest is
   {disposable.iloc[0].protein_group_label} at {disposable.iloc[0].disposable_max_tpm:.1f} TPM.
   [List](disposable-at-least-1.csv).
-- **Below 1 everywhere off target.** `max_off_target_tpm=1.0` with
-  `max_off_target_ntpm=1.0` keeps {len(low)} candidates.
-  [List](off-target-below-1.csv). It is a filter, not a catalog category.
+- **Below 1 everywhere off target.** {len(low)} candidates are below 1 TPM at tissue
+  level and below 1 HPA nTPM, single-cell clusters included.
+  [List](off-target-below-1.csv). It is a list, not a knob or a catalog category.
 
-## 8. The curation layer
+## 8. Curation: what the catalog decides and what the filters add
 
-Layer 3 acts on cited literature. A finding acts only when a second reader confirmed
-it as human, adult, normal-tissue and gene-specific. Its tissue is tiered by the
-hazard registry, or by a cited proposal where the registry has no call.
-[Findings and method](normal-function-sweep.md) ·
-[every finding with its sources](normal-function-sweep.csv).
+**The catalog and the filters read the same records.** The literature review
+(`normal-expression-literature.json`) holds one entry for each of {len(entries)}
+proteins. The tissue-tier registry tiers the tissue. Nothing below lives in a separate
+filter file. [Sweep findings and method](normal-function-sweep.md).
+
+The catalog acts on the review's rubric. A gene-specific report in normal adult tissue
+tiered Vital or Protected makes the protein Unsafe, and needs a quote retrieved from
+the source. The 2026-11-12 candidate sweep adds {len(excluded)} such proteins:
+
+{md(excluded_rows)}
+
+The catalog's sequence check moves read-through loci to Other. {len(loci)} loci in the
+catalog have every coding transcript joining two separate genes. {len(moved)} are
+Other:Sequence; the rest are Unsafe or Other for another reason. Other:Sequence:
+{", ".join(sorted(moved.protein_group_label))}.
+
+Layer 2 acts on the recorded normal home of the candidates that remain: a confirmed
+finding that falls short of the rubric, a family rule, or the nose and skin reference.
 
 {md(tier_rows)}
 
-Compartments the registry did not tier, with the tier proposed here:
+Family rules. A member whose family's home is a tissue no panel resolves, and that has
+no reproductive evidence, is Other:Tissue in the catalog; the rows count the members
+that remain candidates:
+
+{md(family_rows)}
+
+Tissues added to the tissue-tier registry for these findings
+(`normal-tissue-tier-updates.yaml`). Olfactory epithelium is Manageable since
+2026-11-15, on the oncology precedent ([tissue tiers](../../tissue-tiers.md#how-a-tier-is-chosen)):
 
 {md(proposed_rows)}
 
-`readthrough="exclude"` removes {len(loci)} loci that share exons with two or more other
-protein-coding genes, including ATF7-NPFF, ENSG00000273155 and ENSG00000267618:
-{", ".join(loci.protein_group_label)}.
+Limits: {"; ".join(x[0].lower() + x[1:] for x in document["limitations"][-4:])}.
 
 ## 9. What to keep in mind
 
+- **One tumor sample can admit a protein.** The rule asks for a single sample at 10x,
+  as requested; it does not ask for replication. The most frequent top sample is
+  `{top_samples.index[0]}`, the best tumor for {int(top_samples.iloc[0])} Cancer
+  Antigens. `tumor_top_sample` and `independent_patients_above_normal` on each row show
+  how much rests on one sample.
 - **The paper layer does most of the cutting.** {nominated} of {len(cand)} candidates
   are nominated by any CTA-list paper. `min_papers=3` keeps {len(three)}, and
   {only_big} of those are named by all of the three largest lists
@@ -427,17 +470,6 @@ protein-coding genes, including ATF7-NPFF, ENSG00000273155 and ENSG00000267618:
   published catalogs and screens, and their lists overlap. Several lists naming a gene
   shows that several screens picked it, not that separate experiments confirmed it.
   [Sources and recorded scopes](paper-families.csv).
-- **No mode reads the nTPM knob or the warning knobs.** PRAME is
-  {prame.off_target_tpm:.1f} TPM at tissue level ({prame.off_target_tpm_tissue}) but
-  {prame.off_target_ntpm:.1f} nTPM on one single-cell cluster, and carries a dismissed
-  rare-cell signal and a conflicting literature verdict. CTAG2 is
-  {ctag2.off_target_tpm:.1f} TPM ({ctag2.off_target_tpm_tissue}) and
-  {ctag2.off_target_ntpm:.1f} nTPM. A mode using `max_off_target_ntpm`,
-  `rare_cell="no_dismissed"` or `literature="no_conflict"` would drop PRAME, so those
-  stay knobs you set yourself.
-- **{both_low} candidates are below 1 TPM at tissue level but not below 1 nTPM.**
-  `max_off_target_tpm=1.0` with `max_off_target_ntpm=1.0` is the "below 1 everywhere"
-  filter; it removes PRAME by construction.
 """
     (OUT / "index.md").write_text(report)
     print(report)

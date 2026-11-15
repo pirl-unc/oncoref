@@ -1,58 +1,46 @@
 # Licensed under the Apache License, Version 2.0.
-"""Literature curation of Target candidates: normal function and read-through loci.
+"""Read the catalog's central curation records: literature, family rules, tissues.
 
-Nothing here changes the catalog or the tissue hazard registry. The layer records,
-with citations, where a candidate is reported to act in normal adult tissue outside
-the expression panels, tiers that tissue (from :mod:`oncoref.tissue_hazards` where the
-registry resolves it, otherwise from a cited proposal in ``target-curation.yaml``),
-and lists read-through loci. :mod:`oncoref.target_filters` reads :func:`table`.
+This module owns no data. It is a view over the stores the catalog itself is built
+from, so a filter can never act on a record the catalog has not seen:
+
+- ``normal-expression-literature.json``: one reviewed entry per protein, the rubric
+  that decides Unsafe, and the family rules.
+- the tissue-tier registry and its updates, through
+  :mod:`oncoref.tissue_tiers`.
+- ``nose-skin-reference.csv``: normal nose and skin expression of each candidate.
+- ``readthrough-loci.csv``: loci the catalog's sequence check moves to Other.
+
+A literature entry either excludes (Unsafe in the catalog) or is recorded with its
+tissue and tier. :func:`table` reports the recorded tier that
+:mod:`oncoref.target_filters` may act on.
 """
 
 from __future__ import annotations
 
-import re
+import json
 from functools import cache
 from importlib.resources import files
 
 import pandas as pd
-import yaml
 
-TIERS = ("vital", "protected", "manageable", "disposable")  # most protective first
+from . import tissue_tiers
+
+TIERS = tissue_tiers.TIERS  # most protective first
+_REFERENCE_SOURCES = (
+    "https://doi.org/10.1186/s12864-016-2960-3 | https://chanzuckerberg.github.io/cellxgene-census/"
+)
 _DATA = files("oncoref") / "data"
 
 
 @cache
-def registry() -> dict:
-    """The curation file: compartments, proposed tiers with references, family rules."""
-    return yaml.safe_load((_DATA / "target-curation.yaml").read_text())
+def _literature() -> dict:
+    return json.loads((_DATA / "normal-expression-literature.json").read_text())
 
 
-@cache
-def _compartments() -> pd.DataFrame:
-    from . import tissue_hazards
-
-    rows = []
-    for key, c in registry()["registry_compartments"].items():
-        cell = c.get("cell")
-        found = (
-            tissue_hazards.assess(c["tissue"], cell, resolution="cell")
-            if cell
-            else tissue_hazards.assess(c["tissue"])
-        )
-        if found.get("tier") not in TIERS:
-            raise ValueError(f"registry does not resolve compartment {key}")
-        source = f"tissue_hazards:{found['assessment_id']}"
-        rows.append((key, c["label"], found["tier"], source, "", ""))
-    for key, c in registry()["proposed_compartments"].items():
-        cited = "; ".join(f"PMID {r['pmid']}" for r in c["references"])
-        rows.append((key, c["label"], c["tier"], "proposed", c["confidence"], cited))
-    columns = ["compartment", "label", "tier", "tier_source", "confidence", "tier_references"]
-    return pd.DataFrame(rows, columns=columns)
-
-
-def compartments() -> pd.DataFrame:
-    """Every compartment a finding can point to, with its tier and where the tier comes from."""
-    return _compartments().copy()
+def literature() -> dict:
+    """The literature review's scope, rubric, method and limits (entries left out)."""
+    return {k: v for k, v in _literature().items() if k != "entries"}
 
 
 def most_protective(tiers) -> str:
@@ -62,78 +50,154 @@ def most_protective(tiers) -> str:
 
 
 @cache
-def _findings() -> pd.DataFrame:
-    return pd.read_csv(_DATA / "target-normal-function-findings.csv", keep_default_na=False)
+def _entries() -> pd.DataFrame:
+    columns = [
+        "entity_id",
+        "protein",
+        "review",
+        "verdict",
+        "effect",
+        "rule",
+        "decision_tissue",
+        "tissue_tier",
+        "recorded_tissue",
+        "recorded_tier",
+        "decision_reason",
+    ]
+    frame = pd.DataFrame(_literature()["entries"])
+    frame["sources"] = frame.evidence.map(
+        lambda items: " | ".join(dict.fromkeys(x["url"] for x in items if x.get("url")))
+    )
+    return frame[[*columns, "sources"]].fillna("")
 
 
-def findings(gene: str | None = None) -> pd.DataFrame:
-    """Every literature finding with its verdict, sources, compartments and tier.
+def entries(protein: str | None = None) -> pd.DataFrame:
+    """One row per reviewed protein: verdict, effect, deciding and recorded tissue."""
+    d = _entries()
+    return (d[d.protein == protein] if protein else d).reset_index(drop=True)
 
-    ``acts`` is true only for findings a second reader confirmed as human, adult,
-    normal-tissue and gene-specific, and that name a tiered compartment.
+
+def findings(protein: str | None = None) -> pd.DataFrame:
+    """Every evidence item behind the reviewed entries, one row each.
+
+    ``quote`` is verbatim text retrieved from the source, or empty. Items from the
+    candidate sweep also carry the second reader's verdict in
+    ``second_reader_verdict`` and its note in ``limitations``.
     """
-    d = _findings()
-    return (d[d.gene == gene] if gene else d).reset_index(drop=True)
-
-
-def families() -> pd.DataFrame:
-    """Family rules, each with its pattern, compartment, tier, basis and sources."""
-    tier = _compartments().set_index("compartment").tier
     rows = [
-        {**f, "tier": tier[f["compartment"]], "sources": "; ".join(f["sources"])}
-        for f in registry()["families"]
+        {"protein": e["protein"], "effect": e["effect"], "rule": e["rule"], **item}
+        for e in _literature()["entries"]
+        if protein is None or e["protein"] == protein
+        for item in e["evidence"]
     ]
     return pd.DataFrame(rows)
 
 
+def families() -> pd.DataFrame:
+    """Family rules: a name pattern, the tissue its members share, tier and sources.
+
+    ``filter_acts`` marks the rules whose tier the candidate filters use. Those rules
+    also name the home tissue for the catalog's Other:Tissue rule.
+    """
+    frame = pd.DataFrame(_literature()["family_rules"])
+    frame["sources"] = frame.sources.map("; ".join)
+    return frame
+
+
+def compartments() -> pd.DataFrame:
+    """Tissues added to the tissue-tier registry for these findings, with tier and references."""
+    return tissue_tiers.updates()
+
+
 @cache
 def _readthrough() -> pd.DataFrame:
-    return pd.read_csv(_DATA / "target-readthrough-loci.csv", keep_default_na=False)
+    return pd.read_csv(_DATA / "readthrough-loci.csv", keep_default_na=False)
+
+
+def rna_ihc_calibration() -> dict:
+    """How often a tissue stains at each bulk RNA band, and the grade cutoffs drawn from it."""
+    return json.loads((_DATA / "rna-ihc-calibration.json").read_text())
+
+
+def rna_grade(value: float) -> str:
+    """Read an RNA value as "", "low", "medium" or "high" on the staining calibration."""
+    floors = rna_ihc_calibration()["grade_floors_ntpm"]
+    return next(
+        (name for name in ("high", "medium", "low") if value >= floors[name]),
+        "",
+    )
+
+
+def nose_skin(protein: str | None = None) -> pd.DataFrame:
+    """Normal nose and skin expression of each Target candidate, from two references.
+
+    Olfactory mucosa bulk RNA (four people) and single cells of adult nose, skin,
+    scalp and tongue. ``recorded_tissue`` is set when several people or datasets
+    agree; :func:`nose_skin_provenance` gives sources, rules and limits.
+    """
+    d = pd.read_csv(_DATA / "nose-skin-reference.csv", keep_default_na=False)
+    return (d[d.protein == protein] if protein else d).reset_index(drop=True)
+
+
+def nose_skin_provenance() -> dict:
+    """Sources, thresholds, coverage and limits of the nose and skin reference."""
+    return json.loads((_DATA / "nose-skin-reference.json").read_text())
 
 
 def readthrough() -> pd.DataFrame:
-    """Candidate loci that share exons with two or more other protein-coding genes."""
+    """Loci whose every coding transcript joins two separate genes, with the parents."""
     return _readthrough().copy()
 
 
-def table(labels) -> pd.DataFrame:
-    """One row per protein label: the curated tier and what it rests on.
+def table(catalog: pd.DataFrame) -> pd.DataFrame:
+    """Recorded tier per catalog row, from the literature columns the catalog carries.
 
-    ``curated_tier``          most protective tier among acting findings and family rules
-    ``curated_compartments``  the compartments behind it
-    ``curated_basis``         "finding", "family" or both
-    ``curated_sources``       citations, kept verbatim from the curation records
-    ``is_readthrough``        the locus is a read-through of other protein-coding genes
+    ``curated_tier``          most protective tier among the protein's recorded finding,
+                              its nose and skin reference record and an acting family
+                              rule; "" when none exists
+    ``curated_compartments``  the tissues behind it
+    ``curated_basis``         "finding", "reference", "family" or several
+    ``curated_sources``       source links of the entry and the family rule
     """
-    labels = pd.Index(pd.unique(pd.Series(labels, dtype=str)))
-    tier = _compartments().set_index("compartment").tier
-    records = {label: [] for label in labels}
-    acting = _findings()
-    acting = acting[acting.acts.astype(str).str.lower().eq("true")]
-    for r in acting.itertuples():
-        if r.gene in records:
-            for key in r.compartments.split("; "):
-                records[r.gene].append((tier[key], key, "finding", r.best_source or r.source))
-    for f in registry()["families"]:
-        if not f["acts"]:
-            continue
-        pattern = re.compile(f["pattern"])
-        for label in labels:
-            if pattern.match(label):
-                sources = "; ".join(f["sources"])
-                records[label].append((tier[f["compartment"]], f["compartment"], "family", sources))
-    loci = set(_readthrough().protein_group_label)
+    family = families().set_index("id")
+    sources = _entries().set_index("entity_id").sources
     rows = []
-    for label in labels:
-        hits = records[label]
+    for r in catalog.itertuples():
+        hits = []
+        if isinstance(r.literature_recorded_tier, str) and r.literature_recorded_tier:
+            hits.append(
+                (
+                    r.literature_recorded_tier,
+                    r.literature_recorded_tissue,
+                    "finding",
+                    sources.get(r.entity_id, ""),
+                )
+            )
+        if isinstance(r.reference_recorded_tier, str) and r.reference_recorded_tier:
+            hits.append(
+                (
+                    r.reference_recorded_tier,
+                    r.reference_recorded_tissue,
+                    "reference",
+                    _REFERENCE_SOURCES,
+                )
+            )
+        rule = r.literature_family if isinstance(r.literature_family, str) else ""
+        if rule and bool(family.loc[rule, "filter_acts"]):
+            hits.append(
+                (
+                    r.literature_family_tier,
+                    family.loc[rule, "tissue"],
+                    "family",
+                    family.loc[rule, "sources"],
+                )
+            )
         rows.append(
             {
-                "protein_group_label": label,
                 "curated_tier": most_protective(h[0] for h in hits),
                 "curated_compartments": "; ".join(dict.fromkeys(h[1] for h in hits)),
                 "curated_basis": "; ".join(dict.fromkeys(h[2] for h in hits)),
-                "curated_sources": " | ".join(dict.fromkeys(h[3] for h in hits)),
-                "is_readthrough": label in loci,
+                "curated_sources": " | ".join(dict.fromkeys(h[3] for h in hits if h[3])),
             }
         )
-    return pd.DataFrame(rows).set_index("protein_group_label")
+    return pd.DataFrame(rows, index=catalog.index)

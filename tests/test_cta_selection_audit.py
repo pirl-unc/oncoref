@@ -9,6 +9,7 @@ import pytest
 
 from oncoref import canine, cta_selection, human, mouse
 from oncoref import cta_selection_audit as module
+from tests import released_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / "docs/audits/cta-selection-20261028"
@@ -267,7 +268,11 @@ def test_current_replay_and_walkthrough_receipts_match_artifacts():
                     with zipfile.ZipFile(path) as archive:
                         content = archive.read(name)
                 else:
-                    content = (base / name).read_bytes()
+                    content = (
+                        released_inputs.read(name, expected)
+                        if base == ROOT
+                        else (base / name).read_bytes()
+                    )
                 assert hashlib.sha256(content).hexdigest() == expected, name
     summary = json.loads((RELEASE / "summary.json").read_text())
     presentation = json.loads(

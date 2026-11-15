@@ -10,6 +10,8 @@ ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from audit_target_expression_maxima import OUT, evaluate, maxima  # noqa: E402
 
+from tests import released_inputs  # noqa: E402
+
 
 def test_strict_target_maximum_and_independent_inclusive_cap():
     assert evaluate(100, 2, 16, cap=16) == {"maximum_status": "passes", "cap_status": "passes"}
@@ -70,4 +72,7 @@ def test_counterfactual_report_counts_and_fingerprints():
             if path == "oncoref/data/target-selection.csv.gz":
                 # The audit read the 2026-11-09.1 draft catalog, preserved beside it.
                 path = "docs/audits/target-selection-20261109/rebuild/packaged-catalog-2026-11-09.1.csv.gz"
-            assert hashlib.sha256((base / path).read_bytes()).hexdigest() == expected, path
+            content = (
+                released_inputs.read(path, expected) if base == ROOT else (base / path).read_bytes()
+            )
+            assert hashlib.sha256(content).hexdigest() == expected, path

@@ -4,13 +4,13 @@
 CTA is their intersection and Target candidates is their union, with the same
 normal-expression, coverage, translation, expression-bound and sequence checks. The
 [catalog](audits/target-selection-20261110/rebuild/index.md) contains
-**626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
-18,241 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
+**453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only, 970 Other and
+18,253 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
 [Illustrated rules](audits/target-selection-20261110/report.html) ·
 [Rare normal-cell RNA by donor](audits/normal-cell-atlas-20261110/rare-cell/index.md).
 Curated protein–paper links remain attached to their specific claims.
 
-[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
+[Normal-tissue tier ontology](tissue-tiers.md) centralizes cited bulk and cell-subset calls.
 
 [OncoRef 1.36.0](cta-release-1.36.0.md) adds the [47-protein cancer-only audit](audits/cancer-only-20261109/report.html), individual source-linked normal-tissue reviews and a filterable table. No member establishes cancer-only production.
 

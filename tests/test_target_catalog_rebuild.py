@@ -28,11 +28,11 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     genes = [g for ids in catalog.member_gene_ids for g in json.loads(ids)]
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
-        "Unsafe": 18241,
-        "Other": 750,
-        "CTA": 626,
-        "Cancer Antigen only": 245,
-        "Reproductive Antigen only": 31,
+        "Unsafe": 18253,
+        "Other": 970,
+        "CTA": 453,
+        "Cancer Antigen only": 37,
+        "Reproductive Antigen only": 180,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -45,13 +45,13 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert catalog.loc[released & ~unsafe, "legacy_exclusion_reasons"].str.contains("Rare").all()
     assert catalog.loc[unsafe & ~released, "Unsafe_reasons"].value_counts().to_dict() == {
         "Established rare normal-cell RNA": 67,
-        "Published normal-tissue expression": 1,
+        "Published normal-tissue expression": 13,
     }
     # Every rare-cell outcome is terminal; nothing is parked for review.
     assert set(catalog.rare_cell_status) <= {*policy.RARE_CELL_STATUSES, "not_extracted"}
     assert set(catalog.rare_cell_action) == {"none", "unsafe"}
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 490
+    assert len(policy.results(changed_only=True)) == 422
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -59,12 +59,16 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
-    for name in ["H2BW2", "HUS1B", "OR2B2", "SSU72L2", "MAGEA4", "CTAG2"]:
+    for name in ["HUS1B", "OR2B2", "SSU72L2", "MAGEA4", "CTAG2"]:
         assert by_name.loc[name, "category"] == "CTA"
+    # No tumor reaches 10x the normal maximum, so the cancer claim is not made.
+    for name in ["H2BW2", "EXD1"]:
+        assert by_name.loc[name, "category"] == "Reproductive Antigen only"
+        assert by_name.loc[name, "tumor_fold"] < policy.TUMOR_FOLD
     # PRAME is in the eye of two donors in two studies, 1.2-1.5% of cells in different
     # populations. Two lone donors that disagree on the cell type are a recorded warning.
     for name in ["PRAME", "EXD1", "LRRIQ4"]:
-        assert by_name.loc[name, "category"] == "CTA"
+        assert by_name.loc[name, "is_reproductive_antigen"]
         assert by_name.loc[name, "rare_cell_status"] == "dismissed"
         assert "different cell types" in by_name.loc[name, "rare_cell_basis"]
         assert by_name.loc[name, "finding_donors_multi_molecule"] == 2
@@ -78,13 +82,28 @@ def test_named_assignments_and_accepted_review_holds(catalog):
         assert by_name.loc[name, "rare_cell_status"] == "dismissed"
         assert note in by_name.loc[name, "rare_cell_mapping_notes"]
         assert by_name.loc[name, "literature_effect"] == "none"
-        assert by_name.loc[name, "category"] == "CTA"
+        assert by_name.loc[name, "is_target_candidate"]
     # Published brain RNA turns MAGEA12's single-molecule detection into a finding.
     assert by_name.loc["MAGEA12", "max_multi_molecule_pct"] < 1
     assert "published" in by_name.loc["MAGEA12", "rare_cell_basis"]
     assert by_name.loc["MAGEA12", "category"] == "Unsafe"
     assert by_name.loc["MYH13", "literature_effect"] == "exclude"
     assert by_name.loc["MYH13", "category"] == "Unsafe"
+    # The candidate sweep: a quoted report in a Vital or Protected tissue excludes.
+    for name, tissue in [("MRGPRX1", "dorsal root ganglion"), ("SCGB1C1", "nasal mucosa")]:
+        assert by_name.loc[name, "literature_effect"] == "exclude"
+        assert by_name.loc[name, "literature_decision_tissue"] == tissue
+        assert by_name.loc[name, "Unsafe_reasons"] == "Published normal-tissue expression"
+    # Olfactory epithelium is Manageable, so its finding is recorded, and the protein has
+    # no reproductive evidence for a home the panels do not resolve.
+    assert by_name.loc["BPIFB3", "literature_effect"] == "none"
+    assert by_name.loc["BPIFB3", "literature_recorded_tier"] == "manageable"
+    assert by_name.loc["BPIFB3", "classification"] == "Other:Tissue"
+    # A confirmed finding below the rubric, and a family rule, are recorded only.
+    assert by_name.loc["LRRC52", "literature_recorded_tier"] == "vital"
+    assert by_name.loc["LRRC52", "category"] == "CTA"
+    assert by_name.loc["OR2B2", "literature_family"] == "olfactory_receptor"
+    assert by_name.loc["OR2B2", "literature_family_tier"] == "manageable"
     dismissed = catalog[catalog.is_target_candidate & catalog.rare_cell_status.eq("dismissed")]
     released = catalog[catalog.is_target_candidate & catalog.released_category.eq("Unsafe")]
     assert pd.concat([dismissed, released]).literature_effect.eq("none").all()
@@ -94,13 +113,22 @@ def test_named_assignments_and_accepted_review_holds(catalog):
             "protein_group_label",
         ]
     )
-    assert len(held) == 7
+    # Seven review holds, and six released CTAs that are read-through loci.
+    readthrough = set(
+        catalog.loc[
+            catalog.released_category.eq("CTA") & catalog.readthrough_locus, "protein_group_label"
+        ]
+    )
+    assert len(held) == 13 and len(held - readthrough) == 7
+    assert {"ATF7-NPFF", "ENSG00000273155"} <= readthrough <= held
     assert held >= {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
     assert by_name.loc["CDY1B", "cancer_evidence"] == "does_not_qualify"
     assert by_name.loc["CDY1B", "tumor_max_tpm"] < 1
     assert by_name.loc["CDY1B", "category"] == "Reproductive Antigen only"
-    assert by_name.loc["FAM237A", "cancer_evidence"] == "unassessed"
+    # Unresolved patient identity no longer holds a protein: one sample decides.
+    assert by_name.loc["FAM237A", "cancer_evidence"] == "does_not_qualify"
     assert by_name.loc["FAM237A", "unresolved_patient_samples_above_normal"] >= 2
+    assert by_name.loc["FAM237A", "tumor_fold"] < policy.TUMOR_FOLD
     assert by_name.loc["FAM237A", "category"] == "Reproductive Antigen only"
     gene = by_name.loc["H2BW2", "representative_gene_id"]
     assert policy.results(gene).protein_group_label.tolist() == ["H2BW2"]
@@ -113,8 +141,8 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
-    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 949
-    assert summary["shared_eligible"] == 939
+    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 917
+    assert summary["shared_eligible"] == 907
     assert summary["expression_bounds"]["fail"] == 10
     failed = catalog[catalog.expression_bounds_status.eq("fail")]
     assert (
@@ -131,12 +159,8 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     by_entity = dict(iter(witnesses.groupby("entity_id")))
     for row in catalog[catalog.is_cancer_antigen].itertuples():
         observations = by_entity[row.entity_id]
-        above = observations[
-            observations.value.ge(1) & observations.value.gt(row.normal_reference_tpm)
-        ]
-        patients = above.loc[above.participant_id.ne(""), "participant_id"].nunique()
-        single = observations.value.ge(10 * max(row.normal_reference_tpm, 1)).any()
-        assert patients >= 2 or single, row.protein_group_label
+        floor = max(row.normal_reference_tpm, row.disposable_max_tpm, 1)
+        assert observations.value.ge(policy.TUMOR_FOLD * floor).any(), row.protein_group_label
     samples = pd.read_csv(OUT / "tumor-samples.csv.gz")
     assert samples.sample_key.is_unique
     assert not samples.duplicated(["namespace", "sample_id"]).any()
@@ -148,7 +172,9 @@ def test_missing_comparison_is_not_reported_as_zero(catalog):
     assert catalog.loc[failed, "normal_reference_tpm"].isna().all()
     assert catalog.loc[failed, "tumor_max_tpm"].isna().all()
     coverage = pd.read_csv(OUT / "tumor-source-coverage.csv")
-    assert coverage.status.eq("assessed").sum() == 130
+    assert coverage.status.eq("assessed").sum() == 129
+    germ = coverage[coverage.cancer_code.isin(policy.GERM_CELL_TUMORS)]
+    assert len(germ) and not germ.status.eq("assessed").any()
     nutm = coverage[coverage.cancer_code.eq("NUTM")]
     assert len(nutm) == 1 and not nutm.status.eq("assessed").any()
 
@@ -169,8 +195,8 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 402
-    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 24
+    assert catalog[catalog.is_cta].published_nomination.sum() == 308
+    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 6
 
 
 def test_packaged_snapshot_matches_report_metadata(catalog):
@@ -235,5 +261,6 @@ def test_rebuild_patient_metadata_matches_shared_api():
     metadata = pd.read_csv(OUT / "tumor-samples.csv.gz", keep_default_na=False)
     expected = sample_api.sample_identities(metadata[["source_cohort", "sample_id"]])
     pd.testing.assert_frame_equal(metadata[expected.columns], expected)
-    assert metadata.participant_id.ne("").sum() == 13164
+    assert metadata.participant_id.ne("").sum() == 13010
+    assert not metadata.cancer_code.isin(policy.GERM_CELL_TUMORS).any()
     assert metadata.patient_identity_status.eq("conflict").sum() == 0
