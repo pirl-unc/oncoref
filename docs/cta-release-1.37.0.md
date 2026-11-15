@@ -54,7 +54,7 @@ Limits:
   automated reader, not by a person, and mostly at abstract level.
 - Seven tissue tiers (olfactory epithelium, taste buds, nasal mucosa, lacrimal gland,
   sensory ganglia, bone, dental pulp) are cited proposals in
-  `oncoref/data/target-curation.yaml`. They are not in the hazard registry.
+  `oncoref/data/target-curation.yaml`. They are not in the tissue-tier registry.
 - These records are separate from the catalog's own literature review
   (`normal-expression-literature.json`) and act only in the filter layer. Folding them
   into the catalog would change categories and needs a new catalog policy.

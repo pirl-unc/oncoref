@@ -1,0 +1,151 @@
+# oncoref
+
+[Cancer and Reproductive Antigens](target-selection.md) defines the current policy:
+CTA is their intersection and Target candidates is their union, with the same
+normal-expression, coverage, translation, expression-bound and sequence checks. The
+[catalog](audits/target-selection-20261110/rebuild/index.md) contains
+**626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
+18,241 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
+[Illustrated rules](audits/target-selection-20261110/report.html) ·
+[Rare normal-cell RNA by donor](audits/normal-cell-atlas-20261110/rare-cell/index.md).
+Curated protein–paper links remain attached to their specific claims.
+
+[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.
+
+[OncoRef 1.36.0](cta-release-1.36.0.md) adds the [47-protein cancer-only audit](audits/cancer-only-20261109/report.html), individual source-linked normal-tissue reviews and a filterable table. No member establishes cancer-only production.
+
+The [released 1.36.0 CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). These are the earlier policy's counts. All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role.
+
+[Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript table](audits/cta-transcript-selection-20261108/table.html) · [Current paper gaps and judgments](audits/cta-current-review-20261108/index.md) · [PRAMEF18, SSU72-like proteins and other candidate evidence](audits/cta-candidate-evidence-20261108/index.md) · [Historical 602-CTA evidence explorer](audits/cta-evidence-guide-20261106/report.html) · [Verified sequence records](sequence-bundle.md).
+
+The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.36.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
+
+The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
+[1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)
+and [215-gene research selection](audits/cta-research-20261026/index.md)
+retain their dated rules for comparison.
+The [released 213-gene expression policy and protein references](audits/cta-policy-20261025/index.md)
+retain their normal-expression findings and sequence-background semantics.
+
+[Current normal-expression breadth](audits/normal-breadth-20261104/index.md)
+supports review priority without changing memberships.
+[Developmental-target sources](developmental-targets.md) documents the brachyury follow-up.
+
+[Historical antibody reviews](audits/cta-adjudication-20261025/index.md) retain their original findings. The [current migration ledger](audits/cta-evidence-migration-20261104/index.md) explains all revised dispositions without claiming experimental resolution of every reagent conflict. Older reports retain their dated policies.
+
+[Full CTA evidence atlas and gene PDF catalogs](audits/cta-atlas-20261024/index.md)
+cover all 2,540 mapped candidates, cancer occurrence, retained-gene normal-tissue
+conflicts, therapeutic evidence and reconsideration questions.
+
+`oncoref` is the base-layer package for shared cancer reference data:
+cancer-type ontology, cohorts, expression, clean transcripts-per-million (TPM)
+normalization, tumor mutational burden (TMB), incidence/mortality,
+immune-checkpoint inhibitor (ICI) response, Human Protein Atlas (HPA)
+normal-tissue and cancer expression, and HPA-derived cancer-testis antigen references.
+
+Downstream packages such as [pirlygenes](https://github.com/pirl-unc/pirlygenes)
+and [trufflepig](https://github.com/pirl-unc/trufflepig) should delegate
+parity-clean shared primitives here, but they keep different kinds of work:
+pirlygenes owns curated gene sets and panels, while trufflepig owns per-sample
+interpretation, quality-control (QC) narration, and rule firing.
+
+Use this page as the quick orientation. The [API guide](api.md) is the detailed
+module map, with examples and notes about compatibility modules.
+
+## Install
+
+```bash
+pip install oncoref
+```
+
+## Stack Boundary
+
+- **oncoref**: empirical base facts and canonical identifiers. Use it for cancer
+  codes, gene IDs, reference expression/normalization, epidemiology, TMB,
+  ICI/anti-PD-1 response, HPA normal tissue, and source-anchored cancer-testis
+  antigen (CTA) facts. If a row has an `n`, confidence interval, source cohort,
+  or PMID/DOI anchoring a measurement, it usually belongs here.
+- **pirlygenes**: curated gene selections. Use it for lineage/family/compartment
+  panels, discriminators, surfaceome, TME and stem-cell markers, response
+  signature panels, target-to-therapy registries, and other purpose-specific
+  gene sets keyed to oncoref IDs.
+- **trufflepig**: per-sample application. Use it for sample QC narration,
+  library-prep/source warnings, deconvolution, scoring, and tumor-sample rules.
+
+## Data Model
+
+Three distinctions keep oncoref results interpretable:
+
+1. A cancer ontology code, an expression cohort, and a clinical evidence scope
+   are related but not interchangeable. Registry fields state whether a code has
+   its own cohort, a computed member union, a parent fallback, or no expression
+   backing.
+2. Small reference and provenance tables ship in the Python wheel. Large
+   expression matrices and HPA datasets live in versioned download caches.
+3. Availability and eligibility are explicit. Accessors distinguish a missing
+   artifact, a QC-ineligible reference, and a valid empty gene selection.
+
+Public results use canonical cancer codes and Ensembl gene IDs so downstream
+packages can join domains without maintaining private name mappings.
+
+## Start Here
+
+- Need cancer-type codes, hierarchy, molecular subtypes, or matched normal
+  tissues? Start with [Cancer Vocabulary](api.md#cancer-vocabulary).
+- Need expression values or clean-TPM normalization? Start with
+  [Expression And Normalization](api.md#expression-and-normalization).
+- Need anti-PD-1 or broader checkpoint-inhibitor response estimates? Start with
+  [ICI Response](api.md#ici-response).
+- Need cancer-testis antigen definitions, patient coverage, CTA-specific peptide
+  load, or the comparable normal-tissue evidence behind a candidate? Start with
+  [CTA Antigens](api.md#cta-antigens).
+- Need reproductive/disposable tissue definitions or their effect on CTA
+  filtering? See [Normal tissue scopes](normal-tissue-scopes.md) and the
+  [published source and filtering report](audits/cta-curation-20261021-r2/index.md).
+- Need the continuous low-expression rule and uncertainty assessment? See the
+  [22 October pilot](audits/cta-continuous-20261022/index.md). It separates point-screen
+  passes from uncertainty-qualified inclusion; donor-model inputs are not yet available.
+- Need the latest candidate research set? See the
+  [current selection funnel](audits/cta-source-walkthrough-20261028/index.md)
+  and [identity and analysis APIs](cta-analysis-api.md).
+- Need the released target and forbidden-protein sets? See the
+  [CTA, Unsafe and Neither report](audits/cta-policy-20261025/index.md) and
+  [API](target-sets.md). Low-expression and Variable genes belong to Neither;
+  only Unsafe supplies the default forbidden background.
+- Need genome-wide Reproductive, Normal and Other groups, including non-CTAs?
+  Use the [expression categories and downloads](audits/normal-expression-categories-20261021-r2/index.md).
+  Other contains Disposable and Silent subgroups; missing evidence remains Unassessed.
+  It requires reproductive RNA >0 or positive IHC and combines absolute ceilings,
+  pairwise reproductive selectivity and an independent positive-IHC veto.
+  Fixed and adaptive results retain every candidate's evidence and review status.
+
+```python
+from oncoref import cancer_ontology, ici_response
+
+crc_msi = cancer_ontology.cancer_type_records(subtype_group="MSI", under="CRC")
+crc_msi[["code", "parent_code", "ontology_level", "ontology_kind", "evidence_source_code"]]
+
+# Mismatch repair (MMR) / microsatellite instability (MSI) queries keep
+# positive, negative, and confounder classes explicit.
+cancer_ontology.mmrd_cancer_codes(expression_only=True)
+cancer_ontology.mmr_confounder_cancer_codes()
+
+ici_response.best_available_ici_response("COAD_MSI")
+```
+
+## Data Domains
+
+| Domain | Public modules | Use for |
+| --- | --- | --- |
+| Cancer vocabulary | [`oncoref.cancer_ontology`](api.md#cancer-vocabulary), [`oncoref.cohorts`](api.md#cancer-vocabulary) | Registry records, aliases, hierarchy, subtype axes, reference-source backing, MMR/MSI classifier status, cohort IDs, matched normal tissues |
+| ICI response | [`oncoref.ici_response`](api.md#ici-response) | Anti-PD-1 and broader ICI references, regimen-aware lookups, extracted endpoint estimates |
+| CTA references | [`oncoref.cta`](api.md#cta-antigens), [`oncoref.cta_coverage`](api.md#cta-antigens), [`oncoref.cta_peptides`](api.md#cta-antigens), [`oncoref.cta_review`](api.md#cta-antigens) | HPA-derived CTA facts, the opt-in reviewed warning tier, patient coverage, CTA-specific 9-mer counts and load, comparable normal-tissue evidence per candidate |
+| Antigen panels | [`oncoref.antigen_coverage`](api.md#generic-antigen-panels) | Coverage calculations for caller-supplied non-CTA gene lists |
+| Expression | [`oncoref.expression`](api.md#expression-and-normalization), [`oncoref.expression_builders`](api.md#expression-and-normalization) | Source-matrix ingestion, per-sample accessors, percentiles, representatives, within-sample summaries, and reference-expression accessors |
+| Normalization | [`oncoref.normalization`](api.md#expression-and-normalization), [`oncoref.gene_families`](api.md#expression-and-normalization) | Clean TPM, housekeeping normalization, technical-RNA filtering, normalization/QC reference families |
+| Genes and proteoforms | [`oncoref.gene_ids`](api.md#genes-and-proteoforms), [`oncoref.genome`](api.md#genes-and-proteoforms), [`oncoref.proteoforms`](api.md#genes-and-proteoforms) | Gene ID resolution, Ensembl lookup, proteoform grouping |
+| Other references | [`oncoref.tmb`](api.md#burden-tmb-fusions-and-signatures), [`oncoref.incidence`](api.md#burden-tmb-fusions-and-signatures), [`oncoref.fusions`](api.md#burden-tmb-fusions-and-signatures) | TMB, incidence/mortality burden, defining fusions |
+| Legacy compatibility | [`oncoref.response_signatures`](api.md#burden-tmb-fusions-and-signatures) | Transitional historical response-signature surface; new or extended therapy-signature panels belong in pirlygenes |
+| Data management | [`oncoref.catalog`](api.md#data-management), [`oncoref.data_bundle`](api.md#data-management), [`oncoref.reference_data`](api.md#data-management), [`oncoref.hpa`](api.md#data-management) | Dataset inventory, download/cache status, HPA reference data |
+
+The [CTA report pipeline](cta-report-pipeline.md) documents the common gene background, cohort-size policies, provenance checks and rebuild commands for the analysis scripts.

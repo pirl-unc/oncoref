@@ -1,4 +1,4 @@
-# Normal-tissue hazard ontology: 1.29.0
+# Normal-tissue tier ontology: 1.29.0
 
 Requested: a centralized, referenced set of Vital / Protected / Manageable /
 Disposable calls for bulk tissues and cell subsets, with generated figures and
@@ -11,7 +11,7 @@ Implementation commitments:
 - Cover every existing adult anatomy root, resolve descendants explicitly, and add
   reviewed cell subsets across organ systems. Unknown labels retain organ concern;
   broad measurements never establish a narrower compartment restriction.
-- Retain reproductive/developmental membership independently of hazard. Adult
+- Retain reproductive/developmental membership independently of the tier. Adult
   human policy is not transferred to mouse/dog by using an anatomical synonym.
 - Human clinical, animal ablation, human functional analogy, and mechanistic
   inference remain separate. A tier is not a measured toxicity probability.

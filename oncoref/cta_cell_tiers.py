@@ -4,7 +4,7 @@
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
 
-"""Compatibility helpers; hazard assignments live in :mod:`tissue_hazards`.
+"""Compatibility helpers; tier assignments live in :mod:`tissue_tiers`.
 
 ``differentiated_airway`` identifies an anatomical family, not a common tier.
 Club cells are Vital; mature ciliated and goblet cells are Protected.
@@ -16,7 +16,7 @@ import re
 
 import pandas as pd
 
-from .tissue_hazards import assess
+from .tissue_tiers import assess
 
 AIRWAY_TISSUES = frozenset({"lung", "bronchus"})
 DIFFERENTIATED_AIRWAY = re.compile(

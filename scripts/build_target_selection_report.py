@@ -93,17 +93,10 @@ def figures():
     n = np.linspace(0, 10, 501)
     ax.plot(
         n,
-        np.maximum(n, target_selection.DETECTION_FLOOR),
-        color="#247aa5",
-        lw=2.5,
-        label="Two independent patients: each ≥1 and >normal maximum",
-    )
-    ax.plot(
-        n,
-        target_selection.SINGLE_TUMOR_FOLD * np.maximum(n, target_selection.DETECTION_FLOOR),
+        target_selection.TUMOR_FOLD * np.maximum(n, target_selection.DETECTION_FLOOR),
         color="#a36a20",
         lw=2.5,
-        label=f"One sample: ≥{target_selection.SINGLE_TUMOR_FOLD:g} × max(normal maximum, 1)",
+        label=f"One tumor sample: ≥{target_selection.TUMOR_FOLD:g} × max(N, Disposable, 1)",
     )
     ax.set(
         xlabel="Highest eligible normal value N (same comparison scale)",
@@ -111,14 +104,16 @@ def figures():
         xlim=(0, 10),
         ylim=(0, 105),
     )
-    ax.set_title("Cancer RNA evidence: repeated elevation or one strong tumor", loc="left", pad=15)
+    ax.set_title(
+        "Cancer RNA evidence: one tumor at 10 × every non-reproductive normal", loc="left", pad=15
+    )
     ax.spines[["right", "top"]].set_visible(False)
     ax.grid(alpha=0.15)
     ax.legend(loc="upper left", frameon=False, fontsize=10)
     fig.text(
         0.13,
         -0.01,
-        "Blue line: equality to N does not pass. Both routes still require the shared normal screen.",
+        "Any comparable TPM cohort counts. The shared normal screen applies first.",
         fontsize=10,
     )
     save(fig, "tumor-rule")
@@ -140,12 +135,12 @@ def build():
     (OUT / "definition.json").write_text(json.dumps(definition, indent=2) + "\n")
     figures()
     rows = "".join(
-        f"<tr><td>{n:g}</td><td>{'≥1' if n < 1 else f'&gt;{n:g}'} each</td>"
-        f"<td>≥{target_selection.SINGLE_TUMOR_FOLD * max(n, target_selection.DETECTION_FLOOR):g}</td></tr>"
+        f"<tr><td>{n:g}</td>"
+        f"<td>≥{target_selection.TUMOR_FOLD * max(n, target_selection.DETECTION_FLOOR):g}</td></tr>"
         for n in (0, 0.4, 1, 3, 8)
     )
     rare = definition["rare_cell_rna"]
-    fold, cap = target_selection.SINGLE_TUMOR_FOLD, target_selection.DISPOSABLE_CAP
+    fold, cap = target_selection.TUMOR_FOLD, target_selection.DISPOSABLE_CAP
     page = f"""<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cancer and Reproductive Antigens — OncoRef</title>
@@ -168,6 +163,8 @@ The released 1.36.0 catalog remains a separate snapshot under its earlier policy
 Required coverage, identity, translation or unresolved evidence → <strong>Other:Review</strong>.
 Nested or Unsafe-contained sequence → <strong>Other:Sequence</strong>.
 Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
+A recorded normal home that no expression panel resolves (nose, taste bud, hair follicle,
+tooth), without reproductive evidence → <strong>Other:Tissue</strong>.
 The remaining proteins enter the two independent association checks.</p>
 <h2>Rare normal-cell RNA</h2>
 <p>Each adult donor is assessed separately in each named Vital or Protected cell population.
@@ -189,12 +186,13 @@ remain reported comparison metrics. There is no review state.
 <a href="rebuild/literature/">Literature review</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
-comparison panel. Two independent patients each need T ≥1 and T &gt;N; alternatively,
-one tumor needs T ≥{fold:g} × max(N, 1). Sample quality and exact protein identity must pass.
+comparison panel and D the highest Disposable value. One tumor sample, from any comparable
+TPM cohort, needs T ≥{fold:g} × max(N, D, 1). This is the only cancer route; counts of patients
+above N are reported and admit nothing. Sample quality and exact protein identity must pass.
 The highest tumor, reproductive or developmental value must also exceed every measured
 nonreproductive normal and Disposable value, and Disposable expression must stay at or
 below {cap:g} TPM and {cap:g} nTPM, each on its own scale.</p>
-<table><thead><tr><th>Normal maximum N</th><th>Two independent tumors</th><th>One tumor</th></tr></thead>
+<table><thead><tr><th>Non-reproductive maximum max(N, D)</th><th>One tumor sample needs</th></tr></thead>
 <tbody>{rows}</tbody></table>
 <figure>{svg("tumor-rule")}</figure>
 <p>Do not divide tumor TPM by an unrelated normal nTPM or CP10K maximum. Record the

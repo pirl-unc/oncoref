@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from audit_target_category_profiles import BASE, CACHE, OUT, sha, write  # noqa: E402
 
-from oncoref import reference_data, target_selection, tissue_hazards  # noqa: E402
+from oncoref import reference_data, target_selection, tissue_tiers  # noqa: E402
 from oncoref.gene_matching import gene_identity_catalog  # noqa: E402
 
 SOURCES = {
@@ -97,8 +97,8 @@ def build():
     context_keys = ["tissue", "cell_type", "source"]
     tiers = {}
     for t, c, source in native[context_keys].drop_duplicates().itertuples(index=False, name=None):
-        finding = tissue_hazards.assess(
-            t, c, resolution="cell" if source in tissue_hazards.CELL_SOURCES else "bulk"
+        finding = tissue_tiers.assess(
+            t, c, resolution="cell" if source in tissue_tiers.CELL_SOURCES else "bulk"
         )
         tiers[(t, c, source)] = finding.get("fallback_tier", finding["tier"])
     native["selection_tier"] = [
@@ -410,8 +410,8 @@ Reproduce with `scripts/audit_target_category_profiles.py`, then `scripts/render
         ROOT / "scripts/replay_cta_selection.py",
         ROOT / "scripts/rebuild_target_catalog.py",
         ROOT / "oncoref/cta_selection_policy.py",
-        ROOT / "oncoref/tissue_hazards.py",
-        ROOT / "oncoref/data/normal-tissue-hazards.yaml",
+        ROOT / "oncoref/tissue_tiers.py",
+        ROOT / "oncoref/data/normal-tissue-tiers.yaml",
         ROOT / "docs/audits/cta-selection-20261028/alternative-evidence/normal-bulk.csv.gz",
         ROOT
         / "docs/audits/cta-transcript-selection-20261108/inputs/regrouped/group-normal/cluster-contexts.csv.gz",

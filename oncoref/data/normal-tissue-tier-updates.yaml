@@ -1,0 +1,580 @@
+schema: oncoref.normal-tissue-tier-updates
+schema_version: 1
+policy_version: 2026-11-15.1
+review_date: '2026-11-15'
+base_registry:
+  file: normal-tissue-tiers.yaml
+  policy_version: 2026-11-03.1
+  sha256: e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd
+scope: Adult human tissues that published normal-expression findings point to and the base registry does
+  not name. Each record adds a tissue; none changes a base assessment.
+reason: The base registry is bound by hash into released screening receipts, so additions are replayed
+  over it instead of editing it. Fold these records into the base file at the next full data rebuild.
+tissues:
+  olfactory_epithelium:
+    label: olfactory epithelium
+    aliases:
+    - olfactory mucosa
+    - olfactory sensory neurons
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception
+    note: Olfactory epithelium of the superior nasal cavity, distinct from respiratory mucosa.
+  taste_bud:
+    label: taste bud
+    aliases:
+    - taste buds
+    - taste receptor cells
+    - circumvallate papillae
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception
+    note: Taste buds of the lingual papillae and palate; narrower than whole tongue.
+  nasal_mucosa:
+    label: nasal mucosa
+    aliases:
+    - nasal respiratory mucosa
+    - inferior turbinate mucosa
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/22-1-organs-and-structures-of-the-respiratory-system
+    note: Respiratory epithelium and glands of the nasal cavity.
+  lacrimal_gland:
+    label: lacrimal gland
+    aliases:
+    - lachrymal gland
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/14-1-sensory-perception
+    note: Tear-producing gland of the orbit; ocular adnexa, not the globe.
+  sensory_ganglion:
+    label: sensory ganglion
+    aliases:
+    - sensory ganglia
+    - dorsal root ganglion
+    - dorsal root ganglia
+    - trigeminal ganglion
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/13-4-the-peripheral-nervous-system
+    note: Cell bodies of peripheral sensory neurons.
+  bone:
+    label: bone
+    aliases:
+    - bone tissue
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/6-3-bone-structure
+    note: Bone tissue, osteoblasts and osteocytes; distinct from marrow.
+  tooth:
+    label: tooth
+    aliases:
+    - teeth
+    - dental pulp
+    - dentin
+    anatomy_reference:
+      title: OpenStax Anatomy and Physiology 2e
+      url: https://openstax.org/books/anatomy-and-physiology-2e/pages/23-3-the-mouth-pharynx-and-esophagus
+    note: Tooth, dentin and pulp cavity.
+references:
+  santos2004:
+    title: Hazardous events associated with impaired olfactory function
+    url: https://pubmed.ncbi.nlm.nih.gov/15023839/
+    model: human
+    design: Retrospective cohort, 445 smell and taste clinic patients
+    finding: At least one olfactory-related hazardous event in 45.2% of anosmic patients against 19.0%
+      with normal olfaction.
+    limitation: Self-reported events in a referral clinic; no injury or mortality outcomes. Abstract read;
+      full text not opened.
+    checked: '2026-11-12'
+  pinto2014:
+    title: Olfactory dysfunction predicts 5-year mortality in older adults
+    url: https://pubmed.ncbi.nlm.nih.gov/25271633/
+    model: human
+    design: Prospective cohort (NSHAP), 3,005 adults aged 57-85
+    finding: Anosmia carried adjusted OR 3.37 (95% CI 2.04-5.57) for 5-year death.
+    limitation: Observational; the authors read anosmia as a marker, not a cause. Abstract read; full
+      text not opened.
+    checked: '2026-11-12'
+  child2018:
+    title: 'The Neuroregenerative Capacity of Olfactory Stem Cells Is Not Limitless: Implications for
+      Aging'
+    url: https://pubmed.ncbi.nlm.nih.gov/29934351/
+    model: mouse
+    design: Transgenic ablation of mature olfactory neurons
+    finding: Sustained neuron death exhausted globose basal cells, leaving aneuronal epithelium or respiratory
+      metaplasia.
+    limitation: Mouse genetic ablation, not immune-mediated. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  gunn2021:
+    title: 'Taste dysfunction following radiotherapy to the head and neck: A systematic review'
+    url: https://pubmed.ncbi.nlm.nih.gov/33545253/
+    model: human
+    design: Systematic review and meta-analysis, 31 studies
+    finding: Acute dysfunction in most patients; long-term dysfunction in about 25%; associated with weight
+      loss and reduced quality of life.
+    limitation: Radiation also damages salivary glands and mucosa. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  kumari2017:
+    title: Recovery of taste organs and sensory function after severe loss from Hedgehog/Smoothened inhibition
+      with cancer drug sonidegib
+    url: https://pubmed.ncbi.nlm.nih.gov/29133390/
+    model: mouse
+    design: Drug treatment and conditional deletion with nerve recordings
+    finding: Near-complete taste bud loss by 16 days; responses restored within 14 days of stopping, with
+      about 55% of buds recovering.
+    limitation: Mouse; reversible pharmacological block. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  kinnamon2012:
+    title: Taste receptor signalling - from tongues to lungs
+    url: https://pubmed.ncbi.nlm.nih.gov/21481196/
+    model: review
+    design: Narrative review
+    finding: Bitter receptors are expressed in airway solitary chemosensory cells, ciliated cells and
+      smooth muscle.
+    limitation: Mostly rodent; no data on the consequence of losing those cells. Abstract read; full text
+      not opened.
+    checked: '2026-11-12'
+  ng2010:
+    title: 'Tooth survival following non-surgical root canal treatment: a systematic review of the literature'
+    url: https://pubmed.ncbi.nlm.nih.gov/20158529/
+    model: human
+    design: Systematic review and meta-analysis, 14 studies
+    finding: Root-filled tooth survival 86% at 2-3 years, 93% at 4-5 and 87% at 8-10.
+    limitation: Single teeth with infective disease, not dentition-wide immune necrosis. Abstract read;
+      full text not opened.
+    checked: '2026-11-12'
+  aminoshariae2024:
+    title: 'Tooth Loss is a Risk Factor for Cardiovascular Disease Mortality: A Systematic Review with
+      Meta-analyses'
+    url: https://pubmed.ncbi.nlm.nih.gov/38945200/
+    model: human
+    design: Systematic review and meta-analysis, 12 cohorts
+    finding: Edentulism or fewer than 10 teeth associated with cardiovascular death, HR 1.66.
+    limitation: Observational and confounded; causality not established. Abstract read; full text not
+      opened.
+    checked: '2026-11-12'
+  gupta2019:
+    title: 'Rehabilitation of Edentulism and Mortality: A Systematic Review'
+    url: https://pubmed.ncbi.nlm.nih.gov/29573048/
+    model: human
+    design: Systematic review, 5 studies
+    finding: Four of five studies showed poorer survival without complete dentures.
+    limitation: Very few non-wearers; authors draw no definite conclusion. Abstract read; full text not
+      opened.
+    checked: '2026-11-12'
+  sanchosaldana2021:
+    title: 'Sensory neuronopathies: A case series and literature review'
+    url: https://pubmed.ncbi.nlm.nih.gov/33491284/
+    model: human
+    design: Retrospective series, 54 patients
+    finding: At median 24 months 67% had mRS 3 or more and 15% had died; 35% of treated patients improved
+      or stabilised.
+    limitation: Mixed aetiologies; some deaths from the underlying cancer. Abstract read; full text not
+      opened.
+    checked: '2026-11-12'
+  graus2001:
+    title: 'Anti-Hu-associated paraneoplastic encephalomyelitis: analysis of 200 patients'
+    url: https://pubmed.ncbi.nlm.nih.gov/11353730/
+    model: human
+    design: Retrospective series, 200 patients
+    finding: Sensory neuropathy was the predominant syndrome in 54%.
+    limitation: Anti-Hu disease also involves CNS and autonomic neurons. Abstract read; full text not
+      opened.
+    checked: '2026-11-12'
+  camdessanche2009:
+    title: 'The pattern and diagnostic criteria of sensory neuronopathy: a case-control study'
+    url: https://pubmed.ncbi.nlm.nih.gov/19506068/
+    model: human
+    design: Case-control, 78 against 56 patients
+    finding: Paraneoplastic, cisplatin and dysimmune ganglionopathies share one pattern.
+    limitation: Diagnostic study without outcome data. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  moore2001:
+    title: 'Atrophic rhinitis: a review of 242 cases'
+    url: https://pubmed.ncbi.nlm.nih.gov/11777241/
+    model: human
+    design: Retrospective series, 242 patients
+    finding: A debilitating disease with progressive mucosal atrophy and crusting.
+    limitation: No quantitative outcomes in the abstract; different aetiology. Abstract read; full text
+      not opened.
+    checked: '2026-11-12'
+  hussain2025:
+    title: 'A Systematic Review and Meta-Analysis of Management Options for Empty Nose Syndrome: A Proposed
+      Management Algorithm'
+    url: https://pubmed.ncbi.nlm.nih.gov/39126290/
+    model: human
+    design: Systematic review and meta-analysis, 35 articles, 957 patients
+    finding: Symptom scores improved after intervention at up to 1 year; no randomised trials.
+    limitation: Loss of turbinate volume, not selective epithelial loss. Abstract read; full text not
+      opened.
+    checked: '2026-11-12'
+  sumaily2023:
+    title: An Updated Review on Atrophic Rhinitis and Empty Nose Syndrome
+    url: https://pubmed.ncbi.nlm.nih.gov/37449389/
+    model: human
+    design: Narrative review
+    finding: Conservative treatment controls symptoms of secondary atrophic rhinitis.
+    limitation: No pooled outcomes; symptom control, not restoration. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  stevenson2013:
+    title: Bilateral corneal ulceration in ocular graft-versus-host disease
+    url: https://pubmed.ncbi.nlm.nih.gov/24204119/
+    model: human
+    design: Case series within a 243-patient cohort
+    finding: 4 of 243 patients developed corneal ulceration, all bilateral.
+    limitation: Ocular GVHD also damages conjunctiva and meibomian glands. Abstract read; full text not
+      opened.
+    checked: '2026-11-12'
+  zhang2021:
+    title: Corneal perforation in ocular graft-versus-host disease
+    url: https://pubmed.ncbi.nlm.nih.gov/34805617/
+    model: human
+    design: Retrospective multicentre series, 14 eyes
+    finding: All eyes had moderate or poor visual outcomes despite gluing and keratoplasty.
+    limitation: Selected severe cases with no denominator. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  veernala2022:
+    title: 'Lacrimal gland regeneration: The unmet challenges and promise for dry eye therapy'
+    url: https://pubmed.ncbi.nlm.nih.gov/35753665/
+    model: review
+    design: Narrative review
+    finding: Current dry eye treatments are palliative; gland regeneration is an unmet need.
+    limitation: Abstract only. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  tatsumi2007:
+    title: Targeted ablation of osteocytes induces osteoporosis with defective mechanotransduction
+    url: https://pubmed.ncbi.nlm.nih.gov/17550781/
+    model: mouse
+    design: Diphtheria toxin receptor ablation of osteocytes
+    finding: Killing 70-80% of osteocytes produced fragile bone with microfractures.
+    limitation: Mouse, single-dose ablation. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  weinstein2000:
+    title: Apoptosis of osteocytes in glucocorticoid-induced osteonecrosis of the hip
+    url: https://pubmed.ncbi.nlm.nih.gov/10946902/
+    model: human
+    design: Histology of femoral heads from 14 patients
+    finding: Osteocyte apoptosis described as a cumulative and irreparable defect.
+    limitation: Small, focal and drug-induced. Abstract read; full text not opened.
+    checked: '2026-11-12'
+  ctcae5_anosmia:
+    title: Common Terminology Criteria for Adverse Events v5.0, Anosmia and Olfactory nerve disorder
+    url: https://www.cismef.org/page/detail/en/NCI_CO_C143230
+    model: human
+    design: NCI adverse-event grading scale used in cancer trials, read through the CISMeF NCI Thesaurus
+      pages and a trial protocol table (https://cdn.clinicaltrials.gov/large-docs/06/NCT03954106/SAP_001.pdf)
+    finding: Anosmia has one grade, Grade 1 "Present". Olfactory nerve disorder Grade 2 is moderate symptoms
+      limiting instrumental activities of daily living (https://www.cismef.org/page/detail/en/NCI_CO_C144871).
+    limitation: Grade 1 and 3 wording for olfactory nerve disorder not retrieved from the official NCI PDF.
+    checked: '2026-11-15'
+  amezaga2023:
+    title: Taste and smell disorders in cancer treatment, an integrative rapid systematic review
+    url: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9916934/
+    model: human
+    design: Review of 14 studies of patients on chemotherapy
+    finding: Smell disorders in 8 to 45% of patients and taste disorders in 17 to 86%, mostly with taxanes,
+      capecitabine, cyclophosphamide, epirubicin and oral 5-FU analogues, all in standard use.
+    limitation: Heterogeneous studies. Search summary and abstract read; full text not opened.
+    checked: '2026-11-15'
+  buttiron2021:
+    title: 'Taste and smell disturbances in cancer patients: a scoping review of available treatments'
+    url: https://pubmed.ncbi.nlm.nih.gov/32734392/
+    model: human
+    design: Scoping review, Supportive Care in Cancer 2021
+    finding: Tools to manage chemosensory change in cancer patients are limited (zinc, polaprezinc,
+      dronabinol, photobiomodulation); no firm conclusions.
+    limitation: Abstract read; full text not opened.
+    checked: '2026-11-15'
+  rt_smell2025:
+    title: 'Radiotherapy and smell function in head and neck cancer: a nonrandomized clinical trial'
+    url: https://www.epistemonikos.org/en/documents/389d1578f48ebdba37920f7c8460c14bd6e3dc1c
+    model: human
+    design: Prospective nonrandomized trial, 63 patients on intensity-modulated radiotherapy (ISRCTN14947812)
+    finding: Smell loss rises with dose; a mean olfactory-region dose above 22 Gy was the only independent
+      risk factor, with loss lasting up to a year in some high-dose patients. Radiotherapy is given, and
+      the authors propose dose sparing.
+    limitation: One centre, one year of follow-up. Summary read; full text not opened.
+    checked: '2026-11-15'
+  npc_bulb2014:
+    title: Olfactory bulb volume and olfactory function after radiotherapy in patients with nasopharyngeal
+      cancer
+    url: https://pubmed.ncbi.nlm.nih.gov/24746667/
+    model: human
+    design: 24 patients at least 12 months after radiotherapy, against healthy controls
+    finding: Smaller olfactory bulbs and lower olfactory scores (CCCRC 5.5 against 6.4) after curative
+      radiotherapy.
+    limitation: Small; nasopharyngeal site only. Abstract read.
+    checked: '2026-11-15'
+  fda_zinc2009:
+    title: FDA consumer update on zinc-containing intranasal cold remedies (Zicam), June 2009
+    url: https://webarchive.library.unt.edu/web/20090807210616/http://www.fda.gov/ForConsumers/ConsumerUpdates/ucm166931.htm
+    model: human
+    design: Regulatory warning after post-marketing reports
+    finding: More than 130 reports of anosmia; the FDA advised consumers to stop using three products and
+      the maker recalled them. Anosmia was not accepted for a minor, self-limited illness.
+    limitation: Causality disputed by the maker; reports, not a study.
+    checked: '2026-11-15'
+  croy2014:
+    title: Olfactory disorders and quality of life, an updated review
+    url: https://pubmed.ncbi.nlm.nih.gov/24429163/
+    model: human
+    design: Review, Chemical Senses 2014
+    finding: Olfactory disorders affect about a fifth of the population; a smaller share report a clear fall
+      in quality of life and more depression. A 2025 update describes the average impact as moderate and
+      severe for some.
+    limitation: Abstract read; full text not opened.
+    checked: '2026-11-15'
+  stevie_vismodegib:
+    title: Hedgehog pathway inhibitor adverse events, STEVIE and other vismodegib studies
+    url: https://academic.oup.com/oncolo/article-abstract/21/10/1218/6401021
+    model: human
+    design: Review of vismodegib studies, including the STEVIE safety study in advanced basal cell carcinoma
+    finding: Dysgeusia in 54% and ageusia in 22% of STEVIE patients. Dysgeusia caused 6% of discontinuations
+      and weight loss 5%, after muscle spasms at 9%. Symptoms lasting at least 12 months after stopping are
+      reported (https://www.cancercareontario.ca/en/node/44341).
+    limitation: Discontinuation figures vary between studies. Abstract and summaries read.
+    checked: '2026-11-15'
+  siopel6_sts:
+    title: FDA approval of sodium thiosulfate to reduce cisplatin ototoxicity in children (SIOPEL 6, ACCL0431)
+    url: https://www.fda.gov/drugs/resources-information-approved-drugs/fda-approves-sodium-thiosulfate-reduce-risk-ototoxicity-associated-cisplatin-pediatric-patients
+    model: human
+    design: Regulatory summary of two randomized trials
+    finding: Hearing loss in 63% of children on cisplatin alone in SIOPEL 6. Cisplatin stays standard and the
+      2022 approval adds prevention. Lasting sensory loss is accepted in curative treatment, but hearing loss
+      is graded up to Grade 4 and limits cisplatin dosing, unlike anosmia.
+    limitation: Regulatory summary read; trial reports not opened.
+    checked: '2026-11-15'
+assessments:
+- id: olfactory_epithelium
+  label: Olfactory epithelium and olfactory sensory neurons
+  level: bulk
+  tier: manageable
+  confidence: medium
+  system: Sensory
+  tissues:
+  - olfactory_epithelium
+  mechanisms:
+  - sensory
+  - neural
+  - repair
+  acute_loss: Loss of smell; not immediately life-threatening.
+  persistent_loss: 'Permanent anosmia: lost warning sense for smoke, gas and spoiled food, reduced food
+    enjoyment. Associated with higher 5-year mortality in older adults, not shown causal.'
+  repair: Neurons are replaced from basal stem cells, but mouse ablation shows the progenitors can be
+    exhausted, leaving aneuronal epithelium.
+  management: Behavioural only (detectors, food dating). No restorative therapy.
+  oncology_precedent: Accepted. CTCAE grades anosmia at Grade 1 only. Chemotherapy (smell disorders in 8 to
+    45% of patients) and head and neck radiotherapy cause smell loss, lasting a year or more after high
+    doses, and those treatments stay in standard use. No discontinuation for smell loss was found. Outside
+    cancer it is not accepted (intranasal zinc, 2009).
+  rationale: Manageable on the oncology precedent. The loss is graded at the lowest severity and is accepted
+    in standard cancer treatment. Not Disposable, because lasting anosmia brings hazards, lower quality of
+    life and an association with mortality in older adults. Changed from Protected on 2026-11-15.
+  references:
+  - ctcae5_anosmia
+  - amezaga2023
+  - rt_smell2025
+  - npc_bulb2014
+  - buttiron2021
+  - fda_zinc2009
+  - croy2014
+  - santos2004
+  - pinto2014
+  - child2018
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.
+- id: taste_bud
+  label: Taste buds and taste receptor cells
+  level: bulk
+  tier: protected
+  confidence: medium
+  system: Sensory
+  tissues:
+  - taste_bud
+  mechanisms:
+  - sensory
+  - repair
+  acute_loss: Loss of taste with reduced intake; not immediately life-threatening.
+  persistent_loss: Sustained ageusia with loss of appetite, weight loss and malnutrition risk. About 25%
+    of patients have long-term taste dysfunction after head and neck radiotherapy.
+  repair: 'Good if the insult stops and progenitors survive (mouse: function back within 14 days of stopping
+    a Hedgehog inhibitor). No recovery window under sustained killing.'
+  management: Supportive only. No replacement therapy.
+  oncology_precedent: Limited. Taste loss is common with chemotherapy and Hedgehog inhibitors, but with
+    vismodegib it causes 6% of discontinuations and drives weight loss, which causes another 5%.
+  rationale: Tolerated when transient, but permanent ageusia has no established compensation, and taste loss
+    is a recorded reason to stop a cancer drug. Chosen over manageable because the reassuring precedents are
+    reversible, and bitter receptors are also reported in airway cells.
+  references:
+  - gunn2021
+  - kumari2017
+  - kinnamon2012
+  - stevie_vismodegib
+  - amezaga2023
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.
+- id: tooth
+  label: Tooth, dental pulp and odontoblasts
+  level: bulk
+  tier: manageable
+  confidence: medium
+  system: Gastrointestinal
+  tissues:
+  - tooth
+  mechanisms:
+  - structure
+  - sensory
+  acute_loss: Pulpitis and pulp necrosis with pain and infection risk.
+  persistent_loss: Non-vital teeth, more prone to fracture, and eventual loss of some teeth.
+  repair: None once necrotic (standard teaching; no source opened).
+  management: Root canal treatment keeps a pulpless tooth functional (pooled survival 86-93% over 2-10
+    years). Extraction with dentures or implants is the fallback.
+  rationale: Pulp loss has a well-established treatment precedent and loss of the dentition has routine
+    prosthetic compensation. Simultaneous necrosis of all teeth is unstudied.
+  references:
+  - ng2010
+  - aminoshariae2024
+  - gupta2019
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.
+- id: sensory_ganglion
+  label: Dorsal root and trigeminal ganglion sensory neurons
+  level: bulk
+  tier: vital
+  confidence: high
+  system: Nervous
+  tissues:
+  - sensory_ganglion
+  mechanisms:
+  - sensory
+  - neural
+  acute_loss: Subacute sensory loss, pain and sensory ataxia.
+  persistent_loss: Permanent deafferentation with sensory ataxia. In a 54-patient series 67% had modified
+    Rankin score 3 or more at a median 24 months.
+  repair: None. The lesion is death of the neuronal cell body.
+  management: Rehabilitation and pain control; immunotherapy at best stabilises.
+  rationale: Human disease analogues of this lesion (paraneoplastic anti-Hu and cisplatin ganglionopathy)
+    are irreversible and severely disabling, matching the registry's treatment of neurons.
+  references:
+  - sanchosaldana2021
+  - graus2001
+  - camdessanche2009
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.
+- id: nasal_mucosa
+  label: Nasal respiratory mucosa and its glands
+  level: bulk
+  tier: protected
+  confidence: low
+  system: Respiratory
+  tissues:
+  - nasal_mucosa
+  mechanisms:
+  - barrier
+  - secretion
+  - defence
+  acute_loss: Crusting, congestion and impaired air conditioning; not life-threatening in the sources
+    read.
+  persistent_loss: 'An atrophic rhinitis picture: progressive mucosal atrophy, crusting and congestion,
+    described as debilitating. Not life-threatening in the sources read.'
+  repair: Epithelium regenerates from basal cells; established atrophy is chronic.
+  management: Palliative (irrigation, lubricants, surgery in selected patients).
+  rationale: Chronic loss causes a persistent condition whose treatments are symptomatic and poorly evidenced.
+    Evidence is by analogy to surgical or infective atrophy.
+  references:
+  - moore2001
+  - hussain2025
+  - sumaily2023
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.
+- id: lacrimal_gland
+  label: Lacrimal gland
+  level: bulk
+  tier: protected
+  confidence: medium
+  system: Sensory
+  tissues:
+  - lacrimal_gland
+  mechanisms:
+  - secretion
+  - barrier
+  acute_loss: Aqueous tear deficiency with ocular surface pain and blurred vision.
+  persistent_loss: Severe aqueous-deficient dry eye. A small fraction progress to sterile corneal ulceration
+    or perforation (4 of 243 ocular GVHD patients in one cohort).
+  repair: No established regeneration of the human gland.
+  management: Lifelong and palliative (lubricants, punctal occlusion, serum, scleral lenses).
+  rationale: Compatible with life and usually with retained vision under intensive care, but treatment
+    is palliative and there is a tail risk of corneal melt.
+  references:
+  - stevenson2013
+  - zhang2021
+  - veernala2022
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.
+- id: bone
+  label: Bone, osteoblasts and osteocytes
+  level: bulk
+  tier: vital
+  confidence: medium
+  system: Metabolic and structural
+  tissues:
+  - bone
+  mechanisms:
+  - structure
+  - repair
+  - homeostasis
+  acute_loss: No immediate failure is expected; the concern is cumulative.
+  persistent_loss: Loss of bone formation and microdamage repair, expected to give fragility fractures.
+    Inferred from mouse ablation and focal human osteocyte apoptosis.
+  repair: Osteoblasts can be replenished from progenitors; osteocytes are long-lived.
+  management: No replacement for the lineage.
+  rationale: The skeleton's only formation and repair compartment. Human evidence is indirect, so vital
+    is chosen over protected on the conservative rule.
+  references:
+  - tatsumi2007
+  - weinstein2000
+  inference: mechanistic_inference
+  recognition_evidence: Target/receptor-specific evidence is required separately.
+  taxon_ids:
+  - 9606
+  stage: adult
+  priority: 10
+  evidence_scope: Clinical and ablation analogues of sustained loss. Abstracts were read; full texts were
+    not. No direct selective immune-depletion study is cited.

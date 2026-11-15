@@ -69,26 +69,54 @@ def test_every_signal_is_established_or_dismissed_with_a_basis(evidence):
 def test_literature_review_covers_every_dependent_candidate_and_follows_its_rubric():
     document = json.loads((DATA / "normal-expression-literature.json").read_text())
     entries = pd.DataFrame(document["entries"])
-    assert entries.entity_id.is_unique and len(entries) == 99
+    assert entries.entity_id.is_unique and len(entries) == 912
+    assert entries.review.value_counts().to_dict() == {
+        "candidate_sweep": 813,
+        "rare_cell_dependents": 99,
+    }
     catalog = policy.results()
     reviewed = catalog[catalog.literature_effect.ne("not_reviewed")]
     assert set(reviewed.entity_id) == set(entries.entity_id)
     acting = entries[entries.effect.ne("none")]
-    assert set(acting.protein) == {
+    earlier = acting[acting.review.eq("rare_cell_dependents")]
+    assert set(earlier.protein) == {
         "AMBN", "BTNL2", "GDF9", "ITIH6", "MAGEA12", "MYH13", "OTOG", "SCGB1D1", "SLC25A2"
     }  # fmt: skip
-    assert acting.rule.isin(["R1", "R2", "R3"]).all() and acting.tissue_tier.eq("vital").all()
+    assert earlier.tissue_tier.eq("vital").all()
+    swept = acting[acting.review.eq("candidate_sweep")]
+    assert set(swept.protein) == {
+        "ADAM30", "ASCL4", "BECN2", "CCN6", "DEFB106A/B", "GALR3", "MRGPRX1", "OBP2A",
+        "SCGB1C1", "SRY", "SULT6B1", "TCHHL1",
+    }  # fmt: skip
+    assert swept.rule.eq("R2").all()
+    assert acting.rule.isin(["R1", "R2", "R3"]).all()
+    assert acting.tissue_tier.isin(["vital", "protected"]).all()
     assert catalog[catalog.entity_id.isin(acting.entity_id)].category.eq("Unsafe").all()
+    from oncoref import tissue_tiers
+
     for entry in document["entries"]:
         assert entry["decision_reason"] and entry["verdict"]
         if entry["effect"] != "none":
             assert any(e["url"] and e["quote"] for e in entry["evidence"]), entry["protein"]
-    # Any candidate that depends on a dismissal or a release has been reviewed.
+            tier = tissue_tiers.assess(entry["decision_tissue"])["tier"]
+            assert tier == entry["tissue_tier"], entry["protein"]
+        elif entry["recorded_tier"]:
+            # Recorded findings never decide a category.
+            assert entry["decision_tissue"] is None and entry["rule"] is None
+    # A family rule names proteins by label, is cited or switched off, and excludes nothing.
+    for rule in document["family_rules"]:
+        assert rule["effect"] == "none"
+        assert rule["sources"] or not rule["filter_acts"]
+        assert tissue_tiers.assess(rule["tissue"])["tier"] == rule["tier"]
+    # Any candidate that depends on a dismissal or a release has been reviewed,
+    # and so has every candidate but the one the sweep did not search.
     dependent = catalog[
         catalog.is_target_candidate
         & (catalog.rare_cell_status.eq("dismissed") | catalog.released_category.eq("Unsafe"))
     ]
     assert dependent.literature_effect.eq("none").all()
+    unreviewed = catalog[catalog.is_target_candidate & catalog.literature_effect.ne("none")]
+    assert unreviewed.protein_group_label.tolist() == ["FSCB"]
     provenance = json.loads((DATA / "rare-cell-evidence.json").read_text())
     assert provenance["literature_sha256"] == sha(DATA / "normal-expression-literature.json")
 

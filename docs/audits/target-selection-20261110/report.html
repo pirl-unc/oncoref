@@ -10,8 +10,8 @@ code{font-size:.9em}a{color:#176689}.note{color:#53636c}</style><main>
 <h1>Cancer and Reproductive Antigens</h1>
 <p><strong>CTA = Cancer Antigens ∩ Reproductive Antigens.</strong><br>
 Target candidates = Cancer Antigens ∪ Reproductive Antigens.</p>
-<p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-10.1</code>.
-626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other, 18,241 Unsafe.
+<p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-15.1</code>.
+453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only, 970 Other, 18,253 Unsafe.
 <a href="rebuild/report.html">Filterable protein table, measurements and category changes</a>.
 The released 1.36.0 catalog remains a separate snapshot under its earlier policy.</p>
 <figure><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="402.48pt" viewBox="0 0 628.2 402.48" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -22,7 +22,7 @@ The released 1.36.0 catalog remains a separate snapshot under its earlier policy
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
-      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
      </cc:Agent>
     </dc:creator>
    </cc:Work>
@@ -1947,6 +1947,8 @@ z
 Required coverage, identity, translation or unresolved evidence → <strong>Other:Review</strong>.
 Nested or Unsafe-contained sequence → <strong>Other:Sequence</strong>.
 Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
+A recorded normal home that no expression panel resolves (nose, taste bud, hair follicle,
+tooth), without reproductive evidence → <strong>Other:Tissue</strong>.
 The remaining proteins enter the two independent association checks.</p>
 <h2>Rare normal-cell RNA</h2>
 <p>Each adult donor is assessed separately in each named Vital or Protected cell population.
@@ -1968,13 +1970,14 @@ remain reported comparison metrics. There is no review state.
 <a href="rebuild/literature/">Literature review</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
-comparison panel. Two independent patients each need T ≥1 and T &gt;N; alternatively,
-one tumor needs T ≥10 × max(N, 1). Sample quality and exact protein identity must pass.
+comparison panel and D the highest Disposable value. One tumor sample, from any comparable
+TPM cohort, needs T ≥10 × max(N, D, 1). This is the only cancer route; counts of patients
+above N are reported and admit nothing. Sample quality and exact protein identity must pass.
 The highest tumor, reproductive or developmental value must also exceed every measured
 nonreproductive normal and Disposable value, and Disposable expression must stay at or
 below 32 TPM and 32 nTPM, each on its own scale.</p>
-<table><thead><tr><th>Normal maximum N</th><th>Two independent tumors</th><th>One tumor</th></tr></thead>
-<tbody><tr><td>0</td><td>≥1 each</td><td>≥10</td></tr><tr><td>0.4</td><td>≥1 each</td><td>≥10</td></tr><tr><td>1</td><td>&gt;1 each</td><td>≥10</td></tr><tr><td>3</td><td>&gt;3 each</td><td>≥30</td></tr><tr><td>8</td><td>&gt;8 each</td><td>≥80</td></tr></tbody></table>
+<table><thead><tr><th>Non-reproductive maximum max(N, D)</th><th>One tumor sample needs</th></tr></thead>
+<tbody><tr><td>0</td><td>≥10</td></tr><tr><td>0.4</td><td>≥10</td></tr><tr><td>1</td><td>≥10</td></tr><tr><td>3</td><td>≥30</td></tr><tr><td>8</td><td>≥80</td></tr></tbody></table>
 <figure><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="622.395859pt" height="387.864281pt" viewBox="0 0 622.395859 387.864281" xmlns="http://www.w3.org/2000/svg" version="1.1">
  <metadata>
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -1983,7 +1986,7 @@ below 32 TPM and 32 nTPM, each on its own scale.</p>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
-      <dc:title>Matplotlib v3.11.2, https://matplotlib.org/</dc:title>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
      </cc:Agent>
     </dc:creator>
    </cc:Work>
@@ -3009,13 +3012,6 @@ z
     </g>
    </g>
    <g id="tumor-rule-line2d_25">
-    <path d="M 50.197109 328.754737
-L 107.113109 328.697713
-L 608.197109 303.093937
-L 608.197109 303.093937
-" clip-path="url(#tumor-rule-p219c8ce9ba)" style="fill: none; stroke: #247aa5; stroke-width: 2.5; stroke-linecap: square"/>
-   </g>
-   <g id="tumor-rule-line2d_26">
     <path d="M 50.197109 303.093937
 L 105.997109 303.093937
 L 608.197109 46.485937
@@ -3033,7 +3029,7 @@ L 608.197109 331.605937
 " style="fill: none; stroke: #000000; stroke-width: 0.8; stroke-linejoin: miter; stroke-linecap: square"/>
    </g>
    <g id="tumor-rule-text_15">
-    <!-- Cancer RNA evidence: repeated elevation or one strong tumor -->
+    <!-- Cancer RNA evidence: one tumor at 10 × every non-reproductive normal -->
     <g transform="translate(50.197109 17.229937) scale(0.132 -0.132)">
      <defs>
       <path id="tumor-rule-DejaVuSans-26" d="M 4122 4306
@@ -3114,6 +3110,45 @@ L 750 2516
 L 750 3309
 z
 " transform="scale(0.015625)"/>
+      <path id="tumor-rule-DejaVuSans-99" d="M 4488 3438
+L 3059 2003
+L 4488 575
+L 4116 197
+L 2681 1631
+L 1247 197
+L 878 575
+L 2303 2003
+L 878 3438
+L 1247 3816
+L 2681 2381
+L 4116 3816
+L 4488 3438
+z
+" transform="scale(0.015625)"/>
+      <path id="tumor-rule-DejaVuSans-5c" d="M 2059 -325
+Q 1816 -950 1584 -1140
+Q 1353 -1331 966 -1331
+L 506 -1331
+L 506 -850
+L 844 -850
+Q 1081 -850 1212 -737
+Q 1344 -625 1503 -206
+L 1606 56
+L 191 3500
+L 800 3500
+L 1894 763
+L 2988 3500
+L 3597 3500
+L 2059 -325
+z
+" transform="scale(0.015625)"/>
+      <path id="tumor-rule-DejaVuSans-10" d="M 313 2009
+L 1997 2009
+L 1997 1497
+L 313 1497
+L 313 2009
+z
+" transform="scale(0.015625)"/>
      </defs>
      <use xlink:href="#tumor-rule-DejaVuSans-26"/>
      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(69.828125 0)"/>
@@ -3136,164 +3171,65 @@ z
      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1020.25 0)"/>
      <use xlink:href="#tumor-rule-DejaVuSans-1d" transform="translate(1081.78125 0)"/>
      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1115.46875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(1147.25 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1186.15625 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(1247.6875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1311.171875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1372.703125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1433.984375 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1473.1875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(1534.71875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1598.203125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1629.984375 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(1691.515625 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1719.296875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-59" transform="translate(1780.828125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1840.015625 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1901.296875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(1940.5 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1968.28125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2029.46875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2092.84375 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2124.625 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2185.8125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2226.921875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2258.703125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2319.890625 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2383.265625 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2444.796875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(2476.578125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(2528.671875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2567.875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2606.78125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2667.96875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-4a" transform="translate(2731.34375 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2794.828125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(2826.609375 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(2865.8125 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2929.1875 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(3026.59375 0)"/>
-     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(3087.78125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1147.25 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(1208.4375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1271.8125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1333.34375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1365.125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(1404.328125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(1467.703125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1565.109375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(1626.296875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1667.40625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1699.1875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1760.46875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1799.671875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-14" transform="translate(1831.453125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-13" transform="translate(1895.078125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1958.703125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-99" transform="translate(1990.484375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2074.28125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2106.0625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-59" transform="translate(2167.59375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2226.78125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2288.3125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-5c" transform="translate(2329.421875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2388.609375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2420.390625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2483.765625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2544.953125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-10" transform="translate(2608.328125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2644.40625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2683.3125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(2744.84375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2808.328125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2847.234375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(2908.421875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(2971.90625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(3035.28125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(3090.265625 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(3129.46875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-59" transform="translate(3157.25 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(3216.4375 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(3277.96875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(3309.75 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(3373.125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(3434.3125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(3473.671875 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(3571.078125 0)"/>
+     <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(3632.359375 0)"/>
     </g>
    </g>
    <g id="tumor-rule-legend_1">
-    <g id="tumor-rule-line2d_27">
+    <g id="tumor-rule-line2d_26">
      <path d="M 59.197109 45.328375
 L 69.197109 45.328375
 L 79.197109 45.328375
-" style="fill: none; stroke: #247aa5; stroke-width: 2.5; stroke-linecap: square"/>
-    </g>
-    <g id="tumor-rule-text_16">
-     <!-- Two independent patients: each ≥1 and &gt;normal maximum -->
-     <g transform="translate(87.197109 48.828375) scale(0.1 -0.1)">
-      <defs>
-       <path id="tumor-rule-DejaVuSans-5a" d="M 269 3500
-L 844 3500
-L 1563 769
-L 2278 3500
-L 2956 3500
-L 3675 769
-L 4391 3500
-L 4966 3500
-L 4050 0
-L 3372 0
-L 2619 2869
-L 1863 0
-L 1184 0
-L 269 3500
-z
-" transform="scale(0.015625)"/>
-       <path id="tumor-rule-DejaVuSans-cef" d="M 678 3175
-L 678 3725
-L 4684 2578
-L 4684 2047
-L 678 897
-L 678 1453
-L 3681 2309
-L 678 3175
-z
-M 4684 531
-L 4684 0
-L 678 0
-L 678 531
-L 4684 531
-z
-" transform="scale(0.015625)"/>
-       <path id="tumor-rule-DejaVuSans-21" d="M 678 3150
-L 678 3719
-L 4684 2266
-L 4684 1747
-L 678 294
-L 678 863
-L 3897 2003
-L 678 3150
-z
-" transform="scale(0.015625)"/>
-      </defs>
-      <use xlink:href="#tumor-rule-DejaVuSans-37"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-5a" transform="translate(44.53125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(126.3125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(187.5 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(219.28125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(247.0625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(310.4375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(373.921875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(435.453125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(498.9375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(560.46875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(623.84375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(687.328125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(748.859375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(812.234375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(851.4375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(883.21875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(946.703125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1007.984375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(1047.1875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1074.96875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(1136.5 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1199.875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(1239.078125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-1d" transform="translate(1291.171875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1324.859375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1356.640625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1418.171875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(1479.453125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(1534.4375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1597.8125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-cef" transform="translate(1629.59375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-14" transform="translate(1713.390625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1777.015625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1808.796875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(1870.078125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(1933.453125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1996.9375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-21" transform="translate(2028.71875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2112.515625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2175.890625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2237.078125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2276.4375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(2373.84375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(2435.125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2462.90625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2494.6875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(2592.09375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-5b" transform="translate(2653.375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(2712.5625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2740.34375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(2837.75 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2901.125 0)"/>
-     </g>
-    </g>
-    <g id="tumor-rule-line2d_28">
-     <path d="M 59.197109 60.329156
-L 69.197109 60.329156
-L 79.197109 60.329156
 " style="fill: none; stroke: #a36a20; stroke-width: 2.5; stroke-linecap: square"/>
     </g>
-    <g id="tumor-rule-text_17">
-     <!-- One sample: ≥10 × max(normal maximum, 1) -->
-     <g transform="translate(87.197109 63.829156) scale(0.1 -0.1)">
+    <g id="tumor-rule-text_16">
+     <!-- One tumor sample: ≥10 × max(N, Disposable, 1) -->
+     <g transform="translate(87.197109 48.828375) scale(0.1 -0.1)">
       <defs>
        <path id="tumor-rule-DejaVuSans-32" d="M 2522 4238
 Q 1834 4238 1429 3725
@@ -3316,19 +3252,20 @@ Q 359 3434 948 4092
 Q 1538 4750 2522 4750
 z
 " transform="scale(0.015625)"/>
-       <path id="tumor-rule-DejaVuSans-99" d="M 4488 3438
-L 3059 2003
-L 4488 575
-L 4116 197
-L 2681 1631
-L 1247 197
-L 878 575
-L 2303 2003
-L 878 3438
-L 1247 3816
-L 2681 2381
-L 4116 3816
-L 4488 3438
+       <path id="tumor-rule-DejaVuSans-cef" d="M 678 3175
+L 678 3725
+L 4684 2578
+L 4684 2047
+L 678 897
+L 678 1453
+L 3681 2309
+L 678 3175
+z
+M 4684 531
+L 4684 0
+L 678 0
+L 678 531
+L 4684 531
 z
 " transform="scale(0.015625)"/>
        <path id="tumor-rule-DejaVuSans-f" d="M 750 794
@@ -3340,102 +3277,114 @@ L 750 256
 L 750 794
 z
 " transform="scale(0.015625)"/>
+       <path id="tumor-rule-DejaVuSans-27" d="M 1259 4147
+L 1259 519
+L 2022 519
+Q 2988 519 3436 956
+Q 3884 1394 3884 2338
+Q 3884 3275 3436 3711
+Q 2988 4147 2022 4147
+L 1259 4147
+z
+M 628 4666
+L 1925 4666
+Q 3281 4666 3915 4102
+Q 4550 3538 4550 2338
+Q 4550 1131 3912 565
+Q 3275 0 1925 0
+L 628 0
+L 628 4666
+z
+" transform="scale(0.015625)"/>
       </defs>
       <use xlink:href="#tumor-rule-DejaVuSans-32"/>
       <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(78.71875 0)"/>
       <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(142.09375 0)"/>
       <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(203.625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(235.40625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(287.5 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(348.78125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(446.1875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(509.671875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(537.453125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-1d" transform="translate(598.984375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(632.671875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-cef" transform="translate(664.453125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-14" transform="translate(748.25 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-13" transform="translate(811.875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(875.5 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-99" transform="translate(907.28125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(991.078125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(1022.859375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1120.265625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-5b" transform="translate(1181.546875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-b" transform="translate(1240.734375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(1279.75 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1343.125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(1404.3125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(1443.671875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1541.078125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(1602.359375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1630.140625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(1661.921875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1759.328125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-5b" transform="translate(1820.609375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(1879.796875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(1907.578125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(2004.984375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2068.359375 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-f" transform="translate(2165.765625 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2197.546875 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-14" transform="translate(2229.328125 0)"/>
-      <use xlink:href="#tumor-rule-DejaVuSans-c" transform="translate(2292.953125 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(235.40625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(274.609375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(337.984375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(435.390625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(496.578125 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(537.6875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(569.46875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(621.5625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(682.84375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(780.25 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(843.734375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(871.515625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-1d" transform="translate(933.046875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(966.734375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-cef" transform="translate(998.515625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-14" transform="translate(1082.3125 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-13" transform="translate(1145.9375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1209.5625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-99" transform="translate(1241.34375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1325.140625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(1356.921875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1454.328125 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-5b" transform="translate(1515.609375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-b" transform="translate(1574.796875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-31" transform="translate(1613.8125 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-f" transform="translate(1688.625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1720.40625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-27" transform="translate(1752.1875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(1829.1875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(1856.96875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(1909.0625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1972.546875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(2033.734375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(2085.828125 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-45" transform="translate(2147.109375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(2210.59375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2238.375 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-f" transform="translate(2299.90625 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2331.6875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-14" transform="translate(2363.46875 0)"/>
+      <use xlink:href="#tumor-rule-DejaVuSans-c" transform="translate(2427.09375 0)"/>
      </g>
     </g>
    </g>
   </g>
-  <g id="tumor-rule-text_18">
-   <!-- Blue line: equality to N does not pass. Both routes still require the shared normal screen. -->
+  <g id="tumor-rule-text_17">
+   <!-- Any comparable TPM cohort counts. The shared normal screen applies first. -->
    <g transform="translate(53.797109 378.261937) scale(0.1 -0.1)">
     <defs>
-     <path id="tumor-rule-DejaVuSans-25" d="M 1259 2228
-L 1259 519
-L 2272 519
-Q 2781 519 3026 730
-Q 3272 941 3272 1375
-Q 3272 1813 3026 2020
-Q 2781 2228 2272 2228
-L 1259 2228
-z
-M 1259 4147
-L 1259 2741
-L 2194 2741
-Q 2656 2741 2882 2914
-Q 3109 3088 3109 3444
-Q 3109 3797 2882 3972
-Q 2656 4147 2194 4147
+     <path id="tumor-rule-DejaVuSans-33" d="M 1259 4147
+L 1259 2394
+L 2053 2394
+Q 2494 2394 2734 2622
+Q 2975 2850 2975 3272
+Q 2975 3691 2734 3919
+Q 2494 4147 2053 4147
 L 1259 4147
 z
 M 628 4666
-L 2241 4666
-Q 2963 4666 3353 4366
-Q 3744 4066 3744 3513
-Q 3744 3084 3544 2831
-Q 3344 2578 2956 2516
-Q 3422 2416 3680 2098
-Q 3938 1781 3938 1306
-Q 3938 681 3513 340
-Q 3088 0 2303 0
+L 2053 4666
+Q 2838 4666 3239 4311
+Q 3641 3956 3641 3272
+Q 3641 2581 3239 2228
+Q 2838 1875 2053 1875
+L 1259 1875
+L 1259 0
 L 628 0
 L 628 4666
 z
 " transform="scale(0.015625)"/>
-     <path id="tumor-rule-DejaVuSans-5c" d="M 2059 -325
-Q 1816 -950 1584 -1140
-Q 1353 -1331 966 -1331
-L 506 -1331
-L 506 -850
-L 844 -850
-Q 1081 -850 1212 -737
-Q 1344 -625 1503 -206
-L 1606 56
-L 191 3500
-L 800 3500
-L 1894 763
-L 2988 3500
-L 3597 3500
-L 2059 -325
+     <path id="tumor-rule-DejaVuSans-30" d="M 628 4666
+L 1569 4666
+L 2759 1491
+L 3956 4666
+L 4897 4666
+L 4897 0
+L 4281 0
+L 4281 4097
+L 3078 897
+L 2444 897
+L 1241 4097
+L 1241 0
+L 628 0
+L 628 4666
 z
 " transform="scale(0.015625)"/>
      <path id="tumor-rule-DejaVuSans-11" d="M 684 794
@@ -3445,98 +3394,108 @@ L 684 0
 L 684 794
 z
 " transform="scale(0.015625)"/>
+     <path id="tumor-rule-DejaVuSans-13af" d="M 3431 3500
+L 3431 0
+L 2853 0
+L 2853 3053
+L 1275 3053
+L 1275 0
+L 697 0
+L 697 3053
+L 147 3053
+L 147 3500
+L 697 3500
+L 697 3744
+Q 697 4316 967 4589
+Q 1238 4863 1797 4863
+L 2375 4863
+L 2375 4384
+L 1825 4384
+Q 1516 4384 1395 4259
+Q 1275 4134 1275 3809
+L 1275 3500
+L 3431 3500
+z
+M 2853 4856
+L 3431 4856
+L 3431 4128
+L 2853 4128
+L 2853 4856
+z
+" transform="scale(0.015625)"/>
     </defs>
-    <use xlink:href="#tumor-rule-DejaVuSans-25"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(68.609375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(96.390625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(159.765625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(221.296875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(253.078125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(280.859375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(308.640625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(372.015625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-1d" transform="translate(433.546875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(467.234375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(499.015625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-54" transform="translate(560.546875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(624.03125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(687.40625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(748.6875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(776.46875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(804.25 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-5c" transform="translate(843.453125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(902.640625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(934.421875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(973.625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1034.8125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-31" transform="translate(1066.59375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1141.40625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(1173.1875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1236.671875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1297.859375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(1359.390625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1411.484375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(1443.265625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1506.640625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1567.828125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1607.03125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(1638.8125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(1702.296875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(1763.578125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(1815.671875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-11" transform="translate(1867.765625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1899.546875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-25" transform="translate(1931.328125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1999.9375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(2061.125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(2100.328125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2163.703125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2195.484375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2234.390625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(2295.578125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(2358.953125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2398.15625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(2459.6875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2511.78125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(2543.5625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(2595.65625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(2634.859375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(2662.640625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(2690.421875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2718.203125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2749.984375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2788.890625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-54" transform="translate(2850.421875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(2913.90625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(2977.28125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(3005.0625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(3043.96875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(3105.5 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(3137.28125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(3176.484375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(3239.859375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(3301.390625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(3333.171875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(3385.265625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(3448.640625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(3509.921875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(3548.828125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(3610.359375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(3673.84375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(3705.625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(3769 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(3830.1875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(3869.546875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(3966.953125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(4028.234375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(4056.015625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(4087.796875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(4139.890625 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(4194.875 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(4233.78125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(4295.3125 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(4356.84375 0)"/>
-    <use xlink:href="#tumor-rule-DejaVuSans-11" transform="translate(4420.21875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-24"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(68.40625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-5c" transform="translate(131.78125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(190.96875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(222.75 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(277.734375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(338.921875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(436.328125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(499.8125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(561.09375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(602.203125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-45" transform="translate(663.484375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(726.96875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(754.75 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(816.28125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-37" transform="translate(848.0625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-33" transform="translate(909.140625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-30" transform="translate(969.4375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1055.71875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(1087.5 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1142.484375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(1203.671875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1267.046875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(1328.234375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1369.34375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1408.546875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(1440.328125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(1495.3125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-58" transform="translate(1556.5 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(1619.875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(1683.25 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(1722.453125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-11" transform="translate(1774.546875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(1806.328125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-37" transform="translate(1838.109375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(1899.1875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(1962.5625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2024.09375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(2055.875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4b" transform="translate(2107.96875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(2171.34375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2232.625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2271.53125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-47" transform="translate(2333.0625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2396.546875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(2428.328125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-52" transform="translate(2491.703125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2552.890625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-50" transform="translate(2592.25 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(2689.65625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(2750.9375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(2778.71875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(2810.5 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-46" transform="translate(2862.59375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(2917.578125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(2956.484375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(3018.015625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-51" transform="translate(3079.546875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(3142.921875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-44" transform="translate(3174.703125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(3235.984375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-53" transform="translate(3299.46875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4f" transform="translate(3362.953125 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-4c" transform="translate(3390.734375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-48" transform="translate(3418.515625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(3480.046875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-3" transform="translate(3532.140625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-13af" transform="translate(3563.921875 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-55" transform="translate(3626.90625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-56" transform="translate(3668.015625 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-57" transform="translate(3720.109375 0)"/>
+    <use xlink:href="#tumor-rule-DejaVuSans-11" transform="translate(3759.3125 0)"/>
    </g>
   </g>
  </g>

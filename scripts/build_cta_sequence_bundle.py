@@ -159,7 +159,7 @@ def build(source, output, release):
         "gene-knowledge.json",
         "cta-finding-migrations.json",
         "tcr-trial-evidence.json",
-        "normal-tissue-hazards.yaml",
+        "normal-tissue-tiers.yaml",
         "normal-tissue-taxonomy.yaml",
         "translation-qualification.json",
         "translation-qualification.csv.gz",

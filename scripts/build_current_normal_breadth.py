@@ -95,7 +95,7 @@ def build():
     text = f"""# Current normal-expression breadth
 
 Descriptive policy `{policy["policy_id"]}` uses bulk tiers from
-`{policy["hazard_registry_id"]}`. **No admission cutoff or membership change is introduced.**
+`{policy["tier_registry_id"]}`. **No admission cutoff or membership change is introduced.**
 The report covers {len(wanted):,} distinct member loci in the qualified reference
 universe, each once; these are gene profiles, not protein-group counts.
 
@@ -136,8 +136,8 @@ The [October report](../normal-breadth-20261026/index.md) stays frozen and repro
         Path(__file__),
         ROOT / "oncoref/normal_expression_breadth.py",
         ROOT / "oncoref/cta_selection_policy.py",
-        ROOT / "oncoref/data/normal-tissue-hazards.yaml",
-        ROOT / "oncoref/tissue_hazards.py",
+        ROOT / "oncoref/data/normal-tissue-tiers.yaml",
+        ROOT / "oncoref/tissue_tiers.py",
         ROOT / "oncoref/data/normal-tissue-taxonomy.yaml",
         ROOT / "oncoref/data/cta-policy.json",
         ROOT / "oncoref/data/cta-donor-rna.csv",

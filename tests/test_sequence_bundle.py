@@ -3,11 +3,11 @@
 import gzip
 import json
 import zipfile
-from importlib.resources import files
 from pathlib import Path
 
 import pytest
 
+from oncoref import data_file_renames
 from oncoref import sequence_bundle as bundle
 
 
@@ -21,7 +21,7 @@ def test_packaged_asset_pin_matches_current_policy_and_complete_inventory():
     assert manifest["record_count"] == 245535
     assert manifest["occurrence_count"] >= manifest["record_count"]
     for name, expected in manifest["package_dependencies"].items():
-        assert bundle.digest(files("oncoref").joinpath("data", name).read_bytes()) == expected
+        assert bundle.digest(data_file_renames.as_released(name)) == expected
     transition = json.loads((audit / "historical-transition.json").read_text())
     assert transition["current_bundle_id"] == pin["bundle_id"]
     assert transition["historical_policy_id"]

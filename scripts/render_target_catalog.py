@@ -58,6 +58,11 @@ def funnel(data):
             data.classification.eq("Other:Expression"),
             "Other:Expression",
         ),
+        (
+            "Home tissue no panel resolves, without reproductive evidence",
+            data.classification.eq("Other:Tissue"),
+            "Other:Tissue",
+        ),
     ]
     rows, remaining = [], len(data)
     for label, mask, result in steps:
@@ -223,8 +228,8 @@ table{border-collapse:collapse;width:100%}th,td{padding:9px;text-align:left;bord
 <p class="note"><strong>These counts are outputs of screening rules, not validated tumor antigens.</strong> Rare normal-cell RNA is graded per adult donor; single-molecule cells never change a category, and every signal ends as established or dismissed with its reason. <a href="literature/">Literature review of the dismissed and released proteins</a>. <a href="../../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> · <a href="changes-from-draft.csv">Every change from the 2026-11-09 draft</a> · <a href="../../target-selection-20261109/scrutiny/">Earlier 250-protein audit</a>.</p>
 <div class="summary"><table><thead><tr><th>Exclusive category</th><th>Proteins</th><th>With a curated target nomination</th></tr></thead><tbody>__COUNTS__</tbody></table>
 <p><strong>Cancer Antigens: __CA__ · Reproductive Antigens: __RA__ · CTA intersection: __CTA__ · Target candidates union: __UNION__.</strong></p></div>
-<p>Other: __OTHER_COUNTS__. Of the __RA_ONLY__ Reproductive Antigens only, __RA_UNRESOLVED__ have potentially qualifying repeated tumor measurements with unresolved patient identities. The remaining __RA_INSUFFICIENT__ do not meet either cancer RNA rule in the measured samples.</p>
-<p>The shared eligibility screen leaves __ELIGIBLE__ proteins. Cancer RNA needs two confirmed independent patients each ≥1 TPM and above the eligible normal maximum N, or one sample ≥10 × max(N, 1). The highest tumor, reproductive or developmental value must exceed every measured nonreproductive and Disposable value, with Disposable expression at most 32 TPM and 32 nTPM. Reproductive/developmental RNA association uses ≥1 with the established read/cell support. The reproductive concentration score no longer excludes candidates.</p>
+<p>Other: __OTHER_COUNTS__. None of the __RA_ONLY__ Reproductive Antigens only has a tumor sample at 10 × its non-reproductive normal maximum.</p>
+<p>The shared eligibility screen leaves __ELIGIBLE__ proteins. Cancer RNA needs one tumor sample, from any comparable TPM cohort, at ≥10 × max(N, D, 1), where N is the highest non-reproductive normal value and D the highest Disposable value. Patients above N are counted but admit nothing. The highest tumor, reproductive or developmental value must exceed every measured nonreproductive and Disposable value, with Disposable expression at most 32 TPM and 32 nTPM. Reproductive/developmental RNA association uses ≥1 with the established read/cell support. The reproductive concentration score no longer excludes candidates.</p>
 <p class="note">The comparison uses native gene TPM with resolved identities and source quality checks. N is the maximum supported tissue/cell summary, not the largest value in every healthy donor. Cross-study batch effects are not corrected. Other assay scales retain their independent normal-exclusion rules. <a href="comparison.json">Exact comparison scope</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Cross-study methods</a>.</p>
 <p><strong>NUTM coverage:</strong> the stored UNC three-sample matrix fails the nonnegative-TPM check and contributes no qualifying samples. Its failed source remains in the <a href="tumor-source-coverage.csv">coverage ledger</a>; <a href="https://github.com/pirl-unc/oncoref/issues/604">#604</a> and <a href="https://github.com/pirl-unc/oncoref/issues/665">#665</a> track the repair. No raw reads were re-quantified for this rebuild.</p>
 <h2>Changes from the released catalog</h2><div class="summary"><table><thead><tr><th>Released category</th><th>New category</th><th>Proteins</th></tr></thead><tbody>__MIGRATIONS__</tbody></table></div>
@@ -353,7 +358,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "| Coverage, identity and translation | Unchanged | Other:Review |\n"
         "| Sequence | Fewer than 95% of 9-mers inside Unsafe proteins, recomputed for the new Unsafe set | Other:Sequence |\n"
         "| Expression bounds | Target maximum above every measured nonreproductive and Disposable value; Disposable at most 32 TPM and 32 nTPM | Other:Expression |\n"
-        "| Cancer evidence | Two independent patients each ≥1 TPM and above the normal maximum N, or one tumor ≥10 × max(N, 1) | No Cancer Antigen membership |\n"
+        "| Cancer evidence | One tumor sample ≥10 × max(N, Disposable, 1), N the highest non-reproductive normal value | No Cancer Antigen membership |\n"
         "| Reproductive evidence | ≥1 native TPM/nTPM with read and cell support, or reliable protein | No Reproductive Antigen membership |\n\n"
         "## Rare normal-cell RNA\n\n"
         "A count matrix cannot show where a read aligned, and one mis-assigned read per cell from a "
@@ -407,10 +412,13 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         + ".\n\nFormer CTAs now requiring review: "
         + ", ".join(held_cta.protein_group_label)
         + ".\n\n## Reproductive Antigens only\n\n"
-        + f"{unresolved_reproductive} have potentially qualifying tumor measurements but unresolved patient "
-        "independence; none reaches the single-sample threshold. The remaining "
-        f"{len(reproductive_only) - unresolved_reproductive} do not meet either cancer RNA rule.\n\n"
-        "| Protein | Tumor maximum TPM | Normal comparison TPM | Cancer assessment |\n"
+        + "No tumor sample reaches 10 × the protein's non-reproductive normal maximum"
+        + (
+            f"; {unresolved_reproductive} lack a complete normal comparison.\n\n"
+            if unresolved_reproductive
+            else ".\n\n"
+        )
+        + "| Protein | Tumor maximum TPM | Normal comparison TPM | Cancer assessment |\n"
         "|---|---:|---:|---|\n" + table_rows + "\n\n## Evidence and reproduction\n\n"
         "The comparison uses source-native TPM and maxima of supported tissue/cell summaries. "
         "It does not correct cross-study batch effects. NUTM's stored three-sample matrix fails "
@@ -473,7 +481,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "oncoref/target_selection.py",
         "oncoref/gene_matching.py",
         "oncoref/cta_literature.py",
-        "oncoref/tissue_hazards.py",
+        "oncoref/tissue_tiers.py",
         "oncoref/samples.py",
     ]
     manifest = {

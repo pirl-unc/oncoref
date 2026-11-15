@@ -39,7 +39,7 @@ from oncoref import (  # noqa: E402
     cta_selection_audit,
     gene_knowledge,
     sequence_bundle,
-    tissue_hazards,
+    tissue_tiers,
     translation_qualification,
 )
 
@@ -341,7 +341,7 @@ def build():
     admission = pd.read_csv(
         ROOT / "docs/audits/cta-source-walkthrough-20261028/figures/category-funnel.csv"
     ).set_index("stage")
-    levels = tissue_hazards.assessments().level.value_counts().to_dict()
+    levels = tissue_tiers.assessments().level.value_counts().to_dict()
     migrated_count = len(gene_knowledge.historical_dispositions())
     figures(facts, roles, coverage)
     criteria = cta_selection_audit.audit().criteria
@@ -517,10 +517,10 @@ def build():
         "worked": worked,
         "bundle": sequence_bundle.descriptor(),
         "criteria": criteria.to_dict("records"),
-        "registry_references": len(tissue_hazards.references()),
-        "tier_definitions": tissue_hazards.registry()["tier_definitions"],
+        "registry_references": len(tissue_tiers.references()),
+        "tier_definitions": tissue_tiers.registry()["tier_definitions"],
         "source_guide": guide_sources,
-        "tier_references": tissue_hazards.references().set_index("reference_id").to_dict("index"),
+        "tier_references": tissue_tiers.references().set_index("reference_id").to_dict("index"),
         "unlisted_comparison": json.loads(
             (ROOT / "docs/audits/cta-evidence-guide-20261106/comparison.json").read_text()
         ),
@@ -555,7 +555,7 @@ def build():
         ROOT / "oncoref/data/translation-qualification.json",
         ROOT / "oncoref/data/gene-knowledge.json",
         ROOT / "oncoref/data/tcr-trial-evidence.json",
-        ROOT / "oncoref/data/normal-tissue-hazards.yaml",
+        ROOT / "oncoref/data/normal-tissue-tiers.yaml",
         OUT / "manifest.json",
         ROOT / "docs/audits/cta-selection-20261028/manifest.json",
         ROOT / "docs/audits/cta-selection-20261028/reproducibility.json",
@@ -613,7 +613,7 @@ def update_current_docs(data):
     path = ROOT / "README.md"
     text = path.read_text()
     start = text.index("The [current CTA/oncofetal selection]")
-    end = text.index("\n\nThe [normal-tissue hazard ontology]", start)
+    end = text.index("\n\nThe [normal-tissue tier ontology]", start)
     text = (
         text[:start]
         + (
@@ -650,12 +650,12 @@ def update_current_docs(data):
     path.write_text(text)
     path = ROOT / "docs/index.md"
     text = path.read_text()
-    start = text.index("[Normal-tissue hazard ontology]")
+    start = text.index("[Normal-tissue tier ontology]")
     end = text.index("The [343-group harmonized funnel]", start)
     text = (
         text[:start]
         + (
-            "[Normal-tissue hazard ontology](tissue-hazards.md) centralizes cited bulk and cell-subset calls.\n\n"
+            "[Normal-tissue tier ontology](tissue-tiers.md) centralizes cited bulk and cell-subset calls.\n\n"
             + "The [current CTA and oncofetal definition](audits/cta-definition-20261104/index.md) supplies "
             + summary
             + "\n\n[Illustrated report](audits/cta-definition-20261104/report.html) · "
@@ -1039,7 +1039,7 @@ def render_pdf(data):
                 )
             story.append(
                 Paragraph(
-                    '<a href="https://pirl-unc.github.io/oncoref/tissue-hazards/">Central tissue registry, compartment rationales and primary references</a>',
+                    '<a href="https://pirl-unc.github.io/oncoref/tissue-tiers/">Central tissue registry, compartment rationales and primary references</a>',
                     small,
                 )
             )

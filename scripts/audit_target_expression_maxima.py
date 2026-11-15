@@ -14,7 +14,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from oncoref import target_selection, tissue_hazards  # noqa: E402
+from oncoref import target_selection, tissue_tiers  # noqa: E402
 from oncoref.gene_matching import (  # noqa: E402
     gene_identity_catalog,
     resolve_long_measurement_ids,
@@ -78,7 +78,7 @@ def audit_cells(path, candidates):
     for chunk in pd.read_csv(path, sep="\t", chunksize=300_000):
         keys = list(zip(chunk.Tissue, chunk["Cell type"]))
         for tissue, cell in set(keys) - contexts.keys():
-            contexts[(tissue, cell)] = tissue_hazards.assess(tissue, cell, resolution="cell")
+            contexts[(tissue, cell)] = tissue_tiers.assess(tissue, cell, resolution="cell")
         keep = [contexts[key]["tier"] == "disposable" for key in keys]
         selected.append(chunk.loc[keep])
     inventory = pd.DataFrame(
@@ -204,7 +204,7 @@ def build(cell_path):
     scenarios = pd.DataFrame(scenarios)
     scenarios.to_csv(OUT / "cap-scenarios.csv", index=False)
     pd.concat(losses, ignore_index=True).to_csv(OUT / "proteins-moved-to-other.csv", index=False)
-    inventory = tissue_hazards.anatomy_inventory()
+    inventory = tissue_tiers.anatomy_inventory()
     inventory.to_csv(OUT / "anatomy-inventory.csv", index=False)
     cells = audit_cells(cell_path, x)
     summary = {
@@ -219,8 +219,8 @@ def build(cell_path):
         "anatomy_selection_categories": inventory.selection_category.fillna("Needs localization")
         .value_counts()
         .to_dict(),
-        "specific_registered_contexts_needing_hazard_review": inventory[
-            inventory.requires_hazard_review
+        "specific_registered_contexts_needing_tier_review": inventory[
+            inventory.requires_tier_review
         ].concept_id.tolist(),
         "broad_location_labels": inventory[inventory.requires_localization].concept_id.tolist(),
         "hpa_cell_audit": cells,
@@ -270,7 +270,7 @@ The proposed rule has two independent parts: **target expression must be highest
 
 **Reproductive includes adult reproductive organs, placenta/trophoblast, extraembryonic membranes and structures, embryo and fetus.** The taxonomy already contains this union. The inventory now records selection scope separately from injury tier and uses the correct embryonic/fetal stage. Fourteen of the previously unresolved hazard entries belong to this Reproductive scope. Reproductive membership does not exempt the same immune, vascular or other shared cells at nonreproductive sites.
 
-**Soft tissue, head and foot are location labels requiring localization.** They receive no new hazard tier and no Disposable allowance. Retain their observations and resolve the actual tissue/cell identity before using them for clearance. Among the currently registered specific human concepts, none remains without either a Reproductive selection scope or an adult hazard tier. This is a registry inventory, not a complete list of human tissues or source coverage.
+**Soft tissue, head and foot are location labels requiring localization.** They receive no new tier and no Disposable allowance. Retain their observations and resolve the actual tissue/cell identity before using them for clearance. Among the currently registered specific human concepts, none remains without either a Reproductive selection scope or an adult hazard tier. This is a registry inventory, not a complete list of human tissues or source coverage.
 
 Three concrete additions need separate curation:
 
@@ -280,7 +280,7 @@ Three concrete additions need separate curation:
 | Mineralized bone; osteoblasts, osteocytes and osteoclasts | Bone marrow and cartilage do not cover these cells. | [Human osteoblast PANX3 study](https://pubmed.ncbi.nlm.nih.gov/32982413/) provides a candidate-specific lead; its cell-line evidence does not establish an adult tissue hazard tier. |
 | Dental pulp, odontoblasts and periodontal cells | Oral mucosa does not identify the tooth's living compartments. Adult cells belong in normal-tissue assessment; fetal specimens also retain developmental scope. | [Pagella et al., 2021](https://pubmed.ncbi.nlm.nih.gov/33997688/) |
 
-These studies support distinct normal compartments; they do not establish tolerance of immune-mediated depletion. New hazard calls require the registry's functional-injury rationale and evidence.
+These studies support distinct normal compartments; they do not establish tolerance of immune-mediated depletion. New tier calls require the registry's functional-injury rationale and evidence.
 
 [Current anatomy inventory](anatomy-inventory.csv) · [Scenario counts](cap-scenarios.csv) · [Summary](summary.json) · [Provenance manifest](manifest.json).
 
@@ -291,7 +291,7 @@ Reproduce: `python scripts/audit_target_expression_maxima.py --hpa-cell-file PAT
             p: digest(ROOT / p)
             for p in [
                 "scripts/audit_target_expression_maxima.py",
-                "oncoref/tissue_hazards.py",
+                "oncoref/tissue_tiers.py",
                 "oncoref/gene_matching.py",
             ]
         },
@@ -301,7 +301,7 @@ Reproduce: `python scripts/audit_target_expression_maxima.py --hpa-cell-file PAT
                 ROOT / "oncoref/data/target-selection.csv.gz",
                 REBUILD / "normal-comparison.csv.gz",
                 ROOT / "oncoref/data/normal-tissue-taxonomy.yaml",
-                ROOT / "oncoref/data/normal-tissue-hazards.yaml",
+                ROOT / "oncoref/data/normal-tissue-tiers.yaml",
             ]
         },
         "external_input": {

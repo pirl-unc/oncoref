@@ -107,7 +107,7 @@ def test_fixed_panel_brain_has_one_organ_weight_and_explicit_gaps():
 
 
 def test_current_tiers_follow_bulk_registry_while_historical_replay_is_preserved():
-    from oncoref import tissue_hazards
+    from oncoref import tissue_tiers
 
     current = anatomical_panel().set_index("compartment")
     old = historical_panel().set_index("compartment")
@@ -116,7 +116,7 @@ def test_current_tiers_follow_bulk_registry_while_historical_replay_is_preserved
         assert old.loc[tissue, "category"] == "manageable"
         assert current.loc[tissue, "category"] == "protected"
     for row in current.itertuples():
-        assert row.category == tissue_hazards.assess(row.anatomy, resolution="bulk")["tier"]
+        assert row.category == tissue_tiers.assess(row.anatomy, resolution="bulk")["tier"]
     assert current.loc["lung", "category"] == "vital"
     for weight in [0.5, 1, 2]:
         p = anatomical_panel(brain_weight=weight)

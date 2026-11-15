@@ -1,0 +1,90 @@
+{
+  "schema": "oncoref.nose-skin-reference",
+  "schema_version": 1,
+  "scope": "Target candidates of the catalog this was built against; one row each.",
+  "catalog_sha256": "1dfe459cb0cce43d17bb3323978ce60ac087d528d7a7a91568eab7b3b8c14781",
+  "sources": {
+    "olfactory_bulk": {
+      "citation": "Olender T, et al. The human olfactory transcriptome. BMC Genomics 2016;17:619.",
+      "doi": "10.1186/s12864-016-2960-3",
+      "url": "https://static-content.springer.com/esm/art%3A10.1186%2Fs12864-016-2960-3/MediaObjects/12864_2016_2960_MOESM2_ESM.xlsx",
+      "table": "Table S2, columns OE7, OE12, OE15, OE17 (olfactory mucosa) and respiratory (one nasal respiratory sample); FPKM",
+      "sha256": "5f66946292f50a8b805715f55544e3866fa8514c71eb80fb590035b8ea2ecfb0",
+      "matched_proteins": 643
+    },
+    "cells": {
+      "source": "CELLxGENE Census 2025-11-08, primary normal tissue, adult, UMI protocols",
+      "extraction": "scripts/extract_nose_skin_cell_counts.py",
+      "counts_sha256": "793d08c38148ecb810446be19a4b9aebaef6975832209db9b4e4d3e29aef8cf8",
+      "populations_sha256": "2bbb68ae0f0169cbe9967964bc2e44a322c96887cf5e2e4186662f0651c8ce09",
+      "coverage": [
+        {
+          "site": "nose",
+          "datasets": 2,
+          "cell_types": 18,
+          "cells": 108283,
+          "donors": 26
+        },
+        {
+          "site": "scalp",
+          "datasets": 1,
+          "cell_types": 4,
+          "cells": 3006,
+          "donors": 2
+        },
+        {
+          "site": "skin",
+          "datasets": 7,
+          "cell_types": 37,
+          "cells": 185921,
+          "donors": 95
+        },
+        {
+          "site": "tongue",
+          "datasets": 1,
+          "cell_types": 11,
+          "cells": 36040,
+          "donors": 4
+        }
+      ]
+    }
+  },
+  "rules": {
+    "olfactory_min_fpkm": 1.0,
+    "olfactory_min_samples": 3,
+    "min_grade": "medium",
+    "cell_min_cells": 200,
+    "cell_min_detected_pct": 5.0,
+    "cell_min_multi_molecule_pct": 1.0,
+    "cell_min_datasets": 2,
+    "excluded_cell_types": "melanocyte|unknown"
+  },
+  "grades": {
+    "calibration": "oncoref/data/rna-ihc-calibration.json",
+    "floors": {
+      "low": 1.0,
+      "medium": 5.0,
+      "high": 20.0
+    },
+    "note": "A tissue is recorded only at grade medium or high. FPKM and single-cell counts per million are read on the nTPM scale as an approximation."
+  },
+  "olfactory_grades": {
+    "": 856,
+    "low": 10,
+    "medium": 1,
+    "high": 1
+  },
+  "recorded": {
+    "olfactory epithelium": 2,
+    "nasal mucosa": 1,
+    "skin": 1
+  },
+  "limits": [
+    "Olfactory biopsies mix olfactory and respiratory epithelium. The table is from 2016 gene symbols; proteins without a matching symbol are unmeasured, not absent.",
+    "One nasal respiratory bulk sample exists. Its value is reported and never recorded on its own.",
+    "Census nasal cells are brushings of respiratory epithelium. They hold no olfactory neurons.",
+    "Scalp and tongue have one dataset each, so nothing is recorded from them. The scalp cells are follicular keratinocytes, not hair-shaft cortex, where hair keratins and keratin-associated proteins are made.",
+    "One skin dataset (e7c5ba7e) shows many testis genes at similar rates in every cell type. Requiring two datasets keeps that from recording a tissue.",
+    "Melanocytes are left out by request, as are cells without a type."
+  ]
+}

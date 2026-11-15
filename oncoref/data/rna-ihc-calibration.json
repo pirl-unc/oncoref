@@ -1,0 +1,98 @@
+{
+  "schema": "oncoref.rna-ihc-calibration",
+  "schema_version": 1,
+  "source": "Human Protein Atlas normal-tissue staining and tissue RNA consensus, as loaded by oncoref.hpa",
+  "reliability": "Enhanced",
+  "pairs": 153739,
+  "genes": 3951,
+  "tissues": 44,
+  "median_ntpm_by_staining_level": {
+    "Not detected": 0.8,
+    "Low": 9.5,
+    "Medium": 16.6,
+    "High": 30.0
+  },
+  "bands": [
+    {
+      "ntpm_from": 0.0,
+      "ntpm_below": 0.5,
+      "pairs": 40183,
+      "stained": 0.058,
+      "medium_or_high": 0.023,
+      "high": 0.005
+    },
+    {
+      "ntpm_from": 0.5,
+      "ntpm_below": 1.0,
+      "pairs": 9624,
+      "stained": 0.146,
+      "medium_or_high": 0.069,
+      "high": 0.014
+    },
+    {
+      "ntpm_from": 1.0,
+      "ntpm_below": 2.0,
+      "pairs": 11215,
+      "stained": 0.243,
+      "medium_or_high": 0.124,
+      "high": 0.028
+    },
+    {
+      "ntpm_from": 2.0,
+      "ntpm_below": 5.0,
+      "pairs": 18448,
+      "stained": 0.378,
+      "medium_or_high": 0.233,
+      "high": 0.065
+    },
+    {
+      "ntpm_from": 5.0,
+      "ntpm_below": 10.0,
+      "pairs": 17138,
+      "stained": 0.56,
+      "medium_or_high": 0.388,
+      "high": 0.126
+    },
+    {
+      "ntpm_from": 10.0,
+      "ntpm_below": 20.0,
+      "pairs": 18414,
+      "stained": 0.67,
+      "medium_or_high": 0.499,
+      "high": 0.184
+    },
+    {
+      "ntpm_from": 20.0,
+      "ntpm_below": 50.0,
+      "pairs": 19776,
+      "stained": 0.749,
+      "medium_or_high": 0.588,
+      "high": 0.253
+    },
+    {
+      "ntpm_from": 50.0,
+      "ntpm_below": 100.0,
+      "pairs": 9084,
+      "stained": 0.795,
+      "medium_or_high": 0.662,
+      "high": 0.323
+    },
+    {
+      "ntpm_from": 100.0,
+      "ntpm_below": null,
+      "pairs": 9857,
+      "stained": 0.813,
+      "medium_or_high": 0.705,
+      "high": 0.41
+    }
+  ],
+  "grade_floors_ntpm": {
+    "low": 1.0,
+    "medium": 5.0,
+    "high": 20.0
+  },
+  "limits": [
+    "Staining levels overlap widely in RNA. RNA separates stained from unstained tissue far better than low from high staining.",
+    "The cutoffs are in HPA nTPM. FPKM from another study and counts per million from single cells are read on the same scale only as an approximation."
+  ]
+}

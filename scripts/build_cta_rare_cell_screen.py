@@ -8,7 +8,7 @@ gene, the vital-tissue cell types with the highest fraction of expressing cells.
 
 Scope, set by the existing expression panel
 - Tissues: brain, spinal cord, heart and selected lung populations. Central adult
-  human hazard calls determine tiers. Club, basal and alveolar populations are
+  human tier calls determine tiers. Club, basal and alveolar populations are
   Vital; ciliated, goblet and ionocyte populations are Protected and create a
   candidate review hold when positive.
 - Immune lineages, stroma, broad parent terms and developmental labels remain
@@ -44,7 +44,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from oncoref.cta_cell_tiers import cell_tiers, differentiated_airway  # noqa: E402
-from oncoref.tissue_hazards import registry as hazard_registry  # noqa: E402
+from oncoref.tissue_tiers import registry as tier_registry  # noqa: E402
 
 CLASSIFICATIONS = ROOT / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz"
 OUTPUT = ROOT / "oncoref/data/cta-rare-cell-screen.csv.gz"
@@ -256,7 +256,7 @@ def build(works: list[Path]) -> pd.DataFrame:
                 "rules": {
                     "vital_tissues": sorted(VITAL_TISSUES),
                     "lung_vital": LUNG_VITAL.pattern,
-                    "hazard_registry_id": hazard_registry()["registry_id"],
+                    "tier_registry_id": tier_registry()["registry_id"],
                     "protected_action": "candidate_review_hold",
                     "excluded_cell_types": EXCLUDED_CELLS.pattern,
                     "excluded_generic_terms": sorted(GENERIC),

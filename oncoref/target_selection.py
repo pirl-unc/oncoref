@@ -15,10 +15,13 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-10.1"
+POLICY_ID = "oncoref.target-selection.2026-11-15.1"
 DETECTION_FLOOR = 1.0
-SINGLE_TUMOR_FOLD = 10.0
-REPEATED_TUMORS = 2
+#: Cancer evidence: one tumor sample at this multiple of every non-reproductive normal value.
+TUMOR_FOLD = 10.0
+#: Germ cell tumors are compared with testis, not with somatic tissue: a germline program in
+#: them is lineage, not cancer-specific activation. Their samples never count as cancer evidence.
+GERM_CELL_TUMORS = ("TGCT",)
 #: Separate nominal caps for native TPM and HPA nTPM; never a unit conversion.
 DISPOSABLE_CAP = 32.0
 #: Rare normal-cell RNA, per adult donor and named cell population.
@@ -45,6 +48,16 @@ SHARED_CHECKS = (
 )
 #: Failing one of these is Other:Review; bounds and sequence have their own subtypes.
 REVIEW_CHECKS = SHARED_CHECKS[:4]
+#: Normal tissues that no expression panel resolves. Bulk skin and tongue dilute hair
+#: follicle and taste buds; nose and tooth are absent. A tumor value was never compared
+#: with them, so it cannot on its own admit a protein whose recorded home is one of them.
+UNMEASURED_HOME_TISSUES = (
+    "olfactory epithelium",
+    "nasal mucosa",
+    "taste bud",
+    "hair follicle",
+    "dental pulp",
+)
 
 
 def definition() -> dict:
@@ -61,13 +74,50 @@ def definition() -> dict:
             "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
             "Target candidates": "Cancer Antigens UNION Reproductive Antigens",
         },
-        "precedence": ["Unsafe", "Other:Review", "Other:Sequence", "set memberships"],
+        "precedence": [
+            "Unsafe",
+            "Other:Review",
+            "Other:Sequence",
+            "Other:Tissue",
+            "set memberships",
+        ],
         "other_subtypes": {
             "Review": "Required evidence is missing, unresolved, or fails a shared admission check.",
-            "Sequence": "Nested protein without independent support or >=95% Unsafe 9-mer containment.",
+            "Sequence": (
+                "Nested protein without independent support, >=95% Unsafe 9-mer containment, or "
+                "a read-through locus whose every coding transcript joins two separate genes."
+            ),
             "Expression": (
                 "Neither positive expression route qualifies, or the target maximum or "
                 "Disposable cap fails."
+            ),
+            "Tissue": (
+                "The protein's recorded normal home is a tissue no expression panel resolves, "
+                "and no reproductive or developmental evidence qualifies. Its tumor value was "
+                "never compared with that tissue, so cancer evidence alone does not admit it."
+            ),
+        },
+        "home_tissue": {
+            "unmeasured_tissues": list(UNMEASURED_HOME_TISSUES),
+            "recorded_by": (
+                "A family rule, a recorded literature finding, or the nose and skin reference."
+            ),
+            "effect": (
+                "Without qualifying reproductive or developmental evidence: Other:Tissue. "
+                "With it, the category is unchanged and the tissue stays on the row."
+            ),
+        },
+        "published_normal_expression": {
+            "source": "oncoref/data/normal-expression-literature.json",
+            "scope": "Every Target candidate of the previous catalog and every rare-cell dependent.",
+            "exclude": (
+                "A gene-specific report in normal adult tissue that the tissue-tier registry or its "
+                "updates tier Vital or Protected, with a quote retrieved from the source. Unsafe."
+            ),
+            "recorded": (
+                "Confirmed findings that do not meet the rubric, and family rules by protein "
+                "name, keep their tissue and tier on the row. The only category effect is "
+                "the home-tissue rule."
             ),
         },
         "expression_bounds": {
@@ -139,14 +189,27 @@ def definition() -> dict:
         },
         "cancer_rna": {
             "detection_floor": DETECTION_FLOOR,
-            "independent_participants_required": REPEATED_TUMORS,
-            "repeated_rule": "T >= 1 AND T > N in at least two independent participants",
-            "single_tumor_fold": SINGLE_TUMOR_FOLD,
-            "single_rule": "T >= 10 * max(N, 1) in at least one qualified tumor sample",
-            "normal_reference": (
-                "Maximum QC-passing, identity-resolved measurement in the declared compatible "
-                "normal panel, excluding specifically allowed Disposable and reproductive compartments."
+            "tumor_fold": TUMOR_FOLD,
+            "rule": (
+                "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable "
+                "TPM cohort. N is the highest non-reproductive normal value, D the highest "
+                "Disposable value. This is the only cancer route."
             ),
+            "normal_reference": (
+                "N: maximum QC-passing, identity-resolved measurement in the declared compatible "
+                "normal panel, excluding Disposable and reproductive compartments. D is taken "
+                "separately; reproductive, placental and fetal compartments are never compared."
+            ),
+            "descriptive": (
+                "Independent patients and samples above N are reported. They admit nothing."
+            ),
+            "excluded_tumors": {
+                "codes": list(GERM_CELL_TUMORS),
+                "reason": (
+                    "Germ cell tumors carry the germline program of their lineage, so their "
+                    "expression of reproductive genes is not cancer-specific activation."
+                ),
+            },
             "comparability": (
                 "One documented comparison scale and complete required normal contexts. Equal unit "
                 "names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling."
@@ -242,6 +305,10 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     Protein IDs, source links, findings and publication annotations pass through.
     An unassessed positive association does not erase the other set's membership;
     missing required *normal* coverage blocks both sets.
+
+    Optional ``home_tissue_unmeasured`` marks a protein whose recorded normal home no
+    panel resolves. Cancer evidence admits it only together with reproductive evidence;
+    alone it is Other:Tissue.
     """
     flags = ("unsafe", *SHARED_CHECKS)
     _require_columns(facts, {*flags, "cancer_evidence", "reproductive_evidence"})
@@ -251,8 +318,14 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
             raise ValueError(f"{field} must be one of {EVIDENCE_STATUSES}")
     d = facts.copy(deep=True)
     eligible = ~d.unsafe & d[list(SHARED_CHECKS)].all(axis=1)
-    cancer = eligible & d.cancer_evidence.eq("qualifies")
     reproductive = eligible & d.reproductive_evidence.eq("qualifies")
+    if "home_tissue_unmeasured" in d:
+        _require_booleans(d, ["home_tissue_unmeasured"])
+        home = d.home_tissue_unmeasured.astype(bool)
+    else:
+        home = pd.Series(False, index=d.index)
+    uncompared = eligible & d.cancer_evidence.eq("qualifies") & home & ~reproductive
+    cancer = eligible & d.cancer_evidence.eq("qualifies") & ~uncompared
     d["eligible"] = eligible
     d["is_cancer_antigen"] = cancer
     d["is_reproductive_antigen"] = reproductive
@@ -266,6 +339,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     d["subtype"] = ""
     other = d.category.eq("Other")
     d.loc[other, "subtype"] = "Expression"
+    d.loc[other & uncompared, "subtype"] = "Tissue"
     d.loc[other & ~d.sequence_pass, "subtype"] = "Sequence"
     review = ~d[list(REVIEW_CHECKS)].all(axis=1) | (
         eligible & d[["cancer_evidence", "reproductive_evidence"]].eq("unassessed").any(axis=1)
@@ -294,10 +368,11 @@ def assess_cancer_rna(
     ``reproductive`` and must come from reviewed compartment mappings, never from
     the organ name alone. Required contexts are the nonexempt normal contexts.
 
+    Cancer evidence qualifies when one tumor sample reaches ``TUMOR_FOLD`` times the
+    highest non-reproductive value: max(normal, Disposable, ``DETECTION_FLOOR``).
     The receipt retains observed maxima, supporting samples, and missing coverage.
-    Missing/failed normal observations cannot lower the comparison to zero.
-    Participant IDs must be resolved across source/cohort aliases. An unknown
-    participant can support the single-sample route, but cannot count as replication.
+    Missing/failed normal observations cannot lower the comparison to zero. Counts of
+    independent patients above the normal maximum are descriptive.
     """
     common = {
         "entity_id",
@@ -353,6 +428,8 @@ def assess_cancer_rna(
     reference = n[valid_normal]
     missing = sorted(required_normal_contexts - set(reference.context_id))
     normal_maximum = None if reference.empty else float(reference.value.max())
+    disposable = n[n.scope.eq("disposable") & n.qc_pass & n.identity_resolved & n.value.notna()]
+    disposable_maximum = float(disposable.value.max()) if not disposable.empty else 0.0
     receipt = {
         "policy_id": POLICY_ID,
         "entity_id": next(iter(entity_ids)),
@@ -365,6 +442,7 @@ def assess_cancer_rna(
         "normal_maximum_observations": reference[reference.value.eq(normal_maximum)].to_dict(
             "records"
         ),
+        "disposable_maximum": disposable_maximum,
         "single_sample_threshold": None,
         "independent_participants_above_normal": 0,
         "samples_above_normal": 0,
@@ -376,7 +454,7 @@ def assess_cancer_rna(
     if missing or normal_maximum is None:
         receipt["reason"] = "Required normal comparison is incomplete"
         return receipt
-    threshold = SINGLE_TUMOR_FOLD * max(normal_maximum, DETECTION_FLOOR)
+    threshold = TUMOR_FOLD * max(normal_maximum, disposable_maximum, DETECTION_FLOOR)
     receipt["single_sample_threshold"] = threshold
     valid_tumor = t.qc_pass & t.identity_resolved & t.value.notna()
     t = t[valid_tumor].drop_duplicates(["source_id", "sample_id"]).copy()
@@ -392,19 +470,14 @@ def assess_cancer_rna(
     receipt["samples_above_normal"] = int(t.above_normal.sum())
     receipt["unresolved_participant_samples_above_normal"] = unresolved
     receipt["supporting_tumors"] = t[t.above_normal | t.single_sample_pass].to_dict("records")
-    if participants >= REPEATED_TUMORS:
-        receipt["routes"].append("two_independent_tumors_above_normal")
     if t.single_sample_pass.any():
-        receipt["routes"].append("one_tumor_tenfold_above_normal")
+        receipt["routes"].append("tumor_tenfold_above_nonreproductive_normal")
     receipt["status"] = "qualifies" if receipt["routes"] else "does_not_qualify"
     receipt["reason"] = (
-        "Cancer RNA route qualifies" if receipt["routes"] else "No cancer RNA route qualifies"
+        "A tumor sample is at least 10 x every non-reproductive normal value"
+        if receipt["routes"]
+        else "No tumor sample reaches 10 x the non-reproductive normal maximum"
     )
-    if not receipt["routes"] and unresolved and participants + unresolved >= REPEATED_TUMORS:
-        receipt["status"] = "unassessed"
-        receipt["reason"] = (
-            "Patient identity is unresolved for potentially qualifying repeated tumor samples"
-        )
     return deepcopy(receipt)
 
 

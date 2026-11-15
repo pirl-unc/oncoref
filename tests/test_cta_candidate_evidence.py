@@ -11,6 +11,7 @@ import pytest
 from build_cta_candidate_evidence import count_samples, replay_updates, tumor_tables
 
 from oncoref import gene_knowledge
+from tests import released_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
 AUDIT = ROOT / "docs/audits/cta-candidate-evidence-20261108"
@@ -145,7 +146,12 @@ def test_primer_conflict_and_audit_receipts():
     manifest = json.loads((AUDIT / "manifest.json").read_text())
     for section, root in [("inputs", ROOT), ("outputs", AUDIT)]:
         for name, digest in manifest[section].items():
-            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == digest, name
+            content = (
+                released_inputs.read(name, digest)
+                if section == "inputs"
+                else (root / name).read_bytes()
+            )
+            assert hashlib.sha256(content).hexdigest() == digest, name
     # Saved compressed responses must be actual HPA XML, not retrieval error pages.
     for path in inputs.glob("*.xml.gz"):
         assert b"<proteinAtlas" in gzip.decompress(path.read_bytes())

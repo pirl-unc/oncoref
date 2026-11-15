@@ -101,26 +101,26 @@ def historical_panel(*, brain_weight: float = 1.0) -> pd.DataFrame:
 
 
 def anatomical_panel(*, brain_weight: float = 1.0) -> pd.DataFrame:
-    """Current bulk anatomy and fixed weights, with tiers from the hazard registry.
+    """Current bulk anatomy and fixed weights, with tiers from the tissue-tier registry.
 
     The residual non-retinal eye compartment inherits the bulk eye assessment.
     No cell-level exception lowers a bulk observation. Missing compartments keep
     their weight; changing a tier renormalizes the complete fixed tier panel.
     """
-    from . import tissue_hazards
+    from . import tissue_tiers
 
     panel = historical_panel(brain_weight=brain_weight)
     panel["anatomy"] = panel.compartment.replace({"non-retinal eye": "eye"})
-    resolved = [tissue_hazards.assess(tissue, resolution="bulk") for tissue in panel.anatomy]
+    resolved = [tissue_tiers.assess(tissue, resolution="bulk") for tissue in panel.anatomy]
     panel["category"] = [row["tier"] for row in resolved]
     if not panel.category.isin(TIERS).all():
         raise ValueError("Unresolved or unsupported current breadth anatomy")
-    panel["hazard_assessment_id"] = [row["assessment_id"] for row in resolved]
+    panel["tier_assessment_id"] = [row["assessment_id"] for row in resolved]
     organ_weight = panel.organ.map(lambda x: brain_weight if x == "brain" else 1.0)
     panel["weight"] = organ_weight / panel.groupby("organ").compartment.transform("size")
     panel["weight"] /= panel.groupby("category").weight.transform("sum")
     panel["policy_id"] = POLICY_ID
-    panel["registry_id"] = tissue_hazards.registry()["registry_id"]
+    panel["registry_id"] = tissue_tiers.registry()["registry_id"]
     return panel
 
 
@@ -130,12 +130,12 @@ def policy() -> dict:
     These current baseline ceilings are descriptive anchors. Per-gene eligibility
     ceilings and reproductive concentration are different quantities.
     """
-    from . import tissue_hazards
+    from . import tissue_tiers
     from .cta_selection_policy import TIER_BASES
 
     return {
         "policy_id": POLICY_ID,
-        "hazard_registry_id": tissue_hazards.registry()["registry_id"],
+        "tier_registry_id": tissue_tiers.registry()["registry_id"],
         "source": "hpa_rna_consensus",
         "version": "v23",
         "unit": "nTPM",

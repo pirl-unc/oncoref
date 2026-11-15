@@ -422,13 +422,13 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "Cancer and Reproductive Antigen catalog for every human protein record, with set memberships, evidence receipts and paper links",
     ),
-    "target-normal-function-findings": (
+    "nose-skin-reference": (
         "cta-evidence",
-        "cited normal-function findings on Target candidates from an automated literature sweep, with tissue, tier, source and second-reader verdict; read only by the filter layer",
+        "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
     ),
-    "target-readthrough-loci": (
+    "readthrough-loci": (
         "cta-evidence",
-        "read-through loci among Target candidates whose exons overlap two or more other protein-coding genes, with parent genes; read only by the filter layer",
+        "read-through loci whose every coding transcript joins two separate protein-coding genes, with parent genes; the catalog's sequence check moves them to Other",
     ),
     "rare-cell-evidence": (
         "cta-evidence",
@@ -436,7 +436,7 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "normal-expression-literature": (
         "cta-evidence",
-        "reviewed publications on normal adult expression for candidates with dismissed or released rare-cell signals, with rubric outcome, URLs and quotes",
+        "reviewed publications on normal adult expression for every Target candidate and rare-cell dependent, with rubric outcome, recorded tissue tiers, family rules, URLs and quotes",
     ),
     "gene-mapping-risk": (
         "cta-evidence",

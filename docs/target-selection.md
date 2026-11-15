@@ -4,10 +4,10 @@
 Antigens. Both sets use the same normal-tissue, coverage, translation and sequence
 requirements. Their union is called Target candidates.**
 
-The catalog is built under `oncoref.target-selection.2026-11-10.1`:
-**626 CTA, 245 Cancer Antigen only, 31 Reproductive Antigen only, 750 Other and
-18,241 Unsafe**. That gives 871 Cancer Antigens, 657 Reproductive Antigens and
-902 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+The catalog is built under `oncoref.target-selection.2026-11-15.1`:
+**453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only, 970 Other and
+18,253 Unsafe**. That gives 490 Cancer Antigens, 633 Reproductive Antigens and
+670 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot. The counts describe rule matches, not
@@ -19,6 +19,39 @@ experimentally validated tumor antigens.
 [Literature review](audits/target-selection-20261110/rebuild/literature.md)
 
 ![Cancer and Reproductive Antigen sets](audits/target-selection-20261110/sets.svg)
+
+## What changed on 2026-11-15
+
+**One cancer rule.** A Cancer Antigen needs one tumor sample at 10 times every
+non-reproductive normal value, from any comparable TPM cohort except germ cell tumors.
+
+| Rule | Before | Now |
+|---|---|---|
+| Cancer evidence | Two independent patients above N, or one tumor at 10 × max(N, 1) | One tumor at 10 × max(N, Disposable, 1). Patients above N are reported and admit nothing |
+| Germ cell tumors | Counted as cancer samples | Not cancer evidence: their germline program is lineage, not activation |
+| Home tissue the panels do not resolve | New on 2026-11-14 | Other:Tissue unless reproductive evidence qualifies; every family rule names a home |
+| Olfactory epithelium | Protected | Manageable, on the oncology precedent ([tissue tiers](tissue-tiers.md#how-a-tier-is-chosen)) |
+| Target candidates | 868 | 670 |
+
+All 24 familiar CTAs that were CTAs remain CTAs; the lowest is AKAP4 at 16 times its
+normal maximum. 153 CTAs become Reproductive Antigen only: 138 have no tumor at 10x,
+and 15 qualified only through germ cell tumors (DAZL, PRDM14, PGK2, PRM2 and others).
+
+## What changed on 2026-11-13
+
+**The curation that the candidate filters used on their own is now part of the
+catalog.** There is one literature review, one tissue-tier registry and one sequence check.
+
+| Record | Before | Now |
+|---|---|---|
+| Literature review | 99 proteins with a dismissed or released rare-cell signal | Those and every Target candidate of the 2026-11-10 catalog: 912 proteins |
+| Published normal expression | 9 proteins Unsafe by the rubric | 23. The 14 added each have a quote retrieved from the source |
+| Read-through loci | Removed by a filter knob | Fail the sequence check: Other:Sequence |
+| Tissue tiers | Seven tissues tiered in a filter file | Seven tissues added to the tissue-tier registry as dated updates |
+| Proteins of a tissue no panel resolves | Cancer Antigen only when a tumor value cleared the measured tissues | Other:Tissue unless reproductive evidence qualifies: 178 proteins |
+| Target candidates | 902 | 690 |
+
+Candidate filters hold no evidence of their own any more. [Filter rules](target-filters.md).
 
 ## What changed from the 2026-11-09 draft
 
@@ -55,9 +88,10 @@ exclusion establishes Unsafe.** Missing or conflicting evidence does not.
 | Required coverage | Complete combined normal bulk panel for every member locus; retain observed findings from supplemental panels | Other:Review |
 | Identity and translation | Qualifying coding reference or supported noncanonical ORF; complete approved representative; resolve conflicting coding evidence | Other:Review |
 | Expression bounds | Target maximum above every measured nonreproductive and Disposable value; Disposable expression at most 32 TPM and 32 nTPM | Other:Expression |
-| Sequence | Resolve nested proteins independently; fewer than 95% of 9-mers contained in Unsafe proteins | Other:Sequence |
+| Sequence | Resolve nested proteins independently; fewer than 95% of 9-mers contained in Unsafe proteins; not a read-through locus | Other:Sequence |
+| Home tissue | When the recorded normal home is a tissue no panel resolves, reproductive or developmental evidence must qualify | Other:Tissue |
 
-The [tissue and cell registry](tissue-hazards.md) and
+The [tissue and cell registry](tissue-tiers.md) and
 [released normal-expression rules](cta-selection.md#uniform-human-rules) supply
 the normal screen. The RNA bases of 4, 8 and 16 are screening cutoffs for Vital,
 Protected and Manageable contexts. The existing IHC-dependent adjustments remain
@@ -131,22 +165,41 @@ another gene.
 
 ### Published normal expression
 
-A dismissal or a release from the old pooled flag leaves a protein's candidacy
-resting on the absence of evidence, so each such protein is taken through a
-literature review with a fixed rubric. 99 proteins were reviewed.
+**Every candidate is taken through one literature review with a fixed rubric.** The
+review has 912 entries from two passes: the 99 proteins whose candidacy rested on a
+dismissed or released rare-cell signal, and a 2026-11-12 sweep of every Target
+candidate of the 2026-11-10 catalog.
 
 | Rule | Requirement | Effect |
 |---|---|---|
 | R1 | A primary source reports the gene in a panel organ by a gene-specific assay, and donor-level data detect it there | Rare-cell grade becomes established |
-| R2 | A primary source reports the gene by a gene-specific assay in normal adult Vital or Protected tissue, uncontradicted by a gene-specific panel or reliable IHC | Unsafe |
+| R2 | A primary source reports the gene by a gene-specific assay in normal adult tissue that the tissue-tier registry or its updates tier Vital or Protected, uncontradicted by a gene-specific panel or reliable IHC | Unsafe |
 | R3 | Human loss of function causes disease of a Vital tissue, and the ortholog is expressed in that adult tissue | Unsafe |
+| Recorded | A confirmed human, adult, gene-specific finding that does not meet R1 to R3 | The tissue and tier stay on the row. The only category effect is the [home-tissue rule](#home-tissue-the-panels-do-not-resolve) |
 
-Nine are Unsafe on published evidence: MAGEA12 (brain RNA by sequenced qRT-PCR, with
-our own detection; a later in situ study disputes it), SCGB1D1 (sequenced from normal
-tears, with our own detection in acinar cells of the eye), AMBN and BTNL2 (gut),
-GDF9 (bone marrow, pituitary), SLC25A2 (liver), ITIH6 (kidney), MYH13 (extraocular
-and laryngeal muscle) and OTOG (inner ear). Several rest on one report or on an
-abstract; the rubric excludes on that, and the limits are recorded with each item.
+An exclusion needs a quote retrieved from the source. Twenty-three entries act.
+
+- **From the first pass, nine:** MAGEA12 (brain RNA by sequenced qRT-PCR, with our own
+  detection; a later in situ study disputes it), SCGB1D1 (sequenced from normal tears,
+  with our own detection in acinar cells of the eye), AMBN and BTNL2 (gut), GDF9 (bone
+  marrow, pituitary), SLC25A2 (liver), ITIH6 (kidney), MYH13 (extraocular and laryngeal
+  muscle) and OTOG (inner ear).
+- **From the candidate sweep, fourteen:** ADAM30, BECN2 and SRY (brain), DEFB106A/B and
+  OBP2A (lung), GALR3 (adrenal gland), SULT6B1 (kidney), MRGPRX1 (sensory ganglia),
+  ASCL4 and TCHHL1 (skin), CCN6 (cartilage), BPIFB3, BPIFB6 and SCGB1C1 (olfactory
+  epithelium).
+
+Several rest on one report or on an abstract; the rubric excludes on that, and the
+limits are recorded with each item.
+
+**Recorded findings and family rules do not change a category.** Eighteen proteins have
+a confirmed finding in a Vital or Protected tissue that falls short of the rubric:
+cultured cells, a database annotation alone, a family-level source, or no retrievable
+quote. LRRC52 (skeletal muscle) and PRKACG (platelets) are the closest calls. Six family
+rules name proteins by label; olfactory receptors (164 candidates) and bitter taste
+receptors (8) point to Protected tissues. **Olfactory receptors were not reviewed gene
+by gene**, so they stay candidates while BPIFB3, with per-gene olfactory RNA, does not.
+The [candidate filters](target-filters.md) can remove recorded proteins by tier.
 
 **41 proteins that were Unsafe only through the pooled 1% flag are candidates
 again, including CSAG1, PABPC3 and NKX2-6.** None has a gene-specific report of
@@ -165,41 +218,42 @@ separate evidence fields.
 ## Cancer evidence
 
 For a protein, let **N** be the highest supported measurement in a declared,
-compatible healthy-tissue/cell panel, excluding the specifically allowed
-reproductive and Disposable compartments. Let **T** be its value in a qualified
-tumor sample. RNA qualifies through either route:
+compatible healthy-tissue/cell panel, excluding the reproductive and Disposable
+compartments, and **D** the highest Disposable value. Let **T** be its value in a
+qualified tumor sample. **Cancer RNA qualifies when one tumor sample has
+`T ≥ 10 × max(N, D, 1)`.** That is the only route.
 
-1. **Repeated expression:** at least two independent patients each have
-   `T ≥ 1` and `T > N`.
-2. **One strongly enriched tumor:** at least one sample has
-   `T ≥ 10 × max(N, 1)`.
+- **Any comparable cohort counts:** every tumor cohort view with native gene TPM
+  (129 views), one sample at a time. Patient identity is not needed.
+- **Germ cell tumors do not count.** A testicular germ cell tumor carries the germline
+  program of its lineage; normal testis, not somatic tissue, is its comparison.
+- **The floor of 1 TPM** keeps trace expression from qualifying against a zero normal
+  value: a protein with N below 1 needs a tumor at 10 TPM or more.
+- **Reproductive, placental and fetal tissue is never in N.** Those are the
+  Reproductive Antigen route.
 
-The values use the panel's declared native TPM, nTPM or pTPM scale. The second
-route therefore requires at least 10 units when N is below 1. The floor prevents
-trace expression from qualifying against a zero normal measurement. Equality to
-N does not pass the repeated route; equality to the tenfold threshold passes
-the single-tumor route. Two samples from the same patient count once.
+| Highest non-reproductive value max(N, D) | One tumor sample needs |
+|---:|---|
+| 0 | ≥10 |
+| 0.4 | ≥10 |
+| 1 | ≥10 |
+| 3 | ≥30 |
+| 8 | ≥80 |
 
-| Highest eligible normal value | Two independent tumors | One tumor |
-|---:|---|---|
-| 0 | Each ≥1 | ≥10 |
-| 0.4 | Each ≥1 | ≥10 |
-| 1 | Each >1 | ≥10 |
-| 3 | Each >3 | ≥30 |
-| 8 | Each >8 | ≥80 |
+`tumor_fold` on each row is the highest tumor over max(N, D, 1). Independent patients
+and samples above N are still counted on each row; they admit nothing. One sample can
+admit a protein: `tumor_top_sample` names it. The most frequent top sample is one
+Hodgkin lymphoma sample with no documented patient (GSE120328), the best tumor for 31
+Cancer Antigens.
 
-These are selection conventions. Passing either route still requires the shared
-eligibility screen. A tumor at 100 does not cancel an exclusion from normal cells
-at 20. The two-tumor route can pass with a small difference above N; it establishes
-repeated elevation, not a large fold change or statistical significance.
+Passing the rule still requires the shared eligibility screen. A tumor at 100 does not
+cancel an exclusion from normal cells at 20.
 
 ![Tumor expression thresholds](audits/target-selection-20261110/tumor-rule.svg)
 
-The [threshold comparison](audits/target-selection-20261109/thresholds/index.md)
-tested 516 combinations of abundance, enrichment, percentile and cap rules. Moving
-the one-tumor route from fivefold to tenfold kept 431 of 432 published cancer
-nominations in the draft and reduced the proteins that depend on their single
-largest sample from 45 to 35.
+The earlier [threshold comparison](audits/target-selection-20261109/thresholds/index.md)
+tested 516 combinations of abundance, enrichment, percentile and cap rules against the
+2026-11-09 draft.
 
 **Use compatible measurements.** A comparison records its source versions,
 quantification and normalization methods, context panel and sample identities.
@@ -218,6 +272,26 @@ proteoform attribution cannot supply qualifying tumor observations.
 Reviewed reliable tumor protein remains a separate positive cancer-evidence route,
 with exact identity, reagent or peptide scope and source citations. Qualitative
 IHC is not converted to an RNA fold change.
+
+## Home tissue the panels do not resolve
+
+**A protein whose normal home is a tissue no expression panel resolves is a Target
+candidate only with reproductive or developmental evidence. Otherwise it is
+Other:Tissue.** Cancer evidence means tumor expression above every measured normal
+tissue. For these proteins the one tissue that matters was never in the comparison.
+
+| | |
+|---|---|
+| Tissues | Olfactory epithelium, nasal mucosa, taste bud, hair follicle, dental pulp. Nose and tooth are absent from the panels; bulk skin and tongue dilute hair follicle and taste buds |
+| How a home is recorded | A family rule (olfactory, trace-amine and taste receptors, hair keratins and keratin-associated proteins), a recorded literature finding, or the [nose and skin reference](target-filters.md#normal-nose-and-skin-which-the-expression-panels-do-not-sample) |
+| Without reproductive evidence | Other:Tissue: 119 proteins. 87 olfactory receptors, 20 hair keratins and keratin-associated proteins, 6 bitter taste receptors, TAS1R2, TAAR9, BPIFB3 and BPIFB6 (olfactory epithelium), DSPP and PANX3 (tooth) |
+| With reproductive evidence | Category unchanged; the tissue stays on the row and the candidate filters act on its tier. 41 proteins: 26 CTA and 15 Reproductive Antigen only |
+
+The rule does not depend on the tissue's tier, and it makes nothing Unsafe: these
+proteins are tissue-specific, not shown to be dangerous. Fourteen of the 119 have a
+published target nomination. PANX3 has a tumor at 1,388 TPM; it moves because its
+recorded home is dental pulp. Members of these families whose best tumor is below 10x
+are Other:Expression instead.
 
 ## Reproductive and developmental evidence
 
@@ -249,6 +323,7 @@ After the shared screen, cancer and reproductive evidence are assessed independe
 | Yes | No qualifying evidence recorded | **Cancer Antigen only** |
 | No qualifying evidence recorded | Yes | **Reproductive Antigen only** |
 | No | No | **Other:Expression** |
+| Yes, but the home tissue was never compared | No | **Other:Tissue** |
 
 An unassessed association remains marked unassessed. It does not erase a qualified
 membership in the other set. If neither route qualifies and a route is unassessed,
@@ -318,11 +393,11 @@ links = cta_literature.attestations("ENSG00000183128")
 The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
-1 unit, resolves tumor locus identities and counts confirmed independent patients.
+1 unit, resolves tumor locus identities and finds the best tumor at 10 × max(N, D, 1).
 All 949 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
-The 130 included tumor cohort views are deduplicated by physical sample and known
+The 129 included tumor cohort views (germ cell tumors left out) are deduplicated by physical sample and known
 participant identifiers.
 
 These are source-native gene TPM comparisons, without cross-study batch correction.

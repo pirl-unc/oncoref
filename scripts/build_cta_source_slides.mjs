@@ -102,7 +102,7 @@ table(s,[['Assessment','Question','Current rule'],['Safety','Concerning normal e
 note(s,'Only safety establishes Unsafe. Coverage and normal review holds remain explicit in assessment_status.',580,25);
 }
 {
-const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and an RNA- or IHC-supported positive reference. Thymus is excluded from concentration; its hazard tier remains Protected. Supported embryonic evidence retains its separate route with unassessed concentration.');
+const s=slide('Diffuse expression is an identity question','HPA profile identity','The old normal-maximum veto is removed. Diffuseness averages N/(N+R) across fixed weighted normal contexts, including Disposable. The active 10% adult/placental identity boundary requires complete HPA measurements and an RNA- or IHC-supported positive reference. Thymus is excluded from concentration; its tier remains Protected. Supported embryonic evidence retains its separate route with unassessed concentration.');
 table(s,[['Term','Meaning'],['N','HPA v23 normal-tissue nTPM'],['R','Highest Reproductive nTPM in HPA v23 (adult/placental)'],['N / (N + R)','Average across 29 organs / 38 contexts; thymus excluded'],['Active boundary','Average >10%, with a supported positive R and complete comparison']],{widths:[335,817],size:27,h:320,y:170});
 const example=data.concentration_example;
 note(s,`${example.label}: ${example.classification} (${example.unsafe_reasons}); diffuseness ${example.diffuseness_pct.toFixed(2)}%. Embryonic concentration remains unassessed.`,565,26);
@@ -150,7 +150,7 @@ text(s,'One boundary: above-cutoff Vital / Protected is Unsafe',64,500,1152,48,2
 note(s,'Differentiated bowel cells and fibroblasts use Protected. Crypt progenitors use Vital. Equality passes.',568,25);
 }
 {
-const s=slide('Normal-tissue hazard ontology','Bulk and cellular consequence','Central registry and full evidence ledger: https://pirl-unc.github.io/oncoref/audits/tissue-hazards-1.29.0/ . Adult human qualitative policy. AT2 evidence: https://pmc.ncbi.nlm.nih.gov/articles/PMC4821031/ . Club-cell depletion: https://pmc.ncbi.nlm.nih.gov/articles/PMC3056226/ . Ciliated-cell depletion: https://pmc.ncbi.nlm.nih.gov/articles/PMC4521991/ .');
+const s=slide('Normal-tissue tier ontology','Bulk and cellular consequence','Central registry and full evidence ledger: https://pirl-unc.github.io/oncoref/audits/tissue-hazards-1.29.0/ . Adult human qualitative policy. AT2 evidence: https://pmc.ncbi.nlm.nih.gov/articles/PMC4821031/ . Club-cell depletion: https://pmc.ncbi.nlm.nih.gov/articles/PMC3056226/ . Ciliated-cell depletion: https://pmc.ncbi.nlm.nih.gov/articles/PMC4521991/ .');
 table(s,[['Tier','Examples','Key interpretation'],['Vital','AT1/AT2, club/basal, crypt progenitors','Function and regenerative reserve'],['Protected','Ciliated/goblet, fibroblasts, skin','Persistent injury and uncertain control'],['Manageable','Thyroid, mature B cells','Defined compensation precedent'],['Disposable','Cutaneous pigment, hair follicles','Narrow anatomical allowance']],{widths:[230,455,467],size:25,h:350});
 note(s,'Bulk retains organ concern. Recognition and reproductive membership are separate. Protected rare-cell findings create a review hold.',570,25);
 }

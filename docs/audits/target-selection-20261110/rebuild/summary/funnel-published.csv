@@ -5,7 +5,9 @@ Cell-type cluster RNA (HPA single cell),174,595,1453.0
 Sorted immune-cell RNA,25,570,898.0
 Rare-cell RNA established by donor,68,502,85.0
 Normal-tissue protein (IHC),19,483,619.0
-Curated or published normal expression,7,476,7.0
-Adult cornea RNA,1,475,628.0
-"Incomplete coverage, identity or translation",36,439,
-Nested or Unsafe-contained sequence,7,432,
+Curated or published normal expression,10,473,10.0
+Adult cornea RNA,1,472,628.0
+"Incomplete coverage, identity or translation",36,436,
+Nested or Unsafe-contained sequence,7,429,
+No qualifying expression or bounds fail,3,426,
+Home tissue no panel resolves,14,412,

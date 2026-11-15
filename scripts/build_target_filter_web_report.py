@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from oncoref import target_curation, target_selection
+from oncoref import target_curation, target_selection, tissue_tiers
 from oncoref import target_filters as tf
 from oncoref.version import __version__
 
@@ -29,7 +29,6 @@ COLORS = {
 MODES = ("loose", "standard", "strict")
 LAYER_NAMES = {
     "off_target": "Off target",
-    "warnings": "Warnings",
     "curation": "Curation",
     "sets": "Sets",
     "papers": "Papers",
@@ -104,6 +103,10 @@ def known_ctas(measured, applied):
 
 def main():
     measured = tf.measures(target_selection.results())
+    # Reported for reading; no knob acts on it.
+    measured["off_target_ntpm"] = measured[["healthy_maximum_ntpm", "disposable_max_ntpm"]].max(
+        axis=1, skipna=False
+    )
     candidates = measured[measured.is_target_candidate]
     applied = {mode: tf.apply(f, measured) for mode, f in tf.FILTER_MODES.items()}
     counts = measured.category.value_counts()
@@ -151,7 +154,6 @@ def main():
         for mode in MODES
     )
 
-    comps = target_curation.compartments().set_index("compartment")
     removed_by = {
         "vital": "<code>standard</code>, <code>strict</code>",
         "protected": "<code>strict</code>",
@@ -161,51 +163,67 @@ def main():
     tier_rows = []
     for tier in target_curation.TIERS:
         rows = candidates[candidates.curated_tier.eq(tier)]
-        keys = sorted(
-            {
-                k
-                for text in rows.curated_compartments
-                for k in text.split("; ")
-                if comps.tier[k] == tier
-            }
+        tissues = sorted(
+            {t.split(": ")[0] for text in rows.curated_compartments for t in text.split("; ")}
         )
-        tier_rows.append(
-            (tier.capitalize(), len(rows), esc(", ".join(comps.label[keys])), removed_by[tier])
-        )
-    proposed = comps[comps.tier_source == "proposed"]
+        tier_rows.append((tier.capitalize(), len(rows), esc(", ".join(tissues)), removed_by[tier]))
+    added = target_curation.compartments()
+    references = tissue_tiers.references().set_index("reference_id").url
     proposed_rows = [
-        (esc(r.label), r.tier.capitalize(), r.confidence, esc(r.tier_references))
-        for r in proposed.itertuples()
+        (
+            esc(r.label),
+            r.tier.capitalize(),
+            r.confidence,
+            ", ".join(f'<a href="{references[k]}">{esc(k)}</a>' for k in r.references),
+        )
+        for r in added.itertuples()
     ]
     families = target_curation.families()
+    family_counts = candidates.literature_family.value_counts()
     family_rows = [
         (
             esc(r.label),
-            int(candidates.protein_group_label.str.match(r.pattern).sum()),
-            esc(comps.label[r.compartment]),
-            r.tier.capitalize() if r.acts else f"{r.tier.capitalize()} (recorded only)",
+            int(family_counts.get(r.id, 0)),
+            esc(r.tissue),
+            r.tier.capitalize() if r.filter_acts else f"{r.tier.capitalize()} (recorded only)",
             esc(r.sources),
         )
         for r in families.itertuples()
     ]
-    acting = target_curation.findings()
-    acting = acting[acting.acts.astype(str).str.lower().eq("true")]
-    acting = acting[
-        acting.tier.isin(["vital", "protected"]) & ~acting.gene.str.match(r"^(OR\d|TAS2R)")
-    ]
+    entries = target_curation.entries()
+    excluded = entries[entries.effect.eq("exclude") & entries.review.eq("candidate_sweep")]
     finding_rows = [
         (
-            esc(r.gene),
-            r.tier.capitalize(),
-            esc(r.tissue),
-            esc(r.claim[:260]),
-            esc(r.best_source[:120]),
+            esc(r.protein),
+            r.tissue_tier.capitalize(),
+            esc(r.decision_tissue),
+            esc(r.decision_reason),
+            " ".join(
+                f'<a href="{esc(u)}">source {i}</a>'
+                for i, u in enumerate(r.sources.split(" | ")[:2], 1)
+            ),
         )
-        for r in acting.drop_duplicates("gene")
-        .sort_values(["tier", "gene"], ascending=[False, True])
-        .itertuples()
+        for r in excluded.sort_values(
+            ["tissue_tier", "protein"], ascending=[False, True]
+        ).itertuples()
     ]
-    loci = target_curation.readthrough()
+    recorded = entries[
+        entries.effect.eq("none") & entries.recorded_tier.isin(["vital", "protected"])
+    ]
+    recorded_rows = [
+        (
+            esc(r.protein),
+            r.recorded_tier.capitalize(),
+            esc(r.recorded_tissue),
+            esc(r.decision_reason),
+        )
+        for r in recorded.sort_values(
+            ["recorded_tier", "protein"], ascending=[False, True]
+        ).itertuples()
+    ]
+    loci = target_curation.readthrough().drop_duplicates("entity_id")
+    loci = loci.merge(measured[["entity_id", "classification"]], on="entity_id")
+    moved = loci[loci.classification.eq("Other:Sequence")]
 
     genes, known = known_ctas(measured, applied)
     known_counts = known.category.value_counts()
@@ -234,9 +252,7 @@ def main():
             esc(r.protein_group_label),
             pill(r.category),
             f"{r.off_target_tpm:.1f}" if pd.notna(r.off_target_tpm) else "",
-            ""
-            if pd.isna(r.independent_patients_above_normal)
-            else f"{int(r.independent_patients_above_normal):,}",
+            "" if pd.isna(r.tumor_fold) else f"{r.tumor_fold:,.0f}",
             int(r.papers_cta),
             esc(r.curated_tier),
             outcome(r.loose),
@@ -254,6 +270,7 @@ def main():
             "Unsafe_reasons",
             "off_target_tpm",
             "off_target_ntpm",
+            "tumor_fold",
             "independent_patients_above_normal",
             "papers_cta",
             "curated_tier",
@@ -270,7 +287,7 @@ def main():
 <p><strong>Of {total:,} proteins assessed, {len(candidates)} are Target candidates.
 Filter modes narrow them to {mode_rows[1][1]}, {mode_rows[2][1]} and {mode_rows[3][1]}.</strong></p>
 <p class="status">OncoRef {__version__} · catalog <code>{target_selection.definition()["policy_id"]}</code> ·
-filters <code>{tf.FILTER_POLICY_ID}</code> · curation <code>{target_curation.registry()["policy"]}</code>.<br>
+filters <code>{tf.FILTER_POLICY_ID}</code> · tissue-tier updates <code>{target_curation.compartments().updates_id.iloc[0][-12:]}</code>.<br>
 These are outputs of screening rules. They are not validated tumor antigens.</p>
 <p><a href="index.md">Full filter report</a> · <a href="normal-function-sweep.md">Literature sweep</a> ·
 <a href="../../target-filters.md">Rules reference</a> · <a href="../target-selection-20261110/report.html">Catalog rules</a> ·
@@ -282,30 +299,43 @@ the first three rows.</p>
 {table(["Category", "Proteins", ""], category_rows, numeric=(1,))}
 
 <h2>2. Catalog funnel</h2>
-<p>How {total:,} proteins become {len(candidates)} candidates. Each step removes proteins into the category shown.</p>
+<p>How {total:,} proteins become {len(candidates)} candidates. Each step removes proteins into the category shown.
+A Cancer Antigen needs one tumor sample, outside germ cell tumors, at 10 × every non-reproductive normal value.</p>
 {table(["Step", "Removed into", "Removed", "Remaining", ""], funnel_rows, numeric=(2, 3))}
 
 <h2>3. Filter modes</h2>
 <p>Each mode keeps a subset of the one before. Every mode keeps {", ".join(tf.POSITIVE_CONTROLS)}.
-Categories are the ones after the evidence knobs have tightened each set.</p>
+Categories are the ones after the fold knob has tightened Cancer Antigens.</p>
 {table(["Filter mode", "Kept", *CATEGORIES[:3], ""], mode_rows, numeric=(1, 2, 3, 4))}
 <p>Candidates remaining after each layer, in order:</p>
 {table(["Filter mode", "Start", *LAYER_NAMES.values()], layer_rows, numeric=tuple(range(1, 8)))}
 {rule_blocks}
 
-<h2>4. Curation layer</h2>
-<p>Cited literature places some candidates in normal adult tissue that the expression panels do not
-sample. Each tissue carries a tier from the hazard registry, or a cited proposal where the registry had none.</p>
-{table(["Curated tier", "Candidates", "Tissues", "Removed in"], tier_rows, numeric=(1,))}
+<h2>4. Curation: one set of records for catalog and filters</h2>
+<p>The catalog and the filters read the same literature review and the same tissue-tier registry.
+A gene-specific report in normal adult Vital or Protected tissue, with a quote retrieved from the source,
+makes a protein Unsafe in the catalog. A confirmed finding that falls short of that, a family rule by
+name or the nose and skin reference is recorded with its tier. When that home is a tissue no panel
+resolves and no reproductive evidence qualifies, the catalog makes the protein Other:Tissue; otherwise
+only the filters act on the tier.</p>
+<h3>Made Unsafe by the candidate literature sweep</h3>
+{table(["Protein", "Tier", "Tissue", "Basis", "Sources"], finding_rows)}
+<h3>Recorded in a Vital or Protected tissue, still a candidate</h3>
+{table(["Protein", "Tier", "Tissue", "Why it does not meet the rubric"], recorded_rows)}
+<h3>What the curation filter layer removes</h3>
+{table(["Recorded tier", "Candidates", "Tissues", "Removed in"], tier_rows, numeric=(1,))}
 <h3>Family rules</h3>
-{table(["Family", "Candidates", "Normal site", "Tier", "Sources"], family_rows, numeric=(1,))}
-<h3>Tiers proposed for tissues the registry did not cover</h3>
-{table(["Compartment", "Proposed tier", "Confidence", "References"], proposed_rows)}
-<h3>Single proteins with a confirmed finding in a Vital or Protected tissue</h3>
-{table(["Protein", "Tier", "Where", "Finding", "Source"], finding_rows)}
+<p>A family member without reproductive evidence is Other:Tissue in the catalog when the family's home is a tissue no panel resolves. The counts are the members that remain candidates.</p>
+{table(["Family", "Candidates", "Tissue", "Tier", "Sources"], family_rows, numeric=(1,))}
+<h3>Tissues added to the tissue-tier registry</h3>
+<p>Written from abstracts on 2026-11-12. Olfactory epithelium moved to Manageable on 2026-11-15 on the
+oncology precedent: anosmia is graded at the lowest severity and accepted in standard cancer treatment
+(<a href="../../tissue-tiers.md">tissue tiers</a>).</p>
+{table(["Tissue", "Tier", "Confidence", "References"], proposed_rows)}
 <h3>Read-through loci</h3>
-<p>{len(loci)} candidates share exons with two or more other protein-coding genes and are removed in every
-mode but <code>all</code>: {esc(", ".join(loci.protein_group_label))}.</p>
+<p>{len(loci)} catalog loci have every coding transcript joining two separate genes. The catalog's sequence
+check places {len(moved)} of them in Other:Sequence; the rest are Unsafe or Other for another reason.
+Other:Sequence: {esc(", ".join(sorted(moved.protein_group_label)))}.</p>
 
 <h2>5. Where the known CTAs end up</h2>
 <p>CTpedia lists {genes} genes. They map to {len(known)} catalog proteins, because identical copies are
@@ -318,7 +348,7 @@ grouped into one protein.</p>
 <p class="note">A mode column shows “kept” or the first filter layer that removes the protein.</p>
 <input id="q" placeholder="Filter by name, category or reason" oninput="f(this.value)">
 <div class="scroll" id="known">
-{table(["Protein", "Category", "Off-target TPM", "Tumors above normal", "CTA papers", "Curated tier", "loose", "standard", "strict", "Unsafe reasons"], known_rows, numeric=(2, 3, 4))}
+{table(["Protein", "Category", "Off-target TPM", "Tumor fold", "CTA papers", "Curated tier", "loose", "standard", "strict", "Unsafe reasons"], known_rows, numeric=(2, 3, 4))}
 </div>
 <script>function f(q){{q=q.toLowerCase();document.querySelectorAll('#known tbody tr').forEach(function(r){{
 r.style.display=r.textContent.toLowerCase().indexOf(q)<0?'none':''}})}}</script>

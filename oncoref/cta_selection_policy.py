@@ -27,7 +27,7 @@ from .cell_rna_policy import EXPECTED_UNITS, GRADES, NEUTRAL_REPRODUCTIVE_IMMUNE
 from .compartment_rna_policy import IHC_RANKS
 from .cta_funnel import EvidenceLayer, FunnelResult
 from .expression_diffuseness import MAX_DIFFUSENESS
-from .tissue_hazards import context_tiers
+from .tissue_tiers import context_tiers
 
 POLICY_ID = "oncoref.cta-selection.2026-11-08.1"
 TIER_BASES = {"vital": 4.0, "protected": 8.0, "manageable": 16.0}
@@ -288,7 +288,7 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
 
     Equality passes. Source-specific support statistics are supplied by adapters.
     CP10K has a nominal numerical /100 policy, not a biochemical TPM conversion.
-    Adult human tissue and cell tiers come from the central hazard registry.
+    Adult human tissue and cell tiers come from the central tissue-tier registry.
     Protein observations are assessed in their own layer, avoiding double counts.
     Reviewed TCR-T evidence may add one RNA ladder step, capped at Enhanced.
     This never relabels IHC, supplies coverage, or overrides protein/clinical injury.
@@ -351,7 +351,7 @@ def assess_contexts(contexts: pd.DataFrame) -> pd.DataFrame:
     normal = d.selection_tier.isin(TIER_BASES) & d.mapping_status.eq("mapped")
     d["compartment_basis"] = np.where(
         d.selection_tier.ne(d.category) & normal,
-        "central_tissue_hazard_registry",
+        "central_tissue_tier_registry",
         "anatomical_default",
     )
     d["baseline_ceiling"] = (

@@ -113,6 +113,10 @@ oncoref = [
     "data/cta-membership-paper-receipts.json",
     "data/cta-literature.json.gz",
     "data/cta-literature-followup.json",
+    "data/normal-expression-literature.json",
+    "data/data-file-renames.json",
+    "data/nose-skin-reference.json",
+    "data/rna-ihc-calibration.json",
 ]
 
 [tool.setuptools.exclude-package-data]
@@ -136,6 +140,7 @@ line-length = 100
 src = ["oncoref", "tests"]
 exclude = [
     ".git",
+    "tests/fixtures/release-1.37-inputs",
     ".venv",
     "__pycache__",
     "build",
