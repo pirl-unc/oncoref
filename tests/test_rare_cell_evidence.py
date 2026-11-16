@@ -116,6 +116,18 @@ def test_literature_review_covers_every_dependent_candidate_and_follows_its_rubr
     ]
     assert dependent.literature_effect.eq("none").all()
     unreviewed = catalog[catalog.is_target_candidate & catalog.literature_effect.ne("none")]
+    # A later source-specific adjudication can resolve a held candidate outside
+    # the earlier literature sweep; it must be in the shared finding ledger.
+    from oncoref import gene_knowledge
+
+    findings = gene_knowledge.findings(include_updates=True)
+    resolved = findings[
+        findings.supersedes.map(bool) & findings.interpretation_status.eq("rejected")
+    ]
+    resolved_genes = {g for ids in resolved.gene_ids for g in ids}
+    unreviewed = unreviewed[
+        ~unreviewed.member_gene_ids.map(lambda ids: set(json.loads(ids)) <= resolved_genes)
+    ]
     assert unreviewed.protein_group_label.tolist() == ["FSCB"]
     provenance = json.loads((DATA / "rare-cell-evidence.json").read_text())
     assert provenance["literature_sha256"] == sha(DATA / "normal-expression-literature.json")
