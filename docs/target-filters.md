@@ -29,7 +29,7 @@ category. [Full rules](target-selection.md).
 |---|---|---|
 | Shared screen | IHC-dependent RNA ceilings of 4 / 8 / 16 by tissue tier, immune and single-cell cluster rules, established rare-cell RNA, coverage, identity, sequence (read-through loci included), Disposable at most 32 | 1 `off_target` |
 | Published normal expression and home tissue | Every candidate reviewed. A quoted, gene-specific report in a Vital or Protected tissue is Unsafe; weaker findings, family rules and the nose and skin reference record a home tissue. A home no panel resolves needs reproductive evidence (Other:Tissue) | 2 `curation` |
-| Cancer evidence | One tumor sample, outside germ cell tumors, at 10 × max(N, Disposable, 1) | 3 `sets` (`min_tumor_fold`) |
+| Cancer evidence | One QC-passing tumor sample, including TGCT, at 10 × max(N, Disposable, 1) | 3 `sets` (`min_tumor_fold`) |
 | Reproductive evidence | A reproductive or developmental RNA route at 1 or more, or reliable protein | none |
 | Category | CTA = both. Cancer Antigen only. Reproductive Antigen only | 3 `sets` (`membership`) |
 | Published support | Recorded, never required | 4 `papers` |
@@ -39,7 +39,7 @@ category. [Full rules](target-selection.md).
 
 1. **A protein is kept only if it passes all five layers.** `filter_failed` names the
    first layer it fails.
-2. **Every default is the catalog.** `TargetFilter()` returns the plain 670 candidates.
+2. **Every default is the catalog.** `TargetFilter()` returns the plain 668 candidates.
 3. **`max_*` means below the value. `min_*` means at least the value.**
 4. **A missing measurement never passes.** Unmeasured is not low.
 5. **Knobs cannot add a protein.** Other and Unsafe proteins stay out, and
@@ -199,10 +199,10 @@ and a test enforces it. Modes are starting points, not policy.
 
 | Filter mode | Kept | CTA | Cancer Antigen only | Reproductive Antigen only |
 |---|---:|---:|---:|---:|
-| `all` | 670 | 453 | 37 | 180 |
-| `loose` | 452 | 341 | 6 | 105 |
-| `standard` | 295 | 235 | 1 | 59 |
-| `strict` | 145 | 145 | 0 | 0 |
+| `all` | 668 | 437 | 34 | 197 |
+| `loose` | 453 | 333 | 6 | 114 |
+| `standard` | 296 | 235 | 1 | 60 |
+| `strict` | 141 | 141 | 0 | 0 |
 
 **Every mode must keep PRAME, NY-ESO-1 and MAGEA4** (`POSITIVE_CONTROLS`); a test fails
 otherwise. No mode raises the fold above the catalog's 10: doing so relabels CTAs as
@@ -211,7 +211,7 @@ Reproductive Antigen only rather than removing anything, so it is left as a knob
 ## The MAGE rule
 
 `strict` drops every protein whose label starts with `MAGE` except
-MAGEA4. **This is a judgment by family name, not a measurement.** Ten of the 17 it drops
+MAGEA4. **This is a judgment by family name, not a measurement.** Eleven of the 18 it drops
 would pass `strict` on their own data. [Per-protein table](audits/target-filters-20261112/index.md#6-the-mage-family).
 
 The reasons sit outside this repo and are not verified against sources here:

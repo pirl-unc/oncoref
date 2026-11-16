@@ -254,9 +254,9 @@ qualified tumor sample. **Cancer RNA qualifies when one tumor sample has
 `T ≥ 10 × max(N, D, 1)`.** That is the only route.
 
 - **Any comparable cohort counts:** every tumor cohort view with native gene TPM
-  (129 views), one sample at a time. Patient identity is not needed.
-- **Germ cell tumors do not count.** A testicular germ cell tumor carries the germline
-  program of its lineage; normal testis, not somatic tissue, is its comparison.
+  (130 views), one sample at a time. Patient identity is not needed.
+- **Passing germ cell tumors count.** The coordinated spermatid-program screen removes
+  libraries that may contain normal testis; lineage alone does not exclude a histology.
 - **The floor of 1 TPM** keeps trace expression from qualifying against a zero normal
   value: a protein with N below 1 needs a tumor at 10 TPM or more.
 - **Reproductive, placental and fetal tissue is never in N.** Those are the
@@ -273,12 +273,11 @@ qualified tumor sample. **Cancer RNA qualifies when one tumor sample has
 `tumor_fold` on each row is the highest tumor over max(N, D, 1). Independent patients
 and samples above N are still counted on each row; they admit nothing. One sample can
 admit a protein: `tumor_top_sample` names it. A documented patient is not required.
-The most frequent top sample is a laser-captured Hodgkin lymphoma library (GSE120328,
-SRS3811196), the best tumor for 37 Cancer Antigens and the only qualifying sample for
-27. Its background is broad (40% of olfactory receptor genes at 5 TPM or more); a
-background check on tumor libraries is
-[proposed](audits/cta-threshold-review-20261116/index.md#tumor-sample-background-proposed-check-not-applied),
-not applied.
+The Hodgkin library SRS3811196 that previously supplied many sole witnesses is now
+excluded by the broad-background check. Every excluded library and its measurements
+remain in the [library QC table](audits/target-selection-20261110/rebuild/library-qc.csv.gz).
+The largest remaining shared top sample and support counts are shown in the
+[current filter audit](audits/target-filters-20261112/index.md).
 
 Passing the rule still requires the shared eligibility screen. A tumor at 100 does not
 cancel an exclusion from normal cells at 20.
@@ -428,10 +427,10 @@ The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
 1 unit, resolves tumor locus identities and finds the best tumor at 10 × max(N, D, 1).
-All 949 proteins passing the prior shared checks have complete native-TPM comparison
+All 918 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
-The 129 included tumor cohort views (germ cell tumors left out) are deduplicated by physical sample and known
+The 130 included tumor cohort views (passing germ cell tumors included) are deduplicated by physical sample and known
 participant identifiers.
 
 These are source-native gene TPM comparisons, without cross-study batch correction.
