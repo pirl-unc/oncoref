@@ -356,7 +356,8 @@ def test_rare_cell_outcomes_distinguish_exclusion_review_and_weak_evidence():
     )
     frame = rare(TWO_STUDIES)
     receipt = policy.assess_rare_cell_rna(frame, mapping_risk=True, confirmed_tissues=set())
-    assert "cannot be attributed" in receipt["findings"][0]["basis"]
+    assert "unresolved locus attribution" in receipt["findings"][0]["basis"]
+    assert receipt["action"] == "review"
     assert set(policy.RARE_CELL_STATUSES) >= {receipt["status"]}
 
 
