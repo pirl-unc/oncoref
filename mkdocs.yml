@@ -8,6 +8,8 @@ nav:
   - Home: index.md
   - Cancer and Reproductive Antigens: target-selection.md
   - Filtering Target candidates: target-filters.md
+  - How CTpedia genes are classified: ctpedia-filtering.md
+  - Tenfold rule review: audits/cta-threshold-review-20261116/index.md
   - Target filter web summary: audits/target-filters-20261112/report.html
   - Target filter report: audits/target-filters-20261112/index.md
   - Normal-function literature sweep: audits/target-filters-20261112/normal-function-sweep.md

@@ -1,0 +1,42 @@
+protein,classification,group,tumor_fold,best_tumor_tpm,best_tumor_cancer,best_sample_flagged,best_sample_olfactory_share,second_sample_fold,samples_ge_5x,cancer_types_ge_5x,blood_cancer_vs_immune_cells,normal_ceiling_tpm,normal_ceiling_context,datasets_at_half_ceiling,fold_without_that_dataset,patients_above_normal,mapping_risk,published_nomination,reproductive_routes
+TEX50,Reproductive Antigen only,one brain dataset,9.96,12.9,BL,False,0.032,2.5,1,1,False,1.3,HPA brain: nucleus tractus solitarii,HPA brain,12.9,5.0,False,False,reproductive_bulk | reproductive_cells
+TEX38,Reproductive Antigen only,normal in two datasets,9.94,32.3,NEC_MERKEL,False,0.013,7.0,6,2,False,3.25,DICE immune: TREG_MEM,DICE immune + Monaco immune,13.5,114.0,False,True,reproductive_bulk | reproductive_cells
+USP26,Reproductive Antigen only,below 10 TPM,9.92,9.9,NEC_MERKEL,False,0.042,7.6,3,3,False,0.2,"HPA brain: transversal temporal gyrus, anterior",,,21.0,False,True,reproductive_cells | reproductive_ihc
+PABPC3,Reproductive Antigen only,one immune dataset,9.91,69.7,BL,False,0.002,9.4,45,7,True,7.03,DICE immune: CD4_STIM,DICE immune,69.7,668.0,True,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+TENT5D,Reproductive Antigen only,below 10 TPM,9.88,9.9,HL,True,0.4,3.0,1,1,False,0.1,HPA tissue: thyroid gland,,,3.0,False,True,reproductive_bulk | reproductive_cells
+CCDC70,Reproductive Antigen only,one brain dataset,9.87,14.8,CLL,False,0.005,7.4,3,3,False,1.5,"HPA brain: hippocampus, CA1",HPA brain,14.8,16.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+C3orf22,Reproductive Antigen only,one immune dataset,9.82,11.8,MBL,False,0.0,8.6,6,4,False,1.21,DICE immune: MONOCYTES,DICE immune,11.8,52.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+SPMAP1,Reproductive Antigen only,one immune dataset,9.82,21.7,B_ALL,False,0.017,4.7,1,1,True,2.21,DICE immune: CD4_STIM,DICE immune,21.7,59.0,False,True,reproductive_bulk | reproductive_cells | developmental_rna
+AMELY,Reproductive Antigen only,below 10 TPM,9.58,9.6,SARC_OS,False,0.0,5.0,2,2,False,0.43,GTEx: Thyroid,,,71.0,True,True,reproductive_cells
+SCP2D1,Reproductive Antigen only,below 10 TPM,9.54,9.5,HL,True,0.4,7.1,3,3,False,0.1,"HPA brain: anterior insular cortex, ventral",,,2.0,False,True,reproductive_bulk | reproductive_cells
+POTEB/2,Reproductive Antigen only,below 10 TPM,9.49,9.5,PRAD,False,0.005,7.3,4,1,False,0.0,DICE immune: b_cell_naive,,,16.0,True,False,reproductive_bulk
+CABS1,Reproductive Antigen only,one other dataset,9.46,28.4,PRAD,False,0.0,1.5,1,1,False,3.0,GTEx: salivary gland,GTEx,25.8,8.0,False,True,reproductive_bulk | reproductive_cells | localized_reproductive_site | reproductive_ihc
+SIGLECL1,Reproductive Antigen only,one immune dataset,9.46,16.1,OV,False,0.0,7.0,2,2,False,1.7,Monaco immune: myeloid DC,Monaco immune,16.1,28.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+CIMAP1A,Reproductive Antigen only,one immune dataset,9.45,15.0,T_ALL,False,0.022,9.0,4,3,True,1.58,DICE immune: MONOCYTES,DICE immune,15.0,67.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+GSC2,Reproductive Antigen only,normal in two datasets,9.34,22.4,NEC_MERKEL,False,0.103,6.5,2,1,False,2.4,HPA brain: pontine raphe nucleus,GTEx + HPA brain,16.0,3.0,False,True,reproductive_bulk | reproductive_cells
+ARSH,Reproductive Antigen only,below 10 TPM,9.32,9.3,SARC_LPS_UNSPEC,False,0.0,6.4,4,3,False,0.42,GTEx: Esophagus_Mucosa,,,144.0,False,False,reproductive_cells
+PRDM14,Reproductive Antigen only,one brain dataset,9.26,15.7,B_ALL,False,0.027,9.2,9,5,False,1.7,HPA brain: vermis,HPA brain,15.7,41.0,False,True,developmental_rna
+GOLGA8T,Reproductive Antigen only,normal in two datasets,9.16,13.7,LAML,False,0.002,8.3,8,3,False,1.5,GTEx: thyroid gland,GTEx + HPA brain + HPA tissue,10.6,221.0,True,False,reproductive_bulk
+ZNF878,Reproductive Antigen only,one immune dataset,9.16,39.4,B_ALL,False,0.005,8.4,18,5,True,4.3,DICE immune: NK,DICE immune,24.6,374.0,True,False,reproductive_bulk | reproductive_cells | developmental_rna
+RFPL3,Reproductive Antigen only,normal in two datasets,9.13,29.2,CLL,False,0.0,7.6,7,1,False,3.2,GTEx: retina,GTEx + HPA brain + Monaco immune,14.6,382.0,True,False,reproductive_bulk | reproductive_cells | developmental_rna
+RTP2,Reproductive Antigen only,one other dataset,9.11,9.7,HL,True,0.4,6.3,4,3,False,1.06,GTEx: Muscle_Skeletal,GTEx,9.7,50.0,True,True,reproductive_bulk | reproductive_cells
+FREY1,Reproductive Antigen only,one immune dataset,9.05,34.9,B_ALL,False,0.025,7.1,4,2,True,3.86,DICE immune: TREG_MEM,DICE immune,34.9,202.0,False,True,reproductive_bulk | reproductive_cells
+RBMXL3,Reproductive Antigen only,one brain dataset,8.97,11.7,NEC_MERKEL,False,0.113,7.5,12,2,False,1.3,HPA brain: arcuate nucleus,HPA brain,11.7,0.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc | developmental_rna
+FAM24A,Reproductive Antigen only,below 10 TPM,8.88,8.9,HL,True,0.4,4.1,1,1,True,0.52,DICE immune: TREG_NAIVE,,,9.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+GOLGA8F,Reproductive Antigen only,below 10 TPM,8.73,8.7,NEC_MERKEL,False,0.045,7.2,3,1,False,0.06,DICE immune: B_CELL_NAIVE,,,11.0,True,False,reproductive_bulk
+SPATA31F1,Reproductive Antigen only,below 10 TPM,8.67,8.7,SARC_MYXFIB,False,0.0,4.7,1,1,False,0.9,HPA brain: area postrema,,,14.0,True,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+CDY2A/B,Reproductive Antigen only,below 10 TPM,8.64,8.6,HL,True,0.4,1.2,1,1,True,0.0,DICE immune: b_cell_naive,,,1.0,True,True,reproductive_bulk | reproductive_ihc
+LITAFD,Reproductive Antigen only,normal in two datasets,8.64,34.6,T_ALL,False,0.017,6.5,6,3,False,4.0,HPA brain: retrosplenial cortex,DICE immune + HPA brain,13.9,55.0,False,False,reproductive_bulk | reproductive_cells | developmental_rna
+DEFB127,Reproductive Antigen only,below 10 TPM,8.53,8.5,B_ALL,False,0.015,8.4,2,2,False,0.1,HPA tissue: kidney,,,11.0,False,False,reproductive_bulk
+CXorf58,Reproductive Antigen only,one immune dataset,8.47,22.9,T_ALL,False,0.03,7.7,3,2,True,2.7,Monaco immune: T-reg,Monaco immune,22.9,18.0,False,True,reproductive_bulk | reproductive_cells
+ZAR1L,Reproductive Antigen only,one immune dataset,8.45,12.1,T_ALL,False,0.02,6.8,4,3,True,1.43,DICE immune: B_CELL_NAIVE,DICE immune,12.1,113.0,False,True,reproductive_cells | developmental_rna
+TMEM269,Reproductive Antigen only,normal in two datasets,8.42,22.9,T_ALL,False,0.022,7.4,2,1,True,2.72,DICE immune: CD4_NAIVE,DICE immune + GTEx + HPA brain + Monaco immune,9.5,175.0,True,False,reproductive_cells | developmental_rna
+C10orf62,Reproductive Antigen only,normal in two datasets,8.36,25.1,SARC_CHOR,False,0.01,6.6,4,3,False,3.0,HPA brain: parieto-temporal junction (white matter),GTEx + HPA brain,16.5,12.0,True,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+RSPH6A,Reproductive Antigen only,normal in two datasets,8.28,37.9,THCA,False,0.002,5.5,4,2,False,4.58,GTEx: Thyroid,GTEx + HPA tissue,8.6,82.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+ENSG00000285566,Reproductive Antigen only,below 10 TPM,8.23,8.2,NET_LUNG,False,0.005,5.9,3,3,False,0.2,HPA brain: nucleus ambiguus,,,11.0,True,False,reproductive_bulk
+PRR30,Reproductive Antigen only,below 10 TPM,8.19,8.2,HL,True,0.4,8.2,2,2,False,0.3,HPA brain: retrosplenial cortex,,,10.0,False,True,reproductive_bulk | reproductive_cells
+ENSG00000237378,Reproductive Antigen only,below 10 TPM,8.16,8.2,HL,True,0.4,6.5,2,2,False,0.7,HPA brain: Kolliker-Fuse nucleus,,,0.0,True,False,reproductive_bulk | developmental_rna
+OR8B3,Reproductive Antigen only,one brain dataset,8.14,9.0,NET_LUNG,False,0.025,4.3,1,1,False,1.1,HPA brain: preoptic area,HPA brain,9.0,3.0,True,False,reproductive_cells
+CATSPER4,Reproductive Antigen only,below 10 TPM,8.09,8.1,T_ALL,False,0.002,5.7,2,2,True,0.57,DICE immune: TFH,,,47.0,False,True,reproductive_bulk | reproductive_cells | reproductive_ihc
+WFDC8,Reproductive Antigen only,normal in two datasets,8.07,15.2,THCA,False,0.002,4.7,1,1,False,1.88,DICE immune: B_CELL_NAIVE,DICE immune + HPA brain,10.8,21.0,False,False,reproductive_bulk | reproductive_cells | reproductive_ihc
+IZUMO2,Reproductive Antigen only,one immune dataset,8.01,39.4,NET_RECTAL,False,0.004,7.9,5,1,False,4.92,DICE immune: TFH,DICE immune,39.4,40.0,True,True,reproductive_bulk | reproductive_cells | developmental_rna

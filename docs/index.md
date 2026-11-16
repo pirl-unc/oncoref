@@ -9,6 +9,8 @@ normal-expression, coverage, translation, expression-bound and sequence checks. 
 [Illustrated rules](audits/target-selection-20261110/report.html) ·
 [Rare normal-cell RNA by donor](audits/normal-cell-atlas-20261110/rare-cell/index.md).
 Curated protein–paper links remain attached to their specific claims.
+[How every CTpedia gene is classified](ctpedia-filtering.md) ·
+[Tenfold rule review: thresholds, near misses, sample background](audits/cta-threshold-review-20261116/index.md).
 
 [Normal-tissue tier ontology](tissue-tiers.md) centralizes cited bulk and cell-subset calls.
 

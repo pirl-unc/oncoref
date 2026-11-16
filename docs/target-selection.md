@@ -33,9 +33,13 @@ non-reproductive normal value, from any comparable TPM cohort except germ cell t
 | Olfactory epithelium | Protected | Manageable, on the oncology precedent ([tissue tiers](tissue-tiers.md#how-a-tier-is-chosen)) |
 | Target candidates | 868 | 670 |
 
-All 24 familiar CTAs that were CTAs remain CTAs; the lowest is AKAP4 at 16 times its
-normal maximum. 153 CTAs become Reproductive Antigen only: 138 have no tumor at 10x,
+All 27 familiar CTAs that were CTAs remain CTAs; the lowest is AKAP4 at 16 times its
+normal maximum. 153 CTAs become Reproductive Antigen only: for 63 no tumor sample
+reaches the 10 TPM minimum, for 75 no tumor reaches ten times a measured normal value,
 and 15 qualified only through germ cell tumors (DAZL, PRDM14, PGK2, PRM2 and others).
+[Every CTpedia gene](ctpedia-filtering.md) and the
+[tenfold rule review](audits/cta-threshold-review-20261116/index.md) show where each
+protein lands and why.
 
 ## What changed on 2026-11-13
 
@@ -242,9 +246,13 @@ qualified tumor sample. **Cancer RNA qualifies when one tumor sample has
 
 `tumor_fold` on each row is the highest tumor over max(N, D, 1). Independent patients
 and samples above N are still counted on each row; they admit nothing. One sample can
-admit a protein: `tumor_top_sample` names it. The most frequent top sample is one
-Hodgkin lymphoma sample with no documented patient (GSE120328), the best tumor for 31
-Cancer Antigens.
+admit a protein: `tumor_top_sample` names it. A documented patient is not required.
+The most frequent top sample is a laser-captured Hodgkin lymphoma library (GSE120328,
+SRS3811196), the best tumor for 37 Cancer Antigens and the only qualifying sample for
+27. Its background is broad (40% of olfactory receptor genes at 5 TPM or more); a
+background check on tumor libraries is
+[proposed](audits/cta-threshold-review-20261116/index.md#tumor-sample-background-proposed-check-not-applied),
+not applied.
 
 Passing the rule still requires the shared eligibility screen. A tumor at 100 does not
 cancel an exclusion from normal cells at 20.
