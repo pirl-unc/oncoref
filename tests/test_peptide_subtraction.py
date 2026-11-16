@@ -35,6 +35,24 @@ def test_indels_and_directed_weighted_substitutions():
     assert (index.matches("ACDEFGHIK").distance == 0.5).any()
 
 
+def test_no_matches_preserve_occurrence_schema_and_provenance():
+    records = pd.DataFrame({"gene_id": ["unsafe1"], "sequence": ["ACDEFGHIK"]})
+    records.attrs["reference"] = "test-reference"
+    for background in (records, records.iloc[:0]):
+        index = PeptideIndex(background)
+        hits = index.matches("WWWWWWWWW")
+        assert hits.empty
+        assert list(hits.columns) == [
+            "gene_id",
+            "query",
+            "matched_peptide",
+            "start",
+            "end",
+            "distance",
+        ]
+        assert hits.attrs["reference"] == "test-reference"
+
+
 @pytest.mark.parametrize(
     "policy",
     [

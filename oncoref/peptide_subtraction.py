@@ -144,6 +144,12 @@ class PeptideIndex:
         ):
             raise ValueError("Every record requires a sequence string")
         self.metadata = dict(records.attrs)
+        self._result_columns = list(
+            dict.fromkeys(
+                [column for column in records.columns if column != "sequence"]
+                + ["query", "matched_peptide", "start", "end", "distance"]
+            )
+        )
         self._segments, self._starts, chunks = [], [], []
         offset = 0
         # Group identical sequences once while retaining every occurrence.
@@ -219,8 +225,7 @@ class PeptideIndex:
                                 "distance": distance,
                             }
                         )
-        columns = ["query", "matched_peptide", "start", "end", "distance"]
-        result = pd.DataFrame(rows) if rows else pd.DataFrame(columns=columns)
+        result = pd.DataFrame(rows, columns=self._result_columns)
         result.attrs.update(
             self.metadata, match_policy=self.policy.as_dict(), background_lengths=self.lengths
         )
