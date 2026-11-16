@@ -160,8 +160,8 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
     assert len(maxima) == summary["assessed_for_cancer_evidence"] == 918
-    assert summary["shared_eligible"] == 847
-    assert summary["expression_bounds"]["fail"] == 15
+    assert summary["shared_eligible"] == 846
+    assert summary["expression_bounds"]["fail"] == 16
     failed = catalog[catalog.expression_bounds_status.eq("fail")]
     assert (
         not failed.is_target_candidate.any()
@@ -313,6 +313,39 @@ def test_same_context_sum_and_missing_member_coverage():
     assert pd.isna(result.loc["heart", "value"])
     with pytest.raises(ValueError, match="Duplicate normal"):
         group_normal_rows(pd.concat([raw, raw.iloc[:1]]), facts, source="test", statistic="mean")
+
+
+def test_expression_bounds_use_current_reproductive_observations(monkeypatch):
+    import rebuild_target_catalog as rebuild
+
+    selected = pd.DataFrame(
+        {"entity_id": ["embryo-lineage", "legacy-only"], "developmental_mean_tpm": [0, 100]}
+    )
+    evidence = pd.DataFrame(
+        {
+            "entity_id": selected.entity_id,
+            "normal_reference_tpm": [1, 1],
+            "tumor_max_tpm": [0.5, 0.5],
+            "reproductive_max_sample_tpm": [20, 0.5],
+        }
+    )
+    normal = pd.DataFrame(
+        {
+            "entity_id": list(selected.entity_id) * 2,
+            "scope": ["disposable", "disposable", "reproductive", "reproductive"],
+            "value": [0, 0, 0.5, 0.5],
+            "qc_pass": True,
+            "identity_resolved": True,
+        }
+    )
+    monkeypatch.setattr(
+        rebuild, "disposable_ntpm", lambda _: pd.Series(0.0, index=selected.entity_id)
+    )
+    result = rebuild.expression_bounds(selected, evidence, normal).set_index("entity_id")
+    assert result.loc["embryo-lineage", "expression_bounds_status"] == "pass"
+    assert result.loc["embryo-lineage", "target_peak_tpm"] == 20
+    assert result.loc["legacy-only", "expression_bounds_status"] == "fail"
+    assert result.loc["legacy-only", "target_peak_tpm"] == 0.5
 
 
 @pytest.mark.parametrize(

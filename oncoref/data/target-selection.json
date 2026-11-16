@@ -111,7 +111,7 @@
         "proteins": 18173
       }
     ],
-    "shared_eligible": 847,
+    "shared_eligible": 846,
     "assessed_for_cancer_evidence": 918,
     "unsafe_changes": {
       "released_unsafe_now_other": 86,
@@ -141,8 +141,8 @@
     },
     "expression_bounds": {
       "unassessed": 18975,
-      "pass": 903,
-      "fail": 15
+      "pass": 902,
+      "fail": 16
     },
     "comparison_required_contexts": [
       "adipose tissue",
@@ -328,6 +328,6 @@
     ],
     "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
   },
-  "data_sha256": "64018f1b5e090d9c4fe38fbbfb7bfcea0f1d2bebc72e91085a1217add2e47911",
+  "data_sha256": "5149d484baed60a4eb03d7f9991bd42db904cc6e24b0c76a341895ce9fe0e3ce",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

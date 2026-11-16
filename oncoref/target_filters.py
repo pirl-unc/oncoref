@@ -9,7 +9,7 @@ their own, change no category and can only remove proteins:
 
 1. **off_target**  a lower ceiling on expression outside tumors and reproductive tissue
 2. **curation**    the tier of a recorded normal home (literature finding, family, reference)
-3. **sets**        a higher tumor fold for Cancer Antigens, then which set to keep
+3. **sets**        enrichment in each compartment, tumor replication, then which set to keep
 4. **papers**      published support
 5. **exclusions**  gene families dropped by name (a judgment, not a measurement)
 
@@ -30,7 +30,7 @@ import pandas as pd
 
 FILTER_POLICY_ID = "oncoref.target-filters.2026-11-16.2"
 
-#: Which set a protein must belong to, after the fold knob has tightened Cancer Antigens.
+#: Which set a protein must belong to after tightening compartment evidence.
 MEMBERSHIPS = {
     "target_candidates": lambda ca, ra: ca | ra,
     "cancer_antigen": lambda ca, ra: ca,
@@ -184,7 +184,7 @@ def measures(table: pd.DataFrame | None = None) -> pd.DataFrame:
     """The catalog plus every quantity a knob reads, before any knob is applied.
 
     ``off_target_tpm``   max(normal reference N, Disposable), native TPM. N is the
-                         catalog's own reference: bulk tissues, GTEx donor medians,
+                         catalog's own reference: HPA samples, bulk summaries, GTEx medians,
                          brain subregions and immune-cell summaries.
     ``off_target_tpm_tissue`` where that TPM value was measured ("" when it is 0).
     ``tumor_fold``       the catalog's highest tumor / max(N, Disposable, 1).
@@ -220,7 +220,7 @@ def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
 
     Returns :func:`measures` plus ``pass_<layer>`` for each layer, ``keep`` (all
     layers pass), ``filter_failed`` (first failing layer, or "") and
-    ``filtered_category`` (the category once the fold knob has tightened Cancer Antigens).
+    ``filtered_category`` (the category after tightening compartment evidence).
     """
     d = measures(table)
     d["pass_off_target"] = (
@@ -229,7 +229,7 @@ def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
         else pd.Series(True, index=d.index)
     )
     d["pass_curation"] = ~d.curated_tier.isin(NORMAL_FUNCTION[f.normal_function])
-    # The fold knob tightens Cancer Antigens; membership is decided afterwards.
+    # Tighten each compartment independently, then select membership.
     cancer = d.is_cancer_antigen & d.tumor_fold.ge(f.min_tumor_fold)
     if f.min_tumor_patients:
         cancer &= d.independent_patients_at_tenfold.ge(f.min_tumor_patients)

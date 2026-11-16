@@ -101,7 +101,7 @@
       "proteins": 18173
     }
   ],
-  "shared_eligible": 847,
+  "shared_eligible": 846,
   "assessed_for_cancer_evidence": 918,
   "unsafe_changes": {
     "released_unsafe_now_other": 86,
@@ -131,8 +131,8 @@
   },
   "expression_bounds": {
     "unassessed": 18975,
-    "pass": 903,
-    "fail": 15
+    "pass": 902,
+    "fail": 16
   },
   "comparison_required_contexts": [
     "adipose tissue",

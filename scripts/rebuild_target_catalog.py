@@ -458,17 +458,20 @@ def expression_bounds(selected, evidence, normal):
     """Target maximum and Disposable caps for proteins passing the prior checks."""
     rows = normal[normal.qc_pass & normal.identity_resolved & normal.value.notna()]
     by_scope = rows.groupby(["scope", "entity_id"]).value.max()
-    b = selected[["entity_id", "developmental_mean_tpm"]].merge(
-        evidence[["entity_id", "normal_reference_tpm", "tumor_max_tpm"]], on="entity_id"
+    b = selected[["entity_id"]].merge(
+        evidence[
+            ["entity_id", "normal_reference_tpm", "tumor_max_tpm", "reproductive_max_sample_tpm"]
+        ],
+        on="entity_id",
     )
     b["disposable_max_tpm"] = b.entity_id.map(by_scope.get("disposable", pd.Series(dtype=float)))
     b["reproductive_max_tpm"] = b.entity_id.map(
         by_scope.get("reproductive", pd.Series(dtype=float))
     )
     b["disposable_max_ntpm"] = b.entity_id.map(disposable_ntpm(selected))
-    b["target_peak_tpm"] = b[
-        ["tumor_max_tpm", "developmental_mean_tpm", "reproductive_max_tpm"]
-    ].max(axis=1)
+    # Use the same qualified observations as the two enrichment decisions.
+    # Historical developmental averages remain annotations, not admission evidence.
+    b["target_peak_tpm"] = b[["tumor_max_tpm", "reproductive_max_sample_tpm"]].max(axis=1)
     measured = b[["normal_reference_tpm", "disposable_max_tpm", "disposable_max_ntpm"]].notna()
     ceiling = b[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1)
     b["target_maximum_pass"] = b.target_peak_tpm.ge(target_selection.DETECTION_FLOOR) & b[
@@ -482,7 +485,7 @@ def expression_bounds(selected, evidence, normal):
         "unassessed",
         np.where(b.target_maximum_pass & b.disposable_cap_pass, "pass", "fail"),
     )
-    return b.drop(columns=["developmental_mean_tpm", "normal_reference_tpm", "tumor_max_tpm"])
+    return b.drop(columns=["normal_reference_tpm", "tumor_max_tpm", "reproductive_max_sample_tpm"])
 
 
 def participant_id(namespace, sample):
