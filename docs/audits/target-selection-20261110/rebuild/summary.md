@@ -1,12 +1,18 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-15.1`, 19,893 human protein records. **453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-16.1`, 19,893 human protein records. **437 CTA, 34 Cancer Antigen only, 197 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+
+## Antigen membership
+
+![Antigen sets](summary/antigen-sets.png)
+
+CTA is the intersection. Reproductive-only proteins have no qualifying cancer evidence; the union name does not certify tumor targeting. Unsafe is a separate subtraction background.
 
 ## Rule-derived sets and published nominations
 
 ![Set overlap](summary/venn.png)
 
-Of 453 CTA, 308 are published nominations and 145 are not. 1,821 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 36 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 437 CTA, 302 are published nominations and 135 are not. 1,820 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 35 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
@@ -24,10 +30,10 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Normal-tissue protein (IHC) | 50 | 1,694 |
 | Curated or published normal expression | 49 | 1,645 |
 | Adult cornea RNA | 5 | 1,640 |
-| Incomplete coverage, identity or translation | 661 | 979 |
-| Nested or Unsafe-contained sequence | 62 | 917 |
-| No qualifying expression or bounds fail | 128 | 789 |
-| Home tissue no panel resolves | 119 | 670 |
+| Incomplete coverage, identity or translation | 660 | 980 |
+| Nested or Unsafe-contained sequence | 62 | 918 |
+| No qualifying expression or bounds fail | 167 | 751 |
+| Home tissue no panel resolves | 83 | 668 |
 
 ![Published nominations](summary/funnel-published.png)
 
@@ -41,10 +47,10 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Normal-tissue protein (IHC) | 19 | 483 |
 | Curated or published normal expression | 10 | 473 |
 | Adult cornea RNA | 1 | 472 |
-| Incomplete coverage, identity or translation | 36 | 436 |
-| Nested or Unsafe-contained sequence | 7 | 429 |
-| No qualifying expression or bounds fail | 3 | 426 |
-| Home tissue no panel resolves | 14 | 412 |
+| Incomplete coverage, identity or translation | 35 | 437 |
+| Nested or Unsafe-contained sequence | 7 | 430 |
+| No qualifying expression or bounds fail | 7 | 423 |
+| Home tissue no panel resolves | 10 | 413 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 
@@ -98,7 +104,7 @@ One value per protein on each source's own scale; scales are never pooled. Count
 
 - Required normal coverage incomplete: 400
 - Identity or translation unresolved: 102
-- Normal signal blocks admission (not Unsafe): 159
+- Normal signal blocks admission (not Unsafe): 158
 - Patient identity unresolved in tumor samples: 0
 
 A protein can use several routes, so route counts exceed set sizes.

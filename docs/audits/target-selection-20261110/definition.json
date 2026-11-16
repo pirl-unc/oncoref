@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-15.1",
+  "policy_id": "oncoref.target-selection.2026-11-16.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -21,7 +21,7 @@
     "Cancer Antigens": "eligible AND cancer evidence qualifies",
     "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
     "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
-    "Target candidates": "Cancer Antigens UNION Reproductive Antigens"
+    "Candidate antigen proteins": "Cancer Antigens UNION Reproductive Antigens"
   },
   "precedence": [
     "Unsafe",
@@ -92,10 +92,8 @@
     "normal_reference": "N: maximum QC-passing, identity-resolved measurement in the declared compatible normal panel, excluding Disposable and reproductive compartments. D is taken separately; reproductive, placental and fetal compartments are never compared.",
     "descriptive": "Independent patients and samples above N are reported. They admit nothing.",
     "excluded_tumors": {
-      "codes": [
-        "TGCT"
-      ],
-      "reason": "Germ cell tumors carry the germline program of their lineage, so their expression of reproductive genes is not cancer-specific activation."
+      "codes": [],
+      "reason": "No histology is excluded wholesale. TGCT libraries that pass the coordinated spermatid-program screen may supply cancer evidence."
     },
     "comparability": "One documented comparison scale and complete required normal contexts. Equal unit names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling.",
     "missing_reference": "unassessed, never zero",

@@ -17,3 +17,4 @@ MAGEB4,CTA,0.0,0.0,29.0,1,,papers,papers
 MAGEB5,Reproductive Antigen only,0.039186,0.0,2.0,0,,papers,sets
 MAGEB6B,Cancer Antigen only,0.0,0.0,15.0,0,yes,papers,sets
 MAGEC1,CTA,0.5,0.6,313.0,5,,✓,✓
+MAGEC2,CTA,0.1,0.1,682.0,6,,✓,✓

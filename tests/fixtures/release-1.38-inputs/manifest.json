@@ -1,0 +1,13 @@
+{
+  "release": "1.38.0",
+  "source_commit": "8d0ea5b38d6fa01ec0761d030b6781ccdc19de6c",
+  "sha256": {
+    "oncoref/data/gene-knowledge-updates.json": "2625613f9a935d98bc4dd9297e2eda4b0d0a4b83199bdcabac9a70860507ec36",
+    "oncoref/gene_knowledge.py": "e0cefcd2ea1ae560a293845eca726c185efe27990c850ba495a42d53c2d3fa11",
+    "oncoref/target_selection.py": "df9bd5dcc60f11fa88fab07ce3daecc9244b7c04878d86c97c663ba0764ce4fa",
+    "scripts/build_cta_candidate_evidence.py": "848c8952f442c4874018931ae47c4580eae8fc78345db3b3e5b1b720251d4261",
+    "scripts/rebuild_target_catalog.py": "7de6a745c35f1fd7706937c12ce5a3860528e807d33aa5b390f0174c9ea2ae6b",
+    "scripts/render_curation_summary.py": "804c0695e54b0b2ded5d7c559cab74467ec6e02395517de2eca3546d80ffcb53",
+    "scripts/render_target_catalog.py": "8cdb3bf8cf0e5ee2b00797805e2ae209fdbe4e803f726e369e74657dd0724492"
+  }
+}

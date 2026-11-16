@@ -10,7 +10,7 @@ MAGE-B/C,MAGEB1,CTA,0.0,,0.0,93,6,mapping risk,✓,✓,exclusions,
 MAGE-B/C,MAGEB2,Unsafe,,,118.4,,7,,—,—,—,HPA tissue clusters
 MAGE-B/C,MAGEB4,CTA,0.0,,0.0,29,1,,✓,papers,papers,
 MAGE-B/C,MAGEC1,CTA,0.5,white matter,0.6,313,5,,✓,✓,exclusions,
-MAGE-B/C,MAGEC2,Other,,,0.1,,6,,—,—,—,
+MAGE-B/C,MAGEC2,CTA,0.1,amygdala,0.1,682,6,,✓,✓,exclusions,
 NY-ESO / LAGE / PRAME,NY-ESO-1,CTA,0.3,cerebellum,0.5,944,5,mapping risk,✓,✓,✓,
 NY-ESO / LAGE / PRAME,CTAG2,CTA,3.9,thymus,24.9,155,3,"dismissed rare-cell, mapping risk, literature conflict",✓,✓,✓,
 NY-ESO / LAGE / PRAME,PRAME,CTA,3.0,adrenal gland,20.3,1231,6,"dismissed rare-cell, literature conflict",✓,✓,✓,

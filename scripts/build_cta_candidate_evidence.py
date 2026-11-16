@@ -152,8 +152,8 @@ def replay_updates(baseline):
     updated_layers = [
         EvidenceLayer(
             name,
-            hold | updated.knowledge_normal_hold | updated.knowledge_normal_exclusion,
-            unsafe | updated.knowledge_normal_exclusion,
+            updated.knowledge_normal_hold | updated.knowledge_normal_exclusion,
+            updated.knowledge_normal_exclusion,
         )
         if name == "Reviewed normal-cell knowledge"
         else EvidenceLayer(name, hold, unsafe)

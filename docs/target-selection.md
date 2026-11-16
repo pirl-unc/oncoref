@@ -2,12 +2,12 @@
 
 **Cancer/Testis Antigens are the intersection of Cancer Antigens and Reproductive
 Antigens. Both sets use the same normal-tissue, coverage, translation and sequence
-requirements. Their union is called Target candidates.**
+requirements. Their union is called candidate antigen proteins (the `is_target_candidate` API flag).**
 
-The catalog is built under `oncoref.target-selection.2026-11-15.1`:
-**453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only, 970 Other and
-18,253 Unsafe**. That gives 490 Cancer Antigens, 633 Reproductive Antigens and
-670 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+The catalog is built under `oncoref.target-selection.2026-11-16.1`:
+**437 CTA, 34 Cancer Antigen only, 197 Reproductive Antigen only, 972 Other and
+18,253 Unsafe**. That gives 471 Cancer Antigens, 634 Reproductive Antigens and
+668 candidate antigen proteins. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot. The counts describe rule matches, not
@@ -19,6 +19,32 @@ experimentally validated tumor antigens.
 [Literature review](audits/target-selection-20261110/rebuild/literature.md)
 
 ![Cancer and Reproductive Antigen sets](audits/target-selection-20261110/sets.svg)
+
+## What changed on 2026-11-16
+
+TGCT libraries that pass sample QC now supply cancer evidence. The shared library
+screen flags seven TGCT libraries with all six late-spermatid markers at ≥0.1% of
+their GTEx testis medians, and one Hodgkin library with >20% of measured olfactory
+receptors at ≥5 TPM. Four unrelated tissue programs at ≥0.3% also trigger the screen;
+no additional library meets that rule. These are conservative signatures, not
+proof of contamination or calibrated tissue fractions. Every measurement and
+reason is preserved in the [library QC table](audits/target-selection-20261110/rebuild/library-qc.csv.gz).
+
+DAZL, PRDM14, ZNF705D, TMEM202 and GOLGA6D gain CTA membership through passing TGCT
+libraries. MAGEC2 becomes CTA (681.6×) after the reviewed HPA062230/GTEx adjudication
+supersedes the historical TC-1 hold. The MAGE family filter remains independent.
+Removing the Hodgkin library removes cancer support from 22 prior CTAs and three
+cancer-only proteins. The 22 remain reproductive antigens. DAZ1–4 remain excluded
+from candidates; the shared findings preserve their gastric RNA and sequence rationale.
+
+The tenfold denominator is the highest supported **normal context summary**, not
+the maximum over every healthy donor. Native TPM comparisons retain study and
+quantifier effects; the floor is 10 TPM when all non-reproductive summaries are
+below 1 TPM. Normal RNA/protein and rare-cell exclusions still apply independently.
+
+[Current release](cta-release-1.39.0.md) · [Set and peptide APIs](antigen-sequences.md)
+
+The sections below retain the chronology of earlier policy revisions.
 
 ## What changed on 2026-11-15
 

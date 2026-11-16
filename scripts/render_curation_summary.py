@@ -86,7 +86,7 @@ def funnel(data, start_label):
             {"step": label, "removed": int(hit.sum()), "remaining": int(left.sum()), "color": color}
         )
     if not data[left].is_target_candidate.all() or left.sum() != data.is_target_candidate.sum():
-        raise ValueError("Funnel does not end at the Target candidates")
+        raise ValueError("Funnel does not end at the Candidate antigen proteins")
     return pd.DataFrame(rows)
 
 
@@ -581,9 +581,55 @@ def markdown(table, columns):
     )
 
 
+def antigen_venn(data, path):
+    """The two actual membership sets, separate from nomination provenance."""
+    ca, ra = data.is_cancer_antigen, data.is_reproductive_antigen
+    fig, ax = plt.subplots(figsize=(9, 5.4))
+    ax.add_patch(Circle((-0.7, 0), 1.35, color=CANCER, alpha=0.28))
+    ax.add_patch(Circle((0.7, 0), 1.35, color=REPRODUCTIVE, alpha=0.28))
+    for x, text in [
+        (-1.15, f"Cancer only\n{int((ca & ~ra).sum()):,}"),
+        (0, f"CTA\n{int((ca & ra).sum()):,}"),
+        (1.15, f"Reproductive only\n{int((ra & ~ca).sum()):,}"),
+    ]:
+        ax.text(x, 0, text, ha="center", va="center", fontsize=14, weight="bold")
+    ax.text(
+        -0.95, 1.55, f"Cancer Antigens: {int(ca.sum()):,}", ha="center", color=CANCER, fontsize=13
+    )
+    ax.text(
+        0.95,
+        1.55,
+        f"Reproductive Antigens: {int(ra.sum()):,}",
+        ha="center",
+        color=REPRODUCTIVE,
+        fontsize=13,
+    )
+    ax.text(
+        0,
+        -1.65,
+        f"Union: {int((ca | ra).sum()):,} candidate antigen proteins",
+        ha="center",
+        fontsize=14,
+    )
+    ax.text(
+        0,
+        -2,
+        f"Outside both: {int(data.category.eq('Unsafe').sum()):,} Unsafe; "
+        f"{int(data.category.eq('Other').sum()):,} Other",
+        ha="center",
+        fontsize=11,
+    )
+    ax.set(xlim=(-2.3, 2.3), ylim=(-2.2, 1.85), aspect="equal")
+    ax.axis("off")
+    ax.set_title("Current antigen sets (schematic; areas not to scale)", fontsize=14, pad=16)
+    fig.savefig(path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
 def build():
     data = pd.read_csv(OUT / "protein-decisions.csv.gz", low_memory=False)
     FIG.mkdir(exist_ok=True)
+    antigen_venn(data, FIG / "antigen-sets.png")
     counts = data.classification.value_counts()
     sets = venn(data, FIG / "venn.png")
     everything = draw_funnel(
@@ -618,6 +664,9 @@ def build():
         f"{counts['Reproductive Antigen only']} Reproductive Antigen only.** These are outputs of "
         "screening rules, not validated tumor antigens. Every figure is drawn from the "
         "[rebuilt catalog](index.md); thresholds are read from the policy constants.\n\n"
+        "## Antigen membership\n\n![Antigen sets](summary/antigen-sets.png)\n\n"
+        "CTA is the intersection. Reproductive-only proteins have no qualifying cancer evidence; "
+        "the union name does not certify tumor targeting. Unsafe is a separate subtraction background.\n\n"
         "## Rule-derived sets and published nominations\n\n![Set overlap](summary/venn.png)\n\n"
         f"Of {counts['CTA']} CTA, {sets['cta_published']} are published nominations and "
         f"{sets['cta_new']} are not. {sets['published_outside']:,} published nominations are in "
