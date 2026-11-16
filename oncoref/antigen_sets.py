@@ -43,7 +43,7 @@ def gene_ids(group="CTA") -> frozenset[str]:
 
 
 def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
-    """All available coding translations, one row per transcript occurrence.
+    """All annotated protein translations, one row per transcript occurrence.
 
     Uses the local human Ensembl 115 reference (oncoref[genome]); does not download
     it. Missing genes/translations are recorded in ``attrs['missing_gene_ids']``.
@@ -64,7 +64,9 @@ def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
             except ValueError:
                 transcripts = []
             for transcript in transcripts:
-                sequence = transcript.protein_sequence if transcript.is_protein_coding else None
+                # Decay-associated and protein_coding_LoF transcripts can have
+                # annotated translations too. Do not omit those from subtraction.
+                sequence = transcript.protein_sequence
                 if not sequence:
                     continue
                 found = True
@@ -73,6 +75,7 @@ def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
                         "entity_id": protein.entity_id,
                         "gene_id": gene_id,
                         "transcript_id": transcript.id,
+                        "transcript_biotype": transcript.biotype,
                         "sequence": sequence,
                         "sequence_sha256": hashlib.sha256(sequence.encode()).hexdigest(),
                         "set": group,
@@ -82,12 +85,20 @@ def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
                 missing.append(gene_id)
     result = pd.DataFrame(
         rows,
-        columns=["entity_id", "gene_id", "transcript_id", "sequence", "sequence_sha256", "set"],
+        columns=[
+            "entity_id",
+            "gene_id",
+            "transcript_id",
+            "transcript_biotype",
+            "sequence",
+            "sequence_sha256",
+            "set",
+        ],
     )
     result.attrs.update(
         policy_id=target_selection.POLICY_ID,
         reference="homo_sapiens:GRCh38:Ensembl:115",
         missing_gene_ids=sorted(missing),
-        sequence_scope="all coding transcripts",
+        sequence_scope="all annotated protein translations",
     )
     return result

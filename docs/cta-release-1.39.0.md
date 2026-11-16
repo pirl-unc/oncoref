@@ -55,8 +55,9 @@ every gene through the same mechanism.
 
 - `antigen_sets.proteins()` and `gene_ids()` accept `CTA`, `CA`, `RA`, `CA|RA` and
   `Unsafe`. CA and RA include CTA. Historical APIs retain their pinned meanings.
-- `antigen_sets.sequences()` returns all locally available Ensembl 115 coding
-  translations, their gene/transcript occurrences, reference identity and gaps.
+- `antigen_sets.sequences()` returns all locally available Ensembl 115 protein
+  translations, their gene/transcript occurrences, transcript biotypes, reference
+  identity and gaps, including loss-of-function and decay-associated transcripts.
 - `PeptideIndex.matches()` maps a query to every occurrence in either set.
   `subtract()` returns surviving 8–15mer occurrences with coordinates.
 - Exact Unsafe subtraction is the default. Optional Levenshtein distance,

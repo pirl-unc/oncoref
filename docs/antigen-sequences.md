@@ -22,8 +22,9 @@ Rows carry the current policy and evidence. The older `target_sets` and
 ## Sequences, occurrences and retained peptides
 
 Install `oncoref[genome]` and provision human Ensembl 115 locally. Translation
-extraction preserves every available coding transcript, including multiple
-occurrences of the same sequence. It inherits gene-level evidence, without
+extraction preserves every annotated protein translation, including loss-of-function
+and decay-associated transcripts and multiple occurrences of the same sequence.
+`transcript_biotype` records the annotation for each occurrence. It inherits gene-level evidence, without
 claiming isoform-specific expression. Missing translations appear in
 `sequences.attrs["missing_gene_ids"]`; they are coverage gaps, not negatives.
 
