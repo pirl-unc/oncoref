@@ -29,10 +29,10 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18253,
-        "Other": 970,
-        "CTA": 453,
-        "Cancer Antigen only": 37,
-        "Reproductive Antigen only": 180,
+        "Other": 972,
+        "CTA": 437,
+        "Cancer Antigen only": 34,
+        "Reproductive Antigen only": 197,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -51,7 +51,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_status) <= {*policy.RARE_CELL_STATUSES, "not_extracted"}
     assert set(catalog.rare_cell_action) == {"none", "unsafe"}
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 422
+    assert len(policy.results(changed_only=True)) == 436
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -59,6 +59,15 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
+    for name in ["MAGEC2", "DAZL", "PRDM14", "ZNF705D", "TMEM202", "GOLGA6D"]:
+        assert by_name.loc[name, "category"] == "CTA"
+    assert 681 < by_name.loc["MAGEC2", "tumor_fold"] < 683
+    assert by_name.loc["DAZ1", "category"] == by_name.loc["DAZ4", "category"] == "Unsafe"
+    assert (
+        by_name.loc["DAZ2", "classification"]
+        == by_name.loc["DAZ3", "classification"]
+        == "Other:Sequence"
+    )
     for name in ["HUS1B", "OR2B2", "SSU72L2", "MAGEA4", "CTAG2"]:
         assert by_name.loc[name, "category"] == "CTA"
     # No tumor reaches 10x the normal maximum, so the cancer claim is not made.
@@ -141,9 +150,9 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
-    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 917
+    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 918
     assert summary["shared_eligible"] == 907
-    assert summary["expression_bounds"]["fail"] == 10
+    assert summary["expression_bounds"]["fail"] == 11
     failed = catalog[catalog.expression_bounds_status.eq("fail")]
     assert (
         not failed.is_target_candidate.any() and failed.classification.eq("Other:Expression").all()
@@ -172,9 +181,10 @@ def test_missing_comparison_is_not_reported_as_zero(catalog):
     assert catalog.loc[failed, "normal_reference_tpm"].isna().all()
     assert catalog.loc[failed, "tumor_max_tpm"].isna().all()
     coverage = pd.read_csv(OUT / "tumor-source-coverage.csv")
-    assert coverage.status.eq("assessed").sum() == 129
-    germ = coverage[coverage.cancer_code.isin(policy.GERM_CELL_TUMORS)]
-    assert len(germ) and not germ.status.eq("assessed").any()
+    assert coverage.status.eq("assessed").sum() == 130
+    germ = coverage[coverage.cancer_code.eq("TGCT")]
+    assert len(germ) == 1 and germ.status.eq("assessed").all()
+    assert germ.samples.iloc[0] == 147
     nutm = coverage[coverage.cancer_code.eq("NUTM")]
     assert len(nutm) == 1 and not nutm.status.eq("assessed").any()
 
@@ -195,7 +205,7 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 308
+    assert catalog[catalog.is_cta].published_nomination.sum() == 302
     assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 6
 
 
@@ -261,6 +271,6 @@ def test_rebuild_patient_metadata_matches_shared_api():
     metadata = pd.read_csv(OUT / "tumor-samples.csv.gz", keep_default_na=False)
     expected = sample_api.sample_identities(metadata[["source_cohort", "sample_id"]])
     pd.testing.assert_frame_equal(metadata[expected.columns], expected)
-    assert metadata.participant_id.ne("").sum() == 13010
+    assert metadata.participant_id.ne("").sum() == 13157
     assert not metadata.cancer_code.isin(policy.GERM_CELL_TUMORS).any()
     assert metadata.patient_identity_status.eq("conflict").sum() == 0

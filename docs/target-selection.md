@@ -2,12 +2,12 @@
 
 **Cancer/Testis Antigens are the intersection of Cancer Antigens and Reproductive
 Antigens. Both sets use the same normal-tissue, coverage, translation and sequence
-requirements. Their union is called Target candidates.**
+requirements. Their union is called candidate antigen proteins (the `is_target_candidate` API flag).**
 
-The catalog is built under `oncoref.target-selection.2026-11-15.1`:
-**453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only, 970 Other and
-18,253 Unsafe**. That gives 490 Cancer Antigens, 633 Reproductive Antigens and
-670 Target candidates. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
+The catalog is built under `oncoref.target-selection.2026-11-16.1`:
+**437 CTA, 34 Cancer Antigen only, 197 Reproductive Antigen only, 972 Other and
+18,253 Unsafe**. That gives 471 Cancer Antigens, 634 Reproductive Antigens and
+668 candidate antigen proteins. [Curation funnel, filters and every change](audits/target-selection-20261110/rebuild/index.md) ·
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html).
 The [1.36.0 catalog](cta-selection.md) retains its earlier counts and sequence
 downloads as a separate versioned snapshot. The counts describe rule matches, not
@@ -19,6 +19,32 @@ experimentally validated tumor antigens.
 [Literature review](audits/target-selection-20261110/rebuild/literature.md)
 
 ![Cancer and Reproductive Antigen sets](audits/target-selection-20261110/sets.svg)
+
+## What changed on 2026-11-16
+
+TGCT libraries that pass sample QC now supply cancer evidence. The shared library
+screen flags seven TGCT libraries with all six late-spermatid markers at ≥0.1% of
+their GTEx testis medians, and one Hodgkin library with >20% of measured olfactory
+receptors at ≥5 TPM. Four unrelated tissue programs at ≥0.3% also trigger the screen;
+no additional library meets that rule. These are conservative signatures, not
+proof of contamination or calibrated tissue fractions. Every measurement and
+reason is preserved in the [library QC table](audits/target-selection-20261110/rebuild/library-qc.csv.gz).
+
+DAZL, PRDM14, ZNF705D, TMEM202 and GOLGA6D gain CTA membership through passing TGCT
+libraries. MAGEC2 becomes CTA (681.6×) after the reviewed HPA062230/GTEx adjudication
+supersedes the historical TC-1 hold. The MAGE family filter remains independent.
+Removing the Hodgkin library removes cancer support from 22 prior CTAs and three
+cancer-only proteins. The 22 remain reproductive antigens. DAZ1–4 remain excluded
+from candidates; the shared findings preserve their gastric RNA and sequence rationale.
+
+The tenfold denominator is the highest supported **normal context summary**, not
+the maximum over every healthy donor. Native TPM comparisons retain study and
+quantifier effects; the floor is 10 TPM when all non-reproductive summaries are
+below 1 TPM. Normal RNA/protein and rare-cell exclusions still apply independently.
+
+[Current release](cta-release-1.39.0.md) · [Set and peptide APIs](antigen-sequences.md)
+
+The sections below retain the chronology of earlier policy revisions.
 
 ## What changed on 2026-11-15
 
@@ -33,9 +59,13 @@ non-reproductive normal value, from any comparable TPM cohort except germ cell t
 | Olfactory epithelium | Protected | Manageable, on the oncology precedent ([tissue tiers](tissue-tiers.md#how-a-tier-is-chosen)) |
 | Target candidates | 868 | 670 |
 
-All 24 familiar CTAs that were CTAs remain CTAs; the lowest is AKAP4 at 16 times its
-normal maximum. 153 CTAs become Reproductive Antigen only: 138 have no tumor at 10x,
+All 27 familiar CTAs that were CTAs remain CTAs; the lowest is AKAP4 at 16 times its
+normal maximum. 153 CTAs become Reproductive Antigen only: for 63 no tumor sample
+reaches the 10 TPM minimum, for 75 no tumor reaches ten times a measured normal value,
 and 15 qualified only through germ cell tumors (DAZL, PRDM14, PGK2, PRM2 and others).
+[Every CTpedia gene](ctpedia-filtering.md) and the
+[tenfold rule review](audits/cta-threshold-review-20261116/index.md) show where each
+protein lands and why.
 
 ## What changed on 2026-11-13
 
@@ -224,9 +254,9 @@ qualified tumor sample. **Cancer RNA qualifies when one tumor sample has
 `T ≥ 10 × max(N, D, 1)`.** That is the only route.
 
 - **Any comparable cohort counts:** every tumor cohort view with native gene TPM
-  (129 views), one sample at a time. Patient identity is not needed.
-- **Germ cell tumors do not count.** A testicular germ cell tumor carries the germline
-  program of its lineage; normal testis, not somatic tissue, is its comparison.
+  (130 views), one sample at a time. Patient identity is not needed.
+- **Passing germ cell tumors count.** The coordinated spermatid-program screen removes
+  libraries that may contain normal testis; lineage alone does not exclude a histology.
 - **The floor of 1 TPM** keeps trace expression from qualifying against a zero normal
   value: a protein with N below 1 needs a tumor at 10 TPM or more.
 - **Reproductive, placental and fetal tissue is never in N.** Those are the
@@ -242,9 +272,12 @@ qualified tumor sample. **Cancer RNA qualifies when one tumor sample has
 
 `tumor_fold` on each row is the highest tumor over max(N, D, 1). Independent patients
 and samples above N are still counted on each row; they admit nothing. One sample can
-admit a protein: `tumor_top_sample` names it. The most frequent top sample is one
-Hodgkin lymphoma sample with no documented patient (GSE120328), the best tumor for 31
-Cancer Antigens.
+admit a protein: `tumor_top_sample` names it. A documented patient is not required.
+The Hodgkin library SRS3811196 that previously supplied many sole witnesses is now
+excluded by the broad-background check. Every excluded library and its measurements
+remain in the [library QC table](audits/target-selection-20261110/rebuild/library-qc.csv.gz).
+The largest remaining shared top sample and support counts are shown in the
+[current filter audit](audits/target-filters-20261112/index.md).
 
 Passing the rule still requires the shared eligibility screen. A tumor at 100 does not
 cancel an exclusion from normal cells at 20.
@@ -394,10 +427,10 @@ The new evaluator accepts evidence assessed under this contract. Legacy cancer
 `>0` flags and reproductive `≥5` flags cannot substitute for the new checks.
 The rebuild replays accepted normal-evidence curation, recomputes association at
 1 unit, resolves tumor locus identities and finds the best tumor at 10 × max(N, D, 1).
-All 949 proteins passing the prior shared checks have complete native-TPM comparison
+All 918 proteins passing the prior shared checks have complete native-TPM comparison
 coverage across the required 36 nonreproductive anatomy contexts. The normal
 reference also includes measured brain subregions and immune-cell summaries.
-The 129 included tumor cohort views (germ cell tumors left out) are deduplicated by physical sample and known
+The 130 included tumor cohort views (passing germ cell tumors included) are deduplicated by physical sample and known
 participant identifiers.
 
 These are source-native gene TPM comparisons, without cross-study batch correction.

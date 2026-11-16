@@ -32,7 +32,7 @@ def test_pending_curations_are_explicit_and_ambiguous_assays_cannot_exclude():
     assert gene_knowledge.findings("TRIM75", taxonomy_id=10090, include_updates=True).empty
 
 
-def test_complete_funnel_replay_holds_seven_proteins_without_new_unsafe_calls():
+def test_complete_funnel_replay_preserves_holds_and_resolves_superseded_findings():
     baseline = pd.read_csv(
         ROOT / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
         low_memory=False,
@@ -47,9 +47,12 @@ def test_complete_funnel_replay_holds_seven_proteins_without_new_unsafe_calls():
         "TAF11L12",
         "TAF11L13",
         "TAF11L14",
+        "MAGEC2",
     }
-    assert changed.classification.eq("Other:Review").all()
-    assert changed.assessment_status.eq("normal_evidence_hold").all()
+    held = changed[changed.protein_group_label.ne("MAGEC2")]
+    assert held.classification.eq("Other:Review").all()
+    assert held.assessment_status.eq("normal_evidence_hold").all()
+    assert changed[changed.protein_group_label.eq("MAGEC2")].category.eq("CTA").all()
     pd.testing.assert_series_equal(
         result.category.eq("Unsafe"), baseline.category.eq("Unsafe"), check_dtype=False
     )

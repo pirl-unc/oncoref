@@ -1,14 +1,18 @@
 # oncoref
 
+[OncoRef 1.39.0](cta-release-1.39.0.md) · [Antigen set and peptide APIs](antigen-sequences.md)
+
 [Cancer and Reproductive Antigens](target-selection.md) defines the current policy:
-CTA is their intersection and Target candidates is their union, with the same
+CTA is their intersection and candidate antigen proteins is their union, with the same
 normal-expression, coverage, translation, expression-bound and sequence checks. The
 [catalog](audits/target-selection-20261110/rebuild/index.md) contains
-**453 CTA, 37 Cancer Antigen only, 180 Reproductive Antigen only, 970 Other and
+**437 CTA, 34 Cancer Antigen only, 197 Reproductive Antigen only, 972 Other and
 18,253 Unsafe**. [Filterable table](audits/target-selection-20261110/rebuild/report.html) ·
 [Illustrated rules](audits/target-selection-20261110/report.html) ·
 [Rare normal-cell RNA by donor](audits/normal-cell-atlas-20261110/rare-cell/index.md).
 Curated protein–paper links remain attached to their specific claims.
+[How every CTpedia gene is classified](ctpedia-filtering.md) ·
+[Tenfold rule review: thresholds, near misses, sample background](audits/cta-threshold-review-20261116/index.md).
 
 [Normal-tissue tier ontology](tissue-tiers.md) centralizes cited bulk and cell-subset calls.
 

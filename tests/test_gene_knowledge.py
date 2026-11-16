@@ -14,6 +14,21 @@ from oncoref import cta_selection_policy as policy
 from oncoref.cta_funnel import EvidenceLayer
 
 
+def test_superseded_findings_remain_visible_but_stop_applying():
+    findings = gene_knowledge.findings("MAGEC2", include_updates=True)
+    facts = pd.DataFrame({"member_gene_ids": ['["ENSG00000046774"]']})
+    assert gene_knowledge.annotate(
+        facts, gene_knowledge.findings("MAGEC2")
+    ).knowledge_normal_hold.all()
+    result = gene_knowledge.annotate(facts, findings)
+    assert not result.knowledge_normal_hold.any()
+    assert set(json.loads(result.iloc[0].knowledge_finding_ids)) == set(findings.id)
+    bad = findings.to_dict("records")
+    bad[-1]["supersedes"] = ["absent"]
+    with pytest.raises(ValueError, match="existing"):
+        gene_knowledge.validate(bad)
+
+
 def test_other_review_covers_every_baseline_protein_and_preserves_evidence():
     root = Path(__file__).resolve().parents[1]
     report = root / "docs/audits/cta-other-literature-20261030"

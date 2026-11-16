@@ -5415,7 +5415,7 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert bool(prov.loc[0, "linear_tpm_comparable"]) is True
     assert bool(prov.loc[0, "recommended_for_absolute_tpm_floor"]) is True
     assert prov.loc[0, "selection_scale_class"] == "linear_rnaseq_tpm"
-    assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v3"
+    assert prov.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v4"
     assert prov.loc[0, "n_qc_pass"] == 1
     assert prov.loc[0, "n_qc_warn"] == 1
     assert prov.loc[0, "n_qc_fail"] == 1
@@ -5431,7 +5431,7 @@ def test_rebuild_expression_artifacts_defaults_to_qc_passing_samples(tmp_path, m
     assert build_meta.loc[0, "build_source_cohort"] == "TEST_SOURCE"
     assert build_meta.loc[0, "n_source_samples"] == 3
     assert build_meta.loc[0, "n_cohort_samples"] == 1
-    assert build_meta.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v3"
+    assert build_meta.loc[0, "sample_qc_policy_version"] == "sample_expression_qc_v4"
     assert build_meta.loc[0, "partition_status"] == "insufficient_independent_groups"
     assert build_meta.loc[0, "n_partition_train"] == 1
     assert build_meta.loc[0, "n_partition_validation"] == 0

@@ -67,7 +67,7 @@ def figures():
     ax.text(
         5.5,
         1.3,
-        "Target candidates = the union of both sets",
+        "Candidate antigen proteins = the union of both sets",
         ha="center",
         fontsize=12,
         weight="bold",
@@ -152,7 +152,7 @@ td,th{{padding:10px;text-align:left;border-bottom:1px solid #d9dfe3}}th{{backgro
 code{{font-size:.9em}}a{{color:#176689}}.note{{color:#53636c}}</style><main>
 <h1>Cancer and Reproductive Antigens</h1>
 <p><strong>CTA = Cancer Antigens ∩ Reproductive Antigens.</strong><br>
-Target candidates = Cancer Antigens ∪ Reproductive Antigens.</p>
+Candidate antigen proteins = Cancer Antigens ∪ Reproductive Antigens.</p>
 <p class="status">Rebuilt catalog: <code>{html.escape(definition["policy_id"])}</code>.
 {", ".join(f"{target_selection.metadata()['summary']['categories'][c]:,} {c}" for c in target_selection.CATEGORIES)}.
 <a href="rebuild/report.html">Filterable protein table, measurements and category changes</a>.
@@ -220,7 +220,7 @@ experiments, identity limits and counterevidence. Both remain available through
 <h2>Read the decision precisely</h2>
 <p>“Cancer Antigen only” and “Reproductive Antigen only” describe membership in one qualified
 set. They do not establish absence everywhere else. Unassessed associations stay visible.
-Target candidates is the union's name; it does not assert clinical safety.</p>
+Candidate antigen proteins is the union's name; it does not assert clinical safety.</p>
 <p><a href="../../target-selection/">Full definitions and API</a> ·
 <a href="definition.json">Machine-readable contract</a></p>
 </main></html>"""

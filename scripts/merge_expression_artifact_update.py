@@ -101,8 +101,11 @@ def merge_expression_artifact_update(base: Path, update: Path, out: Path) -> set
     build.to_csv(build_path, index=False)
 
     metadata = json.loads((base / BUILD_METADATA_JSON).read_text())
+    qc_versions = sorted(set(build["sample_qc_policy_version"].dropna().astype(str)))
     metadata.update(
         {
+            "sample_qc_policy_version": qc_versions[0] if len(qc_versions) == 1 else "mixed",
+            "sample_qc_policy_versions": qc_versions,
             "n_cohorts": len(build),
             "n_source_samples": int(pd.to_numeric(build["n_source_samples"]).sum()),
             "n_cohort_samples": int(pd.to_numeric(build["n_cohort_samples"]).sum()),

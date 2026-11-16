@@ -37,17 +37,24 @@ two-patient route is gone; patient counts stay on each row as description. Germ 
 tumors no longer count, because their germline program is lineage rather than
 cancer-specific activation. Each row has a new `tumor_fold` column.
 
-- **All 24 familiar CTAs that were CTAs stay CTAs.** The lowest is AKAP4 at 16x;
+- **All 27 familiar CTAs that were CTAs stay CTAs.** The lowest is AKAP4 at 16x;
   PRAME is at 1,231x, NY-ESO-1 at 944x and MAGE-A4 at 3,202x.
-- **153 CTAs become Reproductive Antigen only.** 138 have no tumor at 10x, mostly
-  low-expressed testis genes, and 15 qualified only through germ cell tumors (DAZL,
-  PRDM14, PGK2, PRM2 and others). 19 of them are on the CTpedia list, among them
-  MAGEB3, MAGEB10, SPANXN5 and CABS1. They stay Target candidates.
+- **153 CTAs become Reproductive Antigen only.** For 63, normal expression is under
+  1 TPM, so the bar is 10 TPM and no tumor sample reaches it (MAGEB3: 7.6 TPM against
+  0.2). For 75, a measured normal value of 1-25 TPM, usually in one immune cell type or
+  one brain region, is not beaten tenfold. 15 qualified only through germ cell tumors
+  (DAZL, PRDM14, PGK2, PRM2 and others). 19 are on the CTpedia list, none of them a
+  clinical target ([every CTpedia gene](ctpedia-filtering.md)). All 153 stay Target
+  candidates; the `loose` filter keeps 99, `standard` 55 and `strict` none.
+  [Near misses at 8-10x](audits/cta-threshold-review-20261116/index.md#near-misses-reproductive-antigens-at-8-10x).
 - **81 Cancer Antigens only become Other:Expression,** and 32 proteins held for
   unresolved patient identity under the old two-patient route are now Other:Expression.
-- One sample can admit a protein. One Hodgkin lymphoma sample with no documented
-  patient (GSE120328) is the best tumor for 31 Cancer Antigens; `tumor_top_sample`
-  shows it.
+- One sample can admit a protein; `tumor_top_sample` names it. The most frequent top
+  sample, a laser-captured Hodgkin lymphoma library (GSE120328, SRS3811196), is the
+  best tumor for 37 Cancer Antigens and the only qualifying sample for 27. It has broad
+  background: 40% of its olfactory receptor genes are at 5 TPM or more, against at most
+  12% in any other library that measures at least 100 of them. A background check on tumor libraries is proposed, not
+  applied ([tenfold rule review](audits/cta-threshold-review-20261116/index.md#tumor-sample-background-proposed-check-not-applied)).
 
 ## Home tissue the panels do not resolve
 
@@ -140,8 +147,9 @@ high against HPA staining with Enhanced-reliability antibodies.
   home; 26 with reproductive evidence remain candidates. Whole-tissue RNA dilutes a
   receptor that one neuron in hundreds expresses, so the olfactory RNA-seq table cannot
   clear them.
-- **The cancer rule rests on one sample.** It does not ask for replication, and cell
-  lines or samples without a documented patient count.
+- **The cancer rule rests on one sample.** It does not ask for replication, and tumor
+  libraries are not yet screened for background expression, so one noisy library can
+  admit proteins.
 - The oncology precedent for olfactory epithelium rests on abstracts, reviews and
   regulatory summaries; full texts were not read.
 - The seven added tissue tiers were written from abstracts. Nasal mucosa is low

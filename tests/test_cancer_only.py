@@ -8,6 +8,7 @@ import pandas as pd
 import pytest
 
 from oncoref import cancer_only, gene_knowledge
+from tests import released_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "docs/audits/cancer-only-20261109"
@@ -93,4 +94,7 @@ def test_accessor_and_receipts_preserve_exact_gene_and_source_identity():
     manifest = json.loads((REPORT / "manifest.json").read_text())
     for section, base in [("inputs", ROOT), ("outputs", REPORT)]:
         for name, digest in manifest[section].items():
-            assert hashlib.sha256((base / name).read_bytes()).hexdigest() == digest, name
+            content = (
+                released_inputs.read(name, digest) if base == ROOT else (base / name).read_bytes()
+            )
+            assert hashlib.sha256(content).hexdigest() == digest, name

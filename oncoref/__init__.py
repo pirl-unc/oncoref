@@ -20,6 +20,7 @@ genome and plotting features add only their named extras.
 
 from . import (
     antigen_coverage,
+    antigen_sets,
     barkbase,
     bgee_srp009687,
     bgee_srp181218,
@@ -42,6 +43,7 @@ from . import (
     mouse,
     normal_cell_data,
     normal_tissues,
+    peptide_subtraction,
     pfizer_canine_protein,
     pfizer_canine_rna,
     rna_protein,

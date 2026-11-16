@@ -2,7 +2,7 @@
   "schema": "oncoref.gene-knowledge-updates",
   "version": 1,
   "status": "pending_selection_build",
-  "review_date": "2026-11-08",
+  "review_date": "2026-11-16",
   "baseline_data_version": "5.23.27",
   "findings": [
     {
@@ -1237,6 +1237,178 @@
       "review_date": "2026-11-09",
       "historical_finding_ids": [],
       "review_depth": "Individual source/assay review; preserved primary tables and HPA responses"
+    },
+    {
+      "id": "GK-20261116-MAGEC2-cerebellum-adjudication",
+      "gene_ids": [
+        "ENSG00000046774"
+      ],
+      "gene_symbols": [
+        "MAGEC2"
+      ],
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "tissue": "Human cerebellar Purkinje cells",
+      "cell_type": "See original context; mixed or unresolved where not specified",
+      "state": "Historical normal/tumor/developmental scope as recorded",
+      "assay": "HPA062230 normal cerebellum IHC and GTEx cerebellum RNA",
+      "support": "assay_identity_conflict",
+      "tissue_tier": "vital",
+      "finding": "The historical TC-1 Purkinje-cell staining is not accepted as gene-specific MAGEC2 normal protein evidence. HPA062230 reports no detected Purkinje-cell staining, and GTEx cerebellum RNA does not support the historical neural claim.",
+      "value": null,
+      "unit": null,
+      "effect": "context",
+      "decision_reason": "Resolve the historical admission hold as unsupported under the reviewed evidence policy. Preserve the original finding and its reagent-specific uncertainty; the separate MAGE family filter continues to apply.",
+      "source_title": "Human Protein Atlas MAGEC2 cerebellum: HPA062230 staining and GTEx RNA",
+      "source_url": "https://www.proteinatlas.org/ENSG00000046774-MAGEC2/brain/cerebellum",
+      "source_location": "Cerebellum antibody staining and GTEx RNA panels; historical report PMID 12920247 retained in superseded record",
+      "limitations": "Negative staining and bulk RNA do not prove absence or demonstrate the molecular identity of the historical TC-1 signal. This is a curation judgement, not new experimental refutation or clinical safety evidence.",
+      "review_status": "accepted",
+      "review_date": "2026-11-16",
+      "interpretation_status": "rejected",
+      "historical_finding_ids": [
+        "review-20261025-MAGEC2"
+      ],
+      "review_depth": "Source-specific adjudication requested by curator; HPA062230 and GTEx compared with historical TC-1 report",
+      "supersedes": [
+        "GK-migration-review-20261025-MAGEC2"
+      ]
+    },
+    {
+      "id": "GK-20261116-DAZ1-gastric-family-rna",
+      "gene_ids": [
+        "ENSG00000188120"
+      ],
+      "gene_symbols": [
+        "DAZ1"
+      ],
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "tissue": "stomach",
+      "cell_type": "gastric mucus-secreting cells and bulk stomach",
+      "state": "normal adult stomach; tumor RNA as supporting context only",
+      "assay": "HPA bulk and cell RNA; paralog-aware interpretation",
+      "support": "ambiguous_normal_rna",
+      "tissue_tier": "vital",
+      "finding": "HPA reports DAZ1 at 22.4 nTPM in gastric mucus-secreting cells and DAZ4 at 24.4 nTPM in stomach. DAZ1 and DAZ4 together contain all DAZ3 9-mers. The near-identical Y-linked DAZ loci make assignment to individual paralogs uncertain.",
+      "value": null,
+      "unit": null,
+      "effect": "context",
+      "decision_reason": "Retain DAZ1/DAZ4 normal-RNA exclusions and DAZ2/DAZ3 sequence-based exclusions. Family RNA cannot establish protein production or identify a single DAZ paralog.",
+      "source_title": "Human Protein Atlas DAZ stomach RNA and OncoRef sequence containment audit",
+      "source_url": "https://www.proteinatlas.org/ENSG00000188120-DAZ1/tissue/stomach",
+      "source_location": "HPA v23 normal RNA; catalog Unsafe containment; curator review 2026-11-16",
+      "limitations": "The supplied tumor audit found DAZ1 >=10 TPM in 82 stomach cancers and predominantly male support across DAZ-positive tumors. This supports a Y-linked family signal, not unique-locus attribution or normal protein production. Low uniquely mapped GTEx estimates are uninformative for these near-identical paralogs.",
+      "review_status": "accepted",
+      "review_date": "2026-11-16",
+      "interpretation_status": "accepted",
+      "historical_finding_ids": [
+        "review-20261025-MAGEC2"
+      ],
+      "review_depth": "Curator-supplied family RNA and sequence interpretation; no new protein claim",
+      "supersedes": []
+    },
+    {
+      "id": "GK-20261116-DAZ2-gastric-family-rna",
+      "gene_ids": [
+        "ENSG00000205944"
+      ],
+      "gene_symbols": [
+        "DAZ2"
+      ],
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "tissue": "stomach",
+      "cell_type": "gastric mucus-secreting cells and bulk stomach",
+      "state": "normal adult stomach; tumor RNA as supporting context only",
+      "assay": "HPA bulk and cell RNA; paralog-aware interpretation",
+      "support": "ambiguous_normal_rna",
+      "tissue_tier": "vital",
+      "finding": "HPA reports DAZ1 at 22.4 nTPM in gastric mucus-secreting cells and DAZ4 at 24.4 nTPM in stomach. DAZ1 and DAZ4 together contain all DAZ3 9-mers. The near-identical Y-linked DAZ loci make assignment to individual paralogs uncertain.",
+      "value": null,
+      "unit": null,
+      "effect": "context",
+      "decision_reason": "Retain DAZ1/DAZ4 normal-RNA exclusions and DAZ2/DAZ3 sequence-based exclusions. Family RNA cannot establish protein production or identify a single DAZ paralog.",
+      "source_title": "Human Protein Atlas DAZ stomach RNA and OncoRef sequence containment audit",
+      "source_url": "https://www.proteinatlas.org/ENSG00000188120-DAZ1/tissue/stomach",
+      "source_location": "HPA v23 normal RNA; catalog Unsafe containment; curator review 2026-11-16",
+      "limitations": "The supplied tumor audit found DAZ1 >=10 TPM in 82 stomach cancers and predominantly male support across DAZ-positive tumors. This supports a Y-linked family signal, not unique-locus attribution or normal protein production. Low uniquely mapped GTEx estimates are uninformative for these near-identical paralogs.",
+      "review_status": "accepted",
+      "review_date": "2026-11-16",
+      "interpretation_status": "accepted",
+      "historical_finding_ids": [
+        "review-20261025-MAGEC2"
+      ],
+      "review_depth": "Curator-supplied family RNA and sequence interpretation; no new protein claim",
+      "supersedes": []
+    },
+    {
+      "id": "GK-20261116-DAZ3-gastric-family-rna",
+      "gene_ids": [
+        "ENSG00000187191"
+      ],
+      "gene_symbols": [
+        "DAZ3"
+      ],
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "tissue": "stomach",
+      "cell_type": "gastric mucus-secreting cells and bulk stomach",
+      "state": "normal adult stomach; tumor RNA as supporting context only",
+      "assay": "HPA bulk and cell RNA; paralog-aware interpretation",
+      "support": "ambiguous_normal_rna",
+      "tissue_tier": "vital",
+      "finding": "HPA reports DAZ1 at 22.4 nTPM in gastric mucus-secreting cells and DAZ4 at 24.4 nTPM in stomach. DAZ1 and DAZ4 together contain all DAZ3 9-mers. The near-identical Y-linked DAZ loci make assignment to individual paralogs uncertain.",
+      "value": null,
+      "unit": null,
+      "effect": "context",
+      "decision_reason": "Retain DAZ1/DAZ4 normal-RNA exclusions and DAZ2/DAZ3 sequence-based exclusions. Family RNA cannot establish protein production or identify a single DAZ paralog.",
+      "source_title": "Human Protein Atlas DAZ stomach RNA and OncoRef sequence containment audit",
+      "source_url": "https://www.proteinatlas.org/ENSG00000188120-DAZ1/tissue/stomach",
+      "source_location": "HPA v23 normal RNA; catalog Unsafe containment; curator review 2026-11-16",
+      "limitations": "The supplied tumor audit found DAZ1 >=10 TPM in 82 stomach cancers and predominantly male support across DAZ-positive tumors. This supports a Y-linked family signal, not unique-locus attribution or normal protein production. Low uniquely mapped GTEx estimates are uninformative for these near-identical paralogs.",
+      "review_status": "accepted",
+      "review_date": "2026-11-16",
+      "interpretation_status": "accepted",
+      "historical_finding_ids": [
+        "review-20261025-MAGEC2"
+      ],
+      "review_depth": "Curator-supplied family RNA and sequence interpretation; no new protein claim",
+      "supersedes": []
+    },
+    {
+      "id": "GK-20261116-DAZ4-gastric-family-rna",
+      "gene_ids": [
+        "ENSG00000205916"
+      ],
+      "gene_symbols": [
+        "DAZ4"
+      ],
+      "taxonomy_id": 9606,
+      "stage": "adult",
+      "tissue": "stomach",
+      "cell_type": "gastric mucus-secreting cells and bulk stomach",
+      "state": "normal adult stomach; tumor RNA as supporting context only",
+      "assay": "HPA bulk and cell RNA; paralog-aware interpretation",
+      "support": "ambiguous_normal_rna",
+      "tissue_tier": "vital",
+      "finding": "HPA reports DAZ1 at 22.4 nTPM in gastric mucus-secreting cells and DAZ4 at 24.4 nTPM in stomach. DAZ1 and DAZ4 together contain all DAZ3 9-mers. The near-identical Y-linked DAZ loci make assignment to individual paralogs uncertain.",
+      "value": null,
+      "unit": null,
+      "effect": "context",
+      "decision_reason": "Retain DAZ1/DAZ4 normal-RNA exclusions and DAZ2/DAZ3 sequence-based exclusions. Family RNA cannot establish protein production or identify a single DAZ paralog.",
+      "source_title": "Human Protein Atlas DAZ stomach RNA and OncoRef sequence containment audit",
+      "source_url": "https://www.proteinatlas.org/ENSG00000188120-DAZ1/tissue/stomach",
+      "source_location": "HPA v23 normal RNA; catalog Unsafe containment; curator review 2026-11-16",
+      "limitations": "The supplied tumor audit found DAZ1 >=10 TPM in 82 stomach cancers and predominantly male support across DAZ-positive tumors. This supports a Y-linked family signal, not unique-locus attribution or normal protein production. Low uniquely mapped GTEx estimates are uninformative for these near-identical paralogs.",
+      "review_status": "accepted",
+      "review_date": "2026-11-16",
+      "interpretation_status": "accepted",
+      "historical_finding_ids": [
+        "review-20261025-MAGEC2"
+      ],
+      "review_depth": "Curator-supplied family RNA and sequence interpretation; no new protein claim",
+      "supersedes": []
     }
   ]
 }

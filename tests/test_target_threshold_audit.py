@@ -6,6 +6,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from tests.released_inputs import read as released_input
+
 ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from audit_target_thresholds import (  # noqa: E402
@@ -98,4 +100,5 @@ def test_threshold_provenance_matches_committed_implementation_and_outputs():
     manifest = json.loads((OUT / "manifest.json").read_text())
     for section, base in [("implementation_sha256", ROOT), ("outputs_sha256", OUT)]:
         for path, expected in manifest[section].items():
-            assert hashlib.sha256((base / path).read_bytes()).hexdigest() == expected, path
+            content = released_input(path, expected) if base == ROOT else (base / path).read_bytes()
+            assert hashlib.sha256(content).hexdigest() == expected, path

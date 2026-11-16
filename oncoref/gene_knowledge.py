@@ -17,13 +17,32 @@ import pandas as pd
 EFFECTS = {"exclude", "review", "reproductive", "context"}
 
 
+def _supersedes(row):
+    value = row.get("supersedes")
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return []
+    if not isinstance(value, list) or any(not isinstance(i, str) for i in value):
+        raise ValueError("supersedes must be a list of finding IDs")
+    return value
+
+
 def validate(records: list[dict]) -> None:
     """Reject incomplete provenance, identity and incompatible conclusions."""
     seen = set()
+    by_id = {r["id"]: r for r in records}
     for row in records:
         if row["id"] in seen:
             raise ValueError("Duplicate knowledge finding")
         seen.add(row["id"])
+        for prior in _supersedes(row):
+            if prior not in by_id or prior == row["id"]:
+                raise ValueError("Supersession requires an existing, different finding")
+            if not set(by_id[prior]["gene_ids"]) <= set(row["gene_ids"]):
+                raise ValueError("Supersession must cover the original gene identities")
+            if by_id[prior]["taxonomy_id"] != row["taxonomy_id"]:
+                raise ValueError("Supersession cannot cross species")
+            if row["review_date"] <= by_id[prior]["review_date"]:
+                raise ValueError("Supersession requires a later review")
         if not row["gene_ids"] or any(not re.fullmatch(r"ENSG\d{11}", g) for g in row["gene_ids"]):
             raise ValueError("Knowledge requires exact Ensembl gene identities")
         if row["effect"] not in EFFECTS or row["review_status"] != "accepted":
@@ -109,7 +128,9 @@ def findings(
             for r in rows
             if gene in r["gene_ids"] or gene.casefold() in {s.casefold() for s in r["gene_symbols"]}
         ]
-    return pd.DataFrame(rows, columns=data["columns"])
+    return pd.DataFrame(rows, columns=[*data["columns"], "supersedes"]).assign(
+        supersedes=lambda d: d.supersedes.map(lambda v: v if isinstance(v, list) else [])
+    )
 
 
 def historical_dispositions(gene: str | None = None) -> pd.DataFrame:
@@ -142,12 +163,14 @@ def annotate(facts: pd.DataFrame, evidence: pd.DataFrame | None = None) -> pd.Da
     if members.map(lambda group: not group).any():
         raise ValueError("Protein findings require at least one explicit member identity")
     human = evidence[evidence.taxonomy_id.eq(9606)]
+    superseded = {i for r in human.to_dict("records") for i in _supersedes(r)}
+    active = human[~human.id.isin(superseded)]
     for effect, column in [
         ("exclude", "knowledge_normal_exclusion"),
         ("review", "knowledge_normal_hold"),
         ("reproductive", "knowledge_reproductive_support"),
     ]:
-        ids = {g for genes in human.loc[human.effect.eq(effect), "gene_ids"] for g in genes}
+        ids = {g for genes in active.loc[active.effect.eq(effect), "gene_ids"] for g in genes}
         d[column] = members.map(
             lambda group, ids=ids, effect=effect: (
                 group <= ids if effect == "reproductive" else bool(group & ids)

@@ -1681,7 +1681,7 @@ def _attach_gene_universe_delta_attrs(
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
 _ARTIFACT_SAMPLE_QC_MODES = ("artifact", *_SAMPLE_QC_MODES)
-SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v3"
+SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v4"
 EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v3"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH = "source-matrix-sample-qc.csv"
 EXPRESSION_ARTIFACT_BUILD_METADATA_PATH = "expression-artifact-build-metadata.csv"
@@ -1761,6 +1761,9 @@ _BLOCKING_SAMPLE_QC_REASONS = frozenset(
         "high_zero_fraction",
         "high_top_gene_fraction",
         "high_top10_gene_fraction",
+        "broad_background",
+        "normal_testis_tissue",
+        "several_unrelated_tissues",
     }
 )
 
@@ -2000,6 +2003,13 @@ def sample_expression_qc_from_matrix(
             **source_metadata,
         }
 
+    from . import library_qc
+
+    signatures = (
+        library_qc.signatures(raw, samples)
+        if meta["source_scale_class"] == "linear_rnaseq_tpm"
+        else None
+    )
     rows: list[dict] = []
     for sample in samples:
         vals = pd.to_numeric(raw[sample], errors="coerce")
@@ -2061,10 +2071,13 @@ def sample_expression_qc_from_matrix(
         else:
             flags.append("nonlinear_or_proxy_expression_scale")
 
+        if signatures is not None:
+            flags.extend(library_qc.reasons(signatures.loc[sample]))
         status = _sample_qc_status(flags)
         rows.append(
             {
                 "cancer_code": code,
+                **(signatures.loc[sample].to_dict() if signatures is not None else {}),
                 "source_cohort": meta["source_cohort"],
                 "source_type": meta["source_type"],
                 "unit": meta["unit"],

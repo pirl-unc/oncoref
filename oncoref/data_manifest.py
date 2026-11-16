@@ -422,6 +422,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "Cancer and Reproductive Antigen catalog for every human protein record, with set memberships, evidence receipts and paper links",
     ),
+    "tissue-marker-panels": (
+        "expression-qc",
+        "GTEx v11 protein-coding tissue marker panels and native TPM reference levels for conservative tumor-library QC",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",

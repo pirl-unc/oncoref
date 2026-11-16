@@ -15,13 +15,12 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-15.1"
+POLICY_ID = "oncoref.target-selection.2026-11-16.1"
 DETECTION_FLOOR = 1.0
 #: Cancer evidence: one tumor sample at this multiple of every non-reproductive normal value.
 TUMOR_FOLD = 10.0
-#: Germ cell tumors are compared with testis, not with somatic tissue: a germline program in
-#: them is lineage, not cancer-specific activation. Their samples never count as cancer evidence.
-GERM_CELL_TUMORS = ("TGCT",)
+#: No histology is excluded wholesale; library-level QC also applies to TGCT.
+GERM_CELL_TUMORS = ()
 #: Separate nominal caps for native TPM and HPA nTPM; never a unit conversion.
 DISPOSABLE_CAP = 32.0
 #: Rare normal-cell RNA, per adult donor and named cell population.
@@ -72,7 +71,7 @@ def definition() -> dict:
             "Cancer Antigens": "eligible AND cancer evidence qualifies",
             "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
             "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
-            "Target candidates": "Cancer Antigens UNION Reproductive Antigens",
+            "Candidate antigen proteins": "Cancer Antigens UNION Reproductive Antigens",
         },
         "precedence": [
             "Unsafe",
@@ -206,8 +205,8 @@ def definition() -> dict:
             "excluded_tumors": {
                 "codes": list(GERM_CELL_TUMORS),
                 "reason": (
-                    "Germ cell tumors carry the germline program of their lineage, so their "
-                    "expression of reproductive genes is not cancer-specific activation."
+                    "No histology is excluded wholesale. TGCT libraries that pass the "
+                    "coordinated spermatid-program screen may supply cancer evidence."
                 ),
             },
             "comparability": (

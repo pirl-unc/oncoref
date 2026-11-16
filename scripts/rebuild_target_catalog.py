@@ -25,6 +25,7 @@ from cta_report_common import sha256, write_csv  # noqa: E402
 from oncoref import (  # noqa: E402
     cta_literature,
     cta_sequence_overlap,
+    library_qc,
     reference_data,
     source_matrices,
     target_selection,
@@ -523,7 +524,7 @@ def tumors(facts):
         g: r.entity_id for r in facts.itertuples() for g in json.loads(r.member_gene_ids)
     }
     expected = facts.set_index("entity_id").member_count
-    pieces, coverage = [], []
+    pieces, coverage, qc_rows = [], [], []
     identity_cache = {}
     for job in available.itertuples():
         path, digest = paths[job.cancer_code]
@@ -574,12 +575,17 @@ def tumors(facts):
                 }
             )
             continue
-        raw = pq.read_table(
-            path, filters=[("Ensembl_Gene_ID", "in", identity.source_gene_id.tolist())]
-        ).to_pandas()
+        raw = pq.read_table(path).to_pandas()
         sample_ids = (
             samples.loc[samples.cancer_code.eq(job.cancer_code), "sample_id"].astype(str).tolist()
         )
+        signatures = library_qc.signatures(raw, sample_ids)
+        signatures["reasons"] = signatures.apply(lambda r: ";".join(library_qc.reasons(r)), axis=1)
+        signatures["cancer_code"] = job.cancer_code
+        signatures["source_cohort"] = job.source_cohort
+        qc_rows.append(signatures.reset_index())
+        sample_ids = signatures.index[signatures.reasons.eq("")].tolist()
+        raw = raw[raw.Ensembl_Gene_ID.isin(identity.source_gene_id)]
         raw, decisions = harmonize_reference_expression(
             raw,
             sample_cols=sample_ids,
@@ -615,6 +621,11 @@ def tumors(facts):
             f"Tumor {job.cancer_code}: {len(sample_ids)} samples, {len(values)} proteins",
             flush=True,
         )
+    write_csv(pd.concat(qc_rows, ignore_index=True), OUT / "library-qc.csv.gz")
+    INPUTS["oncoref/library_qc.py"] = sha256(ROOT / "oncoref/library_qc.py")
+    INPUTS["oncoref/data/tissue-marker-panels.csv"] = sha256(
+        ROOT / "oncoref/data/tissue-marker-panels.csv"
+    )
     combined = pd.concat(pieces, axis=1).T
     if combined.index.duplicated().any():
         repeated = combined[combined.index.duplicated(keep=False)]
@@ -651,13 +662,59 @@ def tumors(facts):
     return combined, sample_meta
 
 
-def build():
+def cached_tumors(facts):
+    """Reuse a verified comparison matrix after changes outside tumor extraction."""
+    receipt = json.loads((CACHE / "receipt.json").read_text())
+    members = {g: r.entity_id for r in facts.itertuples() for g in json.loads(r.member_gene_ids)}
+    if members != receipt["members"]:
+        raise ValueError("Cached tumor membership differs; rebuild the matrices")
+    for name in ("oncoref/library_qc.py", "oncoref/data/tissue-marker-panels.csv"):
+        if name not in receipt["inputs"]:
+            raise ValueError("Cached tumor evidence predates library QC")
+    # Non-tumor curation/normal inputs are freshly read by shared_facts and
+    # normal_panel. Only tumor extraction inputs belong to this cache identity.
+    tumor_inputs = {
+        name: digest
+        for name, digest in receipt["inputs"].items()
+        if "tumor-identity-repair/" in name
+        or name
+        in {
+            "oncoref/library_qc.py",
+            "oncoref/data/tissue-marker-panels.csv",
+            "oncoref/samples.py",
+            "oncoref/data/cancer-reference-expression-samples.csv.gz",
+            "oncoref/data/cancer-reference-sample-molecular-provenance.csv",
+        }
+    }
+    for name, digest in tumor_inputs.items():
+        if sha256(ROOT / name) != digest:
+            raise ValueError(f"Changed cached comparison input: {name}")
+    manifest = json.loads((BASE / "tumor-identity-repair/manifest.json").read_text())
+    for name, digest in manifest["matrices"].items():
+        if sha256(Path(name)) != digest:
+            raise ValueError(f"Changed pinned tumor matrix: {name}")
+    coverage = pd.read_csv(OUT / "tumor-source-coverage.csv")
+    if coverage.cancer_code.isin(target_selection.GERM_CELL_TUMORS).any():
+        raise ValueError("Excluded histologies require a fresh tumor extraction")
+    if sha256(CACHE / "tumor-comparison.parquet") != receipt["matrix_sha256"]:
+        raise ValueError("Cached comparison matrix checksum mismatch")
+    if sha256(OUT / "tumor-samples.csv.gz") != receipt["samples_sha256"]:
+        raise ValueError("Cached sample identity checksum mismatch")
+    if sha256(ROOT / "oncoref/gene_matching.py") != receipt["identity_code_sha256"]:
+        raise ValueError("Cached identity mapping changed")
+    INPUTS.update(tumor_inputs)
+    return pd.read_parquet(CACHE / "tumor-comparison.parquet"), pd.read_csv(
+        OUT / "tumor-samples.csv.gz", keep_default_na=False
+    )
+
+
+def build(*, reuse_tumor_cache=False):
     OUT.mkdir(parents=True, exist_ok=True)
     facts = shared_facts()
     selected = facts[facts.shared_eligible].copy()
     print(f"Common eligibility: {len(selected)} / {len(facts)}", flush=True)
     normal, required = normal_panel(selected)
-    matrix, meta = tumors(selected)
+    matrix, meta = cached_tumors(selected) if reuse_tumor_cache else tumors(selected)
     meta = meta.set_index("sample_key").loc[matrix.index]
     summaries, witnesses = [], []
     grouped = dict(iter(normal.groupby("entity_id")))
@@ -1026,4 +1083,8 @@ def build():
 
 
 if __name__ == "__main__":
-    build()
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reuse-tumor-cache", action="store_true")
+    build(reuse_tumor_cache=parser.parse_args().reuse_tumor_cache)
