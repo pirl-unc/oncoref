@@ -22,12 +22,13 @@ least* the value; a missing measurement never passes. Filter modes
 from __future__ import annotations
 
 import json
+import math
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 
 import pandas as pd
 
-FILTER_POLICY_ID = "oncoref.target-filters.2026-11-15.1"
+FILTER_POLICY_ID = "oncoref.target-filters.2026-11-16.2"
 
 #: Which set a protein must belong to, after the fold knob has tightened Cancer Antigens.
 MEMBERSHIPS = {
@@ -56,7 +57,6 @@ NORMAL_FUNCTION = {
     "no_protected": ("vital", "protected"),
     "no_manageable": ("vital", "protected", "manageable"),
 }
-_REPRODUCTIVE_RNA = ("reproductive_ntpm", "reproductive_cell_ntpm", "developmental_mean_tpm")
 
 
 @dataclass(frozen=True)
@@ -71,6 +71,9 @@ class TargetFilter:
     #: 3. A Cancer Antigen's highest tumor / max(non-reproductive normal, 1). The
     #: catalog already requires 10; a higher value moves weaker ones out of the set.
     min_tumor_fold: float = 10.0
+    min_reproductive_fold: float = 10.0
+    #: Known patients at the catalog's 10x threshold; anonymous samples do not count.
+    min_tumor_patients: int = 0
     membership: str = "target_candidates"
     #: 4. Distinct papers that nominate the protein or report it in tumors.
     min_papers: int = 0
@@ -85,8 +88,15 @@ class TargetFilter:
             raise ValueError("exclude_prefixes and except_labels must be tuples, not strings")
         if self.normal_function not in NORMAL_FUNCTION:
             raise ValueError(f"normal_function must be one of {list(NORMAL_FUNCTION)}")
-        if self.min_tumor_fold < 10.0:
-            raise ValueError("min_tumor_fold below the catalog's 10 cannot add a protein")
+        for name in ("min_tumor_fold", "min_reproductive_fold"):
+            if not math.isfinite(getattr(self, name)) or getattr(self, name) < 10.0:
+                raise ValueError(f"{name} must be finite and at least the catalog's 10")
+        if (
+            isinstance(self.min_tumor_patients, bool)
+            or not isinstance(self.min_tumor_patients, int)
+            or self.min_tumor_patients < 0
+        ):
+            raise ValueError("min_tumor_patients must be a nonnegative integer")
 
     def changed(self) -> dict:
         """Knobs that differ from the loosest setting; empty means the plain catalog."""
@@ -178,8 +188,9 @@ def measures(table: pd.DataFrame | None = None) -> pd.DataFrame:
                          brain subregions and immune-cell summaries.
     ``off_target_tpm_tissue`` where that TPM value was measured ("" when it is 0).
     ``tumor_fold``       the catalog's highest tumor / max(N, Disposable, 1).
-    ``reproductive_best`` highest of adult reproductive nTPM, reproductive cell
-                         nTPM and developmental mean TPM, each in its own unit.
+    ``reproductive_fold`` highest qualified reproductive observation / max(N, D, 1).
+    ``reproductive_best`` compatibility alias for reproductive_max_sample_tpm;
+                          native TPM only. It no longer mixes assay scales.
     """
     d = _frame(table)
     derived = [f"papers_{family}" for family in PAPER_FAMILIES]
@@ -192,8 +203,7 @@ def measures(table: pd.DataFrame | None = None) -> pd.DataFrame:
     tissue = d.normal_reference_contexts.map(_reference_context)
     tissue = tissue.where(d.normal_reference_tpm.ge(d.disposable_max_tpm), "Disposable")
     d["off_target_tpm_tissue"] = tissue.where(d.off_target_tpm.gt(0), "")
-    routes = d[list(_REPRODUCTIVE_RNA)].apply(pd.to_numeric, errors="coerce")
-    d["reproductive_best"] = routes.max(axis=1).fillna(0.0)
+    d["reproductive_best"] = d.reproductive_max_sample_tpm
     from . import target_curation
 
     d = d.drop(columns=[c for c in d if c.startswith("curated_")])
@@ -221,7 +231,9 @@ def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
     d["pass_curation"] = ~d.curated_tier.isin(NORMAL_FUNCTION[f.normal_function])
     # The fold knob tightens Cancer Antigens; membership is decided afterwards.
     cancer = d.is_cancer_antigen & d.tumor_fold.ge(f.min_tumor_fold)
-    reproductive = d.is_reproductive_antigen
+    if f.min_tumor_patients:
+        cancer &= d.independent_patients_at_tenfold.ge(f.min_tumor_patients)
+    reproductive = d.is_reproductive_antigen & d.reproductive_fold.ge(f.min_reproductive_fold)
     d["filtered_cancer_antigen"] = cancer
     d["filtered_reproductive_antigen"] = reproductive
     d["filtered_category"] = ""
@@ -269,8 +281,8 @@ def describe(f: TargetFilter | str) -> str:
     """Plain-language statement of exactly what ``f`` keeps, one line per active knob."""
     f = FILTER_MODES[f] if isinstance(f, str) else f
     lines = [
-        "Start from the catalog's Target candidates: a Cancer Antigen has a tumor sample at "
-        "10 x every non-reproductive normal value."
+        "Start from the catalog's Target candidates: CA and RA independently require "
+        "10 x the non-reproductive normal reference in their respective compartments."
     ]
     if f.max_off_target_tpm is not None:
         lines.append(
@@ -284,6 +296,14 @@ def describe(f: TargetFilter | str) -> str:
         lines.append(
             f"Sets: a Cancer Antigen's highest tumor is at least {f.min_tumor_fold:g} x "
             f"max(non-reproductive normal, 1)."
+        )
+    if f.min_reproductive_fold > 10.0:
+        lines.append(
+            f"Sets: reproductive evidence reaches at least {f.min_reproductive_fold:g} x max(non-reproductive normal, 1)."
+        )
+    if f.min_tumor_patients:
+        lines.append(
+            f"Sets: cancer evidence includes at least {f.min_tumor_patients} known patients at the catalog's 10 x threshold; anonymous samples do not count."
         )
     lines.append(
         f"Sets: keep proteins that are then in {f.membership.replace('_', ' ')}."

@@ -10,8 +10,8 @@ code{font-size:.9em}a{color:#176689}.note{color:#53636c}</style><main>
 <h1>Cancer and Reproductive Antigens</h1>
 <p><strong>CTA = Cancer Antigens ∩ Reproductive Antigens.</strong><br>
 Candidate antigen proteins = Cancer Antigens ∪ Reproductive Antigens.</p>
-<p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-16.1</code>.
-437 CTA, 34 Cancer Antigen only, 197 Reproductive Antigen only, 972 Other, 18,253 Unsafe.
+<p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-16.2</code>.
+246 CTA, 149 Cancer Antigen only, 102 Reproductive Antigen only, 1,143 Other, 18,253 Unsafe.
 <a href="rebuild/report.html">Filterable protein table, measurements and category changes</a>.
 The released 1.36.0 catalog remains a separate snapshot under its earlier policy.</p>
 <figure><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="402.48pt" viewBox="0 0 628.2 402.48" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -1954,7 +1954,7 @@ z
 <h2>One shared eligibility screen</h2>
 <p>Accepted normal-tissue or applicable clinical exclusion → <strong>Unsafe</strong>.
 Required coverage, identity, translation or unresolved evidence → <strong>Other:Review</strong>.
-Nested or Unsafe-contained sequence → <strong>Other:Sequence</strong>.
+Nested, Unsafe-contained or read-through sequence → <strong>Other:Sequence</strong>.
 Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
 A recorded normal home that no expression panel resolves (nose, taste bud, hair follicle,
 tooth), without reproductive evidence → <strong>Other:Tissue</strong>.
@@ -1967,21 +1967,22 @@ therefore never change a category.</p>
 <table><thead><tr><th>Question</th><th>Requirement</th></tr></thead><tbody>
 <tr><td>Is there a signal?</td><td>&gt;= 1% of a donor&#x27;s cells and &gt;= 10 cells carry &gt;= 2 molecules.</td></tr>
 <tr><td>Is it replicated?</td><td>The signal in &gt;= 2 independent studies of the same organ, which agree on a cell type or include &gt;= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, a signal counts only when &gt;= 5% of a donor&#x27;s cells carry multiple molecules.</td></tr>
-<tr><td>Could the reads belong elsewhere?</td><td>Shared transcript sequence with another locus, or an exon inside another same-strand gene. Counts for a flagged gene cannot be attributed to it.</td></tr>
+<tr><td>Could the reads belong elsewhere?</td><td>Shared transcript sequence with another locus, or an exon inside another same-strand gene. Attribution needs read-level review; a flag does not prove artifact.</td></tr>
 <tr><td>Does another assay agree?</td><td>Bulk RNA &gt;= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.</td></tr></tbody></table>
 <table><thead><tr><th>Outcome</th><th>Rule</th></tr></thead>
 <tbody><tr><td>Established</td><td>A replicated signal at a locus without mapping risk, or any signal with bulk confirmation. Unsafe.</td></tr>
-<tr><td>Dismissed</td><td>A signal that is neither: counts at a flagged locus, or from one study, that no other assay confirms. Recorded with its reason; no category effect.</td></tr>
+<tr><td>Unresolved</td><td>A replicated signal with unresolved locus attribution, or a frequent single-study signal without independent confirmation. Other:Review pending adjudication.</td></tr>
+<tr><td>Dismissed</td><td>A weak or inconsistent signal below replication and frequency requirements. Recorded with its reason; no category effect.</td></tr>
 <tr><td>Below the screen</td><td>No replicated or frequent multi-molecule signal. No finding; not evidence of absence or safety.</td></tr></tbody></table>
 <p>Protected populations need 2 times these frequencies. Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts. 1%, 2% and 5% detection
-remain reported comparison metrics. There is no review state.
+remain reported comparison metrics. Strong unresolved signals require review.
 <a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> ·
 <a href="rebuild/literature/">Literature review</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
 comparison panel and D the highest Disposable value. One tumor sample, from any comparable
 TPM cohort, needs T ≥10 × max(N, D, 1). This is the only cancer route; counts of patients
-above N are reported and admit nothing. Sample quality and exact protein identity must pass.
+at the actual tenfold threshold are reported separately from anonymous samples. Sample quality and exact protein identity must pass.
 The highest tumor, reproductive or developmental value must also exceed every measured
 nonreproductive normal and Disposable value, and Disposable expression must stay at or
 below 32 TPM and 32 nTPM, each on its own scale.</p>
@@ -3520,15 +3521,17 @@ comparison methods, normal contexts, source statistics and sample identities.
 Missing required normal data leave the comparison unassessed. All other normal panels
 continue to enforce their exclusions.
 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Wang et al., 2018</a>.</p>
-<p>Reviewed reliable tumor protein is a separate positive evidence route. Qualitative
-staining does not supply an RNA fold change. A high tumor value never cancels a normal exclusion.</p>
+<p>Reviewed reliable tumor protein is an independent annotation. Qualitative
+staining cannot bypass the RNA fold. A high tumor value never cancels a normal exclusion.</p>
 <h2>Reproductive and developmental evidence</h2>
 <p>Adult reproductive, placental, extraembryonic, embryonic and fetal associations count.
-Use ≥1 native TPM/nTPM with the existing cell/read support, or reliable mapped protein
-evidence. Record the actual branch and stage. The old adult reproductive concentration
-score becomes descriptive; it is not an admission gate.</p>
-<p>The 1-unit detection convention is distinct from protein production or antigen
-presentation. <a href="https://v23.proteinatlas.org/about/assays%2Bannotation">HPA methods</a>.</p>
+RA requires R ≥10 × max(N, D, 1), against the same reference as CA. R is an
+individual reproductive tissue sample or supported mean within one embryo and lineage
+(≥20 cells, ≥5 positive cells, ≥10% positive). Donors remain distinct from cells.</p>
+<p>Single-cell nTPM, UMI counts and qualitative protein staining retain their own evidence
+roles; they cannot be pooled into a native-TPM fold. The normal reference includes all
+available individual HPA tissue samples plus supported context summaries, not every healthy
+donor. <a href="https://v23.proteinatlas.org/about/download">Pinned HPA sources</a>.</p>
 <h2>Published target support</h2>
 <p>A curated target nomination adds supporting evidence. Preserve the exact protein–paper
 link and what it establishes: nomination, biology, tumor expression, protein identity,

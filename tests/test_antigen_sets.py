@@ -12,6 +12,12 @@ def test_current_memberships_and_forbidden_background():
     assert sets["CTA"] == sets["CA"] & sets["RA"]
     assert sets["CA|RA"] == sets["CA"] | sets["RA"]
     assert not sets["CA|RA"] & sets["Unsafe"]
+    assert sets["Unsafe|Other"] == sets["Unsafe"] | sets["Other"]
+    assert not sets["Unsafe"] & sets["Other"]
+    assert not sets["CA|RA"] & sets["Unsafe|Other"]
+    assert sets["CA|RA"] | sets["Unsafe|Other"] == set(
+        antigen_sets.target_selection.results().entity_id
+    )
     assert antigen_sets.gene_ids("CTA") == {
         g for ids in antigen_sets.proteins("CTA").member_gene_ids for g in json.loads(ids)
     }

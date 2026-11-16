@@ -18,6 +18,12 @@ import pyarrow.parquet as pq
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from antigen_sample_evidence import (  # noqa: E402
+    HPA_ARCHIVE,
+    HPA_SOURCE,
+    developmental_samples,
+    tissue_samples,
+)
 from build_cta_alternative_evidence import GTEX_TISSUES, anatomy  # noqa: E402
 from build_cta_candidate_evidence import replay_updates  # noqa: E402
 from cta_report_common import sha256, write_csv  # noqa: E402
@@ -44,7 +50,7 @@ FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 RAW = ROOT / "tmp/target-rebuild-inputs"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-09.1"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-16.2"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -215,6 +221,14 @@ def shared_facts():
         ~f.nested_microprotein & f.unsafe_sequence_overlap_pct.lt(95) & ~f.readthrough_locus
     )
     f["shared_eligible"] = ~f.unsafe & f[PRIOR_CHECKS].all(axis=1)
+    # Retain measured counterfactuals for newly held rare-cell signals. A review
+    # hold still blocks membership through normal_screen_pass in classify().
+    f["comparison_eligible"] = (
+        ~f.unsafe
+        & f[[c for c in PRIOR_CHECKS if c != "normal_screen_pass"]].all(axis=1)
+        & ~f[normal_holds].any(axis=1)
+        & ~f.rare_cell_legacy_only
+    )
     branches = {
         "reproductive_bulk": f.reproductive_ntpm.ge(1),
         "reproductive_cells": f.reproductive_cell_ntpm.ge(1),
@@ -229,11 +243,11 @@ def shared_facts():
         "developmental_rna": f.developmental_mean_tpm.ge(1),
     }
     routes = pd.DataFrame(branches, index=f.index)
-    f["reproductive_routes"] = routes.apply(lambda r: " | ".join(r.index[r]), axis=1)
+    f["reproductive_association_routes"] = routes.apply(lambda r: " | ".join(r.index[r]), axis=1)
     measured = (
         f.reproductive_ntpm.notna() | f.reproductive_cell_ntpm.notna() | f.developmental_measured
     )
-    f["reproductive_evidence"] = np.select(
+    f["reproductive_association_evidence"] = np.select(
         [routes.any(axis=1), measured], ["qualifies", "does_not_qualify"], default="unassessed"
     )
     return f
@@ -257,7 +271,7 @@ def group_normal_rows(raw, facts, *, source, statistic, gene_col="gene_id"):
     return grouped.assign(source_id=source, statistic=statistic, unit="TPM", cell_type="bulk")
 
 
-def normal_panel(facts, write=True):
+def normal_panel(facts, write=True, *, include_individual_samples=True):
     rows = []
     downloads = OUT / "downloaded-hpa-sources.json"
     INPUTS[str(downloads.relative_to(ROOT))] = sha256(downloads)
@@ -323,6 +337,14 @@ def normal_panel(facts, write=True):
         )
     )
     normal = pd.concat(rows, ignore_index=True)
+    if include_individual_samples:
+        individual = tissue_samples(facts, hpa_ids)
+        individual["member_count"] = individual.entity_id.map(
+            facts.set_index("entity_id").member_count
+        )
+        individual["measured_members"] = individual.member_count.where(individual.identity_resolved)
+        normal = pd.concat([normal, individual], ignore_index=True)
+        INPUTS[str(HPA_ARCHIVE.relative_to(ROOT))] = HPA_SOURCE["sha256"]
     normal["tissue"] = normal.tissue.replace(
         {"nucleus accumbens": "basal ganglia", "putamen": "basal ganglia"}
     )
@@ -382,6 +404,10 @@ def normal_panel(facts, write=True):
     monaco["identity_resolved"] = monaco.measured_members.eq(monaco.member_count)
     normal = pd.concat([normal, immune, monaco], ignore_index=True)
     normal["comparison_id"] = COMPARISON_ID
+    for column in ("sample_id", "participant_id", "observation_kind"):
+        if column not in normal:
+            normal[column] = ""
+        normal[column] = normal[column].fillna("")
     cols = [
         "entity_id",
         "source_id",
@@ -396,6 +422,9 @@ def normal_panel(facts, write=True):
         "value",
         "qc_pass",
         "identity_resolved",
+        "sample_id",
+        "participant_id",
+        "observation_kind",
     ]
     normal = (
         normal[cols]
@@ -711,13 +740,23 @@ def cached_tumors(facts):
 def build(*, reuse_tumor_cache=False):
     OUT.mkdir(parents=True, exist_ok=True)
     facts = shared_facts()
-    selected = facts[facts.shared_eligible].copy()
+    selected = facts[facts.comparison_eligible].copy()
     print(f"Common eligibility: {len(selected)} / {len(facts)}", flush=True)
     normal, required = normal_panel(selected)
+    development, development_provenance = developmental_samples(selected)
+    development["comparison_id"] = COMPARISON_ID
+    reproductive = pd.concat(
+        [normal[normal.scope.eq("reproductive") & normal.sample_id.ne("")], development],
+        ignore_index=True,
+    )
+    write_csv(reproductive, OUT / "reproductive-comparison.csv.gz")
+    for source in development_provenance:
+        INPUTS[source["path"]] = source["sha256"]
     matrix, meta = cached_tumors(selected) if reuse_tumor_cache else tumors(selected)
     meta = meta.set_index("sample_key").loc[matrix.index]
-    summaries, witnesses = [], []
+    summaries, witnesses, reproductive_witnesses = [], [], []
     grouped = dict(iter(normal.groupby("entity_id")))
+    reproductive_groups = dict(iter(reproductive.groupby("entity_id")))
     for row in selected.itertuples():
         values = matrix.get(row.entity_id, pd.Series(np.nan, index=matrix.index))
         tumor = pd.DataFrame(
@@ -743,6 +782,7 @@ def build(*, reuse_tumor_cache=False):
             unit="TPM",
         )
         support = pd.DataFrame(receipt["supporting_tumors"])
+        qualified = support[support.single_sample_pass] if not support.empty else support
         top = (
             support.sort_values("value", ascending=False).drop_duplicates("participant_id")
             if not support.empty
@@ -755,7 +795,32 @@ def build(*, reuse_tumor_cache=False):
             if not support.empty
             else top
         )
+        # Preserve every tenfold witness; weaker examples are a bounded preview.
+        top = (
+            pd.concat([qualified, top]).drop_duplicates(["source_id", "sample_id"])
+            if not support.empty
+            else top
+        )
         witnesses.extend(top.to_dict("records"))
+        ra = reproductive_groups.get(row.entity_id, reproductive.iloc[:0])
+        ra_receipt = target_selection.assess_reproductive_rna(
+            ra,
+            reference,
+            required_normal_contexts=required,
+            comparison_id=COMPARISON_ID,
+            comparability_reference="comparison.json",
+            unit="TPM",
+        )
+        ra_valid = ra[ra.qc_pass & ra.identity_resolved & ra.value.notna()]
+        ra_top = ra_valid.sort_values("value", ascending=False).head(1)
+        ra_support = pd.DataFrame(ra_receipt["supporting_reproductive_samples"])
+        if not ra_support.empty:
+            reproductive_witnesses.extend(
+                ra_support[ra_support.single_sample_pass].to_dict("records")
+            )
+        cancer_keys = (
+            set(qualified.source_id + ":" + qualified.sample_id) if not qualified.empty else set()
+        )
         summaries.append(
             {
                 "entity_id": row.entity_id,
@@ -771,6 +836,34 @@ def build(*, reuse_tumor_cache=False):
                     "independent_participants_above_normal"
                 ],
                 "samples_above_normal": receipt["samples_above_normal"],
+                "samples_at_tenfold": receipt["samples_at_tenfold"],
+                "independent_patients_at_tenfold": receipt["independent_participants_at_tenfold"],
+                "anonymous_samples_at_tenfold": receipt["anonymous_samples_at_tenfold"],
+                "patient_or_sample_witnesses_at_tenfold": receipt[
+                    "participant_or_sample_witnesses_at_tenfold"
+                ],
+                "cancer_types_at_tenfold": int(
+                    meta.loc[meta.index.isin(cancer_keys), "cancer_code"].nunique()
+                ),
+                "reproductive_evidence": ra_receipt["status"],
+                "reproductive_routes": " | ".join(ra_receipt["routes"]),
+                "reproductive_assessment_reason": ra_receipt["reason"],
+                "reproductive_max_sample_tpm": None
+                if ra_top.empty
+                else float(ra_top.value.iloc[0]),
+                "reproductive_fold": None
+                if ra_top.empty or ra_receipt["single_sample_threshold"] is None
+                else float(ra_top.value.iloc[0])
+                / (ra_receipt["single_sample_threshold"] / target_selection.REPRODUCTIVE_FOLD),
+                "reproductive_top_sample": ""
+                if ra_top.empty
+                else ra_top.source_id.iloc[0] + ":" + ra_top.sample_id.iloc[0],
+                "reproductive_top_context": "" if ra_top.empty else ra_top.source_context.iloc[0],
+                "reproductive_samples_at_tenfold": ra_receipt["samples_at_tenfold"],
+                "reproductive_donors_at_tenfold": ra_receipt["independent_participants_at_tenfold"],
+                "reproductive_anonymous_samples_at_tenfold": ra_receipt[
+                    "anonymous_samples_at_tenfold"
+                ],
                 "unresolved_patient_samples_above_normal": receipt[
                     "unresolved_participant_samples_above_normal"
                 ],
@@ -802,6 +895,8 @@ def build(*, reuse_tumor_cache=False):
     )
     facts["shared_eligible"] &= facts.expression_bounds_pass
     facts["cancer_evidence"] = facts.cancer_evidence.fillna("unassessed")
+    facts["reproductive_evidence"] = facts.reproductive_evidence.fillna("unassessed")
+    facts["reproductive_routes"] = facts.reproductive_routes.fillna("")
     facts["cancer_assessment_reason"] = facts.cancer_assessment_reason.fillna(
         "Shared eligibility fails; positive cancer membership cannot be assigned"
     )
@@ -833,11 +928,14 @@ def build(*, reuse_tumor_cache=False):
         if r.subtype == "Tissue"
         else "Cancer and reproductive/developmental evidence qualify"
         if r.category == "CTA"
-        else "Cancer evidence qualifies; no qualifying reproductive/developmental association recorded"
+        else "Cancer tenfold evidence qualifies; reproductive tenfold evidence does not qualify"
         if r.category == "Cancer Antigen only"
         else "Reproductive/developmental evidence qualifies; " + r.cancer_assessment_reason
         if r.category == "Reproductive Antigen only"
-        else "Neither positive association qualifies; " + r.cancer_assessment_reason
+        else "Neither tenfold compartment qualifies; "
+        + r.cancer_assessment_reason
+        + "; "
+        + str(r.reproductive_assessment_reason)
         for r, failed in zip(decisions.itertuples(), bounds_failed)
     ]
     decisions["exclusion_reasons"] = decisions.decision_reason.where(
@@ -878,6 +976,7 @@ def build(*, reuse_tumor_cache=False):
     )
     write_csv(decisions, OUT / "protein-decisions.csv.gz")
     write_csv(pd.DataFrame(witnesses), OUT / "tumor-witnesses.csv.gz")
+    write_csv(pd.DataFrame(reproductive_witnesses), OUT / "reproductive-witnesses.csv.gz")
     write_csv(evidence, OUT / "cancer-evidence.csv.gz")
     summary = {
         "policy_id": target_selection.POLICY_ID,
@@ -935,7 +1034,7 @@ def build(*, reuse_tumor_cache=False):
         ],
         "expression_bounds": target_selection.definition()["expression_bounds"],
         "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,
-        "normal_statistic": "Maximum supported context statistic: tissue/subregion means, GTEx v11 donor medians, and supported immune summaries including DICE third-highest TPM",
+        "normal_statistic": "Maximum of individual HPA tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
         "batch_corrected": False,
         "limitations": [
             "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -945,6 +1044,10 @@ def build(*, reuse_tumor_cache=False):
         "participant_identity": "Shared sample_identities API joins curated case/donor mappings and documented TCGA, TARGET, MMRF and Treehouse identifiers. Every sample retains identity status, basis and references. Unresolved or conflicting identities support only the single-sample route.",
         "participant_identity_policy": sample_api.PATIENT_IDENTITY_POLICY,
         "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
+        "individual_tissue_source": HPA_SOURCE,
+        "developmental_sources": development_provenance,
+        "positive_observations": "CA: individual passing tumor; RA: individual reproductive tissue or supported embryo-by-lineage mean. Qualitative protein and incompatible RNA scales cannot bypass the fold.",
+        "witness_tables": "All tenfold witnesses are exported; tumor table also retains up to six weaker above-normal examples per protein. Filter single_sample_pass for qualifying counts. Unknown donor identity is never claimed independent.",
         "method_references": [
             "https://v23.proteinatlas.org/about/assays%2Bannotation",
             "https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/",
@@ -978,6 +1081,16 @@ def build(*, reuse_tumor_cache=False):
         "cancer_assessment_reason",
         "reproductive_evidence",
         "reproductive_routes",
+        "reproductive_association_routes",
+        "reproductive_association_evidence",
+        "reproductive_assessment_reason",
+        "reproductive_max_sample_tpm",
+        "reproductive_fold",
+        "reproductive_top_sample",
+        "reproductive_top_context",
+        "reproductive_samples_at_tenfold",
+        "reproductive_donors_at_tenfold",
+        "reproductive_anonymous_samples_at_tenfold",
         "reproductive_ntpm",
         "reproductive_cell_ntpm",
         "developmental_mean_tpm",
@@ -1029,6 +1142,11 @@ def build(*, reuse_tumor_cache=False):
         "independent_patients_above_normal",
         "unresolved_patient_samples_above_normal",
         "samples_above_normal",
+        "samples_at_tenfold",
+        "independent_patients_at_tenfold",
+        "anonymous_samples_at_tenfold",
+        "patient_or_sample_witnesses_at_tenfold",
+        "cancer_types_at_tenfold",
         "tumor_samples_measured",
         "tumor_max_tpm",
         "tumor_fold",
@@ -1068,6 +1186,7 @@ def build(*, reuse_tumor_cache=False):
         "schema": "oncoref.target-selection",
         "version": 1,
         "release_ready": False,
+        "release_ready_meaning": "Scientific review completion, not software publication status. False while any listed research adjudication remains open; unresolved evidence stays excluded from positive sets.",
         "open_reviews": [
             "Tumor-source comparability and outlier support",
             "Read-level confirmation of the rare-cell mapping-risk flags",

@@ -15,10 +15,12 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-16.1"
+POLICY_ID = "oncoref.target-selection.2026-11-16.2"
 DETECTION_FLOOR = 1.0
-#: Cancer evidence: one tumor sample at this multiple of every non-reproductive normal value.
-TUMOR_FOLD = 10.0
+#: Both positive compartments use the same fold over the non-reproductive reference.
+ENRICHMENT_FOLD = 10.0
+TUMOR_FOLD = ENRICHMENT_FOLD  # Public compatibility name.
+REPRODUCTIVE_FOLD = ENRICHMENT_FOLD
 #: No histology is excluded wholesale; library-level QC also applies to TGCT.
 GERM_CELL_TUMORS = ()
 #: Separate nominal caps for native TPM and HPA nTPM; never a unit conversion.
@@ -34,7 +36,7 @@ RARE_CELL_REPLICATE_DONORS = 3
 RARE_CELL_SINGLE_STUDY_PCT = 5.0
 #: Protected populations need twice the frequency, as their bulk ceiling is twice Vital's.
 RARE_CELL_PROTECTED_FACTOR = 2.0
-RARE_CELL_STATUSES = ("established", "dismissed", "below_screen", "unassessed")
+RARE_CELL_STATUSES = ("established", "unresolved", "dismissed", "below_screen", "unassessed")
 EVIDENCE_STATUSES = ("qualifies", "does_not_qualify", "unassessed")
 CATEGORIES = ("CTA", "Cancer Antigen only", "Reproductive Antigen only", "Other", "Unsafe")
 SHARED_CHECKS = (
@@ -149,12 +151,12 @@ def definition() -> dict:
                 f"Protected populations need {RARE_CELL_PROTECTED_FACTOR:g} times these frequencies."
             ),
             "single_molecules": (
-                "Cells with one molecule never change a category. A mis-assigned read from a "
-                "paralog, pseudogene or overlapping gene produces exactly this pattern."
+                "Single-molecule detection alone does not establish expression. Ambient RNA "
+                "and read assignment are possible confounders, not demonstrated explanations."
             ),
             "mapping_risk": (
                 "Shared transcript sequence with another locus, or an exon inside another "
-                "same-strand gene. Counts for a flagged gene cannot be attributed to it."
+                "same-strand gene. Attribution needs read-level review; a flag does not prove artifact."
             ),
             "confirmation": (
                 f"Bulk RNA >= {DETECTION_FLOOR:g} native TPM in the same organ in both the HPA and "
@@ -165,8 +167,12 @@ def definition() -> dict:
                 "confirmation. Unsafe."
             ),
             "dismissed": (
-                "A signal that is neither: counts at a flagged locus, or from one study, that no "
-                "other assay confirms. Recorded with its reason; no category effect."
+                "A weak or inconsistent signal below replication and frequency requirements. "
+                "Recorded with its reason; no category effect."
+            ),
+            "unresolved": (
+                "A replicated signal with unresolved locus attribution, or a frequent single-study "
+                "signal without independent confirmation. Other:Review pending adjudication."
             ),
             "literature": (
                 "Where a reviewed publication reports the gene in the same organ by a "
@@ -176,6 +182,7 @@ def definition() -> dict:
             ),
             "consequences": {
                 "established": "Unsafe",
+                "unresolved": "Other:Review; strong evidence needs attribution or confirmation.",
                 "dismissed": "No finding; the reason and counts stay in the record.",
                 "below_screen": "No finding. Not a demonstration of absence or safety.",
                 "unassessed": "Recorded as unmeasured; never treated as negative.",
@@ -200,7 +207,8 @@ def definition() -> dict:
                 "separately; reproductive, placental and fetal compartments are never compared."
             ),
             "descriptive": (
-                "Independent patients and samples above N are reported. They admit nothing."
+                "Counts at the actual tenfold threshold distinguish samples, known patients, "
+                "anonymous samples and cancer types. Above-normal counts are legacy descriptors."
             ),
             "excluded_tumors": {
                 "codes": list(GERM_CELL_TUMORS),
@@ -214,19 +222,22 @@ def definition() -> dict:
                 "names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling."
             ),
             "missing_reference": "unassessed, never zero",
-            "alternative": "Reviewed reliable tumor protein with exact identity and source scope.",
+            "protein": "Independent annotation; qualitative staining cannot satisfy a numerical RNA fold.",
         },
         "reproductive_evidence": {
             "branches": ["adult reproductive", "placental", "extraembryonic", "embryonic", "fetal"],
             "rna_detection_floor": DETECTION_FLOOR,
-            "bulk": "Mapped human reproductive compartment >=1 native TPM/nTPM.",
-            "cell": "Mapped reproductive cells >=1 native TPM/nTPM and >=20 reads.",
+            "reproductive_fold": REPRODUCTIVE_FOLD,
+            "rule": "R >= 10 * max(N, D, 1), using the identical normal panel and comparison scale as CA.",
+            "bulk": "At least one QC-passing, identity-resolved reproductive tissue sample on the declared comparison scale.",
+            "cell": "Cell-type nTPM and UMI counts remain separate annotations and normal checks; no unit pooling.",
             "developmental": (
-                "Human stage/lineage mean >=1 TPM, >=20 cells, >=5 cells at >=1 TPM, "
-                "and >=10% cells at >=1 TPM. Retain embryos, donors and stage."
+                "Mean native TPM within one embryo and lineage, >=20 cells, >=5 cells at >=1 TPM, "
+                "and >=10% cells at >=1 TPM. The mean must reach the tenfold threshold. "
+                "Embryos are biological donors; cells are not independent witnesses."
             ),
-            "protein": "Reliable mapped reproductive IHC or reviewed human reproductive protein.",
-            "concentration": "Descriptive measurement; not an admission gate for either set.",
+            "protein": "Reliable reproductive IHC and reviewed protein findings annotate association; they cannot bypass the RNA fold.",
+            "concentration": "The same tenfold enrichment requirement as CA, assessed independently.",
         },
         "shared_normal_policy": {
             "policy_id": "oncoref.cta-selection.2026-11-08.1",
@@ -350,7 +361,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
-def assess_cancer_rna(
+def _assess_enrichment_rna(
     tumors: pd.DataFrame,
     normals: pd.DataFrame,
     *,
@@ -358,6 +369,7 @@ def assess_cancer_rna(
     comparison_id: str,
     comparability_reference: str,
     unit: str,
+    compartment: str,
 ) -> dict:
     """Evaluate one protein in one reviewed tumor/normal comparison panel.
 
@@ -435,6 +447,7 @@ def assess_cancer_rna(
         "comparison_id": comparison_id,
         "comparability_reference": comparability_reference,
         "unit": unit,
+        "positive_compartment": compartment,
         "required_normal_contexts": sorted(required_normal_contexts),
         "missing_normal_contexts": missing,
         "normal_maximum": normal_maximum,
@@ -446,6 +459,10 @@ def assess_cancer_rna(
         "independent_participants_above_normal": 0,
         "samples_above_normal": 0,
         "unresolved_participant_samples_above_normal": 0,
+        "samples_at_tenfold": 0,
+        "independent_participants_at_tenfold": 0,
+        "anonymous_samples_at_tenfold": 0,
+        "participant_or_sample_witnesses_at_tenfold": 0,
         "supporting_tumors": [],
         "routes": [],
         "status": "unassessed",
@@ -453,12 +470,12 @@ def assess_cancer_rna(
     if missing or normal_maximum is None:
         receipt["reason"] = "Required normal comparison is incomplete"
         return receipt
-    threshold = TUMOR_FOLD * max(normal_maximum, disposable_maximum, DETECTION_FLOOR)
+    threshold = ENRICHMENT_FOLD * max(normal_maximum, disposable_maximum, DETECTION_FLOOR)
     receipt["single_sample_threshold"] = threshold
     valid_tumor = t.qc_pass & t.identity_resolved & t.value.notna()
     t = t[valid_tumor].drop_duplicates(["source_id", "sample_id"]).copy()
     if t.empty:
-        receipt["reason"] = "No qualified tumor observations"
+        receipt["reason"] = f"No qualified {compartment} observations"
         return receipt
     t["above_normal"] = t.value.ge(DETECTION_FLOOR) & t.value.gt(normal_maximum)
     t["single_sample_pass"] = t.value.ge(threshold)
@@ -468,16 +485,56 @@ def assess_cancer_rna(
     receipt["independent_participants_above_normal"] = int(participants)
     receipt["samples_above_normal"] = int(t.above_normal.sum())
     receipt["unresolved_participant_samples_above_normal"] = unresolved
+    qualifying = t.single_sample_pass
+    receipt["samples_at_tenfold"] = int(qualifying.sum())
+    receipt["independent_participants_at_tenfold"] = int(
+        t.loc[qualifying & known_participant, "participant_id"].nunique()
+    )
+    receipt["anonymous_samples_at_tenfold"] = int((qualifying & ~known_participant).sum())
+    receipt["participant_or_sample_witnesses_at_tenfold"] = (
+        receipt["independent_participants_at_tenfold"] + receipt["anonymous_samples_at_tenfold"]
+    )
     receipt["supporting_tumors"] = t[t.above_normal | t.single_sample_pass].to_dict("records")
     if t.single_sample_pass.any():
-        receipt["routes"].append("tumor_tenfold_above_nonreproductive_normal")
+        receipt["routes"].append(f"{compartment}_tenfold_above_nonreproductive_normal")
     receipt["status"] = "qualifies" if receipt["routes"] else "does_not_qualify"
     receipt["reason"] = (
-        "A tumor sample is at least 10 x every non-reproductive normal value"
+        f"A {compartment} sample is at least 10 x every non-reproductive normal value"
         if receipt["routes"]
-        else "No tumor sample reaches 10 x the non-reproductive normal maximum"
+        else f"No {compartment} sample reaches 10 x the non-reproductive normal maximum"
     )
     return deepcopy(receipt)
+
+
+def assess_cancer_rna(tumors: pd.DataFrame, normals: pd.DataFrame, **comparison) -> dict:
+    """Assess cancer samples using the shared tenfold RNA comparison contract.
+
+    See :func:`assess_reproductive_rna` for the symmetric positive compartment.
+    Tumors require source, sample and participant IDs (empty participant ID means
+    unknown), value, unit, comparison ID, QC and identity flags. Normal observations
+    require context IDs and reviewed normal/disposable/reproductive scopes.
+    """
+    return _assess_enrichment_rna(tumors, normals, compartment="tumor", **comparison)
+
+
+def assess_reproductive_rna(
+    reproductive: pd.DataFrame, normals: pd.DataFrame, **comparison
+) -> dict:
+    """Assess reproductive/developmental samples against the same normal reference.
+
+    In addition to the cancer observation schema, every positive row requires a
+    reviewed ``scope`` of reproductive or developmental. nTPM, UMI counts and
+    qualitative protein findings cannot be mixed into a native-TPM comparison.
+    Receipt counts distinguish observed samples, known donors and anonymous samples.
+    """
+    _require_columns(reproductive, {"scope"})
+    if not reproductive.scope.isin(["reproductive", "developmental"]).all():
+        raise ValueError("RA witnesses must be reproductive or developmental observations")
+    receipt = _assess_enrichment_rna(
+        reproductive, normals, compartment="reproductive", **comparison
+    )
+    receipt["supporting_reproductive_samples"] = receipt.pop("supporting_tumors")
+    return receipt
 
 
 def assess_rare_cell_rna(
@@ -505,11 +562,12 @@ def assess_rare_cell_rna(
     Two studies replicate it when both find it in the same cell type, or when at
     least ``RARE_CELL_REPLICATE_DONORS`` donors carry it.
     It is ``established`` when replicated at a locus without mapping risk, or
-    when bulk RNA confirms it; otherwise it is ``dismissed`` with its reason.
+    when bulk RNA confirms it. Strong unresolved signals require review; weak or
+    inconsistent signals are dismissed with their reason.
     ``literature_tissues`` lists organs where a reviewed publication reports the
     gene by a gene-specific assay. There, a second assay already vouches for the
     locus, so 1% detection in one donor is enough, single molecules included.
-    Every outcome is terminal: there is no review state.
+    A reference mapping flag is not evidence that the observed reads are artifacts.
     """
     columns = {
         "gene_id",
@@ -590,8 +648,18 @@ def assess_rare_cell_rna(
             status, basis = "established", "replicated signal at a locus without mapping risk"
         elif confirmed:
             status, basis = "established", "signal confirmed by bulk RNA"
+        elif replicated or group.frequent.any():
+            status = "unresolved"
+            basis = (
+                "consequential normal-cell signal with unresolved locus attribution"
+                if mapping_risk
+                else "frequent single-study normal-cell signal needs independent confirmation"
+            )
         elif mapping_risk:
-            status, basis = "dismissed", "counts cannot be attributed to this locus; no bulk RNA"
+            status, basis = (
+                "dismissed",
+                "insufficient concordant signal; locus attribution uncertain",
+            )
         elif two_studies:
             status, basis = "dismissed", "two donors in different cell types; no bulk RNA"
         else:
@@ -622,12 +690,15 @@ def assess_rare_cell_rna(
                 "top_multi_molecule_pct": float(top.multi_molecule_pct),
             }
         )
-    findings.sort(key=lambda f: (f["status"] != "established", -f["top_multi_molecule_pct"]))
+    rank = {"established": 0, "unresolved": 1, "dismissed": 2}
+    findings.sort(key=lambda f: (rank[f["status"]], -f["top_multi_molecule_pct"]))
     receipt["assessable_donor_populations"] = len(d)
     receipt["max_detection_pct"] = float(d.detection_pct.max())
     receipt["max_multi_molecule_pct"] = float(d.multi_molecule_pct.max())
     receipt["findings"] = findings
     receipt["status"] = findings[0]["status"] if findings else "below_screen"
     receipt["tier"] = findings[0]["tier"] if findings else ""
-    receipt["action"] = "unsafe" if receipt["status"] == "established" else "none"
+    receipt["action"] = {"established": "unsafe", "unresolved": "review"}.get(
+        receipt["status"], "none"
+    )
     return deepcopy(receipt)

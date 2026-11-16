@@ -1006,6 +1006,11 @@ def ctpedia_page(table: pd.DataFrame):
 
 
 def main():
+    if target_selection.POLICY_ID != "oncoref.target-selection.2026-11-15.1":
+        raise RuntimeError(
+            "This is the dated 1.38.0 audit. Run it from the 8d0ea5b3 checkout; "
+            "the current catalog must not overwrite historical threshold results."
+        )
     OUT.mkdir(parents=True, exist_ok=True)
     catalog, matrix, cancer_code, normal = load()
     families = pd.read_csv(ROOT / "oncoref/data/cancer-type-registry.csv").set_index("code").family
@@ -1027,6 +1032,17 @@ def main():
     write_csv(genes, OUT / "ctpedia-genes.csv")
     threshold_page(table, near, background, impact)
     ctpedia_page(genes)
+    for path, link in [
+        (OUT / "index.md", "../target-selection-20261110/rebuild/index.md"),
+        (ROOT / "docs/ctpedia-filtering.md", "audits/target-selection-20261110/rebuild/index.md"),
+    ]:
+        text = path.read_text()
+        path.write_text(
+            text.split("\n", 1)[0]
+            + "\n\n"
+            + f"> Historical 1.38.0 audit. Its counts and proposed QC reflect that release. See the [current catalog]({link}) for the active rules and memberships.\n"
+            + text.split("\n", 1)[1]
+        )
     print(table.to_string(), flush=True)
     print(genes.classification.value_counts().to_string(), flush=True)
 

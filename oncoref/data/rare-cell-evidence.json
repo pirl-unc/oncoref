@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.rare-cell-evidence",
-  "policy_id": "oncoref.target-selection.2026-11-16.1",
+  "policy_id": "oncoref.target-selection.2026-11-16.2",
   "census_release": "2025-11-08",
   "filter": "is_primary_data == True and disease == 'normal' and tissue_type == 'tissue'",
   "count_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",
@@ -32,14 +32,16 @@
     "replication": "The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
     "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules.",
     "protected": "Protected populations need 2 times these frequencies.",
-    "single_molecules": "Cells with one molecule never change a category. A mis-assigned read from a paralog, pseudogene or overlapping gene produces exactly this pattern.",
-    "mapping_risk": "Shared transcript sequence with another locus, or an exon inside another same-strand gene. Counts for a flagged gene cannot be attributed to it.",
+    "single_molecules": "Single-molecule detection alone does not establish expression. Ambient RNA and read assignment are possible confounders, not demonstrated explanations.",
+    "mapping_risk": "Shared transcript sequence with another locus, or an exon inside another same-strand gene. Attribution needs read-level review; a flag does not prove artifact.",
     "confirmation": "Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.",
     "established": "A replicated signal at a locus without mapping risk, or any signal with bulk confirmation. Unsafe.",
-    "dismissed": "A signal that is neither: counts at a flagged locus, or from one study, that no other assay confirms. Recorded with its reason; no category effect.",
+    "dismissed": "A weak or inconsistent signal below replication and frequency requirements. Recorded with its reason; no category effect.",
+    "unresolved": "A replicated signal with unresolved locus attribution, or a frequent single-study signal without independent confirmation. Other:Review pending adjudication.",
     "literature": "Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts.",
     "consequences": {
       "established": "Unsafe",
+      "unresolved": "Other:Review; strong evidence needs attribution or confirmation.",
       "dismissed": "No finding; the reason and counts stay in the record.",
       "below_screen": "No finding. Not a demonstration of absence or safety.",
       "unassessed": "Recorded as unmeasured; never treated as negative."
@@ -185,12 +187,14 @@
   ],
   "status_counts": {
     "below_screen": 1372,
-    "dismissed": 267,
+    "unresolved": 260,
     "established": 129,
-    "unassessed": 36
+    "unassessed": 36,
+    "dismissed": 7
   },
   "action_counts": {
-    "none": 1675,
+    "none": 1415,
+    "review": 260,
     "unsafe": 129
   },
   "limitations": [
@@ -199,5 +203,10 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "bc4851aaaa0a790f4a4a485adadcf912eb03205fd72ed96bc06efecb6fdd3554"
+  "sha256": "f5cc4df40f200074144d6db6007423ab1796955673746eb94f573bd158200325",
+  "regrade": {
+    "inputs_receipt": "docs/audits/normal-cell-atlas-20261110/rare-cell/regrade-inputs.json",
+    "sha256": "16f22723456a7f9ffa537c44b7c368188c57b25a69287f228fec389ceeb7d7ac",
+    "scope": "All released donor populations with >=10 positive cells; complete for the unchanged >=10-cell decision rule. Descriptive maxima and donors_assessed refer to retained populations."
+  }
 }

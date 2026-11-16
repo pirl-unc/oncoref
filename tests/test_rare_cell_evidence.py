@@ -38,13 +38,16 @@ def test_evidence_and_flags_match_their_provenance(evidence):
     assert sha(AUDIT / "gene-mapping-risk.csv.gz") == sha(DATA / "gene-mapping-risk.csv.gz")
 
 
-def test_every_signal_is_established_or_dismissed_with_a_basis(evidence):
+def test_every_signal_has_an_evidence_grade_and_corresponding_action(evidence):
     assert set(evidence.rare_cell_status) <= set(policy.RARE_CELL_STATUSES)
-    assert set(evidence.rare_cell_action) == {"none", "unsafe"}
+    assert set(evidence.rare_cell_action) == {"none", "unsafe", "review"}
     established = evidence[evidence.rare_cell_status.eq("established")]
     dismissed = evidence[evidence.rare_cell_status.eq("dismissed")]
+    unresolved = evidence[evidence.rare_cell_status.eq("unresolved")]
     assert established.rare_cell_action.eq("unsafe").all()
     assert dismissed.rare_cell_action.eq("none").all()
+    assert unresolved.rare_cell_action.eq("review").all()
+    assert unresolved.rare_cell_basis.notna().all()
     risk = evidence.paralog_ambiguous | evidence.host_overlapped
     by_basis = dict(iter(established.groupby("rare_cell_basis")))
     clean = by_basis["replicated signal at a locus without mapping risk"]
@@ -55,10 +58,10 @@ def test_every_signal_is_established_or_dismissed_with_a_basis(evidence):
     assert bulk.finding_bulk_tpm.ge(policy.DETECTION_FLOOR).all()
     published = by_basis["detection confirmed by a published gene-specific assay"]
     assert sorted(published.index) == ["MAGEA12", "SCGB1D1"]
-    # A dismissed signal has a mapping risk or a single study, and no bulk confirmation.
+    # Weak or inconsistent signals are recorded; strong ambiguous signals require review.
     assert not dismissed.finding_orthogonal_confirmation.any()
     assert (risk[dismissed.index] | ~dismissed.finding_replicated.astype(bool)).all()
-    counted = pd.concat([clean, bulk, dismissed])
+    counted = pd.concat([clean, bulk, dismissed, unresolved])
     assert counted.finding_top_multi_molecule_pct.ge(policy.RARE_CELL_DETECTION_PCT).all()
     assert counted.finding_top_n_multi.ge(policy.RARE_CELL_MIN_CELLS).all()
     # Frequent detection without multi-molecule cells is reported, not graded.

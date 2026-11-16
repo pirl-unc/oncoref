@@ -1,31 +1,31 @@
 Group,Name,Catalog,Off-target TPM,in,Off-target nTPM,Tumor fold,CTA papers,Flags,`loose`,`standard`,`strict`,Unsafe reasons
-MAGE-A,MAGEA1,CTA,0.0,,0.0,346,7,literature conflict,✓,✓,exclusions,
-MAGE-A,MAGEA2,CTA,0.6000000000000001,white matter,0.8,234,4,mapping risk,✓,✓,exclusions,
+MAGE-A,MAGEA1,CTA,0.256767,spleen,0.0,346,7,literature conflict,✓,✓,exclusions,
+MAGE-A,MAGEA2,CTA,0.609406,adipose tissue,0.8,234,4,mapping risk,✓,✓,exclusions,
 MAGE-A,MAGEA3,Unsafe,,,53.1,,8,mapping risk,—,—,—,HPA tissue clusters
-MAGE-A,MAGEA4,CTA,0.7,lymph node,0.6,3202,8,literature conflict,✓,✓,✓,
-MAGE-A,MAGEA6,CTA,0.2,adipose tissue,0.2,539,6,mapping risk,✓,✓,exclusions,
+MAGE-A,MAGEA4,CTA,3.649867,lymph node,0.6,877,8,literature conflict,✓,✓,✓,
+MAGE-A,MAGEA6,CTA,0.771287,adipose tissue,0.2,539,6,mapping risk,✓,✓,exclusions,
 MAGE-A,MAGEA10,CTA,2.2,white matter,2.4,232,6,mapping risk,✓,✓,exclusions,
 MAGE-A,MAGEA12,Unsafe,,,0.5,,7,mapping risk,—,—,—,Established rare normal-cell RNA
-MAGE-B/C,MAGEB1,CTA,0.0,,0.0,93,6,mapping risk,✓,✓,exclusions,
+MAGE-B/C,MAGEB1,CTA,0.823462,lung,0.0,93,6,mapping risk,✓,✓,exclusions,
 MAGE-B/C,MAGEB2,Unsafe,,,118.4,,7,,—,—,—,HPA tissue clusters
-MAGE-B/C,MAGEB4,CTA,0.0,,0.0,29,1,,✓,papers,papers,
+MAGE-B/C,MAGEB4,CTA,0.072285,lymph node,0.0,29,1,,✓,papers,papers,
 MAGE-B/C,MAGEC1,CTA,0.5,white matter,0.6,313,5,,✓,✓,exclusions,
-MAGE-B/C,MAGEC2,CTA,0.1,amygdala,0.1,682,6,,✓,✓,exclusions,
-NY-ESO / LAGE / PRAME,NY-ESO-1,CTA,0.3,cerebellum,0.5,944,5,mapping risk,✓,✓,✓,
-NY-ESO / LAGE / PRAME,CTAG2,CTA,3.9,thymus,24.9,155,3,"dismissed rare-cell, mapping risk, literature conflict",✓,✓,✓,
-NY-ESO / LAGE / PRAME,PRAME,CTA,3.0,adrenal gland,20.3,1231,6,"dismissed rare-cell, literature conflict",✓,✓,✓,
+MAGE-B/C,MAGEC2,CTA,0.195391,liver,0.1,682,6,,✓,✓,exclusions,
+NY-ESO / LAGE / PRAME,NY-ESO-1,CTA,0.968004,spleen,0.5,944,5,mapping risk,✓,✓,✓,
+NY-ESO / LAGE / PRAME,CTAG2,Other,11.85391,,24.9,51,3,"mapping risk, literature conflict",—,—,—,
+NY-ESO / LAGE / PRAME,PRAME,CTA,3.0132,lung,20.3,1225,6,"dismissed rare-cell, literature conflict",✓,✓,✓,
 NY-ESO / LAGE / PRAME,LAGE3,Unsafe,,,136.4,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea
-SSX / GAGE / PAGE / XAGE,SSX1,CTA,1.2,cerebellum,1.3,223,5,"mapping risk, literature conflict",✓,✓,✓,
-SSX / GAGE / PAGE / XAGE,SSX2,CTA,2.4000000000000004,hypothalamus,2.8000000000000003,142,6,"mapping risk, literature conflict",✓,✓,✓,
-SSX / GAGE / PAGE / XAGE,SSX4,CTA,0.2,cerebral cortex,0.2,413,2,mapping risk,✓,✓,papers,
+SSX / GAGE / PAGE / XAGE,SSX1,CTA,1.57147,thyroid gland,1.3,170,5,"mapping risk, literature conflict",✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,SSX2,Cancer Antigen only,10.03384,thyroid gland,2.8000000000000003,34,6,"mapping risk, literature conflict",✓,off_target,off_target,
+SSX / GAGE / PAGE / XAGE,SSX4,CTA,0.59212,heart muscle,0.2,413,2,mapping risk,✓,✓,papers,
 SSX / GAGE / PAGE / XAGE,GAGE1,CTA,0.7,retina,0.5,1182,6,mapping risk,✓,✓,✓,
 SSX / GAGE / PAGE / XAGE,GAGE2A,CTA,1.1,retina,0.8,1448,6,mapping risk,✓,✓,✓,
-SSX / GAGE / PAGE / XAGE,PAGE1,CTA,0.0,,0.0,1324,4,,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,PAGE1,CTA,0.17673,cerebral cortex,0.0,1324,4,,✓,✓,✓,
 SSX / GAGE / PAGE / XAGE,PAGE4,Unsafe,,,23.3,,0,,—,—,—,Normal bulk
-SSX / GAGE / PAGE / XAGE,XAGE1A/B,CTA,1.8,lung,1.6,2260,2,,✓,✓,papers,
-Testis / meiosis,SYCP1,CTA,1.93779948619,blood,1.8,153,4,,✓,✓,✓,
+SSX / GAGE / PAGE / XAGE,XAGE1A/B,CTA,8.80776,liver,1.6,462,2,,✓,off_target,off_target,
+Testis / meiosis,SYCP1,CTA,5.30317,bone marrow,1.8,56,4,,✓,off_target,off_target,
 Testis / meiosis,TEX14,Unsafe,,,28.4,,4,,—,—,—,HPA tissue clusters
-Testis / meiosis,AKAP4,CTA,0.0787800445618,blood,0.0,16,3,,✓,✓,✓,
+Testis / meiosis,AKAP4,CTA,0.167549,kidney,0.0,16,3,,✓,✓,✓,
 Testis / meiosis,ODF1,CTA,0.623562,basal ganglia,3.4,31,2,,✓,✓,papers,
 Testis / meiosis,ADAM2,CTA,0.6,midbrain,0.5,100,4,,✓,✓,✓,
 Testis / meiosis,TDRD1,Unsafe,,,10.8,,4,,—,—,—,Established rare normal-cell RNA
@@ -39,9 +39,9 @@ Others,SPAG9,Unsafe,,,480.1,,1,,—,—,—,HPA normal protein | Normal bulk | H
 Others,PBK,Unsafe,,,157.7,,3,,—,—,—,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
 Others,CEP55,Unsafe,,,106.0,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | DICE immune | Adult cornea | Established rare normal-cell RNA
 Others,TPTE,CTA,2.0,white matter,2.5,61,3,mapping risk,✓,✓,✓,
-Others,CT45A1,CTA,0.9,retina,0.8,397,3,mapping risk,✓,✓,✓,
-Others,CT83,CTA,1.7,salivary gland,2.6,114,5,literature conflict,✓,✓,✓,
+Others,CT45A1,CTA,5.97153,lung,0.8,67,3,mapping risk,✓,off_target,off_target,
+Others,CT83,CTA,4.23995,salivary gland,2.6,46,5,literature conflict,✓,✓,off_target,
 Others,PLAC1,Unsafe,,,2.4,,2,,—,—,—,Established rare normal-cell RNA
-Others,CSAG1,CTA,1.35216,basal ganglia,1.9,659,1,"mapping risk, literature conflict",✓,papers,papers,
+Others,CSAG1,Cancer Antigen only,1.849833,lymph node,1.9,481,1,"mapping risk, literature conflict",✓,papers,sets,
 Others,LY6K,Unsafe,,,106.2,,2,,—,—,—,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
 Others,NUTM1,CTA,0.9,cerebellum,1.1,56,3,,✓,✓,✓,

@@ -183,6 +183,47 @@ def test_replicates_and_duplicate_cohort_views_are_one_participant():
     assert assess(tumors, normals)["routes"] == ["tumor_tenfold_above_nonreproductive_normal"]
 
 
+def test_actual_tenfold_counts_and_symmetric_reproductive_comparison():
+    positive, normal = observations((10, 10, 9.99, 12, 11), (1, 0.5))
+    positive["participant_id"] = ["person-a", "person-a", "person-b", "", "person-c"]
+    positive.loc[4, "qc_pass"] = False
+    positive = pd.concat([positive, positive.iloc[[0]]], ignore_index=True)
+    ca = assess(positive, normal)
+    assert ca["samples_at_tenfold"] == 3
+    assert ca["independent_participants_at_tenfold"] == 1
+    assert ca["anonymous_samples_at_tenfold"] == 1
+    assert ca["participant_or_sample_witnesses_at_tenfold"] == 2
+    assert ca["samples_above_normal"] == 4  # The weaker historical measure differs.
+    positive["scope"] = "reproductive"
+    ra = policy.assess_reproductive_rna(
+        positive,
+        normal,
+        required_normal_contexts={"context-0", "context-1"},
+        comparison_id="panel-v1",
+        comparability_reference="receipt.json",
+        unit="TPM",
+    )
+    for key in [
+        "single_sample_threshold",
+        "samples_at_tenfold",
+        "independent_participants_at_tenfold",
+        "anonymous_samples_at_tenfold",
+        "status",
+    ]:
+        assert ra[key] == ca[key]
+    assert ra["routes"] == ["reproductive_tenfold_above_nonreproductive_normal"]
+    positive["scope"] = "normal"
+    with pytest.raises(ValueError, match="RA witnesses"):
+        policy.assess_reproductive_rna(positive, normal)
+
+
+def test_frequent_single_study_normal_signal_requires_review():
+    assert grade([("s1", "donor", "vital", 5000, 1800, 1600)], confirmed=()) == (
+        "unresolved",
+        "review",
+    )
+
+
 @pytest.mark.parametrize(
     "field,bad", [("value", None), ("qc_pass", False), ("identity_resolved", False)]
 )
@@ -265,12 +306,12 @@ def grade(rows, risk=False, confirmed=("brain",)):
 TWO_STUDIES = [("s1", "a", "vital", 5000, 400, 50), ("s2", "b", "vital", 5000, 400, 50)]
 
 
-def test_rare_cell_outcomes_are_terminal_and_explained():
+def test_rare_cell_outcomes_distinguish_exclusion_review_and_weak_evidence():
     assert grade(TWO_STUDIES) == ("established", "unsafe")
     assert grade(TWO_STUDIES, confirmed=()) == ("established", "unsafe")
-    # Counts at an ambiguous locus decide nothing unless another assay confirms them.
-    assert grade(TWO_STUDIES, risk=True, confirmed=()) == ("dismissed", "none")
-    assert grade(TWO_STUDIES, risk=True, confirmed=("heart",)) == ("dismissed", "none")
+    # Mapping risk does not establish artifact: replicated signals need review.
+    assert grade(TWO_STUDIES, risk=True, confirmed=()) == ("unresolved", "review")
+    assert grade(TWO_STUDIES, risk=True, confirmed=("heart",)) == ("unresolved", "review")
     assert grade(TWO_STUDIES, risk=True) == ("established", "unsafe")
     # Two donors of one study share its libraries and reference.
     one_study = [("s1", d, *rest) for _, d, *rest in TWO_STUDIES]
@@ -291,7 +332,7 @@ def test_rare_cell_outcomes_are_terminal_and_explained():
     # Unreplicated, a signal must be frequent, and still needs bulk confirmation.
     assert grade([("s1", "a", "vital", 5000, 400, 249)]) == ("below_screen", "none")
     assert grade([("s1", "a", "vital", 5000, 400, 250)]) == ("established", "unsafe")
-    assert grade([("s1", "a", "vital", 5000, 400, 250)], confirmed=()) == ("dismissed", "none")
+    assert grade([("s1", "a", "vital", 5000, 400, 250)], confirmed=()) == ("unresolved", "review")
     # Protected populations need twice the frequency.
     protected = [(s, d, "protected", *rest) for s, d, _, *rest in TWO_STUDIES]
     assert grade(protected) == ("below_screen", "none")

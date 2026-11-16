@@ -8,6 +8,7 @@ here classifies a protein.
 from __future__ import annotations
 
 import sys
+import textwrap
 from pathlib import Path
 
 import matplotlib
@@ -49,8 +50,8 @@ IDEAS = [
     ("Adult cornea RNA", {"Adult cornea"}),
 ]
 OTHER = [
-    ("Incomplete coverage, identity or translation", "Other:Review", REVIEW),
-    ("Nested or Unsafe-contained sequence", "Other:Sequence", SEQUENCE),
+    ("Coverage, identity, translation or unresolved evidence", "Other:Review", REVIEW),
+    ("Nested, Unsafe-contained or read-through sequence", "Other:Sequence", SEQUENCE),
     ("No qualifying expression or bounds fail", "Other:Expression", EXPRESSION),
     ("Home tissue no panel resolves", "Other:Tissue", EXPRESSION),
 ]
@@ -356,7 +357,12 @@ def distributions(data, path):
             [(base["vital"] * scale, "Vital"), (base["protected"] * scale, "Protected")],
             0.001,
         ),
-        ("reproductive_ntpm", "HPA nTPM: highest reproductive tissue", [(1.0, "floor")], 0.01),
+        (
+            "reproductive_fold",
+            "Reproductive observation / shared normal reference",
+            [(target_selection.REPRODUCTIVE_FOLD, "RA gate")],
+            0.01,
+        ),
         (
             "developmental_all_lineage_max_tpm",
             "Embryo TPM: highest developmental lineage mean",
@@ -425,54 +431,56 @@ def distributions(data, path):
 
 
 def tumor_normal(data, path):
-    d = data[pd.to_numeric(data.tumor_max_tpm, errors="coerce").notna()]
+    """Both positive compartments against their identical nonreproductive reference."""
     floor = 0.05
-    x = d.normal_reference_tpm.clip(lower=floor)
-    y = d.tumor_max_tpm.clip(lower=floor)
-    fig, ax = plt.subplots(figsize=(7.6, 6.6))
-    for label, mask, color in [
-        ("Cancer Antigen", d.is_cancer_antigen.astype(bool), CANCER),
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 6.2), sharex=True, sharey=True)
+    for ax, column, membership, title, color in [
+        (axes[0], "tumor_max_tpm", "is_cancer_antigen", "Cancer", CANCER),
         (
-            "Reproductive Antigen only",
-            d.classification.eq("Reproductive Antigen only"),
+            axes[1],
+            "reproductive_max_sample_tpm",
+            "is_reproductive_antigen",
+            "Reproductive / developmental",
             REPRODUCTIVE,
         ),
-        ("Other", d.category.eq("Other"), EXPRESSION),
     ]:
-        ax.scatter(
-            x[mask], y[mask], s=9, alpha=0.6, color=color, label=f"{label} ({int(mask.sum())})"
+        d = data[data[column].notna()]
+        x = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=floor)
+        y = d[column].clip(lower=floor)
+        for label, mask, shade in [
+            ("Qualified membership", d[membership], color),
+            ("No membership / held", ~d[membership], EXPRESSION),
+        ]:
+            ax.scatter(
+                x[mask], y[mask], s=9, alpha=0.6, color=shade, label=f"{label} ({int(mask.sum())})"
+            )
+        grid = np.logspace(np.log10(floor), np.log10(max(100, x.max())), 100)
+        ax.plot(
+            grid,
+            target_selection.ENRICHMENT_FOLD * np.maximum(grid, 1),
+            "k:",
+            lw=1.3,
+            label="10 × max(N, Disposable, 1)",
         )
-    grid = np.logspace(np.log10(floor), 2, 100)
-    fold = target_selection.TUMOR_FOLD
-    ax.plot(
-        grid,
-        fold * np.maximum(grid, 1),
-        "k:",
-        lw=1.3,
-        label=f"T = {fold:g} × max(N, 1): cancer rule",
-    )
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.set_xlabel("Normal reference N: highest compatible normal context (TPM)")
-    ax.set_ylabel("Highest qualified tumor sample T (TPM)")
-    ax.set_title(
-        f"Cancer rule on the {len(d)} proteins assessed for cancer evidence",
-        loc="left",
-        fontsize=11,
-    )
-    ax.legend(fontsize=8, frameon=False, loc="lower right")
-    ax.spines[["top", "right"]].set_visible(False)
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.set_xlabel("Highest nonreproductive reference, including Disposable (TPM)")
+        ax.set_ylabel("Highest QC-passing observation (TPM)")
+        ax.set_title(f"{title}: {len(d)} measured proteins", loc="left", fontsize=11)
+        ax.legend(fontsize=8, frameon=False, loc="lower right")
+        ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     fig.savefig(path, dpi=150, bbox_inches="tight")
     plt.close(fig)
 
 
 def rare(data, path):
-    d = data[data.rare_cell_status.isin(["established", "dismissed", "below_screen"])]
-    fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.4), gridspec_kw={"width_ratios": [3, 2]})
+    d = data[data.rare_cell_status.isin(["established", "unresolved", "dismissed", "below_screen"])]
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 6.8), gridspec_kw={"width_ratios": [3, 2]})
     for status, color in [
         ("below_screen", "#c4ccd1"),
-        ("dismissed", REVIEW),
+        ("unresolved", REVIEW),
+        ("dismissed", GREY),
         ("established", UNSAFE),
     ]:
         part = d[d.rare_cell_status.eq(status)]
@@ -494,7 +502,7 @@ def rare(data, path):
     axes[0].set_yscale("log")
     axes[0].set_xlabel("Highest % of a donor population with any molecule")
     axes[0].set_ylabel("Highest % with ≥ 2 molecules")
-    axes[0].set_title("Rare-cell panel: single molecules do not decide", loc="left", fontsize=11)
+    axes[0].set_title("Rare-cell panel: frequency by donor", loc="left", fontsize=11)
     axes[0].legend(fontsize=8, frameon=False)
     basis = (
         d[d.rare_cell_status.ne("below_screen")]
@@ -503,13 +511,18 @@ def rare(data, path):
     )
     basis = basis.sort_values()
     axes[1].barh(
-        [b for _, b in basis.index],
+        [textwrap.fill(b, 42) for _, b in basis.index],
         basis.values,
-        color=[UNSAFE if s == "established" else REVIEW for s, _ in basis.index],
+        color=[
+            {"established": UNSAFE, "unresolved": REVIEW, "dismissed": GREY}[s]
+            for s, _ in basis.index
+        ],
     )
     for i, value in enumerate(basis.values):
         axes[1].text(value + 2, i, str(value), va="center", fontsize=9)
-    axes[1].set_title("Why a signal was established (red) or dismissed", loc="left", fontsize=11)
+    axes[1].set_title(
+        "Reason for established, unresolved\nor dismissed signals", loc="left", fontsize=11
+    )
     axes[1].set_xlim(0, basis.max() * 1.15)
     for ax in axes:
         ax.spines[["top", "right"]].set_visible(False)
@@ -529,7 +542,7 @@ def stages(data, path):
             "Required normal coverage incomplete": coverage.sum(),
             "Identity or translation unresolved": identity.sum(),
             "Normal signal blocks admission (not Unsafe)": normal.sum(),
-            "Patient identity unresolved in tumor samples": rest.sum(),
+            "Other unresolved evidence or comparison": rest.sum(),
         }
     )
     candidates = data[data.is_target_candidate.astype(bool)]
@@ -588,21 +601,21 @@ def antigen_venn(data, path):
     ax.add_patch(Circle((-0.7, 0), 1.35, color=CANCER, alpha=0.28))
     ax.add_patch(Circle((0.7, 0), 1.35, color=REPRODUCTIVE, alpha=0.28))
     for x, text in [
-        (-1.15, f"Cancer only\n{int((ca & ~ra).sum()):,}"),
+        (-1.2, f"CA only\n{int((ca & ~ra).sum()):,}"),
         (0, f"CTA\n{int((ca & ra).sum()):,}"),
-        (1.15, f"Reproductive only\n{int((ra & ~ca).sum()):,}"),
+        (1.2, f"RA only\n{int((ra & ~ca).sum()):,}"),
     ]:
         ax.text(x, 0, text, ha="center", va="center", fontsize=14, weight="bold")
     ax.text(
-        -0.95, 1.55, f"Cancer Antigens: {int(ca.sum()):,}", ha="center", color=CANCER, fontsize=13
+        -1.2, 1.55, f"Cancer Antigens\n{int(ca.sum()):,}", ha="center", color=CANCER, fontsize=12
     )
     ax.text(
-        0.95,
+        1.2,
         1.55,
-        f"Reproductive Antigens: {int(ra.sum()):,}",
+        f"Reproductive Antigens\n{int(ra.sum()):,}",
         ha="center",
         color=REPRODUCTIVE,
-        fontsize=13,
+        fontsize=12,
     )
     ax.text(
         0,
@@ -619,7 +632,7 @@ def antigen_venn(data, path):
         ha="center",
         fontsize=11,
     )
-    ax.set(xlim=(-2.3, 2.3), ylim=(-2.2, 1.85), aspect="equal")
+    ax.set(xlim=(-2.3, 2.3), ylim=(-2.2, 2.05), aspect="equal")
     ax.axis("off")
     ax.set_title("Current antigen sets (schematic; areas not to scale)", fontsize=14, pad=16)
     fig.savefig(path, dpi=160, bbox_inches="tight")
@@ -666,7 +679,7 @@ def build():
         "[rebuilt catalog](index.md); thresholds are read from the policy constants.\n\n"
         "## Antigen membership\n\n![Antigen sets](summary/antigen-sets.png)\n\n"
         "CTA is the intersection. Reproductive-only proteins have no qualifying cancer evidence; "
-        "the union name does not certify tumor targeting. Unsafe is a separate subtraction background.\n\n"
+        "the union name does not certify tumor targeting. Unsafe is the accepted-exclusion background; Unsafe|Other also subtracts unresolved and nonqualifying proteins.\n\n"
         "## Rule-derived sets and published nominations\n\n![Set overlap](summary/venn.png)\n\n"
         f"Of {counts['CTA']} CTA, {sets['cta_published']} are published nominations and "
         f"{sets['cta_new']} are not. {sets['published_outside']:,} published nominations are in "
@@ -700,7 +713,7 @@ def build():
         "![Distributions](summary/distributions.png)\n\n"
         "One value per protein on each source's own scale; scales are never pooled. Counts use a "
         "compressed axis so the small candidate group stays visible.\n\n"
-        "## Cancer rule\n\n![Tumor against normal](summary/tumor-normal.png)\n\n"
+        "## Shared enrichment rule\n\nBoth CA and RA independently require 10× max(N, Disposable, 1). The cancer panel below shows the tumor side.\n\n![Tumor against normal](summary/tumor-normal.png)\n\n"
         "## Rare-cell RNA\n\n![Rare-cell grading](summary/rare-cell.png)\n\n"
         "[Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md)\n\n"
         "## Inside the later stages\n\n![Stage detail](summary/stages.png)\n\n"

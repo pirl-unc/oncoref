@@ -2,52 +2,58 @@
   "schema": "oncoref.target-selection",
   "version": 1,
   "release_ready": false,
+  "release_ready_meaning": "Scientific review completion, not software publication status. False while any listed research adjudication remains open; unresolved evidence stays excluded from positive sets.",
   "open_reviews": [
     "Tumor-source comparability and outlier support",
     "Read-level confirmation of the rare-cell mapping-risk flags",
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-16.1",
+    "policy_id": "oncoref.target-selection.2026-11-16.2",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18253,
-      "Other": 972,
-      "CTA": 437,
-      "Reproductive Antigen only": 197,
-      "Cancer Antigen only": 34
+      "Other": 1143,
+      "CTA": 246,
+      "Cancer Antigen only": 149,
+      "Reproductive Antigen only": 102
     },
     "classifications": {
       "Unsafe": 18253,
-      "Other:Review": 660,
-      "CTA": 437,
-      "Reproductive Antigen only": 197,
-      "Other:Expression": 167,
-      "Other:Tissue": 83,
-      "Other:Sequence": 62,
-      "Cancer Antigen only": 34
+      "Other:Review": 731,
+      "Other:Expression": 265,
+      "CTA": 246,
+      "Cancer Antigen only": 149,
+      "Reproductive Antigen only": 102,
+      "Other:Tissue": 99,
+      "Other:Sequence": 48
     },
     "memberships": {
-      "is_cancer_antigen": 471,
-      "is_reproductive_antigen": 634,
-      "is_cta": 437,
-      "is_target_candidate": 668
+      "is_cancer_antigen": 395,
+      "is_reproductive_antigen": 348,
+      "is_cta": 246,
+      "is_target_candidate": 497
     },
     "changes": [
       {
         "released_category": "CTA",
         "category": "CTA",
-        "proteins": 376
+        "proteins": 232
+      },
+      {
+        "released_category": "CTA",
+        "category": "Cancer Antigen only",
+        "proteins": 99
       },
       {
         "released_category": "CTA",
         "category": "Other",
-        "proteins": 13
+        "proteins": 130
       },
       {
         "released_category": "CTA",
         "category": "Reproductive Antigen only",
-        "proteins": 169
+        "proteins": 97
       },
       {
         "released_category": "CTA",
@@ -57,22 +63,22 @@
       {
         "released_category": "Other",
         "category": "CTA",
-        "proteins": 36
+        "proteins": 3
       },
       {
         "released_category": "Other",
         "category": "Cancer Antigen only",
-        "proteins": 33
+        "proteins": 48
       },
       {
         "released_category": "Other",
         "category": "Other",
-        "proteins": 908
+        "proteins": 943
       },
       {
         "released_category": "Other",
         "category": "Reproductive Antigen only",
-        "proteins": 19
+        "proteins": 2
       },
       {
         "released_category": "Other",
@@ -82,22 +88,22 @@
       {
         "released_category": "Unsafe",
         "category": "CTA",
-        "proteins": 25
+        "proteins": 11
       },
       {
         "released_category": "Unsafe",
         "category": "Cancer Antigen only",
-        "proteins": 1
+        "proteins": 2
       },
       {
         "released_category": "Unsafe",
         "category": "Other",
-        "proteins": 51
+        "proteins": 70
       },
       {
         "released_category": "Unsafe",
         "category": "Reproductive Antigen only",
-        "proteins": 9
+        "proteins": 3
       },
       {
         "released_category": "Unsafe",
@@ -105,7 +111,7 @@
         "proteins": 18173
       }
     ],
-    "shared_eligible": 907,
+    "shared_eligible": 847,
     "assessed_for_cancer_evidence": 918,
     "unsafe_changes": {
       "released_unsafe_now_other": 86,
@@ -115,12 +121,14 @@
       "status": {
         "not_extracted": 18089,
         "below_screen": 1372,
-        "dismissed": 267,
+        "unresolved": 260,
         "established": 129,
-        "unassessed": 36
+        "unassessed": 36,
+        "dismissed": 7
       },
       "action": {
-        "none": 19764,
+        "none": 19504,
+        "review": 260,
         "unsafe": 129
       },
       "legacy_flag_unassessed": 0
@@ -133,8 +141,8 @@
     },
     "expression_bounds": {
       "unassessed": 18975,
-      "pass": 907,
-      "fail": 11
+      "pass": 903,
+      "fail": 15
     },
     "comparison_required_contexts": [
       "adipose tissue",
@@ -175,19 +183,19 @@
       "urinary bladder"
     ],
     "assessed_cancer_statuses": {
-      "qualifies": 554,
-      "does_not_qualify": 364
+      "qualifies": 528,
+      "does_not_qualify": 390
     },
     "published_nomination_by_category": {
-      "CTA": 302,
-      "Cancer Antigen only": 6,
-      "Other": 59,
-      "Reproductive Antigen only": 105,
+      "CTA": 194,
+      "Cancer Antigen only": 71,
+      "Other": 136,
+      "Reproductive Antigen only": 71,
       "Unsafe": 1761
     }
   },
   "comparison": {
-    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-09.1",
+    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-16.2",
     "unit": "TPM",
     "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
     "compatibility_basis": [
@@ -208,7 +216,7 @@
       "gallbladder",
       "tonsil"
     ],
-    "normal_statistic": "Maximum supported context statistic: tissue/subregion means, GTEx v11 donor medians, and supported immune summaries including DICE third-highest TPM",
+    "normal_statistic": "Maximum of individual HPA tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
     "batch_corrected": false,
     "limitations": [
       "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -243,6 +251,39 @@
         "bytes": 1633631
       }
     ],
+    "individual_tissue_source": {
+      "source_id": "hpa_tissue_samples:v23",
+      "url": "https://v23.proteinatlas.org/download/transcript_rna_tissue.tsv.zip",
+      "sha256": "4f4790de54380f4d47800b16efaed5a0d6bc364a90ddfdd0582f8f2d13e4f9e1",
+      "reference": "HPA v23, Ensembl 109",
+      "unit": "TPM",
+      "statistic": "individual tissue sample; summed transcript TPM",
+      "participant_identity": "Not provided; sample identifiers are not assumed to be donor IDs"
+    },
+    "developmental_sources": [
+      {
+        "path": "tmp/cta-source-consolidation/petropoulos-tpm.zip",
+        "sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334",
+        "source_id": "petropoulos_E-MTAB-3929"
+      },
+      {
+        "path": "tmp/cta-source-consolidation/petropoulos-design.tsv",
+        "sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573",
+        "source_id": "petropoulos_E-MTAB-3929"
+      },
+      {
+        "path": "tmp/cta-quantitative/atlas_tpm",
+        "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
+        "source_id": "tyser_E-MTAB-9388"
+      },
+      {
+        "path": "tmp/cta-quantitative/atlas_design",
+        "sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3",
+        "source_id": "tyser_E-MTAB-9388"
+      }
+    ],
+    "positive_observations": "CA: individual passing tumor; RA: individual reproductive tissue or supported embryo-by-lineage mean. Qualitative protein and incompatible RNA scales cannot bypass the fold.",
+    "witness_tables": "All tenfold witnesses are exported; tumor table also retains up to six weaker above-normal examples per protein. Filter single_sample_pass for qualifying counts. Unknown donor identity is never claimed independent.",
     "method_references": [
       "https://v23.proteinatlas.org/about/assays%2Bannotation",
       "https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/"
@@ -287,6 +328,6 @@
     ],
     "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
   },
-  "data_sha256": "ee8c3415c939584e3ea24b21103bfab96e0cbc5c68b7ea9c2dfdbe3d283a9928",
+  "data_sha256": "64018f1b5e090d9c4fe38fbbfb7bfcea0f1d2bebc72e91085a1217add2e47911",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

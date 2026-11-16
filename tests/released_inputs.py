@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = [
+    ROOT / "tests/fixtures/release-1.39-inputs",
     ROOT / "tests/fixtures/release-1.38-inputs",
     ROOT / "tests/fixtures/release-1.37-inputs",
     ROOT / "tests/fixtures/cta-1.31-inputs",

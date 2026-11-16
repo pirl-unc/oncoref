@@ -4,8 +4,10 @@
 proteins and CTA, RA includes reproductive-only proteins and CTA, and `CA|RA`
 returns **candidate antigen proteins**. The union name describes a research
 inventory: reproductive-only proteins need tumor evidence before tumor targeting.
-`Unsafe` is the separate exclusion background. `Other` is neither a target nor
-an assertion of absent normal expression.
+`Unsafe` is the accepted-exclusion background. `Other` contains unresolved or
+nonqualifying proteins, including technical gaps and unmeasured home tissues; it
+does not assert absent normal expression. `Unsafe|Other` is the conservative
+background for screening shared peptides against both categories.
 
 ```python
 from oncoref import antigen_sets
@@ -14,6 +16,8 @@ ctas = antigen_sets.proteins("CTA")
 cancer_antigens = antigen_sets.proteins("CA")
 candidates = antigen_sets.proteins("CA|RA")
 unsafe_gene_ids = antigen_sets.gene_ids("Unsafe")
+other = antigen_sets.proteins("Other")
+conservative_background = antigen_sets.sequences("Unsafe|Other")
 ```
 
 Rows carry the current policy and evidence. The older `target_sets` and
@@ -34,6 +38,8 @@ from oncoref.peptide_subtraction import PeptideIndex, MatchPolicy
 unsafe = antigen_sets.sequences("Unsafe")
 targets = antigen_sets.sequences("CA")  # or CTA, RA, CA|RA
 background = PeptideIndex(unsafe)       # background lengths 8–15, exact matches
+# To include unresolved and nonqualifying proteins:
+# background = PeptideIndex(antigen_sets.sequences("Unsafe|Other"))
 target_index = PeptideIndex(targets)
 
 peptide = "ACDEFGHIK"                 # illustrative sequence

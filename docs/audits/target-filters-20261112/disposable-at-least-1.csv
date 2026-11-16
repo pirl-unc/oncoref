@@ -1,9 +1,19 @@
-protein_group_label,category,off_target_tpm,off_target_tpm_tissue,off_target_ntpm,disposable_max_tpm,disposable_max_ntpm,tumor_max_tpm,tumor_fold,reproductive_best,papers_cta,papers_oncofetal,papers_tumor,rare_cell_status,mapping_risk
-LCE3C,Cancer Antigen only,21.4,Disposable,23.4,21.4,23.4,284.5613009825911,13.297257055261268,0.2,1,0,0,below_screen,False
-NLRP4,CTA,4.74827427848,blood,4.9,4.6,4.9,280.5005,59.07419907718405,660.1610470388655,5,0,0,below_screen,False
-IL36B,Cancer Antigen only,7.5,skin,7.9,3.3,3.7,498.45000000138293,66.4600000001844,0.9,0,0,0,below_screen,False
-ENSG00000267140,CTA,5.1,lymph node,4.7,2.6,1.7,62.910994115172514,12.335489042190687,4.928569078992287,0,0,0,below_screen,True
-PSMA8,CTA,5.5603071674599995,blood,2.3,1.5,1.7,90.1265,16.208906681889417,243.7,4,0,0,below_screen,False
-MAS1L,CTA,1.1,esophagus,1.0,1.1,0.7,19.3856,17.623272727272727,3.0,0,0,0,below_screen,True
-ENSG00000289809,Reproductive Antigen only,4.5,adipose tissue,4.5,1.0,0.6,0.0678925288722479,0.0150872286382773,9.8,0,0,0,below_screen,True
-XAGE1A/B,CTA,1.8,lung,1.6,1.0,1.0,4068.6393117828993,2260.3551732127216,98.8,2,0,0,below_screen,False
+protein_group_label,category,off_target_tpm,off_target_tpm_tissue,off_target_ntpm,disposable_max_tpm,disposable_max_ntpm,tumor_max_tpm,tumor_fold,reproductive_fold,samples_at_tenfold,independent_patients_at_tenfold,anonymous_samples_at_tenfold,cancer_types_at_tenfold,reproductive_best,papers_cta,papers_oncofetal,papers_tumor,rare_cell_status,mapping_risk
+NLRP4,Cancer Antigen only,8.293013,Disposable,4.9,8.293013,4.9,280.5005,33.823714010818506,3.095727102569905,7.0,7.0,0.0,2.0,25.67290510606456,5,0,0,below_screen,False
+IL36B,Cancer Antigen only,10.803261999999998,skin,7.9,5.197851,3.7,498.45000000138293,46.13884213873393,0.4371995236253643,2.0,2.0,0.0,1.0,4.723181,0,0,0,below_screen,False
+SYCP1,CTA,5.30317,bone marrow,1.8,4.5517,0.0,296.47000000067396,55.904298749742885,28.39077344305387,12.0,12.0,0.0,1.0,150.561098,4,0,0,below_screen,False
+PSMA8,Cancer Antigen only,5.5603071674599995,blood,2.3,2.828853,1.7,90.1265,16.208906681889417,9.964150959902623,3.0,3.0,0.0,1.0,55.40374,4,0,0,below_screen,False
+XAGE1A/B,CTA,8.80776,liver,1.6,2.18274,1.0,4068.6393117828993,461.9380309843705,41.18261283232059,899.0,884.0,7.0,38.0,362.72657,2,0,0,below_screen,False
+TGM4,CTA,5.949815,adrenal gland,2.3,2.126798,0.6,17629.448498614605,2963.0246484327,1121.1434389136468,93.0,93.0,0.0,3.0,6670.59605,0,0,1,below_screen,False
+ENSG00000284934,Cancer Antigen only,6.646655,adrenal gland,2.9,1.937158,0.3,77.0687604092019,11.595119711975707,1.0514151004013308,1.0,0.0,1.0,1.0,6.988393434158008,0,0,0,below_screen,True
+ZACN,Cancer Antigen only,24.872529,skin,1.9,1.7125979999999998,0.0,526.6207201444702,21.172785451148545,0.8827219379259744,3.0,1.0,2.0,2.0,21.955527,0,0,1,below_screen,False
+SRMS,Cancer Antigen only,4.57041,stomach,2.9,1.42939,0.4,463.739359103144,101.46559260616532,1.961609571132568,4.0,2.0,2.0,4.0,8.96536,0,0,0,below_screen,False
+CIB3,Cancer Antigen only,6.5892469146899995,blood,2.3,1.394413,0.2,83.99,12.746524919676869,0.5558226983170057,1.0,1.0,0.0,1.0,3.662453,2,0,0,below_screen,False
+GOLGA8K,Cancer Antigen only,5.010032,thyroid gland,1.7,1.331671,0.4,51.27113155909868,10.23369342932314,3.1495427574115293,1.0,1.0,0.0,1.0,15.77931,0,0,0,below_screen,True
+SMIM28,Cancer Antigen only,4.65934,colon,2.2,1.29576,0.4,142.4515,30.57332154339456,0.0523325191979979,6.0,6.0,0.0,1.0,0.243835,0,0,0,below_screen,False
+NLRP11,Cancer Antigen only,1.267533,Disposable,1.0,1.267533,0.6,139.6906,110.20667706481802,8.964375049085325,59.0,55.0,4.0,9.0,11.362641199092268,3,0,0,below_screen,False
+TSSK2,Reproductive Antigen only,1.21817,Disposable,0.7,1.21817,0.2,9.38736,7.706116551876995,244.28363857261303,0.0,0.0,0.0,0.0,297.579,0,0,0,below_screen,True
+BTN1A1,CTA,5.9,blood,5.1,1.144787,0.8,427.50489572857856,72.4584569031489,23.69913559322034,6.0,6.0,0.0,4.0,139.8249,0,0,1,below_screen,True
+PRM1,CTA,5.3,thyroid gland,5.6,1.12397,0.5,58.96870623288771,11.126170987337304,2972.471698113208,1.0,1.0,0.0,1.0,15754.1,1,0,0,below_screen,False
+CYLC2,Reproductive Antigen only,1.018436,Disposable,1.2,1.018436,0.0,4.408394343744203,4.328592413999704,131.72186568424522,0.0,0.0,0.0,0.0,134.15028999999998,1,0,0,below_screen,False
+CXorf49/B,CTA,6.7767,thymus,0.0,1.003546,0.0,811.2981296025938,119.71876128537396,33.68153286686406,60.0,59.0,1.0,15.0,228.2496437788777,2,0,0,below_screen,True

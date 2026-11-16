@@ -1,0 +1,20 @@
+{
+  "release": "1.39.0",
+  "source_commit": "80a267d4e5125dcab2738c4e31209e0ba0f74419",
+  "sha256": {
+    "oncoref/target_selection.py": "cbb38a45748656518ac0bceb3735c59628a3c2a07d5f7809fc8cd76a7773f1ba",
+    "scripts/rebuild_target_catalog.py": "fc4f04bc3efcb9538d9ab9428bd5d31be9a32a15e124d08bb1119ac9f54ed036",
+    "scripts/render_curation_summary.py": "679860973f0c4fd1858a0422ee67a51f7d1cf628d18724a82744f77daf8693c0",
+    "scripts/render_target_catalog.py": "d5da8cf1eaf42756d5dc91ae9f09eb355ac7af2dbfdd8602ebf9fb79ecfaa42a",
+    "scripts/build_rare_cell_evidence.py": "ee482611af3f467753c1e009e07aed220c14fafcc149462b225c6ff8a24fe804",
+    "oncoref/data/rare-cell-evidence.csv.gz": "bc4851aaaa0a790f4a4a485adadcf912eb03205fd72ed96bc06efecb6fdd3554",
+    "oncoref/data/rare-cell-evidence.json": "45d822ee4bec68210b6802ca27095d33fd6f8df4173cb271044a3f30e65adeb6",
+    "oncoref/target_filters.py": "ad0c7ea83da3e59db385f88f69d86fdec15736f0451d4f8991c53762cde1a863",
+    "oncoref/antigen_sets.py": "7a4ce7b2bda007a6fffdec628210f267056fe711e554b7f5470827e7ce70b5de",
+    "oncoref/data/target-selection.csv.gz": "ee8c3415c939584e3ea24b21103bfab96e0cbc5c68b7ea9c2dfdbe3d283a9928",
+    "oncoref/data/target-selection.json": "75db95d2bb6d17b1bc5417deb19c15bd730aefa07b0e88eef5289ad36fd8a58e",
+    "scripts/build_target_filter_audit.py": "3d8646637a3bc028a519d85fe62d6add33c92652539340aa0afd74aa2663f63c",
+    "scripts/build_target_selection_report.py": "2086f96edb8db0c8a41be2b64098df07c47ed176f230ba41895b89ac9f88ae5f",
+    "scripts/build_cta_threshold_review.py": "6eb39e9d406310a258d1425cae15f4de440bc4dc4df41361002d8daf979cf5cd"
+  }
+}
