@@ -20,6 +20,14 @@
     "tyser_design": {
       "source": "tyser_embryonic_design",
       "version": "E-MTAB-9388-20261026"
+    },
+    "host_cell_rna": {
+      "source": "hpa_single_cell_tissue",
+      "version": "v23"
+    },
+    "host_protein": {
+      "source": "hpa_normal_tissue",
+      "version": "v23"
     }
   },
   "steps": {

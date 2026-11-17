@@ -70,7 +70,11 @@ def list_antigens(args):
                     "tumor_fold",
                     "reproductive_fold",
                     "independent_patients_at_tenfold",
-                    *(["host_status", "effective_off_target_tpm", "effective_tumor_fold"] if "host_status" in rows else []),
+                    *(
+                        ["host_status", "effective_off_target_tpm", "effective_tumor_fold"]
+                        if "host_status" in rows
+                        else []
+                    ),
                 ]
             ],
             args.format,
@@ -94,7 +98,6 @@ def explain(args):
         "protein_group_label",
         "entity_id",
         "classification",
-        "cta_tier",
         "decision_reason",
         "normal_reference_tpm",
         "normal_reference_contexts",
@@ -124,7 +127,6 @@ def explain(args):
             "pass" if row.keep else "fail: " + row.filter_failed for row in evaluated.itertuples()
         ]
     for label, filt in (
-        ("profile:core", target_filters.TargetFilter(membership="cta", host_profile="core")),
         (
             "profile:male-patient",
             target_filters.TargetFilter(membership="cta", host_profile="male-patient"),
@@ -146,7 +148,15 @@ def explain(args):
         ]
     if overrides := _host_overrides(args):
         selected = target_filters.apply(replace(target_filters.TargetFilter(), **overrides), rows)
-        for column in ("host_status", "host_reasons", "host_unknown_compartments", "host_limiting_compartment", "effective_off_target_tpm", "effective_tumor_fold", "keep"):
+        for column in (
+            "host_status",
+            "host_reasons",
+            "host_unknown_compartments",
+            "host_limiting_compartment",
+            "effective_off_target_tpm",
+            "effective_tumor_fold",
+            "keep",
+        ):
             output[column] = selected[column].to_numpy()
         print(json.dumps(selected.attrs), file=sys.stderr)
     if args.format == "table":
@@ -238,7 +248,11 @@ def subtract(args):
         if not sequence or not set(sequence) <= set("ABCDEFGHIJKLMNOPQRSTUVWXYZ*"):
             raise ValueError(f"Invalid protein sequence for {label}")
     host_overrides = _host_overrides(args)
-    records = antigen_sets.select("CA|RA", **host_overrides).background_sequences(args.background) if host_overrides else antigen_sets.sequences(args.background)
+    records = (
+        antigen_sets.select("CA|RA", **host_overrides).background_sequences(args.background)
+        if host_overrides
+        else antigen_sets.sequences(args.background)
+    )
     if records.attrs.get("missing_gene_ids"):
         raise ValueError(
             "Background has missing gene translations; subtraction cannot claim complete coverage"
@@ -271,7 +285,7 @@ def _add_host_options(parser):
         "--profile",
         choices=list(target_filters.HOST_PROFILES),
         default="all",
-        help="Host compartment profile: all (default), core, male-patient, or female-patient",
+        help="Assumed anatomy: all (no host screen), male-patient, or female-patient",
     )
     parser.add_argument(
         "--lactating",
@@ -281,16 +295,23 @@ def _add_host_options(parser):
     parser.add_argument(
         "--pregnant",
         action="store_true",
-        help="Protect embryo and placenta",
+        help="Protect embryo, placenta and milk-secretory state; developmental coverage remains incomplete",
     )
     parser.add_argument(
-        "--accept-loss", "--allow-tissue",
+        "--accept-loss",
+        "--allow-tissue",
         dest="allow_tissues",
         action="append",
         default=[],
         help="Explicitly accept whole-compartment loss; acute injury remains a separate concern",
     )
-    parser.add_argument("--absent-tissue", dest="absent_tissues", action="append", default=[], help="Declare a verified absent compartment (distinct from accepted injury)")
+    parser.add_argument(
+        "--absent-tissue",
+        dest="absent_tissues",
+        action="append",
+        default=[],
+        help="Declare a verified absent compartment (distinct from accepted injury)",
+    )
     parser.add_argument(
         "--protect-tissue",
         dest="protect_tissues",

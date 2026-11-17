@@ -9,6 +9,7 @@ nav:
   - Antigen Curation & Sets:
       - Cancer and Reproductive Antigens: target-selection.md
       - Host profiles and candidate filters: target-filters.md
+      - Host choices and tissue loss: host-selection.md
       - Antigen CLI and curation builds: curation.md
       - Antigen sequences and peptide subtraction: antigen-sequences.md
       - Current catalog & curation funnel: audits/target-selection-20261110/rebuild/index.md

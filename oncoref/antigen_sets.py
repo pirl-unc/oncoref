@@ -42,7 +42,14 @@ class AntigenSelection:
     @property
     def metadata(self):
         from copy import deepcopy
-        return deepcopy({"catalog_policy_id": target_selection.POLICY_ID, "set": self.group, **self._evaluated.attrs})
+
+        return deepcopy(
+            {
+                "catalog_policy_id": target_selection.POLICY_ID,
+                "set": self.group,
+                **self._evaluated.attrs,
+            }
+        )
 
     def decisions(self):
         """All catalog rows with original membership, host status and filter reasons."""
@@ -53,7 +60,14 @@ class AntigenSelection:
         ca, ra = d.filtered_cancer_antigen, d.filtered_reproductive_antigen
         member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[self.group]
         result = d[d.keep & member].copy()
-        for name in ("category", "classification", "is_cta", "is_cancer_antigen", "is_reproductive_antigen", "is_target_candidate"):
+        for name in (
+            "category",
+            "classification",
+            "is_cta",
+            "is_cancer_antigen",
+            "is_reproductive_antigen",
+            "is_target_candidate",
+        ):
             result["catalog_" + name] = result[name]
         result["category"] = result.filtered_category
         result["classification"] = result.category
@@ -61,11 +75,16 @@ class AntigenSelection:
         result["is_reproductive_antigen"] = result.filtered_reproductive_antigen
         result["is_cta"] = result.is_cancer_antigen & result.is_reproductive_antigen
         result["is_target_candidate"] = result.is_cancer_antigen | result.is_reproductive_antigen
+        if "cta_tier" in result:
+            result["catalog_cta_tier"] = result.cta_tier
+            result["cta_tier"] = result.cta_tier.where(result.is_cta, "")
         result.attrs.update(self.metadata)
         return result.reset_index(drop=True)
 
     def gene_ids(self):
-        return frozenset(g for members in self.proteins().member_gene_ids for g in json.loads(members))
+        return frozenset(
+            g for members in self.proteins().member_gene_ids for g in json.loads(members)
+        )
 
     def background_proteins(self, background="Unsafe|Other"):
         """Global exclusions plus host-excluded/unresolved candidates, never a CTA exemption."""
@@ -76,7 +95,11 @@ class AntigenSelection:
         host = d.is_target_candidate & ~d.pass_host
         result = d[base | host].copy()
         result["background_reason"] = result.category.where(base, "Host: " + result.host_status)
-        result.attrs.update(self.metadata, background=background, background_scope="catalog exclusions plus host-excluded or unresolved candidates")
+        result.attrs.update(
+            self.metadata,
+            background=background,
+            background_scope="catalog exclusions plus host-excluded or unresolved candidates",
+        )
         return result.reset_index(drop=True)
 
     def sequences(self, *, genome=None):
@@ -85,11 +108,16 @@ class AntigenSelection:
     def background_sequences(self, background="Unsafe|Other", *, genome=None):
         return _sequences(self.background_proteins(background), background, genome=genome)
 
-    def background_index(self, background="Unsafe|Other", *, genome=None, policy=None, lengths=range(8, 16)):
+    def background_index(
+        self, background="Unsafe|Other", *, genome=None, policy=None, lengths=range(8, 16)
+    ):
         from .peptide_subtraction import PeptideIndex
+
         records = self.background_sequences(background, genome=genome)
         if records.attrs["missing_gene_ids"]:
-            raise ValueError("Background has missing gene translations; subtraction coverage is incomplete")
+            raise ValueError(
+                "Background has missing gene translations; subtraction coverage is incomplete"
+            )
         return PeptideIndex(records, policy=policy, lengths=lengths)
 
 
@@ -100,6 +128,7 @@ def select(group="CTA", *, mode="all", host=None, table=None, host_evidence=None
     Tissue-loss choices never change the broad biological catalog or global Unsafe.
     """
     from . import target_filters
+
     if group not in SETS or group in EXCLUSION_CATEGORIES:
         raise ValueError("Select a candidate set: CTA, CA, RA or CA|RA")
     base = target_filters.FILTER_MODES[mode] if isinstance(mode, str) else mode
@@ -109,25 +138,61 @@ def select(group="CTA", *, mode="all", host=None, table=None, host_evidence=None
     return AntigenSelection(group, target_filters.apply(filt, table, host_evidence=host_evidence))
 
 
-def proteins(group="CTA", *, profile="all", lactating=False, pregnant=False, allow_tissues=(), protect_tissues=(), absent_tissues=(), host=None, mode="all"):
+def proteins(
+    group="CTA",
+    *,
+    profile="all",
+    lactating=False,
+    pregnant=False,
+    allow_tissues=(),
+    protect_tissues=(),
+    absent_tissues=(),
+    host=None,
+    mode="all",
+):
     """Compatibility convenience view; prefer select() when using sequences/backgrounds."""
     if group not in SETS:
         raise ValueError(f"Unknown antigen set {group!r}; choose from {tuple(SETS)}")
-    active = any((profile != "all", lactating, pregnant, allow_tissues, protect_tissues, absent_tissues, host is not None, mode != "all"))
+    active = any(
+        (
+            profile != "all",
+            lactating,
+            pregnant,
+            allow_tissues,
+            protect_tissues,
+            absent_tissues,
+            host is not None,
+            mode != "all",
+        )
+    )
     if group in EXCLUSION_CATEGORIES:
         if active:
-            raise ValueError("Host profiles and candidate filters require select(...).background_proteins()")
+            raise ValueError(
+                "Host profiles and candidate filters require select(...).background_proteins()"
+            )
         rows = target_selection.results()
         return rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
     if not active:
         rows = target_selection.results()
         return rows[rows[SETS[group]]].reset_index(drop=True)
-    return select(group, mode=mode, host=host, host_profile=profile, lactating=lactating, pregnant=pregnant, allow_tissues=allow_tissues, protect_tissues=protect_tissues, absent_tissues=absent_tissues).proteins()
+    return select(
+        group,
+        mode=mode,
+        host=host,
+        host_profile=profile,
+        lactating=lactating,
+        pregnant=pregnant,
+        allow_tissues=allow_tissues,
+        protect_tissues=protect_tissues,
+        absent_tissues=absent_tissues,
+    ).proteins()
 
 
 def gene_ids(group="CTA", **kwargs):
     """All member gene IDs from the same selection contract."""
-    return frozenset(g for members in proteins(group, **kwargs).member_gene_ids for g in json.loads(members))
+    return frozenset(
+        g for members in proteins(group, **kwargs).member_gene_ids for g in json.loads(members)
+    )
 
 
 def loss_consequences(gene: str) -> list[dict]:

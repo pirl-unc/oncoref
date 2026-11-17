@@ -13,7 +13,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from oncoref import host_context, reference_data, target_selection  # noqa: E402
+from oncoref import curation, host_context, reference_data, target_selection  # noqa: E402
 
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 
@@ -25,8 +25,11 @@ def summarize(observations, *, compartment):
     Embryo scope remains incomplete regardless of the measured maximum.
     """
     good = observations.identity_resolved & observations.value.notna()
-    if "library_qc_review" in observations:
-        good &= observations.library_qc_review.fillna("").eq("")
+    qc_review = (
+        int(observations.library_qc_review.fillna("").ne("").sum())
+        if "library_qc_review" in observations
+        else 0
+    )
     measured = observations.loc[good]
     values = measured.value
     if not np.isfinite(values).all() or values.lt(0).any():
@@ -36,8 +39,11 @@ def summarize(observations, *, compartment):
         "max_tpm": float(values.max()) if len(measured) else None,
         "measured_observations": len(measured),
         "unresolved_observations": int((~good).sum()),
-        "scope_complete": bool(len(measured) and compartment != "embryo"),
-        "scope": "early embryo only; later fetal/developmental stages unavailable" if compartment == "embryo" else "sampled adult tissue/state; no universal donor or cell-type coverage claim",
+        "qc_review_observations": qc_review,
+        "scope_complete": bool(len(measured) and compartment != "embryo" and not qc_review),
+        "scope": "early embryo only; later fetal/developmental stages unavailable"
+        if compartment == "embryo"
+        else "sampled adult tissue/state; no universal donor or cell-type coverage claim",
         "sources": sorted(measured.source_id.unique()),
         "max_ntpm": None,
         "protein_status": "unassessed",
@@ -47,59 +53,111 @@ def summarize(observations, *, compartment):
 def build():
     inputs = {}
 
-    def read(path, **kwargs):
+    def read(path, *, source_key=None, pin=None, **kwargs):
         path = Path(path)
-        inputs[str(path)] = hashlib.sha256(path.read_bytes()).hexdigest()
+        with path.open("rb") as handle:
+            checksum = hashlib.sha256()
+            for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                checksum.update(chunk)
+            digest = checksum.hexdigest()
+        if pin and (digest != pin["sha256"] or path.stat().st_size != pin["bytes"]):
+            raise ValueError(f"Host source does not match its immutable pin: {source_key}")
+        key = source_key or (
+            str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
+        )
+        inputs[key] = digest
         return pd.read_csv(path, **kwargs)
 
     catalog = target_selection.results()
     observations = read(OUT / "reproductive-comparison.csv.gz", low_memory=False)
     evidence = {}
     for entity, rows in observations.groupby("entity_id", sort=True):
-        evidence[entity] = {
-            c: summarize(rows[rows.compartment.eq(c)], compartment=c)
-            for c in host_context.COMPARTMENTS
-        }
+        evidence[entity] = {}
+        for c in host_context.COMPARTMENTS:
+            unknown_state = (
+                rows.compartment.eq("breast")
+                if c in target_selection.MAMMARY_COMPARTMENTS
+                else pd.Series(False, index=rows.index)
+            )
+            evidence[entity][c] = summarize(
+                rows[rows.compartment.eq(c) | unknown_state], compartment=c
+            )
+            if unknown_state.any():
+                evidence[entity][c]["scope_complete"] = False
+                evidence[entity][c]["mammary_state_unknown"] = True
     # Reuse the catalog's source-to-canonical identity adjudication, not symbol guesses.
-    identity = read(ROOT / "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz")
+    identity = read(
+        ROOT / "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz"
+    )
     lookup = identity.set_index("source_gene_id").canonical_gene_id
     members = {r.entity_id: json.loads(r.member_gene_ids) for r in catalog.itertuples()}
     gene_entity = {g: e for e, genes in members.items() for g in genes}
     sizes = {e: len(genes) for e, genes in members.items()}
-    for source in ("hpa_single_cell_tissue", "hpa_normal_tissue"):
-        path = reference_data.local_path(source, "v23")
-        data = read(path, sep="\t")
+    references = curation.manifest()["reference_inputs"]
+    for role in ("host_cell_rna", "host_protein"):
+        source, version = references[role]["source"], references[role]["version"]
+        path = reference_data.local_path(source, version)
+        pin = reference_data.REFERENCE_SOURCES[source]["pins"][version]
+        data = read(path, sep="\t", source_key=f"reference:{source}:{version}", pin=pin)
         data["entity_id"] = data.Gene.map(lookup).map(gene_entity)
         data = data[data.entity_id.isin(evidence)]
         for (entity, tissue), rows in data.groupby(["entity_id", "Tissue"], sort=True):
             compartments = catalog_compartments(tissue)
             for compartment in compartments:
                 item = evidence[entity][compartment]
-                item.setdefault("orthogonal_sources", []).append(source + ":v23")
+                item.setdefault("orthogonal_sources", []).append(source + ":" + version)
                 if source == "hpa_normal_tissue":
-                    positive = rows.Level.isin(["Low", "Medium", "High"]) & rows.Reliability.isin(["Approved", "Supported", "Enhanced"])
-                    item["protein_status"] = "unresolved" if positive.any() else "not_detected" if rows.Level.eq("Not detected").all() else "unassessed"
-                    item["protein_findings"] = rows.loc[positive, ["Gene", "Cell type", "Level", "Reliability"]].to_dict("records")
+                    positive = rows.Level.isin(["Low", "Medium", "High"]) & rows.Reliability.isin(
+                        ["Approved", "Supported", "Enhanced"]
+                    )
+                    item["protein_status"] = (
+                        "unresolved"
+                        if positive.any()
+                        else "not_detected"
+                        if rows.Level.eq("Not detected").all()
+                        else "unassessed"
+                    )
+                    item["protein_findings"] = rows.loc[
+                        positive, ["Gene", "Cell type", "Level", "Reliability"]
+                    ].to_dict("records")
                     # These are observations requiring attribution review, not new Unsafe calls.
                 else:
                     rows = rows.copy()
                     keys = [c for c in ("Cluster", "Cell type") if c in rows]
-                    grouped = rows.groupby(keys).agg(total=("nTPM", "sum"), measured=("Gene", "nunique"))
+                    grouped = rows.groupby(keys).agg(
+                        total=("nTPM", "sum"), measured=("Gene", "nunique")
+                    )
                     complete = grouped.measured.eq(sizes[entity])
                     if complete.any():
                         item["max_ntpm"] = float(grouped.loc[complete, "total"].max())
                     if not complete.all():
                         item["scope_complete"] = False
-                    item["cell_rna_scope"] = "unlocalized mammary state" if tissue == "breast" else "named tissue cell clusters"
-    rows = [{"entity_id": e, "exposures": json.dumps(v, allow_nan=False, sort_keys=True)} for e, v in sorted(evidence.items())]
+                    item["cell_rna_scope"] = (
+                        "unlocalized mammary state"
+                        if tissue == "breast"
+                        else "named tissue cell clusters"
+                    )
+    rows = [
+        {"entity_id": e, "exposures": json.dumps(v, allow_nan=False, sort_keys=True)}
+        for e, v in sorted(evidence.items())
+    ]
     target = ROOT / "oncoref/data/host-exposure.csv.gz"
     pd.DataFrame(rows).to_csv(target, index=False, compression={"method": "gzip", "mtime": 0})
     metadata = {
-        "schema": "oncoref.host-exposure.v1", "policy_id": host_context.POLICY_ID,
+        "schema": "oncoref.host-exposure.v1",
+        "policy_id": host_context.POLICY_ID,
         "catalog_policy_id": target_selection.POLICY_ID,
+        "catalog_data_sha256": target_selection.metadata()["data_sha256"],
         "sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
         "inputs": inputs,
-        "limitations": ["Native TPM and nTPM are screened separately, never converted.", "Positive HPA IHC remains unresolved host-specific protein evidence until attribution is reviewed.", "Early embryo observations cannot clear all stages of pregnancy.", "Mammary state is expression-inferred; state-unspecified orthogonal findings apply conservatively to both states.", "Unmeasured cell populations and treatment-induced states are not excluded by this research screen."],
+        "reference_inputs": {role: references[role] for role in ("host_cell_rna", "host_protein")},
+        "limitations": [
+            "Native TPM and nTPM are screened separately, never converted.",
+            "Positive HPA IHC remains unresolved host-specific protein evidence until attribution is reviewed.",
+            "Early embryo observations cannot clear all stages of pregnancy.",
+            "Mammary state is expression-inferred; state-unspecified orthogonal findings apply conservatively to both states.",
+            "Unmeasured cell populations and treatment-induced states are not excluded by this research screen.",
+        ],
     }
     (ROOT / "oncoref/data/host-exposure.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(json.dumps({"host_exposure_groups": len(rows), "policy_id": host_context.POLICY_ID}))
