@@ -70,9 +70,14 @@ For every protected compartment:
    `host.max_ntpm`. Both default to 4. No TPM/nTPM conversion occurs.
 3. Positive reliable HPA protein findings require host-specific attribution review.
    They remain unresolved here; they do not silently rewrite global Unsafe.
-4. For a biological CA, cancer evidence must also satisfy the requested fold over
+4. For a CA meeting the requested cancer-evidence thresholds, cancer evidence must also satisfy the requested fold over
    **max(N, Disposable, protected-host TPM, 1)**. Known-patient replication uses
    the same enlarged denominator. Host rejection does not demote it to RA-only.
+
+Tightening tumor fold or patient support can independently make a catalog CTA
+RA-only. That is an evidence filter, not a host rejection, and does not add the
+protein to the host subtraction background. A context protecting no compartments
+leaves these biological decisions unchanged.
 
 `max_off_target_tpm`, if requested, includes protected-host TPM. The catalog's
 32 TPM Disposable cap never substitutes for this protection limit. Passing the

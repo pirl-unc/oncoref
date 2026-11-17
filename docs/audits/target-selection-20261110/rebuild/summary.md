@@ -14,7 +14,7 @@ Milk-program labels are inferred from expression, not provider-confirmed lactati
 
 Protect, accept loss and absent retain distinct meanings. Present gonads are protected by anatomy presets. Unresolved coverage fails the host screen, while biological CA/RA/CTA membership remains unchanged. [Rules and limitations](../../../host-selection.md).
 
-| Host profile | Protected compartments | CTA | CA only | RA only | CA | RA |
+| Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
 | all | none | 290 | 106 | 113 | 509 |
 | female-patient | ovary, fallopian tube, endometrium, cervix, resting_breast | 239 | 91 | 96 | 426 |

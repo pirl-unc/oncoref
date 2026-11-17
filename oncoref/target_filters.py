@@ -363,7 +363,9 @@ def apply(
         host_tumor_pass &= (kth_patient_fold * (h0 / host_denom)).ge(f.min_tumor_fold)
     reproductive = d.is_reproductive_antigen & d.reproductive_fold.ge(f.min_reproductive_fold)
     if host is not None:
-        failed_margin = d.is_cancer_antigen & ~host_tumor_pass
+        # A stricter cancer-evidence requirement may leave a protein in RA.
+        # That alone is not host exposure and must not enter the background.
+        failed_margin = cancer & ~host_tumor_pass
         d.loc[failed_margin, "host_reasons"] += (
             " | Insufficient independent tumor expression over the protected host reference"
         )

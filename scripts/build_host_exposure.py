@@ -101,42 +101,30 @@ def build():
         data = read(path, sep="\t", source_key=f"reference:{source}:{version}", pin=pin)
         data["entity_id"] = data.Gene.map(lookup).map(gene_entity)
         data = data[data.entity_id.isin(evidence)]
-        for (entity, tissue), rows in data.groupby(["entity_id", "Tissue"], sort=True):
-            compartments = catalog_compartments(tissue)
-            for compartment in compartments:
-                item = evidence[entity][compartment]
-                item.setdefault("orthogonal_sources", []).append(source + ":" + version)
-                if source == "hpa_normal_tissue":
-                    positive = rows.Level.isin(["Low", "Medium", "High"]) & rows.Reliability.isin(
-                        ["Approved", "Supported", "Enhanced"]
-                    )
-                    item["protein_status"] = (
-                        "unresolved"
-                        if positive.any()
-                        else "not_detected"
-                        if rows.Level.eq("Not detected").all()
-                        else "unassessed"
-                    )
-                    item["protein_findings"] = rows.loc[
-                        positive, ["Gene", "Cell type", "Level", "Reliability"]
-                    ].to_dict("records")
-                    # These are observations requiring attribution review, not new Unsafe calls.
-                else:
-                    rows = rows.copy()
-                    keys = [c for c in ("Cluster", "Cell type") if c in rows]
-                    grouped = rows.groupby(keys).agg(
-                        total=("nTPM", "sum"), measured=("Gene", "nunique")
-                    )
-                    complete = grouped.measured.eq(sizes[entity])
-                    if complete.any():
-                        item["max_ntpm"] = float(grouped.loc[complete, "total"].max())
-                    if not complete.all():
-                        item["scope_complete"] = False
-                    item["cell_rna_scope"] = (
-                        "unlocalized mammary state"
-                        if tissue == "breast"
-                        else "named tissue cell clusters"
-                    )
+        data["compartment"] = data.Tissue.map(catalog_compartments)
+        data = data.explode("compartment").dropna(subset=["compartment"])
+        # Combine every source label for a compartment before grading. A negative
+        # alias must never overwrite a positive finding from another label.
+        for (entity, compartment), rows in data.groupby(["entity_id", "compartment"], sort=True):
+            item = evidence[entity][compartment]
+            item.setdefault("orthogonal_sources", []).append(source + ":" + version)
+            if source == "hpa_normal_tissue":
+                item.update(protein_evidence(rows))
+            else:
+                keys = [c for c in ("Tissue", "Cluster", "Cell type") if c in rows]
+                grouped = rows.groupby(keys).agg(
+                    total=("nTPM", "sum"), measured=("Gene", "nunique")
+                )
+                complete = grouped.measured.eq(sizes[entity])
+                if complete.any():
+                    item["max_ntpm"] = float(grouped.loc[complete, "total"].max())
+                if not complete.all():
+                    item["scope_complete"] = False
+                item["cell_rna_scope"] = (
+                    "unlocalized mammary state"
+                    if rows.Tissue.eq("breast").any()
+                    else "named tissue cell clusters"
+                )
     rows = [
         {"entity_id": e, "exposures": json.dumps(v, allow_nan=False, sort_keys=True)}
         for e, v in sorted(evidence.items())
@@ -164,9 +152,33 @@ def build():
 
 
 def catalog_compartments(tissue):
+    # HPA distinguishes numbered endometrial panels and a lactating breast label.
+    # Retain their native label in findings while mapping to catalog compartments.
+    tissue = {
+        "endometrium 1": "endometrium",
+        "endometrium 2": "endometrium",
+        "lactating breast": "lactating_breast",
+    }.get(tissue, tissue)
     if tissue == "breast":
         return ("lactating_breast", "resting_breast")
     return (tissue,) if tissue in host_context.COMPARTMENTS else ()
+
+
+def protein_evidence(rows):
+    """Pool source labels without allowing negative panels to erase positive ones."""
+    positive = rows.Level.isin(["Low", "Medium", "High"]) & rows.Reliability.isin(
+        ["Approved", "Supported", "Enhanced"]
+    )
+    return {
+        "protein_status": "unresolved"
+        if positive.any()
+        else "not_detected"
+        if rows.Level.eq("Not detected").all()
+        else "unassessed",
+        "protein_findings": rows.loc[
+            positive, ["Gene", "Tissue", "Cell type", "Level", "Reliability"]
+        ].to_dict("records"),
+    }
 
 
 if __name__ == "__main__":

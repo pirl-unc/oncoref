@@ -267,3 +267,66 @@ def test_flagged_normal_library_cannot_lower_host_exposure_and_clear_coverage():
     assert result["max_tpm"] == 20
     assert result["qc_review_observations"] == 1
     assert not result["scope_complete"]
+
+
+def test_convenience_views_preserve_filter_host_choices(rows, monkeypatch):
+    monkeypatch.setattr(tf, "measures", lambda table=None: rows.copy())
+    monkeypatch.setattr(
+        hc, "_evidence", lambda: {"a": {c: observation(0) for c in hc.COMPARTMENTS}}
+    )
+    f = tf.TargetFilter(host_profile="male-patient", protect_tissues=("ovary",))
+    expected = antigen_sets.select(mode=f)
+    assert antigen_sets.proteins(mode=f).attrs["host_context"] == expected.metadata["host_context"]
+    assert antigen_sets.gene_ids(mode=f) == expected.gene_ids()
+    # Explicit neutral arguments may override a filter; omitted ones cannot.
+    assert (
+        antigen_sets.proteins(mode=f, profile="all", protect_tissues=()).attrs["host_context"]
+        is None
+    )
+    monkeypatch.setattr(
+        hc, "_evidence", lambda: {"a": {c: observation(5) for c in hc.COMPARTMENTS}}
+    )
+    assert antigen_sets.proteins(mode=f).empty
+    assert not antigen_sets.gene_ids(mode=f)
+    genome = SimpleNamespace(release=115, species=SimpleNamespace(latin_name="homo_sapiens"))
+    assert antigen_sets.sequences(mode=f, genome=genome).empty
+
+
+@pytest.mark.parametrize("filters", [{"min_tumor_fold": 60}, {"min_tumor_patients": 3}])
+def test_no_protected_tissue_is_neutral_when_cancer_evidence_tightens(rows, filters):
+    without = antigen_sets.select("RA", table=rows, **filters)
+    with_context = antigen_sets.select("RA", table=rows, host=context(()), **filters)
+    assert with_context.gene_ids() == without.gene_ids() == frozenset({"ga"})
+    assert with_context.proteins().category.item() == "Reproductive Antigen only"
+    assert with_context.decisions().host_status.item() == "eligible"
+    assert with_context.background_proteins().empty
+
+
+def test_host_protein_panels_include_native_aliases_and_preserve_positive_findings():
+    from build_host_exposure import catalog_compartments, protein_evidence
+
+    assert catalog_compartments("endometrium 1") == ("endometrium",)
+    assert catalog_compartments("endometrium 2") == ("endometrium",)
+    assert catalog_compartments("lactating breast") == ("lactating_breast",)
+    assert set(catalog_compartments("breast")) == {"lactating_breast", "resting_breast"}
+    panels = pd.DataFrame(
+        [
+            {
+                "Gene": "g",
+                "Tissue": "endometrium 1",
+                "Cell type": "glandular",
+                "Level": "High",
+                "Reliability": "Enhanced",
+            },
+            {
+                "Gene": "g",
+                "Tissue": "endometrium 2",
+                "Cell type": "glandular",
+                "Level": "Not detected",
+                "Reliability": "Enhanced",
+            },
+        ]
+    )
+    result = protein_evidence(panels)
+    assert result["protein_status"] == "unresolved"
+    assert result["protein_findings"][0]["Tissue"] == "endometrium 1"

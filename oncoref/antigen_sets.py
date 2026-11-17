@@ -30,6 +30,7 @@ EXCLUSION_CATEGORIES = {
     "Unsafe|Other": ("Unsafe", "Other"),
 }
 ENSEMBL_RELEASE = 115
+_UNSET = object()
 
 
 @dataclass(frozen=True)
@@ -141,29 +142,39 @@ def select(group="CTA", *, mode="all", host=None, table=None, host_evidence=None
 def proteins(
     group="CTA",
     *,
-    profile="all",
-    lactating=False,
-    pregnant=False,
-    allow_tissues=(),
-    protect_tissues=(),
-    absent_tissues=(),
+    profile=_UNSET,
+    lactating=_UNSET,
+    pregnant=_UNSET,
+    allow_tissues=_UNSET,
+    protect_tissues=_UNSET,
+    absent_tissues=_UNSET,
     host=None,
     mode="all",
 ):
     """Compatibility convenience view; prefer select() when using sequences/backgrounds."""
     if group not in SETS:
         raise ValueError(f"Unknown antigen set {group!r}; choose from {tuple(SETS)}")
-    active = any(
-        (
-            profile != "all",
-            lactating,
-            pregnant,
-            allow_tissues,
-            protect_tissues,
-            absent_tissues,
-            host is not None,
-            mode != "all",
+    # Omitted convenience arguments must preserve a caller's TargetFilter.
+    # Explicit False/()/"all" remain valid overrides of that filter.
+    overrides = {
+        key: value
+        for key, value in {
+            "host_profile": profile,
+            "lactating": lactating,
+            "pregnant": pregnant,
+            "allow_tissues": allow_tissues,
+            "protect_tissues": protect_tissues,
+            "absent_tissues": absent_tissues,
+        }.items()
+        if value is not _UNSET
+    }
+    active = (
+        any(
+            value != "all" if key == "host_profile" else bool(value)
+            for key, value in overrides.items()
         )
+        or host is not None
+        or mode != "all"
     )
     if group in EXCLUSION_CATEGORIES:
         if active:
@@ -175,17 +186,7 @@ def proteins(
     if not active:
         rows = target_selection.results()
         return rows[rows[SETS[group]]].reset_index(drop=True)
-    return select(
-        group,
-        mode=mode,
-        host=host,
-        host_profile=profile,
-        lactating=lactating,
-        pregnant=pregnant,
-        allow_tissues=allow_tissues,
-        protect_tissues=protect_tissues,
-        absent_tissues=absent_tissues,
-    ).proteins()
+    return select(group, mode=mode, host=host, **overrides).proteins()
 
 
 def gene_ids(group="CTA", **kwargs):

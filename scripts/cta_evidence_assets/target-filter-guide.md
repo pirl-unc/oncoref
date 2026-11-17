@@ -4,6 +4,9 @@ Catalog `$catalog_policy`; selection policy `$filter_policy`.
 Filters narrow biological candidates. Optional host constraints are a separate axis
 with their own versioned exposure evidence. [Full audit](audits/target-filters-20261112/index.md).
 
+[Why CTA counts changed](audits/cta-count-history-20261117/index.md) distinguishes
+the broad catalog, optional evidence modes and host selections.
+
 ```python
 from oncoref import antigen_sets, target_filters as tf
 from oncoref.host_context import HostContext

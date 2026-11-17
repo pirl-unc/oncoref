@@ -846,7 +846,7 @@ def build():
                 "CTA": "CTA",
                 "CA_only": "CA only",
                 "RA_only": "RA only",
-                "Union": "CA | RA",
+                "Union": "CA ∪ RA",
             },
         )
         + "\n\n[Profile table CSV](summary/cta-profiles.csv)\n\n"

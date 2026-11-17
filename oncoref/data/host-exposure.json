@@ -3,7 +3,7 @@
   "policy_id": "oncoref.host-selection.2026-11-17.2",
   "catalog_policy_id": "oncoref.target-selection.2026-11-17.1",
   "catalog_data_sha256": "63d4f3a0a867286726c77915814f106bb98d99353e7626e287d29ea70e6b9a2e",
-  "sha256": "0a80ea81efc85916b8a8ab15ceeb85b2676862f40626c0655f1fe91b8ab99079",
+  "sha256": "23037eaf9194835531ad1cc2b55c3beb1d3f7fb6e5bd93f5c61ea92cb057d843",
   "inputs": {
     "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "5efae1d1119be64e18a6a32f48c99fa46ef5d15b6333952fa895ee2d745c3a87",
     "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
