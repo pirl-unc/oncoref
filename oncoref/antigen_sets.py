@@ -20,20 +20,32 @@ SETS = {
     "RA": "is_reproductive_antigen",
     "CA|RA": "is_target_candidate",
     "Unsafe": None,
+    "Other": None,
+    "Unsafe|Other": None,
+}
+EXCLUSION_CATEGORIES = {
+    "Unsafe": ("Unsafe",),
+    "Other": ("Other",),
+    "Unsafe|Other": ("Unsafe", "Other"),
 }
 ENSEMBL_RELEASE = 115
 
 
 def proteins(group="CTA") -> pd.DataFrame:
-    """Current protein groups: CTA, CA, RA, CA|RA, or Unsafe.
+    """Current antigen groups or Unsafe, Other, and Unsafe|Other backgrounds.
 
     CA and RA include CTA. CA|RA is the union of candidate antigen proteins;
     RA-only membership does not imply tumor expression.
+    Other denotes unresolved or nonqualifying proteins, not established hazards.
     """
     if group not in SETS:
         raise ValueError(f"Unknown antigen set {group!r}; choose from {tuple(SETS)}")
     rows = target_selection.results()
-    mask = rows.category.eq("Unsafe") if group == "Unsafe" else rows[SETS[group]]
+    mask = (
+        rows.category.isin(EXCLUSION_CATEGORIES[group])
+        if group in EXCLUSION_CATEGORIES
+        else rows[SETS[group]]
+    )
     return rows[mask].reset_index(drop=True)
 
 

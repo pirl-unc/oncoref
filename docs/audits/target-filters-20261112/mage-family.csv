@@ -1,20 +1,18 @@
 MAGE,Catalog,Off-target TPM,Off-target nTPM,Tumor fold,CTA papers,Mapping risk,`standard`,`strict` on its own data
-MAGEA1,CTA,0.0,0.0,346.0,7,,✓,✓
+MAGEA1,CTA,0.256767,0.0,346.0,7,,✓,✓
 MAGEA10,CTA,2.2,2.4,232.0,6,yes,✓,✓
-MAGEA11,CTA,0.146599,0.1,109.0,6,,✓,✓
-MAGEA2/B,CTA,0.6000000000000001,0.8,234.0,4,yes,✓,✓
-MAGEA4,CTA,0.7,0.6,3202.0,8,,✓,✓
-MAGEA6,CTA,0.2,0.2,539.0,6,yes,✓,✓
+MAGEA11,CTA,0.338267,0.1,109.0,6,,✓,✓
+MAGEA2/B,CTA,0.609406,0.8,234.0,4,yes,✓,✓
+MAGEA4,CTA,3.649867,0.6,877.0,8,,✓,✓
+MAGEA6,CTA,0.771287,0.2,539.0,6,yes,✓,✓
 MAGEA8,CTA,0.989010976255,1.0,205.0,4,,✓,✓
-MAGEA9/B,CTA,0.2,0.2,321.0,4,,✓,✓
-MAGEB1,CTA,0.0,0.0,93.0,6,yes,✓,✓
-MAGEB10,Reproductive Antigen only,1.9,2.4,4.0,2,yes,✓,sets
-MAGEB16,CTA,0.0,0.0,90.0,4,,✓,✓
-MAGEB17,CTA,1.85061,2.8,80.0,0,,papers,papers
-MAGEB18,CTA,0.0,0.0,11.0,2,,✓,papers
+MAGEA9/B,CTA,0.955674,0.2,321.0,4,,✓,✓
+MAGEB1,CTA,0.823462,0.0,93.0,6,yes,✓,✓
+MAGEB16,CTA,0.040433,0.0,90.0,4,,✓,✓
+MAGEB17,Cancer Antigen only,1.85061,2.8,80.0,0,,papers,sets
+MAGEB18,Cancer Antigen only,0.0,0.0,11.0,2,,✓,sets
 MAGEB3,Reproductive Antigen only,0.2,0.3,8.0,3,,✓,sets
-MAGEB4,CTA,0.0,0.0,29.0,1,,papers,papers
-MAGEB5,Reproductive Antigen only,0.039186,0.0,2.0,0,,papers,sets
+MAGEB4,CTA,0.072285,0.0,29.0,1,,papers,papers
 MAGEB6B,Cancer Antigen only,0.0,0.0,15.0,0,yes,papers,sets
 MAGEC1,CTA,0.5,0.6,313.0,5,,✓,✓
-MAGEC2,CTA,0.1,0.1,682.0,6,,✓,✓
+MAGEC2,CTA,0.195391,0.1,682.0,6,,✓,✓

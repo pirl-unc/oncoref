@@ -1,6 +1,6 @@
 # Literature review of normal expression
 
-**912 proteins reviewed on 2026-11-15; 21 are Unsafe on published evidence.** Scope: Every protein that would be a Target candidate while its rare-cell signal is dismissed, or after release from the pooled 1% detection flag, and every Target candidate of the 2026-11-10 catalog.
+**912 proteins reviewed on 2026-11-15; 19 are Unsafe on published evidence.** Scope: Every protein that would be a Target candidate while its rare-cell signal is dismissed, or after release from the pooled 1% detection flag, and every Target candidate of the 2026-11-10 catalog.
 
 ## Rubric
 

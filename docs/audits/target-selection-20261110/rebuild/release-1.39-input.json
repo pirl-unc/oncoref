@@ -1,0 +1,7 @@
+{
+  "release": "1.39.0",
+  "source_commit": "80a267d4e5125dcab2738c4e31209e0ba0f74419",
+  "source_path": "oncoref/data/target-selection.csv.gz",
+  "projection": "release-1.39-memberships.csv.gz",
+  "sha256": "ba2c8590bb635da97ff0bc136d1f8db83a79079d7de2147a0a1a05926dc1323e"
+}

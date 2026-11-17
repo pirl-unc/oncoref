@@ -13,7 +13,8 @@ from oncoref import target_filters as tf
 from oncoref import target_selection
 from oncoref.cta_literature import sources
 
-OUT = Path(__file__).resolve().parents[1] / "docs/audits/target-filters-20261112"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "docs/audits/target-filters-20261112"
 SETS = ("CTA", "Cancer Antigen only", "Reproductive Antigen only")
 VIEWS = ("loose", "standard", "strict")
 
@@ -30,6 +31,8 @@ SWEEPS = {
     "max_off_target_tpm": [5.0, 2.0, 1.0, 0.5, 0.1],
     "normal_function": ["no_vital", "no_protected", "no_manageable"],
     "min_tumor_fold": [20.0, 30.0, 50.0, 100.0],
+    "min_reproductive_fold": [20.0, 30.0, 50.0, 100.0],
+    "min_tumor_patients": [1, 2, 3, 5],
     "membership": ["cancer_antigen", "reproductive_antigen", "cta"],
     "min_papers": [1, 2, 3, 4],
 }
@@ -56,8 +59,8 @@ LAYER_ROWS = [
     ),
     (
         "3 `sets`",
-        "How far above normal must the best tumor be, and which set do you want?",
-        "`min_tumor_fold`, `membership`",
+        "How much enrichment and tumor replication, and which set do you want?",
+        "`min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership`",
     ),
     (
         "4 `papers`",
@@ -135,6 +138,11 @@ def main():
         "disposable_max_ntpm",
         "tumor_max_tpm",
         "tumor_fold",
+        "reproductive_fold",
+        "samples_at_tenfold",
+        "independent_patients_at_tenfold",
+        "anonymous_samples_at_tenfold",
+        "cancer_types_at_tenfold",
         "reproductive_best",
         "papers_cta",
         "papers_oncofetal",
@@ -348,9 +356,13 @@ Target candidates are the first three rows: {len(cand)} proteins. A filter never
 a protein into or out of Other or Unsafe.
 
 **One cancer rule.** A protein is a Cancer Antigen when one tumor sample, from any
-comparable TPM cohort except germ cell tumors, is at least 10 times its highest
+QC-passing comparable TPM cohort including germ cell tumors, is at least 10 times its highest
 non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
 below 1 TPM count as 1). The {len(antigens)} Cancer Antigens: {fold_text}.
+{int(antigens.samples_at_tenfold.eq(1).sum())} have exactly one qualifying sample;
+{int(antigens.independent_patients_at_tenfold.ge(2).sum())} have qualifying samples from
+at least two known patients. Anonymous samples are reported separately.
+RA uses the same 10× denominator in reproductive tissue or a supported embryo-lineage mean.
 {len(other_tissue)} proteins whose normal home is a tissue no panel resolves are
 Other:Tissue unless reproductive evidence qualifies.
 
@@ -362,7 +374,7 @@ value, and a missing measurement never passes.
 
 {md(layers)}
 
-**Layer 3 tightens Cancer Antigens only.** `min_tumor_fold` raises the catalog's 10x;
+**Layer 3 tightens the two sets independently.** Both fold knobs raise the catalog's 10x;
 a protein that loses Cancer Antigen membership keeps its Reproductive Antigen
 membership, so a CTA with a weaker tumor becomes Reproductive Antigen only and stays in
 the list. `membership` then picks the set: `membership="cta"` requires both.
@@ -460,8 +472,9 @@ Limits: {"; ".join(x[0].lower() + x[1:] for x in document["limitations"][-4:])}.
 - **One tumor sample can admit a protein.** The rule asks for a single sample at 10x,
   as requested; it does not ask for replication. The most frequent top sample is
   `{top_samples.index[0]}`, the best tumor for {int(top_samples.iloc[0])} Cancer
-  Antigens. `tumor_top_sample` and `independent_patients_above_normal` on each row show
-  how much rests on one sample.
+  Antigens. `samples_at_tenfold`, `independent_patients_at_tenfold`,
+  `anonymous_samples_at_tenfold` and `cancer_types_at_tenfold` record qualifying support.
+  `min_tumor_patients` optionally requires known-patient replication at 10×.
 - **The paper layer does most of the cutting.** {nominated} of {len(cand)} candidates
   are nominated by any CTA-list paper. `min_papers=3` keeps {len(three)}, and
   {only_big} of those are named by all of the three largest lists
@@ -472,7 +485,105 @@ Limits: {"; ".join(x[0].lower() + x[1:] for x in document["limitations"][-4:])}.
   [Sources and recorded scopes](paper-families.csv).
 """
     (OUT / "index.md").write_text(report)
+    write_guide(table)
     print(report)
+
+
+def write_guide(table):
+    """Render the public filter guide from the same catalog and filter definitions."""
+    mode_rows = []
+    for mode in tf.FILTER_MODES:
+        kept = tf.apply(tf.FILTER_MODES[mode], table)
+        mode_rows.append(
+            f"| `{mode}` | {int(kept.keep.sum())} | `{tf.FILTER_MODES[mode].changed()}` |"
+        )
+    (ROOT / "docs/target-filters.md").write_text(f"""# Target filters
+
+The catalog owns all evidence and category decisions. Filters only narrow its
+candidate sets. Current catalog: `{target_selection.POLICY_ID}`; filter policy:
+`{tf.FILTER_POLICY_ID}`. [Full audit and sweep tables](audits/target-filters-20261112/index.md).
+
+```python
+from oncoref import target_filters as tf
+
+all_candidates = tf.select("all")
+replicated_ca = tf.select(tf.TargetFilter(
+    membership="cancer_antigen", min_tumor_patients=2))
+enriched_ctas = tf.select(tf.TargetFilter(
+    membership="cta", min_tumor_fold=30, min_reproductive_fold=20))
+decisions = tf.apply(tf.TargetFilter(min_papers=2))
+```
+
+## Five ordered layers
+
+| Layer | Knob | Default | Meaning |
+|---|---|---|---|
+| Off target | `max_off_target_tpm` | None | Highest non-reproductive native TPM, including Disposable, must be below this value |
+| Curation | `normal_function` | `any` | Optionally exclude recorded Vital, Protected or Manageable normal homes |
+| Sets | `min_tumor_fold` | 10 | Tighten CA's tumor / max(N, Disposable, 1) |
+| Sets | `min_reproductive_fold` | 10 | Independently tighten RA's reproductive observation / the same denominator |
+| Sets | `min_tumor_patients` | 0 | Known patients with a qualifying sample at the catalog's 10× threshold; anonymous samples do not count |
+| Sets | `membership` | `target_candidates` | Keep union, CA, RA, CTA or either exclusive set after tightening |
+| Papers | `min_papers` | 0 | Distinct scoped target nominations or tumor reports |
+| Exclusions | `exclude_prefixes`, `except_labels` | Empty | Explicit name-based exclusions and exceptions |
+
+Missing measurements never satisfy an active requirement. The fold knobs cannot
+go below 10. A filter never promotes Other or Unsafe, changes the catalog, or adds
+its own evidence. Every layer is evaluated; `filter_failed` names the first failure.
+`filtered_category` reports membership after tightening.
+
+Raising only the cancer fold can move a CTA to RA-only without removing it from the
+union. Raising only the reproductive fold can move it to CA-only. Select `cta` when
+both tightened memberships are required. The patient-count requirement tightens CA
+only; counts remain at **10× even if `min_tumor_fold` is higher**. Requiring two known
+patients at 10× plus a best tumor at 30× does not assert two patients at 30×.
+
+## Modes
+
+| Mode | Kept proteins | Changes from the catalog defaults |
+|---|---:|---|
+{chr(10).join(mode_rows)}
+
+Modes nest from all to strict. They are optional choices, not evidence grades.
+PRAME, NY-ESO-1 and MAGEA4 are regression controls across these modes.
+
+## What the measurements mean
+
+`samples_at_tenfold`, `independent_patients_at_tenfold`,
+`anonymous_samples_at_tenfold` and `cancer_types_at_tenfold` expose actual qualifying
+tumor support. Unknown participant identity stays unknown. `*_above_normal` fields
+describe a weaker historical threshold and must not be used as 10× witness counts.
+
+`reproductive_fold` and `reproductive_max_sample_tpm` use the same native-TPM
+reference as CA. `reproductive_best` is a compatibility display alias for the latter;
+it no longer takes a numerical maximum across TPM and nTPM.
+
+<a id="normal-nose-and-skin-which-the-expression-panels-do-not-sample"></a>
+
+The normal-function knob uses recorded tissues and tiers from shared curation.
+[Unmeasured home tissues](target-selection.md#home-tissue-the-panels-do-not-resolve)
+remain visible even when reproductive evidence qualifies.
+
+## Papers and MAGE
+
+Paper counts indicate published attention and scoped claims. Overlapping screens
+are not independent experimental replication, and bibliographic support cannot
+clear a normal-expression hold. Strong unresolved rare-cell signals now become
+Other:Review in the catalog, before any paper filter.
+
+Strict retains `exclude_prefixes=("MAGE",)` and `except_labels=("MAGEA4",)` as an
+explicit judgment. It can remove MAGEC1 or MAGEC2 despite favorable expression.
+Exact and bounded-distance [peptide subtraction](antigen-sequences.md) against
+`Unsafe` or `Unsafe|Other` complements this rule. Sequence similarity alone does
+not establish recognition by a particular TCR; the prefix rule is not silently replaced.
+
+## Inspecting decisions
+
+`tf.measures()` returns catalog evidence plus the quantities read by filters.
+`tf.funnel("strict")` reports sequential losses; `tf.describe("strict")` names
+every active knob. The [audit](audits/target-filters-20261112/index.md) provides
+single-knob sweeps, every mode's members and overlapping failure reasons.
+""")
 
 
 if __name__ == "__main__":

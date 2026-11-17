@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 668
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 497
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -88,6 +88,31 @@ def test_fold_knob_moves_proteins_between_sets_not_out_of_the_union(catalog):
     assert not both[weak].keep.any()
 
 
+def test_reproductive_fold_tightens_its_own_set(catalog):
+    d = tf.apply(tf.TargetFilter(min_reproductive_fold=50), catalog)
+    weak = d.is_cta & d.reproductive_fold.lt(50)
+    assert weak.any()
+    assert d[weak].filtered_category.eq("Cancer Antigen only").all()
+    assert d[weak].keep.all()
+    assert not tf.apply(tf.TargetFilter(min_reproductive_fold=50, membership="cta"), catalog)[
+        weak
+    ].keep.any()
+
+
+def test_patient_replication_uses_tenfold_known_patients_not_above_normal(catalog):
+    row = catalog[catalog.protein_group_label.eq("MAGEA4")].copy()
+    f = tf.TargetFilter(membership="cancer_antigen", min_tumor_patients=2)
+    row["independent_patients_at_tenfold"] = 1
+    row["independent_patients_above_normal"] = 100
+    row["anonymous_samples_at_tenfold"] = 100
+    assert not tf.apply(f, row).keep.any()
+    row["independent_patients_at_tenfold"] = 2
+    assert tf.apply(f, row).keep.all()
+    row["independent_patients_at_tenfold"] = float("nan")
+    assert not tf.apply(f, row).keep.any()
+    assert "known patients" in tf.describe(f)
+
+
 def test_cta_list_papers_count_only_where_they_nominate(catalog):
     papers = tf.paper_table()
     from oncoref.cta_literature import attestations
@@ -104,9 +129,9 @@ def test_cta_list_papers_count_only_where_they_nominate(catalog):
 
 def test_missing_values_never_pass_a_threshold(catalog):
     row = catalog[catalog.protein_group_label == "MAGEA4"].copy()
-    assert tf.apply(tf.TargetFilter(max_off_target_tpm=1.0), row).keep.all()
+    assert tf.apply(tf.TargetFilter(max_off_target_tpm=4.0), row).keep.all()
     row["normal_reference_tpm"] = float("nan")
-    d = tf.apply(tf.TargetFilter(max_off_target_tpm=1.0), row)
+    d = tf.apply(tf.TargetFilter(max_off_target_tpm=4.0), row)
     assert d.filter_failed.iloc[0] == "off_target"
 
 
@@ -117,6 +142,10 @@ def test_bad_knobs_are_rejected():
         {"readthrough": "exclude"},
         {"min_patients": 5},
         {"min_tumor_fold": 5.0},
+        {"min_reproductive_fold": 5.0},
+        {"min_reproductive_fold": float("nan")},
+        {"min_tumor_patients": -1},
+        {"min_tumor_patients": 1.5},
         {"exclude_prefixes": "MAGE"},
     ):
         with pytest.raises((ValueError, TypeError)):
@@ -142,7 +171,7 @@ def test_mage_rule_drops_the_family_but_keeps_magea4(catalog):
     f = tf.TargetFilter(exclude_prefixes=("MAGE",), except_labels=("MAGEA4",))
     d = tf.apply(f, catalog)
     removed = d[d.is_target_candidate & ~d.keep]
-    assert len(removed) == 18
+    assert len(removed) == 16
     assert "MAGEC2" in set(removed.protein_group_label)
     assert removed.protein_group_label.str.startswith("MAGE").all()
     assert (removed.filter_failed == "exclusions").all()
@@ -161,7 +190,8 @@ def test_readthrough_loci_are_resolved_by_the_catalog_not_by_a_filter(catalog):
     named = catalog[
         catalog.protein_group_label.isin(["ATF7-NPFF", "ENSG00000273155", "ENSG00000267618"])
     ]
-    assert len(named) == 3 and named.classification.eq("Other:Sequence").all()
+    assert len(named) == 3 and named.classification.isin(["Other:Sequence", "Other:Review"]).all()
+    assert not named.sequence_pass.any()  # Review precedence does not erase sequence failure.
     assert rows.readthrough_parents.str.len().gt(0).sum() >= len(rows) - 1
 
 
@@ -170,7 +200,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 668 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 497 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()

@@ -132,6 +132,7 @@ def svg(name):
 def build():
     OUT.mkdir(parents=True, exist_ok=True)
     definition = target_selection.definition()
+    write_guide(definition)
     (OUT / "definition.json").write_text(json.dumps(definition, indent=2) + "\n")
     figures()
     rows = "".join(
@@ -161,7 +162,7 @@ The released 1.36.0 catalog remains a separate snapshot under its earlier policy
 <h2>One shared eligibility screen</h2>
 <p>Accepted normal-tissue or applicable clinical exclusion → <strong>Unsafe</strong>.
 Required coverage, identity, translation or unresolved evidence → <strong>Other:Review</strong>.
-Nested or Unsafe-contained sequence → <strong>Other:Sequence</strong>.
+Nested, Unsafe-contained or read-through sequence → <strong>Other:Sequence</strong>.
 Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
 A recorded normal home that no expression panel resolves (nose, taste bud, hair follicle,
 tooth), without reproductive evidence → <strong>Other:Tissue</strong>.
@@ -178,17 +179,18 @@ therefore never change a category.</p>
 <tr><td>Does another assay agree?</td><td>{html.escape(rare["confirmation"])}</td></tr></tbody></table>
 <table><thead><tr><th>Outcome</th><th>Rule</th></tr></thead>
 <tbody><tr><td>Established</td><td>{html.escape(rare["established"])}</td></tr>
+<tr><td>Unresolved</td><td>{html.escape(rare["unresolved"])}</td></tr>
 <tr><td>Dismissed</td><td>{html.escape(rare["dismissed"])}</td></tr>
 <tr><td>Below the screen</td><td>No replicated or frequent multi-molecule signal. No finding; not evidence of absence or safety.</td></tr></tbody></table>
 <p>{html.escape(rare["protected"])} {html.escape(rare["literature"])} 1%, 2% and 5% detection
-remain reported comparison metrics. There is no review state.
+remain reported comparison metrics. Strong unresolved signals require review.
 <a href="../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> ·
 <a href="rebuild/literature/">Literature review</a>.</p>
 <h2>Cancer evidence</h2>
 <p>Let N be the highest qualified nonexempt normal measurement in a complete, compatible
 comparison panel and D the highest Disposable value. One tumor sample, from any comparable
 TPM cohort, needs T ≥{fold:g} × max(N, D, 1). This is the only cancer route; counts of patients
-above N are reported and admit nothing. Sample quality and exact protein identity must pass.
+at the actual tenfold threshold are reported separately from anonymous samples. Sample quality and exact protein identity must pass.
 The highest tumor, reproductive or developmental value must also exceed every measured
 nonreproductive normal and Disposable value, and Disposable expression must stay at or
 below {cap:g} TPM and {cap:g} nTPM, each on its own scale.</p>
@@ -200,15 +202,17 @@ comparison methods, normal contexts, source statistics and sample identities.
 Missing required normal data leave the comparison unassessed. All other normal panels
 continue to enforce their exclusions.
 <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Wang et al., 2018</a>.</p>
-<p>Reviewed reliable tumor protein is a separate positive evidence route. Qualitative
-staining does not supply an RNA fold change. A high tumor value never cancels a normal exclusion.</p>
+<p>Reviewed reliable tumor protein is an independent annotation. Qualitative
+staining cannot bypass the RNA fold. A high tumor value never cancels a normal exclusion.</p>
 <h2>Reproductive and developmental evidence</h2>
 <p>Adult reproductive, placental, extraembryonic, embryonic and fetal associations count.
-Use ≥1 native TPM/nTPM with the existing cell/read support, or reliable mapped protein
-evidence. Record the actual branch and stage. The old adult reproductive concentration
-score becomes descriptive; it is not an admission gate.</p>
-<p>The 1-unit detection convention is distinct from protein production or antigen
-presentation. <a href="https://v23.proteinatlas.org/about/assays%2Bannotation">HPA methods</a>.</p>
+RA requires R ≥{fold:g} × max(N, D, 1), against the same reference as CA. R is an
+individual reproductive tissue sample or supported mean within one embryo and lineage
+(≥20 cells, ≥5 positive cells, ≥10% positive). Donors remain distinct from cells.</p>
+<p>Single-cell nTPM, UMI counts and qualitative protein staining retain their own evidence
+roles; they cannot be pooled into a native-TPM fold. The normal reference includes all
+available individual HPA tissue samples plus supported context summaries, not every healthy
+donor. <a href="https://v23.proteinatlas.org/about/download">Pinned HPA sources</a>.</p>
 <h2>Published target support</h2>
 <p>A curated target nomination adds supporting evidence. Preserve the exact protein–paper
 link and what it establishes: nomination, biology, tumor expression, protein identity,
@@ -225,6 +229,191 @@ Candidate antigen proteins is the union's name; it does not assert clinical safe
 <a href="definition.json">Machine-readable contract</a></p>
 </main></html>"""
     (OUT / "report.html").write_text(page)
+
+
+def write_guide(definition):
+    """Keep the user-facing contract and live counts beside the generated report."""
+    summary = target_selection.metadata()["summary"]
+    rare = definition["rare_cell_rna"]
+    categories = " · ".join(
+        f"**{summary['categories'][name]:,} {name}**" for name in target_selection.CATEGORIES
+    )
+    counts = summary["categories"]
+    for index_path in [ROOT / "docs/index.md", ROOT / "README.md"]:
+        index_path.write_text(
+            re.sub(
+                r"\*\*[\d,]+ CTA, [\d,]+ Cancer Antigen only, [\d,]+ Reproductive Antigen only, [\d,]+ Other and\s+[\d,]+ Unsafe\*\*",
+                f"**{counts['CTA']:,} CTA, {counts['Cancer Antigen only']:,} Cancer Antigen only, "
+                f"{counts['Reproductive Antigen only']:,} Reproductive Antigen only, {counts['Other']:,} Other and\n"
+                f"{counts['Unsafe']:,} Unsafe**",
+                index_path.read_text(),
+                count=1,
+            )
+        )
+    (ROOT / "docs/target-selection.md").write_text(f"""# Cancer and Reproductive Antigens
+
+**CTA = CA ∩ RA. Candidate antigen proteins = CA ∪ RA.** Cancer-only proteins remain
+Cancer Antigens; calling them CTAs would erase the reproductive distinction.
+
+Policy `{definition["policy_id"]}`: {categories}.
+These are research screening memberships, not demonstrated antigen presentation or safety.
+
+[Browse every protein](audits/target-selection-20261110/rebuild/report.html) ·
+[Funnel, Venn plots and counts](audits/target-selection-20261110/rebuild/summary.md) ·
+[Machine-readable rules](audits/target-selection-20261110/definition.json)
+
+![Antigen membership](audits/target-selection-20261110/rebuild/summary/antigen-sets.png)
+
+## One threshold, two compartments
+
+Let **H = max(N, D, 1 TPM)**: N is the highest supported non-reproductive normal
+measurement and D the highest Disposable-tissue measurement. Both sets require
+**at least 10 × H**, independently, after the same eligibility screen.
+
+| Set | Required positive RNA evidence |
+|---|---|
+| CA | At least one QC-passing tumor sample ≥10 × H |
+| RA | At least one reproductive tissue sample, or supported embryo-specific lineage mean, ≥10 × H |
+| CTA | Both CA and RA |
+| CA∪RA | Either set; the union does not imply tumor expression for RA-only proteins |
+
+All comparisons use the declared native-TPM panel. Qualitative protein staining,
+single-cell nTPM and UMI counts cannot be divided by TPM or bypass its numerical fold.
+Reproductive IHC and older association routes remain visible as supporting annotations.
+
+The normal reference includes **individual HPA v23 tissue samples from all measured
+compartments**, plus tissue/subregion means, GTEx donor medians and supported immune
+summaries. Reproductive observations are positive candidates; non-reproductive
+observations tighten the denominator. It is still not a maximum over every healthy
+donor, and cross-study batch effects are not corrected. Missing required normal
+coverage never becomes zero. [Source receipt and limits](audits/target-selection-20261110/rebuild/comparison.json).
+
+Developmental means are computed within one embryo and lineage: ≥20 cells, ≥5 cells
+with ≥1 TPM and ≥10% positive cells. The mean itself must reach 10 × H. Embryos are
+biological donors; multiple cells or lineages from one embryo are not independent donors.
+The developmental scope is preimplantation and Carnegie-stage-7 embryos, not all fetal stages.
+
+![Both enrichment comparisons](audits/target-selection-20261110/rebuild/summary/tumor-normal.png)
+
+## Shared eligibility and Other
+
+| Layer | Consequence |
+|---|---|
+| Accepted normal RNA, normal protein or applicable clinical exclusion | Unsafe |
+| Missing coverage, uncertain identity/translation or unresolved normal evidence | Other:Review |
+| Unsupported nested protein, ≥95% Unsafe 9-mer containment or read-through locus | Other:Sequence |
+| Unmeasured normal home without qualifying reproductive evidence | Other:Tissue |
+| Neither enrichment compartment qualifies, or expression bounds fail | Other:Expression |
+
+Unsafe takes precedence. Other:Review then precedes the other Other subtypes.
+Every failed check remains on the row, even when another determines its category.
+**Other is neither an accepted hazard nor a claim of absent normal expression.**
+Some Other assignments are technical; others reflect missing biological evidence.
+
+Disposable expression retains separate ceilings of 32 native TPM and 32 nTPM.
+The target maximum must exceed all measured non-reproductive contexts. Tissue
+allowances apply to resolved cell compartments: immune or vascular cells inside a
+reproductive organ do not automatically inherit that organ's allowance.
+
+## Rare normal-cell RNA
+
+Single-cell and single-nucleus data are independent normal-expression layers.
+They can identify a normal population diluted in bulk tissue. The donor-resolved
+UMI rubric is distinct from HPA cell-cluster nTPM and bulk TPM.
+
+| Check | Rule |
+|---|---|
+| Signal | {rare["signal"]} {rare["protected"]} |
+| Replication | {rare["replication"]} |
+| Frequent single-study signal | {rare["single_study"]} |
+| Orthogonal confirmation | {rare["confirmation"]} |
+| Established | {rare["established"]} |
+| Unresolved | {rare["unresolved"]} |
+| Dismissed | {rare["dismissed"]} |
+
+A reference mapping-risk flag does not show where the observed reads aligned.
+DCST1's replicated retinal signal and NKX2-6's frequent single-study cardiac signal
+therefore require review, rather than being dismissed as artifacts. Resolving them
+requires gene-discriminating read evidence or independent confirmation. The present
+count records cannot supply that adjudication. No ambient-RNA correction has been
+applied to these pinned counts. Donor overlap across collections remains a limitation.
+
+Single molecules alone do not establish expression; reviewed gene-specific evidence
+can provide independent confirmation. Low counts and absent findings are not proof
+of safety. [Donor records, grades and reasons](audits/normal-cell-atlas-20261110/rare-cell/index.md).
+
+## Protein staining and published normal expression
+
+Reliable, identity-resolved normal protein findings can independently mark a protein
+Unsafe under the tissue-tier policy. Antibody specificity, staining reliability,
+cell type and source scope remain part of each finding. Conflicting or unresolved
+assays cause review holds. Negative staining supplies only the existing limited
+policy credit; it does not demonstrate absence or cancel a stronger finding.
+
+## Published normal expression
+
+Reviewed publications are adjudicated through the shared evidence records.
+Accepted gene-specific normal expression in Vital or Protected tissues excludes;
+other observations retain their tissue, scope and rationale. Findings can supersede
+earlier findings without deleting history. MAGEC2's HPA062230/GTEx adjudication and
+the DAZ gastric-RNA/paralog limitations use this same format.
+[Literature rubric and sources](audits/target-selection-20261110/rebuild/literature.md).
+
+## Home tissue the panels do not resolve
+
+Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp are not
+resolved by the comparison panel. A recorded home in one of these tissues yields
+Other:Tissue unless reproductive evidence qualifies. The home remains recorded
+even when RA qualifies; a candidate label does not establish a measured margin there.
+The optional normal-function filter can tighten that decision.
+
+## Tumor quality and replication
+
+Passing TGCT libraries contribute normally. The shared QC screen excludes libraries
+with broad olfactory-receptor background, a coordinated late-spermatid signature,
+or multiple unrelated tissue signatures. These are screening signatures, not proof
+of gDNA contamination, normal-tissue fraction or a tumor activation mechanism.
+[Every library measurement](audits/target-selection-20261110/rebuild/library-qc.csv.gz).
+
+Catalog rows expose `samples_at_tenfold`, `independent_patients_at_tenfold`,
+`anonymous_samples_at_tenfold` and `cancer_types_at_tenfold`. Unknown donors never
+count as known independent patients. Counts refer to the catalog's 10× threshold;
+they do not become counts at a higher user-selected fold. Legacy `*_above_normal`
+columns count a weaker threshold and are descriptive only. Every tenfold witness
+is downloadable, with source, sample, participant and expression value.
+
+## API and peptide subtraction
+
+```python
+from oncoref import antigen_sets, target_filters, target_selection
+
+ctas = antigen_sets.proteins("CTA")
+ca = antigen_sets.proteins("CA")
+ra = antigen_sets.proteins("RA")
+union = antigen_sets.proteins("CA|RA")
+background = antigen_sets.proteins("Unsafe|Other")
+record = target_selection.results("MAGEC2")
+replicated_ca = target_filters.select(target_filters.TargetFilter(
+    membership="cancer_antigen", min_tumor_patients=2))
+```
+
+`Unsafe` and `Other` are also available separately. All annotated translations can
+feed exact 8–15mer or optional bounded-distance subtraction, with occurrences and
+sequence gaps retained. [Sequence API](antigen-sequences.md) · [Optional filters](target-filters.md).
+The strict MAGE-prefix rule remains an explicit user-selected judgment; sequence
+similarity screening complements it and does not establish TCR cross-reactivity.
+
+## Reproduction and review status
+
+The [rebuild](audits/target-selection-20261110/rebuild/index.md) publishes inputs,
+receipts, every assignment and both sequential and sole-reason attribution.
+`release_ready: false` describes outstanding scientific adjudications, including
+read-level mapping review and the hair-follicle replay (#687). It is not the software
+publication flag. Open holds stay excluded from positive sets.
+
+Historical catalogs remain dated snapshots. The [1.38 threshold audit](audits/cta-threshold-review-20261116/index.md)
+is not regenerated from today's membership rules; its generator rejects a mismatched policy.
+""")
 
 
 if __name__ == "__main__":

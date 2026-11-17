@@ -149,7 +149,9 @@ def bulk_confirmation(proteins: pd.DataFrame) -> pd.DataFrame:
     base = pd.read_csv(rebuild.BASE / "protein-group-classifications.csv.gz", low_memory=False)
     facts = base.rename(columns={"protein_equivalence_group_id": "entity_id"})
     facts = facts[facts.entity_id.isin(proteins.entity_id)]
-    normal, _ = rebuild.normal_panel(facts, write=False)
+    # Keep the orthogonal confirmation rubric on supported context summaries;
+    # the new individual HPA samples tighten enrichment, not this confirmation.
+    normal, _ = rebuild.normal_panel(facts, write=False, include_individual_samples=False)
     normal = normal[normal.qc_pass & normal.identity_resolved & normal.value.notna()].copy()
     normal["organ"] = normal.tissue.map(lambda t: "brain" if t in BRAIN_BULK else ORGAN_BULK.get(t))
     normal = normal[normal.organ.notna() & normal.cell_type.eq("bulk")]
@@ -201,7 +203,7 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
                 receipt["status"] = "below_screen"
             receipt["gene_id"] = gene
             receipts.append(receipt)
-        rank = {"established": 0, "dismissed": 1, "below_screen": 2}
+        rank = {"established": 0, "unresolved": 1, "dismissed": 2, "below_screen": 3}
         receipts.sort(key=lambda r: (rank[r["status"]], -(r["max_multi_molecule_pct"] or 0)))
         top = receipts[0] if receipts else None
         finding = top["findings"][0] if top and top["findings"] else {}
@@ -338,19 +340,22 @@ def render(evidence, findings, table, provenance):
     dismissed = evidence[evidence.rare_cell_status.eq("dismissed")].sort_values(
         "finding_top_multi_molecule_pct", ascending=False
     )
+    unresolved = evidence[evidence.rare_cell_status.eq("unresolved")].sort_values(
+        "finding_top_multi_molecule_pct", ascending=False
+    )
     risk = provenance["mapping_risk"]
     page = f"""# Rare normal-cell RNA by adult donor
 
 **{len(evidence):,} proteins were graded from {scope["cells"]:,} adult cells and nuclei of
 {scope["donors"]:,} donors in {scope["collections"]} collections, plus the directly analysed
 Siletti cerebellar granule nuclei. {len(unsafe)} have established normal-cell RNA and are
-Unsafe; {len(dismissed)} have a signal that is dismissed with its reason.** Category
+Unsafe; {len(unresolved)} require review; {len(dismissed)} have a weak or inconsistent signal dismissed with its reason.** Category
 consequences are in the [catalog rebuild](../../target-selection-20261110/rebuild/index.md).
 
 A count matrix cannot show where a read aligned. One mis-assigned read per cell, from a
 paralog, a pseudogene or an overlapping gene, looks exactly like sparse expression. The
-grade therefore ignores single-molecule cells and asks five questions. Every outcome is
-terminal; nothing waits for review.
+grade therefore asks five questions. Strong signals with unresolved attribution or
+confirmation become Other:Review. A reference mapping flag cannot establish artifact.
 
 | Question | Requirement |
 |---|---|
@@ -363,6 +368,7 @@ terminal; nothing waits for review.
 | Outcome | Rule |
 |---|---|
 | Established | {rules["established"]} |
+| Unresolved | {rules["unresolved"]} |
 | Dismissed | {rules["dismissed"]} |
 | Below the screen | No replicated or frequent multi-molecule signal. No finding. |
 
@@ -407,7 +413,13 @@ not graded.
 
 {head}{rows(dismissed)}
 
+## Unresolved — Other:Review
+
+{head}{rows(unresolved)}
+
 ## Scope and limits
+
+{provenance.get("regrade", {}).get("scope", "Full extracted donor population records.")}
 
 The panel is every named Vital or Protected cell population of {len(scope["tissues"])}
 non-reproductive tissues ({", ".join(scope["tissues"])}), without immune, stromal, generic,
@@ -453,13 +465,60 @@ def prepare(counts: Path) -> None:
     print(json.dumps({"populations": len(scoped), "cells": len(cells)}))
 
 
+def regrade_pinned():
+    """Regrade the released donor records without depending on a mutable raw cache."""
+    receipt_path = AUDIT / "regrade-inputs.json"
+    pinned = json.loads(receipt_path.read_text())
+    if pinned["minimum_retained_positive_cells"] > target_selection.RARE_CELL_MIN_CELLS:
+        raise ValueError("A lower cell-count threshold requires a full extraction")
+    for name, expected in pinned["inputs"].items():
+        if digest(ROOT / name) != expected:
+            raise ValueError(f"Changed pinned rare-cell input: {name}")
+    provenance = pinned["prior_provenance"].copy()
+    proteins = pd.read_csv(AUDIT / "selected-proteins.csv.gz")
+    rows = pd.read_csv(AUDIT / "donor-populations.csv.gz")
+    measured = {g for ids in proteins.member_gene_ids for g in json.loads(ids)} - set(
+        provenance["unavailable_gene_ids"]
+    )
+    risk = pd.read_csv(RISK).set_index("gene_id")
+    bulk = pd.read_csv(AUDIT / "bulk-confirmation.csv.gz")
+    evidence, findings = assess_proteins(
+        proteins, rows, measured, provenance["panel"]["assessable_donor_populations"], risk, bulk
+    )
+    write_csv(evidence, DATA / "rare-cell-evidence.csv.gz")
+    write_csv(findings, AUDIT / "findings.csv")
+    provenance.update(
+        {
+            "policy_id": target_selection.POLICY_ID,
+            "rules": target_selection.definition()["rare_cell_rna"],
+            "status_counts": evidence.rare_cell_status.value_counts().to_dict(),
+            "action_counts": evidence.rare_cell_action.value_counts().to_dict(),
+            "sha256": digest(DATA / "rare-cell-evidence.csv.gz"),
+            "regrade": {
+                "inputs_receipt": str(receipt_path.relative_to(ROOT)),
+                "sha256": digest(receipt_path),
+                "scope": "All released donor populations with >=10 positive cells; complete for the unchanged >=10-cell decision rule. Descriptive maxima and donors_assessed refer to retained populations.",
+            },
+        }
+    )
+    (DATA / "rare-cell-evidence.json").write_text(json.dumps(provenance, indent=2) + "\n")
+    render(evidence, findings, pd.read_csv(AUDIT / "threshold-sensitivity.csv"), provenance)
+    print(json.dumps(provenance["status_counts"]))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--counts", type=Path, required=True)
+    parser.add_argument("--counts", type=Path)
+    parser.add_argument("--regrade-pinned", action="store_true")
     parser.add_argument(
         "--prepare", action="store_true", help="Write the panel cell list for extraction and stop"
     )
     args = parser.parse_args()
+    if args.regrade_pinned:
+        regrade_pinned()
+        return
+    if args.counts is None:
+        parser.error("Specify --counts or --regrade-pinned")
     if args.prepare:
         prepare(args.counts)
         return
