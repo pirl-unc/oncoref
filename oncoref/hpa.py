@@ -29,8 +29,11 @@ tissue-restriction definition and protein-level / single-cell comparisons.
 from __future__ import annotations
 
 import contextlib
+import os
+import tempfile
 from dataclasses import dataclass
 from functools import cache, lru_cache
+from pathlib import Path
 
 import pandas as pd
 
@@ -147,14 +150,23 @@ def _read_hpa(name: str, version: str | None = None) -> pd.DataFrame:
     concrete = reference_data.resolve_version(name, version)
     tsv = reference_data.ensure(name, concrete)
     parquet = tsv.with_suffix(".parquet")
-    if parquet.exists() and parquet.stat().st_mtime >= tsv.stat().st_mtime:
-        result = pd.read_parquet(parquet)
-        result.attrs.update(reference_data.provenance(name, concrete))
-        return result
+    # Older writers could expose an incomplete cache to another reader. A
+    # damaged optional cache must never prevent reading the authoritative TSV.
+    with contextlib.suppress(Exception):
+        if parquet.exists() and parquet.stat().st_mtime >= tsv.stat().st_mtime:
+            result = pd.read_parquet(parquet)
+            result.attrs.update(reference_data.provenance(name, concrete))
+            return result
     df = pd.read_csv(tsv, sep="\t")
     # parquet cache is an optimization, not required — never fail a read over it.
     with contextlib.suppress(Exception):
-        df.to_parquet(parquet, index=False)
+        fd, temporary = tempfile.mkstemp(dir=parquet.parent, suffix=".parquet.part")
+        os.close(fd)
+        try:
+            df.to_parquet(temporary, index=False)
+            os.replace(temporary, parquet)
+        finally:
+            Path(temporary).unlink(missing_ok=True)
     df.attrs.update(reference_data.provenance(name, concrete))
     return df
 
