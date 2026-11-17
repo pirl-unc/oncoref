@@ -85,6 +85,21 @@ def test_public_tables_cover_the_base_registry_and_its_updates():
     assert tissue_tiers.TIERS == ("vital", "protected", "manageable", "disposable")
 
 
+def test_loss_consequences_preserve_scope_and_link_reviewed_evidence():
+    testis = tissue_tiers.consequences("testis")
+    assert testis["tier"] == "protected"
+    assert "androgen" in testis["persistent_loss"]
+    assert "cannot restore fertility" in testis["management"]
+    assert all(r["url"].startswith("https://") for r in testis["evidence"])
+    unknown_cell = tissue_tiers.consequences("testis", "unreviewed cell", resolution="cell")
+    assert unknown_cell["reason"] == "organ_fallback"
+    assert unknown_cell["matched_level"] == "bulk"
+    assert tissue_tiers.consequences("breast")["tier"] == "manageable"
+    assert tissue_tiers.consequences("dental pulp")["loss_assessed"]
+    embryo = tissue_tiers.consequences("embryo", stage="embryonic")
+    assert not embryo["loss_assessed"] and "persistent_loss" not in embryo
+
+
 def test_frozen_release_inputs_match_their_manifest():
     import hashlib
     import json

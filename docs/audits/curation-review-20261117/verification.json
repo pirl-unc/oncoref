@@ -1,0 +1,32 @@
+{
+  "policy": "oncoref.target-selection.2026-11-17.1",
+  "categories": {
+    "Unsafe": 18253,
+    "Other": 1131,
+    "CTA": 290,
+    "Reproductive Antigen only": 113,
+    "Cancer Antigen only": 106
+  },
+  "unsafe_membership_unchanged": true,
+  "patient_fold_lists_verified": 918,
+  "reproductive_ceilings_verified": 918,
+  "normal_libraries_audited": 186,
+  "normal_libraries_flagged": 0,
+  "transitions": [
+    {
+      "previous_category": "Cancer Antigen only",
+      "category": "CTA",
+      "count": 43
+    },
+    {
+      "previous_category": "Other",
+      "category": "CTA",
+      "count": 1
+    },
+    {
+      "previous_category": "Other",
+      "category": "Reproductive Antigen only",
+      "count": 11
+    }
+  ]
+}

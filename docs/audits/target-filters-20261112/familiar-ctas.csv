@@ -16,7 +16,7 @@ NY-ESO / LAGE / PRAME,CTAG2,Other,11.85391,,24.9,51,3,"mapping risk, literature 
 NY-ESO / LAGE / PRAME,PRAME,CTA,3.0132,lung,20.3,1225,6,"dismissed rare-cell, literature conflict",✓,✓,✓,
 NY-ESO / LAGE / PRAME,LAGE3,Unsafe,,,136.4,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea
 SSX / GAGE / PAGE / XAGE,SSX1,CTA,1.57147,thyroid gland,1.3,170,5,"mapping risk, literature conflict",✓,✓,✓,
-SSX / GAGE / PAGE / XAGE,SSX2,Cancer Antigen only,10.03384,thyroid gland,2.8000000000000003,34,6,"mapping risk, literature conflict",✓,off_target,off_target,
+SSX / GAGE / PAGE / XAGE,SSX2,CTA,10.03384,thyroid gland,2.8000000000000003,34,6,"mapping risk, literature conflict",✓,off_target,off_target,
 SSX / GAGE / PAGE / XAGE,SSX4,CTA,0.59212,heart muscle,0.2,413,2,mapping risk,✓,✓,papers,
 SSX / GAGE / PAGE / XAGE,GAGE1,CTA,0.7,retina,0.5,1182,6,mapping risk,✓,✓,✓,
 SSX / GAGE / PAGE / XAGE,GAGE2A,CTA,1.1,retina,0.8,1448,6,mapping risk,✓,✓,✓,
@@ -42,6 +42,6 @@ Others,TPTE,CTA,2.0,white matter,2.5,61,3,mapping risk,✓,✓,✓,
 Others,CT45A1,CTA,5.97153,lung,0.8,67,3,mapping risk,✓,off_target,off_target,
 Others,CT83,CTA,4.23995,salivary gland,2.6,46,5,literature conflict,✓,✓,off_target,
 Others,PLAC1,Unsafe,,,2.4,,2,,—,—,—,Established rare normal-cell RNA
-Others,CSAG1,Cancer Antigen only,1.849833,lymph node,1.9,481,1,"mapping risk, literature conflict",✓,papers,sets,
+Others,CSAG1,CTA,1.849833,lymph node,1.9,481,1,"mapping risk, literature conflict",✓,papers,papers,
 Others,LY6K,Unsafe,,,106.2,,2,,—,—,—,Normal bulk | HPA tissue clusters | Adult cornea | Established rare normal-cell RNA
 Others,NUTM1,CTA,0.9,cerebellum,1.1,56,3,,✓,✓,✓,

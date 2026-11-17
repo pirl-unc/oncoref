@@ -469,6 +469,37 @@ def ensure(name: str, version: str | None = None) -> Path:
     return download(name, version)
 
 
+def pinned_path(name: str, version: str, *, import_path: str | Path | None = None) -> Path:
+    """Resolve verified reference bytes in a cache addressed by their SHA-256.
+
+    ``import_path`` seeds the cache from an existing local download, after checking
+    the registered size and digest. Rebuilds need only source/version identifiers;
+    a historical working directory is never part of the input contract.
+    """
+    version = resolve_version(name, version)
+    spec = _source(name)
+    pin = spec.get("pins", {}).get(version)
+    if not pin or not pin.get("sha256"):
+        raise ReferenceDataError("Content-addressed references require a registered checksum")
+    dest = cache_dir() / "sha256" / pin["sha256"] / spec["filename"]
+    if dest.is_file() and _matches_pin(dest, pin):
+        return dest
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    with FileLock(str(dest.with_name(".materialize.lock"))):
+        if dest.is_file() and _matches_pin(dest, pin):
+            return dest
+        source = Path(import_path) if import_path is not None else ensure(name, version)
+        if not _matches_pin(source, pin):
+            raise ReferenceDataError(f"Reference import does not match {name}/{version}")
+        with tempfile.TemporaryDirectory(prefix=".reference-", dir=dest.parent) as staging:
+            candidate = Path(staging) / spec["filename"]
+            shutil.copyfile(source, candidate)
+            if not _matches_pin(candidate, pin):
+                raise ReferenceDataError("Reference changed during materialization")
+            os.replace(candidate, dest)
+    return dest
+
+
 def status(*, verify_content: bool = False) -> list[dict]:
     """One row per source with default-version cache and provenance status.
 

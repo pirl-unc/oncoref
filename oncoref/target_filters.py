@@ -28,7 +28,7 @@ from functools import lru_cache
 
 import pandas as pd
 
-FILTER_POLICY_ID = "oncoref.target-filters.2026-11-16.2"
+FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.1"
 
 #: Which set a protein must belong to after tightening compartment evidence.
 MEMBERSHIPS = {
@@ -72,7 +72,7 @@ class TargetFilter:
     #: catalog already requires 10; a higher value moves weaker ones out of the set.
     min_tumor_fold: float = 10.0
     min_reproductive_fold: float = 10.0
-    #: Known patients at the catalog's 10x threshold; anonymous samples do not count.
+    #: Known independent patients at min_tumor_fold; anonymous samples do not count.
     min_tumor_patients: int = 0
     membership: str = "target_candidates"
     #: 4. Distinct papers that nominate the protein or report it in tumors.
@@ -232,7 +232,31 @@ def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
     # Tighten each compartment independently, then select membership.
     cancer = d.is_cancer_antigen & d.tumor_fold.ge(f.min_tumor_fold)
     if f.min_tumor_patients:
-        cancer &= d.independent_patients_at_tenfold.ge(f.min_tumor_patients)
+
+        def patient_fold(value):
+            if not isinstance(value, str):
+                return float("nan")
+            folds = json.loads(value)
+            if (
+                not isinstance(folds, list)
+                or any(
+                    isinstance(v, bool)
+                    or not isinstance(v, (int, float))
+                    or not math.isfinite(v)
+                    or v < 10
+                    for v in folds
+                )
+                or folds != sorted(folds, reverse=True)
+            ):
+                raise ValueError("Patient folds must be descending finite values >=10")
+            return (
+                folds[f.min_tumor_patients - 1]
+                if len(folds) >= f.min_tumor_patients
+                else float("nan")
+            )
+
+        folds = d.get("independent_patient_tumor_folds", pd.Series(index=d.index, dtype=object))
+        cancer &= folds.map(patient_fold).ge(f.min_tumor_fold)
     reproductive = d.is_reproductive_antigen & d.reproductive_fold.ge(f.min_reproductive_fold)
     d["filtered_cancer_antigen"] = cancer
     d["filtered_reproductive_antigen"] = reproductive
@@ -295,15 +319,15 @@ def describe(f: TargetFilter | str) -> str:
     if f.min_tumor_fold > 10.0:
         lines.append(
             f"Sets: a Cancer Antigen's highest tumor is at least {f.min_tumor_fold:g} x "
-            f"max(non-reproductive normal, 1)."
+            f"max(non-reproductive normal, Disposable, 1 TPM)."
         )
     if f.min_reproductive_fold > 10.0:
         lines.append(
-            f"Sets: reproductive evidence reaches at least {f.min_reproductive_fold:g} x max(non-reproductive normal, 1)."
+            f"Sets: reproductive evidence reaches at least {f.min_reproductive_fold:g} x max(non-reproductive normal, Disposable, 1 TPM)."
         )
     if f.min_tumor_patients:
         lines.append(
-            f"Sets: cancer evidence includes at least {f.min_tumor_patients} known patients at the catalog's 10 x threshold; anonymous samples do not count."
+            f"Sets: cancer evidence includes at least {f.min_tumor_patients} known patients at {f.min_tumor_fold:g} x; anonymous samples do not count."
         )
     lines.append(
         f"Sets: keep proteins that are then in {f.membership.replace('_', ' ')}."

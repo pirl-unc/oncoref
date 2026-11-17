@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 import render_curation_summary  # noqa: E402
 
-from oncoref import cta_literature, gene_knowledge, target_selection  # noqa: E402
+from oncoref import cta_literature, gene_knowledge, target_selection, tissue_tiers  # noqa: E402
 
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 DRAFT = ROOT / "docs/audits/target-selection-20261109/rebuild/protein-decisions.csv.gz"
@@ -200,6 +200,9 @@ def build():
         "reproductive_routes",
         "reproductive_fold",
         "reproductive_max_sample_tpm",
+        "reproductive_supported_tpm",
+        "reproductive_supported_context",
+        "reproductive_expression_contexts",
         "reproductive_top_sample",
         "reproductive_top_context",
         "reproductive_samples_at_tenfold",
@@ -220,6 +223,25 @@ def build():
     superseded = {i for r in knowledge.values() for i in r["supersedes"]}
     finding_ids = data.set_index("entity_id").knowledge_finding_ids
     for row in rows:
+        row["loss_consequences"] = []
+        for context in json.loads(row.pop("reproductive_expression_contexts") or "[]"):
+            loss = tissue_tiers.consequences(
+                context["tissue"],
+                context["cell_type"],
+                stage=context["stage"],
+                resolution="bulk" if context["cell_type"] == "bulk" else "cell",
+            )
+            row["loss_consequences"].append(
+                {
+                    **context,
+                    "tier": loss["tier"],
+                    "matched_level": loss["matched_level"],
+                    "persistent_loss": loss.get(
+                        "persistent_loss", "No applicable tissue-loss assessment"
+                    ),
+                    "management": loss.get("management", ""),
+                }
+            )
         row["reviewed_findings"] = [
             {
                 "id": i,
@@ -307,8 +329,8 @@ selected=records.filter(r=>(!cat||r.category===cat)&&(!document.getElementById('
 const pages=Math.max(1,Math.ceil(selected.length/size));page=Math.min(page,pages-1);
 document.getElementById('count').textContent=selected.length.toLocaleString()+' proteins';
 document.getElementById('body').innerHTML=selected.slice(page*size,(page+1)*size).map(r=>`<tr><td><strong>${esc(r.protein_group_label)}</strong><br><small>${r.member_gene_ids.map(g=>link('https://www.ensembl.org/Homo_sapiens/Gene/Summary?g='+g,g)).join('<br>')}<br>${link('https://www.proteinatlas.org/'+r.representative_gene_id,'HPA')}</small></td>
-<td class="badge ${r.category==='Unsafe'?'Unsafe':r.category==='CTA'?'CTA':''}">${esc(r.classification)}</td><td>${esc(r.previous_classification)}</td><td>${fmt(r.normal_reference_tpm)} / ${fmt(r.disposable_max_tpm)}</td><td>${fmt(r.tumor_max_tpm)}<br><small>${esc(r.tumor_top_cancer_code)}</small></td><td>${fmt(r.samples_at_tenfold)} / ${fmt(r.independent_patients_at_tenfold)}</td><td>${fmt(r.reproductive_fold)}</td><td>${fmt(r.reproductive_max_sample_tpm)}</td><td>${esc(r.reproductive_top_context)}</td>
-<td><details><summary>${r.published_nomination?'Published nomination':'No catalog nomination'} · ${r.paper_source_ids.length} paper sources</summary><p>${esc(r.decision_reason)}</p><p>Cancer assessment: ${esc(r.cancer_evidence)}<br>${esc(r.cancer_routes)}<br>Tenfold witnesses: ${fmt(r.samples_at_tenfold)} samples, ${fmt(r.independent_patients_at_tenfold)} known patients, ${fmt(r.anonymous_samples_at_tenfold)} anonymous samples, ${fmt(r.cancer_types_at_tenfold)} cancer types</p><p>Rare normal-cell RNA: ${esc(r.rare_cell_status)}${r.rare_cell_basis?' — '+esc(r.rare_cell_basis):''}${r.rare_cell_mapping_notes?' ('+esc(r.rare_cell_mapping_notes)+')':''}${r.literature_effect&&r.literature_effect!=='not_reviewed'?'<br>Literature: '+esc(r.literature_effect)+' — '+esc(r.literature_decision_reason):''}${r.finding_tissue?'<br>'+esc(r.finding_tissue)+': '+esc(r.finding_top_cell_type)+', '+fmt(r.finding_studies_multi_molecule)+' studies, '+fmt(r.finding_top_multi_molecule_pct)+'% of the strongest donor’s cells with ≥2 molecules':''}<br>Highest single-donor detection ${fmt(r.max_detection_pct)}%; with ≥2 molecules ${fmt(r.max_multi_molecule_pct)}%</p><p>Reproductive/developmental routes: ${esc(r.reproductive_routes)}<br>Highest QC-passing observation: ${fmt(r.reproductive_max_sample_tpm)} TPM / ${fmt(r.reproductive_fold)}×; ${esc(r.reproductive_top_sample)}<br>Context: ${esc(r.reproductive_top_context)}; ${fmt(r.reproductive_samples_at_tenfold)} observations at 10×</p><p><strong>Reviewed gene findings</strong></p>${r.reviewed_findings.map(f=>`<p><a href="${esc(f.source_url)}">${esc(f.id)}</a>${f.superseded?" (superseded)":""}<br>${esc(f.finding)}<br>${esc(f.reason)}<br><em>${esc(f.limitations)}</em></p>`).join('')}<p>Peak tumor sample: ${esc(r.tumor_top_sample)}</p><p>Selected transcript(s): ${esc(r.representative_transcripts)}</p><p>Normal maximum witnesses (up to 10):</p><ul>${r.normal_reference_contexts.map(x=>`<li>${esc(x.tissue)} / ${esc(x.cell_type)}: ${fmt(x.value)} TPM · ${esc(x.source_id)} · ${esc(x.statistic)} · ${esc(x.sample_id||x.source_context)}</li>`).join('')}</ul><p><strong>Target nominations</strong><br>${papers(r.nomination_source_ids)||'None recorded'}</p><p><strong>All paper roles, including counterevidence</strong><br>${papers(r.paper_source_ids)||'None recorded'}</p></details></td></tr>`).join('');
+<td class="badge ${r.category==='Unsafe'?'Unsafe':r.category==='CTA'?'CTA':''}">${esc(r.classification)}</td><td>${esc(r.previous_classification)}</td><td>${fmt(r.normal_reference_tpm)} / ${fmt(r.disposable_max_tpm)}</td><td>${fmt(r.tumor_max_tpm)}<br><small>${esc(r.tumor_top_cancer_code)}</small></td><td>${fmt(r.samples_at_tenfold)} / ${fmt(r.independent_patients_at_tenfold)}</td><td>${fmt(r.reproductive_fold)}</td><td>${fmt(r.reproductive_supported_tpm)}</td><td>${esc(r.reproductive_supported_context)}</td>
+<td><details><summary>${r.published_nomination?'Published nomination':'No catalog nomination'} · ${r.paper_source_ids.length} paper sources</summary><p>${esc(r.decision_reason)}</p><p>Cancer assessment: ${esc(r.cancer_evidence)}<br>${esc(r.cancer_routes)}<br>Tenfold witnesses: ${fmt(r.samples_at_tenfold)} samples, ${fmt(r.independent_patients_at_tenfold)} known patients, ${fmt(r.anonymous_samples_at_tenfold)} anonymous samples, ${fmt(r.cancer_types_at_tenfold)} cancer types</p><p>Rare normal-cell RNA: ${esc(r.rare_cell_status)}${r.rare_cell_basis?' — '+esc(r.rare_cell_basis):''}${r.rare_cell_mapping_notes?' ('+esc(r.rare_cell_mapping_notes)+')':''}${r.literature_effect&&r.literature_effect!=='not_reviewed'?'<br>Literature: '+esc(r.literature_effect)+' — '+esc(r.literature_decision_reason):''}${r.finding_tissue?'<br>'+esc(r.finding_tissue)+': '+esc(r.finding_top_cell_type)+', '+fmt(r.finding_studies_multi_molecule)+' studies, '+fmt(r.finding_top_multi_molecule_pct)+'% of the strongest donor’s cells with ≥2 molecules':''}<br>Highest single-donor detection ${fmt(r.max_detection_pct)}%; with ≥2 molecules ${fmt(r.max_multi_molecule_pct)}%</p><p>Reproductive/developmental routes: ${esc(r.reproductive_routes)}<br>Highest cell-supported observation: ${fmt(r.reproductive_max_sample_tpm)} TPM; replication-supported ceiling: ${fmt(r.reproductive_supported_tpm)} TPM / ${fmt(r.reproductive_fold)}× in ${esc(r.reproductive_supported_context)}; ${esc(r.reproductive_top_sample)}<br>Context: ${esc(r.reproductive_top_context)}; ${fmt(r.reproductive_samples_at_tenfold)} observations at 10×</p><p><strong>Consequences of tissue loss</strong> · <a href="../../../tissue-tiers/">Reviewed tissue policy</a><br>Observed reproductive RNA ≥1 TPM; not restricted to tenfold RA witnesses. These observed maxima can include unsupported cell means; QC indicates whether any observation in that context passes the cell-support screen. Organ fallbacks remain explicit.</p>${r.loss_consequences.map(c=>`<p>${esc(c.tissue)} / ${esc(c.cell_type)}: ${fmt(c.native_tpm_max)} TPM${c.qc_supported?"":" (no observation passes cell-support screen)"}<br>${esc(c.tier)} (${esc(c.matched_level||"unresolved scope")}) — ${esc(c.persistent_loss)}<br>${esc(c.management)}</p>`).join('')}<p><strong>Reviewed gene findings</strong></p>${r.reviewed_findings.map(f=>`<p><a href="${esc(f.source_url)}">${esc(f.id)}</a>${f.superseded?" (superseded)":""}<br>${esc(f.finding)}<br>${esc(f.reason)}<br><em>${esc(f.limitations)}</em></p>`).join('')}<p>Peak tumor sample: ${esc(r.tumor_top_sample)}</p><p>Selected transcript(s): ${esc(r.representative_transcripts)}</p><p>Normal maximum witnesses (up to 10):</p><ul>${r.normal_reference_contexts.map(x=>`<li>${esc(x.tissue)} / ${esc(x.cell_type)}: ${fmt(x.value)} TPM · ${esc(x.source_id)} · ${esc(x.statistic)} · ${esc(x.sample_id||x.source_context)}</li>`).join('')}</ul><p><strong>Target nominations</strong><br>${papers(r.nomination_source_ids)||'None recorded'}</p><p><strong>All paper roles, including counterevidence</strong><br>${papers(r.paper_source_ids)||'None recorded'}</p></details></td></tr>`).join('');
 document.getElementById('page').textContent=`Page ${page+1} of ${pages}`;document.getElementById('previous').disabled=page===0;document.getElementById('next').disabled=page+1>=pages;}
 for(const id of ['search','category','changed','published'])document.getElementById(id).addEventListener(id==='search'?'input':'change',()=>render());
 document.getElementById('previous').onclick=()=>{page--;render(false)};document.getElementById('next').onclick=()=>{page++;render(false)};render();
@@ -476,7 +498,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "It does not correct cross-study batch effects. NUTM's stored three-sample matrix fails "
         "the nonnegative-TPM check and is listed in the [coverage ledger](tumor-source-coverage.csv).\n\n"
         "[Full protein decisions](protein-decisions.csv.gz) · [All member genes](gene-decisions.csv.gz) · "
-        "[Normal comparison values](normal-comparison.csv.gz) · [Tumor witnesses](tumor-witnesses.csv.gz) · [Reproductive observations](reproductive-comparison.csv.gz) · [Reproductive witnesses](reproductive-witnesses.csv.gz) · "
+        "[Normal library QC](normal-library-qc.csv) · [Normal comparison values](normal-comparison.csv.gz) · [Tumor witnesses](tumor-witnesses.csv.gz) · [Reproductive observations](reproductive-comparison.csv.gz) · [Reproductive witnesses](reproductive-witnesses.csv.gz) · "
         "[Paper claims](paper-attestations.json.gz) · [Input hashes](inputs.json).\n\n"
         "The [pinned HPA download receipt](downloaded-hpa-sources.json) supplies exact URLs, "
         "paths and SHA-256 hashes for the newly retrieved native-TPM tables. With the pinned "

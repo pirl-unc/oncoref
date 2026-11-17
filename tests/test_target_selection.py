@@ -217,6 +217,71 @@ def test_actual_tenfold_counts_and_symmetric_reproductive_comparison():
         policy.assess_reproductive_rna(positive, normal)
 
 
+def test_patient_folds_count_people_once_and_exclude_anonymous_and_failed_samples():
+    t, n = observations((100, 40, 30, 20, 500, 600))
+    t["participant_id"] = ["a", "a", "b", "c", "", "d"]
+    t.loc[5, "qc_pass"] = False
+    r = assess(t, n)
+    assert r["independent_participant_folds"] == [100, 30, 20]
+    assert r["independent_participants_at_tenfold"] == 3
+
+
+def test_early_embryos_need_independent_support_at_the_same_stage_and_fold():
+    t, n = observations((100, 9, 20))
+    t = t.assign(
+        scope="developmental",
+        developmental_stage="3 day",
+        source_context="3 day / unspecified",
+        cells=8,
+        positive_cells=4,
+    )
+
+    def evaluate(d):
+        return policy.assess_reproductive_rna(
+            d,
+            n,
+            required_normal_contexts={"context-0", "context-1"},
+            comparison_id="panel-v1",
+            comparability_reference="reviewed",
+            unit="TPM",
+        )
+
+    r = evaluate(t)
+    assert r["status"] == "qualifies"
+    assert r["supported_maximum"] == 20  # The 100-fold embryo cannot support a 30-fold filter.
+    assert r["samples_at_tenfold"] == 2
+    assert evaluate(t.iloc[:2])["status"] == "does_not_qualify"
+    duplicate = t.iloc[[0, 0]].copy()
+    duplicate["sample_id"] = ["pool-a", "pool-b"]
+    assert evaluate(duplicate)["status"] == "does_not_qualify"
+    t.loc[2, ["developmental_stage", "source_context"]] = ["4 day", "4 day / unspecified"]
+    assert evaluate(t)["status"] == "does_not_qualify"
+    t.loc[1, "value"] = 10
+    assert evaluate(t)["status"] == "qualifies"  # Equality at the fold is included.
+    later = t.iloc[[0]].assign(developmental_stage="5 day", source_context="epiblast")
+    assert evaluate(later)["status"] == "does_not_qualify"
+    well_sampled = later.assign(cells=20, positive_cells=5)
+    assert evaluate(well_sampled)["status"] == "qualifies"
+    second = later.assign(sample_id="other", participant_id="other", value=30)
+    replicated_later = pd.concat([later, second], ignore_index=True)
+    assert evaluate(replicated_later)["supported_maximum"] == 30
+    with pytest.raises(ValueError, match="known stage"):
+        evaluate(replicated_later.assign(developmental_stage=""))
+
+
+def test_replicated_unresolved_organ_precedes_stronger_unreplicated_signal():
+    replicated = rare(TWO_STUDIES)
+    single = rare([("s3", "c", "vital", 5000, 1000, 1000)]).assign(tissue="heart")
+    r = policy.assess_rare_cell_rna(
+        pd.concat([replicated, single], ignore_index=True),
+        mapping_risk=True,
+        confirmed_tissues=set(),
+    )
+    assert r["findings"][0]["replicated"]
+    assert r["findings"][0]["basis"].startswith("replicated normal-cell")
+    assert r["findings"][1]["basis"].startswith("frequent single-study")
+
+
 def test_frequent_single_study_normal_signal_requires_review():
     assert grade([("s1", "donor", "vital", 5000, 1800, 1600)], confirmed=()) == (
         "unresolved",

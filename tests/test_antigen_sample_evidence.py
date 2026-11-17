@@ -10,6 +10,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 from antigen_sample_evidence import sum_transcript_chunks, tissue_samples
 
+from oncoref.target_selection import developmental_donor_requirement
+
 
 def test_transcript_sum_across_chunks_preserves_missing_members():
     chunks = [
@@ -35,3 +37,20 @@ def test_transcript_sum_across_chunks_preserves_missing_members():
 def test_invalid_native_tpm_is_rejected(value):
     with pytest.raises(ValueError, match="finite and nonnegative"):
         sum_transcript_chunks([pd.DataFrame({"ensgid": ["g1"], "TPM.testis.1": [value]})])
+
+
+@pytest.mark.parametrize(
+    "cells,positive,required",
+    [
+        (8, 4, 2),
+        (8, 3, 0),
+        (5, 3, 2),
+        (4, 4, 0),
+        (8, 8, 2),
+        (20, 5, 1),
+        (60, 5, 0),
+        (60, 6, 1),
+    ],
+)
+def test_cell_support_sets_the_required_donor_replication(cells, positive, required):
+    assert developmental_donor_requirement(cells, positive) == required

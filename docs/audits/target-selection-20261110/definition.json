@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-16.2",
+  "policy_id": "oncoref.target-selection.2026-11-17.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -114,7 +114,7 @@
     "rule": "R >= 10 * max(N, D, 1), using the identical normal panel and comparison scale as CA.",
     "bulk": "At least one QC-passing, identity-resolved reproductive tissue sample on the declared comparison scale.",
     "cell": "Cell-type nTPM and UMI counts remain separate annotations and normal checks; no unit pooling.",
-    "developmental": "Mean native TPM within one embryo and lineage, >=20 cells, >=5 cells at >=1 TPM, and >=10% cells at >=1 TPM. The mean must reach the tenfold threshold. Embryos are biological donors; cells are not independent witnesses.",
+    "developmental": "Mean native TPM within one embryo and lineage. One well-sampled population: >=20 cells, >=5 cells and >=10% cells at >=1 TPM. Smaller populations: >=5 measured cells, >=50% at >=1 TPM, and >=2 independent embryos at the same age and lineage reaching the fold. The mean must reach the tenfold threshold; higher fold filters retain replication. Embryos are biological donors; cells are not independent witnesses.",
     "protein": "Reliable reproductive IHC and reviewed protein findings annotate association; they cannot bypass the RNA fold.",
     "concentration": "The same tenfold enrichment requirement as CA, assessed independently."
   },

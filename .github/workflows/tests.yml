@@ -274,6 +274,9 @@ jobs:
           assert (alternate.gene_name, alternate.contig) == ("PRAME", "CHR_HSCHR22_1_CTG3")
           PY
 
+      - name: Verify curation build receipts
+        run: python -m oncoref.curation check
+
       - name: Run unit tests
         run: >-
           pytest tests/ -v -n 2 --dist loadgroup

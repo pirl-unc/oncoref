@@ -474,7 +474,8 @@ Limits: {"; ".join(x[0].lower() + x[1:] for x in document["limitations"][-4:])}.
   `{top_samples.index[0]}`, the best tumor for {int(top_samples.iloc[0])} Cancer
   Antigens. `samples_at_tenfold`, `independent_patients_at_tenfold`,
   `anonymous_samples_at_tenfold` and `cancer_types_at_tenfold` record qualifying support.
-  `min_tumor_patients` optionally requires known-patient replication at 10×.
+  `min_tumor_patients` optionally requires known-patient replication at the selected
+  `min_tumor_fold` (10× by default).
 - **The paper layer does most of the cutting.** {nominated} of {len(cand)} candidates
   are nominated by any CTA-list paper. `min_papers=3` keeps {len(three)}, and
   {only_big} of those are named by all of the three largest lists
@@ -522,7 +523,7 @@ decisions = tf.apply(tf.TargetFilter(min_papers=2))
 | Curation | `normal_function` | `any` | Optionally exclude recorded Vital, Protected or Manageable normal homes |
 | Sets | `min_tumor_fold` | 10 | Tighten CA's tumor / max(N, Disposable, 1) |
 | Sets | `min_reproductive_fold` | 10 | Independently tighten RA's reproductive observation / the same denominator |
-| Sets | `min_tumor_patients` | 0 | Known patients with a qualifying sample at the catalog's 10× threshold; anonymous samples do not count |
+| Sets | `min_tumor_patients` | 0 | Known patients with a qualifying sample at `min_tumor_fold`; anonymous samples do not count |
 | Sets | `membership` | `target_candidates` | Keep union, CA, RA, CTA or either exclusive set after tightening |
 | Papers | `min_papers` | 0 | Distinct scoped target nominations or tumor reports |
 | Exclusions | `exclude_prefixes`, `except_labels` | Empty | Explicit name-based exclusions and exceptions |
@@ -535,8 +536,8 @@ its own evidence. Every layer is evaluated; `filter_failed` names the first fail
 Raising only the cancer fold can move a CTA to RA-only without removing it from the
 union. Raising only the reproductive fold can move it to CA-only. Select `cta` when
 both tightened memberships are required. The patient-count requirement tightens CA
-only; counts remain at **10× even if `min_tumor_fold` is higher**. Requiring two known
-patients at 10× plus a best tumor at 30× does not assert two patients at 30×.
+only. Combining `min_tumor_patients=2` with `min_tumor_fold=30` requires two known
+patients each reaching 30×. Multiple samples from one patient count once.
 
 ## Modes
 
@@ -554,9 +555,12 @@ PRAME, NY-ESO-1 and MAGEA4 are regression controls across these modes.
 tumor support. Unknown participant identity stays unknown. `*_above_normal` fields
 describe a weaker historical threshold and must not be used as 10× witness counts.
 
-`reproductive_fold` and `reproductive_max_sample_tpm` use the same native-TPM
-reference as CA. `reproductive_best` is a compatibility display alias for the latter;
-it no longer takes a numerical maximum across TPM and nTPM.
+`reproductive_fold` divides `reproductive_supported_tpm` by the same native-TPM
+reference as CA. Small cell populations are limited by the second independent
+embryo at the same stage and lineage; `reproductive_supported_context` identifies
+that context. `reproductive_max_sample_tpm` retains the strongest cell-supported
+individual observation, which can be higher. `reproductive_best` remains its
+compatibility display alias. None of these fields pools TPM with nTPM.
 
 <a id="normal-nose-and-skin-which-the-expression-panels-do-not-sample"></a>
 

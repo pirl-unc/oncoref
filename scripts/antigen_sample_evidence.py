@@ -11,7 +11,6 @@ import pandas as pd
 from cta_report_common import sha256, write_csv
 
 ROOT = Path(__file__).resolve().parents[1]
-HPA_ARCHIVE = ROOT / "tmp/harmonize-antigens/transcript_rna_tissue.v23.tsv.zip"
 HPA_SOURCE = {
     "source_id": "hpa_tissue_samples:v23",
     "url": "https://v23.proteinatlas.org/download/transcript_rna_tissue.tsv.zip",
@@ -38,8 +37,11 @@ def sum_transcript_chunks(chunks):
     return summed.mask(missing)
 
 
-def tissue_sample_genes(archive=HPA_ARCHIVE):
+def tissue_sample_genes(archive=None):
     """Verify the provider archive and extract gene TPM without renormalizing it."""
+    from oncoref.curation import reference_input
+
+    archive = reference_input("hpa_tissue_samples") if archive is None else archive
     if sha256(Path(archive)) != HPA_SOURCE["sha256"]:
         raise ValueError("HPA tissue-sample source checksum mismatch")
     chunks = pd.read_csv(
@@ -94,49 +96,67 @@ def tissue_samples(facts, accepted_ids, *, genes=None):
     return pd.DataFrame(rows)
 
 
+def tissue_library_qc(genes, accepted_ids):
+    """Audit within tissue; normal testis programs are expected in normal testis.
+
+    These are tumor-screen signatures, not validated normal-library exclusion
+    criteria. Flagged normals remain in the denominator pending adjudication.
+    """
+    from oncoref import library_qc
+    from oncoref.gene_matching import gene_identity_catalog
+
+    lookup = accepted_ids.set_index("source_gene_id").canonical_gene_id
+    values = genes.copy()
+    values.index = values.index.map(lookup)
+    values = values[values.index.notna()]
+    if not values.index.is_unique:
+        raise ValueError("Multiple HPA source genes map to one canonical gene")
+    labels = gene_identity_catalog().set_index("canonical_gene_id").canonical_symbol
+    symbols = labels.reindex(values.index).fillna("")
+    rows = []
+    columns = pd.Series(values.columns, index=values.columns)
+    for tissue, samples in columns.groupby(lambda c: c.removeprefix("TPM.").rsplit(".", 1)[0]):
+        audit = library_qc.signatures(
+            values, list(samples), gene_ids=pd.Series(values.index), symbols=symbols
+        )
+        audit["tissue"] = tissue
+        audit["library_qc_review"] = audit.apply(
+            lambda r, tissue=tissue: ";".join(
+                reason
+                for reason in library_qc.reasons(r)
+                if not (tissue == "testis" and reason == "normal_testis_tissue")
+            ),
+            axis=1,
+        )
+        rows.append(audit)
+    audit = pd.concat(rows).reset_index()
+    audit["sample_id"] = audit.sample_id.str.removeprefix("TPM.")
+    return audit
+
+
 def developmental_samples(facts):
     """TPM means within one embryo and lineage, never across biological donors.
 
-    A positive observation needs >=20 measured cells, >=5 cells with >=1 TPM,
-    and >=10% positive cells. Cell counts are support, not independent witnesses.
+    A well-sampled population needs >=20 cells, >=5 positive and >=10% positive.
+    Smaller populations need >=5 cells, >=50% positive and two independent embryos
+    at the same stage and lineage reaching the fold. Cells are not independent witnesses.
     """
     from scipy.io import mmread
 
-    from oncoref import reference_data
+    from oncoref.curation import reference_input
     from oncoref.gene_matching import match_reference_genes, resolve_measurement_rows
+    from oncoref.target_selection import developmental_donor_requirement
 
-    directory = ROOT / "tmp/cta-source-consolidation"
-    tyser = ROOT / "tmp/cta-quantitative"
-    receipt = json.loads(
-        (ROOT / "docs/audits/cta-selection-20261028/developmental-source.json").read_text()
-    )
     sources = [
-        (
-            "petropoulos_E-MTAB-3929",
-            directory / "petropoulos-tpm.zip",
-            directory / "petropoulos-design.tsv",
-            reference_data.REFERENCE_SOURCES["petropoulos_embryonic_tpm"]["pins"][
-                "E-MTAB-3929-20261028"
-            ]["sha256"],
-            reference_data.REFERENCE_SOURCES["petropoulos_embryonic_design"]["pins"][
-                "E-MTAB-3929-20261028"
-            ]["sha256"],
-        ),
-        (
-            "tyser_E-MTAB-9388",
-            tyser / "atlas_tpm",
-            tyser / "atlas_design",
-            receipt["files"]["atlas_tpm"]["sha256"],
-            receipt["files"]["atlas_design"]["sha256"],
-        ),
+        ("petropoulos_E-MTAB-3929", "petropoulos_tpm", "petropoulos_design"),
+        ("tyser_E-MTAB-9388", "tyser_tpm", "tyser_design"),
     ]
     rows, provenance = [], []
-    for source, archive_path, design_path, archive_sha, design_sha in sources:
-        for path, digest in [(archive_path, archive_sha), (design_path, design_sha)]:
-            if sha256(path) != digest:
-                raise ValueError(f"Changed developmental input: {path}")
+    for source, archive_role, design_role in sources:
+        archive_path, design_path = reference_input(archive_role), reference_input(design_role)
+        for role, path in [(archive_role, archive_path), (design_role, design_path)]:
             provenance.append(
-                {"path": str(path.relative_to(ROOT)), "sha256": digest, "source_id": source}
+                {"role": role, "path": str(path), "sha256": sha256(path), "source_id": source}
             )
         with zipfile.ZipFile(archive_path) as archive:
             name = next(n for n in archive.namelist() if n.endswith(".mtx"))
@@ -170,6 +190,7 @@ def developmental_samples(facts):
         meta = pd.read_csv(design_path, sep="\t").set_index("Assay").loc[cells]
         if source.startswith("petropoulos"):
             meta["embryo"] = meta["Sample Characteristic[individual]"]
+            meta["stage"] = meta["Sample Characteristic[age]"]
             meta["lineage"] = (
                 meta["Sample Characteristic[age]"]
                 + " / "
@@ -177,6 +198,7 @@ def developmental_samples(facts):
             )
         else:
             meta["embryo"] = "single-embryo"
+            meta["stage"] = "Carnegie stage 7"
             meta["lineage"] = (
                 "Carnegie stage 7 / "
                 + meta["Sample Characteristic[inferred cell type - authors labels]"]
@@ -194,13 +216,13 @@ def developmental_samples(facts):
                 else None
             )
             for (embryo, lineage), indices in groups:
+                stage = meta.iloc[indices].stage.unique()
+                if len(stage) != 1:
+                    raise ValueError("Developmental lineage spans multiple ages")
+                stage = stage[0]
                 n_positive = int((values[indices] >= 1).sum()) if complete else 0
-                supported = (
-                    complete
-                    and len(indices) >= 20
-                    and n_positive >= 5
-                    and n_positive / len(indices) >= 0.1
-                )
+                donors_required = developmental_donor_requirement(len(indices), n_positive)
+                supported = complete and donors_required > 0
                 rows.append(
                     {
                         "entity_id": protein.entity_id,
@@ -219,6 +241,8 @@ def developmental_samples(facts):
                         "identity_resolved": complete,
                         "cells": len(indices),
                         "positive_cells": n_positive,
+                        "developmental_stage": stage,
+                        "required_embryos": donors_required,
                     }
                 )
     return pd.DataFrame(rows), provenance

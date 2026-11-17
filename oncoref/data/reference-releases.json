@@ -408,6 +408,24 @@
           "reviewed_on": "2026-11-04"
         }
       }
+    },
+    "hpa_individual_tissue_tpm": {
+      "description": "HPA individual tissue samples; native transcript TPM archive",
+      "filename": "transcript_rna_tissue.v23.tsv.zip",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "v23",
+      "versions": {
+        "v23": {
+          "url": "https://v23.proteinatlas.org/download/transcript_rna_tissue.tsv.zip",
+          "sha256": "4f4790de54380f4d47800b16efaed5a0d6bc364a90ddfdd0582f8f2d13e4f9e1",
+          "archive_sha256": "4f4790de54380f4d47800b16efaed5a0d6bc364a90ddfdd0582f8f2d13e4f9e1",
+          "bytes": 184139285,
+          "unit": "TPM",
+          "reference": "Ensembl 109",
+          "taxon_id": 9606
+        }
+      }
     }
   }
 }

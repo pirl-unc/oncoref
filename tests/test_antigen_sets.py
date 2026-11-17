@@ -57,3 +57,18 @@ def test_sequences_include_every_annotated_translation_and_report_gaps(monkeypat
     assert result.attrs["missing_gene_ids"] == ["g2"]
     assert result.attrs["sequence_scope"] == "all annotated protein translations"
     assert result.sequence_sha256.iloc[0] == result.sequence_sha256.iloc[1]
+
+
+def test_loss_context_is_independent_of_membership_and_retains_organ_scope():
+    # A Review hold still has measured normal exposure; bulk testis does not
+    # establish selective germ-cell injury or waive endocrine consequences.
+    assert antigen_sets.target_selection.results("CAGE1").category.iloc[0] == "Other"
+    records = antigen_sets.loss_consequences("CAGE1")
+    testis = next(r for r in records if r["expression_context"]["tissue"] == "testis")
+    assert testis["matched_level"] == "bulk" and testis["tier"] == "protected"
+    assert testis["evidence"] and "androgen" in testis["persistent_loss"]
+    # CTAG2 fails RA's fold requirement but its reproductive exposure is retained.
+    assert not antigen_sets.target_selection.results("CTAG2").is_reproductive_antigen.iloc[0]
+    assert antigen_sets.loss_consequences("CTAG2")
+    with pytest.raises(ValueError, match="Unknown"):
+        antigen_sets.loss_consequences("not_a_gene")

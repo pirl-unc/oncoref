@@ -10,7 +10,7 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [rebuilt target catalog](docs/audits/target-selection-20261110/rebuild/index.md) contains **246 CTA, 149 Cancer Antigen only, 102 Reproductive Antigen only, 1,143 Other and
+The [rebuilt target catalog](docs/audits/target-selection-20261110/rebuild/index.md) contains **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only, 1,131 Other and
 18,253 Unsafe**. [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen and independently require ≥10 × max(non-reproductive normal, Disposable, 1 TPM) in their respective compartments. CTA is their intersection; candidate antigen proteins is their union. The reference includes individual HPA tissue samples and supported context summaries. Accepted normal exclusions remain Unsafe; strong unresolved signals require review. [Filterable table and changes from 1.39](docs/audits/target-selection-20261110/rebuild/report.html). [Antigen sets and Unsafe|Other peptide subtraction](docs/antigen-sequences.md).
 
 The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). These are the earlier policy's counts. All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role.

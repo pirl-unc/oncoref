@@ -438,7 +438,7 @@ def tumor_normal(data, path):
         (axes[0], "tumor_max_tpm", "is_cancer_antigen", "Cancer", CANCER),
         (
             axes[1],
-            "reproductive_max_sample_tpm",
+            "reproductive_supported_tpm",
             "is_reproductive_antigen",
             "Reproductive / developmental",
             REPRODUCTIVE,
@@ -465,7 +465,7 @@ def tumor_normal(data, path):
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_xlabel("Highest nonreproductive reference, including Disposable (TPM)")
-        ax.set_ylabel("Highest QC-passing observation (TPM)")
+        ax.set_ylabel("Highest supported expression (TPM)")
         ax.set_title(f"{title}: {len(d)} measured proteins", loc="left", fontsize=11)
         ax.legend(fontsize=8, frameon=False, loc="lower right")
         ax.spines[["top", "right"]].set_visible(False)
