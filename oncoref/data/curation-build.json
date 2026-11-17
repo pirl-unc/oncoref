@@ -12,7 +12,8 @@
     "catalog": {"needs": ["rare_cell"], "argv": ["scripts/rebuild_target_catalog.py"]},
     "plots": {"needs": ["catalog"], "argv": ["scripts/render_target_catalog.py"]},
     "report": {"needs": ["plots"], "argv": ["scripts/build_target_selection_report.py"]},
-    "filter_audit": {"needs": ["report"], "argv": ["scripts/build_target_filter_audit.py"]}
+    "filter_audit": {"needs": ["report"], "argv": ["scripts/build_target_filter_audit.py"]},
+    "filter_web_report": {"needs": ["filter_audit"], "argv": ["scripts/build_target_filter_web_report.py"]}
   },
   "output_roots": [
     "docs/audits/target-selection-20261110/rebuild",

@@ -386,3 +386,40 @@ def test_rebuild_patient_metadata_matches_shared_api():
     assert metadata.participant_id.ne("").sum() == 13157
     assert not metadata.cancer_code.isin(policy.GERM_CELL_TUMORS).any()
     assert metadata.patient_identity_status.eq("conflict").sum() == 0
+
+
+def test_lactating_mammary_separation_and_cta_tiers(catalog):
+    meta = policy.metadata()
+    lactation = meta["comparison"]["mammary_lactation"]
+    assert lactation["lactating_samples"] == ["breast.410"]
+    assert lactation["resting_samples"] == ["breast.373", "breast.390", "breast.405"]
+
+    reproductive = pd.read_csv(
+        OUT / "reproductive-comparison.csv.gz",
+        usecols=["tissue", "compartment", "sample_id"],
+        low_memory=False,
+    )
+    assert set(reproductive.compartment) == set(policy.REPRODUCTIVE_COMPARTMENTS)
+    breast = reproductive[reproductive.tissue.eq("breast")]
+    assert set(breast.loc[breast.compartment.eq("lactating_breast"), "sample_id"]) == {"breast.410"}
+    assert set(breast.loc[breast.compartment.eq("resting_breast"), "sample_id"]) == {
+        "breast.373",
+        "breast.390",
+        "breast.405",
+    }
+
+    ctas = catalog[catalog.is_cta]
+    non_ctas = catalog[~catalog.is_cta]
+    assert non_ctas.cta_tier.fillna("").eq("").all()
+    assert ctas.cta_tier.value_counts().to_dict() == {
+        "core": 257,
+        "extended_only": 24,
+        "core_with_extended_exposure": 9,
+    }
+    by_name = ctas.set_index("protein_group_label")
+    assert by_name.loc["LALBA", "cta_tier"] == "extended_only"
+    assert by_name.loc["LALBA", "reproductive_qualifying_compartments"] == "lactating_breast"
+    assert by_name.loc["BTN1A1", "reproductive_qualifying_compartments"] == "lactating_breast"
+    assert by_name.loc["TGM4", "reproductive_qualifying_compartments"] == "prostate"
+    assert by_name.loc["PRAME", "cta_tier"] == "core"
+    assert by_name.loc["MAGEA11", "cta_tier"] == "core_with_extended_exposure"

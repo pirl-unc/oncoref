@@ -42,7 +42,7 @@ value, and a missing measurement never passes.
 |---|---|---|---|
 | 1 `off_target` | How low must expression be outside tumors and reproductive tissue? | `max_off_target_tpm` | 50 |
 | 2 `curation` | Is the protein's recorded normal home in a tissue of this tier or above? | `normal_function` | 9 |
-| 3 `sets` | How much enrichment and tumor replication, and which set do you want? | `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 219 |
+| 3 `sets` | Which host compartments are protected, how much enrichment/replication, and which set? | `host_profile`, `lactating`, `pregnant`, `allow_tissues`, `protect_tissues`, `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 219 |
 | 4 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 329 |
 | 5 `exclusions` | Which gene families do you rule out by name? | `exclude_prefixes`, `except_labels` | 16 |
 
@@ -86,7 +86,7 @@ layer 3 has tightened Cancer Antigens.
 | `min_papers` | 3 | 180 | 135 | 11 | 34 |
 | `min_papers` | 4 | 67 | 61 | 4 | 2 |
 
-## 4. Filter modes
+## 4. Filter modes and host toxicity profiles
 
 `all` → `loose` → `standard` → `strict`: each mode keeps a subset of the one before.
 Every mode keeps the positive controls PRAME, NY-ESO-1, MAGEA4; a test fails
@@ -124,6 +124,26 @@ Target candidates **509** → off_target **475** → curation **472** → sets *
 - Exclusions: drop labels starting with MAGE, except MAGEA4.
 
 Target candidates **509** → off_target **459** → curation **452** → sets **263** → papers **122** → exclusions **111**
+
+### Host anatomy and tissue-tolerance profiles
+
+Selecting a `host_profile` (`all`, `female-patient`, `male-patient`, `core`), physiological
+state (`lactating=True`, `pregnant=True`), or tissue override (`allow_tissues`,
+`protect_tissues`) defines which of the 12 reproductive, developmental, and mammary
+compartments are protected in the host (`≤ 32 TPM` and `≥ min_tumor_fold` below tumor)
+versus allowed as reproductive origins (`≥ min_reproductive_fold × H₀`). Lactating mammary
+(`breast.410`: `LALBA`, `BTN1A1`) is distinct from resting mammary (`breast.373/390/405`).
+[CSV](host-profiles.csv).
+
+| Profile | Protected compartments | CTA | CA only | RA only | CA | RA |
+|---|---|---|---|---|---|
+| all | none | 290 | 106 | 113 | 509 |
+| female-patient | fallopian tube, endometrium, cervix, resting_breast | 285 | 105 | 117 | 507 |
+| female-patient (lactating) | fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 283 | 105 | 115 | 503 |
+| female-patient (pregnant) | embryo, placenta, fallopian tube, endometrium, cervix, resting_breast | 129 | 89 | 117 | 335 |
+| male-patient | epididymis, prostate, seminal vesicle, resting_breast | 260 | 104 | 103 | 467 |
+| male-patient (post-prostatectomy) | epididymis, resting_breast | 264 | 105 | 103 | 472 |
+| core | epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 257 | 103 | 102 | 462 |
 
 ## 5. Where the familiar CTAs land
 

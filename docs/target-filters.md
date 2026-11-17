@@ -1,4 +1,4 @@
-# Target filters
+# Target filters and host profiles
 
 The catalog owns all evidence and category decisions. Filters only narrow its
 candidate sets. Current catalog: `oncoref.target-selection.2026-11-17.1`; filter policy:
@@ -8,11 +8,15 @@ candidate sets. Current catalog: `oncoref.target-selection.2026-11-17.1`; filter
 from oncoref import target_filters as tf
 
 all_candidates = tf.select("all")
+female_ctas = tf.select(tf.TargetFilter(membership="cta", host_profile="female-patient"))
+lactating_safe = tf.select(tf.TargetFilter(
+    membership="cta", host_profile="female-patient", lactating=True))
+male_post_rp = tf.select(tf.TargetFilter(
+    membership="cta", host_profile="male-patient",
+    allow_tissues=("prostate", "seminal vesicle")))
+core_ctas = tf.select(tf.TargetFilter(membership="cta", host_profile="core"))
 replicated_ca = tf.select(tf.TargetFilter(
     membership="cancer_antigen", min_tumor_patients=2))
-enriched_ctas = tf.select(tf.TargetFilter(
-    membership="cta", min_tumor_fold=30, min_reproductive_fold=20))
-decisions = tf.apply(tf.TargetFilter(min_papers=2))
 ```
 
 ## Five ordered layers
@@ -21,8 +25,11 @@ decisions = tf.apply(tf.TargetFilter(min_papers=2))
 |---|---|---|---|
 | Off target | `max_off_target_tpm` | None | Highest non-reproductive native TPM, including Disposable, must be below this value |
 | Curation | `normal_function` | `any` | Optionally exclude recorded Vital, Protected or Manageable normal homes |
-| Sets | `min_tumor_fold` | 10 | Tighten CA's tumor / max(N, Disposable, 1) |
-| Sets | `min_reproductive_fold` | 10 | Independently tighten RA's reproductive observation / the same denominator |
+| Sets | `host_profile` | `all` | Preset of protected host compartments (`all`, `core`, `male-patient`, `female-patient`) |
+| Sets | `lactating`, `pregnant` | `False` | Protect `lactating_breast` (`breast.410`) or `embryo` + `placenta` |
+| Sets | `allow_tissues`, `protect_tissues` | Empty | Explicitly accept toxicity in or protect named compartments (e.g. `prostate`, `testis`, `breast`) |
+| Sets | `min_tumor_fold` | 10 | Tighten CA's tumor / max(N, Disposable, protected host compartments, 1) |
+| Sets | `min_reproductive_fold` | 10 | Independently tighten RA's allowed-compartment observation / max(N, Disposable, 1) |
 | Sets | `min_tumor_patients` | 0 | Known patients with a qualifying sample at `min_tumor_fold`; anonymous samples do not count |
 | Sets | `membership` | `target_candidates` | Keep union, CA, RA, CTA or either exclusive set after tightening |
 | Papers | `min_papers` | 0 | Distinct scoped target nominations or tumor reports |
@@ -32,6 +39,33 @@ Missing measurements never satisfy an active requirement. The fold knobs cannot
 go below 10. A filter never promotes Other or Unsafe, changes the catalog, or adds
 its own evidence. Every layer is evaluated; `filter_failed` names the first failure.
 `filtered_category` reports membership after tightening.
+
+## Host profiles and tissue-toxicity toggles
+
+Every host profile is determined by **which of the 12 reproductive, developmental, and
+mammary compartments are protected** (**P**) versus **allowed** (**12 \ P**):
+
+1. Every compartment in **P** must stay **≤ 32 TPM** (`DISPOSABLE_CAP`),
+2. Tumor expression must reach **≥ `min_tumor_fold` × max(H₀, max_P TPM)**, and
+3. `RA` must reach **≥ `min_reproductive_fold` × H₀** in at least one compartment outside **P**.
+
+![CTA tiers and host profiles](audits/target-selection-20261110/rebuild/summary/cta-tiers-and-profiles.png)
+
+| Profile | Protected compartments (**P**) | CTA | CA only | RA only | CA∪RA |
+|---|---|---:|---:|---:|---:|
+| `all` | none | **290** | 106 | 113 | 509 |
+| `female-patient` | fallopian tube, endometrium, cervix, resting_breast | **285** | 105 | 117 | 507 |
+| `female-patient (lactating)` | fallopian tube, endometrium, cervix, lactating_breast, resting_breast | **283** | 105 | 115 | 503 |
+| `female-patient (pregnant)` | embryo, placenta, fallopian tube, endometrium, cervix, resting_breast | **129** | 89 | 117 | 335 |
+| `male-patient` | epididymis, prostate, seminal vesicle, resting_breast | **260** | 104 | 103 | 467 |
+| `male-patient (post-prostatectomy)` | epididymis, resting_breast | **264** | 105 | 103 | 472 |
+| `core` | epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | **257** | 103 | 102 | 462 |
+
+Lactating mammary (`lactating_breast`, HPA biopsy `breast.410`) is separated from resting
+mammary (`resting_breast`, 3 biopsies) because milk-protein genes (`LALBA`, `BTN1A1`) are
+silent in resting female and male breast ducts (`≤ 0.5 TPM`) and require lactogenic
+hormonal differentiation. Passing `"breast"` in `allow_tissues` or `protect_tissues`
+expands to both `lactating_breast` and `resting_breast`.
 
 Raising only the cancer fold can move a CTA to RA-only without removing it from the
 union. Raising only the reproductive fold can move it to CA-only. Select `cta` when
@@ -49,7 +83,8 @@ patients each reaching 30×. Multiple samples from one patient count once.
 | `strict` | 111 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 
 Modes nest from all to strict. They are optional choices, not evidence grades.
-PRAME, NY-ESO-1 and MAGEA4 are regression controls across these modes.
+PRAME, NY-ESO-1 and MAGEA4 are regression controls across these modes and across
+`all`, `core`, `male-patient`, and `female-patient` profiles.
 
 ## What the measurements mean
 

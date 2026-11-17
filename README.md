@@ -11,34 +11,23 @@ calibration sources — behind one small Python API, a data fetch/cache CLI, and
 set of reference plots.
 
 The [rebuilt target catalog](docs/audits/target-selection-20261110/rebuild/index.md) contains **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only, 1,131 Other and
-18,253 Unsafe**. [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen and independently require ≥10 × max(non-reproductive normal, Disposable, 1 TPM) in their respective compartments. CTA is their intersection; candidate antigen proteins is their union. The reference includes individual HPA tissue samples and supported context summaries. Accepted normal exclusions remain Unsafe; strong unresolved signals require review. [Filterable table and changes from 1.39](docs/audits/target-selection-20261110/rebuild/report.html). [Antigen sets and Unsafe|Other peptide subtraction](docs/antigen-sequences.md).
-
-The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) supplies **607 CTA / 18,259 Unsafe / 1,027 Other** across **19,893 proteins** (identical selected reference sequences counted together; member loci retained). These are the earlier policy's counts. All 19,893 candidate protein records enter classification; translation support and an approved MANE/canonical representative are CTA admission requirements. Every classified human protein has a category, with independent evidence status and sequence role.
-[Illustrated report](https://pirl-unc.github.io/oncoref/audits/cta-definition-20261104/report.html) · [PDF](docs/audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript decisions](https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/table.html) · [Historical 602-CTA evidence explorer](https://pirl-unc.github.io/oncoref/audits/cta-evidence-guide-20261106/report.html).
-
-The [normal-tissue tier ontology](docs/tissue-tiers.md) centralizes evidence-linked
-bulk and cell-subset calls with generated reports, figures and a Python API.
-A would-be target with 95% or more of its 9-mers inside Unsafe proteins is
-`Other:Sequence`, as is a nested microprotein without independent support. Replicated multi-molecule RNA in
-a Vital or Protected cell type of any sampled non-reproductive tissue, graded per
-adult donor, supplies Unsafe evidence.
-[Independent requirements](docs/cta-evidence-axes.md) separate normal exclusion,
-positive associations and published target support. Reproductive includes adult
-reproductive, placental, extraembryonic, embryonic and fetal contexts. The rebuilt
-policy makes the adult reproductive concentration score descriptive. Historical
-reports retain their dated gates. Curated protein–paper links and their attested
-claims are available through `cta_literature.attestations()`.
+18,253 Unsafe**. [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen and independently require ≥10 × max(non-reproductive normal, Disposable, 1 TPM) in their respective compartments. CTA is their intersection; candidate antigen proteins is their union. Lactating mammary (`breast.410`: `LALBA`, `BTN1A1`) is separated from resting mammary (`breast.373/390/405`), and the default `all` CTA set (`290`) slices cleanly by [host anatomy and tissue-loss tolerance](docs/target-filters.md) (`female-patient`: `285`, `--lactating`: `283`, `male-patient`: `260`, `core`: `257`). Accepted normal exclusions remain `Unsafe`; strong unresolved signals require review (`Other:Review`). [Interactive catalog](docs/audits/target-selection-20261110/rebuild/report.html) · [Architecture & figures](docs/audits/target-selection-20261110/rebuild/summary.md) · [Antigen sets and Unsafe|Other peptide subtraction](docs/antigen-sequences.md) · [CLI & curation build](docs/curation.md).
 
 ```python
-from oncoref import target_selection
+from oncoref import antigen_sets, target_filters, target_selection
 
-selected = target_selection.results(category="CTA")
+all_ctas = antigen_sets.proteins("CTA")                              # 290 default CTAs
+female_ctas = antigen_sets.proteins("CTA", profile="female-patient") # 285 CTAs
+lactating_safe = antigen_sets.proteins("CTA", profile="female-patient", lactating=True)
+male_ctas = antigen_sets.proteins("CTA", profile="male-patient")     # 260 CTAs
+core_ctas = antigen_sets.proteins("CTA", profile="core")             # 257 Core CTAs
+background = antigen_sets.proteins("Unsafe|Other")
 all_decisions = target_selection.results()
-changes = target_selection.results(changed_only=True)
-labels = all_decisions[["protein_group_label", "classification"]]
 ```
 
-The 1.36.0 compatibility snapshot and other species remain available separately:
+### Historical snapshots and species compatibility
+
+The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) (`cta_selection`, **607 CTA / 18,259 Unsafe / 1,027 Other**) and earlier snapshots remain pinned separately for historical comparison, alongside explicit multi-species interfaces:
 
 ```python
 from oncoref import human, canine, mouse, cta_selection

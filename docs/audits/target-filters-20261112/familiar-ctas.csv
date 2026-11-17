@@ -2,7 +2,7 @@ Group,Name,Catalog,Off-target TPM,in,Off-target nTPM,Tumor fold,CTA papers,Flags
 MAGE-A,MAGEA1,CTA,0.256767,spleen,0.0,346,7,literature conflict,✓,✓,exclusions,
 MAGE-A,MAGEA2,CTA,0.609406,adipose tissue,0.8,234,4,mapping risk,✓,✓,exclusions,
 MAGE-A,MAGEA3,Unsafe,,,53.1,,8,mapping risk,—,—,—,HPA tissue clusters
-MAGE-A,MAGEA4,CTA,3.649867,lymph node,0.6,877,8,literature conflict,✓,✓,✓,
+MAGE-A,MAGEA4,CTA,3.6498669999999995,lymph node,0.6,877,8,literature conflict,✓,✓,✓,
 MAGE-A,MAGEA6,CTA,0.771287,adipose tissue,0.2,539,6,mapping risk,✓,✓,exclusions,
 MAGE-A,MAGEA10,CTA,2.2,white matter,2.4,232,6,mapping risk,✓,✓,exclusions,
 MAGE-A,MAGEA12,Unsafe,,,0.5,,7,mapping risk,—,—,—,Established rare normal-cell RNA
@@ -12,7 +12,7 @@ MAGE-B/C,MAGEB4,CTA,0.072285,lymph node,0.0,29,1,,✓,papers,papers,
 MAGE-B/C,MAGEC1,CTA,0.5,white matter,0.6,313,5,,✓,✓,exclusions,
 MAGE-B/C,MAGEC2,CTA,0.195391,liver,0.1,682,6,,✓,✓,exclusions,
 NY-ESO / LAGE / PRAME,NY-ESO-1,CTA,0.968004,spleen,0.5,944,5,mapping risk,✓,✓,✓,
-NY-ESO / LAGE / PRAME,CTAG2,Other,11.85391,,24.9,51,3,"mapping risk, literature conflict",—,—,—,
+NY-ESO / LAGE / PRAME,CTAG2,Other,11.853909999999999,,24.9,51,3,"mapping risk, literature conflict",—,—,—,
 NY-ESO / LAGE / PRAME,PRAME,CTA,3.0132,lung,20.3,1225,6,"dismissed rare-cell, literature conflict",✓,✓,✓,
 NY-ESO / LAGE / PRAME,LAGE3,Unsafe,,,136.4,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea
 SSX / GAGE / PAGE / XAGE,SSX1,CTA,1.57147,thyroid gland,1.3,170,5,"mapping risk, literature conflict",✓,✓,✓,

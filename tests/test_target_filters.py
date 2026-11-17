@@ -264,3 +264,66 @@ def test_filters_act_only_on_records_the_catalog_carries(catalog):
     assert families[families.filter_acts].sources.str.len().gt(0).all()
     added = tc.compartments()
     assert len(added) == 7 and added.references.map(len).ge(2).all()
+
+
+def test_host_profiles_lactation_and_tissue_tolerance_toggles(catalog):
+    summary = tf.profile_summary(catalog).set_index("profile")
+    assert summary.loc["all", "CTA"] == 290
+    assert summary.loc["female-patient", "CTA"] == 285
+    assert summary.loc["female-patient (lactating)", "CTA"] == 283
+    assert summary.loc["male-patient", "CTA"] == 260
+    assert summary.loc["male-patient (post-prostatectomy)", "CTA"] == 264
+    assert summary.loc["core", "CTA"] == 257
+
+    def cta_labels(**kwargs):
+        return set(
+            tf.select(tf.TargetFilter(membership="cta", **kwargs), catalog).protein_group_label
+        )
+
+    all_cta = cta_labels(host_profile="all")
+    core_cta = cta_labels(host_profile="core")
+    male_cta = cta_labels(host_profile="male-patient")
+    female_cta = cta_labels(host_profile="female-patient")
+    lactating_cta = cta_labels(host_profile="female-patient", lactating=True)
+    post_rp_cta = cta_labels(
+        host_profile="male-patient", allow_tissues=("prostate", "seminal vesicle")
+    )
+
+    assert core_cta < male_cta < all_cta
+    assert core_cta < lactating_cta < female_cta < all_cta
+    # Milk-program genes are silent in resting breast, kept in male & non-lactating female, dropped in lactation.
+    assert {"LALBA", "BTN1A1"} <= male_cta
+    assert {"LALBA", "BTN1A1"} <= female_cta
+    assert female_cta - lactating_cta == {"LALBA", "BTN1A1"}
+    # Male accessory organ genes are safe in female patients, protected in intact men, and restored post-prostatectomy.
+    assert {"TGM4", "RLN1", "SEMG2", "POTEH"} <= female_cta
+    assert not ({"TGM4", "RLN1", "SEMG2", "POTEH"} & male_cta)
+    assert post_rp_cta - male_cta == {"TGM4", "RLN1", "SEMG2", "POTEH"}
+    # SCGB1D4 is expressed >32 TPM in both fallopian tube (289.8) and epididymis (51.2).
+    assert "SCGB1D4" in all_cta
+    assert "SCGB1D4" not in male_cta and "SCGB1D4" not in female_cta
+
+    # Positive controls survive every mode combined with non-pregnant profiles.
+    for mode in tf.FILTER_MODES:
+        base = tf.FILTER_MODES[mode]
+        for profile in ("all", "core", "male-patient", "female-patient"):
+            kept_labels = set(
+                tf.select(
+                    tf.TargetFilter(
+                        **{**base.__dict__, "host_profile": profile},
+                    ),
+                    catalog,
+                ).protein_group_label
+            )
+            assert set(tf.POSITIVE_CONTROLS) <= kept_labels, (mode, profile)
+
+    for bad in (
+        {"host_profile": "unknown"},
+        {"lactating": "yes"},
+        {"allow_tissues": "prostate"},
+        {"protect_tissues": ("not_a_compartment",)},
+        {"allow_tissues": ("prostate",), "protect_tissues": ("prostate",)},
+        {"allow_tissues": ("breast",), "protect_tissues": ("resting_breast",)},
+    ):
+        with pytest.raises(ValueError):
+            tf.TargetFilter(**bad)

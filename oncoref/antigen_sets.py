@@ -31,27 +31,81 @@ EXCLUSION_CATEGORIES = {
 ENSEMBL_RELEASE = 115
 
 
-def proteins(group="CTA") -> pd.DataFrame:
+def proteins(
+    group: str = "CTA",
+    *,
+    profile: str = "all",
+    lactating: bool = False,
+    pregnant: bool = False,
+    allow_tissues: tuple[str, ...] = (),
+    protect_tissues: tuple[str, ...] = (),
+) -> pd.DataFrame:
     """Current antigen groups or Unsafe, Other, and Unsafe|Other backgrounds.
 
     CA and RA include CTA. CA|RA is the union of candidate antigen proteins;
     RA-only membership does not imply tumor expression.
     Other denotes unresolved or nonqualifying proteins, not established hazards.
+    Optional ``profile`` ("all", "core", "male-patient", "female-patient") and
+    tissue-tolerance overrides narrow positive sets by host compartment rules.
     """
     if group not in SETS:
         raise ValueError(f"Unknown antigen set {group!r}; choose from {tuple(SETS)}")
-    rows = target_selection.results()
-    mask = (
-        rows.category.isin(EXCLUSION_CATEGORIES[group])
-        if group in EXCLUSION_CATEGORIES
-        else rows[SETS[group]]
+    has_host_filter = (
+        profile != "all" or lactating or pregnant or bool(allow_tissues) or bool(protect_tissues)
     )
-    return rows[mask].reset_index(drop=True)
+    if group in EXCLUSION_CATEGORIES:
+        if has_host_filter:
+            raise ValueError(
+                "Host profiles apply to candidate antigen sets, not Unsafe/Other backgrounds"
+            )
+        rows = target_selection.results()
+        return rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
+    rows = target_selection.results()
+    if not has_host_filter:
+        return rows[rows[SETS[group]]].reset_index(drop=True)
+    from . import target_filters
+
+    filt = target_filters.TargetFilter(
+        host_profile=profile,
+        lactating=lactating,
+        pregnant=pregnant,
+        allow_tissues=tuple(allow_tissues),
+        protect_tissues=tuple(protect_tissues),
+    )
+    evaluated = target_filters.apply(filt, rows)
+    ca, ra = evaluated.filtered_cancer_antigen, evaluated.filtered_reproductive_antigen
+    member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[group]
+    selected = evaluated[evaluated.keep & member].copy()
+    selected["category"] = selected.filtered_category
+    return selected.reset_index(drop=True)
 
 
-def gene_ids(group="CTA") -> frozenset[str]:
+def gene_ids(
+    group: str = "CTA",
+    *,
+    profile: str = "all",
+    lactating: bool = False,
+    pregnant: bool = False,
+    allow_tissues: tuple[str, ...] = (),
+    protect_tissues: tuple[str, ...] = (),
+) -> frozenset[str]:
     """All member gene IDs, preserving protein-equivalent loci."""
-    return frozenset(g for ids in proteins(group).member_gene_ids for g in json.loads(ids))
+    has_host_filter = (
+        profile != "all" or lactating or pregnant or bool(allow_tissues) or bool(protect_tissues)
+    )
+    frame = (
+        proteins(
+            group,
+            profile=profile,
+            lactating=lactating,
+            pregnant=pregnant,
+            allow_tissues=allow_tissues,
+            protect_tissues=protect_tissues,
+        )
+        if has_host_filter
+        else proteins(group)
+    )
+    return frozenset(g for ids in frame.member_gene_ids for g in json.loads(ids))
 
 
 def loss_consequences(gene: str) -> list[dict]:

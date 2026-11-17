@@ -59,6 +59,22 @@ UNMEASURED_HOME_TISSUES = (
     "hair follicle",
     "dental pulp",
 )
+#: Germline, gonadal, placental and embryonic compartments defining Core CTAs.
+CORE_REPRODUCTIVE_COMPARTMENTS = ("embryo", "placenta", "testis", "ovary")
+#: Adult accessory reproductive, tract and mammary compartments (sex- or state-conditional).
+MALE_ACCESSORY_COMPARTMENTS = ("epididymis", "prostate", "seminal vesicle")
+FEMALE_TRACT_COMPARTMENTS = ("fallopian tube", "endometrium", "cervix")
+MAMMARY_COMPARTMENTS = ("lactating_breast", "resting_breast")
+EXTENDED_REPRODUCTIVE_COMPARTMENTS = (
+    *MALE_ACCESSORY_COMPARTMENTS,
+    *FEMALE_TRACT_COMPARTMENTS,
+    *MAMMARY_COMPARTMENTS,
+)
+REPRODUCTIVE_COMPARTMENTS = (
+    *CORE_REPRODUCTIVE_COMPARTMENTS,
+    *EXTENDED_REPRODUCTIVE_COMPARTMENTS,
+)
+CTA_TIERS = ("core", "core_with_extended_exposure", "extended_only")
 
 
 def definition() -> dict:
@@ -241,6 +257,31 @@ def definition() -> dict:
             ),
             "protein": "Reliable reproductive IHC and reviewed protein findings annotate association; they cannot bypass the RNA fold.",
             "concentration": "The same tenfold enrichment requirement as CA, assessed independently.",
+            "compartments": {
+                "core": list(CORE_REPRODUCTIVE_COMPARTMENTS),
+                "male_accessory": list(MALE_ACCESSORY_COMPARTMENTS),
+                "female_tract": list(FEMALE_TRACT_COMPARTMENTS),
+                "mammary": list(MAMMARY_COMPARTMENTS),
+                "lactating_breast_rule": (
+                    "Individual breast biopsy samples with coordinated milk-protein RNA "
+                    "(>= 3 of LALBA, CSN1S1, CSN2, CSN3 at >= 100 native TPM) are assigned to "
+                    "lactating_breast; all other breast samples are resting_breast."
+                ),
+                "cta_tiers": {
+                    "core": (
+                        "Qualifies in embryo, placenta, testis or ovary, with all eight extended "
+                        "adult compartments <= 32 TPM and <= tumor_max_tpm / 10."
+                    ),
+                    "core_with_extended_exposure": (
+                        "Qualifies in embryo, placenta, testis or ovary, and also exceeds 32 TPM "
+                        "or lacks a 10x tumor margin in an extended adult compartment."
+                    ),
+                    "extended_only": (
+                        "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, "
+                        "endometrium, cervix, lactating_breast or resting_breast."
+                    ),
+                },
+            },
         },
         "shared_normal_policy": {
             "policy_id": "oncoref.cta-selection.2026-11-08.1",

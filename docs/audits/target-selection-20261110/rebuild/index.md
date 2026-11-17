@@ -4,6 +4,12 @@ Policy `oncoref.target-selection.2026-11-17.1`. **290 CTA, 106 Cancer Antigen on
 
 [Filterable protein table](report.html) · [Changes from 1.39.0](changes-from-1.39.csv) · [Transition counts](changes-from-1.39-summary.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 
+## End-to-end architecture and CTA tiers
+
+![End-to-end curation architecture](summary/source-to-tiers-architecture.png)
+
+![CTA tiers and host profiles](summary/cta-tiers-and-profiles.png)
+
 ## Curation funnel
 
 ![Curation funnel](funnel.png)

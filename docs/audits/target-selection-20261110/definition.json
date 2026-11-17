@@ -116,7 +116,35 @@
     "cell": "Cell-type nTPM and UMI counts remain separate annotations and normal checks; no unit pooling.",
     "developmental": "Mean native TPM within one embryo and lineage. One well-sampled population: >=20 cells, >=5 cells and >=10% cells at >=1 TPM. Smaller populations: >=5 measured cells, >=50% at >=1 TPM, and >=2 independent embryos at the same age and lineage reaching the fold. The mean must reach the tenfold threshold; higher fold filters retain replication. Embryos are biological donors; cells are not independent witnesses.",
     "protein": "Reliable reproductive IHC and reviewed protein findings annotate association; they cannot bypass the RNA fold.",
-    "concentration": "The same tenfold enrichment requirement as CA, assessed independently."
+    "concentration": "The same tenfold enrichment requirement as CA, assessed independently.",
+    "compartments": {
+      "core": [
+        "embryo",
+        "placenta",
+        "testis",
+        "ovary"
+      ],
+      "male_accessory": [
+        "epididymis",
+        "prostate",
+        "seminal vesicle"
+      ],
+      "female_tract": [
+        "fallopian tube",
+        "endometrium",
+        "cervix"
+      ],
+      "mammary": [
+        "lactating_breast",
+        "resting_breast"
+      ],
+      "lactating_breast_rule": "Individual breast biopsy samples with coordinated milk-protein RNA (>= 3 of LALBA, CSN1S1, CSN2, CSN3 at >= 100 native TPM) are assigned to lactating_breast; all other breast samples are resting_breast.",
+      "cta_tiers": {
+        "core": "Qualifies in embryo, placenta, testis or ovary, with all eight extended adult compartments <= 32 TPM and <= tumor_max_tpm / 10.",
+        "core_with_extended_exposure": "Qualifies in embryo, placenta, testis or ovary, and also exceeds 32 TPM or lacks a 10x tumor margin in an extended adult compartment.",
+        "extended_only": "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast or resting_breast."
+      }
+    }
   },
   "shared_normal_policy": {
     "policy_id": "oncoref.cta-selection.2026-11-08.1",
