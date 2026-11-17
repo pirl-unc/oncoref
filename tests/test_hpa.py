@@ -326,3 +326,54 @@ def test_rna_consensus_safety_groups_are_mapped_for_the_pinned_version():
     # The consensus table measures 10 of the 14 requested regions.
     assert brain.coverage_state == "partial"
     assert brain.unavailable_tissues == ("medulla oblongata", "pons", "thalamus", "white matter")
+
+
+def test_corrupt_optional_parquet_recovers_from_tsv(hpa_cache):
+    import pandas as pd
+
+    raw = hpa_cache / "sources/hpa_single_cell/v23/rna_single_cell_type.tsv"
+    parquet = raw.with_suffix(".parquet")
+    parquet.write_bytes(b"PAR1 interrupted write")
+    result = hpa._read_hpa("hpa_single_cell", "v23")
+    assert len(result) == 2
+    assert result.attrs["version"] == "v23"
+    pd.testing.assert_frame_equal(pd.read_parquet(parquet), pd.read_csv(raw, sep="\t"))
+
+
+def test_concurrent_hpa_read_never_observes_partial_cache(hpa_cache, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    from pathlib import Path
+    from threading import Event, Lock
+
+    import pandas as pd
+
+    started, release = Event(), Event()
+    lock = Lock()
+    writes = []
+    original = pd.DataFrame.to_parquet
+    raw = hpa_cache / "sources/hpa_single_cell/v23/rna_single_cell_type.tsv"
+    parquet = raw.with_suffix(".parquet")
+
+    def interrupted_write(frame, path, **kwargs):
+        with lock:
+            first = not writes
+            writes.append(path)
+        if first:
+            Path(path).write_bytes(b"PAR1 incomplete")
+            started.set()
+            assert release.wait(10), "test did not release the paused writer"
+        return original(frame, path, **kwargs)
+
+    monkeypatch.setattr(pd.DataFrame, "to_parquet", interrupted_write)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        first = pool.submit(hpa._read_hpa, "hpa_single_cell", "v23")
+        try:
+            assert started.wait(10)
+            assert not parquet.exists(), "unfinished cache became visible to readers"
+            second = pool.submit(hpa._read_hpa, "hpa_single_cell", "v23").result(timeout=10)
+        finally:
+            release.set()
+        pd.testing.assert_frame_equal(first.result(timeout=10), second)
+    assert len(writes) == 2 and len(set(writes)) == 2
+    pd.testing.assert_frame_equal(pd.read_parquet(parquet), pd.read_csv(raw, sep="\t"))
+    assert not list(raw.parent.glob("*.part"))

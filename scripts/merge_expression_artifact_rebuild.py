@@ -199,6 +199,9 @@ def _merge_reference_summaries(
         destination.unlink(missing_ok=True)
     for destination, rows in writes:
         destination.parent.mkdir(parents=True, exist_ok=True)
+        # Incremental bundle trees may hardlink their unchanged base files.
+        # Detach before writing so a merge cannot mutate the published base.
+        destination.unlink(missing_ok=True)
         rows.to_csv(destination, index=False, compression="infer")
 
 
