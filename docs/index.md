@@ -1,6 +1,6 @@
 # oncoref
 
-[OncoRef 1.39.0](cta-release-1.39.0.md) · [Antigen set and peptide APIs](antigen-sequences.md)
+[OncoRef 1.40.0](cta-release-1.40.0.md) · [Antigen set and peptide APIs](antigen-sequences.md)
 
 [Cancer and Reproductive Antigens](target-selection.md) defines the current policy:
 CTA is their intersection and candidate antigen proteins is their union, with the same
@@ -22,7 +22,7 @@ The [released 1.36.0 CTA and oncofetal definition](audits/cta-definition-2026110
 
 [Illustrated report](audits/cta-definition-20261104/report.html) · [PDF](audits/cta-definition-20261104/cta-definition.pdf) · [Current transcript table](audits/cta-transcript-selection-20261108/table.html) · [Current paper gaps and judgments](audits/cta-current-review-20261108/index.md) · [PRAMEF18, SSU72-like proteins and other candidate evidence](audits/cta-candidate-evidence-20261108/index.md) · [Historical 602-CTA evidence explorer](audits/cta-evidence-guide-20261106/report.html) · [Verified sequence records](sequence-bundle.md).
 
-The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.36.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
+The normal screen, cancer presence, reproductive/developmental association, coverage, translation and sequence-overlap gates remain distinct. Accepted exclusion evidence establishes Unsafe; unresolved evidence requires review. [Current release notes](cta-release-1.40.0.md) and the [source walkthrough](audits/cta-source-walkthrough-20261028/index.md) explain the decisions.
 
 The [343-group harmonized funnel](audits/cta-harmonized-20261027/index.md),
 [1,416-gene biological membership comparison](audits/cta-membership-20261026/index.md)
