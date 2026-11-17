@@ -65,7 +65,8 @@ unsafe_occurrences = background.matches(peptide)
 retained = background.subtract(targets.iloc[0].sequence)
 ```
 
-`matches` retains all source fields (gene, transcript, protein group), the original
+`matches` retains all source fields (gene, transcript, protein group, catalog category
+and background exclusion reason), the original
 matched peptide, distance, and zero-based half-open coordinates. `subtract`
 returns each surviving query occurrence with its coordinates. Both retain the
 reference, missing-gene list and matching parameters in DataFrame attributes.

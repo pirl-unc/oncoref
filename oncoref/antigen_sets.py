@@ -269,6 +269,11 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
                         "sequence": sequence,
                         "sequence_sha256": hashlib.sha256(sequence.encode()).hexdigest(),
                         "set": group,
+                        "catalog_category": getattr(
+                            protein, "catalog_category", getattr(protein, "category", "")
+                        ),
+                        "selection_category": getattr(protein, "category", ""),
+                        "background_reason": getattr(protein, "background_reason", ""),
                     }
                 )
             if not found:
@@ -283,6 +288,9 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
             "sequence",
             "sequence_sha256",
             "set",
+            "catalog_category",
+            "selection_category",
+            "background_reason",
         ],
     )
     result.attrs.update(protein_rows.attrs)

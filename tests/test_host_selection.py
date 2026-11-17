@@ -188,7 +188,10 @@ def test_selection_views_and_host_background_share_one_decision(rows):
     index = selected.background_index(
         genome=genome, policy=MatchPolicy(equivalence_groups=("ILV",)), lengths=(8,)
     )
-    assert len(index.matches("IIIIIIII")) == 1
+    matches = index.matches("IIIIIIII")
+    assert len(matches) == 1
+    assert matches.catalog_category.item() == "CTA"
+    assert matches.background_reason.item() == "Host: excluded"
     # Returned frames/metadata must not mutate the captured decision.
     detached = selected.decisions()
     detached.loc[:, "keep"] = False

@@ -12,7 +12,7 @@
   ],
   "implementation": {
     "oncoref/antigen_cli.py": "e47ed8351165727e6591c5218b402c277c79654371a6cfd4c2cba0cc330e54dd",
-    "oncoref/antigen_sets.py": "815e863c0aad3024fcb6ba94b32542125e8d89e2b17e4ef966b36b8184977846",
+    "oncoref/antigen_sets.py": "ad1fe146f78593b25e2bf9aeedac7118ec9fd05512a7eb42649971941d5d394e",
     "oncoref/cta_literature.py": "082bc2818dc3af6a779aca36a887962e67e7f3fed4ed5d96a8ca6ed43f02fa7b",
     "oncoref/curation.py": "9683796de8d40056d70ebf9f0147630e4c8608115750a20b2f8c32bd540a2dc6",
     "oncoref/data/curation-build.json": "cd059f5928b476d1d3adbcef8f16af77c5363c2723e665337e0709c1d1242d2a",
