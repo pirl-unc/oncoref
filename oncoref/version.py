@@ -10,7 +10,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__version__ = "1.40.0"
+__version__ = "1.40.1"
 
 # Version of the downloadable data bundle (the heavy per-cohort percentile +
 # representative shards). Bump when the DERIVED reference artifacts change — it pins
@@ -61,7 +61,8 @@ __version__ = "1.40.0"
 # identical-protein registry, including RBMY1F/RBMY1J, with registry fingerprints.
 # 5.23.27 rebuilds protein summaries using approved MANE/canonical representatives.
 # 5.23.28 rebuilds HL and TGCT after library background and spermatid-program QC.
-DATA_VERSION = "5.23.28"
+# 5.23.29 restores the 31 non-TGCT cohorts in the shared TCGA summary shard.
+DATA_VERSION = "5.23.29"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION

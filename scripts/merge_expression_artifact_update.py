@@ -14,6 +14,8 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from scripts.merge_expression_artifact_rebuild import _merge_reference_summaries
+
 from oncoref.representative_partitions import (
     REPRESENTATIVE_PARTITION_COHORT_COLUMNS,
     assign_representative_partitions,
@@ -58,9 +60,13 @@ def merge_expression_artifact_update(base: Path, update: Path, out: Path) -> set
 
     for source in sorted(path for path in update.rglob("*") if path.is_file()):
         relative = source.relative_to(update)
-        if relative in GLOBAL_PATHS:
+        if relative in GLOBAL_PATHS or relative.parts[0] == "cancer-reference-expression":
             continue
         _replace_file(source, out / relative)
+
+    # Source CSVs can contain many cohorts. A focused TGCT rebuild must not
+    # replace the shared TCGA file and hide every other cancer in that source.
+    _merge_reference_summaries(out, update, cancer_codes=codes)
 
     base_provenance = pd.read_csv(base / PROVENANCE_PATH, keep_default_na=False)
     update_provenance = pd.read_csv(update / PROVENANCE_PATH, keep_default_na=False)
