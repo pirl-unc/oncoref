@@ -31,6 +31,8 @@ def _host_overrides(args) -> dict:
         overrides["pregnant"] = True
     if getattr(args, "allow_tissues", None):
         overrides["allow_tissues"] = tuple(args.allow_tissues)
+    if getattr(args, "absent_tissues", None):
+        overrides["absent_tissues"] = tuple(args.absent_tissues)
     if getattr(args, "protect_tissues", None):
         overrides["protect_tissues"] = tuple(args.protect_tissues)
     return overrides
@@ -48,13 +50,9 @@ def list_antigens(args):
         if args.mode != "all" or overrides:
             raise ValueError("Candidate filters do not apply to Unsafe/Other backgrounds")
     else:
-        evaluated = target_filters.apply(
-            replace(target_filters.FILTER_MODES[args.mode], **overrides), rows
-        )
-        ca, ra = evaluated.filtered_cancer_antigen, evaluated.filtered_reproductive_antigen
-        member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[args.set]
-        rows = evaluated[evaluated.keep & member].copy()
-        rows["category"] = rows.filtered_category
+        selection = antigen_sets.select(args.set, mode=args.mode, **overrides)
+        rows = selection.proteins()
+        print(json.dumps(selection.metadata), file=sys.stderr)
     if args.ids:
         ids = sorted({gene for members in rows.member_gene_ids for gene in json.loads(members)})
         if args.format == "table":
@@ -68,10 +66,11 @@ def list_antigens(args):
                     "protein_group_label",
                     "entity_id",
                     "category",
-                    "cta_tier",
+                    "reproductive_qualifying_compartments",
                     "tumor_fold",
                     "reproductive_fold",
                     "independent_patients_at_tenfold",
+                    *(["host_status", "effective_off_target_tpm", "effective_tumor_fold"] if "host_status" in rows else []),
                 ]
             ],
             args.format,
@@ -145,6 +144,11 @@ def explain(args):
         output[label] = [
             "pass" if row.keep else "fail: " + row.filter_failed for row in evaluated.itertuples()
         ]
+    if overrides := _host_overrides(args):
+        selected = target_filters.apply(replace(target_filters.TargetFilter(), **overrides), rows)
+        for column in ("host_status", "host_reasons", "host_unknown_compartments", "host_limiting_compartment", "effective_off_target_tpm", "effective_tumor_fold", "keep"):
+            output[column] = selected[column].to_numpy()
+        print(json.dumps(selected.attrs), file=sys.stderr)
     if args.format == "table":
         for record in output.to_dict("records"):
             for name, value in record.items():
@@ -233,7 +237,8 @@ def subtract(args):
     for label, sequence in queries:
         if not sequence or not set(sequence) <= set("ABCDEFGHIJKLMNOPQRSTUVWXYZ*"):
             raise ValueError(f"Invalid protein sequence for {label}")
-    records = antigen_sets.sequences(args.background)
+    host_overrides = _host_overrides(args)
+    records = antigen_sets.select("CA|RA", **host_overrides).background_sequences(args.background) if host_overrides else antigen_sets.sequences(args.background)
     if records.attrs.get("missing_gene_ids"):
         raise ValueError(
             "Background has missing gene translations; subtraction cannot claim complete coverage"
@@ -250,6 +255,7 @@ def subtract(args):
             {
                 "background": args.background,
                 "records": len(records),
+                "selection": records.attrs,
                 "match_policy": policy.as_dict(),
                 "lengths": list(lengths),
                 "interpretation": "Retained sequence windows, not validated antigen presentation or safety",
@@ -278,12 +284,13 @@ def _add_host_options(parser):
         help="Protect embryo and placenta",
     )
     parser.add_argument(
-        "--allow-tissue",
+        "--accept-loss", "--allow-tissue",
         dest="allow_tissues",
         action="append",
         default=[],
-        help="Explicitly allow toxicity in a compartment (e.g. prostate, 'seminal vesicle', breast)",
+        help="Explicitly accept whole-compartment loss; acute injury remains a separate concern",
     )
+    parser.add_argument("--absent-tissue", dest="absent_tissues", action="append", default=[], help="Declare a verified absent compartment (distinct from accepted injury)")
     parser.add_argument(
         "--protect-tissue",
         dest="protect_tissues",
@@ -313,6 +320,7 @@ def register(subparsers):
         "explain", help="Explain every gate and named filter for a gene"
     )
     explanation.add_argument("gene")
+    _add_host_options(explanation)
     explanation.add_argument(
         "--loss", action="store_true", help="Include reviewed tissue-loss consequences and evidence"
     )
@@ -328,6 +336,7 @@ def register(subparsers):
         "subtract", help="Subtract background matches from a protein sequence or FASTA"
     )
     peptides.add_argument("query")
+    _add_host_options(peptides)
     peptides.add_argument(
         "--background", choices=list(antigen_sets.EXCLUSION_CATEGORIES), default="Unsafe|Other"
     )

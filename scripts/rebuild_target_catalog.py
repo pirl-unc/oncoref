@@ -420,6 +420,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     normal["comparison_id"] = COMPARISON_ID
     for column in (
         "compartment",
+        "mammary_state_inference",
         "sample_id",
         "participant_id",
         "observation_kind",
@@ -435,6 +436,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         "comparison_id",
         "tissue",
         "compartment",
+        "mammary_state_inference",
         "cell_type",
         "source_context",
         "context_id",
@@ -775,7 +777,7 @@ def build(*, reuse_tumor_cache=False):
         [normal[normal.scope.eq("reproductive") & normal.sample_id.ne("")], development],
         ignore_index=True,
     )
-    if not set(reproductive.compartment) <= set(target_selection.REPRODUCTIVE_COMPARTMENTS):
+    if not set(reproductive.compartment) <= {*target_selection.REPRODUCTIVE_COMPARTMENTS, "breast"}:
         raise ValueError(
             f"Unexpected reproductive compartments: {sorted(set(reproductive.compartment))}"
         )
@@ -1163,6 +1165,9 @@ def build(*, reuse_tumor_cache=False):
         "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
         "individual_tissue_source": HPA_SOURCE,
         "mammary_lactation": {
+            "state_is_inferred": True,
+            "unknown_marker_coverage_is_resting": False,
+            "resting_label_meaning": "no high secretory signature in sampled biopsies; not confirmed physiology",
             "markers": list(LACTATION_MARKERS),
             "marker_tpm_threshold": LACTATION_MARKER_TPM,
             "min_markers": LACTATION_MIN_MARKERS,

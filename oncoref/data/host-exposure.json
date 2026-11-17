@@ -1,0 +1,19 @@
+{
+  "schema": "oncoref.host-exposure.v1",
+  "policy_id": "oncoref.host-selection.2026-11-17.2",
+  "catalog_policy_id": "oncoref.target-selection.2026-11-17.1",
+  "sha256": "163aa64bf0dfe5b709788d3e22345c7276b9ab4538c2fd82bdbe655f3914f83e",
+  "inputs": {
+    "/private/tmp/oncoref-host-selection/docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "da89803c4853969154cbbf7010296a24b6c5dcf4f113b6929e4dfcfc7d67889e",
+    "/private/tmp/oncoref-host-selection/docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+    "/Users/iskander/.cache/oncoref/sources/hpa_single_cell_tissue/v23/rna_single_cell_type_tissue.tsv": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7",
+    "/Users/iskander/.cache/oncoref/sources/hpa_normal_tissue/v23/normal_tissue.tsv": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"
+  },
+  "limitations": [
+    "Native TPM and nTPM are screened separately, never converted.",
+    "Positive HPA IHC remains unresolved host-specific protein evidence until attribution is reviewed.",
+    "Early embryo observations cannot clear all stages of pregnancy.",
+    "Mammary state is expression-inferred; state-unspecified orthogonal findings apply conservatively to both states.",
+    "Unmeasured cell populations and treatment-induced states are not excluded by this research screen."
+  ]
+}

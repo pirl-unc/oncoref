@@ -29,9 +29,9 @@ from functools import lru_cache
 import numpy as np
 import pandas as pd
 
-from . import target_selection
+from . import host_context, target_selection
 
-FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.1"
+FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.2"
 
 #: Named host / CTA profiles mapping to default protected compartments.
 HOST_PROFILES: dict[str, tuple[str, ...]] = {
@@ -47,33 +47,8 @@ HOST_PROFILES: dict[str, tuple[str, ...]] = {
     ),
 }
 
-_COMPARTMENT_LOOKUP: dict[str, tuple[str, ...]] = {
-    "breast": target_selection.MAMMARY_COMPARTMENTS,
-    "mammary": target_selection.MAMMARY_COMPARTMENTS,
-}
-for _comp in target_selection.REPRODUCTIVE_COMPARTMENTS:
-    _COMPARTMENT_LOOKUP[_comp] = (_comp,)
-    _COMPARTMENT_LOOKUP[_comp.replace(" ", "_")] = (_comp,)
-    _COMPARTMENT_LOOKUP[_comp.replace("_", " ")] = (_comp,)
-
-
 def normalize_compartments(values) -> tuple[str, ...]:
-    """Validate and canonicalize an iterable of reproductive/mammary compartment names."""
-    if isinstance(values, str):
-        raise ValueError("Compartment collections must be tuples of strings, not a bare string")
-    expanded = set()
-    for raw in values:
-        if not isinstance(raw, str) or not raw.strip():
-            raise ValueError(f"Invalid compartment name: {raw!r}")
-        key = " ".join(raw.casefold().strip().split())
-        target = _COMPARTMENT_LOOKUP.get(key) or _COMPARTMENT_LOOKUP.get(key.replace(" ", "_"))
-        if target is None:
-            raise ValueError(
-                f"Unknown reproductive/mammary compartment {raw!r}; expected one of "
-                f"{list(target_selection.REPRODUCTIVE_COMPARTMENTS)} or 'breast'"
-            )
-        expanded.update(target)
-    return tuple(c for c in target_selection.REPRODUCTIVE_COMPARTMENTS if c in expanded)
+    return host_context.normalize(values)
 
 
 #: Which set a protein must belong to after tightening compartment evidence.
@@ -95,7 +70,7 @@ PAPER_FAMILIES = {
 }
 #: Families whose papers ``min_papers`` counts: target nominations and tumor reports.
 COUNTED_FAMILIES = ("cta", "oncofetal", "tumor")
-LAYERS = ("off_target", "curation", "sets", "papers", "exclusions")
+LAYERS = ("off_target", "curation", "host", "sets", "papers", "exclusions")
 #: ``normal_function`` values and the curated tiers each one removes.
 NORMAL_FUNCTION = {
     "any": (),
@@ -122,6 +97,8 @@ class TargetFilter:
     min_tumor_patients: int = 0
     membership: str = "target_candidates"
     #: Host compartment profile and explicit physiological/surgical overrides.
+    host: host_context.HostContext | None = None
+    absent_tissues: tuple[str, ...] = ()
     host_profile: str = "all"  # "all" | "core" | "male-patient" | "female-patient"
     lactating: bool = False
     pregnant: bool = False
@@ -141,12 +118,14 @@ class TargetFilter:
         for flag in ("lactating", "pregnant"):
             if not isinstance(getattr(self, flag), bool):
                 raise ValueError(f"{flag} must be a boolean")
-        for field in ("exclude_prefixes", "except_labels", "allow_tissues", "protect_tissues"):
+        for field in ("exclude_prefixes", "except_labels", "allow_tissues", "protect_tissues", "absent_tissues"):
             if not isinstance(getattr(self, field), tuple):
                 raise ValueError(
                     f"{field} must be a tuple, not {type(getattr(self, field)).__name__}"
                 )
-        protected_compartments(self)
+        context(self)
+        if self.max_off_target_tpm is not None and (isinstance(self.max_off_target_tpm, bool) or not math.isfinite(self.max_off_target_tpm) or self.max_off_target_tpm <= 0):
+            raise ValueError("max_off_target_tpm must be finite and positive")
         if self.normal_function not in NORMAL_FUNCTION:
             raise ValueError(f"normal_function must be one of {list(NORMAL_FUNCTION)}")
         for name in ("min_tumor_fold", "min_reproductive_fold"):
@@ -165,31 +144,30 @@ class TargetFilter:
         return {k: v for k, v in asdict(self).items() if v != base[k]}
 
 
+def context(f):
+    if isinstance(f, str):
+        f = FILTER_MODES[f]
+    if f.host is not None:
+        if not isinstance(f.host, host_context.HostContext):
+            raise ValueError("host must be a HostContext")
+        if any((f.host_profile != "all", f.pregnant, f.lactating, f.allow_tissues, f.protect_tissues, f.absent_tissues)):
+            raise ValueError("Use host or legacy profile/tissue arguments, not both")
+        return f.host
+    return host_context.from_legacy(f.host_profile, pregnant=f.pregnant, lactating=f.lactating, allow_tissues=f.allow_tissues, protect_tissues=f.protect_tissues, absent_tissues=f.absent_tissues)
+
+
 def protected_compartments(f: TargetFilter | str) -> tuple[str, ...]:
-    """Compartments protected from toxicity in this host (<=32 TPM and >=min_tumor_fold below tumor)."""
-    f = FILTER_MODES[f] if isinstance(f, str) else f
-    allowed_override = set(normalize_compartments(f.allow_tissues))
-    protected_override = set(normalize_compartments(f.protect_tissues))
-    if overlap := allowed_override & protected_override:
-        raise ValueError(f"Compartments cannot be both allowed and protected: {sorted(overlap)}")
-    protected = set(HOST_PROFILES[f.host_profile])
-    if f.lactating:
-        protected.add("lactating_breast")
-    if f.pregnant:
-        protected.update(("embryo", "placenta"))
-    protected -= allowed_override
-    protected |= protected_override
-    return tuple(c for c in target_selection.REPRODUCTIVE_COMPARTMENTS if c in protected)
+    host = context(f)
+    return host.protected if host else ()
 
 
 def allowed_compartments(f: TargetFilter | str) -> tuple[str, ...]:
-    """Compartments absent or tolerated in this host that may supply RA membership."""
-    protected = set(protected_compartments(f))
-    return tuple(c for c in target_selection.REPRODUCTIVE_COMPARTMENTS if c not in protected)
+    """Compatibility view of non-protected compartments; inspect context for states."""
+    host = context(f)
+    return tuple(c for c in target_selection.REPRODUCTIVE_COMPARTMENTS if not host or c not in host.protected)
 
 
-#: Proteins every filter mode must keep; a test enforces it. PRAME and NY-ESO-1 are
-#: targets of T-cell therapies given to patients, so a mode that drops one is miscalibrated.
+#: Baseline catalog regression controls. Host constraints may exclude any of them.
 POSITIVE_CONTROLS = ("PRAME", "NY-ESO-1", "MAGEA4")
 
 #: Named filter modes, loosest to strictest. Each keeps a subset of the one before it.
@@ -299,7 +277,7 @@ def measures(table: pd.DataFrame | None = None) -> pd.DataFrame:
     return d
 
 
-def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
+def apply(f: TargetFilter, table: pd.DataFrame | None = None, *, host_evidence=None) -> pd.DataFrame:
     """Evaluate every layer for every protein; nothing is dropped.
 
     Returns :func:`measures` plus ``pass_<layer>`` for each layer, ``keep`` (all
@@ -307,46 +285,20 @@ def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
     ``filtered_category`` (the category after tightening compartment evidence).
     """
     d = measures(table)
-    d["pass_off_target"] = (
-        d.off_target_tpm.lt(f.max_off_target_tpm)
-        if f.max_off_target_tpm is not None
-        else pd.Series(True, index=d.index)
-    )
-    d["pass_curation"] = ~d.curated_tier.isin(NORMAL_FUNCTION[f.normal_function])
-    # Tighten each compartment independently, respecting any protected host compartments.
-    protected = protected_compartments(f)
-    allowed = allowed_compartments(f)
+    host = context(f)
+    assessment = host_context.assess(d, host, evidence=host_evidence)
+    for name in assessment:
+        d[name] = assessment[name]
     h0 = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1, skipna=False).clip(lower=1.0)
-    if not protected:
-        cap_pass = pd.Series(True, index=d.index)
-        host_denom = h0
-        d["host_protected_max_tpm"] = 0.0
-        d["effective_tumor_fold"] = d.tumor_fold
-        d["effective_reproductive_fold"] = d.reproductive_fold
-    else:
-        raw_cmax = d.get("reproductive_compartment_max_tpm", pd.Series(index=d.index, dtype=object))
-        raw_qmax = d.get("reproductive_qualifying_tpm", pd.Series(index=d.index, dtype=object))
-        prot_vals, orig_vals, valid_json = [], [], []
-        for c_str, q_str in zip(raw_cmax, raw_qmax):
-            if not isinstance(c_str, str) or not isinstance(q_str, str) or not c_str or not q_str:
-                prot_vals.append(float("nan"))
-                orig_vals.append(float("nan"))
-                valid_json.append(False)
-                continue
-            cdict = json.loads(c_str)
-            qdict = json.loads(q_str)
-            prot_vals.append(max((float(cdict.get(c, 0.0)) for c in protected), default=0.0))
-            orig_vals.append(max((float(qdict.get(c, 0.0)) for c in allowed), default=0.0))
-            valid_json.append(True)
-        prot_series = pd.Series(prot_vals, index=d.index, dtype=float)
-        orig_series = pd.Series(orig_vals, index=d.index, dtype=float)
-        valid_series = pd.Series(valid_json, index=d.index, dtype=bool) & h0.notna()
-        cap_pass = valid_series & prot_series.le(target_selection.DISPOSABLE_CAP)
-        host_denom = np.maximum(h0, prot_series)
-        d["host_protected_max_tpm"] = prot_series
-        d["effective_tumor_fold"] = d.tumor_max_tpm / host_denom
-        d["effective_reproductive_fold"] = orig_series / h0
-    cancer = d.is_cancer_antigen & cap_pass & d.effective_tumor_fold.ge(f.min_tumor_fold)
+    d["effective_off_target_tpm"] = np.maximum(d.off_target_tpm, d.host_protected_max_tpm)
+    host_denom = np.maximum(h0, d.host_protected_max_tpm)
+    d["effective_tumor_fold"] = d.tumor_fold if host is None else d.tumor_max_tpm / host_denom
+    d["effective_reproductive_fold"] = d.reproductive_fold
+    d["pass_off_target"] = d.effective_off_target_tpm.lt(f.max_off_target_tpm) if f.max_off_target_tpm is not None else True
+    d["pass_curation"] = ~d.curated_tier.isin(NORMAL_FUNCTION[f.normal_function])
+    # Tightened biological membership and host eligibility remain separate axes.
+    cancer = d.is_cancer_antigen & d.tumor_fold.ge(f.min_tumor_fold)
+    host_tumor_pass = d.effective_tumor_fold.ge(f.min_tumor_fold)
     if f.min_tumor_patients:
 
         def patient_fold(value):
@@ -372,13 +324,17 @@ def apply(f: TargetFilter, table: pd.DataFrame | None = None) -> pd.DataFrame:
             )
 
         folds = d.get("independent_patient_tumor_folds", pd.Series(index=d.index, dtype=object))
-        kth_patient_fold = folds.map(patient_fold) * (h0 / host_denom)
+        kth_patient_fold = folds.map(patient_fold)
         cancer &= kth_patient_fold.ge(f.min_tumor_fold)
-    reproductive = (
-        d.is_reproductive_antigen
-        & cap_pass
-        & d.effective_reproductive_fold.ge(f.min_reproductive_fold)
-    )
+        host_tumor_pass &= (kth_patient_fold * (h0 / host_denom)).ge(f.min_tumor_fold)
+    reproductive = d.is_reproductive_antigen & d.reproductive_fold.ge(f.min_reproductive_fold)
+    if host is not None:
+        failed_margin = d.is_cancer_antigen & ~host_tumor_pass
+        d.loc[failed_margin, "host_reasons"] += " | Insufficient independent tumor expression over the protected host reference"
+        d.loc[failed_margin & d.host_status.eq("eligible"), "host_status"] = "excluded"
+        d["pass_host"] &= ~failed_margin
+    d.attrs["host_context"] = host.as_dict() if host else None
+    d.attrs["selection_policy_id"] = FILTER_POLICY_ID
     d["filtered_cancer_antigen"] = cancer
     d["filtered_reproductive_antigen"] = reproductive
     d["filtered_category"] = ""
@@ -443,8 +399,9 @@ def describe(f: TargetFilter | str) -> str:
         prot_text = ", ".join(protected) if protected else "none"
         allow_text = ", ".join(allowed) if allowed else "none"
         lines.append(
-            f"Host ({f.host_profile}): protect [{prot_text}] (<= {target_selection.DISPOSABLE_CAP:g} "
-            f"TPM and tumor >= {f.min_tumor_fold:g} x); allow reproductive origin in [{allow_text}]."
+            f"Host: protect [{prot_text}]; explicit exceptions [{allow_text}]. "
+            f"Native RNA limits: < {context(f).max_tpm:g} TPM and < {context(f).max_ntpm:g} nTPM. "
+            "Missing coverage and unresolved protein findings fail; membership stays biological."
         )
     if f.min_tumor_fold > 10.0:
         lines.append(
@@ -496,7 +453,7 @@ def profile_summary(table: pd.DataFrame | None = None) -> pd.DataFrame:
             "male-patient (post-prostatectomy)",
             TargetFilter(
                 host_profile="male-patient",
-                allow_tissues=("prostate", "seminal vesicle"),
+                absent_tissues=("prostate", "seminal vesicle"),
             ),
         ),
         ("core", TargetFilter(host_profile="core")),
@@ -513,6 +470,8 @@ def profile_summary(table: pd.DataFrame | None = None) -> pd.DataFrame:
                 "profile": label,
                 "protected_compartments": ", ".join(protected_compartments(filt)) or "none",
                 "allowed_compartments": ", ".join(allowed_compartments(filt)),
+                "host_states": json.dumps(context(filt).states() if context(filt) else {}),
+                "unresolved": int((evaluated.is_target_candidate & evaluated.host_status.eq("unresolved")).sum()),
                 "CTA": cta,
                 "CA_only": ca - cta,
                 "RA_only": ra - cta,
