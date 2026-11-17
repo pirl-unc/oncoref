@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-16.2"
+POLICY_ID = "oncoref.target-selection.2026-11-17.1"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -232,8 +232,11 @@ def definition() -> dict:
             "bulk": "At least one QC-passing, identity-resolved reproductive tissue sample on the declared comparison scale.",
             "cell": "Cell-type nTPM and UMI counts remain separate annotations and normal checks; no unit pooling.",
             "developmental": (
-                "Mean native TPM within one embryo and lineage, >=20 cells, >=5 cells at >=1 TPM, "
-                "and >=10% cells at >=1 TPM. The mean must reach the tenfold threshold. "
+                "Mean native TPM within one embryo and lineage. One well-sampled population: "
+                ">=20 cells, >=5 cells and >=10% cells at >=1 TPM. Smaller populations: "
+                ">=5 measured cells, >=50% at >=1 TPM, and >=2 independent embryos at the same "
+                "age and lineage reaching the fold. The mean must reach the tenfold threshold; "
+                "higher fold filters retain replication. "
                 "Embryos are biological donors; cells are not independent witnesses."
             ),
             "protein": "Reliable reproductive IHC and reviewed protein findings annotate association; they cannot bypass the RNA fold.",
@@ -463,6 +466,9 @@ def _assess_enrichment_rna(
         "independent_participants_at_tenfold": 0,
         "anonymous_samples_at_tenfold": 0,
         "participant_or_sample_witnesses_at_tenfold": 0,
+        "independent_participant_folds": [],
+        "supported_maximum": None,
+        "supported_maximum_observations": [],
         "supporting_tumors": [],
         "routes": [],
         "status": "unassessed",
@@ -478,7 +484,14 @@ def _assess_enrichment_rna(
         receipt["reason"] = f"No qualified {compartment} observations"
         return receipt
     t["above_normal"] = t.value.ge(DETECTION_FLOOR) & t.value.gt(normal_maximum)
-    t["single_sample_pass"] = t.value.ge(threshold)
+    # A replicated developmental observation is limited by the required donor's
+    # expression, not the strongest cell pool from one embryo.
+    support = t.support_ceiling if compartment == "reproductive" else t.value
+    t["single_sample_pass"] = t.value.ge(threshold) & support.ge(threshold)
+    receipt["supported_maximum"] = float(support.max()) if support.notna().any() else None
+    receipt["supported_maximum_observations"] = t[support.eq(receipt["supported_maximum"])].to_dict(
+        "records"
+    )
     known_participant = t.participant_id.map(lambda v: isinstance(v, str) and bool(v.strip()))
     participants = t.loc[t.above_normal & known_participant, "participant_id"].nunique()
     unresolved = int((t.above_normal & ~known_participant).sum())
@@ -486,6 +499,14 @@ def _assess_enrichment_rna(
     receipt["samples_above_normal"] = int(t.above_normal.sum())
     receipt["unresolved_participant_samples_above_normal"] = unresolved
     qualifying = t.single_sample_pass
+    receipt["independent_participant_folds"] = (
+        (
+            t.loc[qualifying & known_participant].groupby("participant_id").value.max()
+            / (threshold / ENRICHMENT_FOLD)
+        )
+        .sort_values(ascending=False)
+        .tolist()
+    )
     receipt["samples_at_tenfold"] = int(qualifying.sum())
     receipt["independent_participants_at_tenfold"] = int(
         t.loc[qualifying & known_participant, "participant_id"].nunique()
@@ -517,6 +538,23 @@ def assess_cancer_rna(tumors: pd.DataFrame, normals: pd.DataFrame, **comparison)
     return _assess_enrichment_rna(tumors, normals, compartment="tumor", **comparison)
 
 
+def developmental_donor_requirement(cells: int, positive_cells: int) -> int:
+    """Donors required for a native-TPM cell mean; zero means inadequate cell support."""
+    if (
+        any(
+            isinstance(v, (bool, np.bool_)) or not np.isfinite(v) or v < 0 or int(v) != v
+            for v in (cells, positive_cells)
+        )
+        or positive_cells > cells
+    ):
+        raise ValueError("Require integer counts with 0 <= positive_cells <= cells")
+    if cells >= 20 and positive_cells >= 5 and positive_cells / cells >= 0.1:
+        return 1
+    if cells >= 5 and positive_cells / cells >= 0.5:
+        return 2
+    return 0
+
+
 def assess_reproductive_rna(
     reproductive: pd.DataFrame, normals: pd.DataFrame, **comparison
 ) -> dict:
@@ -530,6 +568,45 @@ def assess_reproductive_rna(
     _require_columns(reproductive, {"scope"})
     if not reproductive.scope.isin(["reproductive", "developmental"]).all():
         raise ValueError("RA witnesses must be reproductive or developmental observations")
+    reproductive = reproductive.reset_index(drop=True).copy()
+    _require_booleans(reproductive, ["qc_pass", "identity_resolved"])
+    reproductive["support_ceiling"] = reproductive.value.where(
+        reproductive.qc_pass & reproductive.identity_resolved
+    )
+    developmental = reproductive.scope.eq("developmental")
+    if developmental.any():
+        _require_columns(
+            reproductive, {"source_context", "developmental_stage", "cells", "positive_cells"}
+        )
+        for field in ("source_context", "developmental_stage"):
+            if (
+                not reproductive.loc[developmental, field]
+                .map(lambda v: isinstance(v, str) and bool(v.strip()))
+                .all()
+            ):
+                raise ValueError(
+                    "Developmental observations require a known stage and lineage context"
+                )
+        required = pd.Series(0, index=reproductive.index)
+        required.loc[developmental] = [
+            developmental_donor_requirement(row.cells, row.positive_cells)
+            for row in reproductive[developmental].itertuples()
+        ]
+        supported = reproductive.participant_id.map(
+            lambda v: isinstance(v, str) and bool(v.strip())
+        )
+        supported &= required.gt(0)
+        reproductive.loc[developmental & ~supported, "support_ceiling"] = np.nan
+        for _, group in reproductive[developmental].groupby(
+            ["source_id", "developmental_stage", "source_context"]
+        ):
+            known = group.participant_id.map(lambda v: isinstance(v, str) and bool(v.strip()))
+            donors = group[known].groupby("participant_id").support_ceiling.max().dropna()
+            ceiling = donors.nlargest(2).iloc[-1] if len(donors) >= 2 else np.nan
+            small = group[required.loc[group.index].eq(2)]
+            reproductive.loc[small.index, "support_ceiling"] = (
+                small.support_ceiling.clip(upper=ceiling) if pd.notna(ceiling) else np.nan
+            )
     receipt = _assess_enrichment_rna(
         reproductive, normals, compartment="reproductive", **comparison
     )
@@ -651,7 +728,11 @@ def assess_rare_cell_rna(
         elif replicated or group.frequent.any():
             status = "unresolved"
             basis = (
-                "consequential normal-cell signal with unresolved locus attribution"
+                (
+                    "replicated normal-cell signal with unresolved locus attribution"
+                    if replicated
+                    else "frequent single-study normal-cell signal with unresolved locus attribution"
+                )
                 if mapping_risk
                 else "frequent single-study normal-cell signal needs independent confirmation"
             )
@@ -691,7 +772,9 @@ def assess_rare_cell_rna(
             }
         )
     rank = {"established": 0, "unresolved": 1, "dismissed": 2}
-    findings.sort(key=lambda f: (rank[f["status"]], -f["top_multi_molecule_pct"]))
+    findings.sort(
+        key=lambda f: (rank[f["status"]], not f["replicated"], -f["top_multi_molecule_pct"])
+    )
     receipt["assessable_donor_populations"] = len(d)
     receipt["max_detection_pct"] = float(d.detection_pct.max())
     receipt["max_multi_molecule_pct"] = float(d.multi_molecule_pct.max())

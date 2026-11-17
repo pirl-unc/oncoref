@@ -477,3 +477,43 @@ def assess(tissue: str, cell_type: str | None = None, **options) -> dict:
             updates_id=doc["updates_id"],
         )
     return result
+
+
+@cache
+def _consequence_records():
+    return (
+        assessments().set_index("id").to_dict("index"),
+        references().set_index("reference_id").to_dict("index"),
+    )
+
+
+def consequences(tissue: str, cell_type: str | None = None, **options) -> dict:
+    """Reviewed consequences of losing a tissue or resolved cell compartment.
+
+    Returns the assessment plus acute/persistent loss, repair, management and
+    linked evidence. Organ fallbacks remain explicit; an expression measurement
+    does not establish selective cell killing or the tolerability of immune injury.
+    Unresolved anatomy or life stage never inherits an adult-organ consequence.
+    """
+    result = assess(tissue, cell_type, **options)
+    assessment = result["assessment_id"]
+    if assessment is None:
+        return {**result, "loss_assessed": False, "evidence": []}
+    records, linked = _consequence_records()
+    record = records[assessment]
+    fields = (
+        "label",
+        "mechanisms",
+        "acute_loss",
+        "persistent_loss",
+        "repair",
+        "management",
+        "rationale",
+        "inference",
+        "evidence_scope",
+        "recognition_evidence",
+    )
+    result.update({key: record[key] for key in fields})
+    result["loss_assessed"] = True
+    result["evidence"] = [{"reference_id": key, **linked[key]} for key in result["references"]]
+    return deepcopy(result)

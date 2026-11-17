@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 497
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 509
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -103,12 +103,22 @@ def test_patient_replication_uses_tenfold_known_patients_not_above_normal(catalo
     row = catalog[catalog.protein_group_label.eq("MAGEA4")].copy()
     f = tf.TargetFilter(membership="cancer_antigen", min_tumor_patients=2)
     row["independent_patients_at_tenfold"] = 1
+    row["independent_patient_tumor_folds"] = "[100]"
     row["independent_patients_above_normal"] = 100
     row["anonymous_samples_at_tenfold"] = 100
     assert not tf.apply(f, row).keep.any()
     row["independent_patients_at_tenfold"] = 2
+    row["independent_patient_tumor_folds"] = "[100, 10]"
     assert tf.apply(f, row).keep.all()
+    assert not tf.apply(
+        tf.TargetFilter(membership="cancer_antigen", min_tumor_patients=2, min_tumor_fold=30), row
+    ).keep.any()
+    row["independent_patient_tumor_folds"] = "[100, 30]"
+    assert tf.apply(
+        tf.TargetFilter(membership="cancer_antigen", min_tumor_patients=2, min_tumor_fold=30), row
+    ).keep.all()
     row["independent_patients_at_tenfold"] = float("nan")
+    row["independent_patient_tumor_folds"] = float("nan")
     assert not tf.apply(f, row).keep.any()
     assert "known patients" in tf.describe(f)
 
@@ -200,7 +210,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 497 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 509 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()

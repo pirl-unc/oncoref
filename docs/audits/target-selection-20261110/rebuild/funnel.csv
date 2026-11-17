@@ -3,5 +3,5 @@ step,result,removed,remaining
 Established rare-cell RNA or published normal expression only,Unsafe,125,1640
 "Coverage, identity, translation or unresolved evidence",Other:Review,731,909
 "Nested, Unsafe-contained or read-through sequence",Other:Sequence,48,861
-"No qualifying expression, target maximum or Disposable cap",Other:Expression,265,596
-"Home tissue no panel resolves, without reproductive evidence",Other:Tissue,99,497
+"No qualifying expression, target maximum or Disposable cap",Other:Expression,254,607
+"Home tissue no panel resolves, without reproductive evidence",Other:Tissue,98,509

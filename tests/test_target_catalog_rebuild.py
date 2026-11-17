@@ -29,10 +29,10 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18253,
-        "Other": 1143,
-        "CTA": 246,
-        "Cancer Antigen only": 149,
-        "Reproductive Antigen only": 102,
+        "Other": 1131,
+        "CTA": 290,
+        "Cancer Antigen only": 106,
+        "Reproductive Antigen only": 113,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -52,7 +52,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 545
+    assert len(policy.results(changed_only=True)) == 502
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -60,7 +60,17 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
-    for name in ["MAGEC2", "PRDM14", "TMEM202", "GOLGA6D"]:
+    for name in [
+        "MAGEC2",
+        "PRDM14",
+        "TMEM202",
+        "GOLGA6D",
+        "SSU72L2",
+        "SSX2/B",
+        "PRAMEF1",
+        "PRAMEF2",
+        "CSAG1",
+    ]:
         assert by_name.loc[name, "category"] == "CTA"
     assert 681 < by_name.loc["MAGEC2", "tumor_fold"] < 683
     assert by_name.loc["DAZ1", "category"] == by_name.loc["DAZ4", "category"] == "Unsafe"
@@ -70,7 +80,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
         == "Other:Sequence"
     )
     assert by_name.loc["MAGEA4", "category"] == "CTA"
-    for name in ["HUS1B", "SSU72L2", "ZNF705D", "LRRC52", "LRRIQ4"]:
+    for name in ["HUS1B", "ZNF705D", "LRRC52", "LRRIQ4"]:
         assert by_name.loc[name, "category"] == "Cancer Antigen only"
         assert by_name.loc[name, "reproductive_fold"] < policy.REPRODUCTIVE_FOLD
     assert by_name.loc["OR2B2", "classification"] == "Other:Tissue"
@@ -137,7 +147,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
             catalog.released_category.eq("CTA") & catalog.readthrough_locus, "protein_group_label"
         ]
     )
-    assert len(held) == 130 and len(held - readthrough) == 124
+    assert len(held) == 119 and len(held - readthrough) == 113
     assert {"ATF7-NPFF", "ENSG00000273155"} <= readthrough <= held
     assert held >= {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
     assert by_name.loc["CDY1B", "cancer_evidence"] == "does_not_qualify"
@@ -218,16 +228,22 @@ def test_tenfold_witness_tables_are_complete_and_reproductive_evidence_is_symmet
     ra = catalog[catalog.is_reproductive_antigen]
     assert ra.reproductive_fold.ge(policy.REPRODUCTIVE_FOLD).all()
     denominator = ra[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=1)
-    assert (
-        (ra.reproductive_max_sample_tpm / denominator - ra.reproductive_fold).abs().lt(1e-8).all()
-    )
+    assert (ra.reproductive_supported_tpm / denominator - ra.reproductive_fold).abs().lt(1e-8).all()
     reproductive = pd.read_csv(OUT / "reproductive-witnesses.csv.gz")
     assert set(reproductive.unit) == {"TPM"}
     assert reproductive.single_sample_pass.all()
     assert set(ra.entity_id) <= set(reproductive.entity_id)
     development = reproductive[reproductive.scope.eq("developmental")]
-    assert development.cells.ge(20).all() and development.positive_cells.ge(5).all()
-    assert (development.positive_cells / development.cells).ge(0.1).all()
+    small = development[development.required_embryos.eq(2)]
+    well_sampled = development[development.required_embryos.eq(1)]
+    assert len(small) + len(well_sampled) == len(development)
+    assert small.cells.ge(5).all()
+    assert (small.positive_cells / small.cells).ge(0.5).all()
+    keys = ["entity_id", "source_id", "developmental_stage", "source_context"]
+    donors = development.groupby(keys).participant_id.nunique().rename("supporting_donors")
+    assert small.join(donors, on=keys).supporting_donors.ge(2).all()
+    assert well_sampled.cells.ge(20).all() and well_sampled.positive_cells.ge(5).all()
+    assert (well_sampled.positive_cells / well_sampled.cells).ge(0.1).all()
     assert development.participant_id.notna().all()
     normal = pd.read_csv(OUT / "normal-comparison.csv.gz")
     individual = normal[normal.observation_kind.eq("individual_tissue_sample")]
@@ -268,8 +284,8 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 194
-    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 71
+    assert catalog[catalog.is_cta].published_nomination.sum() == 215
+    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 51
 
 
 def test_packaged_snapshot_matches_report_metadata(catalog):

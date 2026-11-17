@@ -1,0 +1,10 @@
+{
+  "source_ref": "v1.40.1",
+  "scope": "Data-only reference registry required by historical receipts. No Python code snapshot.",
+  "files": {
+    "oncoref/data/reference-releases.json": {
+      "sha256": "405f05c3b5c1830a8e6cb4106879cabb253b0c832d8f3688153a4c240ab151f5",
+      "bytes": 18023
+    }
+  }
+}

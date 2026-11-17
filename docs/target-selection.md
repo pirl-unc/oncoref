@@ -3,7 +3,7 @@
 **CTA = CA ∩ RA. Candidate antigen proteins = CA ∪ RA.** Cancer-only proteins remain
 Cancer Antigens; calling them CTAs would erase the reproductive distinction.
 
-Policy `oncoref.target-selection.2026-11-16.2`: **246 CTA** · **149 Cancer Antigen only** · **102 Reproductive Antigen only** · **1,143 Other** · **18,253 Unsafe**.
+Policy `oncoref.target-selection.2026-11-17.1`: **290 CTA** · **106 Cancer Antigen only** · **113 Reproductive Antigen only** · **1,131 Other** · **18,253 Unsafe**.
 These are research screening memberships, not demonstrated antigen presentation or safety.
 
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html) ·
@@ -36,8 +36,13 @@ observations tighten the denominator. It is still not a maximum over every healt
 donor, and cross-study batch effects are not corrected. Missing required normal
 coverage never becomes zero. [Source receipt and limits](audits/target-selection-20261110/rebuild/comparison.json).
 
-Developmental means are computed within one embryo and lineage: ≥20 cells, ≥5 cells
-with ≥1 TPM and ≥10% positive cells. The mean itself must reach 10 × H. Embryos are
+Developmental means are computed within one embryo and lineage. One well-sampled
+population requires ≥20 cells, ≥5 cells with ≥1 TPM and ≥10% positive cells.
+Smaller populations require ≥5 measured cells, ≥50% with ≥1 TPM, and two independent
+embryos at the same age and lineage reaching 10 × H. The mean itself must reach
+10 × H. Higher RA fold filters retain the replication requirement through
+`reproductive_supported_tpm`. These are screening support conventions, not biological
+limits on embryo size or lineage abundance. Embryos are
 biological donors; multiple cells or lineages from one embryo are not independent donors.
 The developmental scope is preimplantation and Carnegie-stage-7 embryos, not all fetal stages.
 
@@ -62,6 +67,30 @@ Disposable expression retains separate ceilings of 32 native TPM and 32 nTPM.
 The target maximum must exceed all measured non-reproductive contexts. Tissue
 allowances apply to resolved cell compartments: immune or vascular cells inside a
 reproductive organ do not automatically inherit that organ's allowance.
+
+## Consequences of tissue loss
+
+Reproductive membership and the consequences of losing the expressing tissue are
+separate questions. Broad RA includes gonadal, developmental and accessory reproductive
+contexts. Breast or prostate evidence is retained with its actual tissue context.
+The [tissue registry](tissue-tiers.md) records **acute loss, lasting loss, repair and
+management**. Whole testis and ovary retain Protected assessments; mammary tissue has
+a conditional Manageable assessment. Bulk organ measurements do not establish which
+cell population expresses a protein or whether only that population would be injured.
+
+```python
+from oncoref import tissue_tiers
+loss = tissue_tiers.consequences("testis")
+loss["persistent_loss"], loss["management"], loss["evidence"]
+# Tissue loss alongside this protein's observed reproductive expression:
+from oncoref import antigen_sets
+antigen_sets.loss_consequences("CTAG2")
+```
+
+These records describe functional consequences, not receptor-specific probabilities.
+Sex labels, presumed immune privilege, negative bulk RNA and negative IHC do not by
+themselves demonstrate absence of an off-target compartment or dismiss a sparse signal.
+Actual anatomy, prior removal and pregnancy/lactation state require explicit context.
 
 ## Rare normal-cell RNA
 
@@ -125,8 +154,10 @@ of gDNA contamination, normal-tissue fraction or a tumor activation mechanism.
 
 Catalog rows expose `samples_at_tenfold`, `independent_patients_at_tenfold`,
 `anonymous_samples_at_tenfold` and `cancer_types_at_tenfold`. Unknown donors never
-count as known independent patients. Counts refer to the catalog's 10× threshold;
-they do not become counts at a higher user-selected fold. Legacy `*_above_normal`
+count as known independent patients. Counts refer to the catalog's 10× threshold.
+`independent_patient_tumor_folds` stores each qualifying known patient's maximum
+fold in descending order; filters use the k-th value to require k patients at
+any selected fold ≥10. Legacy `*_above_normal`
 columns count a weaker threshold and are descriptive only. Every tenfold witness
 is downloadable, with source, sample, participant and expression value.
 

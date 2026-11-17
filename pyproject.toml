@@ -93,6 +93,8 @@ oncoref = [
     "data/hpa-cancer-sources.json",
     "data/normal-cell-sources.json",
     "data/reference-releases.json",
+    "data/curation-build.json",
+    "data/curation-build-receipt.json",
     "data/cta-policy.json",
     "data/cta-selection.json",
     "data/target-selection.json",

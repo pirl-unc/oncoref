@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.rare-cell-evidence",
-  "policy_id": "oncoref.target-selection.2026-11-16.2",
+  "policy_id": "oncoref.target-selection.2026-11-17.1",
   "census_release": "2025-11-08",
   "filter": "is_primary_data == True and disease == 'normal' and tissue_type == 'tissue'",
   "count_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",
@@ -203,7 +203,7 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "f5cc4df40f200074144d6db6007423ab1796955673746eb94f573bd158200325",
+  "sha256": "daec8946abc0f3acf75d344b8e8ca7aba4ec333f9d07fcc9c5dddf0fabe34f3b",
   "regrade": {
     "inputs_receipt": "docs/audits/normal-cell-atlas-20261110/rare-cell/regrade-inputs.json",
     "sha256": "16f22723456a7f9ffa537c44b7c368188c57b25a69287f228fec389ceeb7d7ac",

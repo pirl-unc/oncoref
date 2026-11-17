@@ -9,51 +9,51 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-16.2",
+    "policy_id": "oncoref.target-selection.2026-11-17.1",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18253,
-      "Other": 1143,
-      "CTA": 246,
-      "Cancer Antigen only": 149,
-      "Reproductive Antigen only": 102
+      "Other": 1131,
+      "CTA": 290,
+      "Reproductive Antigen only": 113,
+      "Cancer Antigen only": 106
     },
     "classifications": {
       "Unsafe": 18253,
       "Other:Review": 731,
-      "Other:Expression": 265,
-      "CTA": 246,
-      "Cancer Antigen only": 149,
-      "Reproductive Antigen only": 102,
-      "Other:Tissue": 99,
+      "CTA": 290,
+      "Other:Expression": 254,
+      "Reproductive Antigen only": 113,
+      "Cancer Antigen only": 106,
+      "Other:Tissue": 98,
       "Other:Sequence": 48
     },
     "memberships": {
-      "is_cancer_antigen": 395,
-      "is_reproductive_antigen": 348,
-      "is_cta": 246,
-      "is_target_candidate": 497
+      "is_cancer_antigen": 396,
+      "is_reproductive_antigen": 403,
+      "is_cta": 290,
+      "is_target_candidate": 509
     },
     "changes": [
       {
         "released_category": "CTA",
         "category": "CTA",
-        "proteins": 232
+        "proteins": 275
       },
       {
         "released_category": "CTA",
         "category": "Cancer Antigen only",
-        "proteins": 99
+        "proteins": 57
       },
       {
         "released_category": "CTA",
         "category": "Other",
-        "proteins": 130
+        "proteins": 119
       },
       {
         "released_category": "CTA",
         "category": "Reproductive Antigen only",
-        "proteins": 97
+        "proteins": 107
       },
       {
         "released_category": "CTA",
@@ -88,22 +88,22 @@
       {
         "released_category": "Unsafe",
         "category": "CTA",
-        "proteins": 11
+        "proteins": 12
       },
       {
         "released_category": "Unsafe",
         "category": "Cancer Antigen only",
-        "proteins": 2
+        "proteins": 1
       },
       {
         "released_category": "Unsafe",
         "category": "Other",
-        "proteins": 70
+        "proteins": 69
       },
       {
         "released_category": "Unsafe",
         "category": "Reproductive Antigen only",
-        "proteins": 3
+        "proteins": 4
       },
       {
         "released_category": "Unsafe",
@@ -187,15 +187,15 @@
       "does_not_qualify": 390
     },
     "published_nomination_by_category": {
-      "CTA": 194,
-      "Cancer Antigen only": 71,
-      "Other": 136,
-      "Reproductive Antigen only": 71,
+      "CTA": 215,
+      "Cancer Antigen only": 51,
+      "Other": 130,
+      "Reproductive Antigen only": 76,
       "Unsafe": 1761
     }
   },
   "comparison": {
-    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-16.2",
+    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-17.1",
     "unit": "TPM",
     "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
     "compatibility_basis": [
@@ -260,24 +260,33 @@
       "statistic": "individual tissue sample; summed transcript TPM",
       "participant_identity": "Not provided; sample identifiers are not assumed to be donor IDs"
     },
+    "normal_library_qc": {
+      "path": "normal-library-qc.csv",
+      "sha256": "3790558afcc63b2e10c3fff3fc937fd6326fc332d1d9bbcc9559aab3f7a7cda5",
+      "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence."
+    },
     "developmental_sources": [
       {
-        "path": "tmp/cta-source-consolidation/petropoulos-tpm.zip",
+        "role": "petropoulos_tpm",
+        "path": "/Users/iskander/.cache/oncoref/sources/sha256/f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334/petropoulos-tpm.zip",
         "sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334",
         "source_id": "petropoulos_E-MTAB-3929"
       },
       {
-        "path": "tmp/cta-source-consolidation/petropoulos-design.tsv",
+        "role": "petropoulos_design",
+        "path": "/Users/iskander/.cache/oncoref/sources/sha256/c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573/petropoulos-design.tsv",
         "sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573",
         "source_id": "petropoulos_E-MTAB-3929"
       },
       {
-        "path": "tmp/cta-quantitative/atlas_tpm",
+        "role": "tyser_tpm",
+        "path": "/Users/iskander/.cache/oncoref/sources/sha256/db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03/filtered-tpm.zip",
         "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
         "source_id": "tyser_E-MTAB-9388"
       },
       {
-        "path": "tmp/cta-quantitative/atlas_design",
+        "role": "tyser_design",
+        "path": "/Users/iskander/.cache/oncoref/sources/sha256/5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3/experiment-design.tsv",
         "sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3",
         "source_id": "tyser_E-MTAB-9388"
       }
@@ -328,6 +337,6 @@
     ],
     "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
   },
-  "data_sha256": "5149d484baed60a4eb03d7f9991bd42db904cc6e24b0c76a341895ce9fe0e3ce",
+  "data_sha256": "7fcf50e322af93f064828e3ebf89d0644afec7b1f5b67f90f6e79475f06c85b8",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

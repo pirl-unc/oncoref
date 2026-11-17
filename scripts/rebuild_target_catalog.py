@@ -19,9 +19,10 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from antigen_sample_evidence import (  # noqa: E402
-    HPA_ARCHIVE,
     HPA_SOURCE,
     developmental_samples,
+    tissue_library_qc,
+    tissue_sample_genes,
     tissue_samples,
 )
 from build_cta_alternative_evidence import GTEX_TISSUES, anatomy  # noqa: E402
@@ -50,7 +51,7 @@ FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 RAW = ROOT / "tmp/target-rebuild-inputs"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-16.2"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-17.1"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -338,13 +339,23 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     )
     normal = pd.concat(rows, ignore_index=True)
     if include_individual_samples:
-        individual = tissue_samples(facts, hpa_ids)
+        from oncoref.curation import reference_input
+
+        archive = reference_input("hpa_tissue_samples")
+        genes = tissue_sample_genes(archive)
+        audit = tissue_library_qc(genes, hpa_ids)
+        if write:
+            write_csv(audit, OUT / "normal-library-qc.csv")
+        individual = tissue_samples(facts, hpa_ids, genes=genes)
+        individual = individual.merge(
+            audit[["sample_id", "library_qc_review"]], on="sample_id", validate="many_to_one"
+        )
         individual["member_count"] = individual.entity_id.map(
             facts.set_index("entity_id").member_count
         )
         individual["measured_members"] = individual.member_count.where(individual.identity_resolved)
         normal = pd.concat([normal, individual], ignore_index=True)
-        INPUTS[str(HPA_ARCHIVE.relative_to(ROOT))] = HPA_SOURCE["sha256"]
+        INPUTS[str(archive)] = HPA_SOURCE["sha256"]
     normal["tissue"] = normal.tissue.replace(
         {"nucleus accumbens": "basal ganglia", "putamen": "basal ganglia"}
     )
@@ -404,7 +415,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     monaco["identity_resolved"] = monaco.measured_members.eq(monaco.member_count)
     normal = pd.concat([normal, immune, monaco], ignore_index=True)
     normal["comparison_id"] = COMPARISON_ID
-    for column in ("sample_id", "participant_id", "observation_kind"):
+    for column in ("sample_id", "participant_id", "observation_kind", "library_qc_review"):
         if column not in normal:
             normal[column] = ""
         normal[column] = normal[column].fillna("")
@@ -425,6 +436,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         "sample_id",
         "participant_id",
         "observation_kind",
+        "library_qc_review",
     ]
     normal = (
         normal[cols]
@@ -752,6 +764,7 @@ def build(*, reuse_tumor_cache=False):
         [normal[normal.scope.eq("reproductive") & normal.sample_id.ne("")], development],
         ignore_index=True,
     )
+    reproductive["qc_pass"] &= reproductive.library_qc_review.fillna("").eq("")
     write_csv(reproductive, OUT / "reproductive-comparison.csv.gz")
     for source in development_provenance:
         INPUTS[source["path"]] = source["sha256"]
@@ -816,7 +829,24 @@ def build(*, reuse_tumor_cache=False):
         )
         ra_valid = ra[ra.qc_pass & ra.identity_resolved & ra.value.notna()]
         ra_top = ra_valid.sort_values("value", ascending=False).head(1)
+        # Tissue loss is a separate axis from tenfold membership. Retain measured
+        # reproductive expression even when it does not meet the RA threshold.
+        observed_contexts = []
+        observed = ra[ra.identity_resolved & ra.value.ge(target_selection.DETECTION_FLOOR)]
+        for (tissue, cell, scope), contexts in observed.groupby(["tissue", "cell_type", "scope"]):
+            observed_contexts.append(
+                {
+                    "tissue": tissue,
+                    "cell_type": cell,
+                    "scope": scope,
+                    "stage": "embryonic" if scope == "developmental" else "adult",
+                    "native_tpm_max": float(contexts.value.max()),
+                    "qc_supported": bool(contexts.qc_pass.any()),
+                    "sources": sorted(contexts.source_id.unique()),
+                }
+            )
         ra_support = pd.DataFrame(ra_receipt["supporting_reproductive_samples"])
+        ra_supported_top = ra_receipt["supported_maximum_observations"]
         if not ra_support.empty:
             reproductive_witnesses.extend(
                 ra_support[ra_support.single_sample_pass].to_dict("records")
@@ -841,6 +871,9 @@ def build(*, reuse_tumor_cache=False):
                 "samples_above_normal": receipt["samples_above_normal"],
                 "samples_at_tenfold": receipt["samples_at_tenfold"],
                 "independent_patients_at_tenfold": receipt["independent_participants_at_tenfold"],
+                "independent_patient_tumor_folds": json.dumps(
+                    receipt["independent_participant_folds"]
+                ),
                 "anonymous_samples_at_tenfold": receipt["anonymous_samples_at_tenfold"],
                 "patient_or_sample_witnesses_at_tenfold": receipt[
                     "participant_or_sample_witnesses_at_tenfold"
@@ -855,9 +888,22 @@ def build(*, reuse_tumor_cache=False):
                 if ra_top.empty
                 else float(ra_top.value.iloc[0]),
                 "reproductive_fold": None
-                if ra_top.empty or ra_receipt["single_sample_threshold"] is None
-                else float(ra_top.value.iloc[0])
+                if ra_receipt["supported_maximum"] is None
+                or ra_receipt["single_sample_threshold"] is None
+                else ra_receipt["supported_maximum"]
                 / (ra_receipt["single_sample_threshold"] / target_selection.REPRODUCTIVE_FOLD),
+                "reproductive_supported_tpm": ra_receipt["supported_maximum"],
+                "reproductive_supported_context": ""
+                if not ra_supported_top
+                else ra_supported_top[0]["source_context"],
+                "reproductive_supported_observations": json.dumps(
+                    pd.DataFrame(ra_supported_top)
+                    .astype(object)
+                    .where(lambda d: d.notna(), None)
+                    .to_dict("records"),
+                    allow_nan=False,
+                ),
+                "reproductive_expression_contexts": json.dumps(observed_contexts),
                 "reproductive_top_sample": ""
                 if ra_top.empty
                 else ra_top.source_id.iloc[0] + ":" + ra_top.sample_id.iloc[0],
@@ -1048,6 +1094,11 @@ def build(*, reuse_tumor_cache=False):
         "participant_identity_policy": sample_api.PATIENT_IDENTITY_POLICY,
         "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
         "individual_tissue_source": HPA_SOURCE,
+        "normal_library_qc": {
+            "path": "normal-library-qc.csv",
+            "sha256": sha256(OUT / "normal-library-qc.csv"),
+            "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence.",
+        },
         "developmental_sources": development_provenance,
         "positive_observations": "CA: individual passing tumor; RA: individual reproductive tissue or supported embryo-by-lineage mean. Qualitative protein and incompatible RNA scales cannot bypass the fold.",
         "witness_tables": "All tenfold witnesses are exported; tumor table also retains up to six weaker above-normal examples per protein. Filter single_sample_pass for qualifying counts. Unknown donor identity is never claimed independent.",
@@ -1147,6 +1198,11 @@ def build(*, reuse_tumor_cache=False):
         "samples_above_normal",
         "samples_at_tenfold",
         "independent_patients_at_tenfold",
+        "independent_patient_tumor_folds",
+        "reproductive_supported_tpm",
+        "reproductive_supported_context",
+        "reproductive_supported_observations",
+        "reproductive_expression_contexts",
         "anonymous_samples_at_tenfold",
         "patient_or_sample_witnesses_at_tenfold",
         "cancer_types_at_tenfold",

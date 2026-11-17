@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-16.2`, 19,893 human protein records. **246 CTA, 149 Cancer Antigen only, 102 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-17.1`, 19,893 human protein records. **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Antigen membership
 
@@ -12,7 +12,7 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 ![Set overlap](summary/venn.png)
 
-Of 246 CTA, 194 are published nominations and 52 are not. 1,897 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 290 CTA, 215 are published nominations and 75 are not. 1,891 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
@@ -32,8 +32,8 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Adult cornea RNA | 5 | 1,640 |
 | Coverage, identity, translation or unresolved evidence | 731 | 909 |
 | Nested, Unsafe-contained or read-through sequence | 48 | 861 |
-| No qualifying expression or bounds fail | 265 | 596 |
-| Home tissue no panel resolves | 99 | 497 |
+| No qualifying expression or bounds fail | 254 | 607 |
+| Home tissue no panel resolves | 98 | 509 |
 
 ![Published nominations](summary/funnel-published.png)
 
@@ -49,8 +49,8 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Adult cornea RNA | 1 | 472 |
 | Coverage, identity, translation or unresolved evidence | 65 | 407 |
 | Nested, Unsafe-contained or read-through sequence | 7 | 400 |
-| No qualifying expression or bounds fail | 47 | 353 |
-| Home tissue no panel resolves | 17 | 336 |
+| No qualifying expression or bounds fail | 42 | 358 |
+| Home tissue no panel resolves | 16 | 342 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 

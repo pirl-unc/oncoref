@@ -1,0 +1,7 @@
+{
+  "release": "1.40.1",
+  "commit": "8c8f8b0179a24a83ea1e603d47a40bd49c4fcd6a",
+  "catalog_sha256": "5149d484baed60a4eb03d7f9991bd42db904cc6e24b0c76a341895ce9fe0e3ce",
+  "category_snapshot_sha256": "a213b8b4d1406d5f26f49f039068ef11e5e994c702e15d7294b0215f1f9f492c",
+  "purpose": "Data-only category baseline; does not execute or preserve copies of historical Python code."
+}

@@ -527,6 +527,10 @@ def _cmd_tcr_trials(args: argparse.Namespace) -> int:
 
 
 def _cmd_cta(args: argparse.Namespace) -> int:
+    print(
+        "Legacy CTA snapshot; use 'oncoref antigens list --set CTA' for the current catalog.",
+        file=sys.stderr,
+    )
     if args.unfiltered:
         genes = cta.cta_unfiltered_gene_ids() if args.ids else cta.cta_unfiltered_gene_names()
     else:
@@ -855,7 +859,10 @@ def _build_parser() -> argparse.ArgumentParser:
     p_ici.add_argument("--no-inherit", action="store_true", help="Do not inherit an ancestor's ORR")
     p_ici.set_defaults(func=_cmd_ici)
 
-    p_cta = sub.add_parser("cta", help="List cancer-testis antigens (expressed set by default)")
+    from .antigen_cli import register as register_antigens
+
+    register_antigens(sub)
+    p_cta = sub.add_parser("cta", help="Legacy CTA snapshot (current catalog: antigens list)")
     p_cta.add_argument("--unfiltered", action="store_true", help="Full candidate universe")
     p_cta.add_argument("--ids", action="store_true", help="Ensembl gene IDs instead of symbols")
     p_cta.add_argument("--count", action="store_true", help="Print the count only")

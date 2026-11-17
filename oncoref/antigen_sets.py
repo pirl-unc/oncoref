@@ -54,6 +54,38 @@ def gene_ids(group="CTA") -> frozenset[str]:
     return frozenset(g for ids in proteins(group).member_gene_ids for g in json.loads(ids))
 
 
+def loss_consequences(gene: str) -> list[dict]:
+    """Reviewed tissue-loss consequences beside observed reproductive contexts.
+
+    Includes measured native RNA >=1 TPM, even below RA's tenfold threshold;
+    context QC is explicit. This is not a complete exposure or injury prediction.
+    Bulk data use organ assessments and never imply selective germ-cell loss.
+    No context rows means unavailable evidence, not absence or tolerability.
+    """
+    from . import tissue_tiers
+
+    rows = target_selection.results(gene)
+    if rows.empty:
+        raise ValueError(f"Unknown protein label or member gene ID: {gene}")
+    result = []
+    for protein in rows.itertuples():
+        encoded = protein.reproductive_expression_contexts
+        if not isinstance(encoded, str):
+            continue
+        for context in json.loads(encoded):
+            tissue, cell = context["tissue"], context["cell_type"]
+            assessed = tissue_tiers.consequences(
+                tissue,
+                None if cell == "bulk" else cell,
+                stage=context["stage"],
+                resolution="bulk" if cell == "bulk" else "cell",
+            )
+            result.append(
+                {"entity_id": protein.entity_id, "expression_context": context, **assessed}
+            )
+    return result
+
+
 def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
     """All annotated protein translations, one row per transcript occurrence.
 
