@@ -77,14 +77,10 @@ def test_loss_context_is_independent_of_membership_and_retains_organ_scope():
 
 
 def test_proteins_and_gene_ids_accept_host_profiles_and_reject_backgrounds():
-    all_ctas = antigen_sets.proteins("CTA")
-    core_ctas = antigen_sets.proteins("CTA", profile="core")
-    female_ctas = antigen_sets.proteins("CTA", profile="female-patient")
-    lactating_ctas = antigen_sets.proteins("CTA", profile="female-patient", lactating=True)
-    assert len(all_ctas) == 290
-    assert len(core_ctas) == 257
-    assert len(female_ctas) == 285
-    assert len(lactating_ctas) == 283
-    assert antigen_sets.gene_ids("CTA", profile="core") < antigen_sets.gene_ids("CTA")
+    selected = antigen_sets.select("CTA", host_profile="female-patient")
+    rows = antigen_sets.proteins("CTA", profile="female-patient")
+    assert set(rows.entity_id) == set(selected.proteins().entity_id)
+    assert antigen_sets.gene_ids("CTA", profile="female-patient") == selected.gene_ids()
+    assert rows.is_cta.all() and rows.category.eq("CTA").all()
     with pytest.raises(ValueError, match="Host profiles"):
-        antigen_sets.proteins("Unsafe", profile="core")
+        antigen_sets.proteins("Unsafe", profile="female-patient")

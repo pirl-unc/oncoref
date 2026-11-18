@@ -19,7 +19,7 @@ Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
 classifies **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only, 1,131 Other and
 18,253 Unsafe**:
 
-1. **Shared somatic safety (`19,893 → 846` eligible):** Seven normal-expression layers
+1. **Shared normal-expression screen (`19,893 → 846` eligible):** Seven normal-expression layers
    (HPA v23 individual biopsies & bulk, GTEx v11, HPA single-cell clusters, DICE/Monaco/HPA
    sorted immune subsets, donor-resolved CELLxGENE + Siletti single-cell UMI, HPA IHC,
    912-protein literature rubric, and adult cornea scRNA) mark **18,253** proteins `Unsafe`,
@@ -29,11 +29,10 @@ classifies **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only, 1,
    somatic baseline **H₀ = max(Normal N, Disposable D, 1 TPM)**, Cancer Antigens (**CA = 396**)
    and Reproductive Antigens (**RA = 403**) independently require **≥ 10 × H₀** in QC-passing
    tumors or reproductive/embryonic samples. Their intersection is the default broad **CTA (290)** set.
-3. **Host anatomy & toxicity profiles:** Lactating mammary (`breast.410`: `LALBA`, `BTN1A1`)
-   is separated from resting mammary (`breast.373/390/405`), and the 290 default CTAs can be
-   sliced cleanly by patient anatomy or tissue-loss tolerance: `all` (**290**),
-   `female-patient` (**285**, or **283** with `--lactating`), `male-patient` (**260**, or
-   **264** post-prostatectomy), and `core` (**257**).
+3. **Host selection:** Protect / Accept loss / Absent are explicit choices. Anatomy
+   presets protect no reproductive tissue by default; protection is opt-in.
+   Missing evidence for explicitly protected tissue remains unresolved;
+   a host rejection does not relabel a CTA. [Contract and limits](host-selection.md).
 
 ![End-to-end curation architecture](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
 
@@ -52,12 +51,10 @@ pip install oncoref
 ```python
 from oncoref import antigen_sets, cancer_ontology, ici_response, target_filters
 
-# Antigen sets and patient toxicity profiles (default "all" = 290 CTAs)
-all_ctas = antigen_sets.proteins("CTA")
-female_ctas = antigen_sets.proteins("CTA", profile="female-patient")
-lactating_safe = antigen_sets.proteins("CTA", profile="female-patient", lactating=True)
-male_ctas = antigen_sets.proteins("CTA", profile="male-patient")
-core_ctas = antigen_sets.proteins("CTA", profile="core")
+# Biological selection and a consistent view of decisions
+selection = antigen_sets.select("CTA", mode="standard")
+ctas = selection.proteins()
+decisions = selection.decisions()
 forbidden_bg = antigen_sets.proteins("Unsafe|Other")
 
 # Cancer ontology and ICI response
@@ -77,7 +74,7 @@ ici_response.best_available_ici_response("COAD_MSI")
 
 ## Start Here
 
-- **Antigen sets, CTA tiers, and host profiles:** Start with
+- **Antigen sets and host choices:** Start with
   [Cancer and Reproductive Antigens](target-selection.md),
   [Target filters and host profiles](target-filters.md),
   [CLI and curation builds](curation.md), and
@@ -95,7 +92,7 @@ ici_response.best_available_ici_response("COAD_MSI")
 
 | Domain | Preferred modules | Use for |
 | --- | --- | --- |
-| Current antigen curation | `oncoref.target_selection`, `oncoref.target_filters`, `oncoref.antigen_sets`, `oncoref.peptide_subtraction` | Genome-wide `CA`, `RA`, `CTA`, `Other`, `Unsafe` decisions, `cta_tier`, host/patient profiles (`all`, `core`, `male-patient`, `female-patient`, `lactating`), Ensembl 115 sequences, exact/edit-distance peptide subtraction |
+| Current antigen curation | `oncoref.target_selection`, `oncoref.target_filters`, `oncoref.antigen_sets`, `oncoref.peptide_subtraction` | Genome-wide `CA`, `RA`, `CTA`, `Other`, `Unsafe` decisions, biological origins and explicit host tissue-loss choices, Ensembl 115 sequences, exact/edit-distance peptide subtraction |
 | Tissue-loss tiers | `oncoref.tissue_tiers`, `oncoref.target_curation` | Cited bulk and cell-level tissue injury tiers (`Vital`, `Protected`, `Manageable`, `Disposable`), acute/persistent loss consequences, literature & nose/skin home records |
 | Cancer vocabulary | `oncoref.cancer_ontology`, `oncoref.cohorts` | Registry records, aliases, hierarchy, subtype axes, MMR/MSI status, cohort IDs, matched normal tissues |
 | Expression & QC | `oncoref.expression`, `oncoref.normalization`, `oncoref.library_qc`, `oncoref.samples` | Source-matrix ingestion, percentiles, clean TPM, housekeeping normalization, library-contamination screens, patient/donor deduplication |

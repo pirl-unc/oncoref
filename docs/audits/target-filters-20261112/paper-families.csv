@@ -12,6 +12,7 @@ oncofetal,10.1016/j.devcel.2019.06.011,22,"Chew et al., 2019",program_catalog,DU
 reproductive,10.1038/s41467-021-22695-y,291,Gong et al. (2021),historical_catalog,Normal reproductive-tissue enrichment; no tumor validation; Placental RNA enrichment; no tumor-antigen validation
 reproductive,10.1371/journal.pone.0144155,6,Hirbo et al. (2015),historical_catalog,HPA v13 placenta-enriched nominations; 30/86 fast-evolving subset retained as metadata; not tumor validation
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/,3,Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos,previous_individual_review,Human embryo transcripts and human stem-cell functional assays; Measurements include embryo transcripts and stem-cell functional assays.
+reproductive,10.1126/science.abo7923,2,,,
 reproductive,10.3390/cells9020509,2,Colombier P et al. (2020),individual_review,See each linked protein's assay and identity assessment.
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/,2,The human PRD-like homeobox gene LEUTX has a central role in embryo genome activation,previous_individual_review,Human embryos and human embryonic stem-cell overexpression; Experiments include human embryo transcripts and embryonic stem-cell overexpression.
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/,2,Comprehensive characterization of the embryonic factor LEUTX,previous_individual_review,"Human cell models, proteomics and transcriptional assays; The downstream response was measured after experimentally induced LEUTX."
@@ -20,23 +21,17 @@ reproductive,10.1016/j.ajhg.2008.07.007,1,Bonnefont J et al. (2008),individual_r
 reproductive,10.1016/j.ajhg.2012.05.018,1,Webb BD et al. (2012),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1038/s41588-021-00970-4,1,Szenker-Ravi E et al. (2022),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1038/s41598-025-14201-x,1,García-Sanmartín J et al. (2025),individual_review,See each linked protein's assay and identity assessment.
-reproductive,10.1038/sj.ejhg.5200750,1,Appel S et al. (2002),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1042/bj3150901,1,Dubbink HJ et al. (1996),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1073/pnas.0603224103,1,Xing J et al. (2006),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1093/humrep/dey340,1,Jean C et al. (2019),individual_review,See each linked protein's assay and identity assessment.
-reproductive,10.1095/biolreprod.105.048058,1,Yamazaki K et al. (2006),individual_review,mouse epididymal transcripts
 reproductive,10.1098/rsob.170027,1,Dunwell TL et al. (2017),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1126/sciadv.abn0047,1,Vondrakova J et al. (2022),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1186/s40246-024-00593-w,1,Koparir A et al. (2024),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1210/endo.143.7.8925,1,Hamil KG et al. (2002),individual_review,See each linked protein's assay and identity assessment.
 reproductive,10.1371/journal.pone.0035195,1,Okuda H et al. (2012),individual_review,See each linked protein's assay and identity assessment.
-reproductive,10.1371/journal.pone.0254802,1,Gong QQ et al. (2021),individual_review,mouse epididymis
-reproductive,10.3389/froh.2022.817249,1,Ebersole JL et al. (2022),individual_review,nonhuman primate gingiva
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC2669477/,1,"Cloning, expression and location of RNase9 in human epididymis",previous_individual_review,Human tissue RNA and immunolocalization; Measurements include tissue RNA and immunolocalization.
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC4974340/,1,Identification of Maturation-Specific Proteins by Single-Cell Proteomics of Human Oocytes,previous_individual_review,Human oocyte proteomics; ECAT1 and C6orf221 are historical aliases that require exact locus mapping.
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC5985286/,1,Homozygous Mutations in WEE2 Cause Fertilization Failure and Female Infertility,previous_individual_review,"Human genetics, affected oocytes and rescue experiments; The evidence concerns human oocytes and fertilization. WEE2 enters this release through developmental RNA measurements."
-reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC7403729/,1,PABPN1L mediates cytoplasmic mRNA decay as a placeholder during the maternal-to-zygotic transition,previous_individual_review,"Mouse Pabpn1l knockout, oocyte/embryo and biochemical mechanism."
-reproductive,https://pmc.ncbi.nlm.nih.gov/articles/pmid/25760095/,1,In-depth mapping of human testicular and epididymal proteins and their functional association with spermatozoa,previous_individual_review,Human reproductive tissues and proteins; The study distinguishes epididymal protein production from association with sperm.
 tumor,10.1002/cbin.11983,1,Lu B et al. (2023),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.1007/s12010-025-05197-1,1,Li Y et al. (2025),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.1016/j.bbrc.2008.09.113,1,Sun C et al. (2008),individual_review,See each linked protein's assay and identity assessment.
@@ -44,11 +39,10 @@ tumor,10.1016/j.ymthe.2025.02.029,1,Somes LK et al. (2025),individual_review,See
 tumor,10.1083/jcb.201002043,1,Wiedemann SM et al. (2010),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.1136/jitc-2020-001649,1,Lopez-Bujanda ZA et al. (2021),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.1136/jitc-2023-008303,1,Kim YS et al. (2024),individual_review,See each linked protein's assay and identity assessment.
-tumor,10.1385/jmn:29:2:145,1,Santic R et al. (2006),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.18632/oncotarget.2557,1,Chen W et al. (2014),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.3389/fgene.2021.756784,1,Xiang C et al. (2021),individual_review,See each linked protein's assay and identity assessment.
 tumor,10.3390/cancers16213577,1,Cuttitta F et al. (2024),individual_review,See each linked protein's assay and identity assessment.
 tumor,https://pmc.ncbi.nlm.nih.gov/articles/PMC4636967/,1,Phase I Trial of a Yeast-Based Therapeutic Cancer Vaccine (GI-6301) Targeting the Transcription Factor Brachyury,previous_individual_review,Human clinical vaccine study; The product was a yeast-based vaccine; the trial did not test engineered CAR or TCR cells.
 tumor,https://pmc.ncbi.nlm.nih.gov/articles/PMC7733513/,1,SEMG1/2 augment energy metabolism of tumor cells,previous_individual_review,Human tumor data and cancer cell lines; SEMG1 and SEMG2 results require separate attribution.
+tumor,https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/,1,,,
 tumor,https://pubmed.ncbi.nlm.nih.gov/11880645/,1,"PATE, a gene expressed in prostate cancer, normal prostate, and testis, identified by a functional genomic approach",previous_individual_review,"Human prostate/testis and prostate-cancer RNA, cDNA cloning, in-vitro translation and tagged-protein expression."
-tumor,https://pubmed.ncbi.nlm.nih.gov/39566337/,1,Whole genome profiling of rare pediatric thoracic tumors elucidates a YAP1::LEUTX fusion in an unclassified biphasic embryonal neoplasm,previous_individual_review,Human tumor case study; The reported molecule is the fusion; this release uses the full-length reference LEUTX sequence.

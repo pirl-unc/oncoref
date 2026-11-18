@@ -1,0 +1,590 @@
+{
+  "schema": "oncoref.cta-literature-followup",
+  "schema_version": 2,
+  "reviewed_on": "2026-11-17",
+  "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
+  "sources": [
+    {
+      "source_id": "10.1371/journal.pone.0007682",
+      "citation": "Moyer et al., 2009",
+      "title": "Expression of Genes Encoding Multi-Transmembrane Proteins in Specific Primate Taste Cell Populations",
+      "url": "https://doi.org/10.1371/journal.pone.0007682",
+      "roles": [
+        "normal_tissue"
+      ],
+      "source_location": "Human taste-bud results and Figure 10D; Methods: human tissue collection and PCR",
+      "finding": "CALHM3 RNA was measured by semi-quantitative PCR in laser-captured human circumvallate taste buds, with no detectable or reduced expression in surrounding lingual epithelium.",
+      "limitations": "Human data are RNA from a microdissected compartment. Cell-subtype in situ experiments elsewhere in this paper used macaques. This is not human protein detection or a therapeutic depletion experiment.",
+      "retention_reason": "Corrects the earlier mouse-only assessment of CALHM3 and supplies human normal-compartment counterevidence. It is not a CTA nomination.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000183128"
+          ],
+          "protein": "CALHM3",
+          "eligible_for_coverage": true,
+          "scope": "Exact human gene, normal circumvallate taste-bud RNA; Figure 10D",
+          "recommendation": "Review hold: human normal taste-bud RNA plus the established mouse taste-channel function warrant a normal-compartment review before target clearance. Do not call this proven human protein or infer an injury outcome.",
+          "taxonomy_id": 9606,
+          "reported_name": "CALHM3",
+          "reported_as": "Exact human gene, normal circumvallate taste-bud RNA; Figure 10D",
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "context": "Human circumvallate taste buds",
+          "assay": "Microdissection and semi-quantitative PCR",
+          "source_location": "Human taste-bud results and Figure 10D; Methods: human tissue collection and PCR",
+          "limitations": "Human data are RNA from a microdissected compartment. Cell-subtype in situ experiments elsewhere in this paper used macaques. This is not human protein detection or a therapeutic depletion experiment.",
+          "reviewed_on": "2026-11-17"
+        }
+      ],
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
+    },
+    {
+      "source_id": "10.3892/or.2012.1849",
+      "citation": "B\u00f6hm et al., 2012",
+      "title": "Comparison of tear protein levels in breast cancer patients and healthy controls using a de novo proteomic approach",
+      "url": "https://doi.org/10.3892/or.2012.1849",
+      "roles": [
+        "normal_tissue",
+        "translation_identity"
+      ],
+      "source_location": "Table II; pooled sampling and MALDI identification methods; Table III does not quantify TRIM75",
+      "finding": "Table II lists TRI75_HUMAN (TRIM75) among tear-fluid proteins in a study of 25 breast-cancer patients and 25 healthy women.",
+      "limitations": "One pooled tear sample per clinical group. Table II merges identifications and does not assign TRIM75 to a pool or supply its peptide sequences. Tear-fluid detection does not localize the producing tissue or demonstrate a tumor origin.",
+      "retention_reason": "Hold normal-restriction clearance until the contributing pool and peptide specificity are resolved. The merged table establishes neither a healthy-control positive nor cancer-specific protein.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000250374"
+          ],
+          "protein": "TRIM75",
+          "eligible_for_coverage": true,
+          "scope": "Exact human protein label in a pooled tear-MS identification table; peptide and clinical-group attribution unresolved",
+          "recommendation": "Hold normal-restriction clearance until the contributing pool and peptide specificity are resolved. The merged table establishes neither a healthy-control positive nor cancer-specific protein.",
+          "taxonomy_id": 9606,
+          "reported_name": "TRIM75",
+          "reported_as": "Exact human protein label in a pooled tear-MS identification table; peptide and clinical-group attribution unresolved",
+          "evidence_types": [
+            "mass_spectrometry"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review",
+            "translation_context"
+          ],
+          "context": "Human tear fluid, pooled cancer and control samples",
+          "assay": "MALDI mass spectrometry",
+          "source_location": "Table II; pooled sampling and MALDI identification methods; Table III does not quantify TRIM75",
+          "limitations": "One pooled tear sample per clinical group. Table II merges identifications and does not assign TRIM75 to a pool or supply its peptide sequences. Tear-fluid detection does not localize the producing tissue or demonstrate a tumor origin.",
+          "reviewed_on": "2026-11-17"
+        }
+      ],
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
+    },
+    {
+      "source_id": "10.1093/molehr/gaab012",
+      "citation": "Zhu et al., 2021",
+      "title": "Histone demethylase KDM4A overexpression improved the efficiency of corrected human tripronuclear zygote development",
+      "url": "https://doi.org/10.1093/molehr/gaab012",
+      "roles": [
+        "translation_identity",
+        "reproductive_developmental"
+      ],
+      "source_location": "Table I Ubtfl1 primers; Figure 5; NCBI XM_021185540.2 and exact forward/reverse-complement cDNA comparisons",
+      "finding": "The Ubtfl1 row in Table I cites XM_021185540.2, a Mus caroli Sod1 transcript. Its two primer sequences do not match selected human UBTFL1 ENST00000530464.2 and both match mouse Sod1 ENSMUST00000023707.10.",
+      "limitations": "This finding rejects attribution of this specific assay. It does not reject the other experiments in the paper or establish normal UBTFL1 expression. Mouse Hmgpi and human UBTFL2/3 results cannot be substituted for this copy.",
+      "retention_reason": "Do not count this assay as exact-human UBTFL1 support. Independent human embryo RNA and the qualifying coding reference retain their own evidence status.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000255009"
+          ],
+          "protein": "UBTFL1",
+          "eligible_for_coverage": false,
+          "scope": "Reported human assay rejected for exact-copy coverage: primers map to mouse Sod1, not human UBTFL1",
+          "recommendation": "Do not count this assay as exact-human UBTFL1 support. Independent human embryo RNA and the qualifying coding reference retain their own evidence status.",
+          "taxonomy_id": 9606,
+          "reported_name": "UBTFL1",
+          "reported_as": "Reported human assay rejected for exact-copy coverage: primers map to mouse Sod1, not human UBTFL1",
+          "evidence_types": [
+            "assay_identity_review"
+          ],
+          "allowed_uses": [
+            "identity_review"
+          ],
+          "context": "Reported human zygote assay; primers match mouse Sod1",
+          "assay": "Primer/reference sequence comparison",
+          "source_location": "Table I Ubtfl1 primers; Figure 5; NCBI XM_021185540.2 and exact forward/reverse-complement cDNA comparisons",
+          "limitations": "This finding rejects attribution of this specific assay. It does not reject the other experiments in the paper or establish normal UBTFL1 expression. Mouse Hmgpi and human UBTFL2/3 results cannot be substituted for this copy.",
+          "reviewed_on": "2026-11-17"
+        }
+      ],
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
+    },
+    {
+      "source_id": "10.1136/jclinpath-2020-206979",
+      "citation": "Shi et al., 2020/2021",
+      "title": "Identification of potential crucial genes associated with the pathogenesis and prognosis of liver hepatocellular carcinoma",
+      "url": "https://doi.org/10.1136/jclinpath-2020-206979",
+      "roles": [
+        "tumor_expression"
+      ],
+      "source_location": "Supplementary Table S3, PDF page 101; differential-expression table header on page 1",
+      "finding": "Supplementary Table S3 includes TMEM269 as upregulated in TCGA LIHC, log2 fold change 1.257588672, logCPM -3.45323963 and FDR 1.69e-6.",
+      "limitations": "The supplementary RNA comparison is a reanalysis of TCGA, not an independent tumor cohort. Low average RNA expression and a differential-expression statistic do not establish an accessible membrane protein.",
+      "retention_reason": "Add exact-symbol tumor RNA context. This paper does not nominate a CTA or demonstrate protein localization, antigen presentation or normal-tissue restriction.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000274386"
+          ],
+          "protein": "TMEM269",
+          "eligible_for_coverage": true,
+          "scope": "Exact human gene in a significant differential-expression result table; no focused gene experiment or CTA nomination",
+          "recommendation": "Add exact-symbol tumor RNA context. This paper does not nominate a CTA or demonstrate protein localization, antigen presentation or normal-tissue restriction.",
+          "taxonomy_id": 9606,
+          "reported_name": "TMEM269",
+          "reported_as": "Exact human gene in a significant differential-expression result table; no focused gene experiment or CTA nomination",
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "tumor_support"
+          ],
+          "context": "Human liver cancer versus comparison tissue",
+          "assay": "TCGA differential-expression reanalysis",
+          "source_location": "Supplementary Table S3, PDF page 101; differential-expression table header on page 1",
+          "limitations": "The supplementary RNA comparison is a reanalysis of TCGA, not an independent tumor cohort. Low average RNA expression and a differential-expression statistic do not establish an accessible membrane protein.",
+          "reviewed_on": "2026-11-17"
+        }
+      ],
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
+    },
+    {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/",
+      "citation": "Qi et al., 2021",
+      "title": "CDCA8, targeted by MYBL2, promotes malignant progression and olaparib insensitivity in ovarian cancer",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/",
+      "roles": [
+        "tumor_expression"
+      ],
+      "source_location": "Figure 4 and Table S2; combined publisher PDF page 45 (supplement page 18)",
+      "finding": "Table S2 lists SSU72P7, the previous symbol of SSU72L1, with log2 fold change 5.779251523 (54.91968795-fold) and adjusted P 9.14e-69 after CDCA8 knockdown.",
+      "limitations": "The table reports a gene-level RNA result, not unique-read or peptide validation. SSU72 phosphatase experiments are not transferable to SSU72L1 or to SSU72L2-5.",
+      "retention_reason": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000284438"
+          ],
+          "protein": "SSU72L1",
+          "eligible_for_coverage": true,
+          "scope": "Exact previous human symbol SSU72P7 in a significant RNA perturbation result table; no selective protein validation",
+          "recommendation": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity.",
+          "taxonomy_id": 9606,
+          "reported_name": "SSU72P7",
+          "reported_as": "Exact previous human symbol SSU72P7 in a significant RNA perturbation result table; no selective protein validation",
+          "evidence_types": [
+            "induced_rna_expression"
+          ],
+          "allowed_uses": [
+            "tumor_support"
+          ],
+          "context": "Human ovarian cancer cells following CDCA8 knockdown",
+          "assay": "RNA differential-expression supplementary table",
+          "source_location": "Figure 4 and Table S2; combined publisher PDF page 45 (supplement page 18)",
+          "limitations": "The table reports a gene-level RNA result, not unique-read or peptide validation. SSU72 phosphatase experiments are not transferable to SSU72L1 or to SSU72L2-5.",
+          "reviewed_on": "2026-11-17"
+        }
+      ],
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
+    },
+    {
+      "source_id": "10.1126/science.abo7923",
+      "citation": "Zou et al., 2022",
+      "title": "Translatome and transcriptome co-profiling reveals a role of TPRXs in human zygotic genome activation",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36074823/",
+      "roles": [
+        "reproductive_developmental",
+        "translation_identity"
+      ],
+      "source_location": "PubMed abstract, PMID 36074823; human oocyte/early-embryo Ribo-lite and mRNA co-profiling",
+      "finding": "TPRX1, TPRX2 and TPRXL are reported as highly translated around human zygotic genome activation; joint knockdown disrupts activation and preimplantation development.",
+      "limitations": "Developmental and translation evidence, not tumor expression, antigen presentation or adult tissue safety. The abstract does not resolve every paralog-specific ribosome footprint or assign the combined knockdown phenotype to one copy. No TPM enrichment value is inferred.",
+      "retention_reason": "Broader human reproductive evidence for exact named TPRX genes; excluded from the tumor-support publication count.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000178928"
+          ],
+          "protein": "TPRX1",
+          "eligible_for_coverage": true,
+          "scope": "Named human gene in early-embryo translation study; combined TPRX1/2/L functional perturbation, not a single-copy functional validation",
+          "recommendation": "Retain developmental and translation support; no tumor-support count or automatic tenfold qualification.",
+          "taxonomy_id": 9606,
+          "reported_name": "TPRX1",
+          "reported_as": "Named human gene in early-embryo translation study; combined TPRX1/2/L functional perturbation, not a single-copy functional validation",
+          "evidence_types": [
+            "rna_expression",
+            "ribosome_profiling",
+            "combined_gene_perturbation"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "translation_support",
+            "functional_context"
+          ],
+          "context": "Human oocytes and early embryos; combined TPRX perturbation",
+          "assay": "Ribo-lite, mRNA sequencing and combined knockdown",
+          "source_location": "PubMed abstract, PMID 36074823; human oocyte/early-embryo Ribo-lite and mRNA co-profiling",
+          "limitations": "Developmental and translation evidence, not tumor expression, antigen presentation or adult tissue safety. The abstract does not resolve every paralog-specific ribosome footprint or assign the combined knockdown phenotype to one copy. No TPM enrichment value is inferred.",
+          "reviewed_on": "2026-11-17"
+        },
+        {
+          "gene_ids": [
+            "ENSG00000259009"
+          ],
+          "protein": "TPRX2",
+          "eligible_for_coverage": true,
+          "scope": "Named human gene in early-embryo translation study; combined TPRX1/2/L functional perturbation, not a single-copy functional validation",
+          "recommendation": "Retain developmental and translation support; no tumor-support count or automatic tenfold qualification.",
+          "taxonomy_id": 9606,
+          "reported_name": "TPRX2",
+          "reported_as": "Named human gene in early-embryo translation study; combined TPRX1/2/L functional perturbation, not a single-copy functional validation",
+          "evidence_types": [
+            "rna_expression",
+            "ribosome_profiling",
+            "combined_gene_perturbation"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "translation_support",
+            "functional_context"
+          ],
+          "context": "Human oocytes and early embryos; combined TPRX perturbation",
+          "assay": "Ribo-lite, mRNA sequencing and combined knockdown",
+          "source_location": "PubMed abstract, PMID 36074823; human oocyte/early-embryo Ribo-lite and mRNA co-profiling",
+          "limitations": "Developmental and translation evidence, not tumor expression, antigen presentation or adult tissue safety. The abstract does not resolve every paralog-specific ribosome footprint or assign the combined knockdown phenotype to one copy. No TPM enrichment value is inferred.",
+          "reviewed_on": "2026-11-17"
+        }
+      ],
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
+    },
+    {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
+      "citation": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
+      "title": "Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos",
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000204595"
+          ],
+          "protein": "DPRX",
+          "reported_name": "DPRX",
+          "reported_as": "Embryo-expressed homeobox regulator",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression",
+            "regulatory_assay"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "functional_context"
+          ],
+          "context": "Human preimplantation embryos; hESC overexpression",
+          "assay": "Embryo cDNA cloning and transcriptomic perturbation",
+          "source_location": "Cloning methods; Figure 3 regulatory responses",
+          "limitations": "Overexpression supports regulatory activity; no tumor validation or endogenous protein quantification.",
+          "scope": "Embryo-expressed homeobox regulator; Human preimplantation embryos; hESC overexpression",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        },
+        {
+          "gene_ids": [
+            "ENSG00000259009"
+          ],
+          "protein": "TPRX2",
+          "reported_name": "TPRX2",
+          "reported_as": "Embryo-expressed homeobox regulator",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression",
+            "regulatory_assay"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "functional_context"
+          ],
+          "context": "Human preimplantation embryos; hESC overexpression",
+          "assay": "Embryo cDNA cloning and transcriptomic perturbation",
+          "source_location": "Cloning methods; Figure 3 regulatory responses",
+          "limitations": "Overexpression supports regulatory activity; no tumor validation or endogenous protein quantification.",
+          "scope": "Embryo-expressed homeobox regulator; Human preimplantation embryos; hESC overexpression",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        }
+      ]
+    },
+    {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/",
+      "citation": "The human PRD-like homeobox gene LEUTX has a central role in embryo genome activation",
+      "title": "The human PRD-like homeobox gene LEUTX has a central role in embryo genome activation",
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5087614/",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000204595"
+          ],
+          "protein": "DPRX",
+          "reported_name": "DPRX",
+          "reported_as": "Early-embryo-expressed transcriptional repressor",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression",
+            "regulatory_assay"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "functional_context"
+          ],
+          "context": "Human embryos, hESC overexpression and HEK-293 reporter assays",
+          "assay": "RNA profiling and luciferase reporter assays",
+          "source_location": "Figures 4 and 5G",
+          "limitations": "Cancer-cell-line discussion concerns LEUTX; it is not DPRX tumor evidence. Embryo function is inferred from expression and regulatory assays.",
+          "scope": "Early-embryo-expressed transcriptional repressor; Human embryos, hESC overexpression and HEK-293 reporter assays",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        }
+      ]
+    },
+    {
+      "source_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
+      "citation": "Comprehensive characterization of the embryonic factor LEUTX",
+      "title": "Comprehensive characterization of the embryonic factor LEUTX",
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9978639/",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000259009"
+          ],
+          "protein": "TPRX2",
+          "reported_name": "TPRX2 / TPRX2P",
+          "reported_as": "LEUTX-responsive transcript in an embryonic regulatory program",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "induced_rna_expression"
+          ],
+          "allowed_uses": [
+            "reproductive_support"
+          ],
+          "context": "Human cells with experimentally induced LEUTX",
+          "assay": "RT-qPCR after LEUTX induction",
+          "source_location": "Figure 4B; TPRX2/TPRX2P results",
+          "limitations": "This paper cites the separate combined-TPRX knockdown study; that cited experiment is not a second independent functional validation.",
+          "scope": "LEUTX-responsive transcript in an embryonic regulatory program; Human cells with experimentally induced LEUTX",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1098/rsob.170027",
+      "citation": "Dunwell TL et al. (2017)",
+      "title": "A sister of NANOG regulates genes expressed in pre-implantation human development.",
+      "roles": [
+        "reproductive_developmental",
+        "function"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/28446706/",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000205857"
+          ],
+          "protein": "NANOGNB",
+          "reported_name": "NANOGNB",
+          "reported_as": "Preimplantation-expressed regulator of an early-embryo transcription program",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression",
+            "regulatory_assay"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "functional_context"
+          ],
+          "context": "Human 8-cell/morula RNA; ectopic expression in adult fibroblasts",
+          "assay": "RNA-seq and transgene perturbation",
+          "source_location": "Results 2.2/2.3; Figures 2/3",
+          "limitations": "Fibroblast transfection is an assay context, not endogenous adult expression. No human embryo loss-of-function experiment or tumor validation.",
+          "scope": "Preimplantation-expressed regulator of an early-embryo transcription program; Human 8-cell/morula RNA; ectopic expression in adult fibroblasts",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1038/s41467-021-22695-y",
+      "citation": "Gong et al. (2021)",
+      "title": "The RNA landscape of the human placenta in health and disease",
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "url": "https://doi.org/10.1038/s41467-021-22695-y",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000248767"
+          ],
+          "protein": "FOXL3",
+          "reported_name": "WI2-2373I1.1",
+          "reported_as": "Testis-enriched RNA in a cross-tissue comparison",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "reproductive_support"
+          ],
+          "context": "Human testis; GTEx comparison within a placenta-focused paper",
+          "assay": "Tissue-enriched transcript table",
+          "source_location": "Supplementary Data 5, Data 5 - tissue-enriched PC, Excel row 1274, Tissue in query = Testis",
+          "limitations": "RNA association only; no demonstrated reproductive function, tumor validation or locus-specific protein detection.",
+          "scope": "Testis-enriched RNA in a cross-tissue comparison; Human testis; GTEx comparison within a placenta-focused paper",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17",
+          "provenance": {
+            "source_file": "gong.xlsx",
+            "source_sheet": "Data 5 - tissue-enriched PC",
+            "source_row": 1274,
+            "source_tissue": "Testis",
+            "sha256": "b91d126e9e0a270309cb3f6ad5253f1153db3a21f0a8c19d8ef55080410a2007",
+            "identity_basis": "Exact Ensembl ID retained across the symbol change"
+          }
+        },
+        {
+          "gene_ids": [
+            "ENSG00000230268"
+          ],
+          "protein": "SSU72L6",
+          "reported_name": "SSU72P8",
+          "reported_as": "Testis-enriched RNA in a cross-tissue comparison",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "reproductive_support"
+          ],
+          "context": "Human testis; GTEx comparison within a placenta-focused paper",
+          "assay": "Tissue-enriched transcript table",
+          "source_location": "Supplementary Data 5, Data 5 - tissue-enriched PC, Excel row 1242, Tissue in query = Testis",
+          "limitations": "RNA association only; no demonstrated reproductive function, tumor validation or locus-specific protein detection.",
+          "scope": "Testis-enriched RNA in a cross-tissue comparison; Human testis; GTEx comparison within a placenta-focused paper",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17",
+          "provenance": {
+            "source_file": "gong.xlsx",
+            "source_sheet": "Data 5 - tissue-enriched PC",
+            "source_row": 1242,
+            "source_tissue": "Testis",
+            "sha256": "b91d126e9e0a270309cb3f6ad5253f1153db3a21f0a8c19d8ef55080410a2007",
+            "identity_basis": "Exact Ensembl ID retained across the symbol change"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.4049/jimmunol.172.7.4245",
+      "citation": "Choi MS et al. (2004)",
+      "title": "IFN-gamma stimulates the expression of a novel secretoglobin that regulates chemotactic cell migration and invasion.",
+      "roles": [
+        "normal_tissue",
+        "function"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/15034037/",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000197745"
+          ],
+          "protein": "SCGB1D4",
+          "reported_name": "IIS",
+          "reported_as": "Interferon-responsive secretoglobin with reported chemotactic activity",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression",
+            "induced_rna_expression",
+            "regulatory_assay"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review",
+            "functional_context"
+          ],
+          "context": "Human lymphoid tissues/cells, including activated states",
+          "assay": "Expression and cell-migration experiments described in the abstract",
+          "source_location": "PMID 15034037 abstract",
+          "limitations": "Full probe specificity was not adjudicated. Reported tissue breadth conflicts with resting HPA; retain induced-expression concern without automatic Unsafe classification.",
+          "scope": "Interferon-responsive secretoglobin with reported chemotactic activity; Human lymphoid tissues/cells, including activated states",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1186/1465-9921-12-28",
+      "citation": "Lu X et al. (2011)",
+      "title": "The cytokine-driven regulation of secretoglobins in normal human upper airway and their expression, particularly that of uteroglobin-related protein 1, in chronic rhinosinusitis.",
+      "roles": [
+        "normal_tissue"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/21385388/",
+      "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000197745"
+          ],
+          "protein": "SCGB1D4",
+          "reported_name": "SCGB1D4 / IIS",
+          "reported_as": "Secretoglobin RNA detected in human sinonasal mucosa and increased by inflammatory cytokines",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression",
+            "induced_rna_expression"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "context": "Human control sinonasal tissue, rhinosinusitis and cytokine-treated nasal explants",
+          "assay": "qRT-PCR with sequenced PCR products",
+          "source_location": "Results, Figures 1-3; expression-regulation experiments",
+          "limitations": "Cellular location and protein production are unresolved; a normal-expression concern, not RA support or a tumor nomination.",
+          "scope": "Secretoglobin RNA detected in human sinonasal mucosa and increased by inflammatory cytokines; Human control sinonasal tissue, rhinosinusitis and cytokine-treated nasal explants",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-17"
+        }
+      ]
+    }
+  ],
+  "curation_contract": "One source record owns its reviewed exact-gene claims and allowed uses. Current views prefer these claims over inherited scope for the same paper/gene. Historical inputs remain immutable."
+}

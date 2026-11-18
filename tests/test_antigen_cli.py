@@ -54,6 +54,23 @@ def test_explain_held_gene_and_member_symbol(capsys):
     assert cli.main(["antigens", "explain", "not-a-gene"]) == 1
 
 
+def test_explain_distinguishes_all_papers_from_tumor_support(capsys):
+    assert cli.main(["antigens", "explain", "DPRX", "--format", "json"]) == 0
+    row = json.loads(capsys.readouterr().out)[0]
+    assert row["paper_source_count"] == 2
+    assert row["papers_reproductive"] == 2
+    assert row["papers_counted"] == 0
+
+
+def test_explain_papers_retains_original_gene_name_and_tissue(capsys):
+    assert cli.main(["antigens", "explain", "FOXL3", "--papers", "--format", "json"]) == 0
+    row = json.loads(capsys.readouterr().out)[0]
+    claim = row["paper_claims"][0]
+    assert claim["reported_name"] == "WI2-2373I1.1"
+    assert claim["provenance"]["source_tissue"] == "Testis"
+    assert claim["allowed_uses"] == ["reproductive_support"]
+
+
 def test_subtraction_exact_equivalence_fasta_and_missing_coverage(tmp_path, capsys, monkeypatch):
     background = pd.DataFrame({"gene_id": ["background"], "sequence": ["LLLLLLLL"]})
     monkeypatch.setattr(antigen_sets, "sequences", lambda _: background)
@@ -93,54 +110,85 @@ def test_funnel_and_legacy_notice(capsys):
 
 
 def test_cli_host_profiles_and_tissue_toggles(capsys):
+    args = [
+        "antigens",
+        "list",
+        "--set",
+        "CTA",
+        "--profile",
+        "female-patient",
+        "--lactating",
+        "--format",
+        "json",
+    ]
+    assert cli.main(args) == 0
+    capture = capsys.readouterr()
+    rows = json.loads(capture.out)
+    metadata = json.loads(capture.err)
+    assert {r["entity_id"] for r in rows} == set(
+        antigen_sets.proteins("CTA", profile="female-patient", lactating=True).entity_id
+    )
+    assert metadata["host_context"]["protected"] == ["lactating_breast"]
     assert (
         cli.main(
             [
                 "antigens",
-                "list",
-                "--set",
-                "CTA",
+                "explain",
+                "PRAME",
                 "--profile",
                 "female-patient",
-                "--lactating",
+                "--protect-tissue",
+                "endometrium",
                 "--format",
                 "json",
             ]
         )
         == 0
     )
-    lactating_rows = json.loads(capsys.readouterr().out)
-    assert len(lactating_rows) == 283
-    assert "LALBA" not in {r["protein_group_label"] for r in lactating_rows}
+    row = json.loads(capsys.readouterr().out)[0]
+    assert row["classification"] == "CTA" and not row["keep"]
+    assert row["host_status"] in {"excluded", "unresolved"}
+    assert row["host_reasons"]
+    args = [
+        "antigens",
+        "list",
+        "--profile",
+        "male-patient",
+        "--absent-tissue",
+        "prostate",
+        "--accept-loss",
+        "testis",
+        "--format",
+        "json",
+    ]
+    assert cli.main(args) == 0
+    meta = json.loads(capsys.readouterr().err)["host_context"]
+    assert "prostate" in meta["absent"] and "testis" in meta["accept_loss"]
 
+
+def test_cli_subtraction_uses_the_host_selection_background(capsys, monkeypatch):
+    captured = {}
+    records = pd.DataFrame({"gene_id": ["host_excluded_cta"], "sequence": ["LLLLLLLL"]})
+    records.attrs["host_context"] = {"protected": ["testis"]}
+
+    class Selection:
+        def background_sequences(self, background):
+            captured["background"] = background
+            return records
+
+    def select(group, **kwargs):
+        captured.update(group=group, **kwargs)
+        return Selection()
+
+    monkeypatch.setattr(antigen_sets, "select", select)
     assert (
         cli.main(
-            [
-                "antigens",
-                "list",
-                "--set",
-                "CTA",
-                "--profile",
-                "male-patient",
-                "--allow-tissue",
-                "prostate",
-                "--allow-tissue",
-                "seminal vesicle",
-                "--format",
-                "json",
-            ]
+            ["antigens", "subtract", "LLLLLLLL", "--profile", "male-patient", "--format", "json"]
         )
         == 0
     )
-    male_post_rp = json.loads(capsys.readouterr().out)
-    assert len(male_post_rp) == 264
-    assert {"LALBA", "TGM4", "SEMG2"} <= {r["protein_group_label"] for r in male_post_rp}
-
-    assert cli.main(["antigens", "explain", "LALBA", "--format", "json"]) == 0
-    explained = json.loads(capsys.readouterr().out)[0]
-    assert explained["cta_tier"] == "extended_only"
-    assert explained["reproductive_qualifying_compartments"] == "lactating_breast"
-    assert explained["profile:male-patient"] == "pass"
-    assert explained["profile:female-patient"] == "pass"
-    assert explained["profile:female-lactating"].startswith("fail:")
-    assert explained["profile:core"].startswith("fail:")
+    output = capsys.readouterr()
+    assert json.loads(output.out) == []
+    assert captured["host_profile"] == "male-patient"
+    assert captured["background"] == "Unsafe|Other"
+    assert json.loads(output.err)["selection"]["host_context"]["protected"] == ["testis"]

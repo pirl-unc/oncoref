@@ -1,8 +1,8 @@
 # Target filters: categories, knobs and where proteins land
 
 **The catalog assigns five categories and they are not changed here. Filters only
-remove proteins from the 509 Target candidates, through five layers that
-follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.1`, applied to
+remove proteins from the 509 Target candidates, through six layers that
+follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.5`, applied to
 catalog `oncoref.target-selection.2026-11-17.1`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
@@ -32,9 +32,9 @@ RA uses the same 10× denominator in reproductive tissue or a supported embryo-l
 98 proteins whose normal home is a tissue no panel resolves are
 Other:Tissue unless reproductive evidence qualifies.
 
-## 2. The five filter layers
+## 2. The six filter layers
 
-A protein is kept only if it passes all five. `filter_failed` names the first one it
+A protein is kept only if it passes all six. `filter_failed` names the first one it
 fails. `max_*` knobs mean **below** the value, `min_*` knobs mean **at least** the
 value, and a missing measurement never passes.
 
@@ -42,9 +42,10 @@ value, and a missing measurement never passes.
 |---|---|---|---|
 | 1 `off_target` | How low must expression be outside tumors and reproductive tissue? | `max_off_target_tpm` | 50 |
 | 2 `curation` | Is the protein's recorded normal home in a tissue of this tier or above? | `normal_function` | 9 |
-| 3 `sets` | Which host compartments are protected, how much enrichment/replication, and which set? | `host_profile`, `lactating`, `pregnant`, `allow_tissues`, `protect_tissues`, `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 219 |
-| 4 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 329 |
-| 5 `exclusions` | Which gene families do you rule out by name? | `exclude_prefixes`, `except_labels` | 16 |
+| 3 `host` | Do protected compartments have sufficient coverage and bounded exposure? | `host` (HostContext), or explicit profile/tissue choices | 0 |
+| 4 `sets` | How much biological enrichment/replication, and which set? | `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 219 |
+| 5 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 330 |
+| 6 `exclusions` | Which gene families do you rule out by name? | `exclude_prefixes`, `except_labels` | 16 |
 
 **Layer 3 tightens the two sets independently.** Both fold knobs raise the catalog's 10x;
 a protein that loses Cancer Antigen membership keeps its Reproductive Antigen
@@ -81,9 +82,9 @@ layer 3 has tightened Cancer Antigens.
 | `membership` | cancer_antigen | 396 | 290 | 106 | 0 |
 | `membership` | reproductive_antigen | 403 | 290 | 0 | 113 |
 | `membership` | cta | 290 | 290 | 0 | 0 |
-| `min_papers` | 1 | 370 | 237 | 54 | 79 |
+| `min_papers` | 1 | 370 | 238 | 53 | 79 |
 | `min_papers` | 2 | 263 | 184 | 31 | 48 |
-| `min_papers` | 3 | 180 | 135 | 11 | 34 |
+| `min_papers` | 3 | 179 | 134 | 11 | 34 |
 | `min_papers` | 4 | 67 | 61 | 4 | 2 |
 
 ## 4. Filter modes and host toxicity profiles
@@ -95,55 +96,55 @@ if a change to a mode drops one.
 | Filter mode | Kept | CTA | Cancer Antigen only | Reproductive Antigen only |
 |---|---|---|---|---|
 | `all` | 509 | 290 | 106 | 113 |
-| `loose` | 370 | 237 | 54 | 79 |
+| `loose` | 370 | 238 | 53 | 79 |
 | `standard` | 247 | 175 | 28 | 44 |
-| `strict` | 111 | 111 | 0 | 0 |
+| `strict` | 110 | 110 | 0 | 0 |
 
 ### `loose`
 
 - Sets: keep proteins that are then in either antigen set.
 - Papers: at least 1 distinct paper(s) nominating it or reporting it in tumors.
 
-Target candidates **509** → off_target **509** → curation **509** → sets **509** → papers **370** → exclusions **370**
+Target candidates **509** → off_target **509** → curation **509** → host **509** → sets **509** → papers **370** → exclusions **370**
 
 ### `standard`
 
-- Off target: the highest tissue value outside tumors and reproductive tissue, Disposable tissue included, is below 5 TPM.
+- Off target: the highest tissue value outside tumors and reproductive tissue, Disposable and any protected host compartments included, is below 5 TPM.
 - Curation: no recorded normal home in a Vital tissue.
 - Sets: keep proteins that are then in either antigen set.
 - Papers: at least 2 distinct paper(s) nominating it or reporting it in tumors.
 
-Target candidates **509** → off_target **475** → curation **472** → sets **472** → papers **247** → exclusions **247**
+Target candidates **509** → off_target **475** → curation **472** → host **472** → sets **472** → papers **247** → exclusions **247**
 
 ### `strict`
 
-- Off target: the highest tissue value outside tumors and reproductive tissue, Disposable tissue included, is below 4 TPM.
+- Off target: the highest tissue value outside tumors and reproductive tissue, Disposable and any protected host compartments included, is below 4 TPM.
 - Curation: no recorded normal home in a Vital or Protected tissue.
 - Sets: keep proteins that are then in cta.
 - Papers: at least 3 distinct paper(s) nominating it or reporting it in tumors.
 - Exclusions: drop labels starting with MAGE, except MAGEA4.
 
-Target candidates **509** → off_target **459** → curation **452** → sets **263** → papers **122** → exclusions **111**
+Target candidates **509** → off_target **459** → curation **452** → host **452** → sets **263** → papers **121** → exclusions **110**
 
 ### Host anatomy and tissue-tolerance profiles
 
-Selecting a `host_profile` (`all`, `female-patient`, `male-patient`, `core`), physiological
-state (`lactating=True`, `pregnant=True`), or tissue override (`allow_tissues`,
-`protect_tissues`) defines which of the 12 reproductive, developmental, and mammary
-compartments are protected in the host (`≤ 32 TPM` and `≥ min_tumor_fold` below tumor)
-versus allowed as reproductive origins (`≥ min_reproductive_fold × H₀`). Lactating mammary
-(`breast.410`: `LALBA`, `BTN1A1`) is distinct from resting mammary (`breast.373/390/405`).
-[CSV](host-profiles.csv).
+Host protection is independent of biological membership. Presets assume anatomy and
+protect no reproductive tissue by default. Explicit `protect`, `accept_loss` and `absent`
+choices have different meanings.
+Missing coverage and unresolved protein evidence fail the screen. Native TPM and nTPM
+are screened separately; protected TPM also enters every off-target limit and cancer fold.
+[Precise contract](../../host-selection.md). [CSV](host-profiles.csv).
 
 | Profile | Protected compartments | CTA | CA only | RA only | CA | RA |
 |---|---|---|---|---|---|
 | all | none | 290 | 106 | 113 | 509 |
-| female-patient | fallopian tube, endometrium, cervix, resting_breast | 285 | 105 | 117 | 507 |
-| female-patient (lactating) | fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 283 | 105 | 115 | 503 |
-| female-patient (pregnant) | embryo, placenta, fallopian tube, endometrium, cervix, resting_breast | 129 | 89 | 117 | 335 |
-| male-patient | epididymis, prostate, seminal vesicle, resting_breast | 260 | 104 | 103 | 467 |
-| male-patient (post-prostatectomy) | epididymis, resting_breast | 264 | 105 | 103 | 472 |
-| core | epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 257 | 103 | 102 | 462 |
+| female-patient | none | 290 | 106 | 113 | 509 |
+| female-patient (protect ovary) | ovary | 252 | 100 | 101 | 453 |
+| female-patient (lactating) | lactating_breast | 286 | 104 | 110 | 500 |
+| female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
+| male-patient | none | 290 | 106 | 113 | 509 |
+| male-patient (protect testis) | testis | 62 | 45 | 24 | 131 |
+| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
 
 ## 5. Where the familiar CTAs land
 
@@ -325,7 +326,7 @@ Limits: candidate-sweep findings other than the exclusions carry the second read
   `min_tumor_patients` optionally requires known-patient replication at the selected
   `min_tumor_fold` (10× by default).
 - **The paper layer does most of the cutting.** 342 of 509 candidates
-  are nominated by any CTA-list paper. `min_papers=3` keeps 180, and
+  are nominated by any CTA-list paper. `min_papers=3` keeps 179, and
   142 of those are named by all of the three largest lists
   (Wang et al. (2016), Chang et al. (2019), da Silva et al. (2017)).
 - **Paper counts are not independent replication.** The nominating sources are

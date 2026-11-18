@@ -4,16 +4,19 @@ Every number in ``index.md`` is computed here from the packaged catalog.
 Usage: PYTHONPATH=. python scripts/build_target_filter_audit.py
 """
 
+import sys
 from dataclasses import replace
 from pathlib import Path
 
 import pandas as pd
 
-from oncoref import target_filters as tf
-from oncoref import target_selection
-from oncoref.cta_literature import sources
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from oncoref import target_filters as tf  # noqa: E402
+from oncoref import target_selection  # noqa: E402
+from oncoref.cta_literature import sources  # noqa: E402
+
 OUT = ROOT / "docs/audits/target-filters-20261112"
 SETS = ("CTA", "Cancer Antigen only", "Reproductive Antigen only")
 VIEWS = ("loose", "standard", "strict")
@@ -58,18 +61,22 @@ LAYER_ROWS = [
         "`normal_function`",
     ),
     (
-        "3 `sets`",
-        "Which host compartments are protected, how much enrichment/replication, and which set?",
-        "`host_profile`, `lactating`, `pregnant`, `allow_tissues`, `protect_tissues`, "
+        "3 `host`",
+        "Do protected compartments have sufficient coverage and bounded exposure?",
+        "`host` (HostContext), or explicit profile/tissue choices",
+    ),
+    (
+        "4 `sets`",
+        "How much biological enrichment/replication, and which set?",
         "`min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership`",
     ),
     (
-        "4 `papers`",
+        "5 `papers`",
         "How many papers nominate it or report it in tumors?",
         "`min_papers`",
     ),
     (
-        "5 `exclusions`",
+        "6 `exclusions`",
         "Which gene families do you rule out by name?",
         "`exclude_prefixes`, `except_labels`",
     ),
@@ -345,7 +352,7 @@ def main():
     report = f"""# Target filters: categories, knobs and where proteins land
 
 **The catalog assigns five categories and they are not changed here. Filters only
-remove proteins from the {len(cand)} Target candidates, through five layers that
+remove proteins from the {len(cand)} Target candidates, through six layers that
 follow the catalog's own shape.** Filter policy `{tf.FILTER_POLICY_ID}`, applied to
 catalog `{target_selection.POLICY_ID}`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
@@ -370,9 +377,9 @@ RA uses the same 10× denominator in reproductive tissue or a supported embryo-l
 {len(other_tissue)} proteins whose normal home is a tissue no panel resolves are
 Other:Tissue unless reproductive evidence qualifies.
 
-## 2. The five filter layers
+## 2. The six filter layers
 
-A protein is kept only if it passes all five. `filter_failed` names the first one it
+A protein is kept only if it passes all six. `filter_failed` names the first one it
 fails. `max_*` knobs mean **below** the value, `min_*` knobs mean **at least** the
 value, and a missing measurement never passes.
 
@@ -402,13 +409,12 @@ if a change to a mode drops one.
 
 ### Host anatomy and tissue-tolerance profiles
 
-Selecting a `host_profile` (`all`, `female-patient`, `male-patient`, `core`), physiological
-state (`lactating=True`, `pregnant=True`), or tissue override (`allow_tissues`,
-`protect_tissues`) defines which of the 12 reproductive, developmental, and mammary
-compartments are protected in the host (`≤ 32 TPM` and `≥ min_tumor_fold` below tumor)
-versus allowed as reproductive origins (`≥ min_reproductive_fold × H₀`). Lactating mammary
-(`breast.410`: `LALBA`, `BTN1A1`) is distinct from resting mammary (`breast.373/390/405`).
-[CSV](host-profiles.csv).
+Host protection is independent of biological membership. Presets assume anatomy and
+protect no reproductive tissue by default. Explicit `protect`, `accept_loss` and `absent`
+choices have different meanings.
+Missing coverage and unresolved protein evidence fail the screen. Native TPM and nTPM
+are screened separately; protected TPM also enters every off-target limit and cancer fold.
+[Precise contract](../../host-selection.md). [CSV](host-profiles.csv).
 
 {md(profiles[["profile", "protected_compartments", "CTA", "CA_only", "RA_only", "Union"]].rename(columns={"profile": "Profile", "protected_compartments": "Protected compartments", "CA_only": "CA only", "RA_only": "RA only", "Union": "CA | RA"}))}
 
@@ -519,125 +525,17 @@ def write_guide(table):
         f"| `{r.profile}` | {r.protected_compartments} | **{r.CTA}** | {r.CA_only} | {r.RA_only} | {r.Union} |"
         for r in profiles.itertuples()
     ]
-    (ROOT / "docs/target-filters.md").write_text(f"""# Target filters and host profiles
+    from string import Template
 
-The catalog owns all evidence and category decisions. Filters only narrow its
-candidate sets. Current catalog: `{target_selection.POLICY_ID}`; filter policy:
-`{tf.FILTER_POLICY_ID}`. [Full audit and sweep tables](audits/target-filters-20261112/index.md).
-
-```python
-from oncoref import target_filters as tf
-
-all_candidates = tf.select("all")
-female_ctas = tf.select(tf.TargetFilter(membership="cta", host_profile="female-patient"))
-lactating_safe = tf.select(tf.TargetFilter(
-    membership="cta", host_profile="female-patient", lactating=True))
-male_post_rp = tf.select(tf.TargetFilter(
-    membership="cta", host_profile="male-patient",
-    allow_tissues=("prostate", "seminal vesicle")))
-core_ctas = tf.select(tf.TargetFilter(membership="cta", host_profile="core"))
-replicated_ca = tf.select(tf.TargetFilter(
-    membership="cancer_antigen", min_tumor_patients=2))
-```
-
-## Five ordered layers
-
-| Layer | Knob | Default | Meaning |
-|---|---|---|---|
-| Off target | `max_off_target_tpm` | None | Highest non-reproductive native TPM, including Disposable, must be below this value |
-| Curation | `normal_function` | `any` | Optionally exclude recorded Vital, Protected or Manageable normal homes |
-| Sets | `host_profile` | `all` | Preset of protected host compartments (`all`, `core`, `male-patient`, `female-patient`) |
-| Sets | `lactating`, `pregnant` | `False` | Protect `lactating_breast` (`breast.410`) or `embryo` + `placenta` |
-| Sets | `allow_tissues`, `protect_tissues` | Empty | Explicitly accept toxicity in or protect named compartments (e.g. `prostate`, `testis`, `breast`) |
-| Sets | `min_tumor_fold` | 10 | Tighten CA's tumor / max(N, Disposable, protected host compartments, 1) |
-| Sets | `min_reproductive_fold` | 10 | Independently tighten RA's allowed-compartment observation / max(N, Disposable, 1) |
-| Sets | `min_tumor_patients` | 0 | Known patients with a qualifying sample at `min_tumor_fold`; anonymous samples do not count |
-| Sets | `membership` | `target_candidates` | Keep union, CA, RA, CTA or either exclusive set after tightening |
-| Papers | `min_papers` | 0 | Distinct scoped target nominations or tumor reports |
-| Exclusions | `exclude_prefixes`, `except_labels` | Empty | Explicit name-based exclusions and exceptions |
-
-Missing measurements never satisfy an active requirement. The fold knobs cannot
-go below 10. A filter never promotes Other or Unsafe, changes the catalog, or adds
-its own evidence. Every layer is evaluated; `filter_failed` names the first failure.
-`filtered_category` reports membership after tightening.
-
-## Host profiles and tissue-toxicity toggles
-
-Every host profile is determined by **which of the 12 reproductive, developmental, and
-mammary compartments are protected** (**P**) versus **allowed** (**12 \\ P**):
-
-1. Every compartment in **P** must stay **≤ 32 TPM** (`DISPOSABLE_CAP`),
-2. Tumor expression must reach **≥ `min_tumor_fold` × max(H₀, max_P TPM)**, and
-3. `RA` must reach **≥ `min_reproductive_fold` × H₀** in at least one compartment outside **P**.
-
-![CTA tiers and host profiles](audits/target-selection-20261110/rebuild/summary/cta-tiers-and-profiles.png)
-
-| Profile | Protected compartments (**P**) | CTA | CA only | RA only | CA∪RA |
-|---|---|---:|---:|---:|---:|
-{chr(10).join(profile_rows)}
-
-Lactating mammary (`lactating_breast`, HPA biopsy `breast.410`) is separated from resting
-mammary (`resting_breast`, 3 biopsies) because milk-protein genes (`LALBA`, `BTN1A1`) are
-silent in resting female and male breast ducts (`≤ 0.5 TPM`) and require lactogenic
-hormonal differentiation. Passing `"breast"` in `allow_tissues` or `protect_tissues`
-expands to both `lactating_breast` and `resting_breast`.
-
-Raising only the cancer fold can move a CTA to RA-only without removing it from the
-union. Raising only the reproductive fold can move it to CA-only. Select `cta` when
-both tightened memberships are required. The patient-count requirement tightens CA
-only. Combining `min_tumor_patients=2` with `min_tumor_fold=30` requires two known
-patients each reaching 30×. Multiple samples from one patient count once.
-
-## Modes
-
-| Mode | Kept proteins | Changes from the catalog defaults |
-|---|---:|---|
-{chr(10).join(mode_rows)}
-
-Modes nest from all to strict. They are optional choices, not evidence grades.
-PRAME, NY-ESO-1 and MAGEA4 are regression controls across these modes and across
-`all`, `core`, `male-patient`, and `female-patient` profiles.
-
-## What the measurements mean
-
-`samples_at_tenfold`, `independent_patients_at_tenfold`,
-`anonymous_samples_at_tenfold` and `cancer_types_at_tenfold` expose actual qualifying
-tumor support. Unknown participant identity stays unknown. `*_above_normal` fields
-describe a weaker historical threshold and must not be used as 10× witness counts.
-
-`reproductive_fold` divides `reproductive_supported_tpm` by the same native-TPM
-reference as CA. Small cell populations are limited by the second independent
-embryo at the same stage and lineage; `reproductive_supported_context` identifies
-that context. `reproductive_max_sample_tpm` retains the strongest cell-supported
-individual observation, which can be higher. `reproductive_best` remains its
-compatibility display alias. None of these fields pools TPM with nTPM.
-
-<a id="normal-nose-and-skin-which-the-expression-panels-do-not-sample"></a>
-
-The normal-function knob uses recorded tissues and tiers from shared curation.
-[Unmeasured home tissues](target-selection.md#home-tissue-the-panels-do-not-resolve)
-remain visible even when reproductive evidence qualifies.
-
-## Papers and MAGE
-
-Paper counts indicate published attention and scoped claims. Overlapping screens
-are not independent experimental replication, and bibliographic support cannot
-clear a normal-expression hold. Strong unresolved rare-cell signals now become
-Other:Review in the catalog, before any paper filter.
-
-Strict retains `exclude_prefixes=("MAGE",)` and `except_labels=("MAGEA4",)` as an
-explicit judgment. It can remove MAGEC1 or MAGEC2 despite favorable expression.
-Exact and bounded-distance [peptide subtraction](antigen-sequences.md) against
-`Unsafe` or `Unsafe|Other` complements this rule. Sequence similarity alone does
-not establish recognition by a particular TCR; the prefix rule is not silently replaced.
-
-## Inspecting decisions
-
-`tf.measures()` returns catalog evidence plus the quantities read by filters.
-`tf.funnel("strict")` reports sequential losses; `tf.describe("strict")` names
-every active knob. The [audit](audits/target-filters-20261112/index.md) provides
-single-knob sweeps, every mode's members and overlapping failure reasons.
-""")
+    template = (ROOT / "scripts/cta_evidence_assets/target-filter-guide.md").read_text()
+    (ROOT / "docs/target-filters.md").write_text(
+        Template(template).substitute(
+            catalog_policy=target_selection.POLICY_ID,
+            filter_policy=tf.FILTER_POLICY_ID,
+            profile_rows="\n".join(profile_rows),
+            mode_rows="\n".join(mode_rows),
+        )
+    )
 
 
 if __name__ == "__main__":

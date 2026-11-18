@@ -426,6 +426,24 @@
           "taxon_id": 9606
         }
       }
+    },
+    "hpa_normal_tissue": {
+      "description": "HPA normal tissue protein staining, with cell type and reliability",
+      "filename": "normal_tissue.tsv",
+      "archive_format": "zip",
+      "kind": "hpa",
+      "default_version": "v23",
+      "versions": {
+        "v23": {
+          "url": "https://v23.proteinatlas.org/download/normal_tissue.tsv.zip",
+          "sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
+          "archive_sha256": "11f1c10095ac4ced74a38faf1257ae924d623139b9d80f4585c8d685c36213f6",
+          "bytes": 82941549,
+          "unit": "qualitative IHC",
+          "statistic": "tissue/cell-type staining with reliability",
+          "taxon_id": 9606
+        }
+      }
     }
   }
 }

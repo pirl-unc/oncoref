@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from dataclasses import dataclass, replace
 
 import pandas as pd
 
@@ -29,83 +30,170 @@ EXCLUSION_CATEGORIES = {
     "Unsafe|Other": ("Unsafe", "Other"),
 }
 ENSEMBL_RELEASE = 115
+_UNSET = object()
+
+
+@dataclass(frozen=True)
+class AntigenSelection:
+    """One evaluated selection, shared by protein, gene, sequence and peptide views."""
+
+    group: str
+    _evaluated: pd.DataFrame
+
+    @property
+    def metadata(self):
+        from copy import deepcopy
+
+        return deepcopy(
+            {
+                "catalog_policy_id": target_selection.POLICY_ID,
+                "set": self.group,
+                **self._evaluated.attrs,
+            }
+        )
+
+    def decisions(self):
+        """All catalog rows with original membership, host status and filter reasons."""
+        return self._evaluated.copy(deep=True)
+
+    def proteins(self):
+        d = self._evaluated
+        ca, ra = d.filtered_cancer_antigen, d.filtered_reproductive_antigen
+        member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[self.group]
+        result = d[d.keep & member].copy()
+        for name in (
+            "category",
+            "classification",
+            "is_cta",
+            "is_cancer_antigen",
+            "is_reproductive_antigen",
+            "is_target_candidate",
+        ):
+            result["catalog_" + name] = result[name]
+        result["category"] = result.filtered_category
+        result["classification"] = result.category
+        result["is_cancer_antigen"] = result.filtered_cancer_antigen
+        result["is_reproductive_antigen"] = result.filtered_reproductive_antigen
+        result["is_cta"] = result.is_cancer_antigen & result.is_reproductive_antigen
+        result["is_target_candidate"] = result.is_cancer_antigen | result.is_reproductive_antigen
+        if "cta_tier" in result:
+            result["catalog_cta_tier"] = result.cta_tier
+            result["cta_tier"] = result.cta_tier.where(result.is_cta, "")
+        result.attrs.update(self.metadata)
+        return result.reset_index(drop=True)
+
+    def gene_ids(self):
+        return frozenset(
+            g for members in self.proteins().member_gene_ids for g in json.loads(members)
+        )
+
+    def background_proteins(self, background="Unsafe|Other"):
+        """Global exclusions plus host-excluded/unresolved candidates, never a CTA exemption."""
+        if background not in EXCLUSION_CATEGORIES:
+            raise ValueError("Background must be Unsafe, Other or Unsafe|Other")
+        d = self._evaluated
+        base = d.category.isin(EXCLUSION_CATEGORIES[background])
+        host = d.is_target_candidate & ~d.pass_host
+        result = d[base | host].copy()
+        result["background_reason"] = result.category.where(base, "Host: " + result.host_status)
+        result.attrs.update(
+            self.metadata,
+            background=background,
+            background_scope="catalog exclusions plus host-excluded or unresolved candidates",
+        )
+        return result.reset_index(drop=True)
+
+    def sequences(self, *, genome=None):
+        return _sequences(self.proteins(), self.group, genome=genome)
+
+    def background_sequences(self, background="Unsafe|Other", *, genome=None):
+        return _sequences(self.background_proteins(background), background, genome=genome)
+
+    def background_index(
+        self, background="Unsafe|Other", *, genome=None, policy=None, lengths=range(8, 16)
+    ):
+        from .peptide_subtraction import PeptideIndex
+
+        records = self.background_sequences(background, genome=genome)
+        if records.attrs["missing_gene_ids"]:
+            raise ValueError(
+                "Background has missing gene translations; subtraction coverage is incomplete"
+            )
+        return PeptideIndex(records, policy=policy, lengths=lengths)
+
+
+def select(group="CTA", *, mode="all", host=None, table=None, host_evidence=None, **overrides):
+    """Select once, then obtain consistent protein, gene, sequence and background views.
+
+    ``host`` is a HostContext. An omitted host means catalog screening only.
+    Tissue-loss choices never change the broad biological catalog or global Unsafe.
+    """
+    from . import target_filters
+
+    if group not in SETS or group in EXCLUSION_CATEGORIES:
+        raise ValueError("Select a candidate set: CTA, CA, RA or CA|RA")
+    base = target_filters.FILTER_MODES[mode] if isinstance(mode, str) else mode
+    if host is not None:
+        overrides["host"] = host
+    filt = replace(base, **overrides)
+    return AntigenSelection(group, target_filters.apply(filt, table, host_evidence=host_evidence))
 
 
 def proteins(
-    group: str = "CTA",
+    group="CTA",
     *,
-    profile: str = "all",
-    lactating: bool = False,
-    pregnant: bool = False,
-    allow_tissues: tuple[str, ...] = (),
-    protect_tissues: tuple[str, ...] = (),
-) -> pd.DataFrame:
-    """Current antigen groups or Unsafe, Other, and Unsafe|Other backgrounds.
-
-    CA and RA include CTA. CA|RA is the union of candidate antigen proteins;
-    RA-only membership does not imply tumor expression.
-    Other denotes unresolved or nonqualifying proteins, not established hazards.
-    Optional ``profile`` ("all", "core", "male-patient", "female-patient") and
-    tissue-tolerance overrides narrow positive sets by host compartment rules.
-    """
+    profile=_UNSET,
+    lactating=_UNSET,
+    pregnant=_UNSET,
+    allow_tissues=_UNSET,
+    protect_tissues=_UNSET,
+    absent_tissues=_UNSET,
+    host=None,
+    mode="all",
+):
+    """Compatibility convenience view; prefer select() when using sequences/backgrounds."""
     if group not in SETS:
         raise ValueError(f"Unknown antigen set {group!r}; choose from {tuple(SETS)}")
-    has_host_filter = (
-        profile != "all" or lactating or pregnant or bool(allow_tissues) or bool(protect_tissues)
+    # Omitted convenience arguments must preserve a caller's TargetFilter.
+    # Explicit False/()/"all" remain valid overrides of that filter.
+    overrides = {
+        key: value
+        for key, value in {
+            "host_profile": profile,
+            "lactating": lactating,
+            "pregnant": pregnant,
+            "allow_tissues": allow_tissues,
+            "protect_tissues": protect_tissues,
+            "absent_tissues": absent_tissues,
+        }.items()
+        if value is not _UNSET
+    }
+    active = (
+        any(
+            value != "all" if key == "host_profile" else bool(value)
+            for key, value in overrides.items()
+        )
+        or host is not None
+        or mode != "all"
     )
     if group in EXCLUSION_CATEGORIES:
-        if has_host_filter:
+        if active:
             raise ValueError(
-                "Host profiles apply to candidate antigen sets, not Unsafe/Other backgrounds"
+                "Host profiles and candidate filters require select(...).background_proteins()"
             )
         rows = target_selection.results()
         return rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
-    rows = target_selection.results()
-    if not has_host_filter:
+    if not active:
+        rows = target_selection.results()
         return rows[rows[SETS[group]]].reset_index(drop=True)
-    from . import target_filters
-
-    filt = target_filters.TargetFilter(
-        host_profile=profile,
-        lactating=lactating,
-        pregnant=pregnant,
-        allow_tissues=tuple(allow_tissues),
-        protect_tissues=tuple(protect_tissues),
-    )
-    evaluated = target_filters.apply(filt, rows)
-    ca, ra = evaluated.filtered_cancer_antigen, evaluated.filtered_reproductive_antigen
-    member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[group]
-    selected = evaluated[evaluated.keep & member].copy()
-    selected["category"] = selected.filtered_category
-    return selected.reset_index(drop=True)
+    return select(group, mode=mode, host=host, **overrides).proteins()
 
 
-def gene_ids(
-    group: str = "CTA",
-    *,
-    profile: str = "all",
-    lactating: bool = False,
-    pregnant: bool = False,
-    allow_tissues: tuple[str, ...] = (),
-    protect_tissues: tuple[str, ...] = (),
-) -> frozenset[str]:
-    """All member gene IDs, preserving protein-equivalent loci."""
-    has_host_filter = (
-        profile != "all" or lactating or pregnant or bool(allow_tissues) or bool(protect_tissues)
+def gene_ids(group="CTA", **kwargs):
+    """All member gene IDs from the same selection contract."""
+    return frozenset(
+        g for members in proteins(group, **kwargs).member_gene_ids for g in json.loads(members)
     )
-    frame = (
-        proteins(
-            group,
-            profile=profile,
-            lactating=lactating,
-            pregnant=pregnant,
-            allow_tissues=allow_tissues,
-            protect_tissues=protect_tissues,
-        )
-        if has_host_filter
-        else proteins(group)
-    )
-    return frozenset(g for ids in frame.member_gene_ids for g in json.loads(ids))
 
 
 def loss_consequences(gene: str) -> list[dict]:
@@ -140,7 +228,12 @@ def loss_consequences(gene: str) -> list[dict]:
     return result
 
 
-def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
+def sequences(group="CTA", *, genome=None, **selection) -> pd.DataFrame:
+    """Annotated translations of the exact same profiled protein selection."""
+    return _sequences(proteins(group, **selection), group, genome=genome)
+
+
+def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
     """All annotated protein translations, one row per transcript occurrence.
 
     Uses the local human Ensembl 115 reference (oncoref[genome]); does not download
@@ -154,7 +247,7 @@ def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
     if genome.release != ENSEMBL_RELEASE or genome.species.latin_name != "homo_sapiens":
         raise ValueError("Current antigen sets require human Ensembl 115")
     rows, missing = [], []
-    for protein in proteins(group).itertuples():
+    for protein in protein_rows.itertuples():
         for gene_id in json.loads(protein.member_gene_ids):
             found = False
             try:
@@ -177,6 +270,11 @@ def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
                         "sequence": sequence,
                         "sequence_sha256": hashlib.sha256(sequence.encode()).hexdigest(),
                         "set": group,
+                        "catalog_category": getattr(
+                            protein, "catalog_category", getattr(protein, "category", "")
+                        ),
+                        "selection_category": getattr(protein, "category", ""),
+                        "background_reason": getattr(protein, "background_reason", ""),
                     }
                 )
             if not found:
@@ -191,8 +289,12 @@ def sequences(group="CTA", *, genome=None) -> pd.DataFrame:
             "sequence",
             "sequence_sha256",
             "set",
+            "catalog_category",
+            "selection_category",
+            "background_reason",
         ],
     )
+    result.attrs.update(protein_rows.attrs)
     result.attrs.update(
         policy_id=target_selection.POLICY_ID,
         reference="homo_sapiens:GRCh38:Ensembl:115",

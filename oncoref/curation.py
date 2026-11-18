@@ -68,6 +68,11 @@ def write_receipt(root):
         "oncoref/curation.py",
         "oncoref/data/curation-build.json",
         "oncoref/target_filters.py",
+        "oncoref/host_context.py",
+        "scripts/cta_evidence_assets/target-selection-guide.md",
+        "scripts/cta_evidence_assets/target-filter-guide.md",
+        "oncoref/antigen_sets.py",
+        "oncoref/antigen_cli.py",
         "oncoref/reference_data.py",
         "oncoref/data/reference-releases.json",
         "oncoref/tissue_tiers.py",
@@ -100,7 +105,11 @@ def check(root):
                 errors.append(name)
     required = set(manifest().get("outputs", []))
     errors.extend(sorted(required - receipt["outputs"].keys()))
-    for stem, field in (("target-selection", "data_sha256"), ("rare-cell-evidence", "sha256")):
+    for stem, field in (
+        ("target-selection", "data_sha256"),
+        ("rare-cell-evidence", "sha256"),
+        ("host-exposure", "sha256"),
+    ):
         metadata = root / f"oncoref/data/{stem}.json"
         data = root / f"oncoref/data/{stem}.csv.gz"
         if (

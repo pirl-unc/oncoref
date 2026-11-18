@@ -19,8 +19,11 @@ def _seed(cache_root, name, version, filename, text):
 @pytest.fixture
 def hpa_cache(monkeypatch, tmp_path):
     monkeypatch.setenv("CANCERDATA_DATA_DIR", str(tmp_path))
-    for name in ("hpa_rna_consensus", "hpa_single_cell"):
+    for name in ("hpa_rna_consensus", "hpa_normal_tissue", "hpa_single_cell"):
         monkeypatch.setitem(reference_data.REFERENCE_SOURCES[name], "default_version", "v23")
+        # These tiny synthetic tables exercise the readers, not source integrity.
+        # An immutable upstream pin would replace the fixture with a download.
+        monkeypatch.setitem(reference_data.REFERENCE_SOURCES[name], "pins", {})
     # clear lru_caches so each test sees its own fixture
     for fn in (
         hpa._hpa_rna_consensus_for_version,

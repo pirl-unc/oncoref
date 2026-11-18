@@ -20,6 +20,23 @@ other = antigen_sets.proteins("Other")
 conservative_background = antigen_sets.sequences("Unsafe|Other")
 ```
 
+For host-specific work, select once and use that object's views and background:
+
+```python
+from oncoref.host_context import HostContext
+
+selection = antigen_sets.select("CA", host=HostContext(protect=("testis",)))
+proteins = selection.proteins()
+sequences = selection.sequences()
+background = selection.background_index("Unsafe|Other")
+```
+
+The background adds every host-excluded or unresolved candidate to the selected
+Unsafe/Other background, including biological CTAs. Missing translations stop index
+construction. [Host assumptions, scope and consequences](host-selection.md).
+Convenience `proteins`, `gene_ids` and `sequences` also accept matching profile
+arguments; the selection object avoids repeating those choices.
+
 Rows carry the current policy and evidence. The older `target_sets` and
 `cta_selection` APIs remain explicitly versioned historical snapshots.
 
@@ -48,7 +65,8 @@ unsafe_occurrences = background.matches(peptide)
 retained = background.subtract(targets.iloc[0].sequence)
 ```
 
-`matches` retains all source fields (gene, transcript, protein group), the original
+`matches` retains all source fields (gene, transcript, protein group, catalog category
+and background exclusion reason), the original
 matched peptide, distance, and zero-based half-open coordinates. `subtract`
 returns each surviving query occurrence with its coordinates. Both retain the
 reference, missing-gene list and matching parameters in DataFrame attributes.

@@ -1,0 +1,81 @@
+[
+  {
+    "from": "1.36",
+    "to": "1.37",
+    "cta_before": 607,
+    "cta_after": 626,
+    "lost": 74,
+    "gained": 93,
+    "lost_to": {
+      "Unsafe": 41,
+      "Reproductive Antigen only": 26,
+      "Other:Review": 7
+    }
+  },
+  {
+    "from": "1.37",
+    "to": "1.38",
+    "cta_before": 626,
+    "cta_after": 453,
+    "lost": 173,
+    "gained": 0,
+    "lost_to": {
+      "Reproductive Antigen only": 153,
+      "Other:Sequence": 11,
+      "Unsafe": 9
+    }
+  },
+  {
+    "from": "1.38",
+    "to": "1.39",
+    "cta_before": 453,
+    "cta_after": 437,
+    "lost": 22,
+    "gained": 6,
+    "lost_to": {
+      "Reproductive Antigen only": 22
+    }
+  },
+  {
+    "from": "1.39",
+    "to": "1.40",
+    "cta_before": 437,
+    "cta_after": 246,
+    "lost": 191,
+    "gained": 0,
+    "lost_to": {
+      "Cancer Antigen only": 121,
+      "Other:Review": 35,
+      "Other:Tissue": 16,
+      "Other:Expression": 12,
+      "Reproductive Antigen only": 7
+    }
+  },
+  {
+    "from": "1.40",
+    "to": "1.41",
+    "cta_before": 246,
+    "cta_after": 290,
+    "lost": 0,
+    "gained": 44,
+    "lost_to": {}
+  },
+  {
+    "from": "1.41",
+    "to": "699",
+    "cta_before": 290,
+    "cta_after": 290,
+    "lost": 0,
+    "gained": 0,
+    "lost_to": {}
+  },
+  {
+    "from": "699",
+    "to": "700",
+    "cta_before": 290,
+    "cta_after": 290,
+    "lost": 0,
+    "gained": 0,
+    "lost_to": {}
+  }
+]

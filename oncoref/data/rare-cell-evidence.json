@@ -203,7 +203,7 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "d62bc45f6bd7dc1e2b052d84be26116d1a698cdde218478b3b29e0742356ef98",
+  "sha256": "daec8946abc0f3acf75d344b8e8ca7aba4ec333f9d07fcc9c5dddf0fabe34f3b",
   "regrade": {
     "inputs_receipt": "docs/audits/normal-cell-atlas-20261110/rare-cell/regrade-inputs.json",
     "sha256": "16f22723456a7f9ffa537c44b7c368188c57b25a69287f228fec389ceeb7d7ac",

@@ -1,23 +1,112 @@
 {
   "schema": "oncoref.curation-build.v1",
   "reference_inputs": {
-    "hpa_tissue_samples": {"source": "hpa_individual_tissue_tpm", "version": "v23"},
-    "petropoulos_tpm": {"source": "petropoulos_embryonic_tpm", "version": "E-MTAB-3929-20261028"},
-    "petropoulos_design": {"source": "petropoulos_embryonic_design", "version": "E-MTAB-3929-20261028"},
-    "tyser_tpm": {"source": "tyser_embryonic_tpm", "version": "E-MTAB-9388-20261026"},
-    "tyser_design": {"source": "tyser_embryonic_design", "version": "E-MTAB-9388-20261026"}
+    "hpa_tissue_samples": {
+      "source": "hpa_individual_tissue_tpm",
+      "version": "v23"
+    },
+    "petropoulos_tpm": {
+      "source": "petropoulos_embryonic_tpm",
+      "version": "E-MTAB-3929-20261028"
+    },
+    "petropoulos_design": {
+      "source": "petropoulos_embryonic_design",
+      "version": "E-MTAB-3929-20261028"
+    },
+    "tyser_tpm": {
+      "source": "tyser_embryonic_tpm",
+      "version": "E-MTAB-9388-20261026"
+    },
+    "tyser_design": {
+      "source": "tyser_embryonic_design",
+      "version": "E-MTAB-9388-20261026"
+    },
+    "host_cell_rna": {
+      "source": "hpa_single_cell_tissue",
+      "version": "v23"
+    },
+    "host_protein": {
+      "source": "hpa_normal_tissue",
+      "version": "v23"
+    }
   },
   "steps": {
-    "rare_cell": {"needs": [], "argv": ["scripts/build_rare_cell_evidence.py", "--regrade-pinned"]},
-    "catalog": {"needs": ["rare_cell"], "argv": ["scripts/rebuild_target_catalog.py"]},
-    "plots": {"needs": ["catalog"], "argv": ["scripts/render_target_catalog.py"]},
-    "report": {"needs": ["plots"], "argv": ["scripts/build_target_selection_report.py"]},
-    "filter_audit": {"needs": ["report"], "argv": ["scripts/build_target_filter_audit.py"]},
-    "filter_web_report": {"needs": ["filter_audit"], "argv": ["scripts/build_target_filter_web_report.py"]}
+    "rare_cell": {
+      "needs": [],
+      "argv": [
+        "scripts/build_rare_cell_evidence.py",
+        "--regrade-pinned"
+      ]
+    },
+    "catalog": {
+      "needs": [
+        "rare_cell"
+      ],
+      "argv": [
+        "scripts/rebuild_target_catalog.py"
+      ]
+    },
+    "plots": {
+      "needs": [
+        "host_exposure"
+      ],
+      "argv": [
+        "scripts/render_target_catalog.py"
+      ]
+    },
+    "report": {
+      "needs": [
+        "plots"
+      ],
+      "argv": [
+        "scripts/build_target_selection_report.py"
+      ]
+    },
+    "filter_audit": {
+      "needs": [
+        "report"
+      ],
+      "argv": [
+        "scripts/build_target_filter_audit.py"
+      ]
+    },
+    "filter_web_report": {
+      "needs": [
+        "filter_audit"
+      ],
+      "argv": [
+        "scripts/build_target_filter_web_report.py"
+      ]
+    },
+    "host_exposure": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/build_host_exposure.py"
+      ]
+    },
+    "literature_audit": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_antigen_paper_counts.py"
+      ]
+    },
+    "reproductive_ihc_audit": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_reproductive_ihc_route.py"
+      ]
+    }
   },
   "output_roots": [
     "docs/audits/target-selection-20261110/rebuild",
-    "docs/audits/target-filters-20261112"
+    "docs/audits/target-filters-20261112",
+    "docs/audits/antigen-evidence-review-20261117"
   ],
   "outputs": [
     "oncoref/data/target-selection.csv.gz",
@@ -27,6 +116,8 @@
     "docs/audits/target-selection-20261110/definition.json",
     "docs/audits/target-selection-20261110/report.html",
     "docs/target-selection.md",
-    "docs/target-filters.md"
+    "docs/target-filters.md",
+    "oncoref/data/host-exposure.csv.gz",
+    "oncoref/data/host-exposure.json"
   ]
 }

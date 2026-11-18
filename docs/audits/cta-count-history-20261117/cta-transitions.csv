@@ -1,0 +1,604 @@
+from_version,to_version,entity_id,protein_group_label,from_category,to_classification
+1.36,1.37,PEG:020e4b93f993a54a4be8,CDY2A/B,CTA,Reproductive Antigen only
+1.36,1.37,PEG:82bbfdb131c123c8ed0c,WNT8A,CTA,Unsafe
+1.36,1.37,PEG:0add72edc5eb37ab78f4,ADAM7,CTA,Unsafe
+1.36,1.37,PEG:ba11c7bd43f05930ef56,FKBP6,Other,CTA
+1.36,1.37,PEG:90fd94e49593855ed245,AMELY,Other,CTA
+1.36,1.37,PEG:e2a2fb77e366f5a9bab2,H2BW2,Other,CTA
+1.36,1.37,PEG:639b75885ff8db376581,PRSS54,Other,CTA
+1.36,1.37,PEG:b7e6918bd775d8e58ae1,RSPH6A,Unsafe,CTA
+1.36,1.37,PEG:31b55de6cd45d0f4b35b,SPMAP2,CTA,Unsafe
+1.36,1.37,PEG:bd87d5943adb64f4e420,KRT37,Other,CTA
+1.36,1.37,PEG:b0d6c8f02d3c93179b43,ANKRD60,Other,CTA
+1.36,1.37,PEG:9aa7d39d77bb86d12871,PSG8,Unsafe,CTA
+1.36,1.37,PEG:07bc57d4c7d89e5e3ca7,SRMS,Other,CTA
+1.36,1.37,PEG:363086d8b4fafff52aae,PRDM7,Unsafe,CTA
+1.36,1.37,PEG:acd544ce0020891334de,OR1E2,Other,CTA
+1.36,1.37,PEG:ba6798466117b944e46d,GALR3,Other,CTA
+1.36,1.37,PEG:311145eaa2423ba10cea,VRTN,Unsafe,CTA
+1.36,1.37,PEG:9a4474f82b95215088a3,ACRV1,CTA,Unsafe
+1.36,1.37,PEG:cd8871e0d60a430d9f23,OCM2,Other,CTA
+1.36,1.37,PEG:f8dbad8589abd378c1d3,MMP20,CTA,Unsafe
+1.36,1.37,PEG:efa0b2560c10d0e05eec,TTLL8,Other,CTA
+1.36,1.37,PEG:8ea530b33a6734f55ab9,SPACA3,CTA,Unsafe
+1.36,1.37,PEG:6fd72faa6b92e17cd49c,CHCT1,Unsafe,CTA
+1.36,1.37,PEG:13d2009a88dabde0394f,SLC25A52,CTA,Reproductive Antigen only
+1.36,1.37,PEG:581dc1d036bbdddf6a43,CIB3,Other,CTA
+1.36,1.37,PEG:d7cf0111102154b3f829,C1orf94,CTA,Unsafe
+1.36,1.37,PEG:b6999d59062476d2ec3b,HHIPL2,CTA,Unsafe
+1.36,1.37,PEG:34f328e2f5b6313189c0,SPINT4,CTA,Unsafe
+1.36,1.37,PEG:668c4e0e27533b8ec392,CCDC83,CTA,Unsafe
+1.36,1.37,PEG:3882fc757cfe17c3c170,PABPC3,Unsafe,CTA
+1.36,1.37,PEG:d47c472d5edde3832f80,RBM46,CTA,Unsafe
+1.36,1.37,PEG:30dd9c54ba4ec034ad07,BOLL,CTA,Unsafe
+1.36,1.37,PEG:25df684f7218f6f02efd,RGPD3,Unsafe,CTA
+1.36,1.37,PEG:cc7eba9b12cc8cce7017,ASB17,CTA,Unsafe
+1.36,1.37,PEG:b11d7047767cef633d42,ASZ1,CTA,Unsafe
+1.36,1.37,PEG:b36d0170ab35318112b5,NLRP14,CTA,Unsafe
+1.36,1.37,PEG:1d43701ff33b06a08fdb,KLHL10,CTA,Unsafe
+1.36,1.37,PEG:a82375b146f49aac7e7e,ZSWIM2,CTA,Reproductive Antigen only
+1.36,1.37,PEG:75fe0aadf42a9b23f441,DPPA2,Unsafe,CTA
+1.36,1.37,PEG:93b004e8607aca9cd834,ERICH6,CTA,Unsafe
+1.36,1.37,PEG:e0de5f18d0ea628bce02,ADAD1,Unsafe,CTA
+1.36,1.37,PEG:7354dab0c4f554d92e3b,SPAG11B,Unsafe,CTA
+1.36,1.37,PEG:8fe4e4afaf1b041a17b7,CXorf58,Unsafe,CTA
+1.36,1.37,PEG:39e0d9b9fa322a015002,C12orf50,Unsafe,CTA
+1.36,1.37,PEG:f0ba7590c9bb29333f4b,ERICH6B,CTA,Unsafe
+1.36,1.37,PEG:f8aa24f2175e062396ff,TMCO5A,CTA,Unsafe
+1.36,1.37,PEG:d77c5aa334908accb44f,POTED,Other,CTA
+1.36,1.37,PEG:f97f563c819bff14c9ee,OR2B2,Other,CTA
+1.36,1.37,PEG:c4287bfb2fc94398e3cf,SCGB1D1,CTA,Unsafe
+1.36,1.37,PEG:df9618bfb3b34cb467d3,ADAM18,Unsafe,CTA
+1.36,1.37,PEG:de08c7c6995dfe5f18c0,PROKR1,Other,CTA
+1.36,1.37,PEG:eddea217c73d85d69679,HOXD12,Other,CTA
+1.36,1.37,PEG:44c15cfece6fa14d5fb0,COX7B2,CTA,Unsafe
+1.36,1.37,PEG:4d7a9416696f69562a7d,GARIN3,CTA,Reproductive Antigen only
+1.36,1.37,PEG:2a17bbbb8c6078d191b6,CDY1,CTA,Reproductive Antigen only
+1.36,1.37,PEG:4c123db4009af1875f70,CDY1B,CTA,Reproductive Antigen only
+1.36,1.37,PEG:e47996dae82c509c57eb,EFCAB3,Unsafe,CTA
+1.36,1.37,PEG:b6707155dfcaebb74182,TOPAZ1,CTA,Unsafe
+1.36,1.37,PEG:835f2cda298454afab81,TEX36,CTA,Unsafe
+1.36,1.37,PEG:689c79967f21965817a9,TRIM60,Unsafe,CTA
+1.36,1.37,PEG:d88b5d2ec3404b5d529c,SPAG11A,Unsafe,CTA
+1.36,1.37,PEG:5c608c51ffe82240b4c0,DEFB125,Other,CTA
+1.36,1.37,PEG:bf74b1d1a638e14f9344,EXD1,Unsafe,CTA
+1.36,1.37,PEG:2b550f9f93384c6062b0,NLRP8,Unsafe,CTA
+1.36,1.37,PEG:49e05b2a5ba1cfbf7145,NKX2-6,Unsafe,CTA
+1.36,1.37,PEG:3f14c5b64138c2981f51,OR8D4,Unsafe,CTA
+1.36,1.37,PEG:c47c62ec9be49c4d3aed,OR52D1,Other,CTA
+1.36,1.37,PEG:804ae30c92f9107b8cfe,DCAF4L1,CTA,Unsafe
+1.36,1.37,PEG:673448700641048dadb6,CCDC172,CTA,Unsafe
+1.36,1.37,PEG:773ae6144c5f0318c61f,MAGEB17,Other,CTA
+1.36,1.37,PEG:fc6b33603f71bec8b335,CALHM3,CTA,Other:Review
+1.36,1.37,PEG:be476053166b5f725272,SATL1,Unsafe,CTA
+1.36,1.37,PEG:ba19aea49415fa14f0c4,C5orf47,CTA,Unsafe
+1.36,1.37,PEG:5dc4054a4eba0cc9abdc,SPATA45,CTA,Unsafe
+1.36,1.37,PEG:1fb7e51b15889d306f19,SMIM23,CTA,Unsafe
+1.36,1.37,PEG:925b1135a1c9b56b2aad,SPATA31A6,Other,CTA
+1.36,1.37,PEG:ab6932bd51e145d88ec1,TMEM262,CTA,Reproductive Antigen only
+1.36,1.37,PEG:5197ccb744d3ee794b6f,C5orf52,CTA,Unsafe
+1.36,1.37,PEG:f6e567cce64c26bff223,MAGEB5,CTA,Reproductive Antigen only
+1.36,1.37,PEG:20fd0b963a82f5c51ebb,KRTAP24-1,CTA,Reproductive Antigen only
+1.36,1.37,PEG:c23adbbf2642bbadced3,AADACL3,Other,CTA
+1.36,1.37,PEG:0ea3771c4ce1cd37abb3,HUS1B,Other,CTA
+1.36,1.37,PEG:ca65a9a92dfdb403341e,FAM47B,CTA,Reproductive Antigen only
+1.36,1.37,PEG:ce4f9e9638ede2dfd12e,POTEF,Unsafe,CTA
+1.36,1.37,PEG:d9cf6d78c81edd4368a8,OR14A16,Other,CTA
+1.36,1.37,PEG:913384bfcd8cc2059749,OR51C1,Other,CTA
+1.36,1.37,PEG:bb4a6082f958f150b887,OR8G1,CTA,Reproductive Antigen only
+1.36,1.37,PEG:2762ab9ca5b098b6e195,KRTAP4-1,Other,CTA
+1.36,1.37,PEG:e07ae591e4fb35a4e33d,CSAG1,Unsafe,CTA
+1.36,1.37,PEG:a7fd98f889075a61335c,SMIM9,Unsafe,CTA
+1.36,1.37,PEG:1a661c7b77f20467112d,GLYATL3,Other,CTA
+1.36,1.37,PEG:078e251f335ff1fbd8d2,C1orf185,CTA,Unsafe
+1.36,1.37,PEG:9b6c576d20f8aaa44aaf,TXNDC8,Other,CTA
+1.36,1.37,PEG:6b3c05a8fabada3c1536,KRTAP5-10,Other,CTA
+1.36,1.37,PEG:72efb5f8cffda4ad1aec,CBY3,CTA,Unsafe
+1.36,1.37,PEG:eacf7d3f430df59c2574,C9orf57,CTA,Unsafe
+1.36,1.37,PEG:a4fd7b31c64bc8928480,MAS1L,Other,CTA
+1.36,1.37,PEG:9a91206f7a724f5836cf,MGAT4D,CTA,Unsafe
+1.36,1.37,PEG:9520487d82356ae71fb5,SLCO6A1,CTA,Unsafe
+1.36,1.37,PEG:614a720247abb9707729,ARSH,Other,CTA
+1.36,1.37,PEG:665416af37123848366d,MANSC4,CTA,Unsafe
+1.36,1.37,PEG:cc8f812ef5e0970f4a81,LRRC72,CTA,Unsafe
+1.36,1.37,PEG:196808c67fa73ae11428,C18orf63,CTA,Unsafe
+1.36,1.37,PEG:26ff43d9bcd3fb095cf7,KRTAP19-8,Other,CTA
+1.36,1.37,PEG:cafc20d65ce6100c7d28,KRTAP20-4,Other,CTA
+1.36,1.37,PEG:0a95d6b7de596e7dc190,OR2F1,Unsafe,CTA
+1.36,1.37,PEG:eabb3be47e1e8dd9e393,ZC3H11C,Other,CTA
+1.36,1.37,PEG:d36602dc99457334ed43,DEFB113,CTA,Reproductive Antigen only
+1.36,1.37,PEG:34902909b93023b09371,TRIM64C,Other,CTA
+1.36,1.37,PEG:ef99bd8c40a789b06a79,GRXCR1,CTA,Unsafe
+1.36,1.37,PEG:98ef0bcf47d9683cb231,ZNF705D,Other,CTA
+1.36,1.37,PEG:36f2f7c5e0bd89eee45c,DEFB115,Other,CTA
+1.36,1.37,PEG:cd2877231d1d88d1d460,ZC3H11B,Unsafe,CTA
+1.36,1.37,PEG:d2cde6343aa40f2cacbc,TRIM51G,Other,CTA
+1.36,1.37,PEG:425a365bfe1d99a15b43,ZNF816-ZNF321P,Other,CTA
+1.36,1.37,PEG:aa67c5a714c761d22402,SUPT20HL1,Other,CTA
+1.36,1.37,PEG:423de197bb86ba7742af,ZNF492,Unsafe,CTA
+1.36,1.37,PEG:0de483604947cb9e73f7,OR5H1,CTA,Reproductive Antigen only
+1.36,1.37,PEG:222667b88180a71d4b01,PPP1R2B,Unsafe,CTA
+1.36,1.37,PEG:2e8abb92a91dd411e114,RAB6D,Other,CTA
+1.36,1.37,PEG:c0fa6589ee4f4179ecac,PRR23C,Other,CTA
+1.36,1.37,PEG:9913d9543bc5181e808d,FAM237A,CTA,Reproductive Antigen only
+1.36,1.37,PEG:422f22924539f6e72bdd,CIMIP7,CTA,Unsafe
+1.36,1.37,PEG:ad22a7bf35b45ca0ec8a,ENSG00000237378,CTA,Reproductive Antigen only
+1.36,1.37,PEG:7a81a2cf3631c7adb27c,ENSG00000241690,CTA,Reproductive Antigen only
+1.36,1.37,PEG:494461907930700de63d,OR5V1,Unsafe,CTA
+1.36,1.37,PEG:aaf161dc2692824ec94c,KRTAP5-7,Other,CTA
+1.36,1.37,PEG:b847e9c6d95d3dcaedef,RAD21L1,Unsafe,CTA
+1.36,1.37,PEG:983af5605adaf41d6a8c,PRR5-ARHGAP8,Unsafe,CTA
+1.36,1.37,PEG:fdd7f0c5ad8fcef88b57,TAF11L12,CTA,Other:Review
+1.36,1.37,PEG:5dca19749634c5267bc2,H2AL1Q,CTA,Reproductive Antigen only
+1.36,1.37,PEG:0e36aa2dea5e617ca41b,TRIM75,CTA,Other:Review
+1.36,1.37,PEG:30dc854f95cec2ea4932,P3R3URF,CTA,Reproductive Antigen only
+1.36,1.37,PEG:bb4b19645fd0c3e6333b,TAF11L14,CTA,Other:Review
+1.36,1.37,PEG:39099f3e417798616cca,PTTG1IP2,CTA,Reproductive Antigen only
+1.36,1.37,PEG:02f41390c76fe3d915fe,KRTAP5-9,Other,CTA
+1.36,1.37,PEG:592a5a5a692d322baf49,ENSG00000255432,Other,CTA
+1.36,1.37,PEG:d9a9b30d4e07f9ba4fc3,ENSG00000255835,Other,CTA
+1.36,1.37,PEG:24c69136cf11d62d3f1a,ENSG00000258417,CTA,Reproductive Antigen only
+1.36,1.37,PEG:513004a64a1dd7274552,ENSG00000258691,Other,CTA
+1.36,1.37,PEG:5e2e62cbb514007ea08f,ARMH2,Other,CTA
+1.36,1.37,PEG:4bd36fd4f9ac768923ce,TUBB8,Unsafe,CTA
+1.36,1.37,PEG:f6c36cc12b55d8c5a2b8,GFY,Unsafe,CTA
+1.36,1.37,PEG:08e651ae6837afe111f9,ENSG00000267140,Other,CTA
+1.36,1.37,PEG:d6a89c430882fdc12fcf,ENSG00000267618,Unsafe,CTA
+1.36,1.37,PEG:f1d0c6f08a7be5709bb2,URGCP-MRPS24,Unsafe,CTA
+1.36,1.37,PEG:b2c016f61cfe6ece76e2,TPTE,Unsafe,CTA
+1.36,1.37,PEG:cd8eaef0aa7ffbe4d21b,ENSG00000274944,CTA,Reproductive Antigen only
+1.36,1.37,PEG:3f200e6b28ff10e757df,SPATA31A3,Other,CTA
+1.36,1.37,PEG:773944eeea567587ce84,SPATA31A7,Other,CTA
+1.36,1.37,PEG:7cd695fcb26e001c4f48,SPATA31A5,Other,CTA
+1.36,1.37,PEG:09ae2908a32167d7f9c6,PRAMEF18,CTA,Other:Review
+1.36,1.37,PEG:883a50299cb53b6ba4a1,ENSG00000279983,Other,CTA
+1.36,1.37,PEG:0a48677ce4d9f60fb792,RPS4Y2,Other,CTA
+1.36,1.37,PEG:d7c58dfc108d629cedf9,DUXB,CTA,Unsafe
+1.36,1.37,PEG:e9d269856740c4e02fbe,CCDC201,CTA,Reproductive Antigen only
+1.36,1.37,PEG:67511d2c2b4245685d15,FAM240B,Other,CTA
+1.36,1.37,PEG:90e65476c38a522b8c70,HSFX3,CTA,Reproductive Antigen only
+1.36,1.37,PEG:642d515a9a34d19423e5,TAF11L11,CTA,Other:Review
+1.36,1.37,PEG:67dec9123a9456d1115e,TAF11L13,CTA,Other:Review
+1.36,1.37,PEG:3e290a3e78f3113dd5f9,OOSP1,Other,CTA
+1.36,1.37,PEG:a2206bad8a66a6b6d03c,ENSG00000285566,Other,CTA
+1.36,1.37,PEG:b7668edb7de9a67040bb,MSANTD5,CTA,Reproductive Antigen only
+1.36,1.37,PEG:d576051097601567c804,CIMIP3,CTA,Reproductive Antigen only
+1.36,1.37,PEG:27ae484f4ec3a7675ba0,ENSG00000289809,CTA,Reproductive Antigen only
+1.36,1.37,PEG:cbaf0ecfdde342bff024,POTEB/2,Other,CTA
+1.36,1.37,PEG:d1f439cd5f7047003879,TP53TG3/B/C/D/E/F,CTA,Unsafe
+1.37,1.38,PEG:0f48f42f615fc0455d9a,BPY2/B/C,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6a035227c8b07685ea2c,DEFB104A/B,CTA,Reproductive Antigen only
+1.37,1.38,PEG:c20e271d13081f724514,DEFB106A/B,CTA,Unsafe
+1.37,1.38,PEG:eaac8e2ede9534315e3b,DEFB107A/B,CTA,Reproductive Antigen only
+1.37,1.38,PEG:c6efb305abe4ecf59e14,GSC2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:00b71bccd0d1c545be54,FNDC8,CTA,Reproductive Antigen only
+1.37,1.38,PEG:19355eaa66f9ef3fc3bf,DEFB127,CTA,Reproductive Antigen only
+1.37,1.38,PEG:941a08a702068efc8f35,DAZL,CTA,Reproductive Antigen only
+1.37,1.38,PEG:90fd94e49593855ed245,AMELY,CTA,Reproductive Antigen only
+1.37,1.38,PEG:e2a2fb77e366f5a9bab2,H2BW2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:639b75885ff8db376581,PRSS54,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b7e6918bd775d8e58ae1,RSPH6A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:c374a2fe6e21bcd73f84,ZNRF4,CTA,Reproductive Antigen only
+1.37,1.38,PEG:e683c4922f31769eb320,SPAM1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:bd87d5943adb64f4e420,KRT37,CTA,Reproductive Antigen only
+1.37,1.38,PEG:81c71816f5781582b4c0,CCN6,CTA,Unsafe
+1.37,1.38,PEG:1dc2e7075282314c6200,TTLL2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:71c7273c6a0553fab3f1,OBP2A,CTA,Unsafe
+1.37,1.38,PEG:fdf69ee4dc400ab5e8e1,TBX22,CTA,Reproductive Antigen only
+1.37,1.38,PEG:59d63e36958214a05e64,PRM2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:699f7f412f5d5e1ca302,CCDC70,CTA,Reproductive Antigen only
+1.37,1.38,PEG:d65e5f3155ca5ba0a88e,ATXN3L,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6bb3cdb872a5c86206d4,CSTL1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:4557257ab96a76597bbe,C20orf173,CTA,Reproductive Antigen only
+1.37,1.38,PEG:acd544ce0020891334de,OR1E2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:cdbe9acee094e4d6bdc1,RFPL3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:ba6798466117b944e46d,GALR3,CTA,Unsafe
+1.37,1.38,PEG:19fa7af455f6fe1ee17f,BMP15,CTA,Reproductive Antigen only
+1.37,1.38,PEG:5014bc3fef7bb406669c,SCP2D1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:1b1f84762d9a3e07d092,ADAM30,CTA,Unsafe
+1.37,1.38,PEG:41db39bdc828cb59639b,USP26,CTA,Reproductive Antigen only
+1.37,1.38,PEG:f588a3582d09d613e19e,SULT6B1,CTA,Unsafe
+1.37,1.38,PEG:724807581f6b8e5b8988,GOLGA6D,CTA,Reproductive Antigen only
+1.37,1.38,PEG:013bdbe363b632ff9882,ZIM3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:e1dbbc633e8e8a78b9a8,CABS1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:86c0573ac5b314924664,CPXCR1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:8eaa75aa8eea0c091f66,PRDM14,CTA,Reproductive Antigen only
+1.37,1.38,PEG:c70743fd2c1eed72a429,TKTL2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3882fc757cfe17c3c170,PABPC3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3f1c67d26be556e71b13,GOLGA8F,CTA,Reproductive Antigen only
+1.37,1.38,PEG:d91813094c65100d30ac,CYLC2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:be8d3025c80ff866d72a,WFDC8,CTA,Reproductive Antigen only
+1.37,1.38,PEG:42232b8b0bac1990df60,IZUMO2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:f2e5dda48c5a399c7bdc,PDHA2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:85c1d55282c3a1dd9b19,DCST1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:a8b525b8c5ab45301a94,FAM170A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:86d9c72e9d338dfe96a9,SSMEM1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:8fe4e4afaf1b041a17b7,CXorf58,CTA,Reproductive Antigen only
+1.37,1.38,PEG:ba180054e19e985881aa,SPATA19,CTA,Reproductive Antigen only
+1.37,1.38,PEG:e55e30b50a6da22124c1,C16orf78,CTA,Reproductive Antigen only
+1.37,1.38,PEG:d77c5aa334908accb44f,POTED,CTA,Reproductive Antigen only
+1.37,1.38,PEG:5ef9a7ec35d248e457a9,SUN5,CTA,Reproductive Antigen only
+1.37,1.38,PEG:03bda62781abc827aec1,WFDC13,CTA,Reproductive Antigen only
+1.37,1.38,PEG:1eebb52a87d2599b843e,GOT1L1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:4e6ed0a98e0f954e4366,OR10G3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:79087723ce5efad5143f,MRGPRX1,CTA,Unsafe
+1.37,1.38,PEG:8f174438c4fb21866c3e,PGK2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:8b1b82b563ef8391d944,C8orf74,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7278598ea06d972facdd,NLRP13,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3c6a74a74c79eeb3d20f,TENT5D,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2ef56e07aebaa5e84547,ARL13A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:d8e3f84a5319fba61ef9,RBMXL3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:a1250dfbbd12865ef40c,CETN1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:347a3da362089d499e50,DEFB114,CTA,Reproductive Antigen only
+1.37,1.38,PEG:ff6ca79ef71390f04eab,MAGEB10,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b73782407298087864f8,CIMAP1A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:02053e37f8d52dcfddad,H1-8,CTA,Reproductive Antigen only
+1.37,1.38,PEG:bf74b1d1a638e14f9344,EXD1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2dfd7b59ac0396ea17d0,SIGLECL1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2b550f9f93384c6062b0,NLRP8,CTA,Reproductive Antigen only
+1.37,1.38,PEG:fd22ed0a7c36b0130000,GOLGA8J,CTA,Reproductive Antigen only
+1.37,1.38,PEG:f3b1dd82a8df176ef6cd,OR1R1P,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7feb7f0126d1f4774ba4,WFDC9,CTA,Reproductive Antigen only
+1.37,1.38,PEG:5c1a79c2d4d3b92d541e,C3orf22,CTA,Reproductive Antigen only
+1.37,1.38,PEG:537dccecc12fd2371130,SPEM1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:930374b7e0499edcd1a1,ZNF716,CTA,Reproductive Antigen only
+1.37,1.38,PEG:501825951b91aba924ba,CYLC1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:678dfbaf132aac2274b8,GOLGA8G,CTA,Reproductive Antigen only
+1.37,1.38,PEG:051bbf6103905dd73ad1,DEFB108B,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6dba5bd9860eb7893ea1,SRY,CTA,Unsafe
+1.37,1.38,PEG:203f36725815106c3e6b,SPPL2C,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6be626847ed8ab1f7700,DEFB128,CTA,Reproductive Antigen only
+1.37,1.38,PEG:556381ec020a12682a53,TEX38,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b6eb4b04f8ce0ee19f78,PRR30,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2bef9ea650cd82da1af9,DEFB132,CTA,Reproductive Antigen only
+1.37,1.38,PEG:62f78e99df2c787962c3,TMEM202,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b154c71e081fc3b57ffc,CATSPER4,CTA,Reproductive Antigen only
+1.37,1.38,PEG:76724d8b08f6658ae9ba,TMCO2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:8ae529289f1345c1dd48,ZAR1L,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b8d836f0ac2e64d02d0f,SPATA31D4,CTA,Reproductive Antigen only
+1.37,1.38,PEG:04996ba6c73572abce32,TBC1D28,CTA,Reproductive Antigen only
+1.37,1.38,PEG:d6a41ae2c249d16b2cd8,BECN2,CTA,Unsafe
+1.37,1.38,PEG:f07ecf8f77fe25ae3184,TOMM20L,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6b55aa07e152f11869ae,SPMIP10,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7c6e38af19070fb45130,ZNF705A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3a7c755d67864d8953c9,RTP2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b911e6df81a7b0aec3ae,MAGEB3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6c783a0d5f840cd1c046,TEDDM1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:ffb703da6bd8af07d969,FAM24A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:a7fd98f889075a61335c,SMIM9,CTA,Reproductive Antigen only
+1.37,1.38,PEG:093c601762f8ba6c7f05,C10orf62,CTA,Reproductive Antigen only
+1.37,1.38,PEG:457da4aa4353f3ec4164,DEFB110,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7ff3fa6dd5e74a1c7f21,GLT6D1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6e3f4e1bee75fa212591,SPANXN5,CTA,Reproductive Antigen only
+1.37,1.38,PEG:9c53c0a8e90756eaa5f0,PRAMEF17,CTA,Reproductive Antigen only
+1.37,1.38,PEG:a7e05daf09c9a46f9515,DEFB121,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6b3c05a8fabada3c1536,KRTAP5-10,CTA,Reproductive Antigen only
+1.37,1.38,PEG:037f1d7b1fdaaa4d69c0,OR2H1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:43694d13ceb82e0c2017,SPATA31F1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:614a720247abb9707729,ARSH,CTA,Reproductive Antigen only
+1.37,1.38,PEG:d1351146b7d65265d391,SMIM21,CTA,Reproductive Antigen only
+1.37,1.38,PEG:26ff43d9bcd3fb095cf7,KRTAP19-8,CTA,Reproductive Antigen only
+1.37,1.38,PEG:99c8e4ce9caf969f3854,PRR23A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:febc559642ec8d6cb719,TSSK1B,CTA,Reproductive Antigen only
+1.37,1.38,PEG:38a0d9c3e5559e612c04,WEE2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2ada35b6f5f76e61df6d,MINDY4B,CTA,Reproductive Antigen only
+1.37,1.38,PEG:4bfc72faaa60a3db6ad7,EFCAB9,CTA,Reproductive Antigen only
+1.37,1.38,PEG:9949fb47c4aa9a7cbc00,TRIM77,CTA,Reproductive Antigen only
+1.37,1.38,PEG:0c7f80687adb3c0d82e7,NOTO,CTA,Reproductive Antigen only
+1.37,1.38,PEG:eabb3be47e1e8dd9e393,ZC3H11C,CTA,Reproductive Antigen only
+1.37,1.38,PEG:0e0c68a00f86804e1e28,C12orf71,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2794f50e6c794311fa72,CDRT15L2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:e97f493190cbbdd4eadf,GOLGA6B,CTA,Reproductive Antigen only
+1.37,1.38,PEG:98ef0bcf47d9683cb231,ZNF705D,CTA,Reproductive Antigen only
+1.37,1.38,PEG:425a365bfe1d99a15b43,ZNF816-ZNF321P,CTA,Other:Sequence
+1.37,1.38,PEG:3af933942e94b5931ad6,POM121L12,CTA,Reproductive Antigen only
+1.37,1.38,PEG:1d16658bc8a8de4aa0b8,ZNF735,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7d51770a8c6cc1cc8b19,GPX5,CTA,Reproductive Antigen only
+1.37,1.38,PEG:be6cfcb4b17bcd06e297,TEX46,CTA,Reproductive Antigen only
+1.37,1.38,PEG:525452ed69c9a06a2fc2,BOD1L2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:0bf48dca16886adcee97,TEX50,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2e8abb92a91dd411e114,RAB6D,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2c493fd8f6f6aa4785d3,FREY1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7fa570e3c69cb31cb94a,TSPY9,CTA,Reproductive Antigen only
+1.37,1.38,PEG:8966d1986e8b2d8a0e4d,PRR20G,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b8af9754429d3017a4ae,PRAMEF11,CTA,Reproductive Antigen only
+1.37,1.38,PEG:57c7058ae548c3a25c68,OR14A2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:494461907930700de63d,OR5V1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:bf75b24ff665964e18de,RBMY1D,CTA,Reproductive Antigen only
+1.37,1.38,PEG:983af5605adaf41d6a8c,PRR5-ARHGAP8,CTA,Other:Sequence
+1.37,1.38,PEG:7c05ea54d8510c796222,EPPIN-WFDC6,CTA,Other:Sequence
+1.37,1.38,PEG:592a5a5a692d322baf49,ENSG00000255432,CTA,Other:Sequence
+1.37,1.38,PEG:d9a9b30d4e07f9ba4fc3,ENSG00000255835,CTA,Other:Sequence
+1.37,1.38,PEG:f9a42776af304f6808d7,ZNF878,CTA,Reproductive Antigen only
+1.37,1.38,PEG:513004a64a1dd7274552,ENSG00000258691,CTA,Other:Sequence
+1.37,1.38,PEG:5fa0d20468b9241ac78f,TLE7,CTA,Reproductive Antigen only
+1.37,1.38,PEG:cef2f2b2102163b3f577,GOLGA8T,CTA,Reproductive Antigen only
+1.37,1.38,PEG:94c5fc911ad02b3b5e93,DPEP2NB,CTA,Reproductive Antigen only
+1.37,1.38,PEG:6176aa2810a16ba8ed15,IGBP1C,CTA,Reproductive Antigen only
+1.37,1.38,PEG:4ec273108e0908d9e2f3,ATF7-NPFF,CTA,Other:Sequence
+1.37,1.38,PEG:d6a89c430882fdc12fcf,ENSG00000267618,CTA,Other:Sequence
+1.37,1.38,PEG:37b7d959243ba5c5a004,TEX13A,CTA,Reproductive Antigen only
+1.37,1.38,PEG:f1d0c6f08a7be5709bb2,URGCP-MRPS24,CTA,Other:Sequence
+1.37,1.38,PEG:1f1a10caec58d2d32020,ENSG00000273155,CTA,Other:Sequence
+1.37,1.38,PEG:faca81e4e6e3b4de73a7,TMEM269,CTA,Reproductive Antigen only
+1.37,1.38,PEG:747bf588dddf2f9ab40c,SPMAP1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:2939d234d20796b00c1b,LYZL6,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7cd695fcb26e001c4f48,SPATA31A5,CTA,Reproductive Antigen only
+1.37,1.38,PEG:44bc888d980455c66565,GOLGA6L6,CTA,Reproductive Antigen only
+1.37,1.38,PEG:7ab61497af43a7904af1,CT47C1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:405660bcaf527bbecd7d,GOLGA6L22,CTA,Reproductive Antigen only
+1.37,1.38,PEG:a379338b5c2e18bf8464,POTEB3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3fbf8cd35f53128e1915,PRAMEF13,CTA,Reproductive Antigen only
+1.37,1.38,PEG:883a50299cb53b6ba4a1,ENSG00000279983,CTA,Other:Sequence
+1.37,1.38,PEG:cd2842396310af70f932,SPEM3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:b2854c9d92a5f00ad8d1,HSFX4,CTA,Reproductive Antigen only
+1.37,1.38,PEG:dcf96e813b46e0ebc77e,LITAFD,CTA,Reproductive Antigen only
+1.37,1.38,PEG:8379cf8330d2c11fd9d7,CPHXL,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3e30ee46e0d41ed85f6a,PMIS2,CTA,Reproductive Antigen only
+1.37,1.38,PEG:ef4058d9283487564667,OR8B3,CTA,Reproductive Antigen only
+1.37,1.38,PEG:3e290a3e78f3113dd5f9,OOSP1,CTA,Reproductive Antigen only
+1.37,1.38,PEG:a2206bad8a66a6b6d03c,ENSG00000285566,CTA,Reproductive Antigen only
+1.37,1.38,PEG:cbaf0ecfdde342bff024,POTEB/2,CTA,Reproductive Antigen only
+1.38,1.39,PEG:2df2bef7153337b21963,DEFB130A/B,CTA,Reproductive Antigen only
+1.38,1.39,PEG:f53f189c7f70e6ff446c,MAGEC2,Other,CTA
+1.38,1.39,PEG:941a08a702068efc8f35,DAZL,Reproductive Antigen only,CTA
+1.38,1.39,PEG:ce693e8e18efbcefdd4a,CST8,CTA,Reproductive Antigen only
+1.38,1.39,PEG:c10beeb1fcc1ed59ac51,BPIFA3,CTA,Reproductive Antigen only
+1.38,1.39,PEG:724807581f6b8e5b8988,GOLGA6D,Reproductive Antigen only,CTA
+1.38,1.39,PEG:8eaa75aa8eea0c091f66,PRDM14,Reproductive Antigen only,CTA
+1.38,1.39,PEG:3a612f49857841d76af3,POM121L2,CTA,Reproductive Antigen only
+1.38,1.39,PEG:e84425e36cba586a4a1f,OR4M1,CTA,Reproductive Antigen only
+1.38,1.39,PEG:54b3b8164715f120e743,TNP2,CTA,Reproductive Antigen only
+1.38,1.39,PEG:adcf19afb9ea7e46e7b1,PRR23B,CTA,Reproductive Antigen only
+1.38,1.39,PEG:62f78e99df2c787962c3,TMEM202,Reproductive Antigen only,CTA
+1.38,1.39,PEG:648f8ac4b36dda41f189,NANOS2,CTA,Reproductive Antigen only
+1.38,1.39,PEG:e65bd518f6aa889dcbf6,PRAMEF19,CTA,Reproductive Antigen only
+1.38,1.39,PEG:336d006059eecb2cf247,SPATA31A1,CTA,Reproductive Antigen only
+1.38,1.39,PEG:c844633e53f9544199bb,TSSK2,CTA,Reproductive Antigen only
+1.38,1.39,PEG:0a95d6b7de596e7dc190,OR2F1,CTA,Reproductive Antigen only
+1.38,1.39,PEG:8da94b831a581419c9e1,TSGA13,CTA,Reproductive Antigen only
+1.38,1.39,PEG:4a3e51ccb29346c93b26,IQCF5,CTA,Reproductive Antigen only
+1.38,1.39,PEG:98ef0bcf47d9683cb231,ZNF705D,Reproductive Antigen only,CTA
+1.38,1.39,PEG:36f2f7c5e0bd89eee45c,DEFB115,CTA,Reproductive Antigen only
+1.38,1.39,PEG:bd43ced0621bec3dc007,KIF4B,CTA,Reproductive Antigen only
+1.38,1.39,PEG:db9dd693692e1353abe8,GOLGA6L25,CTA,Reproductive Antigen only
+1.38,1.39,PEG:c42361808df3c56a8cf7,TEX51,CTA,Reproductive Antigen only
+1.38,1.39,PEG:02aeb82fd849bdf4a4be,GOLGA6L24,CTA,Reproductive Antigen only
+1.38,1.39,PEG:5e2318ea560079897c32,EXOC1L,CTA,Reproductive Antigen only
+1.38,1.39,PEG:2e8b622596f38971496e,SPANXN2,CTA,Reproductive Antigen only
+1.38,1.39,PEG:0997d42d0e78d26d7ac4,OR8B2,CTA,Reproductive Antigen only
+1.39,1.40,PEG:ba11c7bd43f05930ef56,FKBP6,CTA,Other:Review
+1.39,1.40,PEG:941a08a702068efc8f35,DAZL,CTA,Other:Review
+1.39,1.40,PEG:4386ffaec87dfd475b81,EVX1,CTA,Other:Expression
+1.39,1.40,PEG:5be5d5923c21fa202181,PRAMEF1,CTA,Cancer Antigen only
+1.39,1.40,PEG:d092efb1e1461312b656,PRAMEF2,CTA,Cancer Antigen only
+1.39,1.40,PEG:ba172ee518ba0c020809,RGSL1,CTA,Other:Review
+1.39,1.40,PEG:ef026481aff64f1a22f2,H2BW1,CTA,Cancer Antigen only
+1.39,1.40,PEG:b0d6c8f02d3c93179b43,ANKRD60,CTA,Cancer Antigen only
+1.39,1.40,PEG:9aa7d39d77bb86d12871,PSG8,CTA,Other:Review
+1.39,1.40,PEG:07bc57d4c7d89e5e3ca7,SRMS,CTA,Cancer Antigen only
+1.39,1.40,PEG:363086d8b4fafff52aae,PRDM7,CTA,Other:Review
+1.39,1.40,PEG:0c251c50f994bfdf3967,CTAG2,CTA,Other:Review
+1.39,1.40,PEG:add389c4abd0006b8650,PKDREJ,CTA,Cancer Antigen only
+1.39,1.40,PEG:7d3f2ee2de49d72c9bd8,CDX4,CTA,Other:Expression
+1.39,1.40,PEG:6d42c5be7b9168a8aa85,HHLA1,CTA,Other:Review
+1.39,1.40,PEG:d773babea9298212fadd,FTHL17,CTA,Cancer Antigen only
+1.39,1.40,PEG:cd8871e0d60a430d9f23,OCM2,CTA,Cancer Antigen only
+1.39,1.40,PEG:435e399a81660ec4beae,C4orf17,CTA,Reproductive Antigen only
+1.39,1.40,PEG:efa0b2560c10d0e05eec,TTLL8,CTA,Cancer Antigen only
+1.39,1.40,PEG:581dc1d036bbdddf6a43,CIB3,CTA,Cancer Antigen only
+1.39,1.40,PEG:c6d710818578b9caa5ba,TRIM43B,CTA,Cancer Antigen only
+1.39,1.40,PEG:e1e8ab36d7564447b99e,TRIM43,CTA,Cancer Antigen only
+1.39,1.40,PEG:70f59520a0e26b23f88e,LCN9,CTA,Cancer Antigen only
+1.39,1.40,PEG:b0a3fa4ff2fcd422c314,TRIM48,CTA,Cancer Antigen only
+1.39,1.40,PEG:25df684f7218f6f02efd,RGPD3,CTA,Other:Review
+1.39,1.40,PEG:fde80137566ffd0d0929,PSMA8,CTA,Cancer Antigen only
+1.39,1.40,PEG:05a844733a1507c9ef3a,NLRP4,CTA,Cancer Antigen only
+1.39,1.40,PEG:0cb36841692fbc8278aa,LRRC52,CTA,Cancer Antigen only
+1.39,1.40,PEG:2367ecece9042c588f37,PRDM9,CTA,Cancer Antigen only
+1.39,1.40,PEG:62b40832b71778925612,CAGE1,CTA,Other:Review
+1.39,1.40,PEG:9d19df174ac5883c0670,SLC35G3,CTA,Cancer Antigen only
+1.39,1.40,PEG:5fb4991ec0006787d238,SSX5,CTA,Cancer Antigen only
+1.39,1.40,PEG:e1480e78c9563ba52a76,GOLGA6C,CTA,Reproductive Antigen only
+1.39,1.40,PEG:f97f563c819bff14c9ee,OR2B2,CTA,Other:Tissue
+1.39,1.40,PEG:7aaac9e721e000424fdf,TRIM49,CTA,Cancer Antigen only
+1.39,1.40,PEG:896fc711daef8a8d3f11,OR6F1,CTA,Other:Tissue
+1.39,1.40,PEG:71fe1f30ebae17ffbd03,ZNF280A,CTA,Other:Review
+1.39,1.40,PEG:de08c7c6995dfe5f18c0,PROKR1,CTA,Cancer Antigen only
+1.39,1.40,PEG:3689bb7432a99c8ba155,TAS2R1,CTA,Other:Review
+1.39,1.40,PEG:eddea217c73d85d69679,HOXD12,CTA,Cancer Antigen only
+1.39,1.40,PEG:c30008d71e8df708306b,SP7,CTA,Cancer Antigen only
+1.39,1.40,PEG:aa54325a2c15acb4bc72,XAGE5,CTA,Cancer Antigen only
+1.39,1.40,PEG:ce254373243f5169317f,OR1N1,CTA,Other:Tissue
+1.39,1.40,PEG:e47996dae82c509c57eb,EFCAB3,CTA,Other:Review
+1.39,1.40,PEG:5adf7b85a8c9c99dff7c,MOS,CTA,Cancer Antigen only
+1.39,1.40,PEG:6cd40ac662055cd0a70c,XKR3,CTA,Cancer Antigen only
+1.39,1.40,PEG:1441077618a78a1ab218,EVX2,CTA,Cancer Antigen only
+1.39,1.40,PEG:3dae9cc5ff43af038bb1,GOLGA6L2,CTA,Reproductive Antigen only
+1.39,1.40,PEG:18b7d701f8e3b7faa226,HIGD2B,CTA,Other:Expression
+1.39,1.40,PEG:f0e0cd8711d5b74341cc,TSGA10IP,CTA,Other:Review
+1.39,1.40,PEG:e911442ed120405107f6,CCDC197,CTA,Other:Expression
+1.39,1.40,PEG:a7bee535e36dba7b28f5,OR4N2,CTA,Other:Review
+1.39,1.40,PEG:ecc5352ad0667c6560f5,TGIF2LY,CTA,Cancer Antigen only
+1.39,1.40,PEG:d01200d6e14c01061f02,MAGEB18,CTA,Cancer Antigen only
+1.39,1.40,PEG:280811cfacab82ee6aaf,SLC35G5,CTA,Cancer Antigen only
+1.39,1.40,PEG:5c608c51ffe82240b4c0,DEFB125,CTA,Cancer Antigen only
+1.39,1.40,PEG:58d58aae40b0dd869998,HNRNPCL1,CTA,Cancer Antigen only
+1.39,1.40,PEG:a759e456881ad198e08c,NLRP11,CTA,Cancer Antigen only
+1.39,1.40,PEG:49e05b2a5ba1cfbf7145,NKX2-6,CTA,Other:Review
+1.39,1.40,PEG:3f14c5b64138c2981f51,OR8D4,CTA,Other:Tissue
+1.39,1.40,PEG:c47c62ec9be49c4d3aed,OR52D1,CTA,Other:Tissue
+1.39,1.40,PEG:d16473fe90211fd2c7d9,ADIG,CTA,Reproductive Antigen only
+1.39,1.40,PEG:653a82d225d0924f8133,TRIM49B,CTA,Cancer Antigen only
+1.39,1.40,PEG:1daf8f4fb7c9daf625df,CCDC87,CTA,Reproductive Antigen only
+1.39,1.40,PEG:773ae6144c5f0318c61f,MAGEB17,CTA,Cancer Antigen only
+1.39,1.40,PEG:c47b3c9ed57af3efe662,TMEM95,CTA,Cancer Antigen only
+1.39,1.40,PEG:ac3a8190661cefefa614,RIPPLY3,CTA,Other:Review
+1.39,1.40,PEG:4b7a013bbfca617fe9ff,POTEC,CTA,Other:Review
+1.39,1.40,PEG:0679f9e7591a931eb660,FAM9A,CTA,Cancer Antigen only
+1.39,1.40,PEG:2822479cf57db6bcc766,IZUMO1R,CTA,Cancer Antigen only
+1.39,1.40,PEG:727c9cb20e039c51da1e,OR56A3,CTA,Other:Tissue
+1.39,1.40,PEG:b63da3318f685ccaa319,PIWIL3,CTA,Cancer Antigen only
+1.39,1.40,PEG:7090977fa5f42635531d,OR51M1,CTA,Other:Expression
+1.39,1.40,PEG:be476053166b5f725272,SATL1,CTA,Other:Review
+1.39,1.40,PEG:133f4501087b4e404615,ZNF479,CTA,Cancer Antigen only
+1.39,1.40,PEG:bde1214e6a8994368a6a,FAM47A,CTA,Cancer Antigen only
+1.39,1.40,PEG:925b1135a1c9b56b2aad,SPATA31A6,CTA,Cancer Antigen only
+1.39,1.40,PEG:472b297b7ac2cbe12ae0,PRSS38,CTA,Cancer Antigen only
+1.39,1.40,PEG:70142db47caa200b3cf0,ZACN,CTA,Cancer Antigen only
+1.39,1.40,PEG:d89b534c216297fb1376,KRTAP21-2,CTA,Other:Tissue
+1.39,1.40,PEG:65698b2ad8732f761478,PRAMEF10,CTA,Cancer Antigen only
+1.39,1.40,PEG:a8499b20f9bac7488674,CPSF4L,CTA,Cancer Antigen only
+1.39,1.40,PEG:c9baacc9350165c111b6,C19orf67,CTA,Cancer Antigen only
+1.39,1.40,PEG:75fb921e968fe1f658d7,LRRIQ4,CTA,Cancer Antigen only
+1.39,1.40,PEG:c720ddd281173f729c89,PPP3R2,CTA,Other:Review
+1.39,1.40,PEG:c23adbbf2642bbadced3,AADACL3,CTA,Cancer Antigen only
+1.39,1.40,PEG:0ea3771c4ce1cd37abb3,HUS1B,CTA,Cancer Antigen only
+1.39,1.40,PEG:c3e68b6addf66e379e7d,DCAF8L2,CTA,Other:Review
+1.39,1.40,PEG:3a41dd6838b9ba5f6c2a,FOXR2,CTA,Cancer Antigen only
+1.39,1.40,PEG:f181f56d8fe05eff74df,FAM90A27P,CTA,Cancer Antigen only
+1.39,1.40,PEG:181517e5a383f0bf1364,OTUD6A,CTA,Cancer Antigen only
+1.39,1.40,PEG:e49963d2191c309469a5,SPANXD,CTA,Cancer Antigen only
+1.39,1.40,PEG:afca4babb2435c4e1845,PFN3,CTA,Other:Expression
+1.39,1.40,PEG:ce4f9e9638ede2dfd12e,POTEF,CTA,Other:Review
+1.39,1.40,PEG:d9cf6d78c81edd4368a8,OR14A16,CTA,Other:Tissue
+1.39,1.40,PEG:1938d1f3a4e6859b8e67,RGPD4,CTA,Other:Review
+1.39,1.40,PEG:150a14451459722067c0,GALP,CTA,Cancer Antigen only
+1.39,1.40,PEG:913384bfcd8cc2059749,OR51C1,CTA,Other:Tissue
+1.39,1.40,PEG:d99133e742eda2e7a2b9,STPG3,CTA,Other:Expression
+1.39,1.40,PEG:ffa2d8c61740a26ab9bc,ZNF560,CTA,Cancer Antigen only
+1.39,1.40,PEG:1ce49b609c14617d859b,FAM47C,CTA,Cancer Antigen only
+1.39,1.40,PEG:2762ab9ca5b098b6e195,KRTAP4-1,CTA,Other:Tissue
+1.39,1.40,PEG:e07ae591e4fb35a4e33d,CSAG1,CTA,Cancer Antigen only
+1.39,1.40,PEG:0b80bfb8f0f37b51ff32,KHDC3L,CTA,Cancer Antigen only
+1.39,1.40,PEG:f4e199758b9cecc8a9c2,SPANXN1,CTA,Cancer Antigen only
+1.39,1.40,PEG:1a661c7b77f20467112d,GLYATL3,CTA,Other:Tissue
+1.39,1.40,PEG:0ab4035e060ebf8abc06,TRIM49C,CTA,Cancer Antigen only
+1.39,1.40,PEG:4eacdc84da3e2f9d669a,PRAMEF14,CTA,Cancer Antigen only
+1.39,1.40,PEG:a4fd7b31c64bc8928480,MAS1L,CTA,Other:Expression
+1.39,1.40,PEG:544cc5de018bd6d38343,OR11A1,CTA,Other:Tissue
+1.39,1.40,PEG:ee4fb7d21c04da1ca37a,OR2J3,CTA,Other:Tissue
+1.39,1.40,PEG:eff1a5bc29533898a35b,FBXO47,CTA,Other:Review
+1.39,1.40,PEG:1a92fb62ff88120a4cea,PABPN1L,CTA,Cancer Antigen only
+1.39,1.40,PEG:c940c179516dcbce4382,VCX3B,CTA,Other:Review
+1.39,1.40,PEG:4dc11aaf5c48c5f399fc,MBD3L4,CTA,Cancer Antigen only
+1.39,1.40,PEG:77e8d2e6a3e7d5fd510e,DEFB136,CTA,Cancer Antigen only
+1.39,1.40,PEG:184c674270a9ea087616,RNASE13,CTA,Reproductive Antigen only
+1.39,1.40,PEG:c0abd30a13b99ebc9cc1,CTAGE1,CTA,Cancer Antigen only
+1.39,1.40,PEG:a4d1a78a6bc4d94dfff5,LEUTX,CTA,Cancer Antigen only
+1.39,1.40,PEG:4f82cc85ed024fd890e9,ZNF99,CTA,Other:Review
+1.39,1.40,PEG:34902909b93023b09371,TRIM64C,CTA,Cancer Antigen only
+1.39,1.40,PEG:b2df069d528c8939900e,GAGE10,CTA,Other:Review
+1.39,1.40,PEG:98ef0bcf47d9683cb231,ZNF705D,CTA,Cancer Antigen only
+1.39,1.40,PEG:483fad15f8dc18722e45,ZNF705G,CTA,Other:Review
+1.39,1.40,PEG:a2516258969c680cbea6,GAB4,CTA,Cancer Antigen only
+1.39,1.40,PEG:cd2877231d1d88d1d460,ZC3H11B,CTA,Other:Review
+1.39,1.40,PEG:d2cde6343aa40f2cacbc,TRIM51G,CTA,Cancer Antigen only
+1.39,1.40,PEG:9fb6804f0d3ba6105827,PSG3,CTA,Other:Review
+1.39,1.40,PEG:78559dedca662dbe64d5,PSG7,CTA,Reproductive Antigen only
+1.39,1.40,PEG:4b932d0db9d26fbc0722,EBLN1,CTA,Cancer Antigen only
+1.39,1.40,PEG:aa67c5a714c761d22402,SUPT20HL1,CTA,Cancer Antigen only
+1.39,1.40,PEG:ed4defa367797bb90954,PPP4R3C,CTA,Cancer Antigen only
+1.39,1.40,PEG:5f39382f943b65a979ef,CRIPTO3,CTA,Cancer Antigen only
+1.39,1.40,PEG:8ab545e1ce83f5c885aa,DCAF8L1,CTA,Cancer Antigen only
+1.39,1.40,PEG:79e4b75bdef4defd0ff3,PGAM4,CTA,Cancer Antigen only
+1.39,1.40,PEG:39fb57911bfe12d5c8b2,RFPL4AL1,CTA,Cancer Antigen only
+1.39,1.40,PEG:423de197bb86ba7742af,ZNF492,CTA,Other:Review
+1.39,1.40,PEG:1f7bf599544a9c9ab7ee,SSU72L6,CTA,Cancer Antigen only
+1.39,1.40,PEG:79201d664a6639b98efb,AK4P3,CTA,Other:Expression
+1.39,1.40,PEG:c0fa6589ee4f4179ecac,PRR23C,CTA,Cancer Antigen only
+1.39,1.40,PEG:47e3215b33542f9a5ea6,CLDN34,CTA,Cancer Antigen only
+1.39,1.40,PEG:544399ffd396d2433254,CT47B1,CTA,Cancer Antigen only
+1.39,1.40,PEG:b98b541b3ae2b70d3800,MBD3L5,CTA,Cancer Antigen only
+1.39,1.40,PEG:0a4b2bf7732910a4788a,OR7E24,CTA,Other:Tissue
+1.39,1.40,PEG:1efc9bfce4998b736e65,ZNF722,CTA,Cancer Antigen only
+1.39,1.40,PEG:3c4275978dcfdf840f9e,RBMY1E,CTA,Cancer Antigen only
+1.39,1.40,PEG:8683edcee4e284d8b165,RBMY1B,CTA,Cancer Antigen only
+1.39,1.40,PEG:82c48d108f0ba43e9915,PRAMEF4,CTA,Cancer Antigen only
+1.39,1.40,PEG:98713b3b7bb00023638b,PSG11,CTA,Other:Review
+1.39,1.40,PEG:aaf161dc2692824ec94c,KRTAP5-7,CTA,Other:Tissue
+1.39,1.40,PEG:b847e9c6d95d3dcaedef,RAD21L1,CTA,Other:Review
+1.39,1.40,PEG:65d2e038c688a823b5e0,GOLGA8K,CTA,Cancer Antigen only
+1.39,1.40,PEG:02f41390c76fe3d915fe,KRTAP5-9,CTA,Other:Tissue
+1.39,1.40,PEG:49474c33cb94125c2178,UBTFL1,CTA,Cancer Antigen only
+1.39,1.40,PEG:9a79156dcbaf6854efb9,CCDC166,CTA,Cancer Antigen only
+1.39,1.40,PEG:a90c8529360aad1a85c2,OOSP4B,CTA,Other:Review
+1.39,1.40,PEG:3a11a68e97f14f13a77f,SLC35G6,CTA,Cancer Antigen only
+1.39,1.40,PEG:5e2e62cbb514007ea08f,ARMH2,CTA,Other:Review
+1.39,1.40,PEG:4bd36fd4f9ac768923ce,TUBB8,CTA,Other:Review
+1.39,1.40,PEG:f6c36cc12b55d8c5a2b8,GFY,CTA,Cancer Antigen only
+1.39,1.40,PEG:b2d830f3aab3341e1f9d,KLF14,CTA,Cancer Antigen only
+1.39,1.40,PEG:08e651ae6837afe111f9,ENSG00000267140,CTA,Other:Expression
+1.39,1.40,PEG:3e0a4447822671dc1ca8,TCP11X1,CTA,Cancer Antigen only
+1.39,1.40,PEG:3f3fe81f53ed02c80b26,CSAG2,CTA,Cancer Antigen only
+1.39,1.40,PEG:329582e7e7912b5cf014,CSAG3,CTA,Cancer Antigen only
+1.39,1.40,PEG:a8f90dfeb55ae984bf17,CTAGE15,CTA,Cancer Antigen only
+1.39,1.40,PEG:dd68ac906575435478c2,CTAGE6,CTA,Cancer Antigen only
+1.39,1.40,PEG:9bc060a090ec3172dd0c,GOLGA6L1,CTA,Cancer Antigen only
+1.39,1.40,PEG:39bcae6d3ad7d62b8040,XKR5,CTA,Cancer Antigen only
+1.39,1.40,PEG:ab75db1824a341158b3d,HNRNPCL2,CTA,Cancer Antigen only
+1.39,1.40,PEG:3f200e6b28ff10e757df,SPATA31A3,CTA,Cancer Antigen only
+1.39,1.40,PEG:773944eeea567587ce84,SPATA31A7,CTA,Other:Expression
+1.39,1.40,PEG:8d61aa4f005bc0d29280,GSTT4,CTA,Other:Expression
+1.39,1.40,PEG:c03a52804d8b5f913d38,IQCA1L,CTA,Cancer Antigen only
+1.39,1.40,PEG:0a48677ce4d9f60fb792,RPS4Y2,CTA,Cancer Antigen only
+1.39,1.40,PEG:d391c5d8513f57517485,TEX13D,CTA,Cancer Antigen only
+1.39,1.40,PEG:ca0cae010d8bb9499dfd,TEX13C,CTA,Cancer Antigen only
+1.39,1.40,PEG:c1785185f2736960b676,KLF18,CTA,Cancer Antigen only
+1.39,1.40,PEG:7bad8fb4daf83a0e99c7,CTXND2,CTA,Cancer Antigen only
+1.39,1.40,PEG:67511d2c2b4245685d15,FAM240B,CTA,Cancer Antigen only
+1.39,1.40,PEG:239b064b509fe82b6379,C19orf85,CTA,Cancer Antigen only
+1.39,1.40,PEG:b6708d76c220960f3383,SSU72L4,CTA,Cancer Antigen only
+1.39,1.40,PEG:77d4ac745a2951e13e16,SSU72L5,CTA,Cancer Antigen only
+1.39,1.40,PEG:47dcb3ce7255d1e1ffcd,C1orf202,CTA,Cancer Antigen only
+1.39,1.40,PEG:28a89961ee80474f1996,SSU72L2,CTA,Cancer Antigen only
+1.39,1.40,PEG:f9b97c7f8faf5a7950b0,SSU72L1,CTA,Cancer Antigen only
+1.39,1.40,PEG:276090530a257361d2f0,SSU72L3,CTA,Cancer Antigen only
+1.39,1.40,PEG:672e705b44fa7730dc51,ENSG00000284934,CTA,Cancer Antigen only
+1.39,1.40,PEG:e04fe268186dedc0faed,PRAMEF25/6,CTA,Cancer Antigen only
+1.39,1.40,PEG:f99b14bd4ed9be445a51,PRR20A/B/C/D/E,CTA,Cancer Antigen only
+1.39,1.40,PEG:ea4a5b47e25b6870bbb5,SSX2/B,CTA,Cancer Antigen only
+1.40,1.41,PEG:5be5d5923c21fa202181,PRAMEF1,Cancer Antigen only,CTA
+1.40,1.41,PEG:d092efb1e1461312b656,PRAMEF2,Cancer Antigen only,CTA
+1.40,1.41,PEG:c6d710818578b9caa5ba,TRIM43B,Cancer Antigen only,CTA
+1.40,1.41,PEG:e1e8ab36d7564447b99e,TRIM43,Cancer Antigen only,CTA
+1.40,1.41,PEG:b0a3fa4ff2fcd422c314,TRIM48,Cancer Antigen only,CTA
+1.40,1.41,PEG:05a844733a1507c9ef3a,NLRP4,Cancer Antigen only,CTA
+1.40,1.41,PEG:7aaac9e721e000424fdf,TRIM49,Cancer Antigen only,CTA
+1.40,1.41,PEG:aa54325a2c15acb4bc72,XAGE5,Cancer Antigen only,CTA
+1.40,1.41,PEG:ce254373243f5169317f,OR1N1,Other,CTA
+1.40,1.41,PEG:58d58aae40b0dd869998,HNRNPCL1,Cancer Antigen only,CTA
+1.40,1.41,PEG:a759e456881ad198e08c,NLRP11,Cancer Antigen only,CTA
+1.40,1.41,PEG:653a82d225d0924f8133,TRIM49B,Cancer Antigen only,CTA
+1.40,1.41,PEG:0679f9e7591a931eb660,FAM9A,Cancer Antigen only,CTA
+1.40,1.41,PEG:2822479cf57db6bcc766,IZUMO1R,Cancer Antigen only,CTA
+1.40,1.41,PEG:b63da3318f685ccaa319,PIWIL3,Cancer Antigen only,CTA
+1.40,1.41,PEG:133f4501087b4e404615,ZNF479,Cancer Antigen only,CTA
+1.40,1.41,PEG:65698b2ad8732f761478,PRAMEF10,Cancer Antigen only,CTA
+1.40,1.41,PEG:c9baacc9350165c111b6,C19orf67,Cancer Antigen only,CTA
+1.40,1.41,PEG:f181f56d8fe05eff74df,FAM90A27P,Cancer Antigen only,CTA
+1.40,1.41,PEG:e07ae591e4fb35a4e33d,CSAG1,Cancer Antigen only,CTA
+1.40,1.41,PEG:0b80bfb8f0f37b51ff32,KHDC3L,Cancer Antigen only,CTA
+1.40,1.41,PEG:0ab4035e060ebf8abc06,TRIM49C,Cancer Antigen only,CTA
+1.40,1.41,PEG:4eacdc84da3e2f9d669a,PRAMEF14,Cancer Antigen only,CTA
+1.40,1.41,PEG:1a92fb62ff88120a4cea,PABPN1L,Cancer Antigen only,CTA
+1.40,1.41,PEG:4dc11aaf5c48c5f399fc,MBD3L4,Cancer Antigen only,CTA
+1.40,1.41,PEG:a4d1a78a6bc4d94dfff5,LEUTX,Cancer Antigen only,CTA
+1.40,1.41,PEG:4b932d0db9d26fbc0722,EBLN1,Cancer Antigen only,CTA
+1.40,1.41,PEG:5f39382f943b65a979ef,CRIPTO3,Cancer Antigen only,CTA
+1.40,1.41,PEG:39fb57911bfe12d5c8b2,RFPL4AL1,Cancer Antigen only,CTA
+1.40,1.41,PEG:1f7bf599544a9c9ab7ee,SSU72L6,Cancer Antigen only,CTA
+1.40,1.41,PEG:b98b541b3ae2b70d3800,MBD3L5,Cancer Antigen only,CTA
+1.40,1.41,PEG:1efc9bfce4998b736e65,ZNF722,Cancer Antigen only,CTA
+1.40,1.41,PEG:82c48d108f0ba43e9915,PRAMEF4,Cancer Antigen only,CTA
+1.40,1.41,PEG:49474c33cb94125c2178,UBTFL1,Cancer Antigen only,CTA
+1.40,1.41,PEG:ab75db1824a341158b3d,HNRNPCL2,Cancer Antigen only,CTA
+1.40,1.41,PEG:c1785185f2736960b676,KLF18,Cancer Antigen only,CTA
+1.40,1.41,PEG:239b064b509fe82b6379,C19orf85,Cancer Antigen only,CTA
+1.40,1.41,PEG:b6708d76c220960f3383,SSU72L4,Cancer Antigen only,CTA
+1.40,1.41,PEG:77d4ac745a2951e13e16,SSU72L5,Cancer Antigen only,CTA
+1.40,1.41,PEG:28a89961ee80474f1996,SSU72L2,Cancer Antigen only,CTA
+1.40,1.41,PEG:f9b97c7f8faf5a7950b0,SSU72L1,Cancer Antigen only,CTA
+1.40,1.41,PEG:276090530a257361d2f0,SSU72L3,Cancer Antigen only,CTA
+1.40,1.41,PEG:e04fe268186dedc0faed,PRAMEF25/6,Cancer Antigen only,CTA
+1.40,1.41,PEG:ea4a5b47e25b6870bbb5,SSX2/B,Cancer Antigen only,CTA

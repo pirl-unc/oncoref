@@ -265,8 +265,11 @@ def definition() -> dict:
                 "lactating_breast_rule": (
                     "Individual breast biopsy samples with coordinated milk-protein RNA "
                     "(>= 3 of LALBA, CSN1S1, CSN2, CSN3 at >= 100 native TPM) are assigned to "
-                    "lactating_breast; all other breast samples are resting_breast."
+                    "lactating_breast (inferred secretory signature). Complete panels without that signature "
+                    "retain the legacy resting_breast label; incomplete marker coverage stays unknown. "
+                    "These are not provider-confirmed physiological states."
                 ),
+                "cta_tier_interpretation": "Legacy origin/exposure annotation retained for compatibility, not a toxicity tier or host eligibility rule. Use reproductive_qualifying_compartments for origins and HostContext for host choices.",
                 "cta_tiers": {
                     "core": (
                         "Qualifies in embryo, placenta, testis or ovary, with all eight extended "

@@ -266,6 +266,9 @@
       "participant_identity": "Not provided; sample identifiers are not assumed to be donor IDs"
     },
     "mammary_lactation": {
+      "state_is_inferred": true,
+      "unknown_marker_coverage_is_resting": false,
+      "resting_label_meaning": "no high secretory signature in sampled biopsies; not confirmed physiology",
       "markers": [
         "LALBA",
         "CSN1S1",
@@ -285,7 +288,7 @@
     },
     "normal_library_qc": {
       "path": "normal-library-qc.csv",
-      "sha256": "4d162df589eecb62d3c2357ba3a8ae0c4e02a72548620c976f9e0fe0715994d9",
+      "sha256": "3790558afcc63b2e10c3fff3fc937fd6326fc332d1d9bbcc9559aab3f7a7cda5",
       "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence."
     },
     "developmental_sources": [
@@ -360,6 +363,6 @@
     ],
     "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
   },
-  "data_sha256": "08f81d3a49d8337845b4f2e04fb6f37d09ac82f5eb490179b9f2a33851ea3c7b",
+  "data_sha256": "7fc9182bc4ed89535c4fc051bbd2980301ed958dfc14444556a2c4f6a31465d3",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

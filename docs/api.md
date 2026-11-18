@@ -673,6 +673,10 @@ cta_literature.current_coverage()  # Current CTAs; exact member-locus scope reta
 cta_literature.followup_findings()  # Dated corrections and review recommendations.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
 cta_literature.attestations()  # All occurrences joined to citations and original claim scope.
+cta_literature.current_attestations("SSU72L1")  # Exact loci joined to today's protein groups.
+cta_literature.publication_registry()  # Central current paper records and reviewed gene claims.
+cta_literature.papers("DPRX")  # One row per paper, with gene lists and per-gene claims.
+cta_literature.paper_gene_claims("DPRX", use="reproductive_support")
 cta_literature.gap_assessments()  # The historical 33 gaps, before current remapping.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
@@ -685,13 +689,38 @@ The core preserves mapped paper coverage. Supplementary papers retain additional
 assays, normal-expression findings, identity questions and upstream gene-set
 provenance. Core placement does not determine which findings apply to selection.
 
-The [current reconciliation](audits/cta-current-review-20261108/index.md) reports
+The [historical reconciliation](audits/cta-current-review-20261108/index.md) reported
 487 nomination-covered proteins, 90 with other qualifying papers, and 30 gaps
-among the 607 current CTAs. `current_coverage()` distinguishes `all_members`,
+among its 607 CTAs. `current_coverage()` now reads the current target catalog and distinguishes `all_members`,
 `some_members` and `no_paper`; `per_gene_sources` retains the underlying locus
 assignments. Five shared proteins have coverage for only some member loci.
 Paper coverage includes normal-function studies and counterevidence. It is
 separate from CTA nomination and does not change released classifications.
+
+`current_attestations()` also retains follow-up records without historical group
+IDs, joining by exact member genes. Original identities remain in
+`recorded_entity_id`, `recorded_gene_ids` and `membership_record`. A paper about
+one locus never becomes a nomination for a different locus merely because an
+older release grouped them. `antigens explain` reports all curated sources
+(`paper_source_count`) separately from reproductive and counted tumor-support
+papers. See the [IHC and literature review](audits/antigen-evidence-review-20261117/index.md).
+
+Current reviews are curated once in `oncoref/data/cta-literature-followup.json`
+(schema 2), grouped by paper and exact Ensembl gene IDs. Each claim records the
+native gene name and context, assay, source location, reported association or
+function, limitations and allowed uses. `followup_findings()` is a compatibility
+view derived from that ledger. Frozen nomination tables are preserved as source
+inputs; their imported claims remain distinguishable from `reviewed_gene_claim`.
+Both the catalog builder and paper filter consume the resolved gene-specific
+uses. For example, FOXL3/SSU72L6 have Testis RNA support in Gong's comparison
+table; that paper's placental title supplies no placental claim for those genes.
+
+`reproductive_support`, `tumor_support`, `oncofetal_support` and `cta_nomination`
+have separate counts. `translation_support`, `functional_context`,
+`normal_tissue_review` and identity/assay context are retained without automatic
+antigen admission. These are literature uses, not native-TPM observations,
+independent cohorts or clinical safety judgments. Add `--papers` to
+`oncoref antigens explain GENE` for the same structured per-paper claims.
 
 The [named-candidate evidence audit](audits/cta-candidate-evidence-20261108/index.md)
 adds human IHC, MS and RNA reviews and sample-level tumor prevalence. Read the

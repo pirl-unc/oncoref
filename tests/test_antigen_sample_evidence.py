@@ -54,3 +54,30 @@ def test_invalid_native_tpm_is_rejected(value):
 )
 def test_cell_support_sets_the_required_donor_replication(cells, positive, required):
     assert developmental_donor_requirement(cells, positive) == required
+
+
+def test_mammary_state_is_inferred_and_incomplete_marker_panel_is_unknown(monkeypatch):
+    from antigen_sample_evidence import LACTATION_MARKERS, mammary_sample_states
+
+    from oncoref import gene_matching
+
+    ids = pd.DataFrame(
+        {"canonical_gene_id": ["m1", "m2", "m3", "m4"], "canonical_symbol": LACTATION_MARKERS}
+    )
+    monkeypatch.setattr(gene_matching, "gene_identity_catalog", lambda: ids)
+    accepted = ids[["canonical_gene_id"]].assign(source_gene_id=ids.canonical_gene_id)
+    values = pd.DataFrame(
+        {
+            "TPM.breast.1": [100, 100, 100, 0],
+            "TPM.breast.2": [0, 0, 0, 0],
+            "TPM.breast.3": [0, 0, 0, np.nan],
+        },
+        index=ids.canonical_gene_id,
+    )
+    states = mammary_sample_states(values, accepted)
+    assert [states[f"breast.{i}"]["state"] for i in (1, 2, 3)] == [
+        "secretory_signature",
+        "no_high_secretory_signature",
+        "unknown",
+    ]
+    assert not any(v["provider_confirmed"] for v in states.values())

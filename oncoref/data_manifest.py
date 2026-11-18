@@ -422,6 +422,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta",
         "Cancer and Reproductive Antigen catalog for every human protein record, with set memberships, evidence receipts and paper links",
     ),
+    "host-exposure": (
+        "cta-evidence",
+        "per-compartment host RNA/protein observations and coverage, independent of antigen membership and explicit tissue-loss choices",
+    ),
     "tissue-marker-panels": (
         "expression-qc",
         "GTEx v11 protein-coding tissue marker panels and native TPM reference levels for conservative tumor-library QC",

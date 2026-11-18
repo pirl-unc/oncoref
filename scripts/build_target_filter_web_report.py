@@ -6,15 +6,18 @@ Usage: PYTHONPATH=. python scripts/build_target_filter_web_report.py
 
 import html
 import json
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-from oncoref import target_curation, target_selection, tissue_tiers
-from oncoref import target_filters as tf
-from oncoref.version import __version__
-
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from oncoref import target_curation, target_selection, tissue_tiers  # noqa: E402
+from oncoref import target_filters as tf  # noqa: E402
+from oncoref.version import __version__  # noqa: E402
+
 OUT = ROOT / "docs/audits/target-filters-20261112"
 FUNNEL = ROOT / "docs/audits/target-selection-20261110/rebuild/funnel.csv"
 KNOWN = ROOT / "oncoref/data/cancer-testis-antigens.csv"
@@ -321,7 +324,7 @@ A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM coho
 Categories are the ones after the fold knob has tightened Cancer Antigens.</p>
 {table(["Filter mode", "Kept", *CATEGORIES[:3], ""], mode_rows, numeric=(1, 2, 3, 4))}
 <h3>Host anatomy and tissue-tolerance profiles</h3>
-<p>Selecting a host profile defines which of the 12 reproductive, developmental and mammary compartments are protected in the host (≤ 32 TPM and ≥ 10× below tumor) versus allowed as reproductive origins. Lactating mammary (<code>breast.410</code>) is separated from resting mammary.</p>
+<p>Host selection is separate from biological membership. No reproductive tissue is protected by default. Explicit protection, accepted loss and absence are distinct choices. Missing coverage and unresolved protein findings fail the host screen; native TPM and nTPM have separate limits. Milk-program labels are inferred. <a href="../../host-selection/">Contract and limitations</a>.</p>
 {table(["Host profile", "Protected compartments", "CTA", "CA only", "RA only", "CA ∪ RA", ""], profile_rows, numeric=(2, 3, 4, 5))}
 <p>Candidates remaining after each layer, in order:</p>
 {table(["Filter mode", "Start", *LAYER_NAMES.values()], layer_rows, numeric=tuple(range(1, 8)))}

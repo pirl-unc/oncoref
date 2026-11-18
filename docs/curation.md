@@ -9,9 +9,8 @@ evidence inputs in topological order.
 oncoref antigens list --set CTA
 
 # Host anatomy & tissue-tolerance profiles
-oncoref antigens list --set CTA --profile core
 oncoref antigens list --set CTA --profile male-patient
-oncoref antigens list --set CTA --profile male-patient --allow-tissue prostate --allow-tissue "seminal vesicle"
+oncoref antigens list --set CTA --profile male-patient --absent-tissue prostate --absent-tissue "seminal vesicle"
 oncoref antigens list --set CTA --profile female-patient
 oncoref antigens list --set CTA --profile female-patient --lactating
 oncoref antigens list --set CTA --profile female-patient --protect-tissue ovary
@@ -33,15 +32,21 @@ oncoref antigens subtract protein.fa --equiv ILV --max-distance 1
 ```
 
 `--set` accepts `CTA`, `CA`, `RA`, `CA|RA`, `Unsafe`, `Other`, and `Unsafe|Other`.
-`--profile` accepts `all` (default, 290 CTAs), `female-patient` (285 CTAs; `--lactating`
-yields 283 CTAs by protecting `lactating_breast` and dropping `LALBA` and `BTN1A1`),
-`male-patient` (260 CTAs; keeps `LALBA`, `BTN1A1`, and `TCP11X2`), and `core` (257 CTAs).
-`--allow-tissue` and `--protect-tissue` toggle individual compartments directly (`embryo`,
-`placenta`, `testis`, `ovary`, `epididymis`, `prostate`, `seminal vesicle`, `fallopian tube`,
-`endometrium`, `cervix`, `lactating_breast`, `resting_breast`, or `breast` for both mammary
-states). Backgrounds (`Unsafe`, `Other`, `Unsafe|Other`) are exported without candidate
-filters. `--ids` exports member Ensembl gene IDs. The legacy `oncoref cta` command retains
-its compatibility snapshot and emits a notice pointing to `oncoref antigens`.
+`--profile` accepts `all` (no host screen), `female-patient` and `male-patient`
+(assumed anatomy, with no reproductive tissue protected by default). Select
+`--protect-tissue testis` or `--protect-tissue ovary` to request smaller sets.
+`--accept-loss` (legacy alias
+`--allow-tissue`) explicitly accepts tissue loss; `--absent-tissue` records absent
+anatomy/state; `--protect-tissue` overrides an exception. `breast` expands to both
+mammary states. `--pregnant` also protects the milk-secretory state, and pregnancy
+remains unresolved because developmental coverage is incomplete. The old `core`
+host shortcut is rejected. [Concepts and exact rules](host-selection.md).
+
+`--ids` exports gene IDs. Background sets remain global when listed directly;
+`subtract --profile ...` adds candidates excluded or unresolved under that host
+context to the chosen background. List, explain and subtraction emit selection
+provenance to stderr. `explain --profile ...` reports all host reasons. The legacy
+`oncoref cta` command retains its historical snapshot and migration notice.
 
 Subtraction requires locally installed Ensembl 115 translations and stops if any
 background gene lacks a translation. Defaults are exact 8–15mers against
@@ -63,8 +68,8 @@ python -m oncoref.curation build --check
 python -m oncoref.curation diff --against prior-categories.csv.gz
 ```
 
-The declared dependency graph (`oncoref/data/curation-build.json`) runs six steps in
-topological order: `rare_cell` → `catalog` → `plots` → `report` → `filter_audit` →
+The declared dependency graph (`oncoref/data/curation-build.json`) runs seven steps in
+topological order: `rare_cell` → `catalog` → `host_exposure` → `plots` → `report` → `filter_audit` →
 `filter_web_report`. Failures stop dependent steps. Omitting `--reuse-tumor-cache`
 re-extracts tumors; supplying it verifies the tumor cache receipt and input hashes first.
 `check` verifies implementation and output hashes across all 210+ tracked files without

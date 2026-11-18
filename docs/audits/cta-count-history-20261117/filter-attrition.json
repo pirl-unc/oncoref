@@ -1,0 +1,174 @@
+[
+  {
+    "mode": "all",
+    "starting_ctas": 290,
+    "kept": 290,
+    "layers": [
+      {
+        "layer": "off_target",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "curation",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "host",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "sets",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "papers",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "exclusions",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      }
+    ]
+  },
+  {
+    "mode": "loose",
+    "starting_ctas": 290,
+    "kept": 237,
+    "layers": [
+      {
+        "layer": "off_target",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "curation",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "host",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "sets",
+        "removed_sequentially": 0,
+        "remaining": 290,
+        "fail_independently": 0
+      },
+      {
+        "layer": "papers",
+        "removed_sequentially": 53,
+        "remaining": 237,
+        "fail_independently": 53
+      },
+      {
+        "layer": "exclusions",
+        "removed_sequentially": 0,
+        "remaining": 237,
+        "fail_independently": 0
+      }
+    ]
+  },
+  {
+    "mode": "standard",
+    "starting_ctas": 290,
+    "kept": 175,
+    "layers": [
+      {
+        "layer": "off_target",
+        "removed_sequentially": 16,
+        "remaining": 274,
+        "fail_independently": 16
+      },
+      {
+        "layer": "curation",
+        "removed_sequentially": 2,
+        "remaining": 272,
+        "fail_independently": 2
+      },
+      {
+        "layer": "host",
+        "removed_sequentially": 0,
+        "remaining": 272,
+        "fail_independently": 0
+      },
+      {
+        "layer": "sets",
+        "removed_sequentially": 0,
+        "remaining": 272,
+        "fail_independently": 0
+      },
+      {
+        "layer": "papers",
+        "removed_sequentially": 97,
+        "remaining": 175,
+        "fail_independently": 106
+      },
+      {
+        "layer": "exclusions",
+        "removed_sequentially": 0,
+        "remaining": 175,
+        "fail_independently": 0
+      }
+    ]
+  },
+  {
+    "mode": "strict",
+    "starting_ctas": 290,
+    "kept": 111,
+    "layers": [
+      {
+        "layer": "off_target",
+        "removed_sequentially": 23,
+        "remaining": 267,
+        "fail_independently": 23
+      },
+      {
+        "layer": "curation",
+        "removed_sequentially": 4,
+        "remaining": 263,
+        "fail_independently": 4
+      },
+      {
+        "layer": "host",
+        "removed_sequentially": 0,
+        "remaining": 263,
+        "fail_independently": 0
+      },
+      {
+        "layer": "sets",
+        "removed_sequentially": 0,
+        "remaining": 263,
+        "fail_independently": 0
+      },
+      {
+        "layer": "papers",
+        "removed_sequentially": 141,
+        "remaining": 122,
+        "fail_independently": 155
+      },
+      {
+        "layer": "exclusions",
+        "removed_sequentially": 11,
+        "remaining": 111,
+        "fail_independently": 12
+      }
+    ]
+  }
+]
