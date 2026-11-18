@@ -15,20 +15,20 @@ Cancer and Reproductive Antigen (`CA`, `RA`, `CTA`) classification.
 ## Current Antigen Curation Architecture
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
-[rebuilt catalog](audits/target-selection-20261110/rebuild/index.md) (`oncoref.target-selection.2026-11-17.1`)
-classifies **303 CTA, 106 Cancer Antigen only, 100 Reproductive Antigen only, 1,131 Other and
+[rebuilt catalog](audits/target-selection-20261110/rebuild/index.md)
+classifies **203 CTA, 64 Cancer Antigen only, 211 Reproductive Antigen only, 1,162 Other and
 18,253 Unsafe**:
 
-1. **Shared normal-expression screen (`19,893 → 846` eligible):** Seven normal-expression layers
-   (HPA v23 individual biopsies & bulk, GTEx v11, HPA single-cell clusters, DICE/Monaco/HPA
+1. **Shared normal-expression screen:** Seven normal-expression layers
+   (HPA v23 individual biopsies & bulk, individual GTEx v11 tissue samples, HPA single-cell clusters, DICE/Monaco/HPA
    sorted immune subsets, donor-resolved CELLxGENE + Siletti single-cell UMI, HPA IHC,
    912-protein literature rubric, and adult cornea scRNA) mark **18,253** proteins `Unsafe`,
    while coverage, translation, sequence-containment, and expression-bound checks hold
-   **794** proteins in `Other`.
-2. **Symmetric 10× compartment enrichment (`846 → 509` candidates):** Against the shared
-   somatic baseline **H₀ = max(Normal N, Disposable D, 1 TPM)**, Cancer Antigens (**CA = 396**)
-   and Reproductive Antigens (**RA = 403**) independently require **≥ 10 × H₀** in QC-passing
-   tumors or reproductive/embryonic samples. Their intersection is the default broad **CTA (290)** set.
+   additional proteins in `Other`.
+2. **Symmetric 10× compartment enrichment:** Against the shared
+   somatic baseline **H₀ = max(Normal N, Disposable D, 1 TPM)**, Cancer Antigens (CA)
+   and Reproductive Antigens (RA) independently require **≥ 10 × H₀** in QC-passing
+   tumors or reproductive/embryonic samples. Their intersection is the default broad **CTA** set.
 3. **Host selection:** Protect / Accept loss / Absent are explicit choices. Anatomy
    presets protect no reproductive tissue by default; protection is opt-in.
    Missing evidence for explicitly protected tissue remains unresolved;

@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 509
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 478
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -39,10 +39,16 @@ def test_no_knob_can_add_a_protein(catalog):
         assert kept(name, catalog) <= candidates
 
 
-def test_every_mode_keeps_the_positive_controls(catalog):
+def test_positive_controls_follow_the_same_thresholds(catalog):
+    expected = {
+        "all": set(tf.POSITIVE_CONTROLS),
+        "loose": set(tf.POSITIVE_CONTROLS),
+        "standard": {"NY-ESO-1"},
+        "strict": set(),
+    }
     for name in tf.FILTER_MODES:
         labels = set(tf.select(name, catalog).protein_group_label)
-        assert set(tf.POSITIVE_CONTROLS) <= labels, name
+        assert set(tf.POSITIVE_CONTROLS) & labels == expected[name], name
 
 
 def test_layers_report_first_failure_in_order(catalog):
@@ -139,6 +145,7 @@ def test_cta_list_papers_count_only_where_they_nominate(catalog):
 
 def test_missing_values_never_pass_a_threshold(catalog):
     row = catalog[catalog.protein_group_label == "MAGEA4"].copy()
+    row["normal_reference_tpm"] = 1.0
     assert tf.apply(tf.TargetFilter(max_off_target_tpm=4.0), row).keep.all()
     row["normal_reference_tpm"] = float("nan")
     d = tf.apply(tf.TargetFilter(max_off_target_tpm=4.0), row)
@@ -181,7 +188,7 @@ def test_mage_rule_drops_the_family_but_keeps_magea4(catalog):
     f = tf.TargetFilter(exclude_prefixes=("MAGE",), except_labels=("MAGEA4",))
     d = tf.apply(f, catalog)
     removed = d[d.is_target_candidate & ~d.keep]
-    assert len(removed) == 16
+    assert len(removed) == 15
     assert "MAGEC2" in set(removed.protein_group_label)
     assert removed.protein_group_label.str.startswith("MAGE").all()
     assert (removed.filter_failed == "exclusions").all()
@@ -210,7 +217,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 509 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 478 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()

@@ -40,8 +40,7 @@ assumptions = selection.metadata
 Every unspecified compartment is **not protected**. `HostContext()` and both
 anatomy presets retain the full candidate set at the chosen evidence mode.
 `protect`, `absent` and `accept_loss` must be explicit, disjoint tuples.
-All 12 current compartments are available, including
-both mammary states. `breast` expands to both. These conditional compartments
+Host protection can include vagina and either mammary state. `breast` expands to both. These conditional compartments
 supplement the catalog's shared normal screen; they do not represent every organ.
 
 Compatibility presets `male-patient` and `female-patient` encode **assumed anatomy**,

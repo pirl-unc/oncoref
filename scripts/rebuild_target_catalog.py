@@ -31,6 +31,8 @@ from antigen_sample_evidence import (  # noqa: E402
 from build_cta_alternative_evidence import GTEX_TISSUES, anatomy  # noqa: E402
 from build_cta_candidate_evidence import replay_updates  # noqa: E402
 from cta_report_common import sha256, write_csv  # noqa: E402
+from gtex_sample_evidence import SOURCE as GTEX_SOURCE  # noqa: E402
+from gtex_sample_evidence import individual_samples  # noqa: E402
 
 from oncoref import (  # noqa: E402
     cta_literature,
@@ -54,7 +56,7 @@ FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 RAW = ROOT / "tmp/target-rebuild-inputs"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-17.1"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-18.2"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -67,7 +69,9 @@ DISPOSABLE_NTPM_TISSUES = ["appendix", "gallbladder", "tonsil"]
 
 def read(path, **kwargs):
     path = Path(path)
-    INPUTS[str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)] = sha256(path)
+    INPUTS[str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path.resolve())] = (
+        sha256(path)
+    )
     return pd.read_csv(path, low_memory=False, **kwargs)
 
 
@@ -347,8 +351,10 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         archive = reference_input("hpa_tissue_samples")
         genes = tissue_sample_genes(archive)
         audit = tissue_library_qc(genes, hpa_ids)
+        gtex, gtex_audit = individual_samples(facts, mapped, gtex_columns)
         if write:
             write_csv(audit, OUT / "normal-library-qc.csv")
+            write_csv(gtex_audit, OUT / "gtex-library-qc.csv.gz")
         individual = tissue_samples(facts, hpa_ids, genes=genes)
         individual = individual.merge(
             audit[["sample_id", "library_qc_review"]], on="sample_id", validate="many_to_one"
@@ -357,8 +363,16 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
             facts.set_index("entity_id").member_count
         )
         individual["measured_members"] = individual.member_count.where(individual.identity_resolved)
-        normal = pd.concat([normal, individual], ignore_index=True)
-        INPUTS[str(archive)] = HPA_SOURCE["sha256"]
+        normal = pd.concat([normal, individual, gtex], ignore_index=True)
+        INPUTS["reference:hpa_tissue_samples"] = HPA_SOURCE["sha256"]
+        INPUTS.update(
+            {
+                f"reference:{GTEX_SOURCE}:v11-{native.lower()}": reference_data.REFERENCE_SOURCES[
+                    GTEX_SOURCE
+                ]["pins"]["v11-" + native.lower()]["sha256"]
+                for native in gtex_columns
+            }
+        )
     normal["tissue"] = normal.tissue.replace(
         {"nucleus accumbens": "basal ganglia", "putamen": "basal ganglia"}
     )
@@ -1154,7 +1168,7 @@ def build(*, reuse_tumor_cache=False):
         ],
         "expression_bounds": target_selection.definition()["expression_bounds"],
         "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,
-        "normal_statistic": "Maximum of individual HPA tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
+        "normal_statistic": "Maximum of individual GTEx v11 and HPA v23 tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
         "batch_corrected": False,
         "limitations": [
             "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -1165,6 +1179,20 @@ def build(*, reuse_tumor_cache=False):
         "participant_identity_policy": sample_api.PATIENT_IDENTITY_POLICY,
         "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
         "individual_tissue_source": HPA_SOURCE,
+        "gtex_individual_tissue_source": {
+            "source": GTEX_SOURCE,
+            "release": "v11",
+            "unit": "TPM",
+            "shards": sorted(
+                v
+                for v in reference_data.REFERENCE_SOURCES[GTEX_SOURCE]["pins"]
+                if v.startswith("v11-")
+            ),
+            "registry": "oncoref/data/reference-releases.json",
+            "sample_inventory": "gtex-library-qc.csv.gz",
+            "scope": "All 52 primary tissue matrices; cultured cell lines excluded.",
+            "reduction": "Maximum complete within-sample protein-group sum per non-reproductive tissue, all reproductive samples. Donors identified by GTEX subject ID.",
+        },
         "mammary_lactation": {
             "state_is_inferred": True,
             "unknown_marker_coverage_is_resting": False,

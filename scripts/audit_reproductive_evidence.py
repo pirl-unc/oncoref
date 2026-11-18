@@ -120,6 +120,8 @@ def write(frame, name):
 
 
 def main():
+    if target_selection.POLICY_ID != "oncoref.target-selection.2026-11-18.1":
+        raise RuntimeError("The #717 evidence review requires the pre-GTEx-samples catalog")
     inputs = {}
 
     def read(path, **kwargs):

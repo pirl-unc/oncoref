@@ -10,7 +10,9 @@ Catalog `$policy_id`: $categories.
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
 [Host choices](host-selection.md) · [Optional filters](target-filters.md)
 
-[Bulk/cell comparison for 78 CA-only proteins and review of 31 normal-cell holds](audits/antigen-evidence-review-20261118/index.md).
+[Pre-GTEx comparison for 78 CA-only proteins and 31 normal-cell holds](audits/antigen-evidence-review-20261118/index.md).
+
+[Individual GTEx samples and symmetric reassessment of the ten testis leads](audits/gtex-reproductive-witnesses/index.md).
 
 ## Three separate questions
 
@@ -35,7 +37,7 @@ Both CA and RA independently require **≥10 × H₀**, where
 | CTA | Both routes | $cta |
 | CA∪RA | Either route | $union |
 
-The normal reference includes individual HPA v23 samples, tissue/subregion summaries,
+Individual GTEx v11 samples supply both sides of the comparison across 52 primary tissues. Reproductive tissues (including breast and prostate) supply candidate witnesses. Other tissues supply normal or Disposable maxima. Loci encoding identical proteins are summed within each sample before taking any maximum. The sample inventory records GTEx subject IDs, anatomical origin and library QC. The reference also includes individual HPA v23 samples, tissue/subregion summaries,
 GTEx v11 donor medians and supported immune summaries. All numerical fold comparisons
 use native TPM. nTPM, UMI counts and qualitative staining remain separate evidence.
 Missing required normal coverage does not become zero.

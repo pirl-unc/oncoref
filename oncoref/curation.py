@@ -74,6 +74,7 @@ def write_receipt(root):
         "oncoref/antigen_sets.py",
         "oncoref/antigen_cli.py",
         "oncoref/reference_data.py",
+        "scripts/gtex_sample_evidence.py",
         "oncoref/data/reference-releases.json",
         "oncoref/tissue_tiers.py",
     }

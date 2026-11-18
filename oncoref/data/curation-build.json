@@ -30,6 +30,14 @@
       "version": "v23"
     }
   },
+  "reference_panels": {
+    "gtex_individual_samples": {
+      "source": "gtex_individual_tissue_tpm",
+      "release": "v11",
+      "tissues": "adult primary tissues",
+      "unit": "TPM"
+    }
+  },
   "steps": {
     "rare_cell": {
       "needs": [],
@@ -102,12 +110,12 @@
         "scripts/audit_reproductive_ihc_route.py"
       ]
     },
-    "reproductive_evidence_review": {
+    "gtex_witness_audit": {
       "needs": [
         "catalog"
       ],
       "argv": [
-        "scripts/audit_reproductive_evidence.py"
+        "scripts/audit_gtex_symmetric_witnesses.py"
       ]
     }
   },
@@ -115,7 +123,8 @@
     "docs/audits/target-selection-20261110/rebuild",
     "docs/audits/target-filters-20261112",
     "docs/audits/antigen-evidence-review-20261117",
-    "docs/audits/antigen-evidence-review-20261118"
+    "docs/audits/antigen-evidence-review-20261118",
+    "docs/audits/gtex-reproductive-witnesses"
   ],
   "outputs": [
     "oncoref/data/target-selection.csv.gz",

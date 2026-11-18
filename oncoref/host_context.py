@@ -17,7 +17,7 @@ import pandas as pd
 
 from . import target_selection as catalog
 
-POLICY_ID = "oncoref.host-selection.2026-11-17.3"
+POLICY_ID = "oncoref.host-selection.2026-11-18.1"
 COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
 
 

@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-18.1",
+  "policy_id": "oncoref.target-selection.2026-11-18.2",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -132,7 +132,8 @@
       "female_tract": [
         "fallopian tube",
         "endometrium",
-        "cervix"
+        "cervix",
+        "vagina"
       ],
       "mammary": [
         "lactating_breast",
@@ -141,9 +142,9 @@
       "lactating_breast_rule": "Individual breast biopsy samples with coordinated milk-protein RNA (>= 3 of LALBA, CSN1S1, CSN2, CSN3 at >= 100 native TPM) are assigned to lactating_breast (inferred secretory signature). Complete panels without that signature retain the legacy resting_breast label; incomplete marker coverage stays unknown. These are not provider-confirmed physiological states.",
       "cta_tier_interpretation": "Legacy origin/exposure annotation retained for compatibility, not a toxicity tier or host eligibility rule. Use reproductive_qualifying_compartments for origins and HostContext for host choices.",
       "cta_tiers": {
-        "core": "Qualifies in embryo, placenta, testis or ovary, with all eight extended adult compartments <= 32 TPM and <= tumor_max_tpm / 10.",
+        "core": "Qualifies in embryo, placenta, testis or ovary, with all extended adult compartments <= 32 TPM and <= tumor_max_tpm / 10.",
         "core_with_extended_exposure": "Qualifies in embryo, placenta, testis or ovary, and also exceeds 32 TPM or lacks a 10x tumor margin in an extended adult compartment.",
-        "extended_only": "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast or resting_breast."
+        "extended_only": "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, vagina, lactating_breast or resting_breast."
       }
     }
   },

@@ -43,6 +43,11 @@ def mammary_sample_states(genes, accepted_ids) -> dict:
     if len(marker_ids) != len(LACTATION_MARKERS):
         raise ValueError("Missing canonical gene identities for lactation markers")
     panel = mapped.reindex(marker_ids)[breast_cols]
+    return mammary_states_from_panel(panel)
+
+
+def mammary_states_from_panel(panel):
+    """Classify sampled mammary RNA from the four canonical milk-program markers."""
     states = {}
     for column in panel:
         values = panel[column]
@@ -222,7 +227,7 @@ def developmental_samples(facts):
         archive_path, design_path = reference_input(archive_role), reference_input(design_role)
         for role, path in [(archive_role, archive_path), (design_role, design_path)]:
             provenance.append(
-                {"role": role, "path": str(path), "sha256": sha256(path), "source_id": source}
+                {"role": role, "path": str(path.resolve()), "sha256": sha256(path), "source_id": source}
             )
         with zipfile.ZipFile(archive_path) as archive:
             name = next(n for n in archive.namelist() if n.endswith(".mtx"))

@@ -400,8 +400,7 @@ layer 3 has tightened Cancer Antigens.
 ## 4. Filter modes and host toxicity profiles
 
 `all` → `loose` → `standard` → `strict`: each mode keeps a subset of the one before.
-Every mode keeps the positive controls {", ".join(tf.POSITIVE_CONTROLS)}; a test fails
-if a change to a mode drops one.
+The reference proteins {", ".join(tf.POSITIVE_CONTROLS)} pass through the same thresholds as every other protein.
 
 {md(modes)}
 

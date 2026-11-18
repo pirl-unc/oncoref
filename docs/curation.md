@@ -5,7 +5,7 @@ maintainer command rebuilds the catalog, figures, and reports from the declared
 evidence inputs in topological order.
 
 ```sh
-# Default largest CTA set (all 290 CTAs across all 12 compartments)
+# Default CTA membership across all reproductive compartments
 oncoref antigens list --set CTA
 
 # Host anatomy & tissue-tolerance profiles
@@ -68,9 +68,8 @@ python -m oncoref.curation build --check
 python -m oncoref.curation diff --against prior-categories.csv.gz
 ```
 
-The declared dependency graph (`oncoref/data/curation-build.json`) runs seven steps in
-topological order: `rare_cell` → `catalog` → `host_exposure` → `plots` → `report` → `filter_audit` →
-`filter_web_report`. Failures stop dependent steps. Omitting `--reuse-tumor-cache`
+The declared dependency graph (`oncoref/data/curation-build.json`) orders the main build as `rare_cell` → `catalog` → `host_exposure` → `plots` → `report` → `filter_audit` →
+`filter_web_report`. The rebuilt catalog also feeds the GTEx witness comparison, literature audit and IHC audit. Failures stop dependent steps. Omitting `--reuse-tumor-cache`
 re-extracts tumors; supplying it verifies the tumor cache receipt and input hashes first.
 `check` verifies implementation and output hashes across all 210+ tracked files without
 downloading or reprocessing raw data. `diff` uses stable protein identities and highlights
@@ -79,7 +78,7 @@ named regression controls (`PRAME`, `NY-ESO-1`, `MAGEA4`).
 ## Migration boundaries
 
 The current build consumes the pinned normal-screen fact table and its replayed
-adjudications, plus checksum-verified HPA v23 individual tissue biopsies and
+adjudications. GTEx v11 individual gene TPM is registered under `gtex_individual_tissue_tpm` with a SHA-256 pin for each of the 52 primary tissue matrices. The catalog resolves those pins during a normal build and carries the subject and sample IDs into both the healthy reference and reproductive evidence. Other inputs include checksum-verified HPA v23 individual tissue biopsies and
 Petropoulos/Tyser human embryo single-cell datasets via `curation.reference_input(role)`.
 Historical receipts and public compatibility modules (`cta_selection`, `target_sets`,
 `cta`) remain frozen snapshots and are never overwritten by live policy updates.

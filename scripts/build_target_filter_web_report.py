@@ -320,7 +320,7 @@ A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM coho
 {table(["Step", "Removed into", "Removed", "Remaining", ""], funnel_rows, numeric=(2, 3))}
 
 <h2>3. Filter modes and host toxicity profiles</h2>
-<p>Each mode keeps a subset of the one before. Every mode keeps {", ".join(tf.POSITIVE_CONTROLS)}.
+<p>Each mode keeps a subset of the one before. Reference proteins {", ".join(tf.POSITIVE_CONTROLS)} follow the same thresholds.
 Categories are the ones after the fold knob has tightened Cancer Antigens.</p>
 {table(["Filter mode", "Kept", *CATEGORIES[:3], ""], mode_rows, numeric=(1, 2, 3, 4))}
 <h3>Host anatomy and tissue-tolerance profiles</h3>
