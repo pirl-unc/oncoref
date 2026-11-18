@@ -1,0 +1,93 @@
+source,site,samples,known_donors
+GTEx,Adipose_Subcutaneous,714,714
+GTEx,Adipose_Visceral_Omentum,587,587
+GTEx,Adrenal_Gland,295,295
+GTEx,Artery_Aorta,472,472
+GTEx,Artery_Coronary,268,268
+GTEx,Artery_Tibial,691,691
+GTEx,Bladder,77,77
+GTEx,Brain_Amygdala,181,181
+GTEx,Brain_Anterior_cingulate_cortex_BA24,233,233
+GTEx,Brain_Caudate_basal_ganglia,300,300
+GTEx,Brain_Cerebellar_Hemisphere,277,277
+GTEx,Brain_Cerebellum,266,266
+GTEx,Brain_Cortex,270,270
+GTEx,Brain_Frontal_Cortex_BA9,269,269
+GTEx,Brain_Hippocampus,255,255
+GTEx,Brain_Hypothalamus,257,257
+GTEx,Brain_Nucleus_accumbens_basal_ganglia,285,285
+GTEx,Brain_Putamen_basal_ganglia,254,254
+GTEx,Brain_Spinal_cord_cervical_c-1,204,204
+GTEx,Brain_Substantia_nigra,183,183
+GTEx,Breast_Mammary_Tissue,514,514
+GTEx,Cervix_Ectocervix,24,24
+GTEx,Cervix_Endocervix,23,23
+GTEx,Colon_Sigmoid,419,419
+GTEx,Colon_Transverse,479,479
+GTEx,Esophagus_Gastroesophageal_Junction,403,403
+GTEx,Esophagus_Mucosa,614,614
+GTEx,Esophagus_Muscularis,561,561
+GTEx,Fallopian_Tube,29,29
+GTEx,Heart_Atrial_Appendage,461,461
+GTEx,Heart_Left_Ventricle,452,452
+GTEx,Kidney_Cortex,104,104
+GTEx,Kidney_Medulla,11,11
+GTEx,Liver,262,262
+GTEx,Lung,604,604
+GTEx,Minor_Salivary_Gland,181,181
+GTEx,Muscle_Skeletal,818,818
+GTEx,Nerve_Tibial,670,670
+GTEx,Ovary,193,193
+GTEx,Pancreas,362,362
+GTEx,Pituitary,313,313
+GTEx,Prostate,282,282
+GTEx,Skin_Not_Sun_Exposed_Suprapubic,651,651
+GTEx,Skin_Sun_Exposed_Lower_leg,754,754
+GTEx,Small_Intestine_Terminal_Ileum,207,207
+GTEx,Spleen,277,277
+GTEx,Stomach,407,407
+GTEx,Testis,414,414
+GTEx,Thyroid,684,684
+GTEx,Uterus,153,153
+GTEx,Vagina,170,170
+GTEx,Whole_Blood,803,803
+HPA,adipose tissue,5,
+HPA,adrenal gland,3,
+HPA,appendix,3,
+HPA,bone marrow,4,
+HPA,breast,4,
+HPA,cerebral cortex,3,
+HPA,cervix,2,
+HPA,choroid plexus,2,
+HPA,colon,13,
+HPA,duodenum,2,
+HPA,endometrium,5,
+HPA,epididymis,1,
+HPA,esophagus,3,
+HPA,fallopian tube,5,
+HPA,gallbladder,3,
+HPA,heart muscle,4,
+HPA,kidney,9,
+HPA,liver,10,
+HPA,lung,9,
+HPA,lymph node,5,
+HPA,ovary,7,
+HPA,pancreas,2,
+HPA,parathyroid gland,3,
+HPA,placenta,8,
+HPA,prostate,9,
+HPA,rectum,4,
+HPA,salivary gland,3,
+HPA,seminal vesicle,3,
+HPA,skeletal muscle,5,
+HPA,skin,3,
+HPA,small intestine,4,
+HPA,smooth muscle,3,
+HPA,spleen,5,
+HPA,stomach,4,
+HPA,testis,10,
+HPA,thymus,3,
+HPA,thyroid gland,5,
+HPA,tongue,1,
+HPA,tonsil,5,
+HPA,urinary bladder,4,

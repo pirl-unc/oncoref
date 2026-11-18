@@ -1,0 +1,6 @@
+threshold,screened_libraries,any_panel,broad_testis_panel,six_testis_markers
+0.001,18637,821,28,139
+0.01,18637,384,26,24
+0.03,18637,181,12,9
+0.05,18637,117,6,3
+0.1,18637,59,1,1

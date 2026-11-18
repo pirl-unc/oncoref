@@ -1,0 +1,6 @@
+sample_id,tissue,panel,markers,peers,score,breadth
+bone marrow.98,bone marrow,Whole blood,10,3,0.7972453768729428,0.8
+breast.390,breast,Skin,48,3,0.17405925549667284,0.9166666666666666
+prostate.59,prostate,Muscle,43,8,0.12979193875363054,0.9767441860465116
+esophagus.130,esophagus,Muscle,43,2,0.06865624497907066,1.0
+stomach.241,stomach,Small intestine,10,3,0.01429340007759728,0.8

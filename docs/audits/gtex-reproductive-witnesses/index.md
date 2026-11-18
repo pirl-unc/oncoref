@@ -2,7 +2,7 @@
 
 The catalog uses 18,637 primary tissue samples from 946 GTEx donors. Each of the 52 tissue files has a versioned URL and SHA-256 checksum in the reference registry. Individual reproductive samples can qualify RA. Individual normal and Disposable samples contribute to the shared 10× denominator for CA and RA. The normal comparison retains the highest complete within-sample protein-group sum per GTEx tissue, with the sample and donor that attained it. The full matrices retain every measurement.
 
-[Source registry and rebuild instructions](../../curation.md) · [Sample inventory and QC](../target-selection-20261110/rebuild/gtex-library-qc.csv.gz) · [Comparison methods](../target-selection-20261110/rebuild/comparison.json)
+[GTEx and HPA contamination screen and donor sensitivity](../gtex-cross-tissue-signals/index.md) · [Source registry and rebuild instructions](../../curation.md) · [Sample inventory and QC](../target-selection-20261110/rebuild/gtex-library-qc.csv.gz) · [Comparison methods](../target-selection-20261110/rebuild/comparison.json)
 
 ## Symmetric comparison
 
