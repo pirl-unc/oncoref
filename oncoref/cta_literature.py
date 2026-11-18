@@ -10,11 +10,41 @@ from __future__ import annotations
 
 import gzip
 import json
+import re
 from collections import defaultdict
 from copy import deepcopy
 from importlib.resources import files
 
 import pandas as pd
+
+# Uses describe the claim's role in curation, never automatic set admission.
+PAPER_USES = {
+    "cta": "cta_nomination",
+    "oncofetal": "oncofetal_support",
+    "tumor": "tumor_support",
+    "reproductive": "reproductive_support",
+}
+ALLOWED_USES = frozenset(PAPER_USES.values()) | {
+    "translation_support",
+    "translation_context",
+    "functional_context",
+    "normal_tissue_review",
+    "identity_review",
+    "immune_context",
+}
+EVIDENCE_TYPES = frozenset(
+    {
+        "rna_expression",
+        "induced_rna_expression",
+        "ribosome_profiling",
+        "regulatory_assay",
+        "combined_gene_perturbation",
+        "mass_spectrometry",
+        "assay_identity_review",
+        "cta_nomination",
+        "cancer_embryo_program",
+    }
+)
 
 NOMINATION_SOURCE_TAGS = frozenset(
     {
@@ -206,7 +236,9 @@ def cta_coverage() -> pd.DataFrame:
     return pd.DataFrame(registry()["cta_coverage"])
 
 
-def current_attestations(gene: str | None = None) -> pd.DataFrame:
+def current_attestations(
+    gene: str | None = None, *, catalog: pd.DataFrame | None = None
+) -> pd.DataFrame:
     """Literature occurrences mapped onto the current catalog by exact member loci.
 
     Historical group IDs and follow-ups without a group ID cannot serve as join
@@ -216,13 +248,25 @@ def current_attestations(gene: str | None = None) -> pd.DataFrame:
     """
     from . import target_selection
 
-    catalog = target_selection.results(gene)
+    if catalog is None:
+        catalog = target_selection.results(gene)
+    elif gene is not None:
+        catalog = catalog[
+            catalog.protein_group_label.eq(gene)
+            | catalog.member_gene_ids.map(lambda ids: gene in json.loads(ids))
+        ]
     by_gene = {
         member: (row.entity_id, row.protein_group_label)
         for row in catalog.itertuples()
         for member in json.loads(row.member_gene_ids)
     }
     links = attestations()
+    reviewed = {
+        (source["source_id"], member): claim
+        for source in publication_registry()["sources"]
+        for claim in source["gene_claims"]
+        for member in claim["gene_ids"]
+    }
     rows = []
     for record in links.to_dict("records"):
         groups = defaultdict(list)
@@ -230,7 +274,17 @@ def current_attestations(gene: str | None = None) -> pd.DataFrame:
             if member in by_gene:
                 groups[by_gene[member]].append(member)
         for (entity, label), members in groups.items():
-            nominations = sorted(set(members) & set(record["nomination_gene_ids"]))
+            gene_claims = []
+            for member in sorted(set(members)):
+                claim = deepcopy(reviewed.get((record["source_id"], member)))
+                if claim is None:
+                    claim = _inherited_claim(record, member)
+                else:
+                    claim["curation_status"] = "reviewed_gene_claim"
+                gene_claims.append(claim | {"gene_id": member})
+            nominations = [
+                c["gene_id"] for c in gene_claims if "cta_nomination" in c["allowed_uses"]
+            ]
             rows.append(
                 record
                 | {
@@ -241,14 +295,215 @@ def current_attestations(gene: str | None = None) -> pd.DataFrame:
                     "gene_ids": sorted(set(members)),
                     "nomination_gene_ids": nominations,
                     "published_nomination": bool(nominations),
+                    "gene_claims": gene_claims,
+                    "allowed_uses": sorted({u for c in gene_claims for u in c["allowed_uses"]}),
+                    "eligible_for_coverage": any(c["eligible_for_coverage"] for c in gene_claims),
+                    "recorded_claim_scope": record["claim_scope"],
+                    "claim_scope": " | ".join(dict.fromkeys(c["scope"] for c in gene_claims)),
                 }
             )
-    return pd.DataFrame(rows, columns=[*links.columns, "recorded_entity_id", "recorded_gene_ids"])
+    return pd.DataFrame(
+        rows,
+        columns=[
+            *links.columns,
+            "recorded_entity_id",
+            "recorded_gene_ids",
+            "recorded_claim_scope",
+            "gene_claims",
+            "allowed_uses",
+        ],
+    )
+
+
+def _inherited_claim(record, member):
+    """Preserve legacy scope; never pretend an imported role is a new review."""
+    roles = record["source_roles"]
+    uses = []
+    if record["eligible_for_coverage"]:
+        for role, use in (
+            ("tumor_expression", "tumor_support"),
+            ("cancer_embryo_program", "oncofetal_support"),
+            ("reproductive_developmental", "reproductive_support"),
+        ):
+            if role in roles:
+                uses.append(use)
+        if member in record["nomination_gene_ids"]:
+            uses.append("cta_nomination")
+    for role, use in (
+        ("normal_tissue", "normal_tissue_review"),
+        ("function", "functional_context"),
+        ("translation_identity", "translation_context"),
+        ("immune_recognition", "immune_context"),
+    ):
+        if role in roles:
+            uses.append(use)
+    native = [c for c in record["publication_claims"] if c["Ensembl_Gene_ID"] == member]
+    scope = (
+        " | ".join(
+            dict.fromkeys(
+                c["validation_scope"]
+                + ("; source subset: " + c["source_subset"] if c["source_subset"] else "")
+                for c in native
+            )
+        )
+        if native
+        else record["claim_scope"]
+    )
+    return {
+        "gene_ids": [member],
+        "protein": record["protein"],
+        "scope": scope,
+        "allowed_uses": sorted(uses),
+        "eligible_for_coverage": record["eligible_for_coverage"],
+        "curation_status": "imported_scope",
+        "reported_as": scope,
+        "context": "; ".join(dict.fromkeys(c["source_subset"] for c in native)) if native else None,
+        "source_location": deepcopy(native),
+        "limitations": record["membership_record"].get(
+            "identity_limit",
+            record["source_record"].get("limitations", "See original source record"),
+        ),
+    }
+
+
+def validate_publications(data):
+    """Validate the current paper-centric ledger and each exact gene claim."""
+    if data.get("schema") != "oncoref.cta-literature-followup" or data.get("schema_version") != 2:
+        raise ValueError("Unsupported publication curation schema")
+    seen = set()
+    for source in data["sources"]:
+        sid = source["source_id"]
+        if sid in seen or not all(
+            source.get(k) for k in ("citation", "title", "url", "gene_claims")
+        ):
+            raise ValueError("Publications require unique source IDs, citations and gene claims")
+        seen.add(sid)
+        genes = set()
+        for claim in source["gene_claims"]:
+            ids = claim.get("gene_ids", [])
+            if not ids or any(not re.fullmatch(r"ENSG\d{11}", gene) for gene in ids):
+                raise ValueError("Publication claims require exact Ensembl gene IDs")
+            if genes.intersection(ids) or len(set(ids)) != len(ids):
+                raise ValueError("Consolidate each paper's claims for a gene in one record")
+            genes.update(ids)
+            required = (
+                "protein",
+                "reported_as",
+                "scope",
+                "context",
+                "assay",
+                "source_location",
+                "limitations",
+                "evidence_types",
+                "reviewed_on",
+            )
+            if not all(claim.get(k) for k in required) or claim.get("taxonomy_id") != 9606:
+                raise ValueError("Gene claims require human identity, assay, context and scope")
+            uses, types = claim.get("allowed_uses"), claim["evidence_types"]
+            if not isinstance(uses, list) or not set(uses) <= ALLOWED_USES:
+                raise ValueError("Unknown publication use")
+            if not isinstance(types, list) or not set(types) <= EVIDENCE_TYPES:
+                raise ValueError("Unknown publication evidence type")
+            if not isinstance(claim.get("eligible_for_coverage"), bool):
+                raise ValueError("Coverage eligibility must be explicit")
+            if not claim["eligible_for_coverage"] and set(uses) & set(PAPER_USES.values()):
+                raise ValueError("Ineligible claims cannot supply positive antigen support")
+            if "cta_nomination" in uses and "cta_nomination" not in types:
+                raise ValueError("CTA nomination requires an explicit nomination claim")
+            if "translation_support" in uses and not set(types) & {
+                "ribosome_profiling",
+                "mass_spectrometry",
+            }:
+                raise ValueError("Translation support requires translation/protein evidence")
+
+
+def publication_registry() -> dict:
+    """Central current curation: papers containing exact gene lists and allowed uses.
+
+    Frozen nomination tables remain source evidence; new reviews and corrections
+    belong here. A gene-specific review supersedes inherited scope for that
+    paper/gene in current views, without editing the historical record.
+    """
+    data = json.loads(files("oncoref").joinpath("data/cta-literature-followup.json").read_text())
+    validate_publications(data)
+    return data
 
 
 def followup_findings() -> dict:
-    """Dated literature corrections; recommendations do not change released labels."""
-    return json.loads(files("oncoref").joinpath("data/cta-literature-followup.json").read_text())
+    """Compatibility tables derived from the single current publication ledger."""
+    data = publication_registry()
+    sources, memberships = [], []
+    for source in data["sources"]:
+        sources.append({k: v for k, v in source.items() if k != "gene_claims"})
+        memberships.extend(c | {"source_id": source["source_id"]} for c in source["gene_claims"])
+    return data | {"schema_version": 1, "sources": sources, "memberships": memberships}
+
+
+def paper_gene_claims(gene: str | None = None, *, use: str | None = None) -> pd.DataFrame:
+    """Current exact-gene claims, citations, native contexts and permitted uses.
+
+    ``reviewed_gene_claim`` is centrally adjudicated; ``imported_scope`` preserves
+    prior source/table curation. Neither status asserts clinical targetability.
+    """
+    if use is not None and use not in ALLOWED_USES:
+        raise ValueError(f"Unknown publication use: {use}")
+    rows = {}
+    for record in current_attestations(gene).to_dict("records"):
+        for claim in record["gene_claims"]:
+            if use is not None and use not in claim["allowed_uses"]:
+                continue
+            row = {
+                k: record[k] for k in ("entity_id", "source_id", "source_url", "citation", "title")
+            }
+            row.update(claim)
+            rows[json.dumps(row, sort_keys=True)] = row
+    return pd.DataFrame(
+        list(rows.values()),
+        columns=[
+            "entity_id",
+            "source_id",
+            "source_url",
+            "citation",
+            "title",
+            "gene_id",
+            "protein",
+            "reported_as",
+            "reported_name",
+            "context",
+            "assay",
+            "evidence_types",
+            "allowed_uses",
+            "eligible_for_coverage",
+            "curation_status",
+            "source_location",
+            "limitations",
+            "scope",
+            "taxonomy_id",
+            "reviewed_on",
+            "provenance",
+        ],
+    )
+
+
+def papers(gene: str | None = None) -> pd.DataFrame:
+    """One row per current paper, with its exact gene list and per-gene claims."""
+    claims = paper_gene_claims(gene)
+    rows = []
+    for source, group in claims.groupby("source_id", sort=True):
+        row = group.iloc[0]
+        rows.append(
+            {
+                "source_id": source,
+                "citation": row.citation,
+                "title": row.title,
+                "url": row.source_url,
+                "gene_ids": sorted(group.gene_id.unique()),
+                "gene_claims": group.to_dict("records"),
+            }
+        )
+    return pd.DataFrame(
+        rows, columns=["source_id", "citation", "title", "url", "gene_ids", "gene_claims"]
+    )
 
 
 def _reconcile_coverage(profiles, nominations, links, additions):
@@ -312,7 +567,16 @@ def current_coverage() -> pd.DataFrame:
         for row in links
         if row["published_nomination"]
     ]
-    return _reconcile_coverage(profiles.to_dict("records"), nominations, links, [])
+    gene_links = [
+        {
+            "source_id": row["source_id"],
+            "gene_ids": [claim["gene_id"]],
+            "eligible_for_coverage": claim["eligible_for_coverage"],
+        }
+        for row in links
+        for claim in row["gene_claims"]
+    ]
+    return _reconcile_coverage(profiles.to_dict("records"), nominations, gene_links, [])
 
 
 def _protein_rows(key: str, gene: str | None) -> pd.DataFrame:

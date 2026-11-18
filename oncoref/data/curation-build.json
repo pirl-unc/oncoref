@@ -85,11 +85,28 @@
       "argv": [
         "scripts/build_host_exposure.py"
       ]
+    },
+    "literature_audit": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_antigen_paper_counts.py"
+      ]
+    },
+    "reproductive_ihc_audit": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_reproductive_ihc_route.py"
+      ]
     }
   },
   "output_roots": [
     "docs/audits/target-selection-20261110/rebuild",
-    "docs/audits/target-filters-20261112"
+    "docs/audits/target-filters-20261112",
+    "docs/audits/antigen-evidence-review-20261117"
   ],
   "outputs": [
     "oncoref/data/target-selection.csv.gz",

@@ -32,7 +32,7 @@ import pandas as pd
 
 from . import host_context, target_selection
 
-FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.4"
+FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.5"
 
 #: Compatibility names describe assumed anatomy, never accepted organ loss.
 HOST_PROFILES = {
@@ -58,7 +58,7 @@ MEMBERSHIPS = {
     "reproductive_antigen_only": lambda ca, ra: ra & ~ca,
 }
 
-#: Paper families, from the source-level roles recorded by ``cta_literature``.
+#: Legacy source-role labels; eligibility now consumes per-gene PAPER_USES.
 PAPER_FAMILIES = {
     "cta": "catalog_nomination",  # cancer/testis, cancer-germline, cancer-placenta lists
     "oncofetal": "cancer_embryo_program",  # embryonic gene programs re-expressed in cancer
@@ -228,17 +228,15 @@ def paper_table() -> pd.DataFrame:
     Exact loci map each record to the current protein group. Rejected assay,
     related-species, fusion-only and other ineligible coverage cannot earn credit.
     """
-    from .cta_literature import current_attestations
+    from .cta_literature import PAPER_USES, current_attestations
 
     links = current_attestations()
     links = links[links.eligible_for_coverage]
     rows = []
-    columns = ["entity_id", "source_id", "source_roles", "published_nomination"]
+    columns = ["entity_id", "source_id", "allowed_uses"]
     for record in links[columns].itertuples(index=False):
-        for family, role in PAPER_FAMILIES.items():
-            if role not in record.source_roles:
-                continue
-            if family == "cta" and not record.published_nomination:
+        for family, use in PAPER_USES.items():
+            if use not in record.allowed_uses:
                 continue
             rows.append((record.entity_id, family, record.source_id))
     return pd.DataFrame(rows, columns=["entity_id", "family", "source_id"]).drop_duplicates()

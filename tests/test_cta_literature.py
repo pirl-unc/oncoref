@@ -87,6 +87,11 @@ def test_current_links_use_exact_loci_and_keep_original_records(monkeypatch):
         "published_nomination": True,
         "eligible_for_coverage": True,
         "membership_record": {"gene_ids": ["a", "b"]},
+        "source_id": "example-source",
+        "source_roles": ["catalog_nomination"],
+        "publication_claims": [],
+        "source_record": {},
+        "claim_scope": "Exact original loci",
     }
     monkeypatch.setattr(target_selection, "results", lambda gene=None: catalog)
     monkeypatch.setattr(cta_literature, "attestations", lambda: pd.DataFrame([original]))

@@ -521,7 +521,7 @@ def participant_id(namespace, sample):
 
 def annotate_papers(decisions):
     """Retain the full curated occurrence ledger, joined by exact member loci."""
-    links = cta_literature.attestations()
+    links = cta_literature.current_attestations(catalog=decisions)
     for name in [
         "cta-literature.json.gz",
         "cta-literature-followup.json",

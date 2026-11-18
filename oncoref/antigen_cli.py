@@ -122,6 +122,13 @@ def explain(args):
     counts = target_filters.paper_counts()
     for column in counts:
         output[column] = rows.entity_id.map(counts[column]).fillna(0).astype(int)
+    if args.papers:
+        from .cta_literature import paper_gene_claims
+
+        output["paper_claims"] = [
+            json.loads(paper_gene_claims(label).to_json(orient="records"))
+            for label in rows.protein_group_label
+        ]
     if args.loss:
         output["loss_consequences"] = [
             antigen_sets.loss_consequences(label) for label in rows.protein_group_label
@@ -346,6 +353,11 @@ def register(subparsers):
         "explain", help="Explain every gate and named filter for a gene"
     )
     explanation.add_argument("gene")
+    explanation.add_argument(
+        "--papers",
+        action="store_true",
+        help="Include each paper's exact gene claims and allowed uses",
+    )
     _add_host_options(explanation)
     explanation.add_argument(
         "--loss", action="store_true", help="Include reviewed tissue-loss consequences and evidence"

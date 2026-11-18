@@ -62,6 +62,15 @@ def test_explain_distinguishes_all_papers_from_tumor_support(capsys):
     assert row["papers_counted"] == 0
 
 
+def test_explain_papers_retains_original_gene_name_and_tissue(capsys):
+    assert cli.main(["antigens", "explain", "FOXL3", "--papers", "--format", "json"]) == 0
+    row = json.loads(capsys.readouterr().out)[0]
+    claim = row["paper_claims"][0]
+    assert claim["reported_name"] == "WI2-2373I1.1"
+    assert claim["provenance"]["source_tissue"] == "Testis"
+    assert claim["allowed_uses"] == ["reproductive_support"]
+
+
 def test_subtraction_exact_equivalence_fasta_and_missing_coverage(tmp_path, capsys, monkeypatch):
     background = pd.DataFrame({"gene_id": ["background"], "sequence": ["LLLLLLLL"]})
     monkeypatch.setattr(antigen_sets, "sequences", lambda _: background)

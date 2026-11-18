@@ -1,7 +1,7 @@
 # Reproductive IHC and broader publication coverage
 
 Catalog policy `oncoref.target-selection.2026-11-17.1`; publication-count correction
-`oncoref.target-filters.2026-11-17.4`. No reproductive compartment is protected by
+`oncoref.target-filters.2026-11-17.5`. No reproductive compartment is protected by
 default. The IHC analysis below is a counterfactual; it changes no catalog memberships.
 
 ## How much would reproductive High IHC add?
@@ -63,7 +63,7 @@ Of the original 49 CTAs with zero counted tumor-support publications:
 | DPRX | [Human embryo transcripts and regulatory experiments](https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/); another developmental study is also curated | 0 |
 | TPRX2 | Two existing developmental papers plus newly added [human embryo translation and TPRX perturbation evidence](https://pubmed.ncbi.nlm.nih.gov/36074823/) | 0 |
 | NANOGNB | [Human preimplantation expression and transcriptional function](https://pmc.ncbi.nlm.nih.gov/articles/PMC5413911/); a separate mutation-specific immune record remains ineligible for reference-protein coverage | 0 |
-| FOXL3; SSU72L6 | Mapped reproductive RNA evidence from the [placental transcriptome study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8113443/) | 0 |
+| FOXL3; SSU72L6 | **Testis-enriched RNA**, in the comparison table of the [placental transcriptome study](https://pmc.ncbi.nlm.nih.gov/articles/PMC8113443/); no demonstrated reproductive function | 0 |
 | SCGB1D4 | Normal lymphoid and [nasal expression/cytokine-response evidence](https://link.springer.com/article/10.1186/1465-9921-12-28); retained as counterevidence with resting-pattern and assay-specificity limitations | 0 |
 | SSU72L1 | A [cancer-cell RNA perturbation table](https://pmc.ncbi.nlm.nih.gov/articles/PMC7868764/) names its previous symbol SSU72P7; no copy-specific protein validation | 1, after fixing the join |
 
@@ -73,6 +73,33 @@ tumor-expression or cancer/embryo-program records; reproductive papers and norma
 counterevidence have their own roles. Counting every biological paper as tumor
 validation would erase the claim distinction. Distinct publications may reuse the
 same cohort and are not independent patient replication.
+
+### Central paper → gene → claim records
+
+The central current ledger, `oncoref/data/cta-literature-followup.json` schema 2,
+contains one record per reviewed paper with its exact gene list, native gene names,
+reported context, assay, claim, limitations and allowed uses. It currently has
+13 reviewed papers and 16 gene-specific records. Original nomination tables remain
+immutable source inputs; imported scope is labeled separately from a reviewed
+gene claim. New reviews belong in this ledger, including corrections to old papers.
+
+The original Gong workbook was retrieved again and its SHA-256 matched the pinned
+`b91d126e9e0a270309cb3f6ad5253f1153db3a21f0a8c19d8ef55080410a2007`.
+FOXL3 appears as **WI2-2373I1.1**, row **1274**, and SSU72L6 as **SSU72P8**,
+row **1242**, on `Data 5 - tissue-enriched PC`. Both rows say **Testis**.
+The earlier description of these as placental evidence was incorrect. A paper's
+title cannot substitute for the tissue and gene on the source row.
+
+The catalog builder, API and publication filters consume resolved per-gene uses;
+source-wide roles cannot override them. The old source records remain available
+for provenance. A normal-expression concern cannot earn reproductive or tumor
+credit, and an expression study cannot silently become a functional validation.
+The TPRX knockdown cited by the 2023 LEUTX paper is recorded under its original
+2022 paper, not counted as a second independent functional experiment.
+
+[Reviewed papers, gene lists and their uses](reviewed-paper-claims.md)
+· [Structured claims](reviewed-paper-claims.json)
+· [Version and filter comparison](version-comparison.md).
 
 ### Corrected joins and assay scope
 
@@ -95,6 +122,8 @@ from oncoref import cta_literature, target_filters
 
 cta_literature.current_attestations("SSU72L1")  # Sources, scopes, exact gene IDs.
 cta_literature.current_coverage()              # Broader coverage of current CTAs.
+cta_literature.papers("DPRX")                  # Paper records with exact gene lists.
+cta_literature.paper_gene_claims("DPRX", use="reproductive_support")
 target_filters.paper_counts()                 # Separate families and counted tumor support.
 ```
 
@@ -102,6 +131,11 @@ target_filters.paper_counts()                 # Separate families and counted tu
 counted tumor-support publications. The new TPRX translation paper is recorded in
 the shared follow-up ledger for TPRX1 and TPRX2; it adds no inferred TPM value or
 automatic tumor credit.
+
+`oncoref antigens explain FOXL3 --papers --format json` includes the original
+name, Testis context, supplementary row, allowed uses and limits. The DAG rebuilds
+these paper views and the IHC audit with the catalog; they are generated views of
+the central curation, not additional editable curation stores.
 
 [All original 49, with broader counts](original-49-literature-coverage.csv)
 · [Every linked paper and claim scope](original-49-paper-links.csv)
