@@ -166,7 +166,7 @@ def tissue_samples(facts, accepted_ids, *, genes=None):
 
 
 def tissue_library_qc(genes, accepted_ids):
-    """Audit within tissue; normal testis programs are expected in normal testis.
+    """Audit within tissue, with reproductive programs recorded as notes only.
 
     These are tumor-screen signatures, not validated normal-library exclusion
     criteria. Flagged normals remain in the denominator pending adjudication.
@@ -190,13 +190,10 @@ def tissue_library_qc(genes, accepted_ids):
         )
         audit["tissue"] = tissue
         audit["library_qc_review"] = audit.apply(
-            lambda r, tissue=tissue: ";".join(
-                reason
-                for reason in library_qc.reasons(r)
-                if not (tissue == "testis" and reason == "normal_testis_tissue")
-            ),
+            lambda r: ";".join(library_qc.reasons(r)),
             axis=1,
         )
+        audit["library_qc_notes"] = audit.apply(lambda r: ";".join(library_qc.notes(r)), axis=1)
         rows.append(audit)
     audit = pd.concat(rows).reset_index()
     audit["sample_id"] = audit.sample_id.str.removeprefix("TPM.")

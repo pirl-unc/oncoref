@@ -3,12 +3,12 @@
 
 Each panel holds up to six protein-coding genes that a normal tissue expresses at
 100 TPM or more and that no tissue outside its group reaches 1% of. Library QC uses
-the panels to recognise normal tissue inside a tumor RNA library: tissue brings all of
-a panel's transcripts at the same fraction of their tissue level, whereas a tumor that
-switches on one tissue-specific gene does not.
+the panels to describe tissue expression programs. A reproductive program does not
+establish normal-cell admixture: tumors can also express reproductive-specific genes.
 
 The testis panel is the late-spermatid program (seminiferous tubules with complete
-spermatogenesis). Panels with fewer than three qualifying genes are left out.
+spermatogenesis) and is advisory only. Panels with fewer than three qualifying genes
+are left out.
 """
 
 from __future__ import annotations

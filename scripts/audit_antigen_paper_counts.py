@@ -72,14 +72,6 @@ def version_comparison(catalog):
     previous = None
     for row in history.to_dict("records"):
         version = str(row["version"])
-        if version == "700":
-            counts = catalog.category.value_counts()
-            row.update(
-                {
-                    k: int(counts[k])
-                    for k in ["CTA", "Cancer Antigen only", "Reproductive Antigen only"]
-                }
-            )
         cta = int(row["CTA"])
         ca, ra = row["Cancer Antigen only"], row["Reproductive Antigen only"]
         cells = [str(cta), *["—" if pd.isna(v) else str(int(v)) for v in (ca, ra)]]
@@ -88,6 +80,23 @@ def version_comparison(catalog):
         label = "PR #" + version if version in {"699", "700"} else version
         lines.append("| " + " | ".join([label, *cells, delta, notes[version]]) + " |")
         previous = cta
+    counts = catalog.category.value_counts()
+    current_cta = int(counts["CTA"])
+    lines.append(
+        "| "
+        + " | ".join(
+            [
+                f"Current ({target_selection.POLICY_ID})",
+                str(current_cta),
+                str(int(counts["Cancer Antigen only"])),
+                str(int(counts["Reproductive Antigen only"])),
+                str(int(catalog.is_target_candidate.sum())),
+                f"{current_cta - previous:+d}",
+                "Reproductive-content signatures are advisory sample notes",
+            ]
+        )
+        + " |"
+    )
     lines += [
         "\nThe frozen 1.39 → 1.41 difference is 147: 78 CA-only, 35 Other:Review, "
         "15 Other:Tissue, 12 Other:Expression and 7 RA-only. None became Unsafe. "

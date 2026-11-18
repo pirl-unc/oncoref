@@ -1,0 +1,1042 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reproductive evidence and normal-cell holds</title><style>body{font:15px/1.5 system-ui;margin:2rem;color:#21343d}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:.6rem;text-align:left;border-bottom:1px solid #ddd;vertical-align:top}th{background:#eef3f5;position:sticky;top:0}p{max-width:95ch}a{color:#126487}</style><main><h1>Reproductive evidence and normal-cell holds</h1>
+<p>The requested cohorts are frozen at release 1.42.0: 78 CA-only proteins and 31 Other:Review proteins with tumor ≥10×. Current measurements are regenerated from pinned sources; this report does not change admission.</p>
+<p>Bulk TPM, HPA cell-cluster nTPM and donor UMI frequencies are separate assays. Maxima include all measured non-reproductive normal tissues on the normal side and all reproductive tissues on the reproductive side. The normal maximum includes Disposable tissues; their separate D value is also retained in the CSV. A cell-cluster maximum is descriptive and cannot be divided by bulk TPM to qualify RA. Whole-organ bulk does not measure every cell population. Embryo TPM is a separate within-embryo/lineage mean; its observed maximum can fail cell/donor support.</p>
+<p>Sources: HPA v23 tissue-resolved single-cell clusters and bulk consensus, native-TPM HPA individual tissues and bulk/brain summaries, GTEx v11 and HPA-hosted GTEx, Petropoulos/Tyser embryo observations, and the pinned Census donor UMI panel. The native normal reference also includes sorted immune panels. No single-cell value is silently substituted for missing bulk coverage.</p>
+<h2>Codes</h2>
+<ul>
+<li><strong>H</strong>: Same-strand host overlap: resolve spliced/exonic locus attribution.</li>
+<li><strong>P</strong>: Paralog ambiguity: validate gene-unique sequence or a specific protein assay.</li>
+<li><strong>S</strong>: Selected finding qualifies in one catalog collection; verify independent study support.</li>
+<li><strong>F</strong>: Accepted reproductive enrichment remains below 10×.</li>
+<li><strong>E</strong>: Eye bulk comparison covers retina only; no matched HPA bulk or reliable eye staining.</li>
+<li><strong>C</strong>: Integrated retina atlas contributes; audit original-study/donor overlap before counting replication.</li>
+<li><strong>I</strong>: Reliable positive IHC in the implicated organ; inspect cell and antibody specificity.</li>
+<li><strong>—</strong>: Not measured or not attributable; never a measured zero.</li>
+</ul>
+<h2>The 78 CA-only proteins</h2>
+<p><a href="ca-only-78.csv">Full numeric table, exact contexts and sources</a>. The accepted RA fold uses the existing native-TPM witness/support rules, not the largest value across these assays.</p>
+<p><strong>A source-selection gap affects 10 of these proteins:</strong> C1orf202, CCDC166, CT47B1, CTAGE1, CTAGE6, GOLGA6L1, SLC35G6, SPANXD, TMEM95, TTLL8. Their reproductive bulk TPM summaries clear the same normal/Disposable/1-TPM reference, but current RA admission uses individual HPA samples and supported embryo means, not GTEx tissue summaries. The CSV exposes this separate <code>bulk_R_fold</code>. This is not a cross-unit comparison. Before using these summaries for admission, verify the exact-locus quantification and underlying reproductive samples; a tissue summary does not supply an identified donor witness. <a href="https://github.com/pirl-unc/oncoref/issues/716">Follow-up</a>.</p>
+<table>
+<thead>
+<tr>
+<th>Protein</th>
+<th style="text-align: right;">Normal bulk TPM</th>
+<th style="text-align: right;">Reproductive bulk TPM</th>
+<th style="text-align: right;">Normal cells nTPM</th>
+<th style="text-align: right;">Reproductive cells nTPM</th>
+<th style="text-align: right;">Observed embryo TPM</th>
+<th style="text-align: right;">Accepted R fold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AADACL3</td>
+<td style="text-align: right;">3.77 · skin.226</td>
+<td style="text-align: right;">7.25 · placenta.203</td>
+<td style="text-align: right;">0.1 · brain / excitatory neurons / c-29</td>
+<td style="text-align: right;">2.4 · placenta / extravillous trophoblasts / c-8</td>
+<td style="text-align: right;">7.86 · 5 day / trophectoderm</td>
+<td style="text-align: right;">1.92×</td>
+</tr>
+<tr>
+<td>ANKRD60</td>
+<td style="text-align: right;">1.9 · nucleus ambiguus</td>
+<td style="text-align: right;">5.08 · Testis</td>
+<td style="text-align: right;">0.6 · thymus / t-cells / c-18</td>
+<td style="text-align: right;">11 · testis / late spermatids / c-2</td>
+<td style="text-align: right;">3.31 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">2.05×</td>
+</tr>
+<tr>
+<td>C1orf202</td>
+<td style="text-align: right;">0.8 · dorsomedial nucleus</td>
+<td style="text-align: right;">12.4 · Testis</td>
+<td style="text-align: right;">6.1 · kidney / distal tubular cells / c-10</td>
+<td style="text-align: right;">229 · testis / early spermatids / c-3</td>
+<td style="text-align: right;">11.1 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">2.46×</td>
+</tr>
+<tr>
+<td>CCDC166</td>
+<td style="text-align: right;">0.2 · nucleus ambiguus</td>
+<td style="text-align: right;">11.4 · Testis</td>
+<td style="text-align: right;">0.8 · eye / rod photoreceptor cells / c-4</td>
+<td style="text-align: right;">39.6 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.408 · Carnegie stage 7 / yolk sac mesoderm</td>
+<td style="text-align: right;">1.15×</td>
+</tr>
+<tr>
+<td>CIB3</td>
+<td style="text-align: right;">5.19 · bone marrow.97</td>
+<td style="text-align: right;">3.66 · testis.282</td>
+<td style="text-align: right;">8.9 · colon / distal enterocytes / c-9</td>
+<td style="text-align: right;">14.4 · testis / late spermatids / c-11</td>
+<td style="text-align: right;">2.94 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">0.556×</td>
+</tr>
+<tr>
+<td>CLDN34</td>
+<td style="text-align: right;">1.4 · temporo-occipital transitional zone</td>
+<td style="text-align: right;">3.84 · Testis</td>
+<td style="text-align: right;">4.7 · liver / hepatocytes / c-18</td>
+<td style="text-align: right;">18.6 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">1.71 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">2.23×</td>
+</tr>
+<tr>
+<td>CPSF4L</td>
+<td style="text-align: right;">2.2 · cerebellar cortex</td>
+<td style="text-align: right;">3.04 · ovary.3662</td>
+<td style="text-align: right;">3 · eye / bipolar cells / c-3</td>
+<td style="text-align: right;">7.4 · ovary / oocytes / c-15</td>
+<td style="text-align: right;">21.2 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">7.26×</td>
+</tr>
+<tr>
+<td>CSAG2</td>
+<td style="text-align: right;">5.69 · lymph node.173</td>
+<td style="text-align: right;">4.08 · testis.283</td>
+<td style="text-align: right;">1 · lymph node / mixed cell types / c-6</td>
+<td style="text-align: right;">0.9 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">18.8 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">1.96×</td>
+</tr>
+<tr>
+<td>CSAG3</td>
+<td style="text-align: right;">4.28 · lymph node.177</td>
+<td style="text-align: right;">10.4 · testis.244</td>
+<td style="text-align: right;">0.2 · colon / undifferentiated cells / c-8</td>
+<td style="text-align: right;">1.8 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">84 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">5.25×</td>
+</tr>
+<tr>
+<td>CT47B1</td>
+<td style="text-align: right;">0 · Adipose_Subcutaneous</td>
+<td style="text-align: right;">14.6 · Testis</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">200 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">9.83 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">6.49×</td>
+</tr>
+<tr>
+<td>CTAGE1</td>
+<td style="text-align: right;">0.0728 · small intestine.234</td>
+<td style="text-align: right;">25 · Testis</td>
+<td style="text-align: right;">1.3 · brain / inhibitory neurons / c-26</td>
+<td style="text-align: right;">227 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.123 · 7 day / epiblast</td>
+<td style="text-align: right;">7.7×</td>
+</tr>
+<tr>
+<td>CTAGE15</td>
+<td style="text-align: right;">1.6 · thyroid gland</td>
+<td style="text-align: right;">10.5 · testis</td>
+<td style="text-align: right;">0.8 · vascular / t-cells / c-10</td>
+<td style="text-align: right;">1.5 · prostate / endothelial cells / c-11</td>
+<td style="text-align: right;">0.389 · 6 day / epiblast</td>
+<td style="text-align: right;">5.33×</td>
+</tr>
+<tr>
+<td>CTAGE6</td>
+<td style="text-align: right;">0.8 · somatomor cortex, precentral gyrus (white matter)</td>
+<td style="text-align: right;">18.7 · testis</td>
+<td style="text-align: right;">2.2 · pancreas / exocrine glandular cells / c-10</td>
+<td style="text-align: right;">9.4 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.0914 · 5 day / trophectoderm</td>
+<td style="text-align: right;">7.7×</td>
+</tr>
+<tr>
+<td>CTXND2</td>
+<td style="text-align: right;">0.9 · paraventricular nucleus</td>
+<td style="text-align: right;">1.77 · fallopian tube.306</td>
+<td style="text-align: right;">0.9 · brain / microglial cells / c-43</td>
+<td style="text-align: right;">7.8 · placenta / extravillous trophoblasts / c-25</td>
+<td style="text-align: right;">1.68 · 7 day / epiblast</td>
+<td style="text-align: right;">1.77×</td>
+</tr>
+<tr>
+<td>DCAF8L1</td>
+<td style="text-align: right;">0.0513 · Bladder</td>
+<td style="text-align: right;">3.11 · testis.349</td>
+<td style="text-align: right;">0.4 · skeletal muscle / t-cells / c-5</td>
+<td style="text-align: right;">12.5 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">5.81 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">3.11×</td>
+</tr>
+<tr>
+<td>DEFB125</td>
+<td style="text-align: right;">0.1 · retina</td>
+<td style="text-align: right;">3.53 · seminal vesicle.386</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">1.8 · testis / late spermatids / c-11</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">3.53×</td>
+</tr>
+<tr>
+<td>DEFB136</td>
+<td style="text-align: right;">1.1 · supramarginal gyrus</td>
+<td style="text-align: right;">1.46 · epididymis.407</td>
+<td style="text-align: right;">0.2 · colon / undifferentiated cells / c-8</td>
+<td style="text-align: right;">2.4 · testis / late spermatids / c-9</td>
+<td style="text-align: right;">0.195 · 6 day / epiblast</td>
+<td style="text-align: right;">1.33×</td>
+</tr>
+<tr>
+<td>ENSG00000284934</td>
+<td style="text-align: right;">6.65 · adrenal gland.89</td>
+<td style="text-align: right;">4.32 · testis.279</td>
+<td style="text-align: right;">3.7 · small intestine / proximal enterocytes / c-7</td>
+<td style="text-align: right;">0.3 · endometrium / endometrial stromal cells / c-19</td>
+<td style="text-align: right;">19 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">1.25×</td>
+</tr>
+<tr>
+<td>EVX2</td>
+<td style="text-align: right;">3.33 · colon.67</td>
+<td style="text-align: right;">7.6 · Testis</td>
+<td style="text-align: right;">11.7 · rectum / enteroendocrine cells / c-9</td>
+<td style="text-align: right;">22.2 · testis / late spermatids / c-13</td>
+<td style="text-align: right;">0.721 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">1.52×</td>
+</tr>
+<tr>
+<td>FAM240B</td>
+<td style="text-align: right;">3.4 · angular gyrus (white matter)</td>
+<td style="text-align: right;">1.53 · testis.278</td>
+<td style="text-align: right;">2.7 · salivary gland / fibroblasts / c-19</td>
+<td style="text-align: right;">4.1 · testis / spermatogonia / c-14</td>
+<td style="text-align: right;">11.1 · 5 day / unspecified lineage</td>
+<td style="text-align: right;">2.05×</td>
+</tr>
+<tr>
+<td>FAM47A</td>
+<td style="text-align: right;">1.3 · transversal temporal gyrus, anterior</td>
+<td style="text-align: right;">7.14 · testis.282</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">17.3 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">2.22 · 5 day / epiblast</td>
+<td style="text-align: right;">5.49×</td>
+</tr>
+<tr>
+<td>FAM47C</td>
+<td style="text-align: right;">0.28 · Pituitary</td>
+<td style="text-align: right;">6.75 · Testis</td>
+<td style="text-align: right;">0.1 · brain / inhibitory neurons / c-23</td>
+<td style="text-align: right;">15.3 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.354 · 6 day / epiblast</td>
+<td style="text-align: right;">6.5×</td>
+</tr>
+<tr>
+<td>FOXR2</td>
+<td style="text-align: right;">0.0287 · adipose tissue.86</td>
+<td style="text-align: right;">3.53 · testis.244</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">5.2 · testis / spermatogonia / c-4</td>
+<td style="text-align: right;">7.92 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">3.53×</td>
+</tr>
+<tr>
+<td>FTHL17</td>
+<td style="text-align: right;">0.122 · skin.225</td>
+<td style="text-align: right;">7.62 · testis.279</td>
+<td style="text-align: right;">0.1 · salivary gland / salivary duct cells / c-12</td>
+<td style="text-align: right;">27.5 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">9.48 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">7.62×</td>
+</tr>
+<tr>
+<td>GAB4</td>
+<td style="text-align: right;">1.96 · spleen.378</td>
+<td style="text-align: right;">13.6 · testis.282</td>
+<td style="text-align: right;">1 · vascular / schwann cells / c-18</td>
+<td style="text-align: right;">50.3 · testis / late spermatids / c-11</td>
+<td style="text-align: right;">1.55 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">6.95×</td>
+</tr>
+<tr>
+<td>GALP</td>
+<td style="text-align: right;">1.46 · liver.359</td>
+<td style="text-align: right;">0.24 · testis.279</td>
+<td style="text-align: right;">0.8 · liver / hepatocytes / c-0</td>
+<td style="text-align: right;">9 · endometrium / glandular and luminal cells / c-12</td>
+<td style="text-align: right;">1.52 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">0.164×</td>
+</tr>
+<tr>
+<td>GFY</td>
+<td style="text-align: right;">1.8 · vermis</td>
+<td style="text-align: right;">3 · Testis</td>
+<td style="text-align: right;">3.1 · pbmc / b-cells / c-8</td>
+<td style="text-align: right;">16.2 · ovary / oocytes / c-15</td>
+<td style="text-align: right;">10 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">2.64×</td>
+</tr>
+<tr>
+<td>GOLGA6L1</td>
+<td style="text-align: right;">0.3 · cerebral cortex</td>
+<td style="text-align: right;">36.5 · testis</td>
+<td style="text-align: right;">1.1 · eye / muller glia cells / c-9</td>
+<td style="text-align: right;">15.1 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.756 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">0.0991×</td>
+</tr>
+<tr>
+<td>GOLGA8K</td>
+<td style="text-align: right;">5.01 · thyroid gland.250</td>
+<td style="text-align: right;">15.8 · testis.278</td>
+<td style="text-align: right;">1 · spleen / t-cells / c-5</td>
+<td style="text-align: right;">21.7 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">2.16 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">3.15×</td>
+</tr>
+<tr>
+<td>H2BW1</td>
+<td style="text-align: right;">0.4 · paracentral lobule, posterior</td>
+<td style="text-align: right;">1.28 · Testis</td>
+<td style="text-align: right;">0.1 · brain / excitatory neurons / c-20</td>
+<td style="text-align: right;">8.1 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">1.12 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">0.893×</td>
+</tr>
+<tr>
+<td>HOXD12</td>
+<td style="text-align: right;">6.32 · colon.68</td>
+<td style="text-align: right;">2.35 · Vagina</td>
+<td style="text-align: right;">18.4 · rectum / enteroendocrine cells / c-9</td>
+<td style="text-align: right;">0 · breast / adipocytes / c-23</td>
+<td style="text-align: right;">1.36 · 5 day / unspecified lineage</td>
+<td style="text-align: right;">0.339×</td>
+</tr>
+<tr>
+<td>HUS1B</td>
+<td style="text-align: right;">2.2 · nucleus ambiguus</td>
+<td style="text-align: right;">4.69 · Testis</td>
+<td style="text-align: right;">5.1 · skin / endothelial cells / c-17</td>
+<td style="text-align: right;">30 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">8.02 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">0.169×</td>
+</tr>
+<tr>
+<td>IQCA1L</td>
+<td style="text-align: right;">0.367 · skeletal muscle.340</td>
+<td style="text-align: right;">16.7 · testis.282</td>
+<td style="text-align: right;">0.7 · lymph node / b-cells / c-4</td>
+<td style="text-align: right;">91.7 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.762 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">7.26×</td>
+</tr>
+<tr>
+<td>KLF14</td>
+<td style="text-align: right;">2.03 · adipose tissue.86</td>
+<td style="text-align: right;">2.01 · Testis</td>
+<td style="text-align: right;">3.9 · salivary gland / serous glandular cells / c-16</td>
+<td style="text-align: right;">8 · placenta / smooth muscle cells / c-23</td>
+<td style="text-align: right;">2.06 · 5 day / unspecified lineage</td>
+<td style="text-align: right;">0.95×</td>
+</tr>
+<tr>
+<td>LCN9</td>
+<td style="text-align: right;">2.46 · cerebral cortex.105</td>
+<td style="text-align: right;">2.96 · epididymis.407</td>
+<td style="text-align: right;">0.5 · brain / oligodendrocyte precursor cells / c-42</td>
+<td style="text-align: right;">0.1 · endometrium / endometrial stromal cells / c-7</td>
+<td style="text-align: right;">0.0308 · 7 day / trophectoderm</td>
+<td style="text-align: right;">1.2×</td>
+</tr>
+<tr>
+<td>LRRC52</td>
+<td style="text-align: right;">5.48 · parathyroid gland.1600</td>
+<td style="text-align: right;">40.3 · Testis</td>
+<td style="text-align: right;">1 · skin / endothelial cells / c-17</td>
+<td style="text-align: right;">295 · testis / early spermatids / c-3</td>
+<td style="text-align: right;">0.682 · Carnegie stage 7 / emergent mesoderm</td>
+<td style="text-align: right;">6.61×</td>
+</tr>
+<tr>
+<td>LRRIQ4</td>
+<td style="text-align: right;">1.12 · colon.69</td>
+<td style="text-align: right;">7.76 · testis.282</td>
+<td style="text-align: right;">2.4 · esophagus / t-cells / c-8</td>
+<td style="text-align: right;">75.5 · testis / late spermatids / c-5</td>
+<td style="text-align: right;">2.8 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">6.92×</td>
+</tr>
+<tr>
+<td>MAGEB17</td>
+<td style="text-align: right;">1.85 · Esophagus_Gastroesophageal_Junction</td>
+<td style="text-align: right;">4.55 · testis.282</td>
+<td style="text-align: right;">2.8 · brain / inhibitory neurons / c-28</td>
+<td style="text-align: right;">1 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">8.51 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">2.46×</td>
+</tr>
+<tr>
+<td>MAGEB18</td>
+<td style="text-align: right;">0 · Adipose_Subcutaneous</td>
+<td style="text-align: right;">2.71 · testis.279</td>
+<td style="text-align: right;">0.4 · colon / undifferentiated cells / c-8</td>
+<td style="text-align: right;">6.2 · testis / spermatocytes / c-16</td>
+<td style="text-align: right;">0.486 · 5 day / epiblast</td>
+<td style="text-align: right;">2.71×</td>
+</tr>
+<tr>
+<td>MOS</td>
+<td style="text-align: right;">0.5 · nucleus of the diagonal band</td>
+<td style="text-align: right;">2.06 · testis.279</td>
+<td style="text-align: right;">0.1 · brain / excitatory neurons / c-20</td>
+<td style="text-align: right;">10.8 · testis / spermatocytes / c-16</td>
+<td style="text-align: right;">27.3 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">7.42×</td>
+</tr>
+<tr>
+<td>OCM2</td>
+<td style="text-align: right;">0.39 · liver.367</td>
+<td style="text-align: right;">1.51 · testis.354</td>
+<td style="text-align: right;">0.1 · brain / excitatory neurons / c-0</td>
+<td style="text-align: right;">1.5 · ovary / oocytes / c-15</td>
+<td style="text-align: right;">4.88 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">1.51×</td>
+</tr>
+<tr>
+<td>OTUD6A</td>
+<td style="text-align: right;">2.8 · cerebellar cortex</td>
+<td style="text-align: right;">15.2 · testis.279</td>
+<td style="text-align: right;">2.7 · eye / rod photoreceptor cells / c-0</td>
+<td style="text-align: right;">110 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">12.3 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">5.42×</td>
+</tr>
+<tr>
+<td>PGAM4</td>
+<td style="text-align: right;">1.1 · retrosplenial cortex</td>
+<td style="text-align: right;">0.4 · prostate.412</td>
+<td style="text-align: right;">4.2 · small intestine / undifferentiated cells / c-9</td>
+<td style="text-align: right;">1.1 · fallopian tube / macrophages / c-14</td>
+<td style="text-align: right;">22 · 6 day / epiblast</td>
+<td style="text-align: right;">5.16×</td>
+</tr>
+<tr>
+<td>PKDREJ</td>
+<td style="text-align: right;">1.5 · occipital cortex (white matter)</td>
+<td style="text-align: right;">9.69 · testis.349</td>
+<td style="text-align: right;">2.2 · bone marrow / t-cells / c-6</td>
+<td style="text-align: right;">19.2 · testis / spermatocytes / c-16</td>
+<td style="text-align: right;">0.0506 · 6 day / trophectoderm</td>
+<td style="text-align: right;">3.08×</td>
+</tr>
+<tr>
+<td>PPP4R3C</td>
+<td style="text-align: right;">0 · Adipose_Subcutaneous</td>
+<td style="text-align: right;">5.45 · testis.349</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">22.7 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">6.69 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">5.45×</td>
+</tr>
+<tr>
+<td>PRDM9</td>
+<td style="text-align: right;">2.4 · angular gyrus (white matter)</td>
+<td style="text-align: right;">10.6 · testis.349</td>
+<td style="text-align: right;">0.2 · brain / inhibitory neurons / c-25</td>
+<td style="text-align: right;">61.8 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">4.03 · 5 day / primitive endoderm</td>
+<td style="text-align: right;">4.4×</td>
+</tr>
+<tr>
+<td>PROKR1</td>
+<td style="text-align: right;">2.78 · adipose tissue.137</td>
+<td style="text-align: right;">4.21 · epididymis.407</td>
+<td style="text-align: right;">1.2 · stomach / t-cells / c-4</td>
+<td style="text-align: right;">4.4 · breast / adipocytes / c-7</td>
+<td style="text-align: right;">0.953 · 5 day / epiblast</td>
+<td style="text-align: right;">1.52×</td>
+</tr>
+<tr>
+<td>PRR20A/B/C/D/E</td>
+<td style="text-align: right;">0.0172 · thymus.1599</td>
+<td style="text-align: right;">2.44 · testis.282</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">0 · breast / adipocytes / c-23</td>
+<td style="text-align: right;">37.9 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">7.28×</td>
+</tr>
+<tr>
+<td>PRR23C</td>
+<td style="text-align: right;">1.3 · flocculonodular lobe</td>
+<td style="text-align: right;">2.65 · testis.282</td>
+<td style="text-align: right;">0.8 · adipose tissue / dendritic cells / c-20</td>
+<td style="text-align: right;">5.9 · testis / late spermatids / c-5</td>
+<td style="text-align: right;">8.59 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">4.84×</td>
+</tr>
+<tr>
+<td>PRSS38</td>
+<td style="text-align: right;">0.3 · nuclei of the trapezoid body</td>
+<td style="text-align: right;">9.44 · Testis</td>
+<td style="text-align: right;">2.8 · adipose tissue / t-cells / c-7</td>
+<td style="text-align: right;">51.1 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">0.647 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">7.84×</td>
+</tr>
+<tr>
+<td>PSMA8</td>
+<td style="text-align: right;">3.19 · lymph node.173</td>
+<td style="text-align: right;">55.4 · testis.349</td>
+<td style="text-align: right;">8.5 · liver / plasma cells / c-3</td>
+<td style="text-align: right;">244 · testis / spermatocytes / c-17</td>
+<td style="text-align: right;">6.89 · 5 day / trophectoderm</td>
+<td style="text-align: right;">9.96×</td>
+</tr>
+<tr>
+<td>RBMY1B</td>
+<td style="text-align: right;">0.453 · kidney.377</td>
+<td style="text-align: right;">3.59 · testis.280</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">0 · breast / adipocytes / c-23</td>
+<td style="text-align: right;">11.8 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">8.79×</td>
+</tr>
+<tr>
+<td>RBMY1E</td>
+<td style="text-align: right;">0.228 · kidney.58</td>
+<td style="text-align: right;">8.92 · testis.244</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">2.2 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">12.1 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">8.92×</td>
+</tr>
+<tr>
+<td>RPS4Y2</td>
+<td style="text-align: right;">0.411 · spleen.238</td>
+<td style="text-align: right;">9.96 · prostate.388</td>
+<td style="text-align: right;">14.5 · liver / b-cells / c-16</td>
+<td style="text-align: right;">4.3 · prostate / prostatic glandular cells / c-14</td>
+<td style="text-align: right;">28.7 · 5 day / primitive endoderm</td>
+<td style="text-align: right;">0.696×</td>
+</tr>
+<tr>
+<td>SLC35G3</td>
+<td style="text-align: right;">0.376 · lymph node.174</td>
+<td style="text-align: right;">6.35 · Testis</td>
+<td style="text-align: right;">4.3 · heart muscle / cardiomyocytes / c-1</td>
+<td style="text-align: right;">56 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">21.6 · 5 day / primitive endoderm</td>
+<td style="text-align: right;">3.02×</td>
+</tr>
+<tr>
+<td>SLC35G5</td>
+<td style="text-align: right;">0.812 · Spleen</td>
+<td style="text-align: right;">5.26 · Testis</td>
+<td style="text-align: right;">8.7 · bone marrow / b-cells / c-9</td>
+<td style="text-align: right;">17.5 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">4.34 · 5 day / unspecified lineage</td>
+<td style="text-align: right;">0.774×</td>
+</tr>
+<tr>
+<td>SLC35G6</td>
+<td style="text-align: right;">0.7 · paracentral lobule, posterior</td>
+<td style="text-align: right;">13.6 · Testis</td>
+<td style="text-align: right;">2 · lymph node / t-cells / c-5</td>
+<td style="text-align: right;">42.4 · testis / late spermatids / c-13</td>
+<td style="text-align: right;">0.968 · 6 day / primitive endoderm</td>
+<td style="text-align: right;">5.29×</td>
+</tr>
+<tr>
+<td>SP7</td>
+<td style="text-align: right;">1.6 · temporal white matter</td>
+<td style="text-align: right;">4.07 · testis.279</td>
+<td style="text-align: right;">2 · lymph node / t-cells / c-5</td>
+<td style="text-align: right;">1.9 · testis / late spermatids / c-13</td>
+<td style="text-align: right;">18.8 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">2.63×</td>
+</tr>
+<tr>
+<td>SPANXD</td>
+<td style="text-align: right;">2.6 · preoptic area</td>
+<td style="text-align: right;">32.1 · Testis</td>
+<td style="text-align: right;">0.1 · salivary gland / serous glandular cells / c-10</td>
+<td style="text-align: right;">2.43e+03 · testis / late spermatids / c-2</td>
+<td style="text-align: right;">18.4 · 6 day / epiblast</td>
+<td style="text-align: right;">9.13×</td>
+</tr>
+<tr>
+<td>SPANXN1</td>
+<td style="text-align: right;">0 · Adipose_Subcutaneous</td>
+<td style="text-align: right;">6.01 · testis.244</td>
+<td style="text-align: right;">2.2 · pancreas / exocrine glandular cells / c-10</td>
+<td style="text-align: right;">37.6 · testis / late spermatids / c-13</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">6.01×</td>
+</tr>
+<tr>
+<td>SPATA31A3</td>
+<td style="text-align: right;">0.0295 · kidney.58</td>
+<td style="text-align: right;">8.86 · testis.283</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">1.2 · testis / late spermatids / c-9</td>
+<td style="text-align: right;">0.278 · 5 day / unspecified lineage</td>
+<td style="text-align: right;">8.86×</td>
+</tr>
+<tr>
+<td>SPATA31A6</td>
+<td style="text-align: right;">0.3 · hippocampus</td>
+<td style="text-align: right;">2.95 · testis.278</td>
+<td style="text-align: right;">0.1 · brain / excitatory neurons / c-31</td>
+<td style="text-align: right;">1 · testis / late spermatids / c-13</td>
+<td style="text-align: right;">0.229 · 7 day / trophectoderm</td>
+<td style="text-align: right;">2.95×</td>
+</tr>
+<tr>
+<td>SRMS</td>
+<td style="text-align: right;">4.57 · stomach.241</td>
+<td style="text-align: right;">8.97 · prostate.207</td>
+<td style="text-align: right;">2.9 · heart muscle / smooth muscle cells / c-3</td>
+<td style="text-align: right;">0.2 · breast / t-cells / c-0</td>
+<td style="text-align: right;">0.504 · 6 day / primitive endoderm</td>
+<td style="text-align: right;">1.96×</td>
+</tr>
+<tr>
+<td>SSX5</td>
+<td style="text-align: right;">3.5 · ventromedial nucleus</td>
+<td style="text-align: right;">1.84 · testis.244</td>
+<td style="text-align: right;">0.6 · lung / endothelial cells / c-5</td>
+<td style="text-align: right;">5.8 · testis / spermatogonia / c-4</td>
+<td style="text-align: right;">17.4 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">2.98×</td>
+</tr>
+<tr>
+<td>SUPT20HL1</td>
+<td style="text-align: right;">0.897 · Colon_Sigmoid</td>
+<td style="text-align: right;">2.01 · Fallopian_Tube</td>
+<td style="text-align: right;">3.7 · esophagus / fibroblasts / c-0</td>
+<td style="text-align: right;">3.9 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">1.27 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">1.07×</td>
+</tr>
+<tr>
+<td>TCP11X1</td>
+<td style="text-align: right;">0.783 · lung.164</td>
+<td style="text-align: right;">2.45 · testis.283</td>
+<td style="text-align: right;">0.9 · brain / inhibitory neurons / c-23</td>
+<td style="text-align: right;">0.1 · testis / spermatogonia / c-14</td>
+<td style="text-align: right;">8.97 · Carnegie stage 7 / axial mesoderm</td>
+<td style="text-align: right;">8.97×</td>
+</tr>
+<tr>
+<td>TEX13C</td>
+<td style="text-align: right;">0.3 · putamen</td>
+<td style="text-align: right;">4.21 · testis.282</td>
+<td style="text-align: right;">0.1 · adipose tissue / fibroblasts / c-8</td>
+<td style="text-align: right;">13.6 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">4.26 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">4.21×</td>
+</tr>
+<tr>
+<td>TEX13D</td>
+<td style="text-align: right;">0.218 · smooth muscle.330</td>
+<td style="text-align: right;">8.4 · testis.349</td>
+<td style="text-align: right;">0.6 · pbmc / t-cells / c-2</td>
+<td style="text-align: right;">26.3 · testis / spermatocytes / c-1</td>
+<td style="text-align: right;">25.1 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">9.83×</td>
+</tr>
+<tr>
+<td>TGIF2LY</td>
+<td style="text-align: right;">0.105 · small intestine.233</td>
+<td style="text-align: right;">9.33 · testis.244</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">36.8 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">2.17 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">9.33×</td>
+</tr>
+<tr>
+<td>TMEM95</td>
+<td style="text-align: right;">1.2 · corpus callosum, splenium (white matter)</td>
+<td style="text-align: right;">25.7 · Testis</td>
+<td style="text-align: right;">35.9 · esophagus / schwann cells / c-14</td>
+<td style="text-align: right;">86.4 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">0.708 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">9.11×</td>
+</tr>
+<tr>
+<td>TRIM51G</td>
+<td style="text-align: right;">0.1 · perirhinal gyrus</td>
+<td style="text-align: right;">0.121 · testis.278</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">0.1 · testis / spermatogonia / c-14</td>
+<td style="text-align: right;">7.97 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">2.72×</td>
+</tr>
+<tr>
+<td>TRIM64C</td>
+<td style="text-align: right;">0.0342 · rectum.333</td>
+<td style="text-align: right;">0.128 · testis.278</td>
+<td style="text-align: right;">0 · adipose tissue / adipocytes / c-12</td>
+<td style="text-align: right;">0 · breast / adipocytes / c-23</td>
+<td style="text-align: right;">10.4 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">5.37×</td>
+</tr>
+<tr>
+<td>TTLL8</td>
+<td style="text-align: right;">1.5 · lymph node.175</td>
+<td style="text-align: right;">16 · Testis</td>
+<td style="text-align: right;">0.8 · bone marrow / b-cells / c-3</td>
+<td style="text-align: right;">9 · testis / late spermatids / c-11</td>
+<td style="text-align: right;">0.125 · 6 day / trophectoderm</td>
+<td style="text-align: right;">8.68×</td>
+</tr>
+<tr>
+<td>XKR3</td>
+<td style="text-align: right;">0.331 · adipose tissue.331</td>
+<td style="text-align: right;">25.4 · testis.371</td>
+<td style="text-align: right;">1.3 · salivary gland / serous glandular cells / c-16</td>
+<td style="text-align: right;">297 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">8.48×</td>
+</tr>
+<tr>
+<td>XKR5</td>
+<td style="text-align: right;">1.6 · dorsomedial nucleus</td>
+<td style="text-align: right;">1.55 · prostate.365</td>
+<td style="text-align: right;">1.2 · rectum / mixed immune cells / c-8</td>
+<td style="text-align: right;">7.2 · endometrium / endothelial cells / c-23</td>
+<td style="text-align: right;">1.16 · 6 day / primitive endoderm</td>
+<td style="text-align: right;">0.971×</td>
+</tr>
+<tr>
+<td>ZACN</td>
+<td style="text-align: right;">24.9 · skin.227</td>
+<td style="text-align: right;">22 · prostate.206</td>
+<td style="text-align: right;">4.8 · thymus / t-cells / c-18</td>
+<td style="text-align: right;">1.8 · fallopian tube / ciliated cells / c-12</td>
+<td style="text-align: right;">18.1 · 7 day / primitive endoderm</td>
+<td style="text-align: right;">0.883×</td>
+</tr>
+<tr>
+<td>ZNF560</td>
+<td style="text-align: right;">2.8 · retina</td>
+<td style="text-align: right;">15.5 · Testis</td>
+<td style="text-align: right;">3.9 · bronchus / basal respiratory cells / c-14</td>
+<td style="text-align: right;">140 · testis / early spermatids / c-8</td>
+<td style="text-align: right;">26.4 · 4 day / unspecified lineage</td>
+<td style="text-align: right;">7.23×</td>
+</tr>
+<tr>
+<td>ZNF705D</td>
+<td style="text-align: right;">0.3 · choroid plexus</td>
+<td style="text-align: right;">3.88 · epididymis.407</td>
+<td style="text-align: right;">0.6 · kidney / proximal tubular cells / c-5</td>
+<td style="text-align: right;">6.7 · testis / late spermatids / c-13</td>
+<td style="text-align: right;">9.79 · 3 day / unspecified lineage</td>
+<td style="text-align: right;">9.49×</td>
+</tr>
+</tbody>
+</table>
+<h2>Review of the 31 holds</h2>
+<p>Eye and retinal findings remain Vital-tissue concerns. All 31 remain excluded from antigen sets. None is rescued by low bulk RNA or a mapping-risk flag. Established gene-specific normal-cell expression would move a hold to Unsafe; the current review does not establish that attribution.</p>
+<h3>What the deeper review found</h3>
+<ul>
+<li><strong>Ocular evidence:</strong> HPA's retina values under its GTEx label are actually <a href="https://v23.proteinatlas.org/about/assays%2Bannotation">EyeGEx RNA processed by HPA</a>. The older rare-cell confirmation summary omitted eye; the table below includes retinal bulk, including RAD21L1 (1.2 TPM), RGPD3 (1.3) and RGPD4 (1.4). These are additional concerns, not proof that the same cell or exact locus produced both signals. There is no separate HPA retinal bulk measurement here. Retinal RNA cannot assess corneal, conjunctival or optic-nerve populations, and duplicated HPA exports of EyeGEx are one source.</li>
+<li><strong>Replication:</strong> collection IDs are not guaranteed independent studies. The <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC13050529/">integrated retinal atlas</a> combines public studies and new samples. Its final publication postdates the pinned Census snapshot, so original-study and donor mapping must be checked against that snapshot. Counts below are collections and source-specific donor labels, not verified unique patients. Possible overlap does not dismiss the signals.</li>
+<li><strong>PSG8:</strong> the strongest ocular observation reaches 46% multi-molecule cells; the paralog attribution question remains consequential. <a href="https://doi.org/10.1167/iovs.09-3622">Kurji et al.</a> also report a PSG8-labelled microarray signal in cultured RPE (Table 2). The probe has not been checked for PSG-family specificity and the reported validation panel did not validate PSG8. This is additional RNA evidence, not exact-protein confirmation.</li>
+<li><strong>Host-overlap hypotheses:</strong> CAGE1, PPP3R2, RAD21L1 and the other H-coded genes need locus-specific attribution. Same-strand overlap does not demonstrate host pre-mRNA contamination. The previous bulk confirmation score was the weaker source maximum, not the highest normal expression: for example, brain HPA reaches 0.5 TPM for CAGE1 and 2.7 for PPP3R2, despite much lower GTEx values. Negative bulk cannot rule out a rare essential population.</li>
+<li><strong>Single-collection findings:</strong> DCAF8L2 (16% retinal bipolar cells), FBXO47 (6.8% keratocytes) and NKX2-6 (37% atrial cardiomyocytes) lack a mapping-risk flag but still need independent confirmation. Their frequency warrants holding them; it does not justify calling them artifacts.</li>
+<li><strong>DAZL and CTAG2:</strong> <a href="https://doi.org/10.1186/s12885-020-07155-y">Zhang et al.</a> provide DAZL glioblastoma-expression support, but their normal astrocyte comparator does not resolve the ocular astrocyte signal. CTAG2 has low but nonzero lung bulk measurements and remains below reproductive 10× even if its review hold were resolved. Both newly reviewed papers are recorded centrally with exact gene IDs and permitted uses.</li>
+</ul>
+<p>No selected organ has reliable positive HPA staining in this extraction. Usually the assay is missing; only measured negative rows count as negative staining. Neither missing staining nor a negative bulk measurement clears a cell-specific concern. Use Unsafe|Other for conservative peptide subtraction so unresolved proteins remain in the exclusion background.</p>
+<table>
+<thead>
+<tr>
+<th>Protein</th>
+<th>Organ / strongest population</th>
+<th style="text-align: right;">Collections / donor labels</th>
+<th style="text-align: right;">Peak ≥2-UMI cells</th>
+<th style="text-align: right;">Same-organ HPA / GTEx–EyeGEx TPM</th>
+<th style="text-align: right;">Same-organ cell nTPM</th>
+<th>Codes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ARMH2</td>
+<td>lung / multiciliated columnar cell of tracheobronchial tree</td>
+<td style="text-align: right;">2 / 4</td>
+<td style="text-align: right;">30.8%</td>
+<td style="text-align: right;">6.06 / 0.4</td>
+<td style="text-align: right;">4.4</td>
+<td>H F</td>
+</tr>
+<tr>
+<td>CAGE1</td>
+<td>brain / dopaminergic neuron</td>
+<td style="text-align: right;">2 / 3</td>
+<td style="text-align: right;">3.29%</td>
+<td style="text-align: right;">0.5 / 0.0125</td>
+<td style="text-align: right;">2.6</td>
+<td>H</td>
+</tr>
+<tr>
+<td>CTAG2</td>
+<td>lung / pulmonary alveolar type 2 cell</td>
+<td style="text-align: right;">2 / 3</td>
+<td style="text-align: right;">4.29%</td>
+<td style="text-align: right;">0.537 / 0.3</td>
+<td style="text-align: right;">0</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>DAZL</td>
+<td>eye / astrocyte</td>
+<td style="text-align: right;">1 / 4</td>
+<td style="text-align: right;">5.86%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>H S E</td>
+</tr>
+<tr>
+<td>DCAF8L2</td>
+<td>eye / invaginating midget bipolar cell</td>
+<td style="text-align: right;">1 / 2</td>
+<td style="text-align: right;">16.3%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>S E C</td>
+</tr>
+<tr>
+<td>EFCAB3</td>
+<td>lung / pulmonary alveolar type 2 cell</td>
+<td style="text-align: right;">2 / 10</td>
+<td style="text-align: right;">15.9%</td>
+<td style="text-align: right;">1.95 / 0</td>
+<td style="text-align: right;">0.1</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>FBXO47</td>
+<td>eye / keratocyte</td>
+<td style="text-align: right;">1 / 1</td>
+<td style="text-align: right;">6.76%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>S E</td>
+</tr>
+<tr>
+<td>GAGE10</td>
+<td>brain / L2/3-6 intratelencephalic projecting glutamatergic neuron</td>
+<td style="text-align: right;">4 / 17</td>
+<td style="text-align: right;">3.53%</td>
+<td style="text-align: right;">1.9 / 0.6</td>
+<td style="text-align: right;">1.2</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>NKX2-6</td>
+<td>heart / regular atrial cardiac myocyte</td>
+<td style="text-align: right;">1 / 1</td>
+<td style="text-align: right;">36.8%</td>
+<td style="text-align: right;">0.197 / 0.786</td>
+<td style="text-align: right;">0.2</td>
+<td>S F</td>
+</tr>
+<tr>
+<td>OOSP4B</td>
+<td>brain / L2/3-6 intratelencephalic projecting glutamatergic neuron</td>
+<td style="text-align: right;">2 / 4</td>
+<td style="text-align: right;">3.11%</td>
+<td style="text-align: right;">0.0223 / 0</td>
+<td style="text-align: right;">0</td>
+<td>H</td>
+</tr>
+<tr>
+<td>OR4N2</td>
+<td>brain / GABAergic neuron</td>
+<td style="text-align: right;">5 / 15</td>
+<td style="text-align: right;">2.57%</td>
+<td style="text-align: right;">3.06 / 0.0118</td>
+<td style="text-align: right;">2.3</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>POTEC</td>
+<td>eye / corneal endothelial cell</td>
+<td style="text-align: right;">2 / 2</td>
+<td style="text-align: right;">12.1%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>P E</td>
+</tr>
+<tr>
+<td>POTEF</td>
+<td>heart / ventricular cardiac muscle cell</td>
+<td style="text-align: right;">1 / 1</td>
+<td style="text-align: right;">8.35%</td>
+<td style="text-align: right;">0.0415 / 0.0195</td>
+<td style="text-align: right;">0</td>
+<td>P S F</td>
+</tr>
+<tr>
+<td>PPP3R2</td>
+<td>brain / dopaminergic neuron</td>
+<td style="text-align: right;">3 / 49</td>
+<td style="text-align: right;">8.84%</td>
+<td style="text-align: right;">2.7 / 0.0253</td>
+<td style="text-align: right;">0</td>
+<td>H</td>
+</tr>
+<tr>
+<td>PRDM7</td>
+<td>eye / melanocyte</td>
+<td style="text-align: right;">4 / 6</td>
+<td style="text-align: right;">12.9%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>P F E</td>
+</tr>
+<tr>
+<td>PSG3</td>
+<td>brain / L2/3-6 intratelencephalic projecting glutamatergic neuron</td>
+<td style="text-align: right;">4 / 21</td>
+<td style="text-align: right;">3.48%</td>
+<td style="text-align: right;">0.1 / 0.0133</td>
+<td style="text-align: right;">1.1</td>
+<td>P</td>
+</tr>
+<tr>
+<td>PSG8</td>
+<td>eye / rod bipolar cell</td>
+<td style="text-align: right;">8 / 103</td>
+<td style="text-align: right;">46%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>P E C</td>
+</tr>
+<tr>
+<td>RAD21L1</td>
+<td>eye / ON midget ganglion cell</td>
+<td style="text-align: right;">4 / 35</td>
+<td style="text-align: right;">6.04%</td>
+<td style="text-align: right;">— / 1.2</td>
+<td style="text-align: right;">0.3</td>
+<td>H E C</td>
+</tr>
+<tr>
+<td>RGPD3</td>
+<td>eye / diffuse bipolar 2 cell</td>
+<td style="text-align: right;">3 / 17</td>
+<td style="text-align: right;">15.1%</td>
+<td style="text-align: right;">— / 1.3</td>
+<td style="text-align: right;">1</td>
+<td>P F E C</td>
+</tr>
+<tr>
+<td>RGPD4</td>
+<td>eye / diffuse bipolar 2 cell</td>
+<td style="text-align: right;">3 / 16</td>
+<td style="text-align: right;">11.8%</td>
+<td style="text-align: right;">— / 1.4</td>
+<td style="text-align: right;">3</td>
+<td>P F E C</td>
+</tr>
+<tr>
+<td>RGSL1</td>
+<td>brain / lamp5 GABAergic cortical interneuron</td>
+<td style="text-align: right;">4 / 26</td>
+<td style="text-align: right;">5.09%</td>
+<td style="text-align: right;">0.313 / 0.0124</td>
+<td style="text-align: right;">0.9</td>
+<td>H</td>
+</tr>
+<tr>
+<td>RIPPLY3</td>
+<td>lung / pulmonary alveolar type 2 cell</td>
+<td style="text-align: right;">2 / 4</td>
+<td style="text-align: right;">2.51%</td>
+<td style="text-align: right;">0.72 / 0.624</td>
+<td style="text-align: right;">2.5</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>SATL1</td>
+<td>brain / L6b glutamatergic cortical neuron</td>
+<td style="text-align: right;">13 / 150</td>
+<td style="text-align: right;">23.4%</td>
+<td style="text-align: right;">1.3 / 0.42</td>
+<td style="text-align: right;">1.5</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>TAS2R1</td>
+<td>brain / direct pathway medium spiny neuron</td>
+<td style="text-align: right;">3 / 7</td>
+<td style="text-align: right;">2.7%</td>
+<td style="text-align: right;">3.2 / 0.373</td>
+<td style="text-align: right;">0.1</td>
+<td>H</td>
+</tr>
+<tr>
+<td>TUBB8</td>
+<td>brain / glutamatergic neuron</td>
+<td style="text-align: right;">6 / 34</td>
+<td style="text-align: right;">9.05%</td>
+<td style="text-align: right;">0.4 / 0.3</td>
+<td style="text-align: right;">1.8</td>
+<td>P</td>
+</tr>
+<tr>
+<td>VCX3B</td>
+<td>eye / retinal ganglion cell</td>
+<td style="text-align: right;">2 / 3</td>
+<td style="text-align: right;">4.44%</td>
+<td style="text-align: right;">— / 0.5</td>
+<td style="text-align: right;">0.8</td>
+<td>P E C</td>
+</tr>
+<tr>
+<td>ZC3H11B</td>
+<td>brain / glutamatergic neuron</td>
+<td style="text-align: right;">2 / 5</td>
+<td style="text-align: right;">6.23%</td>
+<td style="text-align: right;">0.107 / 0.2</td>
+<td style="text-align: right;">0</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>ZNF280A</td>
+<td>eye / conjunctival epithelial cell</td>
+<td style="text-align: right;">2 / 6</td>
+<td style="text-align: right;">6.85%</td>
+<td style="text-align: right;">— / 0</td>
+<td style="text-align: right;">0</td>
+<td>P E</td>
+</tr>
+<tr>
+<td>ZNF492</td>
+<td>brain / L2/3-6 intratelencephalic projecting glutamatergic neuron</td>
+<td style="text-align: right;">3 / 4</td>
+<td style="text-align: right;">1.62%</td>
+<td style="text-align: right;">2.5 / 0.13</td>
+<td style="text-align: right;">2.8</td>
+<td>P F</td>
+</tr>
+<tr>
+<td>ZNF705G</td>
+<td>eye / Mueller cell</td>
+<td style="text-align: right;">2 / 4</td>
+<td style="text-align: right;">1.47%</td>
+<td style="text-align: right;">— / 0.2</td>
+<td style="text-align: right;">2.6</td>
+<td>P F E C</td>
+</tr>
+<tr>
+<td>ZNF99</td>
+<td>kidney / kidney loop of Henle thick ascending limb epithelial cell</td>
+<td style="text-align: right;">4 / 8</td>
+<td style="text-align: right;">4.64%</td>
+<td style="text-align: right;">0.279 / 0.109</td>
+<td style="text-align: right;">0</td>
+<td>P F</td>
+</tr>
+</tbody>
+</table>
+<p><a href="review-31.csv">31-gene review details</a> · <a href="all-organ-findings.csv">Every organ finding</a> · <a href="donor-evidence.csv.gz">Donor observations</a> · <a href="census-sources.csv">Primary source registry</a> · <a href="hpa-assay-measurements.csv.gz">HPA assay measurements</a> · <a href="protein-staining.csv.gz">Protein staining</a> · <a href="expression-comparison.csv">All 124 comparisons</a> · <a href="manifest.json">Receipt</a></p></main></html>

@@ -10,6 +10,8 @@ Catalog `$policy_id`: $categories.
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
 [Host choices](host-selection.md) · [Optional filters](target-filters.md)
 
+[Bulk/cell comparison for 78 CA-only proteins and review of 31 normal-cell holds](audits/antigen-evidence-review-20261118/index.md).
+
 ## Three separate questions
 
 1. **Shared evidence:** Does the protein pass the normal-expression, coverage,
@@ -53,7 +55,7 @@ from one embryo are not independent donors. These positive-support requirements 
 | Accepted normal RNA, normal protein or applicable clinical exclusion | Unsafe |
 | Missing coverage, uncertain identity/translation or unresolved normal finding | Other:Review |
 | Unsupported nested protein, ≥95% Unsafe 9-mer containment or read-through locus | Other:Sequence |
-| Unmeasured home tissue without qualifying reproductive evidence | Other:Tissue |
+| Unmeasured home tissue without qualifying reproductive evidence | Other:Unscreened tissue |
 | Neither enrichment route qualifies, or expression bounds fail | Other:Expression |
 
 Unsafe takes precedence, then Other:Review. Every failed gate remains on the row.
@@ -87,13 +89,21 @@ retains sources, adjudication and supersession history.
 ## Home tissue the panels do not resolve
 
 Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp are not
-resolved by the comparison panel. A recorded home yields Other:Tissue unless RA
+resolved by the comparison panel. A recorded home yields Other:Unscreened tissue unless RA
 qualifies. The home remains recorded; RA membership does not establish a margin there.
 
 ## Tumor quality and replication
 
-Library QC evaluates olfactory-receptor background, coordinated late-spermatid RNA
-and unrelated tissue signatures. Cohort availability and exclusions remain explicit
+Library QC retains the olfactory-receptor background and unrelated-tissue screens.
+Coordinated late-spermatid RNA is an **advisory note only**: normal reproductive
+specificity does not establish absence from cancer or prove normal-cell admixture.
+These notes never change sample QC status or remove tumor or reproductive evidence,
+including when selecting only `sample_qc="pass"`. Independent QC exclusions still apply.
+The [library audit](audits/target-selection-20261110/rebuild/library-qc.csv.gz) separates
+blocking `reasons` from advisory `notes`; the public expression QC API exposes
+`sample_qc_reasons` and `sample_qc_notes` separately.
+$library_note_legend
+Cohort availability and exclusions remain explicit
 in the [source coverage table](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv).
 Catalog rows expose samples, independent patients, anonymous samples and cancer types
 at tenfold. `independent_patient_tumor_folds` holds descending patient maxima; multiple
@@ -106,8 +116,8 @@ samples from one known patient count once. Unknown donors do not count as known 
 compatibility; it is **not a toxicity ranking**. `profile="core"` is rejected: choosing
 an origin does not authorize gonadal injury.
 
-Protect / Accept loss / Absent are separate host choices. Presets protect present
-gonads and record anatomy assumptions. Host rejection leaves biological membership
+Protect / Accept loss / Absent are separate host choices. Anatomy presets protect no
+reproductive tissues by default; protection is explicit. Host rejection leaves biological membership
 unchanged and adds the rejected candidate to the selection's subtraction background.
 [Exact contract, evidence scope and migration](host-selection.md).
 
@@ -128,4 +138,4 @@ background = selection.background_index("Unsafe|Other")
 [Sequence and peptide API](antigen-sequences.md) · [CLI and rebuild](curation.md).
 The [rebuild](audits/target-selection-20261110/rebuild/index.md) records every input,
 output and decision. Outstanding scientific adjudications remain explicit holds;
-this follow-up changes host selection, not the catalog's biological memberships.
+reproductive-content notes do not resolve malignant-cell localization.

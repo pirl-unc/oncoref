@@ -28,7 +28,7 @@ from oncoref.host_context import HostContext
 selection = antigen_sets.select("CA", host=HostContext(protect=("testis",)))
 proteins = selection.proteins()
 sequences = selection.sequences()
-background = selection.background_index("Unsafe|Other")
+background = selection.background_index()  # defaults to Unsafe|Other
 ```
 
 The background adds every host-excluded or unresolved candidate to the selected
@@ -52,16 +52,14 @@ claiming isoform-specific expression. Missing translations appear in
 ```python
 from oncoref.peptide_subtraction import PeptideIndex, MatchPolicy
 
-unsafe = antigen_sets.sequences("Unsafe")
+background_records = antigen_sets.sequences("Unsafe|Other")
 targets = antigen_sets.sequences("CA")  # or CTA, RA, CA|RA
-background = PeptideIndex(unsafe)       # background lengths 8–15, exact matches
-# To include unresolved and nonqualifying proteins:
-# background = PeptideIndex(antigen_sets.sequences("Unsafe|Other"))
+background = PeptideIndex(background_records)  # lengths 8–15, exact matches
 target_index = PeptideIndex(targets)
 
 peptide = "ACDEFGHIK"                 # illustrative sequence
 target_occurrences = target_index.matches(peptide)
-unsafe_occurrences = background.matches(peptide)
+background_occurrences = background.matches(peptide)
 retained = background.subtract(targets.iloc[0].sequence)
 ```
 
@@ -78,13 +76,13 @@ The background's configured lengths determine which potential matches are tested
 
 ```python
 # Ordinary Levenshtein distance: substitutions, insertions and deletions.
-near_self = PeptideIndex(unsafe, policy=MatchPolicy(max_distance=1))
+near_self = PeptideIndex(background_records, policy=MatchPolicy(max_distance=1))
 
 # Reduced alphabet, still requiring zero distance after equivalence.
-ilv = PeptideIndex(unsafe, policy=MatchPolicy(equivalence_groups=("ILV",)))
+ilv = PeptideIndex(background_records, policy=MatchPolicy(equivalence_groups=("ILV",)))
 
 # Explicit, illustrative weights; unspecified substitutions cost 1.
-weighted = PeptideIndex(unsafe, policy=MatchPolicy(
+weighted = PeptideIndex(background_records, policy=MatchPolicy(
     max_distance=0.5,
     substitution_costs={( "I", "V"): 0.25, ("V", "I"): 0.25},
     insertion_cost=1,

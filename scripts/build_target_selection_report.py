@@ -168,7 +168,7 @@ Required coverage, identity, translation or unresolved evidence → <strong>Othe
 Nested, Unsafe-contained or read-through sequence → <strong>Other:Sequence</strong>.
 Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
 A recorded normal home that no expression panel resolves (nose, taste bud, hair follicle,
-tooth), without reproductive evidence → <strong>Other:Tissue</strong>.
+tooth), without reproductive evidence → <strong>Other:Unscreened tissue</strong>.
 The remaining proteins enter the two independent association checks.</p>
 <h2>Rare normal-cell RNA</h2>
 <p>Each adult donor is assessed separately in each named Vital or Protected cell population.
@@ -257,6 +257,8 @@ def write_guide(definition):
         )
     from string import Template
 
+    from oncoref.library_qc import NOTES
+
     rare_table = "| Check | Rule |\n|---|---|\n" + "\n".join(
         f"| {name.replace('_', ' ').capitalize()} | {rare[name]} |"
         for name in (
@@ -275,6 +277,9 @@ def write_guide(definition):
             policy_id=definition["policy_id"],
             categories=categories,
             rare_table=rare_table,
+            library_note_legend=" · ".join(
+                f"**{code}** — {meaning}" for code, meaning in NOTES.items()
+            ),
             ca=summary["memberships"]["is_cancer_antigen"],
             ra=summary["memberships"]["is_reproductive_antigen"],
             cta=counts["CTA"],

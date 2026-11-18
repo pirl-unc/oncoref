@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-17.1"
+POLICY_ID = "oncoref.target-selection.2026-11-18.1"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -95,7 +95,7 @@ def definition() -> dict:
             "Unsafe",
             "Other:Review",
             "Other:Sequence",
-            "Other:Tissue",
+            "Other:Unscreened tissue",
             "set memberships",
         ],
         "other_subtypes": {
@@ -108,7 +108,7 @@ def definition() -> dict:
                 "Neither positive expression route qualifies, or the target maximum or "
                 "Disposable cap fails."
             ),
-            "Tissue": (
+            "Unscreened tissue": (
                 "The protein's recorded normal home is a tissue no expression panel resolves, "
                 "and no reproductive or developmental evidence qualifies. Its tumor value was "
                 "never compared with that tissue, so cancer evidence alone does not admit it."
@@ -120,7 +120,7 @@ def definition() -> dict:
                 "A family rule, a recorded literature finding, or the nose and skin reference."
             ),
             "effect": (
-                "Without qualifying reproductive or developmental evidence: Other:Tissue. "
+                "Without qualifying reproductive or developmental evidence: Other:Unscreened tissue. "
                 "With it, the category is unchanged and the tissue stays on the row."
             ),
         },
@@ -229,8 +229,9 @@ def definition() -> dict:
             "excluded_tumors": {
                 "codes": list(GERM_CELL_TUMORS),
                 "reason": (
-                    "No histology is excluded wholesale. TGCT libraries that pass the "
-                    "coordinated spermatid-program screen may supply cancer evidence."
+                    "No histology is excluded wholesale. Reproductive programs are advisory "
+                    "sample notes, not evidence of normal-cell contamination, and never exclude "
+                    "TGCT or other libraries. Independent QC exclusions still apply."
                 ),
             },
             "comparability": (
@@ -365,7 +366,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
 
     Optional ``home_tissue_unmeasured`` marks a protein whose recorded normal home no
     panel resolves. Cancer evidence admits it only together with reproductive evidence;
-    alone it is Other:Tissue.
+    alone it is Other:Unscreened tissue.
     """
     flags = ("unsafe", *SHARED_CHECKS)
     _require_columns(facts, {*flags, "cancer_evidence", "reproductive_evidence"})
@@ -396,7 +397,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     d["subtype"] = ""
     other = d.category.eq("Other")
     d.loc[other, "subtype"] = "Expression"
-    d.loc[other & uncompared, "subtype"] = "Tissue"
+    d.loc[other & uncompared, "subtype"] = "Unscreened tissue"
     d.loc[other & ~d.sequence_pass, "subtype"] = "Sequence"
     review = ~d[list(REVIEW_CHECKS)].all(axis=1) | (
         eligible & d[["cancer_evidence", "reproductive_evidence"]].eq("unassessed").any(axis=1)

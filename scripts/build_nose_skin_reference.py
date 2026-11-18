@@ -11,7 +11,7 @@ dilutes single cell types. This script measures every Target candidate in:
 
 It records a tissue for a protein when the reference shows it there in several
 people or several datasets. The catalog rebuild carries that record on the row. A
-recorded nose tissue is a home tissue for the catalog's Other:Tissue rule.
+recorded nose tissue is a home tissue for the catalog's Other:Unscreened tissue rule.
 
     python scripts/build_nose_skin_reference.py tmp/normal-atlas/nose-skin-2025-11-08
 """

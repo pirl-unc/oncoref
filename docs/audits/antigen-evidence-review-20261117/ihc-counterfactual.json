@@ -1,6 +1,6 @@
 {
-  "catalog_policy": "oncoref.target-selection.2026-11-17.1",
-  "catalog_sha256": "7fc9182bc4ed89535c4fc051bbd2980301ed958dfc14444556a2c4f6a31465d3",
+  "catalog_policy": "oncoref.target-selection.2026-11-18.1",
+  "catalog_sha256": "b38716d7e9b7d69bc427ec0d63c74a3ba80651058b654fe068cb7abc8a45ffb2",
   "source": "hpa_normal_tissue:v23",
   "source_sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
   "identity_mapping_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
@@ -64,7 +64,7 @@
     "All reported negative tissues is not all tissues in the body. Complete source-panel coverage is reported separately."
   ],
   "baseline": {
-    "CTA": 290,
+    "CTA": 303,
     "RA": 403,
     "union": 509
   },
