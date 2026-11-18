@@ -28,7 +28,7 @@
     "reference:hpa_normal_tissue:v23": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
     "oncoref/data/cta-literature-followup.json": "ab3205bb56bb642aedb601bc22d458078a5652ae3f8bf125291f590446e69e93"
   },
-  "implementation_sha256": "fbbb1f5d3486fb16d27a743af09be32d930fef6387e097090b34185ff2e3f3d9",
+  "implementation_sha256": "8a9419f705ae29dc218a35ff4e66a20281b5abde8178b2861fb9cd4b12b00781",
   "outputs": {
     "all-organ-findings.csv": "bf5c79d9cd433492ee1e40a22b794a6564535b2a3f32f95b11e218116a2faed4",
     "ca-only-78.csv": "776db062f1794e1fce5fd7936ac4ff5974adea07bd1b7b48eb9d5adc04b72ed7",

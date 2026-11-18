@@ -7,7 +7,6 @@ staining remain separate. Compact codes refer to a single report legend.
 
 from __future__ import annotations
 
-import hashlib
 import html
 import json
 import sys
@@ -18,7 +17,13 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from oncoref import cta_screen, normal_tissues, reference_data, target_selection  # noqa: E402
+from oncoref import (  # noqa: E402
+    cta_screen,
+    curation,
+    normal_tissues,
+    reference_data,
+    target_selection,
+)
 
 OUT = ROOT / "docs/audits/antigen-evidence-review-20261118"
 REBUILD = ROOT / "docs/audits/target-selection-20261110/rebuild"
@@ -53,8 +58,7 @@ BRAIN = {
 
 
 def sha(path):
-    with Path(path).open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
+    return curation.digest(Path(path))
 
 
 def organ(tissue):
@@ -244,7 +248,7 @@ def main():
         row["normal_UMI_peak_pct"] = float(d.multi_pct.max()) if len(d) else np.nan
         rows.append(row)
     comparison = pd.DataFrame(rows)
-    denominator = comparison[["N_reference_TPM", "D_TPM"]].max(axis=1).clip(lower=1)
+    denominator = comparison[["N_reference_TPM", "D_TPM"]].max(axis=1, skipna=False).clip(lower=1)
     comparison["bulk_R_fold"] = comparison.R_bulk_TPM / denominator
     write(comparison, "expression-comparison.csv")
     ca = comparison[comparison.baseline_classification.eq("Cancer Antigen only")]
