@@ -76,6 +76,8 @@ def write_receipt(root):
         "oncoref/reference_data.py",
         "scripts/gtex_sample_evidence.py",
         "oncoref/data/reference-releases.json",
+        "oncoref/data/normal-cell-sources.json",
+        "oncoref/data/cta-literature-followup.json",
         "oncoref/tissue_tiers.py",
     }
     implementation.update(step["argv"][0] for step in spec["steps"].values())

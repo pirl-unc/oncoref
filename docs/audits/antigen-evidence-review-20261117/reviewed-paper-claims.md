@@ -163,3 +163,73 @@ Suppressing Dazl modulates tumorigenicity and stemness in human glioblastoma cel
 
 **DAZL** (`ENSG00000092345`): qRT-PCR; the study also reports immunoblotting and perturbation experiments. Source: Figure 1; cell culture and qRT-PCR methods. Limitations: Relative expression in commercial normal human astrocytes does not establish absence in all normal astrocytes. The normal comparator is not the ocular astrocyte population with the Census signal. This review does not validate antibody specificity or use the paper to dismiss that signal.
 
+## [Durante et al., 2020](https://doi.org/10.1038/s41593-020-0587-9)
+
+Single-cell analysis of olfactory neurogenesis and differentiation in adult humans
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| GFY | GFY | GFY RNA was detected in 94.1% of mature and 70.3% of immature olfactory sensory neurons. | Adult human olfactory epithelium | normal_tissue_review |
+
+**GFY** (`ENSG00000261949`): 10x single-cell RNA sequencing. Source: Supplementary tables 3 and 5, GFY rows. Limitations: Cluster-level detection fractions pool cells and do not establish donor replication or absolute TPM.
+
+## [Alghadeer et al., 2023](https://doi.org/10.1016/j.devcel.2023.07.013)
+
+Single-cell census of human tooth development enables generation of human enamel
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| AMELX | AMELX | At 20–22 gestational weeks AMELX had positive counts in 55 of 67 AM-1 cells and 119 of 156 AM-2 cells. | Human fetal dental epithelium, 9–22 gestational weeks | normal_tissue_review |
+
+**AMELX** (`ENSG00000125363`): Single-cell RNA counts in primary dental tissue. Source: Dental epithelial lineage count matrix, AM-1 and AM-2 clusters, 20_22gw. Limitations: Gestational-age bins can pool donors. These counts describe primary developing teeth and cannot estimate adult expression.
+
+## [To et al., 2024](https://doi.org/10.1038/s41586-024-08189-z)
+
+A multi-omic atlas of human embryonic skeletal development
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| SP7 | SP7 | SP7 marked developing osteogenic zones, with osterix protein localized in the embryonic cranium. | Human first-trimester limb and cranium; cranial staining at 8.5 and 10 post-conception weeks | normal_tissue_review |
+
+**SP7** (`ENSG00000170374`): Single-nucleus and spatial transcriptomics, whole-mount immunostaining. Source: Cranial osteogenic zones and supplementary videos 1 and 2. Limitations: The age-specific staining and spatial signal do not measure adult bone expression.
+
+## [Gong et al., 2021](https://doi.org/10.18632/aging.203452)
+
+A systematic dissection of human primary osteoblasts in vivo at single-cell resolution
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| SP7 | SP7 | SP7 RNA was enriched in the O2 mature osteoblast cluster. | Primary femoral-head osteoblasts from one 31-year-old man with osteoarthritis and osteopenia | normal_tissue_review |
+
+**SP7** (`ENSG00000170374`): Single-cell RNA sequencing of freshly isolated cells. Source: Supplementary Table 3, row 528, O2 versus other osteoblast clusters. Limitations: One surgical donor with bone disease. The within-study differential expression statistic cannot set a healthy bulk TPM ceiling.
+
+## [Molè et al., 2021](https://doi.org/10.1038/s41467-021-23758-w)
+
+A single cell characterisation of human embryogenesis identifies pluripotency transitions and putative anterior hypoblast centre
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| CER1 | CER1 | A hypoblast subpopulation expressed CER1 RNA on days 9 and 11. Day-9 immunofluorescence localized CER1 protein in a subset of hypoblast cells. | Human IVF embryos cultured to days 9 and 11 after fertilization | reproductive_support |
+
+**CER1** (`ENSG00000147869`): 10x single-cell RNA sequencing and immunofluorescence. Source: Figure 3 and Supplementary Data 1. Limitations: The expression matrix contains UMI counts. Neither detection nor staining supplies a native TPM fold.
+
+## [Lopes et al., 2010](https://doi.org/10.1186/1471-2199-11-33)
+
+The human RPS4 paralogue on Yq11.223 encodes a structurally conserved ribosomal protein and is preferentially expressed during spermatogenesis
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| RPS4Y2 | RPS4Y2 | Distinct RPS4Y2 splice products were detected in testis and prostate, with testicular expression associated with germ-cell content. | Human testis and prostate; testicular biopsies differing in germ-cell content | reproductive_support, identity_review |
+
+**RPS4Y2** (`ENSG00000280969`): Paralog- and transcript-directed RT-PCR. Source: Figures 1 and 2, additional files 1 and 2. Limitations: The study did not resolve the DICE naïve B-cell signal or quantify germ cells, prostate and B cells on a common TPM scale.
+
+## [Santic et al., 2006](https://doi.org/10.1385/jmn:29:2:145)
+
+Gangliocytes in neuroblastic tumors express alarin, a novel peptide derived by differential splicing of the galanin-like peptide gene
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| GALP | GALP | A GALP transcript skipping exon 3 encodes alarin. Alarin-directed staining was reported in neuroblastic tumors. | Human ganglioneuroma and other neuroblastic tumors | identity_review, translation_context |
+
+**GALP** (`ENSG00000197487`): Splice-product RT-PCR and alarin-directed immunohistochemistry. Source: RT-PCR in ganglioneuroma and staining in neuroblastic tumor tissues. Limitations: This finding does not assign the protein product in the catalog tumor or in hypothalamic cells.
+

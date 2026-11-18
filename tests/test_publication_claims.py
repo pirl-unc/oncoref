@@ -151,3 +151,33 @@ def test_curation_schema_rejects_duplicate_genes_and_unsupported_uses():
     invalid["sources"][0]["gene_claims"][0]["allowed_uses"] = ["cta_nomination"]
     with pytest.raises(ValueError, match="explicit nomination"):
         literature.validate_publications(invalid)
+
+
+def test_cell_and_isoform_study_claims_resolve_pinned_sources():
+    from oncoref import reference_data
+
+    sources = {s["source_id"]: s for s in literature.publication_registry()["sources"]}
+    studies = {
+        "10.1038/s41593-020-0587-9": ("GFY", "normal_tissue_review"),
+        "10.1016/j.devcel.2023.07.013": ("AMELX", "normal_tissue_review"),
+        "10.1038/s41586-024-08189-z": ("SP7", "normal_tissue_review"),
+        "10.18632/aging.203452": ("SP7", "normal_tissue_review"),
+        "10.1038/s41467-021-23758-w": ("CER1", "reproductive_support"),
+        "10.1186/1471-2199-11-33": ("RPS4Y2", "reproductive_support"),
+    }
+    for doi, (gene, use) in studies.items():
+        claim = next(c for c in sources[doi]["gene_claims"] if c["protein"] == gene)
+        assert use in claim["allowed_uses"]
+        assert "cta_nomination" not in claim["allowed_uses"]
+        assert claim["provenance"]["reference_sources"]
+        for key in claim["provenance"]["reference_sources"]:
+            version = reference_data.resolve_version(key)
+            assert reference_data.REFERENCE_SOURCES[key]["pins"][version]["sha256"]
+
+
+def test_alarin_has_one_current_product_specific_claim():
+    claims = literature.paper_gene_claims("GALP")
+    alarin = claims[claims.source_id.eq("10.1385/jmn:29:2:145")]
+    assert len(alarin) == 1
+    assert "identity_review" in alarin.iloc[0].allowed_uses
+    assert not alarin.iloc[0].eligible_for_coverage

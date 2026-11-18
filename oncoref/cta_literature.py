@@ -36,6 +36,7 @@ EVIDENCE_TYPES = frozenset(
     {
         "rna_expression",
         "induced_rna_expression",
+        "immunostaining",
         "ribosome_profiling",
         "regulatory_assay",
         "combined_gene_perturbation",
@@ -450,6 +451,12 @@ def paper_gene_claims(gene: str | None = None, *, use: str | None = None) -> pd.
     rows = {}
     for record in current_attestations(gene).to_dict("records"):
         for claim in record["gene_claims"]:
+            # The reviewed claim also appears on historical occurrences of this DOI.
+            if (
+                claim["curation_status"] == "reviewed_gene_claim"
+                and record["origin"] != "literature_followup"
+            ):
+                continue
             if use is not None and use not in claim["allowed_uses"]:
                 continue
             row = {

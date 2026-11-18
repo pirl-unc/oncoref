@@ -92,7 +92,7 @@
   "oncoref/data/cancer-reference-sample-molecular-provenance.csv": "2acd4ff01d56169dd01d01c4de6a7c7ab9c3c9eab81e84a23e78fdfcaa5f44f6",
   "oncoref/samples.py": "d7bbc28bf0c8a9930e788b4a30071e9002a7ca589f0282b9a9d84146350d7cd7",
   "oncoref/data/cta-literature.json.gz": "110c01134ddbef070d1f286fc907e18b24f774df8edd90a0661e0b2cc3eed5f9",
-  "oncoref/data/cta-literature-followup.json": "ab3205bb56bb642aedb601bc22d458078a5652ae3f8bf125291f590446e69e93",
+  "oncoref/data/cta-literature-followup.json": "8506402653f1de941f7b8e559a92678fd764fe002a5a5c654ca4cc1b6fd2cd19",
   "oncoref/data/cta-selection-audit.json": "55c4ce34a07a6e7eb41f1e1f697ccf565c2aedcab2a6782ee0315ffcd0421334",
   "oncoref/data/cta-publication-membership.csv": "690adeecfff44d13d40fa7ec6ecfc74193adbf9b9286e54e9c498bae23e9f546",
   "oncoref/data/cta-publication-sources.csv": "f62e6edfadcfe039ac8e05e7cf6f4029a0289fde8b609c3c1b7a2519967c2f04"

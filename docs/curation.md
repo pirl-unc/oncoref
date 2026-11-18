@@ -87,3 +87,16 @@ Unresolved locus attribution remains an explicit research hold (`Other:Review`),
 code failure. For reviewed tissue-loss consequences alongside observed reproductive RNA,
 use `antigen_sets.loss_consequences(gene)` or `tissue_tiers.consequences(tissue,
 cell_type, resolution="cell")`.
+
+## Cell and isoform evidence
+
+Use `cta_literature.paper_gene_claims(gene)` for the observation, assay, tissue or developmental stage, and permitted use. For studies with downloadable artifacts, the claim’s `provenance["reference_sources"]` lists the keys for `reference_data.ensure(key)`. These studies supply cell localization and molecular identity. The CA and RA fold calculations require native TPM.
+
+| Gene | Primary source | What the data establish |
+|---|---|---|
+| GFY | [Adult olfactory biopsies, GSE139522](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE139522) | Detected in 94.1% of mature and 70.3% of immature olfactory neurons, pooled across the sampled cells. |
+| AMELX | [Developing teeth, GSE184749](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184749) | The primary dental epithelium count matrix covers 9–22 gestational weeks. At 20–22 weeks, 174 of 223 cells in the two ameloblast clusters expressed AMELX. |
+| SP7 | [Embryonic skeleton, E-MTAB-14385](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-14385) · [Primary osteoblasts, GSE147390](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147390) | Cranial osterix staining at 8.5 and 10 post-conception weeks. In a separate adult study, SP7 RNA was enriched in mature femoral-head osteoblasts from one donor with osteoarthritis and osteopenia. |
+| CER1 | [Peri-implantation embryos, E-MTAB-8060](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8060) | Days 9 and 11 yielded hypoblast CER1 RNA. Day-9 staining localized protein. The count matrix supplies UMI measurements, and the published lineage summary identifies the sampled embryos. |
+| RPS4Y2 | [RPS4 tissue panel and primer supplement](https://doi.org/10.1186/1471-2199-11-33) | Transcript-directed assays distinguish splice products in testis and prostate. Attribution of the healthy naïve B-cell signal remains open. |
+| GALP | [Alarin study](https://pubmed.ncbi.nlm.nih.gov/16954604/) · [HYPOMAP collection](https://cellxgene.cziscience.com/collections/d0941303-7ce3-4422-9249-cf31eb98c480) | Alarin was observed in neuroblastic tumors. HYPOMAP already provides adult hypothalamus coverage in the [atlas inventory](audits/normal-cell-atlas-20261110/source-registry.csv). The product expressed in the catalog tumor and the normal hypothalamus remains unresolved. |
