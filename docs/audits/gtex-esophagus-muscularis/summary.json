@@ -1,0 +1,18 @@
+{
+  "normal_sample": "GTEX-1I1GR-1426-SM-CY8H8",
+  "pathology": "6 pieces, confirmed target muscularis",
+  "rna_integrity_number": 6.2,
+  "extraction_batch": "BP-72061",
+  "expression_batch": "LCSET-9769",
+  "esophagus_samples": 561,
+  "testis_samples": 414,
+  "genes_for_correlations": 36864,
+  "independent_testis_enriched": 717,
+  "above_every_esophagus_peer": 702,
+  "median_ratio_to_testis": 0.10851742488677002,
+  "proteins": 98,
+  "sample_sets_normal_maximum": 77,
+  "regain_tumor_tenfold_without_sample": 9,
+  "subject_libraries": 25,
+  "annotation_sha256": "98c246b3855edf62cb050982a7ca50f3069d010624baea47ef84a9465900ca4b"
+}
