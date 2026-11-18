@@ -70,5 +70,21 @@ def test_loss_context_is_independent_of_membership_and_retains_organ_scope():
     # CTAG2 fails RA's fold requirement but its reproductive exposure is retained.
     assert not antigen_sets.target_selection.results("CTAG2").is_reproductive_antigen.iloc[0]
     assert antigen_sets.loss_consequences("CTAG2")
+    lalba = antigen_sets.loss_consequences("LALBA")
+    assert any(r["expression_context"].get("compartment") == "lactating_breast" for r in lalba)
     with pytest.raises(ValueError, match="Unknown"):
         antigen_sets.loss_consequences("not_a_gene")
+
+
+def test_proteins_and_gene_ids_accept_host_profiles_and_reject_backgrounds():
+    all_ctas = antigen_sets.proteins("CTA")
+    core_ctas = antigen_sets.proteins("CTA", profile="core")
+    female_ctas = antigen_sets.proteins("CTA", profile="female-patient")
+    lactating_ctas = antigen_sets.proteins("CTA", profile="female-patient", lactating=True)
+    assert len(all_ctas) == 290
+    assert len(core_ctas) == 257
+    assert len(female_ctas) == 285
+    assert len(lactating_ctas) == 283
+    assert antigen_sets.gene_ids("CTA", profile="core") < antigen_sets.gene_ids("CTA")
+    with pytest.raises(ValueError, match="Host profiles"):
+        antigen_sets.proteins("Unsafe", profile="core")

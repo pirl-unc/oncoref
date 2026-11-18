@@ -141,6 +141,19 @@ def main():
                 bar(len(kept), len(candidates), COLORS["CTA"]),
             )
         )
+    profiles = tf.profile_summary(measured)
+    profile_rows = [
+        (
+            f"<code>{esc(r.profile)}</code>",
+            esc(r.protected_compartments),
+            f"<strong>{r.CTA:,}</strong>",
+            f"{r.CA_only:,}",
+            f"{r.RA_only:,}",
+            f"{r.Union:,}",
+            bar(r.CTA, int(counts["CTA"]), COLORS["CTA"]),
+        )
+        for r in profiles.itertuples()
+    ]
     layer_rows = []
     for mode in MODES:
         steps_ = tf.funnel(mode, measured)
@@ -300,13 +313,16 @@ the first three rows.</p>
 
 <h2>2. Catalog funnel</h2>
 <p>How {total:,} proteins become {len(candidates)} candidates. Each step removes proteins into the category shown.
-A Cancer Antigen needs one tumor sample, outside germ cell tumors, at 10 × every non-reproductive normal value.</p>
+A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM cohort, at 10 × every non-reproductive normal value.</p>
 {table(["Step", "Removed into", "Removed", "Remaining", ""], funnel_rows, numeric=(2, 3))}
 
-<h2>3. Filter modes</h2>
+<h2>3. Filter modes and host toxicity profiles</h2>
 <p>Each mode keeps a subset of the one before. Every mode keeps {", ".join(tf.POSITIVE_CONTROLS)}.
 Categories are the ones after the fold knob has tightened Cancer Antigens.</p>
 {table(["Filter mode", "Kept", *CATEGORIES[:3], ""], mode_rows, numeric=(1, 2, 3, 4))}
+<h3>Host anatomy and tissue-tolerance profiles</h3>
+<p>Selecting a host profile defines which of the 12 reproductive, developmental and mammary compartments are protected in the host (≤ 32 TPM and ≥ 10× below tumor) versus allowed as reproductive origins. Lactating mammary (<code>breast.410</code>) is separated from resting mammary.</p>
+{table(["Host profile", "Protected compartments", "CTA", "CA only", "RA only", "CA ∪ RA", ""], profile_rows, numeric=(2, 3, 4, 5))}
 <p>Candidates remaining after each layer, in order:</p>
 {table(["Filter mode", "Start", *LAYER_NAMES.values()], layer_rows, numeric=tuple(range(1, 8)))}
 {rule_blocks}

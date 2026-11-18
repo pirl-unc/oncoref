@@ -24,6 +24,11 @@
     "is_cta": 290,
     "is_target_candidate": 509
   },
+  "cta_tiers": {
+    "core": 257,
+    "extended_only": 24,
+    "core_with_extended_exposure": 9
+  },
   "changes": [
     {
       "released_category": "CTA",

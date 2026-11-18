@@ -50,7 +50,7 @@ DPPA5,DPPA5,CTA,,6.30794,0.5,442.775295003659,124.0,2,,,✓,off_target,off_targe
 EGFL6,EGFL6,Unsafe,Normal bulk | HPA tissue clusters | Adult cornea,,,,,0,,,—,—,—
 EPPIN,EPPIN,Unsafe,Normal bulk | HPA tissue clusters | Monaco immune,,,,,3,,,—,—,—
 FATE1,FATE1,Unsafe,HPA tissue clusters,,,,,4,,,—,—,—
-FKBP6,FKBP6,Other,,22.633157,0.4,1.4915600860039395,0.0,3,protected,nasal mucosa,—,—,—
+FKBP6,FKBP6,Other,,22.633157000000004,0.4,1.4915600860039395,0.0,3,protected,nasal mucosa,—,—,—
 FMR1NB,FMR1NB,CTA,,0.67570504146,0.7,363.4057,179.0,5,,,✓,✓,✓
 FTHL17,FTHL17,Cancer Antigen only,,0.122032,0.1,218.4308953739871,251.0,5,,,✓,✓,sets
 GAGE1,GAGE1,CTA,,0.7,0.5,1181.9049505121604,854.0,6,,,✓,✓,✓
@@ -73,7 +73,7 @@ MAGEA11,MAGEA11,CTA,,0.338267,0.1,109.40145470574323,1251.0,6,,,✓,✓,exclusio
 MAGEA12,MAGEA12,Unsafe,Established rare normal-cell RNA,,,,,7,,,—,—,—
 MAGEA2/B,MAGEA2,CTA,,0.609406,0.8,233.598576286082,1674.0,4,,,✓,✓,exclusions
 MAGEA3,MAGEA3,Unsafe,HPA tissue clusters,,,,,8,,,—,—,—
-MAGEA4,MAGEA4,CTA,,3.649867,0.6,877.2057781353681,1362.0,8,,,✓,✓,✓
+MAGEA4,MAGEA4,CTA,,3.649866999999999,0.6,877.2057781353681,1362.0,8,,,✓,✓,✓
 MAGEA6,MAGEA6,CTA,,0.771287,0.2,538.808542650006,2147.0,6,,,✓,✓,exclusions
 MAGEA8,MAGEA8,CTA,,0.989010976255,1.0,204.97900954300155,307.0,4,,,✓,✓,exclusions
 MAGEA9/B,"MAGEA9, MAGEA9B",CTA,,0.955674,0.2,321.2373068103917,1437.0,4,,,✓,✓,exclusions
@@ -157,7 +157,7 @@ SPMAP2,THEG,Unsafe,Established rare normal-cell RNA,,,,,4,,,—,—,—
 SPMIP9,TEX37,CTA,,0.220399,0.3,71.3263,141.0,3,,,✓,✓,✓
 SPO11,SPO11,CTA,,0.136234470525,0.0,28.300468924479656,23.0,1,,,✓,papers,papers
 SSX1,SSX1,CTA,,1.57147,1.3,170.08278872647415,1058.0,5,,,✓,✓,✓
-SSX2/B,"SSX2, SSX2B",Cancer Antigen only,,10.03384,2.8000000000000003,33.93459170312982,294.0,6,,,✓,off_target,off_target
+SSX2/B,"SSX2, SSX2B",CTA,,10.03384,2.8000000000000003,33.934591703129826,294.0,6,,,✓,off_target,off_target
 SSX3,SSX3,CTA,,1.5,2.2,82.4752,112.0,5,,,✓,✓,✓
 SSX4/B,SSX4,CTA,,0.59212,0.2,413.3400000008371,685.0,2,,,✓,✓,papers
 SYCE2,SYCE2,Unsafe,Normal bulk | DICE immune,,,,,3,,,—,—,—
@@ -191,6 +191,6 @@ UTF1,UTF1,Unsafe,HPA tissue clusters,,,,,4,,,—,—,—
 XAGE1A/B,"XAGE1A, XAGE1B",CTA,,8.80776,1.6,461.9380309843705,1350.0,2,,,✓,off_target,off_target
 XAGE2,XAGE2,Unsafe,Normal bulk | HPA tissue clusters | Established rare normal-cell RNA,,,,,0,,,—,—,—
 XAGE3,XAGE3,CTA,,7.33127,4.5,47.79298811357573,74.0,1,,,✓,off_target,off_target
-XAGE5,XAGE5,Cancer Antigen only,,1.64097441476,0.1,109.40537501581775,271.0,3,,,✓,✓,sets
+XAGE5,XAGE5,CTA,,1.64097441476,0.1,109.40537501581775,271.0,3,,,✓,✓,✓
 ZPBP,ZPBP,Unsafe,Normal bulk | HPA tissue clusters,,,,,3,,,—,—,—
 ZPBP2,ZPBP2,Unsafe,Normal bulk,,,,,4,,,—,—,—

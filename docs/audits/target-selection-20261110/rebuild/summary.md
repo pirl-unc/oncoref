@@ -2,6 +2,28 @@
 
 Policy `oncoref.target-selection.2026-11-17.1`, 19,893 human protein records. **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
+## End-to-end architecture: data sources to CTA tiers
+
+![End-to-end curation architecture](summary/source-to-tiers-architecture.png)
+
+Every upstream panel induces a defined exclusion, review gate, or enrichment set. Lactating mammary (`breast.410`, expressing coordinated milk proteins `LALBA`, `CSN1S1`, `CSN2`, `CSN3`) is separated from resting mammary (`breast.373`, `breast.390`, `breast.405`), keeping lactation-specific antigens available for non-lactating women and men while allowing explicit exclusion via `--lactating`.
+
+## CTA compartment tiers and host toxicity profiles
+
+![CTA tiers and host profiles](summary/cta-tiers-and-profiles.png)
+
+| Host profile | Protected compartments (<=32 TPM & >=10x below tumor) | CTA | CA only | RA only | CA | RA |
+|---|---|---|---|---|---|
+| all | none | 290 | 106 | 113 | 509 |
+| female-patient | fallopian tube, endometrium, cervix, resting_breast | 285 | 105 | 117 | 507 |
+| female-patient (lactating) | fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 283 | 105 | 115 | 503 |
+| female-patient (pregnant) | embryo, placenta, fallopian tube, endometrium, cervix, resting_breast | 129 | 89 | 117 | 335 |
+| male-patient | epididymis, prostate, seminal vesicle, resting_breast | 260 | 104 | 103 | 467 |
+| male-patient (post-prostatectomy) | epididymis, resting_breast | 264 | 105 | 103 | 472 |
+| core | epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 257 | 103 | 102 | 462 |
+
+[Profile table CSV](summary/cta-profiles.csv)
+
 ## Antigen membership
 
 ![Antigen sets](summary/antigen-sets.png)

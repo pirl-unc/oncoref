@@ -34,6 +34,11 @@
       "is_cta": 290,
       "is_target_candidate": 509
     },
+    "cta_tiers": {
+      "core": 257,
+      "extended_only": 24,
+      "core_with_extended_exposure": 9
+    },
     "changes": [
       {
         "released_category": "CTA",
@@ -260,9 +265,27 @@
       "statistic": "individual tissue sample; summed transcript TPM",
       "participant_identity": "Not provided; sample identifiers are not assumed to be donor IDs"
     },
+    "mammary_lactation": {
+      "markers": [
+        "LALBA",
+        "CSN1S1",
+        "CSN2",
+        "CSN3"
+      ],
+      "marker_tpm_threshold": 100.0,
+      "min_markers": 3,
+      "lactating_samples": [
+        "breast.410"
+      ],
+      "resting_samples": [
+        "breast.373",
+        "breast.390",
+        "breast.405"
+      ]
+    },
     "normal_library_qc": {
       "path": "normal-library-qc.csv",
-      "sha256": "3790558afcc63b2e10c3fff3fc937fd6326fc332d1d9bbcc9559aab3f7a7cda5",
+      "sha256": "4d162df589eecb62d3c2357ba3a8ae0c4e02a72548620c976f9e0fe0715994d9",
       "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence."
     },
     "developmental_sources": [
@@ -337,6 +360,6 @@
     ],
     "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
   },
-  "data_sha256": "7fcf50e322af93f064828e3ebf89d0644afec7b1f5b67f90f6e79475f06c85b8",
+  "data_sha256": "08f81d3a49d8337845b4f2e04fb6f37d09ac82f5eb490179b9f2a33851ea3c7b",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

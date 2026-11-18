@@ -20,6 +20,9 @@ sys.path.insert(0, str(ROOT))
 
 from antigen_sample_evidence import (  # noqa: E402
     HPA_SOURCE,
+    LACTATION_MARKER_TPM,
+    LACTATION_MARKERS,
+    LACTATION_MIN_MARKERS,
     developmental_samples,
     tissue_library_qc,
     tissue_sample_genes,
@@ -415,15 +418,23 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     monaco["identity_resolved"] = monaco.measured_members.eq(monaco.member_count)
     normal = pd.concat([normal, immune, monaco], ignore_index=True)
     normal["comparison_id"] = COMPARISON_ID
-    for column in ("sample_id", "participant_id", "observation_kind", "library_qc_review"):
+    for column in (
+        "compartment",
+        "sample_id",
+        "participant_id",
+        "observation_kind",
+        "library_qc_review",
+    ):
         if column not in normal:
             normal[column] = ""
         normal[column] = normal[column].fillna("")
+    normal["compartment"] = normal.compartment.where(normal.compartment.ne(""), normal.tissue)
     cols = [
         "entity_id",
         "source_id",
         "comparison_id",
         "tissue",
+        "compartment",
         "cell_type",
         "source_context",
         "context_id",
@@ -764,6 +775,10 @@ def build(*, reuse_tumor_cache=False):
         [normal[normal.scope.eq("reproductive") & normal.sample_id.ne("")], development],
         ignore_index=True,
     )
+    if not set(reproductive.compartment) <= set(target_selection.REPRODUCTIVE_COMPARTMENTS):
+        raise ValueError(
+            f"Unexpected reproductive compartments: {sorted(set(reproductive.compartment))}"
+        )
     reproductive["qc_pass"] &= reproductive.library_qc_review.fillna("").eq("")
     write_csv(reproductive, OUT / "reproductive-comparison.csv.gz")
     for source in development_provenance:
@@ -833,10 +848,13 @@ def build(*, reuse_tumor_cache=False):
         # reproductive expression even when it does not meet the RA threshold.
         observed_contexts = []
         observed = ra[ra.identity_resolved & ra.value.ge(target_selection.DETECTION_FLOOR)]
-        for (tissue, cell, scope), contexts in observed.groupby(["tissue", "cell_type", "scope"]):
+        for (tissue, compartment, cell, scope), contexts in observed.groupby(
+            ["tissue", "compartment", "cell_type", "scope"], sort=True
+        ):
             observed_contexts.append(
                 {
                     "tissue": tissue,
+                    "compartment": compartment,
                     "cell_type": cell,
                     "scope": scope,
                     "stage": "embryonic" if scope == "developmental" else "adult",
@@ -845,12 +863,29 @@ def build(*, reuse_tumor_cache=False):
                     "sources": sorted(contexts.source_id.unique()),
                 }
             )
+        comp_max = {
+            comp: float(val)
+            for comp, val in ra_valid.groupby("compartment", sort=True).value.max().items()
+            if val > 0
+        }
         ra_support = pd.DataFrame(ra_receipt["supporting_reproductive_samples"])
         ra_supported_top = ra_receipt["supported_maximum_observations"]
+        ra_qualifying = (
+            ra_support[ra_support.single_sample_pass] if not ra_support.empty else ra_support
+        )
+        qual_tpm = (
+            {
+                comp: float(val)
+                for comp, val in ra_qualifying.groupby("compartment", sort=True)
+                .support_ceiling.max()
+                .items()
+                if pd.notna(val) and val > 0
+            }
+            if not ra_qualifying.empty
+            else {}
+        )
         if not ra_support.empty:
-            reproductive_witnesses.extend(
-                ra_support[ra_support.single_sample_pass].to_dict("records")
-            )
+            reproductive_witnesses.extend(ra_qualifying.to_dict("records"))
         cancer_keys = (
             set(qualified.source_id + ":" + qualified.sample_id) if not qualified.empty else set()
         )
@@ -904,6 +939,9 @@ def build(*, reuse_tumor_cache=False):
                     allow_nan=False,
                 ),
                 "reproductive_expression_contexts": json.dumps(observed_contexts),
+                "reproductive_compartment_max_tpm": json.dumps(comp_max, allow_nan=False),
+                "reproductive_qualifying_tpm": json.dumps(qual_tpm, allow_nan=False),
+                "reproductive_qualifying_compartments": " | ".join(qual_tpm),
                 "reproductive_top_sample": ""
                 if ra_top.empty
                 else ra_top.source_id.iloc[0] + ":" + ra_top.sample_id.iloc[0],
@@ -950,6 +988,35 @@ def build(*, reuse_tumor_cache=False):
         "Shared eligibility fails; positive cancer membership cannot be assigned"
     )
     decisions = annotate_papers(target_selection.classify(facts))
+
+    def _cta_tier(r) -> str:
+        if not r.is_cta:
+            return ""
+        qual = (
+            json.loads(r.reproductive_qualifying_tpm)
+            if isinstance(r.reproductive_qualifying_tpm, str) and r.reproductive_qualifying_tpm
+            else {}
+        )
+        cmax = (
+            json.loads(r.reproductive_compartment_max_tpm)
+            if isinstance(r.reproductive_compartment_max_tpm, str)
+            and r.reproductive_compartment_max_tpm
+            else {}
+        )
+        if not (set(qual) & set(target_selection.CORE_REPRODUCTIVE_COMPARTMENTS)):
+            return "extended_only"
+        h0 = max(float(r.normal_reference_tpm), float(r.disposable_max_tpm), 1.0)
+        ext_max = max(
+            (float(cmax.get(c, 0.0)) for c in target_selection.EXTENDED_REPRODUCTIVE_COMPARTMENTS),
+            default=0.0,
+        )
+        if ext_max <= target_selection.DISPOSABLE_CAP and float(
+            r.tumor_max_tpm
+        ) >= target_selection.TUMOR_FOLD * max(h0, ext_max):
+            return "core"
+        return "core_with_extended_exposure"
+
+    decisions["cta_tier"] = [_cta_tier(r) for r in decisions.itertuples()]
     reasons = {
         "normal_screen_pass": "Normal-expression evidence blocks admission",
         "required_coverage_complete": "Required normal coverage is incomplete",
@@ -1041,6 +1108,7 @@ def build(*, reuse_tumor_cache=False):
                 "is_target_candidate",
             ]
         },
+        "cta_tiers": decisions.loc[decisions.is_cta, "cta_tier"].value_counts().to_dict(),
         "changes": decisions.groupby(["released_category", "category"])
         .size()
         .reset_index(name="proteins")
@@ -1094,6 +1162,21 @@ def build(*, reuse_tumor_cache=False):
         "participant_identity_policy": sample_api.PATIENT_IDENTITY_POLICY,
         "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
         "individual_tissue_source": HPA_SOURCE,
+        "mammary_lactation": {
+            "markers": list(LACTATION_MARKERS),
+            "marker_tpm_threshold": LACTATION_MARKER_TPM,
+            "min_markers": LACTATION_MIN_MARKERS,
+            "lactating_samples": sorted(
+                reproductive.loc[
+                    reproductive.compartment.eq("lactating_breast"), "sample_id"
+                ].unique()
+            ),
+            "resting_samples": sorted(
+                reproductive.loc[
+                    reproductive.compartment.eq("resting_breast"), "sample_id"
+                ].unique()
+            ),
+        },
         "normal_library_qc": {
             "path": "normal-library-qc.csv",
             "sha256": sha256(OUT / "normal-library-qc.csv"),
@@ -1129,6 +1212,7 @@ def build(*, reuse_tumor_cache=False):
         "is_cancer_antigen",
         "is_reproductive_antigen",
         "is_cta",
+        "cta_tier",
         "is_target_candidate",
         "cancer_evidence",
         "cancer_routes",
@@ -1203,6 +1287,9 @@ def build(*, reuse_tumor_cache=False):
         "reproductive_supported_context",
         "reproductive_supported_observations",
         "reproductive_expression_contexts",
+        "reproductive_compartment_max_tpm",
+        "reproductive_qualifying_tpm",
+        "reproductive_qualifying_compartments",
         "anonymous_samples_at_tenfold",
         "patient_or_sample_witnesses_at_tenfold",
         "cancer_types_at_tenfold",

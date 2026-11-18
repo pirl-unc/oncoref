@@ -1,0 +1,8 @@
+profile,protected_compartments,allowed_compartments,CTA,CA_only,RA_only,CA,RA,Union
+all,none,"embryo, placenta, testis, ovary, epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast, resting_breast",290,106,113,396,403,509
+female-patient,"fallopian tube, endometrium, cervix, resting_breast","embryo, placenta, testis, ovary, epididymis, prostate, seminal vesicle, lactating_breast",285,105,117,390,402,507
+female-patient (lactating),"fallopian tube, endometrium, cervix, lactating_breast, resting_breast","embryo, placenta, testis, ovary, epididymis, prostate, seminal vesicle",283,105,115,388,398,503
+female-patient (pregnant),"embryo, placenta, fallopian tube, endometrium, cervix, resting_breast","testis, ovary, epididymis, prostate, seminal vesicle, lactating_breast",129,89,117,218,246,335
+male-patient,"epididymis, prostate, seminal vesicle, resting_breast","embryo, placenta, testis, ovary, fallopian tube, endometrium, cervix, lactating_breast",260,104,103,364,363,467
+male-patient (post-prostatectomy),"epididymis, resting_breast","embryo, placenta, testis, ovary, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast",264,105,103,369,367,472
+core,"epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, lactating_breast, resting_breast","embryo, placenta, testis, ovary",257,103,102,360,359,462

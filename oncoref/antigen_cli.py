@@ -21,6 +21,21 @@ def emit(frame, output_format):
         print(frame.to_string(index=False))
 
 
+def _host_overrides(args) -> dict:
+    overrides = {}
+    if getattr(args, "profile", "all") != "all":
+        overrides["host_profile"] = args.profile
+    if getattr(args, "lactating", False):
+        overrides["lactating"] = True
+    if getattr(args, "pregnant", False):
+        overrides["pregnant"] = True
+    if getattr(args, "allow_tissues", None):
+        overrides["allow_tissues"] = tuple(args.allow_tissues)
+    if getattr(args, "protect_tissues", None):
+        overrides["protect_tissues"] = tuple(args.protect_tissues)
+    return overrides
+
+
 def list_antigens(args):
     rows = antigen_sets.proteins(args.set)
     overrides = {
@@ -28,6 +43,7 @@ def list_antigens(args):
         for name in ("min_tumor_fold", "min_reproductive_fold", "min_tumor_patients")
         if getattr(args, name) is not None
     }
+    overrides.update(_host_overrides(args))
     if args.set in antigen_sets.EXCLUSION_CATEGORIES:
         if args.mode != "all" or overrides:
             raise ValueError("Candidate filters do not apply to Unsafe/Other backgrounds")
@@ -52,6 +68,7 @@ def list_antigens(args):
                     "protein_group_label",
                     "entity_id",
                     "category",
+                    "cta_tier",
                     "tumor_fold",
                     "reproductive_fold",
                     "independent_patients_at_tenfold",
@@ -78,6 +95,7 @@ def explain(args):
         "protein_group_label",
         "entity_id",
         "classification",
+        "cta_tier",
         "decision_reason",
         "normal_reference_tpm",
         "normal_reference_contexts",
@@ -87,6 +105,7 @@ def explain(args):
         "independent_patients_at_tenfold",
         "cancer_types_at_tenfold",
         "reproductive_fold",
+        "reproductive_qualifying_compartments",
         "reproductive_supported_tpm",
         "reproductive_supported_context",
         "reproductive_top_context",
@@ -103,6 +122,27 @@ def explain(args):
     for mode in target_filters.FILTER_MODES:
         evaluated = target_filters.apply(target_filters.FILTER_MODES[mode], rows)
         output[mode] = [
+            "pass" if row.keep else "fail: " + row.filter_failed for row in evaluated.itertuples()
+        ]
+    for label, filt in (
+        ("profile:core", target_filters.TargetFilter(membership="cta", host_profile="core")),
+        (
+            "profile:male-patient",
+            target_filters.TargetFilter(membership="cta", host_profile="male-patient"),
+        ),
+        (
+            "profile:female-patient",
+            target_filters.TargetFilter(membership="cta", host_profile="female-patient"),
+        ),
+        (
+            "profile:female-lactating",
+            target_filters.TargetFilter(
+                membership="cta", host_profile="female-patient", lactating=True
+            ),
+        ),
+    ):
+        evaluated = target_filters.apply(filt, rows)
+        output[label] = [
             "pass" if row.keep else "fail: " + row.filter_failed for row in evaluated.itertuples()
         ]
     if args.format == "table":
@@ -132,7 +172,8 @@ def funnel(args):
             {"stage": name, "remaining": int(alive.sum()), "removed": before - int(alive.sum())}
         )
     shared = pd.DataFrame(shared).assign(kind="sequential catalog")
-    filtered = target_filters.funnel(args.mode, table).rename(columns={"layer": "stage"})
+    filt = replace(target_filters.FILTER_MODES[args.mode], **_host_overrides(args))
+    filtered = target_filters.funnel(filt, table).rename(columns={"layer": "stage"})
     filtered["kind"] = "sequential filter"
     emit(pd.concat([shared, categories, filtered], ignore_index=True), args.format)
     return 0
@@ -219,6 +260,39 @@ def subtract(args):
     return 0
 
 
+def _add_host_options(parser):
+    parser.add_argument(
+        "--profile",
+        choices=list(target_filters.HOST_PROFILES),
+        default="all",
+        help="Host compartment profile: all (default), core, male-patient, or female-patient",
+    )
+    parser.add_argument(
+        "--lactating",
+        action="store_true",
+        help="Protect lactating mammary tissue (excludes milk-program antigens such as LALBA)",
+    )
+    parser.add_argument(
+        "--pregnant",
+        action="store_true",
+        help="Protect embryo and placenta",
+    )
+    parser.add_argument(
+        "--allow-tissue",
+        dest="allow_tissues",
+        action="append",
+        default=[],
+        help="Explicitly allow toxicity in a compartment (e.g. prostate, 'seminal vesicle', breast)",
+    )
+    parser.add_argument(
+        "--protect-tissue",
+        dest="protect_tissues",
+        action="append",
+        default=[],
+        help="Explicitly protect a compartment from toxicity (e.g. testis, ovary)",
+    )
+
+
 def register(subparsers):
     group = subparsers.add_parser(
         "antigens", help="Current antigen catalog, filters and peptide subtraction"
@@ -229,6 +303,7 @@ def register(subparsers):
     )
     listing.add_argument("--set", choices=list(antigen_sets.SETS), default="CTA")
     listing.add_argument("--mode", choices=list(target_filters.FILTER_MODES), default="all")
+    _add_host_options(listing)
     listing.add_argument("--min-tumor-fold", type=float)
     listing.add_argument("--min-reproductive-fold", type=float)
     listing.add_argument("--min-patients", dest="min_tumor_patients", type=int)
@@ -246,6 +321,7 @@ def register(subparsers):
         "funnel", help="Catalog categories and sequential filter attrition"
     )
     counts.add_argument("--mode", choices=list(target_filters.FILTER_MODES), default="all")
+    _add_host_options(counts)
     counts.add_argument("--published-only", action="store_true")
     counts.set_defaults(func=funnel)
     peptides = commands.add_parser(

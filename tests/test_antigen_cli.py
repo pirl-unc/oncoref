@@ -90,3 +90,57 @@ def test_funnel_and_legacy_notice(capsys):
     assert catalog_steps == sorted(catalog_steps, reverse=True)
     assert cli.main(["cta", "--count"]) == 0
     assert "Legacy CTA snapshot" in capsys.readouterr().err
+
+
+def test_cli_host_profiles_and_tissue_toggles(capsys):
+    assert (
+        cli.main(
+            [
+                "antigens",
+                "list",
+                "--set",
+                "CTA",
+                "--profile",
+                "female-patient",
+                "--lactating",
+                "--format",
+                "json",
+            ]
+        )
+        == 0
+    )
+    lactating_rows = json.loads(capsys.readouterr().out)
+    assert len(lactating_rows) == 283
+    assert "LALBA" not in {r["protein_group_label"] for r in lactating_rows}
+
+    assert (
+        cli.main(
+            [
+                "antigens",
+                "list",
+                "--set",
+                "CTA",
+                "--profile",
+                "male-patient",
+                "--allow-tissue",
+                "prostate",
+                "--allow-tissue",
+                "seminal vesicle",
+                "--format",
+                "json",
+            ]
+        )
+        == 0
+    )
+    male_post_rp = json.loads(capsys.readouterr().out)
+    assert len(male_post_rp) == 264
+    assert {"LALBA", "TGM4", "SEMG2"} <= {r["protein_group_label"] for r in male_post_rp}
+
+    assert cli.main(["antigens", "explain", "LALBA", "--format", "json"]) == 0
+    explained = json.loads(capsys.readouterr().out)[0]
+    assert explained["cta_tier"] == "extended_only"
+    assert explained["reproductive_qualifying_compartments"] == "lactating_breast"
+    assert explained["profile:male-patient"] == "pass"
+    assert explained["profile:female-patient"] == "pass"
+    assert explained["profile:female-lactating"].startswith("fail:")
+    assert explained["profile:core"].startswith("fail:")

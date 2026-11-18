@@ -235,12 +235,20 @@ Candidate antigen proteins is the union's name; it does not assert clinical safe
 
 def write_guide(definition):
     """Keep the user-facing contract and live counts beside the generated report."""
+    from oncoref import target_filters
+
     summary = target_selection.metadata()["summary"]
     rare = definition["rare_cell_rna"]
     categories = " · ".join(
         f"**{summary['categories'][name]:,} {name}**" for name in target_selection.CATEGORIES
     )
     counts = summary["categories"]
+    tiers = summary["cta_tiers"]
+    profiles = target_filters.profile_summary()
+    profile_rows = "\n".join(
+        f"| `{r.profile}` | {r.protected_compartments} | **{r.CTA}** | {r.CA_only} | {r.RA_only} | {r.Union} |"
+        for r in profiles.itertuples()
+    )
     for index_path in [ROOT / "docs/index.md", ROOT / "README.md"]:
         index_path.write_text(
             re.sub(
@@ -262,45 +270,121 @@ These are research screening memberships, not demonstrated antigen presentation 
 
 [Browse every protein](audits/target-selection-20261110/rebuild/report.html) ·
 [Funnel, Venn plots and counts](audits/target-selection-20261110/rebuild/summary.md) ·
+[Host profiles & optional filters](target-filters.md) ·
 [Machine-readable rules](audits/target-selection-20261110/definition.json)
 
-![Antigen membership](audits/target-selection-20261110/rebuild/summary/antigen-sets.png)
+## Three sequential questions
+
+OncoRef classifies every human protein group (**19,893** groups from **20,099** Ensembl 115
+coding loci) by asking three independent, sequential questions:
+
+1. **Shared somatic safety:** Is the protein safe across shared human vital, protected,
+   immune, and disposable organs, with complete 36-tissue coverage, approved translation,
+   resolved sequence identity, and bounded Disposable expression? (**18,253** `Unsafe`;
+   **779** `Other:Review` / `Other:Sequence`; **15** bounds failures → **846** shared-eligible.)
+2. **Symmetric 10× compartment enrichment:** Against the shared somatic baseline
+   **H₀ = max(Normal N, Disposable D, 1 TPM)**, does expression reach **≥ 10 × H₀** in
+   QC-passing tumors (**CA = {summary["memberships"]["is_cancer_antigen"]}**) and/or
+   reproductive-developmental compartments (**RA = {summary["memberships"]["is_reproductive_antigen"]}**)?
+   Their intersection is the default broad **CTA ({counts["CTA"]})** set.
+3. **Host anatomy & toxicity tolerance (optional profile slice):** Which of the **12**
+   conditional reproductive, developmental, and mammary compartments exist in a specific
+   patient and are *not* tolerated for toxicity? Selecting a patient profile (`male-patient`,
+   `female-patient`, `--lactating`, `--pregnant`, `core`, or custom `--allow-tissue` /
+   `--protect-tissue`) moves protected host compartments into the off-target denominator.
+
+![End-to-end curation architecture](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
 
 ## One threshold, two compartments
 
-Let **H = max(N, D, 1 TPM)**: N is the highest supported non-reproductive normal
-measurement and D the highest Disposable-tissue measurement. Both sets require
-**at least 10 × H**, independently, after the same eligibility screen.
+Let **H₀ = max(N, D, 1 TPM)**: N is the highest supported non-reproductive normal
+measurement and D the highest Disposable-tissue measurement (`appendix`, `gallbladder`, `tonsil`).
+Both sets require **at least 10 × H₀**, independently, after the same eligibility screen.
 
 | Set | Required positive RNA evidence |
 |---|---|
-| CA | At least one QC-passing tumor sample ≥10 × H |
-| RA | At least one reproductive tissue sample, or supported embryo-specific lineage mean, ≥10 × H |
-| CTA | Both CA and RA |
-| CA∪RA | Either set; the union does not imply tumor expression for RA-only proteins |
+| CA | At least one QC-passing tumor sample ≥10 × H₀ (and not an unmeasured home tissue without RA) |
+| RA | At least one reproductive tissue sample, or supported embryo-specific lineage mean, ≥10 × H₀ |
+| CTA | Both CA and RA (**{counts["CTA"]}** proteins in default `all` mode) |
+| CA∪RA | Either set (**{summary["memberships"]["is_target_candidate"]}** candidate proteins; RA-only does not imply tumor expression) |
 
 All comparisons use the declared native-TPM panel. Qualitative protein staining,
 single-cell nTPM and UMI counts cannot be divided by TPM or bypass its numerical fold.
 Reproductive IHC and older association routes remain visible as supporting annotations.
 
 The normal reference includes **individual HPA v23 tissue samples from all measured
-compartments**, plus tissue/subregion means, GTEx donor medians and supported immune
+compartments**, plus tissue/subregion means, GTEx v11 donor medians and supported immune
 summaries. Reproductive observations are positive candidates; non-reproductive
-observations tighten the denominator. It is still not a maximum over every healthy
-donor, and cross-study batch effects are not corrected. Missing required normal
-coverage never becomes zero. [Source receipt and limits](audits/target-selection-20261110/rebuild/comparison.json).
+observations tighten the denominator. Missing required normal coverage never becomes zero.
+[Source receipt and limits](audits/target-selection-20261110/rebuild/comparison.json).
 
 Developmental means are computed within one embryo and lineage. One well-sampled
 population requires ≥20 cells, ≥5 cells with ≥1 TPM and ≥10% positive cells.
 Smaller populations require ≥5 measured cells, ≥50% with ≥1 TPM, and two independent
-embryos at the same age and lineage reaching 10 × H. The mean itself must reach
-10 × H. Higher RA fold filters retain the replication requirement through
-`reproductive_supported_tpm`. These are screening support conventions, not biological
-limits on embryo size or lineage abundance. Embryos are
-biological donors; multiple cells or lineages from one embryo are not independent donors.
-The developmental scope is preimplantation and Carnegie-stage-7 embryos, not all fetal stages.
+embryos at the same age and lineage reaching 10 × H₀. Embryos are biological donors;
+multiple cells or lineages from one embryo are not independent donors.
 
 ![Both enrichment comparisons](audits/target-selection-20261110/rebuild/summary/tumor-normal.png)
+
+## CTA tiers, lactating mammary, and patient toxicity profiles
+
+The default `CTA` set (**{counts["CTA"]}** proteins) intentionally spans **all 12**
+reproductive, developmental, and mammary compartments so no sex-specific or surgical
+target is discarded upstream. Those 12 compartments divide into four biological groups:
+
+- **Core germline & fetoplacental (`4`):** `embryo`, `placenta`, `testis`, `ovary`
+- **Male accessory organs (`3`):** `epididymis`, `prostate`, `seminal vesicle`
+  (anatomically absent in XX females; vascularized MHC-I+ organs in intact XY males)
+- **Female Müllerian tract (`3`):** `fallopian tube`, `endometrium`, `cervix`
+  (anatomically absent in XY males; vascularized MHC-I+ organs in intact XX females)
+- **Mammary physiological states (`2`):** `lactating_breast` vs `resting_breast`
+
+### Why `lactating_breast` is distinct from `resting_breast`
+
+Men possess rudimentary mammary ductal epithelium (which expresses constitutive ductal
+genes and can undergo gynecomastia), so **resting mammary tissue is protected in both
+sexes**. By contrast, secretory milk-protein transcription requires lactogenic hormonal
+differentiation: in HPA v23, biopsy `breast.410` expresses coordinated milk proteins at
+massive levels (`LALBA` 9,523 TPM, `CSN1S1` 6,058 TPM, `CSN2` 2,530 TPM, `CSN3` 1,582 TPM,
+`BTN1A1` 140 TPM), whereas all resting breast biopsies (`breast.373`, `breast.390`,
+`breast.405`) are near zero (`LALBA` ≤ 0.5 TPM, `BTN1A1` ≤ 0.2 TPM). Separating
+`lactating_breast` (`≥ 3` of `LALBA, CSN1S1, CSN2, CSN3` at `≥ 100 TPM`) from
+`resting_breast` keeps `LALBA` and `BTN1A1` available for non-lactating female and male
+patients while immediately excluding them when `lactating=True`.
+
+### Three biological CTA tiers (`cta_tier`)
+
+Every CTA row carries an explicit `cta_tier` decomposition (`{tiers["core"]} + {tiers["core_with_extended_exposure"]} + {tiers["extended_only"]} = {counts["CTA"]}`):
+
+- **`core` ({tiers["core"]} CTAs):** Qualifies in `embryo`, `placenta`, `testis`, or `ovary`,
+  and every one of the 8 extended adult compartments is ≤ 32 TPM and ≥ 10× below peak tumor
+  expression (e.g., `MAGEA4`, `NY-ESO-1`, `PRAME`, `SSX2/B`, `MAGEC2`).
+- **`core_with_extended_exposure` ({tiers["core_with_extended_exposure"]} CTAs):** Qualifies
+  in a Core compartment, but also exceeds 32 TPM or lacks a 10× tumor margin in an adult
+  accessory, tract, or resting-breast sample (e.g., `MAGEA11`, `MAGEB4`, `RNASE11`,
+  `KIAA1210`, `ADAM2`, `TCP11X2`).
+- **`extended_only` ({tiers["extended_only"]} CTAs):** Qualifies only via extended compartments —
+  21 male-organ antigens (`TGM4`, `RLN1`, `SEMG2`, `POTEH`, `SPAG11A/B`, `PATE1`, ...),
+  2 lactation antigens (`LALBA`, `BTN1A1`), and 1 shared tract antigen (`SCGB1D4`).
+
+### Selecting which compartments are protected in a patient
+
+Every host profile is defined by **one set P of protected compartments** (tissues present
+in the patient where toxicity is *not* accepted):
+
+1. Every compartment in **P** must stay **≤ 32 TPM** (`DISPOSABLE_CAP`),
+2. Tumor expression must reach **≥ 10 × max(H₀, max_P TPM)**, and
+3. `RA` must qualify (**≥ 10 × H₀**) in at least one **allowed** compartment outside **P**.
+
+![CTA tiers and host profiles](audits/target-selection-20261110/rebuild/summary/cta-tiers-and-profiles.png)
+
+| Profile | Protected compartments (**P**) | CTA | CA only | RA only | CA∪RA |
+|---|---|---:|---:|---:|---:|
+{profile_rows}
+
+Callers can toggle individual tissues directly (e.g., `allow_tissues=("prostate", "seminal vesicle")`
+after radical prostatectomy, `allow_tissues=("breast",)` after bilateral mastectomy, or
+`protect_tissues=("testis",)` / `protect_tissues=("ovary",)` for fertility/endocrine preservation).
 
 ## Shared eligibility and Other
 
@@ -315,7 +399,6 @@ The developmental scope is preimplantation and Carnegie-stage-7 embryos, not all
 Unsafe takes precedence. Other:Review then precedes the other Other subtypes.
 Every failed check remains on the row, even when another determines its category.
 **Other is neither an accepted hazard nor a claim of absent normal expression.**
-Some Other assignments are technical; others reflect missing biological evidence.
 
 Disposable expression retains separate ceilings of 32 native TPM and 32 nTPM.
 The target maximum must exceed all measured non-reproductive contexts. Tissue
@@ -325,26 +408,18 @@ reproductive organ do not automatically inherit that organ's allowance.
 ## Consequences of tissue loss
 
 Reproductive membership and the consequences of losing the expressing tissue are
-separate questions. Broad RA includes gonadal, developmental and accessory reproductive
-contexts. Breast or prostate evidence is retained with its actual tissue context.
-The [tissue registry](tissue-tiers.md) records **acute loss, lasting loss, repair and
-management**. Whole testis and ovary retain Protected assessments; mammary tissue has
-a conditional Manageable assessment. Bulk organ measurements do not establish which
-cell population expresses a protein or whether only that population would be injured.
+separate questions. The [tissue registry](tissue-tiers.md) records **acute loss, lasting
+loss, repair and management**. Whole testis and ovary retain Protected assessments
+(reflecting Leydig/endocrine and germ-cell loss in bulk measurements); mammary tissue has
+a conditional Manageable assessment. Bulk organ measurements do not establish which cell
+population expresses a protein or whether only that population would be injured.
 
 ```python
-from oncoref import tissue_tiers
-loss = tissue_tiers.consequences("testis")
-loss["persistent_loss"], loss["management"], loss["evidence"]
-# Tissue loss alongside this protein's observed reproductive expression:
-from oncoref import antigen_sets
-antigen_sets.loss_consequences("CTAG2")
-```
+from oncoref import antigen_sets, tissue_tiers
 
-These records describe functional consequences, not receptor-specific probabilities.
-Sex labels, presumed immune privilege, negative bulk RNA and negative IHC do not by
-themselves demonstrate absence of an off-target compartment or dismiss a sparse signal.
-Actual anatomy, prior removal and pregnancy/lactation state require explicit context.
+loss = tissue_tiers.consequences("testis")
+antigen_sets.loss_consequences("LALBA")  # shows breast (lactating_breast): 9523.2 TPM
+```
 
 ## Rare normal-cell RNA
 
@@ -364,30 +439,21 @@ UMI rubric is distinct from HPA cell-cluster nTPM and bulk TPM.
 
 A reference mapping-risk flag does not show where the observed reads aligned.
 DCST1's replicated retinal signal and NKX2-6's frequent single-study cardiac signal
-therefore require review, rather than being dismissed as artifacts. Resolving them
-requires gene-discriminating read evidence or independent confirmation. The present
-count records cannot supply that adjudication. No ambient-RNA correction has been
-applied to these pinned counts. Donor overlap across collections remains a limitation.
+therefore require review, rather than being dismissed as artifacts. Single molecules alone
+do not establish expression; reviewed gene-specific evidence can provide independent
+confirmation. [Donor records, grades and reasons](audits/normal-cell-atlas-20261110/rare-cell/index.md).
 
-Single molecules alone do not establish expression; reviewed gene-specific evidence
-can provide independent confirmation. Low counts and absent findings are not proof
-of safety. [Donor records, grades and reasons](audits/normal-cell-atlas-20261110/rare-cell/index.md).
-
-## Protein staining and published normal expression
+## Protein staining
 
 Reliable, identity-resolved normal protein findings can independently mark a protein
 Unsafe under the tissue-tier policy. Antibody specificity, staining reliability,
-cell type and source scope remain part of each finding. Conflicting or unresolved
-assays cause review holds. Negative staining supplies only the existing limited
-policy credit; it does not demonstrate absence or cancel a stronger finding.
+cell type and source scope remain part of each finding.
 
 ## Published normal expression
 
-Reviewed publications are adjudicated through the shared evidence records.
-Accepted gene-specific normal expression in Vital or Protected tissues excludes;
-other observations retain their tissue, scope and rationale. Findings can supersede
-earlier findings without deleting history. MAGEC2's HPA062230/GTEx adjudication and
-the DAZ gastric-RNA/paralog limitations use this same format.
+Reviewed publications are adjudicated through the shared evidence records: accepted
+gene-specific normal expression in Vital or Protected tissues excludes; other
+observations retain their tissue, scope and rationale.
 [Literature rubric and sources](audits/target-selection-20261110/rebuild/literature.md).
 
 ## Home tissue the panels do not resolve
@@ -396,56 +462,50 @@ Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp ar
 resolved by the comparison panel. A recorded home in one of these tissues yields
 Other:Tissue unless reproductive evidence qualifies. The home remains recorded
 even when RA qualifies; a candidate label does not establish a measured margin there.
-The optional normal-function filter can tighten that decision.
 
 ## Tumor quality and replication
 
 Passing TGCT libraries contribute normally. The shared QC screen excludes libraries
 with broad olfactory-receptor background, a coordinated late-spermatid signature,
-or multiple unrelated tissue signatures. These are screening signatures, not proof
-of gDNA contamination, normal-tissue fraction or a tumor activation mechanism.
+or multiple unrelated tissue signatures.
 [Every library measurement](audits/target-selection-20261110/rebuild/library-qc.csv.gz).
 
 Catalog rows expose `samples_at_tenfold`, `independent_patients_at_tenfold`,
 `anonymous_samples_at_tenfold` and `cancer_types_at_tenfold`. Unknown donors never
-count as known independent patients. Counts refer to the catalog's 10× threshold.
-`independent_patient_tumor_folds` stores each qualifying known patient's maximum
-fold in descending order; filters use the k-th value to require k patients at
-any selected fold ≥10. Legacy `*_above_normal`
-columns count a weaker threshold and are descriptive only. Every tenfold witness
-is downloadable, with source, sample, participant and expression value.
+count as known independent patients. `independent_patient_tumor_folds` stores each
+qualifying known patient's maximum fold in descending order.
 
-## API and peptide subtraction
+## API, host profiles, and peptide subtraction
 
 ```python
 from oncoref import antigen_sets, target_filters, target_selection
 
-ctas = antigen_sets.proteins("CTA")
-ca = antigen_sets.proteins("CA")
-ra = antigen_sets.proteins("RA")
-union = antigen_sets.proteins("CA|RA")
+all_ctas = antigen_sets.proteins("CTA")                              # 290 default CTAs
+core_ctas = antigen_sets.proteins("CTA", profile="core")             # 257 Core CTAs
+male_ctas = antigen_sets.proteins("CTA", profile="male-patient")     # 260 CTAs (includes LALBA)
+female_ctas = antigen_sets.proteins("CTA", profile="female-patient") # 285 CTAs (includes TGM4, LALBA)
+lactating_safe = antigen_sets.proteins(
+    "CTA", profile="female-patient", lactating=True                  # 283 CTAs (excludes LALBA, BTN1A1)
+)
+post_rp = antigen_sets.proteins(
+    "CTA", profile="male-patient", allow_tissues=("prostate", "seminal vesicle")
+)
 background = antigen_sets.proteins("Unsafe|Other")
-record = target_selection.results("MAGEC2")
-replicated_ca = target_filters.select(target_filters.TargetFilter(
-    membership="cancer_antigen", min_tumor_patients=2))
+record = target_selection.results("LALBA")
 ```
 
-`Unsafe` and `Other` are also available separately. All annotated translations can
-feed exact 8–15mer or optional bounded-distance subtraction, with occurrences and
-sequence gaps retained. [Sequence API](antigen-sequences.md) · [Optional filters](target-filters.md).
-The strict MAGE-prefix rule remains an explicit user-selected judgment; sequence
-similarity screening complements it and does not establish TCR cross-reactivity.
+All annotated translations can feed exact 8–15mer or optional bounded-distance
+subtraction, with occurrences and sequence gaps retained.
+[Sequence API](antigen-sequences.md) · [Optional filters & host profiles](target-filters.md) ·
+[CLI & curation build](curation.md).
 
 ## Reproduction and review status
 
 The [rebuild](audits/target-selection-20261110/rebuild/index.md) publishes inputs,
 receipts, every assignment and both sequential and sole-reason attribution.
 `release_ready: false` describes outstanding scientific adjudications, including
-read-level mapping review and the hair-follicle replay (#687). It is not the software
-publication flag. Open holds stay excluded from positive sets.
-
-Historical catalogs remain dated snapshots. The [1.38 threshold audit](audits/cta-threshold-review-20261116/index.md)
-is not regenerated from today's membership rules; its generator rejects a mismatched policy.
+read-level mapping review and the hair-follicle replay (#687). Open holds stay excluded
+from positive sets. Historical catalogs remain dated snapshots.
 """)
 
 

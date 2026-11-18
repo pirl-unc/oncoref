@@ -20,6 +20,33 @@ HPA_SOURCE = {
     "statistic": "individual tissue sample; summed transcript TPM",
     "participant_identity": "Not provided; sample identifiers are not assumed to be donor IDs",
 }
+LACTATION_MARKERS = ("LALBA", "CSN1S1", "CSN2", "CSN3")
+LACTATION_MARKER_TPM = 100.0
+LACTATION_MIN_MARKERS = 3
+
+
+def lactating_mammary_samples(genes, accepted_ids) -> frozenset[str]:
+    """Identify individual breast biopsies expressing a coordinated lactation program."""
+    from oncoref.gene_matching import gene_identity_catalog
+
+    lookup = accepted_ids.set_index("source_gene_id").canonical_gene_id
+    mapped = genes.copy()
+    mapped.index = mapped.index.map(lookup)
+    mapped = mapped[mapped.index.notna()]
+    catalog = gene_identity_catalog()
+    marker_ids = catalog.loc[
+        catalog.canonical_symbol.isin(LACTATION_MARKERS), "canonical_gene_id"
+    ].tolist()
+    if len(marker_ids) != len(LACTATION_MARKERS):
+        raise ValueError("Missing canonical gene identities for lactation markers")
+    breast_cols = [
+        c for c in mapped.columns if c.removeprefix("TPM.").rsplit(".", 1)[0] == "breast"
+    ]
+    if not breast_cols:
+        return frozenset()
+    panel = mapped.reindex(marker_ids)[breast_cols]
+    hits = panel.ge(LACTATION_MARKER_TPM).sum(axis=0)
+    return frozenset(c.removeprefix("TPM.") for c in hits.index[hits.ge(LACTATION_MIN_MARKERS)])
 
 
 def sum_transcript_chunks(chunks):
@@ -59,7 +86,9 @@ def tissue_sample_genes(archive=None):
 
 def tissue_samples(facts, accepted_ids, *, genes=None):
     """Group exact member loci in each real sample; missing members never become zero."""
-    genes = tissue_sample_genes() if genes is None else genes.copy()
+    raw_genes = tissue_sample_genes() if genes is None else genes.copy()
+    lactating = lactating_mammary_samples(raw_genes, accepted_ids)
+    genes = raw_genes
     lookup = accepted_ids.set_index("source_gene_id").canonical_gene_id
     genes.index = genes.index.map(lookup)
     genes = genes[genes.index.notna()]
@@ -76,6 +105,11 @@ def tissue_samples(facts, accepted_ids, *, genes=None):
             tissue, identifier = sample.rsplit(".", 1)
             if not identifier.isdigit():
                 raise ValueError(f"Unexpected HPA sample identifier: {sample}")
+            compartment = (
+                "lactating_breast"
+                if sample in lactating
+                else ("resting_breast" if tissue == "breast" else tissue)
+            )
             rows.append(
                 {
                     "entity_id": protein.entity_id,
@@ -83,6 +117,7 @@ def tissue_samples(facts, accepted_ids, *, genes=None):
                     "sample_id": sample,
                     "participant_id": "",
                     "tissue": tissue,
+                    "compartment": compartment,
                     "source_context": sample,
                     "cell_type": "bulk",
                     "statistic": HPA_SOURCE["statistic"],
@@ -230,6 +265,7 @@ def developmental_samples(facts):
                         "sample_id": str(embryo) + " / " + lineage,
                         "participant_id": source + ":" + str(embryo),
                         "tissue": "embryo",
+                        "compartment": "embryo",
                         "source_context": lineage,
                         "cell_type": lineage,
                         "scope": "developmental",

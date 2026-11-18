@@ -7,6 +7,7 @@ here classifies a protein.
 
 from __future__ import annotations
 
+import json
 import sys
 import textwrap
 from pathlib import Path
@@ -17,11 +18,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.patches import Circle
+from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from oncoref import cta_selection_policy, target_selection  # noqa: E402
+from oncoref import cta_selection_policy, target_filters, target_selection  # noqa: E402
 
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 FIG = OUT / "summary"
@@ -639,6 +640,742 @@ def antigen_venn(data, path):
     plt.close(fig)
 
 
+def _save_both(fig, stem_path: Path, dpi: int = 170):
+    with plt.rc_context({"svg.hashsalt": f"oncoref-{stem_path.name}-v1"}):
+        svg_path = stem_path.with_suffix(".svg")
+        fig.savefig(svg_path, bbox_inches="tight", metadata={"Date": None})
+        svg_path.write_text(
+            "\n".join(line.rstrip() for line in svg_path.read_text().splitlines()) + "\n"
+        )
+        fig.savefig(stem_path.with_suffix(".png"), dpi=dpi, bbox_inches="tight")
+    plt.close(fig)
+
+
+def source_to_tiers_architecture(data: pd.DataFrame, funnel_all: pd.DataFrame, stem_path: Path):
+    """End-to-end schematic: upstream data sources -> induced sets -> gradual funnel -> CTA tiers."""
+    n_proteins = len(data)
+    n_genes = sum(len(json.loads(m)) for m in data.member_gene_ids)
+    n_nominated = int(data.published_nomination.fillna(False).astype(bool).sum())
+    n_unsafe = int(data.category.eq("Unsafe").sum())
+    after_unsafe = n_proteins - n_unsafe
+    n_review = int(data.classification.eq("Other:Review").sum())
+    n_sequence = int(data.classification.eq("Other:Sequence").sum())
+    n_shared_elig = int(data.eligible.astype(bool).sum())
+    n_bounds_fail = after_unsafe - n_review - n_sequence - n_shared_elig
+    n_tissue = int(data.classification.eq("Other:Tissue").sum())
+    n_expr_total = int(data.classification.eq("Other:Expression").sum())
+    n_neither_10x = n_expr_total - n_bounds_fail
+    n_ca = int(data.is_cancer_antigen.astype(bool).sum())
+    n_ra = int(data.is_reproductive_antigen.astype(bool).sum())
+    n_cta = int(data.is_cta.astype(bool).sum())
+    n_ca_only = int(data.category.eq("Cancer Antigen only").sum())
+    n_ra_only = int(data.category.eq("Reproductive Antigen only").sum())
+    n_cand = int(data.is_target_candidate.astype(bool).sum())
+
+    coverage = pd.read_csv(OUT / "tumor-source-coverage.csv")
+    assessed_cohorts = coverage[coverage.status.eq("assessed")]
+    n_cohorts = len(assessed_cohorts)
+    n_tumor_samples = int(assessed_cohorts.samples.sum())
+    repro_obs = pd.read_csv(
+        OUT / "reproductive-comparison.csv.gz",
+        usecols=["scope", "sample_id", "compartment"],
+        low_memory=False,
+    )
+    n_repro_biopsies = int(repro_obs.loc[repro_obs.scope.eq("reproductive"), "sample_id"].nunique())
+
+    tiers = data.loc[data.is_cta.astype(bool), "cta_tier"].value_counts()
+    n_core_tier = int(tiers.get("core", 0))
+    n_core_ext = int(tiers.get("core_with_extended_exposure", 0))
+    n_ext_only = int(tiers.get("extended_only", 0))
+    profiles = target_filters.profile_summary(data).set_index("profile")
+
+    source_specs = [
+        ("HPA v23 (186 biopsies + bulk) & GTEx v11 (54 tissues, brain)", "TPM / nTPM"),
+        ("HPA v23 Single-Cell Tissue Atlas (81 cell clusters)", "nTPM"),
+        ("Sorted Immune Panels (DICE 15 + Monaco 29 + HPA subsets)", "TPM / nTPM"),
+        ("Donor scRNA/snRNA UMI (CELLxGENE 93 studies + Siletti 13.6M)", ">=2 UMI/donor"),
+        ("Normal-Tissue Protein Staining (HPA v23 IHC, 45 organs)", "graded IHC"),
+        ("Reviewed Normal-Expression Literature (912-protein rubric)", "quoted assays"),
+        ("Adult Human Cornea scRNA (Collin et al.)", "CP10K"),
+    ]
+
+    fig, ax = plt.subplots(figsize=(16.5, 15.2))
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0, 100)
+    ax.axis("off")
+
+    def box(x, y, w, h, fc="#ffffff", ec="#b8c4cc", lw=1.2, pad=0.35):
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                w,
+                h,
+                boxstyle=f"round,pad={pad},rounding_size=0.7",
+                facecolor=fc,
+                edgecolor=ec,
+                lw=lw,
+            )
+        )
+
+    def arrow(x0, y0, x1, y1, color="#5c6c75", lw=1.4):
+        ax.add_patch(
+            FancyArrowPatch(
+                (x0, y0),
+                (x1, y1),
+                arrowstyle="-|>,head_length=5,head_width=3",
+                color=color,
+                lw=lw,
+                mutation_scale=1.0,
+            )
+        )
+
+    # Header
+    ax.text(
+        50,
+        98.4,
+        "OncoRef Antigen Curation Architecture: Data Sources → Induced Protein Sets → CTA Tiers",
+        ha="center",
+        va="center",
+        fontsize=15,
+        fontweight="bold",
+        color="#1d2d35",
+    )
+    ax.text(
+        50,
+        96.5,
+        f"Policy {target_selection.POLICY_ID} · {n_proteins:,} human protein groups from {n_genes:,} Ensembl 115 coding loci · Every count computed from the packaged catalog",
+        ha="center",
+        va="center",
+        fontsize=9.6,
+        color="#4e6069",
+    )
+
+    # Stage 0: Reference Universe & Literature Nominations (y = 89.2 .. 94.8)
+    box(2.0, 89.4, 30.0, 5.1, fc="#f2f6f8", ec="#8fa2ad")
+    ax.text(
+        3.2,
+        93.3,
+        "Genome & Transcript Identity Sources",
+        fontsize=9.5,
+        fontweight="bold",
+        color="#243742",
+    )
+    ax.text(
+        3.2,
+        90.4,
+        f"Ensembl 115 ({n_genes:,} coding genes)\n+ MANE Select / Canonical (transcript-selection)",
+        fontsize=8.4,
+        color="#3d505b",
+        linespacing=1.35,
+    )
+    arrow(32.5, 92.0, 35.8, 92.0)
+
+    box(36.3, 89.4, 27.4, 5.1, fc="#e6eef2", ec="#5c7684", lw=1.5)
+    ax.text(
+        50.0,
+        92.9,
+        f"{n_proteins:,} Human Protein Groups",
+        ha="center",
+        fontsize=11.5,
+        fontweight="bold",
+        color="#1d2d35",
+    )
+    ax.text(
+        50.0,
+        90.5,
+        "Identical reference sequences grouped;\nall member Ensembl gene IDs retained",
+        ha="center",
+        fontsize=8.2,
+        color="#3d505b",
+        linespacing=1.3,
+    )
+
+    box(68.0, 89.4, 30.0, 5.1, fc="#fcf7eb", ec="#c99a46")
+    ax.text(
+        69.2,
+        93.3,
+        f"Literature Nominations ({n_nominated:,} proteins)",
+        fontsize=9.5,
+        fontweight="bold",
+        color="#7a5b1b",
+    )
+    ax.text(
+        69.2,
+        90.4,
+        "16 curated CTA & oncofetal catalogs (CTpedia,\nBruggeman, Da Silva, ...); annotation only",
+        fontsize=8.3,
+        color="#5c4922",
+        linespacing=1.35,
+    )
+    arrow(67.5, 92.0, 64.2, 92.0, color="#b38732")
+    arrow(50.0, 89.0, 50.0, 86.7)
+
+    # Stage 1: Normal Somatic Exclusion Screen (y = 57.2 .. 86.2)
+    box(2.0, 57.2, 96.0, 28.8, fc="#fdf8f7", ec="#cfa3a0", lw=1.3)
+    ax.text(
+        3.2,
+        84.6,
+        f"1. Shared Somatic Safety Screen — 7 Normal Data Panels  ({n_proteins:,} → {after_unsafe:,} survive;  −{n_unsafe:,} Unsafe)",
+        fontsize=10.5,
+        fontweight="bold",
+        color="#7d2b29",
+    )
+    ax.text(
+        3.4,
+        82.6,
+        "Upstream Normal Data Source & Scale",
+        fontsize=8.5,
+        fontweight="bold",
+        color="#526068",
+    )
+    ax.text(
+        47.5,
+        82.6,
+        "Sequential Funnel (surviving proteins)",
+        fontsize=8.5,
+        fontweight="bold",
+        color="#526068",
+    )
+    ax.text(79.0, 82.6, "Total Flagged by Layer", fontsize=8.5, fontweight="bold", color="#526068")
+
+    unsafe_steps = funnel_all.iloc[1 : 1 + len(IDEAS)].reset_index(drop=True)
+    y_rows = np.linspace(80.1, 61.2, len(unsafe_steps))
+    for idx, (y_i, row, (src_label, scale_label)) in enumerate(
+        zip(y_rows, unsafe_steps.itertuples(), source_specs)
+    ):
+        ax.text(3.4, y_i, f"{idx + 1}. {src_label}", va="center", fontsize=8.2, color="#243742")
+        ax.text(
+            45.8, y_i, f"[{scale_label}]", va="center", ha="right", fontsize=7.6, color="#687780"
+        )
+        # Draw rescaled bar for surviving proteins (max 2,500 after step 1; step 1 starts from 19,893)
+        bar_w = 18.0 * (row.remaining / 2600.0)
+        ax.add_patch(
+            FancyBboxPatch(
+                (47.5, y_i - 0.85),
+                max(bar_w, 0.4),
+                1.7,
+                boxstyle="round,pad=0.02,rounding_size=0.25",
+                facecolor="#5f7d8c",
+                edgecolor="none",
+            )
+        )
+        ax.text(
+            47.5 + max(bar_w, 0.4) + 0.6,
+            y_i,
+            f"{int(row.remaining):,}  (−{int(row.removed):,})",
+            va="center",
+            fontsize=8.2,
+            fontweight="bold" if idx == len(unsafe_steps) - 1 else "normal",
+            color="#243742",
+        )
+        flagged_total = int(row.flagged_in_total)
+        ax.text(
+            79.0,
+            y_i,
+            f"{flagged_total:,} Unsafe",
+            va="center",
+            fontsize=8.1,
+            color="#8f3532",
+        )
+
+    box(78.5, 58.0, 18.3, 2.3, fc="#ac5552", ec="#8c3b38", pad=0.2)
+    ax.text(
+        87.65,
+        59.15,
+        f"Unsafe Set: {n_unsafe:,} proteins",
+        ha="center",
+        va="center",
+        fontsize=9.2,
+        fontweight="bold",
+        color="#ffffff",
+    )
+    ax.text(
+        3.4,
+        58.6,
+        "Note: Many genes fail multiple normal panels; sequential (−removed) attributes each protein to the first panel it fails.",
+        fontsize=7.9,
+        color="#5e6d75",
+    )
+    arrow(50.0, 56.8, 50.0, 54.5)
+
+    # Stage 2: Technical, Sequence & Bounds Eligibility (y = 43.2 .. 54.0)
+    box(2.0, 43.2, 30.0, 10.6, fc="#f4f6f8", ec="#9aa8b2")
+    ax.text(
+        3.2,
+        52.3,
+        "2. Eligibility & Sequence Sources",
+        fontsize=9.5,
+        fontweight="bold",
+        color="#243742",
+    )
+    ax.text(
+        3.2,
+        44.4,
+        "• Complete 36-tissue native-TPM normal panel\n"
+        "• MANE/canonical ORF & translation qualification\n"
+        "• Ensembl 115 9-mers (<95% in Unsafe)\n"
+        "• Curated readthrough-loci.csv\n"
+        "• Disposable tissues <= 32 TPM & <= 32 nTPM",
+        fontsize=8.0,
+        color="#3d505b",
+        linespacing=1.35,
+    )
+    arrow(32.5, 48.5, 35.8, 48.5)
+
+    box(36.3, 43.2, 27.4, 10.6, fc="#eaf2f0", ec="#4c8473", lw=1.4)
+    ax.text(
+        50.0,
+        52.2,
+        "Shared-Eligible Gate",
+        ha="center",
+        fontsize=10.2,
+        fontweight="bold",
+        color="#1f4e40",
+    )
+    ax.text(
+        50.0,
+        47.9,
+        f"{after_unsafe:,} surviving somatic screen\n"
+        f"  − {n_review:,} Other:Review\n"
+        f"  − {n_sequence:,} Other:Sequence\n"
+        f"  − {n_bounds_fail:,} Bounds fail",
+        ha="center",
+        va="center",
+        fontsize=8.3,
+        color="#2c443d",
+        linespacing=1.32,
+    )
+    ax.text(
+        50.0,
+        44.2,
+        f"→ {n_shared_elig:,} Shared-Eligible (H₀ = max(N, D, 1))",
+        ha="center",
+        fontsize=9.1,
+        fontweight="bold",
+        color="#1f4e40",
+    )
+
+    arrow(64.2, 50.8, 67.5, 50.8, color="#9e7430")
+    box(68.0, 48.8, 30.0, 5.0, fc="#fbf5ea", ec="#b88a3c")
+    ax.text(
+        69.2,
+        52.3,
+        f"Other:Review ({n_review:,} proteins)",
+        fontsize=9.2,
+        fontweight="bold",
+        color="#855f1f",
+    )
+    ax.text(
+        69.2,
+        49.5,
+        "Incomplete 36-tissue coverage, uncertain ORF,\nor unresolved donor rare-cell / mapping signal",
+        fontsize=7.9,
+        color="#5c4926",
+        linespacing=1.28,
+    )
+
+    arrow(64.2, 45.6, 67.5, 45.6, color="#73608f")
+    box(68.0, 43.2, 30.0, 4.9, fc="#f4f1f8", ec="#8d7aa8")
+    ax.text(
+        69.2,
+        46.6,
+        f"Other:Sequence ({n_sequence:,} proteins)",
+        fontsize=9.2,
+        fontweight="bold",
+        color="#574473",
+    )
+    ax.text(
+        69.2,
+        43.9,
+        ">=95% 9-mer overlap with Unsafe proteins,\nnested microprotein, or read-through locus",
+        fontsize=7.9,
+        color="#473b59",
+        linespacing=1.28,
+    )
+
+    arrow(50.0, 42.8, 50.0, 40.4)
+
+    # Stage 3: Symmetric 10x Compartment Enrichment (y = 24.0 .. 40.0)
+    box(2.0, 24.0, 29.0, 15.8, fc="#edf5fa", ec="#3e8bba", lw=1.3)
+    ax.text(
+        3.2,
+        38.2,
+        "3A. Tumor RNA Sources (CA)",
+        fontsize=9.6,
+        fontweight="bold",
+        color="#1d5b82",
+    )
+    ax.text(
+        3.2,
+        31.8,
+        f"• {n_cohorts} linear-TPM cancer cohorts\n"
+        f"  ({n_tumor_samples:,} QC-passing tumor libraries;\n"
+        "  library_qc screens spermatid/OR/ectopic)\n"
+        "• nose-skin-reference.csv & family homes\n"
+        "• Rule: >=1 tumor >= 10 x H₀",
+        fontsize=8.0,
+        color="#274659",
+        linespacing=1.33,
+    )
+    ax.text(
+        3.2,
+        25.3,
+        f"Induces {n_ca:,} Cancer Antigens (CA)\n({n_tissue:,} unmeasured home -> Other:Tissue)",
+        fontsize=8.5,
+        fontweight="bold",
+        color="#1d5b82",
+        linespacing=1.3,
+    )
+    arrow(31.5, 32.0, 34.3, 32.0, color="#3e8bba")
+
+    box(69.0, 24.0, 29.0, 15.8, fc="#edf7f1", ec="#438a69", lw=1.3)
+    ax.text(
+        70.2,
+        38.2,
+        "3B. Reproductive & Embryo Sources (RA)",
+        fontsize=9.6,
+        fontweight="bold",
+        color="#225e42",
+    )
+    ax.text(
+        70.2,
+        31.8,
+        f"• HPA v23 ({n_repro_biopsies} biopsies across 11 adult\n"
+        "  compartments: lactating breast.410 split\n"
+        "  from 3 resting breast biopsies)\n"
+        "• Petropoulos E3–E7 & Tyser CS7 embryos\n"
+        "• Rule: sample or lineage >= 10 x H₀",
+        fontsize=8.0,
+        color="#264a39",
+        linespacing=1.33,
+    )
+    ax.text(
+        70.2,
+        25.3,
+        f"Induces {n_ra:,} Reproductive Antigens (RA)\n(embryo replication enforced per stage)",
+        fontsize=8.5,
+        fontweight="bold",
+        color="#225e42",
+        linespacing=1.3,
+    )
+    arrow(68.5, 32.0, 65.7, 32.0, color="#438a69")
+
+    box(34.8, 24.0, 30.4, 15.8, fc="#f7fbf9", ec="#3f8f6b", lw=1.6)
+    ax.text(
+        50.0,
+        38.1,
+        f"{n_cand:,} Candidate Antigens (CA ∪ RA)",
+        ha="center",
+        fontsize=10.6,
+        fontweight="bold",
+        color="#1d3537",
+    )
+    # Three partition cards
+    box(36.0, 29.3, 8.2, 6.8, fc="#dcebf5", ec="#3e8bba", pad=0.2)
+    ax.text(40.1, 33.8, "CA only", ha="center", fontsize=8.6, fontweight="bold", color="#1d5b82")
+    ax.text(
+        40.1, 31.1, f"{n_ca_only:,}", ha="center", fontsize=12.0, fontweight="bold", color="#1d5b82"
+    )
+
+    box(45.2, 29.0, 9.6, 7.4, fc="#2f7f6f", ec="#1f5c50", lw=1.5, pad=0.2)
+    ax.text(
+        50.0, 34.4, "CTA (CA ∩ RA)", ha="center", fontsize=8.6, fontweight="bold", color="#ffffff"
+    )
+    ax.text(
+        50.0, 31.7, f"{n_cta:,}", ha="center", fontsize=13.5, fontweight="bold", color="#ffffff"
+    )
+    ax.text(50.0, 29.8, 'default "all"', ha="center", fontsize=7.5, color="#e2f5f0")
+
+    box(55.8, 29.3, 8.2, 6.8, fc="#dff0e6", ec="#438a69", pad=0.2)
+    ax.text(59.9, 33.8, "RA only", ha="center", fontsize=8.6, fontweight="bold", color="#225e42")
+    ax.text(
+        59.9, 31.1, f"{n_ra_only:,}", ha="center", fontsize=12.0, fontweight="bold", color="#225e42"
+    )
+
+    ax.text(
+        50.0,
+        25.4,
+        f"Excluded here: {n_neither_10x:,} below 10x (+{n_bounds_fail:,} bounds = {n_expr_total:,} Other:Expression)\nand {n_tissue:,} Other:Tissue",
+        ha="center",
+        fontsize=7.8,
+        color="#55656e",
+        linespacing=1.28,
+    )
+
+    arrow(50.0, 23.6, 50.0, 21.3, color="#2f7f6f", lw=1.6)
+
+    # Stage 4: CTA Biological Tiers & Host Toxicity Profiles (y = 1.4 .. 21.0)
+    box(2.0, 1.4, 96.0, 19.6, fc="#f6faf8", ec="#2f7f6f", lw=1.4)
+    ax.text(
+        3.2,
+        19.4,
+        f"4. Slicing the {n_cta:,} Default CTAs — Biological Compartment Tiers & Patient Toxicity Profiles",
+        fontsize=10.5,
+        fontweight="bold",
+        color="#1f5c50",
+    )
+
+    # Left subpanel: 3 biological CTA tiers
+    ax.text(
+        3.4,
+        17.3,
+        f"Biological Origin & Exposure Tiers (sum = {n_cta} CTAs)",
+        fontsize=9.0,
+        fontweight="bold",
+        color="#243742",
+    )
+    tier_cards = [
+        (
+            12.4,
+            f"Core CTA: {n_core_tier}",
+            "Qualifies in embryo, placenta, testis or ovary; all 8 extended adult organs <=32 TPM & >=10x below tumor (MAGEA4, NY-ESO-1, PRAME, SSX2/B, MAGEC2)",
+            "#2f7f6f",
+        ),
+        (
+            7.2,
+            f"Core + Extended Exposure: {n_core_ext}",
+            "Core origin, plus >32 TPM or <10x tumor margin in epididymis, tract or resting breast (MAGEA11, MAGEB4, RNASE11, KIAA1210, ADAM2, TCP11X2)",
+            "#5a8f7d",
+        ),
+        (
+            2.0,
+            f"Extended-Only CTA: {n_ext_only}",
+            "Qualifies only via accessory/mammary/tract: 21 male accessory (TGM4, RLN1, SEMG2, SPAG11A/B), 2 lactating breast (LALBA, BTN1A1), 1 tract (SCGB1D4)",
+            "#9c7228",
+        ),
+    ]
+    for y_card, title_txt, body_txt, badge_col in tier_cards:
+        box(3.4, y_card, 44.5, 4.3, fc="#ffffff", ec=badge_col, lw=1.1, pad=0.2)
+        ax.text(
+            4.3,
+            y_card + 3.45,
+            title_txt,
+            va="center",
+            fontsize=8.5,
+            fontweight="bold",
+            color=badge_col,
+        )
+        ax.text(
+            4.3,
+            y_card + 2.75,
+            textwrap.fill(body_txt, 69),
+            va="top",
+            fontsize=7.35,
+            color="#374952",
+            linespacing=1.18,
+        )
+
+    # Right subpanel: Host / Patient Toxicity Profiles
+    ax.text(
+        50.2,
+        17.3,
+        "Configurable Host Profiles (select protected vs tolerated compartments)",
+        fontsize=9.0,
+        fontweight="bold",
+        color="#243742",
+    )
+    prof_rows = [
+        ("all", "all (default: no compartments protected)", "#2f7f6f"),
+        ("female-patient", "female-patient (protects tract + resting breast)", "#3d8c78"),
+        (
+            "female-patient (lactating)",
+            "female-patient --lactating (drops LALBA, BTN1A1)",
+            "#4c9985",
+        ),
+        (
+            "male-patient (post-prostatectomy)",
+            "male-patient --allow-tissue prostate,sem. vesicle",
+            "#4a7da8",
+        ),
+        ("male-patient", "male-patient (protects male acc. + resting breast)", "#3e8bba"),
+        ("core", "core (protects all 8 extended adult compartments)", "#5c6e7a"),
+    ]
+    for idx, (pkey, plabel, pcol) in enumerate(prof_rows):
+        y_p = 15.0 - idx * 2.38
+        cta_val = int(profiles.loc[pkey, "CTA"])
+        bw = 11.8 * (cta_val / max(n_cta, 1))
+        ax.text(50.2, y_p, plabel, va="center", fontsize=7.8, color="#243742")
+        ax.add_patch(
+            FancyBboxPatch(
+                (79.4, y_p - 0.7),
+                bw,
+                1.4,
+                boxstyle="round,pad=0.02,rounding_size=0.2",
+                facecolor=pcol,
+                edgecolor="none",
+            )
+        )
+        ax.text(
+            79.4 + bw + 0.5,
+            y_p,
+            f"{cta_val} CTA",
+            va="center",
+            fontsize=8.1,
+            fontweight="bold",
+            color="#1d2d35",
+        )
+
+    _save_both(fig, stem_path, dpi=170)
+
+
+def cta_tiers_and_profiles(data: pd.DataFrame, stem_path: Path):
+    """Two-panel visual of the 12 compartments x host profiles and resulting CTA sets."""
+    scenarios = [
+        ("all (default)", target_filters.TargetFilter(host_profile="all")),
+        ("female-patient", target_filters.TargetFilter(host_profile="female-patient")),
+        (
+            "female-patient\n(--lactating)",
+            target_filters.TargetFilter(host_profile="female-patient", lactating=True),
+        ),
+        (
+            "male-patient\n(post-prostatectomy)",
+            target_filters.TargetFilter(
+                host_profile="male-patient", allow_tissues=("prostate", "seminal vesicle")
+            ),
+        ),
+        ("male-patient", target_filters.TargetFilter(host_profile="male-patient")),
+        ("core", target_filters.TargetFilter(host_profile="core")),
+        (
+            "female-patient\n(--pregnant)",
+            target_filters.TargetFilter(host_profile="female-patient", pregnant=True),
+        ),
+    ]
+    compartments = list(target_selection.REPRODUCTIVE_COMPARTMENTS)
+    comp_labels = [
+        "embryo (Core)",
+        "placenta (Core)",
+        "testis (Core)",
+        "ovary (Core)",
+        "epididymis (Male)",
+        "prostate (Male)",
+        "seminal vesicle (Male)",
+        "fallopian tube (Female)",
+        "endometrium (Female)",
+        "cervix (Female)",
+        "lactating_breast [breast.410]",
+        "resting_breast [3 biopsies]",
+    ]
+    matrix = np.zeros((len(scenarios), len(compartments)), dtype=int)
+    tier_counts = []
+    measured = target_filters.measures(data)
+    for i, (_, filt) in enumerate(scenarios):
+        prot = set(target_filters.protected_compartments(filt))
+        for j, comp in enumerate(compartments):
+            matrix[i, j] = 1 if comp in prot else 0
+        ev = target_filters.apply(
+            target_filters.TargetFilter(
+                membership="cta",
+                host_profile=filt.host_profile,
+                lactating=filt.lactating,
+                pregnant=filt.pregnant,
+                allow_tissues=filt.allow_tissues,
+                protect_tissues=filt.protect_tissues,
+            ),
+            measured,
+        )
+        kept = ev[ev.keep]
+        vc = kept.cta_tier.value_counts()
+        tier_counts.append(
+            (
+                int(vc.get("core", 0)),
+                int(vc.get("core_with_extended_exposure", 0)),
+                int(vc.get("extended_only", 0)),
+            )
+        )
+
+    fig, (ax_grid, ax_bars) = plt.subplots(
+        1, 2, figsize=(15.5, 6.4), gridspec_kw={"width_ratios": [1.35, 1.0]}
+    )
+
+    # Left: Compartment allowance vs protection grid (compartments on y, profiles on x)
+    grid_t = matrix.T  # shape: (12 compartments, 7 scenarios)
+    cmap = matplotlib.colors.ListedColormap(["#d9efe6", "#f4d4d2"])
+    ax_grid.imshow(grid_t, cmap=cmap, aspect="auto", vmin=0, vmax=1)
+    ax_grid.set_yticks(range(len(comp_labels)), comp_labels, fontsize=9)
+    ax_grid.set_xticks(
+        range(len(scenarios)),
+        [name for name, _ in scenarios],
+        fontsize=8.3,
+        rotation=25,
+        ha="right",
+    )
+    for r_i in range(grid_t.shape[0]):
+        for c_i in range(grid_t.shape[1]):
+            protected = bool(grid_t[r_i, c_i])
+            ax_grid.text(
+                c_i,
+                r_i,
+                "Protected" if protected else "Allowed",
+                ha="center",
+                va="center",
+                fontsize=7.8,
+                fontweight="bold" if protected else "normal",
+                color="#8a2c28" if protected else "#1f5c48",
+            )
+    for sep in (3.5, 6.5, 9.5):
+        ax_grid.axhline(sep, color="#5c6c75", lw=1.1, ls="--")
+    ax_grid.set_title(
+        "Which compartments are protected from toxicity vs allowed as CTA origins?",
+        loc="left",
+        fontsize=10.5,
+        fontweight="bold",
+        pad=10,
+    )
+    ax_grid.tick_params(length=0)
+
+    # Right: Stacked horizontal bars of CTA counts per scenario
+    y_pos = np.arange(len(scenarios))[::-1]
+    core_vals = np.array([t[0] for t in tier_counts])
+    cext_vals = np.array([t[1] for t in tier_counts])
+    ext_vals = np.array([t[2] for t in tier_counts])
+    totals = core_vals + cext_vals + ext_vals
+
+    ax_bars.barh(
+        y_pos, core_vals, color="#2f7f6f", label="Core CTA (germline/fetoplacental, clean extended)"
+    )
+    ax_bars.barh(
+        y_pos,
+        cext_vals,
+        left=core_vals,
+        color="#6ea899",
+        label="Core + extended organ exposure",
+    )
+    ax_bars.barh(
+        y_pos,
+        ext_vals,
+        left=core_vals + cext_vals,
+        color="#c99a46",
+        label="Extended-only CTA (prostate, epididymis, lactating breast, tract)",
+    )
+    for yi, total, c_v in zip(y_pos, totals, core_vals):
+        detail = f"{int(total)} CTA" + (
+            f"  ({int(c_v)} core + {int(total - c_v)} ext)" if total != c_v else "  (core)"
+        )
+        ax_bars.text(
+            total + 4, yi, detail, va="center", fontsize=8.6, fontweight="bold", color="#1d2d35"
+        )
+    ax_bars.set_yticks(y_pos, [name.replace("\n", " ") for name, _ in scenarios], fontsize=8.8)
+    ax_bars.set_xlim(0, max(totals) * 1.48)
+    ax_bars.set_xlabel("Retained CTA proteins")
+    ax_bars.set_title(
+        "Induced CTA set size by host / patient profile",
+        loc="left",
+        fontsize=10.5,
+        fontweight="bold",
+        pad=10,
+    )
+    ax_bars.legend(
+        loc="upper left",
+        bbox_to_anchor=(0.0, -0.14),
+        fontsize=8.0,
+        framealpha=0.95,
+    )
+    ax_bars.spines[["top", "right"]].set_visible(False)
+
+    fig.tight_layout()
+    _save_both(fig, stem_path, dpi=165)
+
+
 def build():
     data = pd.read_csv(OUT / "protein-decisions.csv.gz", low_memory=False)
     FIG.mkdir(exist_ok=True)
@@ -650,6 +1387,10 @@ def build():
         "Every assessed protein, by filtering idea",
         FIG / "funnel-all.png",
     )
+    source_to_tiers_architecture(data, everything, FIG / "source-to-tiers-architecture")
+    cta_tiers_and_profiles(data, FIG / "cta-tiers-and-profiles")
+    profile_table = target_filters.profile_summary(data)
+    profile_table.to_csv(FIG / "cta-profiles.csv", index=False)
     published = data[data.published_nomination.fillna(False).astype(bool)]
     nominated = draw_funnel(
         funnel(published, "Published CTA / oncofetal nominations"),
@@ -677,6 +1418,27 @@ def build():
         f"{counts['Reproductive Antigen only']} Reproductive Antigen only.** These are outputs of "
         "screening rules, not validated tumor antigens. Every figure is drawn from the "
         "[rebuilt catalog](index.md); thresholds are read from the policy constants.\n\n"
+        "## End-to-end architecture: data sources to CTA tiers\n\n"
+        "![End-to-end curation architecture](summary/source-to-tiers-architecture.png)\n\n"
+        "Every upstream panel induces a defined exclusion, review gate, or enrichment set. "
+        "Lactating mammary (`breast.410`, expressing coordinated milk proteins `LALBA`, `CSN1S1`, "
+        "`CSN2`, `CSN3`) is separated from resting mammary (`breast.373`, `breast.390`, `breast.405`), "
+        "keeping lactation-specific antigens available for non-lactating women and men while allowing "
+        "explicit exclusion via `--lactating`.\n\n"
+        "## CTA compartment tiers and host toxicity profiles\n\n"
+        "![CTA tiers and host profiles](summary/cta-tiers-and-profiles.png)\n\n"
+        + markdown(
+            profile_table,
+            {
+                "profile": "Host profile",
+                "protected_compartments": "Protected compartments (<=32 TPM & >=10x below tumor)",
+                "CTA": "CTA",
+                "CA_only": "CA only",
+                "RA_only": "RA only",
+                "Union": "CA | RA",
+            },
+        )
+        + "\n\n[Profile table CSV](summary/cta-profiles.csv)\n\n"
         "## Antigen membership\n\n![Antigen sets](summary/antigen-sets.png)\n\n"
         "CTA is the intersection. Reproductive-only proteins have no qualifying cancer evidence; "
         "the union name does not certify tumor targeting. Unsafe is the accepted-exclusion background; Unsafe|Other also subtracts unresolved and nonqualifying proteins.\n\n"
