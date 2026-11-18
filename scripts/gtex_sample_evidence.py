@@ -51,6 +51,15 @@ def sample_matrix(path, canonical):
     return pd.DataFrame.from_dict(values, orient="index", columns=samples), donors
 
 
+def donor_p99(values, donors):
+    """Linear P99 across measured donors after combining member loci within each sample."""
+    if len(donors) != len(values.columns) or pd.isna(donors).any():
+        raise ValueError("GTEx P99 requires a donor for every sample")
+    # Give each donor one value if a later release includes replicate libraries.
+    donor_values = values.T.groupby(donors, sort=False).median()
+    return donor_values.quantile(0.99, interpolation="linear").dropna()
+
+
 def individual_samples(facts, mapped, tissue_columns):
     labels = gene_identity_catalog().set_index("canonical_gene_id").canonical_symbol.fillna("")
     group = {g: r.entity_id for r in facts.itertuples() for g in json.loads(r.member_gene_ids)}
@@ -120,26 +129,30 @@ def individual_samples(facts, mapped, tissue_columns):
             frame = values.melt(
                 ignore_index=False, var_name="sample_id", value_name="value"
             ).reset_index()
+            frame["participant_id"] = frame.sample_id.map(audit.participant_id)
+            frame["library_qc_review"] = frame.sample_id.map(audit.library_qc_review)
+            frame["compartment"] = frame.sample_id.map(compartments)
+            statistic = "individual sample gene TPM"
+            kind = "individual_gtex_sample"
+            source = SOURCE_ID
         else:
-            # The normal and Disposable gates consume only the maximum. Select after
-            # summing within each individual sample, preserving the attaining sample ID.
-            valid = values.dropna(how="all")
-            frame = pd.DataFrame(
-                {"sample_id": valid.idxmax(axis=1), "value": valid.max(axis=1)}
-            ).reset_index()
-        frame["participant_id"] = frame.sample_id.map(audit.participant_id)
-        frame["library_qc_review"] = frame.sample_id.map(audit.library_qc_review)
-        frame["compartment"] = frame.sample_id.map(compartments)
+            frame = donor_p99(values, donors).rename("value").reset_index()
+            frame = frame.assign(
+                sample_id="", participant_id="", library_qc_review="", compartment=tissue
+            )
+            statistic = "within-site donor P99, linear interpolation"
+            kind = "donor_percentile"
+            source = PANEL["normal_source_id"]
         frame["member_count"] = frame.entity_id.map(counts)
         frame["measured_members"] = frame.member_count.where(frame.value.notna())
         rows.append(
             frame.assign(
                 tissue=tissue,
                 source_context=native,
-                source_id=SOURCE_ID,
+                source_id=source,
                 cell_type="bulk",
-                statistic="individual sample gene TPM",
-                observation_kind="individual_gtex_sample",
+                statistic=statistic,
+                observation_kind=kind,
                 unit="TPM",
             )
         )

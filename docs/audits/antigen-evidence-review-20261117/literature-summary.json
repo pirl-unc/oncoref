@@ -1,7 +1,7 @@
 {
-  "catalog_policy": "oncoref.target-selection.2026-11-18.2",
+  "catalog_policy": "oncoref.target-selection.2026-11-18.3",
   "filter_policy": "oncoref.target-filters.2026-11-17.5",
-  "catalog_sha256": "56fd776f77222008d19540e2e21f8b0db593414f00bce33a25aafad0e7d874a0",
+  "catalog_sha256": "e9204f2af6b2fdcb6f1fd2980c8df2c3568dee81d06d74574c385501d884017d",
   "original_49_sha256": "c406a01018b4c69d9fd644c1baa3c841e9f4be608728301f53fad7baa28094c7",
   "original_zero_counted": 49,
   "with_any_literature": 43,
@@ -15,16 +15,16 @@
     "SSU72L4",
     "SSU72L5"
   ],
-  "standard_sequential_paper_exclusions": 67,
+  "standard_sequential_paper_exclusions": 101,
   "excluded_by_count": {
-    "0": 34,
-    "1": 33
+    "1": 56,
+    "0": 45
   },
   "cta_modes": {
-    "all": 203,
-    "loose": 163,
-    "standard": 96,
-    "strict": 47
+    "all": 308,
+    "loose": 257,
+    "standard": 174,
+    "strict": 103
   },
   "limitations": [
     "A source count describes curated coverage, not an exhaustive literature search or independent validation.",

@@ -1,0 +1,11 @@
+source,unique,tied
+dice,79,0
+gtex_donor_p99,260,0
+gtex_tissue_rna,0,0
+hpa_immune_monaco,17,4
+hpa_tissue_samples,83,0
+rna_brain_gtex,0,8
+rna_brain_hpa,95,6
+rna_tissue_gtex,0,8
+rna_tissue_hpa,0,0
+floor,367,9

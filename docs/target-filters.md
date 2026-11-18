@@ -1,6 +1,6 @@
 # Target filters and host selection
 
-Catalog `oncoref.target-selection.2026-11-18.2`; selection policy `oncoref.target-filters.2026-11-17.5`.
+Catalog `oncoref.target-selection.2026-11-18.3`; selection policy `oncoref.target-filters.2026-11-17.5`.
 Filters narrow biological candidates. Optional host constraints are a separate axis
 with their own versioned exposure evidence. [Full audit](audits/target-filters-20261112/index.md).
 
@@ -60,14 +60,14 @@ assumptions and override actual anatomy. `all` means no host screen. The former
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
-| `all` | none | **203** | 64 | 211 | 478 |
-| `female-patient` | none | **203** | 64 | 211 | 478 |
-| `female-patient (protect ovary)` | ovary | **174** | 60 | 183 | 417 |
-| `female-patient (lactating)` | lactating_breast | **199** | 63 | 205 | 467 |
+| `all` | none | **308** | 68 | 131 | 507 |
+| `female-patient` | none | **308** | 68 | 131 | 507 |
+| `female-patient (protect ovary)` | ovary | **261** | 65 | 116 | 442 |
+| `female-patient (lactating)` | lactating_breast | **301** | 66 | 128 | 495 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
-| `male-patient` | none | **203** | 64 | 211 | 478 |
-| `male-patient (protect testis)` | testis | **43** | 28 | 27 | 98 |
-| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **35** | 21 | 13 | 69 |
+| `male-patient` | none | **308** | 68 | 131 | 507 |
+| `male-patient (protect testis)` | testis | **49** | 28 | 24 | 101 |
+| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **39** | 21 | 11 | 71 |
 
 Counts are research-screen outputs. Pregnancy remains unresolved because early
 embryo measurements do not cover all fetal/developmental stages. Milk-program
@@ -77,10 +77,10 @@ state labels are inferred and do not prove expression absence in other hosts.
 
 | Mode | Retained proteins without a host context | Changes |
 |---|---:|---|
-| `all` | 478 | `{}` |
-| `loose` | 361 | `{'min_papers': 1}` |
-| `standard` | 134 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
-| `strict` | 47 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
+| `all` | 507 | `{}` |
+| `loose` | 379 | `{'min_papers': 1}` |
+| `standard` | 230 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
+| `strict` | 103 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 
 Modes nest from all to strict. Baseline positive controls are regression checks;
 any of them may fail a host requirement. Paper counts measure scoped published

@@ -1,5 +1,7 @@
 # GTEx esophagus muscularis and the 98 former CTAs
 
+Historical sensitivity analysis against the individual-maximum catalog. Reproduce these tables from commit `819111a9`. The [current source report](../target-selection-20261110/rebuild/normal-rna/index.md) uses interpolated donor P99 for GTEx normal tissue sites.
+
 **GTEX-1I1GR-1426-SM-CY8H8 is a pathology-confirmed muscularis specimen with convincing evidence of testis RNA admixture in its sequencing library.** The GTEx pathologist recorded “6 pieces, confirmed target muscularis.” The slide record explicitly links the specimen to this RNA library from a male donor aged 60–69. The note records no tumor finding. It gives no microscopic disease-free certification of every piece or independent identity check on the sequenced RNA. [GTEx slide record](https://gtexportal.org/api/v2/histology/image?tissueSampleId=GTEX-1I1GR-1426) · [GTEx v11 specimen annotations](https://storage.googleapis.com/adult-gtex/annotations/v11/metadata-files/GTEx_Analysis_v11_Annotations_SampleAttributesDS.txt)
 
 ## Tissue and batch evidence

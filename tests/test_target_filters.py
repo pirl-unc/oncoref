@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 478
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 507
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -43,8 +43,8 @@ def test_positive_controls_follow_the_same_thresholds(catalog):
     expected = {
         "all": set(tf.POSITIVE_CONTROLS),
         "loose": set(tf.POSITIVE_CONTROLS),
-        "standard": {"NY-ESO-1"},
-        "strict": set(),
+        "standard": {"MAGEA4", "NY-ESO-1"},
+        "strict": {"MAGEA4", "NY-ESO-1"},
     }
     for name in tf.FILTER_MODES:
         labels = set(tf.select(name, catalog).protein_group_label)
@@ -188,7 +188,7 @@ def test_mage_rule_drops_the_family_but_keeps_magea4(catalog):
     f = tf.TargetFilter(exclude_prefixes=("MAGE",), except_labels=("MAGEA4",))
     d = tf.apply(f, catalog)
     removed = d[d.is_target_candidate & ~d.keep]
-    assert len(removed) == 15
+    assert len(removed) == 17
     assert "MAGEC2" in set(removed.protein_group_label)
     assert removed.protein_group_label.str.startswith("MAGE").all()
     assert (removed.filter_failed == "exclusions").all()
@@ -217,7 +217,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 478 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 507 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()

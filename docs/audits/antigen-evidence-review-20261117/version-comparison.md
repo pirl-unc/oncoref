@@ -12,19 +12,19 @@ Counts are identical selected-reference protein groups. CA-only and RA-only excl
 | 1.41 | 290 | 106 | 113 | 509 | +44 | Embryo gate repaired; 44 CTAs restored |
 | PR #699 | 290 | 106 | 113 | 509 | +0 | Compartment and host views; membership unchanged |
 | PR #700 | 290 | 106 | 113 | 509 | +0 | Explicit host choices and gene-specific paper uses; membership unchanged |
-| Current (oncoref.target-selection.2026-11-18.2) | 203 | 64 | 211 | 478 | -87 | Reproductive-content signatures are advisory sample notes |
+| Current (oncoref.target-selection.2026-11-18.3) | 308 | 68 | 131 | 507 | +18 | GTEx individual reproductive witnesses and within-site normal donor P99; reproductive-program flags are advisory |
 
 The frozen 1.39 → 1.41 difference is 147: 78 CA-only, 35 Other:Review, 15 Other:Tissue, 12 Other:Expression and 7 RA-only. None became Unsafe. These are observed destinations, not independent causal attributions for overlapping gates.
 
-Each optional mode below starts from the same 203 CTAs; losses are sequential within that mode. Default anatomy protects no reproductive tissue and removes zero.
+Each optional mode below starts from the same 308 CTAs; losses are sequential within that mode. Default anatomy protects no reproductive tissue and removes zero.
 
 | Mode | Normal-RNA loss | Curated-home loss | Paper loss | MAGE-name loss | CTAs kept |
 |---|---:|---:|---:|---:|---:|
-| all | 0 | 0 | 0 | 0 | 203 |
-| loose | 0 | 0 | 40 | 0 | 163 |
-| standard | 39 | 1 | 67 | 0 | 96 |
-| strict | 52 | 3 | 94 | 7 | 47 |
+| all | 0 | 0 | 0 | 0 | 308 |
+| loose | 0 | 0 | 51 | 0 | 257 |
+| standard | 31 | 2 | 101 | 0 | 174 |
+| strict | 38 | 5 | 152 | 10 | 103 |
 
 Standard requires two counted tumor-support papers; reproductive-only papers remain separate support. The [IHC counterfactual](index.md#how-much-would-reproductive-high-ihc-add) is not enabled.
 
-Catalog `oncoref.target-selection.2026-11-18.2`; filter `oncoref.target-filters.2026-11-17.5`. Historical snapshots and exact transitions: [count history](../cta-count-history-20261117/index.md).
+Catalog `oncoref.target-selection.2026-11-18.3`; filter `oncoref.target-filters.2026-11-17.5`. Historical snapshots and exact transitions: [count history](../cta-count-history-20261117/index.md).

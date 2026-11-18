@@ -1,16 +1,16 @@
 previous_classification,classification,proteins
-CTA,Cancer Antigen only,50
-CTA,Other:Expression,44
+CTA,Cancer Antigen only,52
+CTA,Other:Expression,25
 CTA,Other:Review,35
-CTA,Other:Unscreened tissue,12
-CTA,Reproductive Antigen only,95
+CTA,Other:Unscreened tissue,10
+CTA,Reproductive Antigen only,20
 Cancer Antigen only,CTA,1
-Cancer Antigen only,Other:Expression,16
+Cancer Antigen only,Other:Expression,14
 Cancer Antigen only,Other:Review,3
 Other:Expression,Other:Review,5
 Other:Sequence,Other:Review,14
-Other:Tissue,Other:Expression,32
-Other:Tissue,Other:Unscreened tissue,51
-Reproductive Antigen only,CTA,1
-Reproductive Antigen only,Other:Expression,66
+Other:Tissue,Other:Expression,20
+Other:Tissue,Other:Unscreened tissue,63
+Reproductive Antigen only,CTA,12
+Reproductive Antigen only,Other:Expression,60
 Reproductive Antigen only,Other:Review,14

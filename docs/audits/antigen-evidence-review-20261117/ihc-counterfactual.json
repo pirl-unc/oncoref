@@ -1,6 +1,6 @@
 {
-  "catalog_policy": "oncoref.target-selection.2026-11-18.2",
-  "catalog_sha256": "56fd776f77222008d19540e2e21f8b0db593414f00bce33a25aafad0e7d874a0",
+  "catalog_policy": "oncoref.target-selection.2026-11-18.3",
+  "catalog_sha256": "e9204f2af6b2fdcb6f1fd2980c8df2c3568dee81d06d74574c385501d884017d",
   "source": "hpa_normal_tissue:v23",
   "source_sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
   "identity_mapping_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
@@ -64,28 +64,25 @@
     "All reported negative tissues is not all tissues in the body. Complete source-panel coverage is reported separately."
   ],
   "baseline": {
-    "CTA": 203,
-    "RA": 414,
-    "union": 478
+    "CTA": 308,
+    "RA": 439,
+    "union": 507
   },
   "additional": {
-    "CTA": 12,
-    "RA": 26,
-    "union": 14
+    "CTA": 9,
+    "RA": 17,
+    "union": 8
   },
   "additional_cta_labels": [
-    "SSX1",
     "PKDREJ",
     "LCN9",
     "MAGEC1",
+    "SSX5",
     "SP7",
     "SAGE1",
-    "PRAME",
     "DEFB136",
     "RBMY1E",
-    "RBMY1B",
-    "CT45A10",
-    "NY-ESO-1"
+    "RBMY1B"
   ],
   "additional_ctas_with_complete_source_panel": 0
 }

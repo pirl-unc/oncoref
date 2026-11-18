@@ -78,7 +78,7 @@ named regression controls (`PRAME`, `NY-ESO-1`, `MAGEA4`).
 ## Migration boundaries
 
 The current build consumes the pinned normal-screen fact table and its replayed
-adjudications. GTEx v11 individual gene TPM is registered under `gtex_individual_tissue_tpm` with a SHA-256 pin for each of the 52 primary tissue matrices. The catalog resolves those pins during a normal build and carries the subject and sample IDs into both the healthy reference and reproductive evidence. Other inputs include checksum-verified HPA v23 individual tissue biopsies and
+adjudications. GTEx v11 individual gene TPM is registered under `gtex_individual_tissue_tpm` with a SHA-256 pin for each of the 52 primary tissue matrices. The build uses those primary matrices for two measurements. Non-reproductive tissue sites produce the derived native-TPM source `gtex_donor_p99:v11`. Each donor contributes one value, and its interpolated tissue percentile carries no individual sample ID. Reproductive tissues provide individual witnesses with donor and sample IDs. See the [source-by-tissue inventory and denominator figures](audits/target-selection-20261110/rebuild/normal-rna/index.md). Other inputs include checksum-verified HPA v23 individual tissue biopsies and
 Petropoulos/Tyser human embryo single-cell datasets via `curation.reference_input(role)`.
 Historical receipts and public compatibility modules (`cta_selection`, `target_sets`,
 `cta`) remain frozen snapshots and are never overwritten by live policy updates.

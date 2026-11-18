@@ -16,7 +16,7 @@ Cancer and Reproductive Antigen (`CA`, `RA`, `CTA`) classification.
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
 [rebuilt catalog](audits/target-selection-20261110/rebuild/index.md)
-classifies **203 CTA, 64 Cancer Antigen only, 211 Reproductive Antigen only, 1,162 Other and
+classifies **308 CTA, 68 Cancer Antigen only, 131 Reproductive Antigen only, 1,133 Other and
 18,253 Unsafe**:
 
 1. **Shared normal-expression screen:** Seven normal-expression layers

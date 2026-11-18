@@ -59,10 +59,39 @@ def test_live_gtex_witnesses_match_the_symmetric_ten_protein_audit():
     assert leads.threshold_tpm.tolist() == pytest.approx(bounds * target_selection.ENRICHMENT_FOLD)
     assert leads.classification.tolist() == catalog.classification.tolist()
     assert leads.classification.value_counts().to_dict() == {
-        "CTA": 8,
-        "Reproductive Antigen only": 2,
+        "CTA": 10,
     }
 
     qc = pd.read_csv(rebuild / "gtex-library-qc.csv.gz", keep_default_na=False)
     assert qc.sample_id.is_unique and len(qc) == 18_637
     assert qc.participant_id.nunique() == 946 and qc.source_tissue.nunique() == 52
+
+
+def test_site_p99_uses_one_value_per_measured_donor():
+    values = pd.DataFrame([[0, 2, 8], [None, None, None], [None, None, 3]], index=["a", "b", "c"])
+    result = gtex.donor_p99(values, pd.Index(["first", "first", "second"]))
+    assert result.to_dict() == pytest.approx({"a": 7.93, "c": 3.0})
+    with pytest.raises(ValueError, match="donor"):
+        gtex.donor_p99(values, pd.Index(["first", None, "second"]))
+
+
+def test_live_normal_reference_matches_independent_p99_sensitivity():
+    from oncoref import target_selection
+
+    audit = Path(__file__).parents[1] / "docs/audits"
+    expected = pd.read_csv(
+        audit / "gtex-cross-tissue-signals/protein-sensitivity.csv.gz"
+    ).set_index("entity_id")
+    actual = target_selection.results().set_index("entity_id").loc[expected.index]
+    assert actual[["normal_reference_tpm", "disposable_max_tpm"]].max(
+        axis=1
+    ).tolist() == pytest.approx(expected.ceiling_p99.tolist())
+    frame = pd.read_csv(
+        audit / "target-selection-20261110/rebuild/normal-comparison.csv.gz",
+        usecols=["source_id", "scope", "sample_id", "participant_id", "source_context"],
+    )
+    p99 = frame[frame.source_id.eq("gtex_donor_p99:v11")]
+    assert p99.source_context.nunique() == 43
+    assert set(p99.scope) <= {"normal", "disposable"}
+    assert p99[["sample_id", "participant_id"]].isna().all().all()
+    assert set(frame.loc[frame.source_id.eq(gtex.SOURCE_ID), "scope"]) == {"reproductive"}

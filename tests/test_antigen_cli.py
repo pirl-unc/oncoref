@@ -146,7 +146,7 @@ def test_cli_host_profiles_and_tissue_toggles(capsys):
         == 0
     )
     row = json.loads(capsys.readouterr().out)[0]
-    assert row["classification"] == "Cancer Antigen only" and not row["keep"]
+    assert row["classification"] == "CTA" and not row["keep"]
     assert row["host_status"] in {"excluded", "unresolved"}
     assert row["host_reasons"]
     args = [

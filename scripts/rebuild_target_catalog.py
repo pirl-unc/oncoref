@@ -56,7 +56,7 @@ FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 RAW = ROOT / "tmp/target-rebuild-inputs"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-18.2"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-18.3"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -277,6 +277,34 @@ def group_normal_rows(raw, facts, *, source, statistic, gene_col="gene_id"):
     grouped["value"] = grouped["sum"].where(grouped["count"].eq(grouped.member_count))
     grouped = grouped.drop(columns="sum").rename(columns={"count": "measured_members"})
     return grouped.assign(source_id=source, statistic=statistic, unit="TPM", cell_type="bulk")
+
+
+def write_hpa_context_inventory():
+    """Keep the report rebuildable from the compact HPA v23 tissue and cell inventory."""
+    rows = []
+    for key in ["hpa_rna_consensus", "hpa_single_cell_tissue"]:
+        fields = {"Tissue": "tissue"}
+        if key == "hpa_single_cell_tissue":
+            fields["Cell type"] = "cell_type"
+        pieces = [
+            x.drop_duplicates()
+            for x in pd.read_csv(
+                reference_data.local_path(key, "v23"),
+                sep="\t",
+                usecols=list(fields),
+                chunksize=250000,
+            )
+        ]
+        sites = pd.concat(pieces).drop_duplicates().rename(columns=fields)
+        rows.append(
+            sites.assign(
+                family=key,
+                source_id=key + ":v23",
+                source_context=sites.tissue,
+                role="Shared screen",
+            )
+        )
+    write_csv(pd.concat(rows, ignore_index=True), OUT / "hpa-normal-source-contexts.csv")
 
 
 def normal_panel(facts, write=True, *, include_individual_samples=True):
@@ -786,6 +814,7 @@ def build(*, reuse_tumor_cache=False):
     selected = facts[facts.comparison_eligible].copy()
     print(f"Common eligibility: {len(selected)} / {len(facts)}", flush=True)
     normal, required = normal_panel(selected)
+    write_hpa_context_inventory()
     development, development_provenance = developmental_samples(selected)
     development["comparison_id"] = COMPARISON_ID
     reproductive = pd.concat(
@@ -1168,7 +1197,7 @@ def build(*, reuse_tumor_cache=False):
         ],
         "expression_bounds": target_selection.definition()["expression_bounds"],
         "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,
-        "normal_statistic": "Maximum of individual GTEx v11 and HPA v23 tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
+        "normal_statistic": "Maximum across GTEx v11 within-site linear donor P99, HPA v23 biopsy maxima and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
         "batch_corrected": False,
         "limitations": [
             "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -1191,7 +1220,7 @@ def build(*, reuse_tumor_cache=False):
             "registry": "oncoref/data/reference-releases.json",
             "sample_inventory": "gtex-library-qc.csv.gz",
             "scope": "All 52 primary tissue matrices; cultured cell lines excluded.",
-            "reduction": "Maximum complete within-sample protein-group sum per non-reproductive tissue, all reproductive samples. Donors identified by GTEX subject ID.",
+            "reduction": "Non-reproductive sites use gtex_donor_p99:v11, the linearly interpolated 99th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses.",
         },
         "mammary_lactation": {
             "state_is_inferred": True,

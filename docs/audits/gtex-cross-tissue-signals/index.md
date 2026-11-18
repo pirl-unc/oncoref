@@ -1,5 +1,7 @@
 # Cross-tissue expression in individual GTEx v11 libraries
 
+Historical sensitivity analysis against the individual-maximum catalog. Reproduce these tables from commit `819111a9`. The [current source report](../target-selection-20261110/rebuild/normal-rna/index.md) uses interpolated donor P99 for GTEx normal tissue sites.
+
 The survey ranked all 18,637 primary tissue libraries. At a relative expression threshold of 1%, 384 libraries showed an unusual foreign tissue program. Twenty-one had a reproducible best match to a different donor's source tissue in the same technical batch, supporting probable carryover. Six of the 21 included a testis signal. These are research flags. The measurements cannot certify contamination or estimate prevalence across all types of contamination.
 
 [Ranked batch matches with sample and batch IDs](batch-matched.csv) · [Counts by threshold](thresholds.csv) · [All sample–panel flags](signals.csv.gz) · [Marker panel sizes](panels.csv)

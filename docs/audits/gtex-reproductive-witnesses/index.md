@@ -1,18 +1,16 @@
 # Individual GTEx v11 tissue samples
 
-The catalog uses 18,637 primary tissue samples from 946 GTEx donors. Each of the 52 tissue files has a versioned URL and SHA-256 checksum in the reference registry. Individual reproductive samples can qualify RA. Individual normal and Disposable samples contribute to the shared 10× denominator for CA and RA. The normal comparison retains the highest complete within-sample protein-group sum per GTEx tissue, with the sample and donor that attained it. The full matrices retain every measurement.
+The catalog uses 18,637 primary tissue samples from 946 GTEx donors. Each of the 52 tissue files has a versioned URL and SHA-256 checksum in the reference registry. Individual reproductive samples can qualify RA. GTEx non-reproductive tissue sites contribute interpolated donor P99 to the shared CA and RA denominator. Complete member-locus TPMs are summed within each sample first. The full matrices retain every measurement.
 
 [GTEx and HPA contamination screen and donor sensitivity](../gtex-cross-tissue-signals/index.md) · [Source registry and rebuild instructions](../../curation.md) · [Sample inventory and QC](../target-selection-20261110/rebuild/gtex-library-qc.csv.gz) · [Comparison methods](../target-selection-20261110/rebuild/comparison.json)
 
 ## Symmetric comparison
 
-All ten pilot proteins clear reproductive 10×. Eight qualify as CTAs. C1orf202 and TMEM95 qualify as RA-only because tumor expression peaks at 7.34× and 3.23×, respectively.
+The live comparison reports how many of the 414 testis donors pass each protein’s current threshold and how many tumor-fold units its best tumor reaches. The full table compares the pre-GTEx catalog with the current P99 policy.
 
-[Results for all ten, including donor counts and both fold values](symmetric-comparison.csv)
+[Ten pilot proteins and their donor counts](symmetric-comparison.csv) · [All 918 fold comparisons and category transitions](catalog-comparison.csv.gz) · [Baseline catalog checksum](baseline.json)
 
-[Before and after for all 918 assessed groups, including every classification change](catalog-comparison.csv.gz) · [Previous catalog revision and checksum](baseline.json)
-
-Across the inventory, 179 of the previous 303 CTAs retain membership and 24 former CA-only proteins gain it. Of the 124 leaving CTA, 98 become RA-only, 13 CA-only and 13 Other. One sample labeled esophagus muscularis (GTEX-1I1GR-1426-SM-CY8H8) sets the maximum normal TPM for 77 of the 124. It measures PRM2 at 3,047.26 TPM and carries the advisory R code. The denominator retains the sample under its provider tissue label. Its cellular origin is unresolved.
+The earlier individual-maximum policy had 203 CTAs and moved 98 former CTAs to RA-only. Its prominent esophagus muscularis measurement and the alternative percentile calculations are documented in the [historical QC audit](../gtex-cross-tissue-signals/index.md). The [current source report](../target-selection-20261110/rebuild/normal-rna/index.md) gives the rebuilt totals.
 
 ## Original testis-only pilot
 

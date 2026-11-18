@@ -1,5 +1,5 @@
 {
-  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-18.2",
+  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-18.3",
   "unit": "TPM",
   "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
   "compatibility_basis": [
@@ -20,7 +20,7 @@
     "gallbladder",
     "tonsil"
   ],
-  "normal_statistic": "Maximum of individual GTEx v11 and HPA v23 tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
+  "normal_statistic": "Maximum across GTEx v11 within-site linear donor P99, HPA v23 biopsy maxima and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
   "batch_corrected": false,
   "limitations": [
     "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -125,7 +125,7 @@
     "registry": "oncoref/data/reference-releases.json",
     "sample_inventory": "gtex-library-qc.csv.gz",
     "scope": "All 52 primary tissue matrices; cultured cell lines excluded.",
-    "reduction": "Maximum complete within-sample protein-group sum per non-reproductive tissue, all reproductive samples. Donors identified by GTEX subject ID."
+    "reduction": "Non-reproductive sites use gtex_donor_p99:v11, the linearly interpolated 99th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses."
   },
   "mammary_lactation": {
     "state_is_inferred": true,

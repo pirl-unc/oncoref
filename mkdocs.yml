@@ -8,6 +8,7 @@ nav:
   - Home: index.md
   - Antigen Curation & Sets:
       - Cancer and Reproductive Antigens: target-selection.md
+      - Normal RNA sources and tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
       - Host profiles and candidate filters: target-filters.md
       - Host choices and tissue loss: host-selection.md
       - Why CTA counts changed: audits/cta-count-history-20261117/index.md

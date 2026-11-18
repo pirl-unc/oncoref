@@ -216,7 +216,7 @@ individual reproductive tissue sample or supported mean within one embryo and li
 Donors remain distinct from cells.</p>
 <p>Single-cell nTPM, UMI counts and qualitative protein staining retain their own evidence
 roles; they cannot be pooled into a native-TPM fold. The normal reference includes all
-available individual GTEx v11 and HPA v23 tissue samples plus supported context summaries, not every healthy
+GTEx v11 site-specific linear donor P99 and individual HPA v23 biopsies plus supported context summaries, not every healthy
 donor. <a href="https://v23.proteinatlas.org/about/download">Pinned HPA sources</a>.</p>
 <h2>Published target support</h2>
 <p>A curated target nomination adds supporting evidence. Preserve the exact protein–paper

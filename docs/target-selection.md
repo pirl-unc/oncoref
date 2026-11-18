@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-18.2`: **203 CTA** · **64 Cancer Antigen only** · **211 Reproductive Antigen only** · **1,162 Other** · **18,253 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-18.3`: **308 CTA** · **68 Cancer Antigen only** · **131 Reproductive Antigen only** · **1,133 Other** · **18,253 Unsafe**.
 
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
@@ -32,14 +32,17 @@ Both CA and RA independently require **≥10 × H₀**, where
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
-| CA | At least one QC-passing tumor sample ≥10 × H₀ | 267 |
-| RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 414 |
-| CTA | Both routes | 203 |
-| CA∪RA | Either route | 478 |
+| CA | At least one QC-passing tumor sample ≥10 × H₀ | 376 |
+| RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 439 |
+| CTA | Both routes | 308 |
+| CA∪RA | Either route | 507 |
 
-Individual GTEx v11 samples supply both sides of the comparison across 52 primary tissues. Reproductive tissues (including breast and prostate) supply candidate witnesses. Other tissues supply normal or Disposable maxima. Loci encoding identical proteins are summed within each sample before taking any maximum. The sample inventory records GTEx subject IDs, anatomical origin and library QC. The reference also includes individual HPA v23 samples, tissue/subregion summaries,
-GTEx v11 donor medians and supported immune summaries. All numerical fold comparisons
-use native TPM. nTPM, UMI counts and qualitative staining remain separate evidence.
+GTEx v11 contributes the **linearly interpolated donor P99 within each non-reproductive tissue site**. Complete member-locus TPMs are summed within a library first. Reproductive sites, including breast and prostate, retain individual samples as RA witnesses. HPA v23 biopsies contribute individual maxima. Tissue and brain summaries, GTEx donor medians, Monaco and DICE each contribute their supported native TPM. The highest applicable value across these sources sets N or D. Single-cell and single-nucleus counts, nTPM and protein staining have separate normal-expression gates.
+
+[All RNA sources, tissue coverage and set definitions](audits/target-selection-20261110/rebuild/normal-rna/index.md)
+
+![Normal and reproductive TPM sources by tissue](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage.png)
+
 Missing required normal coverage does not become zero.
 [Source receipt](audits/target-selection-20261110/rebuild/comparison.json).
 
