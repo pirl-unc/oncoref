@@ -54,7 +54,7 @@ OTHER = [
     ("Coverage, identity, translation or unresolved evidence", "Other:Review", REVIEW),
     ("Nested, Unsafe-contained or read-through sequence", "Other:Sequence", SEQUENCE),
     ("No qualifying expression or bounds fail", "Other:Expression", EXPRESSION),
-    ("Home tissue no panel resolves", "Other:Tissue", EXPRESSION),
+    ("Home tissue no panel resolves", "Other:Unscreened tissue", EXPRESSION),
 ]
 
 

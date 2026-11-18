@@ -60,8 +60,8 @@ def funnel(data):
         ),
         (
             "Home tissue no panel resolves, without reproductive evidence",
-            data.classification.eq("Other:Tissue"),
-            "Other:Tissue",
+            data.classification.eq("Other:Unscreened tissue"),
+            "Other:Unscreened tissue",
         ),
     ]
     rows, remaining = [], len(data)
@@ -284,7 +284,7 @@ def build():
     unresolved_reproductive = int(reproductive_only.cancer_evidence.eq("unassessed").sum())
     other_counts = ", ".join(
         f"{summary['classifications'].get('Other:' + name, 0):,} {name.lower()}"
-        for name in ["Review", "Sequence", "Expression", "Tissue"]
+        for name in ["Review", "Sequence", "Expression", "Unscreened tissue"]
     )
     page = """<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">

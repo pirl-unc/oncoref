@@ -133,7 +133,7 @@ def test_unmeasured_home_tissue_needs_reproductive_evidence():
         )
     )
     assert result.classification.tolist() == [
-        "Other:Tissue",
+        "Other:Unscreened tissue",
         "CTA",
         "Reproductive Antigen only",
         "Other:Review",

@@ -61,8 +61,9 @@ __version__ = "1.42.0"
 # identical-protein registry, including RBMY1F/RBMY1J, with registry fingerprints.
 # 5.23.27 rebuilds protein summaries using approved MANE/canonical representatives.
 # 5.23.28 rebuilds HL and TGCT after library background and spermatid-program QC.
-# 5.23.29 restores the 31 non-TGCT cohorts in the shared TCGA summary shard.
-DATA_VERSION = "5.23.29"
+# 5.23.30 retains all TGCT libraries with reproductive-program notes only;
+# the 31 other TCGA summary shards remain unchanged from 5.23.29.
+DATA_VERSION = "5.23.30"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION

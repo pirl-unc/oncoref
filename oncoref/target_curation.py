@@ -97,7 +97,7 @@ def families() -> pd.DataFrame:
     """Family rules: a name pattern, the tissue its members share, tier and sources.
 
     ``filter_acts`` marks the rules whose tier the candidate filters use. Those rules
-    also name the home tissue for the catalog's Other:Tissue rule.
+    also name the home tissue for the catalog's Other:Unscreened tissue rule.
     """
     frame = pd.DataFrame(_literature()["family_rules"])
     frame["sources"] = frame.sources.map("; ".join)

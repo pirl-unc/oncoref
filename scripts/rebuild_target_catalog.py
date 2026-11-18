@@ -638,6 +638,7 @@ def tumors(facts):
         )
         signatures = library_qc.signatures(raw, sample_ids)
         signatures["reasons"] = signatures.apply(lambda r: ";".join(library_qc.reasons(r)), axis=1)
+        signatures["notes"] = signatures.apply(lambda r: ";".join(library_qc.notes(r)), axis=1)
         signatures["cancer_code"] = job.cancer_code
         signatures["source_cohort"] = job.source_cohort
         qc_rows.append(signatures.reset_index())
@@ -1043,7 +1044,7 @@ def build(*, reuse_tumor_cache=False):
         if not r.shared_eligible
         else f"Normal home is {r.home_tissue}, which no expression panel resolves; tumor "
         "expression alone does not admit it and no reproductive/developmental evidence qualifies"
-        if r.subtype == "Tissue"
+        if r.subtype == "Unscreened tissue"
         else "Cancer and reproductive/developmental evidence qualify"
         if r.category == "CTA"
         else "Cancer tenfold evidence qualifies; reproductive tenfold evidence does not qualify"
@@ -1185,7 +1186,7 @@ def build(*, reuse_tumor_cache=False):
         "normal_library_qc": {
             "path": "normal-library-qc.csv",
             "sha256": sha256(OUT / "normal-library-qc.csv"),
-            "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence.",
+            "policy": "Signatures are evaluated within each tissue. Reproductive programs are advisory notes and never change sample eligibility. Other flags require adjudication; they never silently remove normal measurements from the denominator. Samples with blocking signatures cannot provide positive reproductive evidence.",
         },
         "developmental_sources": development_provenance,
         "positive_observations": "CA: individual passing tumor; RA: individual reproductive tissue or supported embryo-by-lineage mean. Qualitative protein and incompatible RNA scales cannot bypass the fold.",

@@ -101,12 +101,21 @@
       "argv": [
         "scripts/audit_reproductive_ihc_route.py"
       ]
+    },
+    "reproductive_evidence_review": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_reproductive_evidence.py"
+      ]
     }
   },
   "output_roots": [
     "docs/audits/target-selection-20261110/rebuild",
     "docs/audits/target-filters-20261112",
-    "docs/audits/antigen-evidence-review-20261117"
+    "docs/audits/antigen-evidence-review-20261117",
+    "docs/audits/antigen-evidence-review-20261118"
   ],
   "outputs": [
     "oncoref/data/target-selection.csv.gz",

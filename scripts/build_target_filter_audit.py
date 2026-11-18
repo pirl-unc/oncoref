@@ -347,7 +347,7 @@ def main():
         for b, n in fold_bands.items()
     )
     top_samples = antigens.tumor_top_sample.value_counts()
-    other_tissue = table[table.classification.eq("Other:Tissue")]
+    other_tissue = table[table.classification.eq("Other:Unscreened tissue")]
 
     report = f"""# Target filters: categories, knobs and where proteins land
 
@@ -375,7 +375,7 @@ below 1 TPM count as 1). The {len(antigens)} Cancer Antigens: {fold_text}.
 at least two known patients. Anonymous samples are reported separately.
 RA uses the same 10× denominator in reproductive tissue or a supported embryo-lineage mean.
 {len(other_tissue)} proteins whose normal home is a tissue no panel resolves are
-Other:Tissue unless reproductive evidence qualifies.
+Other:Unscreened tissue unless reproductive evidence qualifies.
 
 ## 2. The six filter layers
 
@@ -476,7 +476,7 @@ finding that falls short of the rubric, a family rule, or the nose and skin refe
 {md(tier_rows)}
 
 Family rules. A member whose family's home is a tissue no panel resolves, and that has
-no reproductive evidence, is Other:Tissue in the catalog; the rows count the members
+no reproductive evidence, is Other:Unscreened tissue in the catalog; the rows count the members
 that remain candidates:
 
 {md(family_rows)}

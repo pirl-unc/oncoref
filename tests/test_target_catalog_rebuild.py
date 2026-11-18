@@ -30,9 +30,9 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18253,
         "Other": 1131,
-        "CTA": 290,
+        "CTA": 303,
         "Cancer Antigen only": 106,
-        "Reproductive Antigen only": 113,
+        "Reproductive Antigen only": 100,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -52,7 +52,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 502
+    assert len(policy.results(changed_only=True)) == 489
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -60,6 +60,24 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
+    # Reproductive coexpression is advisory, not evidence against tumor origin.
+    for name in [
+        "ZNRF4",
+        "PRM2",
+        "CCDC70",
+        "BPIFA3",
+        "CYLC2",
+        "SPATA19",
+        "PGK2",
+        "CETN1",
+        "TEX38",
+        "PRR30",
+        "TSSK2",
+        "IQCF5",
+        "BOD1L2",
+    ]:
+        assert by_name.loc[name, "category"] == "CTA"
+        assert by_name.loc[name, "tumor_top_sample"] == "TCGA-2G-AAFL-01"
     for name in [
         "MAGEC2",
         "PRDM14",
@@ -83,7 +101,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     for name in ["HUS1B", "ZNF705D", "LRRC52", "LRRIQ4"]:
         assert by_name.loc[name, "category"] == "Cancer Antigen only"
         assert by_name.loc[name, "reproductive_fold"] < policy.REPRODUCTIVE_FOLD
-    assert by_name.loc["OR2B2", "classification"] == "Other:Tissue"
+    assert by_name.loc["OR2B2", "classification"] == "Other:Unscreened tissue"
     for name in ["DAZL", "CTAG2", "DCST1", "NKX2-6"]:
         assert by_name.loc[name, "classification"] == "Other:Review"
         assert by_name.loc[name, "rare_cell_status"] == "unresolved"
@@ -126,7 +144,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     # no reproductive evidence for a home the panels do not resolve.
     assert by_name.loc["BPIFB3", "literature_effect"] == "none"
     assert by_name.loc["BPIFB3", "literature_recorded_tier"] == "manageable"
-    assert by_name.loc["BPIFB3", "classification"] == "Other:Tissue"
+    assert by_name.loc["BPIFB3", "classification"] == "Other:Unscreened tissue"
     # A confirmed finding below the rubric, and a family rule, are recorded only.
     assert by_name.loc["LRRC52", "literature_recorded_tier"] == "vital"
     assert by_name.loc["LRRC52", "category"] == "Cancer Antigen only"

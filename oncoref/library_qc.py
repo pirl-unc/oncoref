@@ -9,7 +9,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Conservative tumor-library screens for background and tissue programs.
+"""Library exclusion screens and advisory tissue-program notes.
 
 Three signatures that can flag a technical problem or admixed normal tissue:
 
@@ -17,10 +17,9 @@ Three signatures that can flag a technical problem or admixed normal tissue:
   express together. Genomic DNA or unspliced background gives many of them a few TPM
   at once; real expression involves a few receptors, usually the same ones across a
   tumor type.
-* **Normal testis tissue.** Seminiferous tubules bring the whole late-spermatid
-  program (protamines, transition proteins) at the same fraction of its testis level.
-  A coordinated program is treated conservatively as possible admixture. RNA
-  alone cannot establish its cell of origin or exclude tumor differentiation.
+* **Coordinated testis program (note only).** Reproductive-specific normal RNA
+  markers can also be expressed by cancer. Their coexpression cannot establish
+  normal-cell admixture and never excludes a library or changes its QC status.
 * **Several unrelated tissues.** One other tissue is common (adjacent normal tissue,
   the metastasis site); markers of four or more unrelated tissues in one library are
   not.
@@ -28,7 +27,8 @@ Three signatures that can flag a technical problem or admixed normal tissue:
 A tissue-program score is the *lowest* ratio, across its panel, of library TPM to
 the tissue's GTEx median. It is not a calibrated cell fraction or purity estimate.
 Panels come from :file:`tissue-marker-panels.csv` (``scripts/build_tissue_marker_panels.py``).
-The thresholds remove whole libraries; they apply only to linear TPM sources.
+Exclusion thresholds apply only to linear TPM sources. Reproductive content is
+reported separately by :func:`notes`, never by :func:`reasons`.
 """
 
 from __future__ import annotations
@@ -47,9 +47,8 @@ BACKGROUND_TPM = 5.0
 BACKGROUND_MIN_RECEPTORS = 100
 #: Fail when more than this share of measured receptors is at ``BACKGROUND_TPM``.
 BACKGROUND_MAX_SHARE = 0.20
-#: Fail at this testis-tissue content: testis transcripts at ~10,000 TPM then reach
-#: 10 TPM, the cancer rule's floor, on their own.
-TESTIS_TISSUE_MAX_CONTENT = 0.001
+#: Annotate a coordinated program; this ratio is not a normal-cell fraction.
+TESTIS_PROGRAM_NOTE_THRESHOLD = 0.001
 #: A non-testis tissue counts as present at this content...
 UNRELATED_TISSUE_CONTENT = 0.003
 #: ...when the cohort's median content is below this (the tissue is not the cohort's own).
@@ -59,8 +58,13 @@ UNRELATED_TISSUE_MAX = 4
 
 REASONS = {
     "broad_background": "More than 20% of measured olfactory receptors at 5 TPM or more",
-    "normal_testis_tissue": "All six late-spermatid transcripts at 0.1% of testis or more",
     "several_unrelated_tissues": "Four or more unrelated tissues at 0.3% of their level or more",
+}
+NOTES = {
+    "R": (
+        "Coordinated reproductive RNA: all six testis markers ≥0.1% of their reference; "
+        "cell of origin unresolved. Advisory only."
+    ),
 }
 COLUMNS = [
     "olfactory_receptors_measured",
@@ -138,12 +142,21 @@ def reasons(signature: pd.Series) -> list[str]:
         and signature.olfactory_share_ge5 > BACKGROUND_MAX_SHARE
     ):
         out.append("broad_background")
-    if pd.notna(signature.testis_tissue_content) and (
-        signature.testis_tissue_content >= TESTIS_TISSUE_MAX_CONTENT
-    ):
-        out.append("normal_testis_tissue")
     value = signature.unrelated_tissues
     tissues = [] if pd.isna(value) else [t for t in str(value).split(";") if t]
     if len(tissues) >= UNRELATED_TISSUE_MAX:
         out.append("several_unrelated_tissues")
     return out
+
+
+def notes(signature: pd.Series) -> list[str]:
+    """Advisory observations that never affect QC status or sample eligibility.
+
+    ``testis_tissue_content`` is a legacy column name for the minimum marker/reference
+    expression ratio. It does not measure the fraction of normal testis cells.
+    """
+    if pd.notna(signature.testis_tissue_content) and (
+        signature.testis_tissue_content >= TESTIS_PROGRAM_NOTE_THRESHOLD
+    ):
+        return ["R"]
+    return []

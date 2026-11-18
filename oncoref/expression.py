@@ -1681,7 +1681,7 @@ def _attach_gene_universe_delta_attrs(
 _PER_SAMPLE_NORMALIZE = ("tpm_raw", "tpm_clean", "tpm_clean_log1p", "tpm_clean_hk")
 _SAMPLE_QC_MODES = ("all", "pass", "pass_or_warn")
 _ARTIFACT_SAMPLE_QC_MODES = ("artifact", *_SAMPLE_QC_MODES)
-SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v4"
+SAMPLE_EXPRESSION_QC_POLICY_VERSION = "sample_expression_qc_v5"
 EXPRESSION_ARTIFACT_BUILD_METADATA_SCHEMA_VERSION = "expression_artifact_build_metadata_v3"
 SOURCE_MATRIX_SAMPLE_QC_MANIFEST_PATH = "source-matrix-sample-qc.csv"
 EXPRESSION_ARTIFACT_BUILD_METADATA_PATH = "expression-artifact-build-metadata.csv"
@@ -1721,6 +1721,7 @@ _SOURCE_MATRIX_SAMPLE_QC_MANIFEST_COLUMNS = [
     "tpm_proxy",
     "sample_qc_status",
     "sample_qc_reasons",
+    "sample_qc_notes",
     "passes_expression_qc",
     "recommended_for_absolute_tpm_floor",
     "source_matrix_path",
@@ -1762,7 +1763,6 @@ _BLOCKING_SAMPLE_QC_REASONS = frozenset(
         "high_top_gene_fraction",
         "high_top10_gene_fraction",
         "broad_background",
-        "normal_testis_tissue",
         "several_unrelated_tissues",
     }
 )
@@ -1954,6 +1954,9 @@ def sample_expression_qc_from_matrix(
     pass/fail gates use ``top1_fraction_clean`` and ``top10_fraction_clean`` because
     clean TPM first confines protocol-sensitive RNA to its fixed compartment; raw
     fractions would systematically reject valid ribo-depleted libraries.
+
+    Reproductive programs are reported in ``sample_qc_notes``. These annotations
+    never change QC status, including for callers selecting only ``sample_qc="pass"``.
     """
     code = (
         resolve_cancer_type(cancer_type, strict=False) or cancer_type
@@ -2110,6 +2113,11 @@ def sample_expression_qc_from_matrix(
                 "tpm_proxy": bool(meta["tpm_proxy"]),
                 "sample_qc_status": status,
                 "sample_qc_reasons": ";".join(flags),
+                "sample_qc_notes": (
+                    ";".join(library_qc.notes(signatures.loc[sample]))
+                    if signatures is not None
+                    else ""
+                ),
                 "passes_expression_qc": status != "fail",
                 "recommended_for_absolute_tpm_floor": status != "fail"
                 and bool(meta["linear_tpm_comparable"]),

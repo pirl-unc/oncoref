@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-literature-followup",
   "schema_version": 2,
-  "reviewed_on": "2026-11-17",
+  "reviewed_on": "2026-11-18",
   "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
   "sources": [
     {
@@ -582,6 +582,84 @@
           "scope": "Secretoglobin RNA detected in human sinonasal mucosa and increased by inflammatory cytokines; Human control sinonasal tissue, rhinosinusitis and cytokine-treated nasal explants",
           "eligible_for_coverage": true,
           "reviewed_on": "2026-11-17"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1167/iovs.09-3622",
+      "citation": "Kurji et al., 2010",
+      "title": "Microarray Analysis Identifies Changes in Inflammatory Gene Expression in Response to Amyloid-β Stimulation of Cultured Human Retinal Pigment Epithelial Cells",
+      "url": "https://doi.org/10.1167/iovs.09-3622",
+      "roles": [
+        "normal_tissue"
+      ],
+      "source_location": "Table 2, PSG8 / NM_182707; microarray and qRT-PCR methods",
+      "finding": "The PSG8-labelled probe has a reported 1.64-fold decrease after 24 hours of amyloid-β treatment (P=0.0123). This is an additional ocular RNA observation requiring assay-specific attribution.",
+      "limitations": "Probe specificity against other PSG genes has not been established in this review. PSG8 was not in the reported 17 upregulated genes selected for qRT-PCR validation. Cultured RPE is not evidence of expression in intact healthy retina or of PSG8 protein. This does not resolve the retinal single-cell mapping hold.",
+      "retention_reason": "Retain the exact-gene claim and its normal-tissue interpretation limits; no automatic admission or exclusion.",
+      "gene_list_scope": "Reviewed gene claim; not an exhaustive list of the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000124467"
+          ],
+          "protein": "PSG8",
+          "reported_name": "PSG8",
+          "reported_as": "The PSG8-labelled probe has a reported 1.64-fold decrease after 24 hours of amyloid-β treatment (P=0.0123). This is an additional ocular RNA observation requiring assay-specific attribution.",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "context": "Cultured human retinal pigment epithelial cells, amyloid-β treatment and control",
+          "assay": "Agilent oligonucleotide microarray",
+          "source_location": "Table 2, PSG8 / NM_182707; microarray and qRT-PCR methods",
+          "limitations": "Probe specificity against other PSG genes has not been established in this review. PSG8 was not in the reported 17 upregulated genes selected for qRT-PCR validation. Cultured RPE is not evidence of expression in intact healthy retina or of PSG8 protein. This does not resolve the retinal single-cell mapping hold.",
+          "scope": "The PSG8-labelled probe has a reported 1.64-fold decrease after 24 hours of amyloid-β treatment (P=0.0123). This is an additional ocular RNA observation requiring assay-specific attribution.",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-18"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1186/s12885-020-07155-y",
+      "citation": "Zhang et al., 2020",
+      "title": "Suppressing Dazl modulates tumorigenicity and stemness in human glioblastoma cells",
+      "url": "https://doi.org/10.1186/s12885-020-07155-y",
+      "roles": [
+        "tumor_support",
+        "normal_tissue"
+      ],
+      "source_location": "Figure 1; cell culture and qRT-PCR methods",
+      "finding": "The study reports higher DAZL RNA in glioblastoma and glioblastoma cell lines than the normal comparators. It supplies tumor-expression support, not a test of normal retinal astrocytes.",
+      "limitations": "Relative expression in commercial normal human astrocytes does not establish absence in all normal astrocytes. The normal comparator is not the ocular astrocyte population with the Census signal. This review does not validate antibody specificity or use the paper to dismiss that signal.",
+      "retention_reason": "Retain the exact-gene claim and its normal-tissue interpretation limits; no automatic admission or exclusion.",
+      "gene_list_scope": "Reviewed gene claim; not an exhaustive list of the paper.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000092345"
+          ],
+          "protein": "DAZL",
+          "reported_name": "DAZL",
+          "reported_as": "The study reports higher DAZL RNA in glioblastoma and glioblastoma cell lines than the normal comparators. It supplies tumor-expression support, not a test of normal retinal astrocytes.",
+          "taxonomy_id": 9606,
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "tumor_support",
+            "normal_tissue_review"
+          ],
+          "context": "Human glioblastoma specimens and cell lines, with adjacent brain and commercial normal human astrocyte comparators",
+          "assay": "qRT-PCR; the study also reports immunoblotting and perturbation experiments",
+          "source_location": "Figure 1; cell culture and qRT-PCR methods",
+          "limitations": "Relative expression in commercial normal human astrocytes does not establish absence in all normal astrocytes. The normal comparator is not the ocular astrocyte population with the Census signal. This review does not validate antibody specificity or use the paper to dismiss that signal.",
+          "scope": "The study reports higher DAZL RNA in glioblastoma and glioblastoma cell lines than the normal comparators. It supplies tumor-expression support, not a test of normal retinal astrocytes.",
+          "eligible_for_coverage": true,
+          "reviewed_on": "2026-11-18"
         }
       ]
     }
