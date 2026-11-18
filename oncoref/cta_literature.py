@@ -206,6 +206,46 @@ def cta_coverage() -> pd.DataFrame:
     return pd.DataFrame(registry()["cta_coverage"])
 
 
+def current_attestations(gene: str | None = None) -> pd.DataFrame:
+    """Literature occurrences mapped onto the current catalog by exact member loci.
+
+    Historical group IDs and follow-ups without a group ID cannot serve as join
+    keys. Original records remain intact; ``gene_ids`` and nomination scope are
+    restricted to the current group's intersecting loci. Related-copy and rejected
+    assay records remain visible with ``eligible_for_coverage=False``.
+    """
+    from . import target_selection
+
+    catalog = target_selection.results(gene)
+    by_gene = {
+        member: (row.entity_id, row.protein_group_label)
+        for row in catalog.itertuples()
+        for member in json.loads(row.member_gene_ids)
+    }
+    links = attestations()
+    rows = []
+    for record in links.to_dict("records"):
+        groups = defaultdict(list)
+        for member in record["gene_ids"]:
+            if member in by_gene:
+                groups[by_gene[member]].append(member)
+        for (entity, label), members in groups.items():
+            nominations = sorted(set(members) & set(record["nomination_gene_ids"]))
+            rows.append(
+                record
+                | {
+                    "recorded_entity_id": record["entity_id"],
+                    "recorded_gene_ids": record["gene_ids"],
+                    "entity_id": entity,
+                    "protein": label,
+                    "gene_ids": sorted(set(members)),
+                    "nomination_gene_ids": nominations,
+                    "published_nomination": bool(nominations),
+                }
+            )
+    return pd.DataFrame(rows, columns=[*links.columns, "recorded_entity_id", "recorded_gene_ids"])
+
+
 def followup_findings() -> dict:
     """Dated literature corrections; recommendations do not change released labels."""
     return json.loads(files("oncoref").joinpath("data/cta-literature-followup.json").read_text())
@@ -260,14 +300,19 @@ def current_coverage() -> pd.DataFrame:
     ``some_members`` means the shared protein has paper coverage for only some
     source loci. The original 602-protein ``cta_coverage()`` remains reproducible.
     """
-    from . import cta_selection
+    from . import target_selection
 
-    return _reconcile_coverage(
-        cta_selection.profiles().to_dict("records"),
-        cta_selection.audit().memberships.to_dict("records"),
-        registry()["memberships"],
-        followup_findings()["memberships"],
+    profiles = target_selection.results(category="CTA").rename(
+        columns={"protein_group_label": "label"}
     )
+    profiles["gene_ids"] = profiles.member_gene_ids.map(json.loads)
+    links = current_attestations().to_dict("records")
+    nominations = [
+        row | {"gene_ids": row["nomination_gene_ids"]}
+        for row in links
+        if row["published_nomination"]
+    ]
+    return _reconcile_coverage(profiles.to_dict("records"), nominations, links, [])
 
 
 def _protein_rows(key: str, gene: str | None) -> pd.DataFrame:

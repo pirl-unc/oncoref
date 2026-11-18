@@ -32,7 +32,7 @@ import pandas as pd
 
 from . import host_context, target_selection
 
-FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.3"
+FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.4"
 
 #: Compatibility names describe assumed anatomy, never accepted organ loss.
 HOST_PROFILES = {
@@ -225,10 +225,13 @@ def paper_table() -> pd.DataFrame:
     A CTA-list paper counts only for proteins it nominates: appearing in such a
     paper's background table is not a nomination. Oncofetal and tumor papers have
     no nomination tables, so membership of the program or the report itself counts.
+    Exact loci map each record to the current protein group. Rejected assay,
+    related-species, fusion-only and other ineligible coverage cannot earn credit.
     """
-    from .cta_literature import attestations
+    from .cta_literature import current_attestations
 
-    links = attestations()
+    links = current_attestations()
+    links = links[links.eligible_for_coverage]
     rows = []
     columns = ["entity_id", "source_id", "source_roles", "published_nomination"]
     for record in links[columns].itertuples(index=False):

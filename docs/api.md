@@ -673,6 +673,7 @@ cta_literature.current_coverage()  # Current CTAs; exact member-locus scope reta
 cta_literature.followup_findings()  # Dated corrections and review recommendations.
 cta_literature.memberships()  # Exact source occurrences, including unresolved links.
 cta_literature.attestations()  # All occurrences joined to citations and original claim scope.
+cta_literature.current_attestations("SSU72L1")  # Exact loci joined to today's protein groups.
 cta_literature.gap_assessments()  # The historical 33 gaps, before current remapping.
 cta_literature.concerns("SRY")  # Evidence type, next action and citations.
 cta_literature.localization("ZP4")  # Gene-mapped locations, evidence and model scope.
@@ -685,13 +686,21 @@ The core preserves mapped paper coverage. Supplementary papers retain additional
 assays, normal-expression findings, identity questions and upstream gene-set
 provenance. Core placement does not determine which findings apply to selection.
 
-The [current reconciliation](audits/cta-current-review-20261108/index.md) reports
+The [historical reconciliation](audits/cta-current-review-20261108/index.md) reported
 487 nomination-covered proteins, 90 with other qualifying papers, and 30 gaps
-among the 607 current CTAs. `current_coverage()` distinguishes `all_members`,
+among its 607 CTAs. `current_coverage()` now reads the current target catalog and distinguishes `all_members`,
 `some_members` and `no_paper`; `per_gene_sources` retains the underlying locus
 assignments. Five shared proteins have coverage for only some member loci.
 Paper coverage includes normal-function studies and counterevidence. It is
 separate from CTA nomination and does not change released classifications.
+
+`current_attestations()` also retains follow-up records without historical group
+IDs, joining by exact member genes. Original identities remain in
+`recorded_entity_id`, `recorded_gene_ids` and `membership_record`. A paper about
+one locus never becomes a nomination for a different locus merely because an
+older release grouped them. `antigens explain` reports all curated sources
+(`paper_source_count`) separately from reproductive and counted tumor-support
+papers. See the [IHC and literature review](audits/antigen-evidence-review-20261117/index.md).
 
 The [named-candidate evidence audit](audits/cta-candidate-evidence-20261108/index.md)
 adds human IHC, MS and RNA reviews and sample-level tumor prevalence. Read the

@@ -2,7 +2,7 @@
 
 **The catalog assigns five categories and they are not changed here. Filters only
 remove proteins from the 509 Target candidates, through six layers that
-follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.3`, applied to
+follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.4`, applied to
 catalog `oncoref.target-selection.2026-11-17.1`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
@@ -44,7 +44,7 @@ value, and a missing measurement never passes.
 | 2 `curation` | Is the protein's recorded normal home in a tissue of this tier or above? | `normal_function` | 9 |
 | 3 `host` | Do protected compartments have sufficient coverage and bounded exposure? | `host` (HostContext), or explicit profile/tissue choices | 0 |
 | 4 `sets` | How much biological enrichment/replication, and which set? | `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 219 |
-| 5 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 329 |
+| 5 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 330 |
 | 6 `exclusions` | Which gene families do you rule out by name? | `exclude_prefixes`, `except_labels` | 16 |
 
 **Layer 3 tightens the two sets independently.** Both fold knobs raise the catalog's 10x;
@@ -82,9 +82,9 @@ layer 3 has tightened Cancer Antigens.
 | `membership` | cancer_antigen | 396 | 290 | 106 | 0 |
 | `membership` | reproductive_antigen | 403 | 290 | 0 | 113 |
 | `membership` | cta | 290 | 290 | 0 | 0 |
-| `min_papers` | 1 | 370 | 237 | 54 | 79 |
+| `min_papers` | 1 | 370 | 238 | 53 | 79 |
 | `min_papers` | 2 | 263 | 184 | 31 | 48 |
-| `min_papers` | 3 | 180 | 135 | 11 | 34 |
+| `min_papers` | 3 | 179 | 134 | 11 | 34 |
 | `min_papers` | 4 | 67 | 61 | 4 | 2 |
 
 ## 4. Filter modes and host toxicity profiles
@@ -96,9 +96,9 @@ if a change to a mode drops one.
 | Filter mode | Kept | CTA | Cancer Antigen only | Reproductive Antigen only |
 |---|---|---|---|---|
 | `all` | 509 | 290 | 106 | 113 |
-| `loose` | 370 | 237 | 54 | 79 |
+| `loose` | 370 | 238 | 53 | 79 |
 | `standard` | 247 | 175 | 28 | 44 |
-| `strict` | 111 | 111 | 0 | 0 |
+| `strict` | 110 | 110 | 0 | 0 |
 
 ### `loose`
 
@@ -124,7 +124,7 @@ Target candidates **509** → off_target **475** → curation **472** → host *
 - Papers: at least 3 distinct paper(s) nominating it or reporting it in tumors.
 - Exclusions: drop labels starting with MAGE, except MAGEA4.
 
-Target candidates **509** → off_target **459** → curation **452** → host **452** → sets **263** → papers **122** → exclusions **111**
+Target candidates **509** → off_target **459** → curation **452** → host **452** → sets **263** → papers **121** → exclusions **110**
 
 ### Host anatomy and tissue-tolerance profiles
 
@@ -326,7 +326,7 @@ Limits: candidate-sweep findings other than the exclusions carry the second read
   `min_tumor_patients` optionally requires known-patient replication at the selected
   `min_tumor_fold` (10× by default).
 - **The paper layer does most of the cutting.** 342 of 509 candidates
-  are nominated by any CTA-list paper. `min_papers=3` keeps 180, and
+  are nominated by any CTA-list paper. `min_papers=3` keeps 179, and
   142 of those are named by all of the three largest lists
   (Wang et al. (2016), Chang et al. (2019), da Silva et al. (2017)).
 - **Paper counts are not independent replication.** The nominating sources are

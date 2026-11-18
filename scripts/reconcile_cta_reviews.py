@@ -297,10 +297,16 @@ def main():
         "--output", type=Path, default=ROOT / "docs/audits/cta-current-review-20261108"
     )
     args = parser.parse_args()
-    out = args.output
-    out.mkdir(parents=True, exist_ok=True)
     profiles = cta_selection.profiles()
     current = cta_literature.current_coverage()
+    if set(current.entity_id) != set(profiles.loc[profiles.category.eq("CTA"), "entity_id"]):
+        raise ValueError(
+            "This historical reconciliation uses the November 8 catalog. Run its original "
+            "checkout to reproduce that audit; use cta_literature.current_coverage() for "
+            "the current catalog. No historical outputs were rewritten."
+        )
+    out = args.output
+    out.mkdir(parents=True, exist_ok=True)
     q = translation_qualification.records()
     d = transcript_selection.records()
     bundle = sequence_bundle.load(args.sequence_bundle)

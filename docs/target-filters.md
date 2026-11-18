@@ -1,6 +1,6 @@
 # Target filters and host selection
 
-Catalog `oncoref.target-selection.2026-11-17.1`; selection policy `oncoref.target-filters.2026-11-17.3`.
+Catalog `oncoref.target-selection.2026-11-17.1`; selection policy `oncoref.target-filters.2026-11-17.4`.
 Filters narrow biological candidates. Optional host constraints are a separate axis
 with their own versioned exposure evidence. [Full audit](audits/target-filters-20261112/index.md).
 
@@ -8,6 +8,9 @@ with their own versioned exposure evidence. [Full audit](audits/target-filters-2
 the broad catalog, optional evidence modes and host selections.
 [The 97 standard paper exclusions](audits/cta-count-history-20261117/paper-filter.md)
 lists every affected protein and its counted publications.
+The [subsequent literature review](audits/antigen-evidence-review-20261117/index.md)
+distinguishes broad coverage from tumor-support credit and fixes follow-up joins
+and ineligible fusion/proteoform credits. `antigens explain` exposes both counts.
 
 ```python
 from oncoref import antigen_sets, target_filters as tf
@@ -77,7 +80,7 @@ state labels are inferred and do not prove expression absence in other hosts.
 | `all` | 509 | `{}` |
 | `loose` | 370 | `{'min_papers': 1}` |
 | `standard` | 247 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
-| `strict` | 111 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
+| `strict` | 110 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 
 Modes nest from all to strict. Baseline positive controls are regression checks;
 any of them may fail a host requirement. Paper counts measure scoped published

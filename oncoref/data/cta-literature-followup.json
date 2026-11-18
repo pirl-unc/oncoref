@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-literature-followup",
   "schema_version": 1,
-  "reviewed_on": "2026-11-08",
+  "reviewed_on": "2026-11-17",
   "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
   "sources": [
     {
@@ -70,6 +70,20 @@
       "finding": "Table S2 lists SSU72P7, the previous symbol of SSU72L1, with log2 fold change 5.779251523 (54.91968795-fold) and adjusted P 9.14e-69 after CDCA8 knockdown.",
       "limitations": "The table reports a gene-level RNA result, not unique-read or peptide validation. SSU72 phosphatase experiments are not transferable to SSU72L1 or to SSU72L2-5.",
       "retention_reason": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity."
+    },
+    {
+      "source_id": "10.1126/science.abo7923",
+      "citation": "Zou et al., 2022",
+      "title": "Translatome and transcriptome co-profiling reveals a role of TPRXs in human zygotic genome activation",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/36074823/",
+      "roles": [
+        "reproductive_developmental",
+        "translation_identity"
+      ],
+      "source_location": "PubMed abstract, PMID 36074823; human oocyte/early-embryo Ribo-lite and mRNA co-profiling",
+      "finding": "TPRX1, TPRX2 and TPRXL are reported as highly translated around human zygotic genome activation; joint knockdown disrupts activation and preimplantation development.",
+      "limitations": "Developmental and translation evidence, not tumor expression, antigen presentation or adult tissue safety. The abstract does not resolve every paralog-specific ribosome footprint or assign the combined knockdown phenotype to one copy. No TPM enrichment value is inferred.",
+      "retention_reason": "Broader human reproductive evidence for exact named TPRX genes; excluded from the tumor-support publication count."
     }
   ],
   "memberships": [
@@ -122,6 +136,26 @@
       "eligible_for_coverage": true,
       "scope": "Exact previous human symbol SSU72P7 in a significant RNA perturbation result table; no selective protein validation",
       "recommendation": "Add exact-copy-symbol cancer-cell RNA context, retaining the old symbol. A perturbation response does not establish baseline tumor prevalence, protein production or CTA identity."
+    },
+    {
+      "source_id": "10.1126/science.abo7923",
+      "gene_ids": [
+        "ENSG00000178928"
+      ],
+      "protein": "TPRX1",
+      "eligible_for_coverage": true,
+      "scope": "Named human gene in early-embryo translation study; combined TPRX1/2/L functional perturbation, not a single-copy functional validation",
+      "recommendation": "Retain developmental and translation support; no tumor-support count or automatic tenfold qualification."
+    },
+    {
+      "source_id": "10.1126/science.abo7923",
+      "gene_ids": [
+        "ENSG00000259009"
+      ],
+      "protein": "TPRX2",
+      "eligible_for_coverage": true,
+      "scope": "Named human gene in early-embryo translation study; combined TPRX1/2/L functional perturbation, not a single-copy functional validation",
+      "recommendation": "Retain developmental and translation support; no tumor-support count or automatic tenfold qualification."
     }
   ]
 }

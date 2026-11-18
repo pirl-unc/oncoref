@@ -54,6 +54,14 @@ def test_explain_held_gene_and_member_symbol(capsys):
     assert cli.main(["antigens", "explain", "not-a-gene"]) == 1
 
 
+def test_explain_distinguishes_all_papers_from_tumor_support(capsys):
+    assert cli.main(["antigens", "explain", "DPRX", "--format", "json"]) == 0
+    row = json.loads(capsys.readouterr().out)[0]
+    assert row["paper_source_count"] == 2
+    assert row["papers_reproductive"] == 2
+    assert row["papers_counted"] == 0
+
+
 def test_subtraction_exact_equivalence_fasta_and_missing_coverage(tmp_path, capsys, monkeypatch):
     background = pd.DataFrame({"gene_id": ["background"], "sequence": ["LLLLLLLL"]})
     monkeypatch.setattr(antigen_sets, "sequences", lambda _: background)

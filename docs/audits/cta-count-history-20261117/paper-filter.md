@@ -1,5 +1,10 @@
 # The 97 CTAs excluded at the standard paper-count step
 
+This is the `f7847d51` snapshot. The [subsequent literature audit](../antigen-evidence-review-20261117/index.md)
+corrects a missing SSU72L1 paper join: the same 97 exclusions become 48 with zero
+counted tumor-support papers and 49 with one. Forty-three of the original 49
+already have broader literature records when follow-ups are joined correctly.
+
 These proteins pass the catalog and standard mode's earlier normal-RNA and curated-home gates. They leave only at the publication-count step. All remain CTAs in the broad catalog. The list is bound to catalog policy `oncoref.target-selection.2026-11-17.1`; default anatomy does not narrow it.
 
 `min_papers` is an optional prioritization filter: all requires 0, loose 1, standard 2 and strict 3 counted sources. A source counts once per protein, across all eligible roles. A CTA catalog paper counts only proteins it actually nominates; oncofetal-program and tumor-expression papers count the proteins their records link. Reproductive-only biology papers do not count toward this tumor-support filter. Reviewed normal-expression literature is a separate curation layer and does not require two papers to establish a concern.

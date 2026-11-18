@@ -115,8 +115,13 @@ def explain(args):
         "rare_cell_basis",
         "rare_cell_mapping_notes",
         "literature_recorded_tier",
+        "paper_source_count",
+        "paper_source_ids",
     ]
     output = rows[fields].copy()
+    counts = target_filters.paper_counts()
+    for column in counts:
+        output[column] = rows.entity_id.map(counts[column]).fillna(0).astype(int)
     if args.loss:
         output["loss_consequences"] = [
             antigen_sets.loss_consequences(label) for label in rows.protein_group_label

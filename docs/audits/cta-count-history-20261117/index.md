@@ -1,8 +1,12 @@
 # Why CTA counts changed
 
-**The current broad catalog contains 290 CTAs. The 175 and 111 counts are its
+**The broad catalog at `f7847d51` contains 290 CTAs. The 175 and 111 counts are its
 optional standard and strict selections. Neither PR #699 nor #700 removes CTAs
 from the broad biological catalog. Host choices are another, separate selection.**
+
+The [subsequent publication-scope correction](../antigen-evidence-review-20261117/index.md)
+leaves broad/standard counts at 290/175, changes loose from 237 to 238 (SSU72L1),
+and strict from 111 to 110 (LEUTX). Tables below preserve the earlier snapshot.
 
 Counts are identical selected reference **protein groups**, not gene loci,
 transcripts, cDNAs, all isoforms or peptide sequences. Identical protein sequences

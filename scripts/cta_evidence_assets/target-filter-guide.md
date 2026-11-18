@@ -8,6 +8,9 @@ with their own versioned exposure evidence. [Full audit](audits/target-filters-2
 the broad catalog, optional evidence modes and host selections.
 [The 97 standard paper exclusions](audits/cta-count-history-20261117/paper-filter.md)
 lists every affected protein and its counted publications.
+The [subsequent literature review](audits/antigen-evidence-review-20261117/index.md)
+distinguishes broad coverage from tumor-support credit and fixes follow-up joins
+and ineligible fusion/proteoform credits. `antigens explain` exposes both counts.
 
 ```python
 from oncoref import antigen_sets, target_filters as tf

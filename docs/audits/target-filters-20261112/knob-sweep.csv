@@ -22,7 +22,7 @@ Knob,Value,Kept,CTA,Cancer Antigen only,Reproductive Antigen only
 `membership`,cancer_antigen,396,290,106,0
 `membership`,reproductive_antigen,403,290,0,113
 `membership`,cta,290,290,0,0
-`min_papers`,1,370,237,54,79
+`min_papers`,1,370,238,53,79
 `min_papers`,2,263,184,31,48
-`min_papers`,3,180,135,11,34
+`min_papers`,3,179,134,11,34
 `min_papers`,4,67,61,4,2

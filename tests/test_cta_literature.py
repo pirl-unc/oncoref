@@ -68,6 +68,68 @@ def test_attestations_gene_filter_does_not_expand_related_copies():
     assert cta_literature.attestations("unmapped-test-gene").empty
 
 
+def test_current_links_use_exact_loci_and_keep_original_records(monkeypatch):
+    import pandas as pd
+
+    from oncoref import target_selection
+
+    catalog = pd.DataFrame(
+        [
+            {"entity_id": "current-a", "protein_group_label": "A", "member_gene_ids": '["a"]'},
+            {"entity_id": "current-b", "protein_group_label": "B", "member_gene_ids": '["b"]'},
+        ]
+    )
+    original = {
+        "entity_id": "old-group",
+        "protein": "A/B",
+        "gene_ids": ["a", "b"],
+        "nomination_gene_ids": ["a"],
+        "published_nomination": True,
+        "eligible_for_coverage": True,
+        "membership_record": {"gene_ids": ["a", "b"]},
+    }
+    monkeypatch.setattr(target_selection, "results", lambda gene=None: catalog)
+    monkeypatch.setattr(cta_literature, "attestations", lambda: pd.DataFrame([original]))
+    links = cta_literature.current_attestations().set_index("entity_id")
+    assert links.loc["current-a", "published_nomination"]
+    assert not links.loc["current-b", "published_nomination"]
+    assert links.loc["current-b", "gene_ids"] == ["b"]
+    assert links.loc["current-b", "recorded_gene_ids"] == ["a", "b"]
+    assert links.loc["current-b", "membership_record"] == original["membership_record"]
+
+
+def test_current_coverage_and_followup_papers_match_current_catalog():
+    from oncoref import target_filters, target_selection
+
+    links = cta_literature.current_attestations("SSU72L1")
+    assert len(links) == 1
+    assert links.iloc[0].recorded_entity_id == ""
+    entity = target_selection.results("SSU72L1").iloc[0].entity_id
+    assert links.iloc[0].entity_id == entity
+    assert target_filters.paper_counts().loc[entity, "papers_counted"] == 1
+    assert set(cta_literature.current_coverage().entity_id) == set(
+        target_selection.results(category="CTA").entity_id
+    )
+    assert cta_literature.current_attestations("unmapped-test-gene").empty
+
+
+def test_related_proteoforms_and_development_are_not_tumor_support():
+    from oncoref import target_filters, target_selection
+
+    papers = target_filters.paper_table()
+    for gene, source in [
+        ("GALP", "10.1385/jmn:29:2:145"),
+        ("LEUTX", "https://pubmed.ncbi.nlm.nih.gov/39566337/"),
+    ]:
+        entity = target_selection.results(gene).iloc[0].entity_id
+        assert not (papers.entity_id.eq(entity) & papers.source_id.eq(source)).any()
+        # The paper is still available for inspection, with its identity limit.
+        links = cta_literature.current_attestations(gene)
+        assert not links.loc[links.source_id.eq(source), "eligible_for_coverage"].any()
+    tprx = papers[papers.source_id.eq("10.1126/science.abo7923")]
+    assert len(tprx) == 2 and set(tprx.family) == {"reproductive"}
+
+
 def test_background_table_is_not_a_published_tumor_target_nomination():
     background = cta_literature.attestations("KRTAP20-2")
     background = background[background.source_id.eq("10.18632/oncotarget.21715")]
