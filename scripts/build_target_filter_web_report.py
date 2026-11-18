@@ -324,7 +324,7 @@ A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM coho
 Categories are the ones after the fold knob has tightened Cancer Antigens.</p>
 {table(["Filter mode", "Kept", *CATEGORIES[:3], ""], mode_rows, numeric=(1, 2, 3, 4))}
 <h3>Host anatomy and tissue-tolerance profiles</h3>
-<p>Host selection is separate from biological membership. Protect, accept loss and absent are distinct choices. Presets protect present gonads. Missing coverage and unresolved protein findings fail the host screen; native TPM and nTPM have separate limits. Milk-program labels are inferred. <a href="../../host-selection/">Contract and limitations</a>.</p>
+<p>Host selection is separate from biological membership. No reproductive tissue is protected by default. Explicit protection, accepted loss and absence are distinct choices. Missing coverage and unresolved protein findings fail the host screen; native TPM and nTPM have separate limits. Milk-program labels are inferred. <a href="../../host-selection/">Contract and limitations</a>.</p>
 {table(["Host profile", "Protected compartments", "CTA", "CA only", "RA only", "CA ∪ RA", ""], profile_rows, numeric=(2, 3, 4, 5))}
 <p>Candidates remaining after each layer, in order:</p>
 {table(["Filter mode", "Start", *LAYER_NAMES.values()], layer_rows, numeric=tuple(range(1, 8)))}

@@ -15,7 +15,7 @@ from oncoref import target_filters as tf
 
 
 def context(protect=("ovary",), **kwargs):
-    return hc.HostContext(absent=tuple(c for c in hc.COMPARTMENTS if c not in protect), **kwargs)
+    return hc.HostContext(protect=protect, **kwargs)
 
 
 def observation(value=0, **kwargs):
@@ -83,11 +83,15 @@ def test_missing_is_not_zero_and_native_assays_remain_separate(rows, item, statu
     assert result.pass_host == (status == "eligible")
 
 
-def test_anatomy_presets_never_accept_gonadal_loss():
+def test_anatomy_presets_leave_protection_opt_in():
+    assert hc.HostContext().protected == ()
+    assert set(hc.HostContext().states().values()) == {"Not protected"}
     for profile, gonad in (("male-patient", "testis"), ("female-patient", "ovary")):
         host = hc.from_legacy(profile)
-        assert gonad in host.protected and not host.accept_loss
-        assert "resting_breast" in host.protected
+        assert host.protected == () and not host.accept_loss
+        assert host.states()[gonad] == "Not protected"
+        assert host.states()["resting_breast"] == "Not protected"
+        assert hc.from_legacy(profile, protect_tissues=(gonad,)).protected == (gonad,)
         assert host.assumptions
     pregnant = hc.from_legacy("female-patient", pregnant=True)
     assert {"embryo", "placenta", "lactating_breast"} <= set(pregnant.protected)
@@ -95,6 +99,20 @@ def test_anatomy_presets_never_accept_gonadal_loss():
         tf.TargetFilter(host_profile="core")
     with pytest.raises(ValueError, match="both absent"):
         hc.HostContext(absent=("ovary",), accept_loss=("ovary",))
+    for incompatible in ({"absent": ("ovary",)}, {"accept_loss": ("ovary",)}):
+        with pytest.raises(ValueError, match="protected compartment"):
+            hc.HostContext(protect=("ovary",), **incompatible)
+
+
+def test_unprotected_default_needs_no_exposure_and_creates_no_background(rows, monkeypatch):
+    def unexpected_read():
+        raise AssertionError("A context with no protected tissue needs no exposure lookup")
+
+    monkeypatch.setattr(hc, "_evidence", unexpected_read)
+    selected = antigen_sets.select(table=rows, host=hc.HostContext())
+    assert selected.proteins().entity_id.tolist() == ["a"]
+    assert selected.background_proteins().empty
+    assert selected.decisions().host_status.item() == "eligible"
 
 
 @pytest.mark.parametrize(

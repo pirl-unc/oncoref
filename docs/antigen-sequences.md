@@ -25,7 +25,7 @@ For host-specific work, select once and use that object's views and background:
 ```python
 from oncoref.host_context import HostContext
 
-selection = antigen_sets.select("CA", host=HostContext(absent=("embryo", "placenta")))
+selection = antigen_sets.select("CA", host=HostContext(protect=("testis",)))
 proteins = selection.proteins()
 sequences = selection.sequences()
 background = selection.background_index("Unsafe|Other")

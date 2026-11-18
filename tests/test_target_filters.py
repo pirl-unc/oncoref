@@ -275,8 +275,14 @@ def test_host_profile_invariants_on_published_catalog(catalog):
     assert summary.loc["female-patient (pregnant)", "Union"] == 0
     male = tf.apply(tf.TargetFilter(host_profile="male-patient"), catalog)
     female = tf.apply(tf.TargetFilter(host_profile="female-patient"), catalog)
-    assert not male[male.protein_group_label.eq("MAGEA4")].keep.any()
-    assert not female[female.protein_group_label.eq("PRAME")].keep.any()
+    baseline = tf.apply(tf.TargetFilter(), catalog)
+    assert male.keep.equals(baseline.keep) and female.keep.equals(baseline.keep)
+    assert tf.protected_compartments(tf.TargetFilter(host_profile="male-patient")) == ()
+    protected = tf.apply(
+        tf.TargetFilter(host_profile="male-patient", protect_tissues=("testis",)), catalog
+    )
+    assert not protected[protected.protein_group_label.eq("MAGEA4")].keep.any()
+    assert set(protected.loc[protected.keep, "entity_id"]) < set(male.loc[male.keep, "entity_id"])
     # No host policy changes biological category, even when the host rejects a CTA.
     assert male.filtered_category[male.is_cta].eq("CTA").all()
     for bad in (

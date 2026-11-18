@@ -12,17 +12,18 @@ Milk-program labels are inferred from expression, not provider-confirmed lactati
 
 ![Host choices and outcomes](summary/cta-tiers-and-profiles.png)
 
-Protect, accept loss and absent retain distinct meanings. Present gonads are protected by anatomy presets. Unresolved coverage fails the host screen, while biological CA/RA/CTA membership remains unchanged. [Rules and limitations](../../../host-selection.md).
+Reproductive protection is opt-in for every anatomy preset. Not protected, protect, accept loss and absent retain distinct meanings. Unresolved protected-tissue coverage fails the host screen, while biological CA/RA/CTA membership remains unchanged. [Rules and limitations](../../../host-selection.md).
 
 | Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
 | all | none | 290 | 106 | 113 | 509 |
-| female-patient | ovary, fallopian tube, endometrium, cervix, resting_breast | 239 | 91 | 96 | 426 |
-| female-patient (lactating) | ovary, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 239 | 91 | 95 | 425 |
-| female-patient (pregnant) | embryo, placenta, ovary, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 0 | 0 | 0 | 0 |
-| male-patient | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
-| male-patient (post-prostatectomy) | testis, epididymis, resting_breast | 49 | 40 | 14 | 103 |
-| female-patient (accept ovary loss) | fallopian tube, endometrium, cervix, resting_breast | 272 | 96 | 108 | 476 |
+| female-patient | none | 290 | 106 | 113 | 509 |
+| female-patient (protect ovary) | ovary | 252 | 100 | 101 | 453 |
+| female-patient (lactating) | lactating_breast | 286 | 104 | 110 | 500 |
+| female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
+| male-patient | none | 290 | 106 | 113 | 509 |
+| male-patient (protect testis) | testis | 62 | 45 | 24 | 131 |
+| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
 
 [Profile table CSV](summary/cta-profiles.csv)
 

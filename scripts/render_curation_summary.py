@@ -713,12 +713,15 @@ def cta_tiers_and_profiles(data, stem_path):
     from matplotlib.patches import Patch
 
     profiles = target_filters.profile_summary(data)
-    states = ["Unspecified", "Protect", "Accept loss", "Absent"]
+    states = ["Not protected", "Protect", "Accept loss", "Absent"]
     colors = ["#e4e8eb", "#efc7c4", "#e9d69c", "#c7ddea"]
     compartments = list(target_selection.REPRODUCTIVE_COMPARTMENTS)
     matrix = np.array(
         [
-            [states.index(json.loads(row.host_states).get(c, "Unspecified")) for c in compartments]
+            [
+                states.index(json.loads(row.host_states).get(c, "Not protected"))
+                for c in compartments
+            ]
             for row in profiles.itertuples()
         ]
     )
@@ -780,7 +783,7 @@ def cta_tiers_and_profiles(data, stem_path):
     fig.text(
         0.02,
         0.015,
-        "Presets assume anatomy; verify organs and physiological state. Present gonads remain protected. Pregnancy coverage is incomplete.",
+        "No reproductive protection by default. Select tissues to protect explicitly. Presets record assumed anatomy; pregnancy coverage is incomplete.",
         fontsize=10,
     )
     fig.tight_layout(rect=(0, 0.07, 1, 0.95))
@@ -835,8 +838,8 @@ def build():
         "Negative signature evidence does not establish universal resting-state absence.\n\n"
         "## Host choices and screening outcomes\n\n"
         "![Host choices and outcomes](summary/cta-tiers-and-profiles.png)\n\n"
-        "Protect, accept loss and absent retain distinct meanings. Present gonads are protected "
-        "by anatomy presets. Unresolved coverage fails the host screen, while biological "
+        "Reproductive protection is opt-in for every anatomy preset. Not protected, protect, "
+        "accept loss and absent retain distinct meanings. Unresolved protected-tissue coverage fails the host screen, while biological "
         "CA/RA/CTA membership remains unchanged. [Rules and limitations](../../../host-selection.md).\n\n"
         + markdown(
             profile_table,

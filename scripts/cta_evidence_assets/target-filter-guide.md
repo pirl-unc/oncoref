@@ -6,14 +6,16 @@ with their own versioned exposure evidence. [Full audit](audits/target-filters-2
 
 [Why CTA counts changed](audits/cta-count-history-20261117/index.md) distinguishes
 the broad catalog, optional evidence modes and host selections.
+[The 97 standard paper exclusions](audits/cta-count-history-20261117/paper-filter.md)
+lists every affected protein and its counted publications.
 
 ```python
 from oncoref import antigen_sets, target_filters as tf
 from oncoref.host_context import HostContext
 
 selection = antigen_sets.select("CA", min_tumor_patients=2, min_tumor_fold=30)
-# All unspecified compartments are protected; exceptions are explicit.
-host = HostContext(absent=("embryo", "placenta"), accept_loss=("testis",))
+# No reproductive protection by default; request the smaller protected-tissue set.
+host = HostContext(protect=("testis",))
 with_host = antigen_sets.select("CTA", mode="strict", host=host)
 decisions = with_host.decisions()
 ```
@@ -41,13 +43,14 @@ including the enlarged protected-host denominator when one is used.
 
 ## Explicit host assumptions
 
-`HostContext` distinguishes `absent` and `accept_loss`; every other compartment is
-protected. Default host limits are **<4 native TPM and <4 nTPM**, independently.
+`HostContext` distinguishes `protect`, `absent` and `accept_loss`; unspecified
+compartments are not protected. Limits for explicitly protected tissues are
+**<4 native TPM and <4 nTPM**, independently.
 These are research cutoffs, not injury thresholds. A stricter `max_off_target_tpm`
 also applies. Missing coverage or unresolved protein findings prevents eligibility.
 
 Compatibility profiles `male-patient` and `female-patient` assume anatomy and no
-current pregnancy/lactation; they protect present gonads. Inspect their recorded
+current pregnancy/lactation; neither preset protects reproductive tissue by default. Inspect their recorded
 assumptions and override actual anatomy. `all` means no host screen. The former
 `core` host shortcut is rejected; specify accepted loss explicitly.
 [Host contract and limitations](host-selection.md).

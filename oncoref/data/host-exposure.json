@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.host-exposure.v1",
-  "policy_id": "oncoref.host-selection.2026-11-17.2",
+  "policy_id": "oncoref.host-selection.2026-11-17.3",
   "catalog_policy_id": "oncoref.target-selection.2026-11-17.1",
   "catalog_data_sha256": "63d4f3a0a867286726c77915814f106bb98d99353e7626e287d29ea70e6b9a2e",
   "sha256": "23037eaf9194835531ad1cc2b55c3beb1d3f7fb6e5bd93f5c61ea92cb057d843",

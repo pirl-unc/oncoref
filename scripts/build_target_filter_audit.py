@@ -410,7 +410,8 @@ if a change to a mode drops one.
 ### Host anatomy and tissue-tolerance profiles
 
 Host protection is independent of biological membership. Presets assume anatomy and
-protect present gonads. Explicit `accept_loss` and `absent` choices have different meanings.
+protect no reproductive tissue by default. Explicit `protect`, `accept_loss` and `absent`
+choices have different meanings.
 Missing coverage and unresolved protein evidence fail the screen. Native TPM and nTPM
 are screened separately; protected TPM also enters every off-target limit and cancer fold.
 [Precise contract](../../host-selection.md). [CSV](host-profiles.csv).

@@ -32,7 +32,7 @@ import pandas as pd
 
 from . import host_context, target_selection
 
-FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.2"
+FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.3"
 
 #: Compatibility names describe assumed anatomy, never accepted organ loss.
 HOST_PROFILES = {
@@ -434,13 +434,15 @@ def describe(f: TargetFilter | str) -> str:
         lines.append(f"Curation: no recorded normal home in a {tiers} tissue.")
     protected = protected_compartments(f)
     if context(f) is not None:
-        allowed = allowed_compartments(f)
+        host = context(f)
         prot_text = ", ".join(protected) if protected else "none"
-        allow_text = ", ".join(allowed) if allowed else "none"
+        absent_text = ", ".join(host.absent) or "none"
+        loss_text = ", ".join(host.accept_loss) or "none"
         lines.append(
-            f"Host: protect [{prot_text}]; explicit exceptions [{allow_text}]. "
-            f"Native RNA limits: < {context(f).max_tpm:g} TPM and < {context(f).max_ntpm:g} nTPM. "
-            "Missing coverage and unresolved protein findings fail; membership stays biological."
+            f"Host: protect [{prot_text}]; absent [{absent_text}]; accept loss [{loss_text}]. "
+            "Other compartments are not protected. "
+            f"Protected-tissue RNA limits: < {host.max_tpm:g} TPM and < {host.max_ntpm:g} nTPM. "
+            "Missing protected-tissue coverage and unresolved protein findings fail; membership stays biological."
         )
     if f.min_tumor_fold > 10.0:
         lines.append(
@@ -480,6 +482,10 @@ def profile_summary(table: pd.DataFrame | None = None) -> pd.DataFrame:
         ("all", TargetFilter(host_profile="all")),
         ("female-patient", TargetFilter(host_profile="female-patient")),
         (
+            "female-patient (protect ovary)",
+            TargetFilter(host_profile="female-patient", protect_tissues=("ovary",)),
+        ),
+        (
             "female-patient (lactating)",
             TargetFilter(host_profile="female-patient", lactating=True),
         ),
@@ -489,15 +495,24 @@ def profile_summary(table: pd.DataFrame | None = None) -> pd.DataFrame:
         ),
         ("male-patient", TargetFilter(host_profile="male-patient")),
         (
-            "male-patient (post-prostatectomy)",
+            "male-patient (protect testis)",
             TargetFilter(
                 host_profile="male-patient",
-                absent_tissues=("prostate", "seminal vesicle"),
+                protect_tissues=("testis",),
             ),
         ),
         (
-            "female-patient (accept ovary loss)",
-            TargetFilter(host_profile="female-patient", allow_tissues=("ovary",)),
+            "male-patient (protect adult tissues)",
+            TargetFilter(
+                host_profile="male-patient",
+                protect_tissues=(
+                    "testis",
+                    "epididymis",
+                    "prostate",
+                    "seminal vesicle",
+                    "resting_breast",
+                ),
+            ),
         ),
     ]
     rows = []

@@ -2,7 +2,7 @@
 
 **The catalog assigns five categories and they are not changed here. Filters only
 remove proteins from the 509 Target candidates, through six layers that
-follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.2`, applied to
+follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.3`, applied to
 catalog `oncoref.target-selection.2026-11-17.1`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
@@ -129,7 +129,8 @@ Target candidates **509** → off_target **459** → curation **452** → host *
 ### Host anatomy and tissue-tolerance profiles
 
 Host protection is independent of biological membership. Presets assume anatomy and
-protect present gonads. Explicit `accept_loss` and `absent` choices have different meanings.
+protect no reproductive tissue by default. Explicit `protect`, `accept_loss` and `absent`
+choices have different meanings.
 Missing coverage and unresolved protein evidence fail the screen. Native TPM and nTPM
 are screened separately; protected TPM also enters every off-target limit and cancer fold.
 [Precise contract](../../host-selection.md). [CSV](host-profiles.csv).
@@ -137,12 +138,13 @@ are screened separately; protected TPM also enters every off-target limit and ca
 | Profile | Protected compartments | CTA | CA only | RA only | CA | RA |
 |---|---|---|---|---|---|
 | all | none | 290 | 106 | 113 | 509 |
-| female-patient | ovary, fallopian tube, endometrium, cervix, resting_breast | 239 | 91 | 96 | 426 |
-| female-patient (lactating) | ovary, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 239 | 91 | 95 | 425 |
-| female-patient (pregnant) | embryo, placenta, ovary, fallopian tube, endometrium, cervix, lactating_breast, resting_breast | 0 | 0 | 0 | 0 |
-| male-patient | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
-| male-patient (post-prostatectomy) | testis, epididymis, resting_breast | 49 | 40 | 14 | 103 |
-| female-patient (accept ovary loss) | fallopian tube, endometrium, cervix, resting_breast | 272 | 96 | 108 | 476 |
+| female-patient | none | 290 | 106 | 113 | 509 |
+| female-patient (protect ovary) | ovary | 252 | 100 | 101 | 453 |
+| female-patient (lactating) | lactating_breast | 286 | 104 | 110 | 500 |
+| female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
+| male-patient | none | 290 | 106 | 113 | 509 |
+| male-patient (protect testis) | testis | 62 | 45 | 24 | 131 |
+| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
 
 ## 5. Where the familiar CTAs land
 

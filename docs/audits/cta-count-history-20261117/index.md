@@ -41,6 +41,44 @@ After that correction, the settled **437 → 290** difference is 147 proteins:
 78 CA-only, 35 Other:Review, 15 Other:Tissue, 12 Other:Expression and 7 RA-only.
 All 290 current CTAs were already among the 437; this net comparison has no new entrants.
 
+## What changed in 1.40
+
+**Symmetric reproductive 10×.** CA and RA independently use the same native-TPM
+reference, `H = max(non-reproductive normal N, Disposable D, 1 TPM)`. CA needs a
+QC-passing tumor observation at least `10 × H`; RA needs a reproductive tissue
+sample or supported embryo-lineage mean at least `10 × H`. Before 1.40 RA was
+an association rule: detection at 1 TPM or 1 nTPM with the source's support checks,
+or reliable reproductive protein staining, could qualify without a 10× fold.
+A protein can
+therefore remain CA but lose CTA membership if reproductive evidence is weaker.
+For example, with `H = 2 TPM`, tumor 50 TPM qualifies CA, while reproductive
+15 TPM does not qualify RA. The tumor need not exceed reproductive tissue by 10×.
+Individual HPA normal biopsies were also added to N; that can raise both branches'
+thresholds. nTPM and UMI counts cannot substitute for native TPM in this fold.
+
+**Stronger review holds.** Consequential normal-cell signals whose attribution or
+replication is unresolved now enter Other:Review instead of being dismissed just
+because the locus has mapping risk or the signal comes from one study. The screen
+uses donor-resolved multi-molecule support, cell frequency and study replication,
+plus bulk RNA or gene-specific literature confirmation. A mapping flag says reads
+could be misassigned; it does not prove they were. CAGE1, CTAG2 and DAZL illustrate
+these holds. Resolution requires gene-specific evidence: unique exonic/junction
+support, independent population replication, orthogonal localization, or a supported
+artifact adjudication. Accepted normal expression can make a protein Unsafe;
+demonstrated artifact can dismiss the signal and restore eligibility if other gates
+pass. Negative bulk RNA alone does not settle a sparse-cell finding. These holds
+are unrelated to the optional minimum-publication count.
+
+**Overly restrictive embryo gate.** The 1.40 implementation moved from stage-pooled
+cells to separate embryo × lineage means but kept a 20-measured-cell requirement.
+An eight-cell embryo cannot supply 20 cells. The corrected 1.41 rule retains the
+large-population route (at least 20 measured cells, at least 5 positive, at least
+10% positive) and adds a small-population route (at least 5 measured cells, at
+least 50% positive, with two independent embryos at the same stage/lineage reaching
+10×). A positive cell has at least 1 TPM. Multiple cells from one embryo do not
+count as independent embryos. This correction restored 44 CTAs; the smaller
+population route still has an explicit replication requirement.
+
 ## Optional evidence filters
 
 The following attrition is sequential, starting from the same 290 current CTAs.
@@ -59,26 +97,36 @@ measurements of normal-tissue toxicity. Strict also excludes MAGE-prefixed label
 except MAGEA4. The 111 strict candidates are all CTAs because strict requests the
 intersection; the full CA/RA union still contains 509 proteins.
 
+[All 97 proteins excluded at the standard paper step](paper-filter.md) are listed
+with their source citations and tumor-patient counts. Of these, 49 have zero and
+48 have one counted publication; 59 already have at least two known tumor patients
+at 10×. Zero denotes the curated registry, not an exhaustive absence of literature.
+
 ## Host selection is a third axis
 
-PR #699's host presets implicitly allow gonadal exposure. PR #700 instead protects
-present gonads unless their loss is explicitly accepted. It also independently
-checks native cell-RNA measurements, unresolved protein findings and coverage.
-These choices can yield fewer than 200 **host-eligible** CTAs without removing any
-of the 290 biological CTAs. A whole-testis or whole-ovary restriction cannot be
-interpreted as a selective fertility-only intervention from bulk RNA alone.
+The default anatomy choice protects **no reproductive tissue**, for either men
+or women. The same 290 broad CTAs remain available in both anatomy presets.
+Protection is an explicit opt-in through `HostContext(protect=(...))` or
+`protect_tissues=(...)`; it independently checks native cell-RNA measurements,
+unresolved protein findings and coverage in the requested compartments.
+Not protected, absent and accepted loss have distinct meanings. A whole-testis
+or whole-ovary restriction cannot be interpreted as a selective fertility-only
+intervention from bulk RNA alone.
 
 | Host context in corrected PR #700 | all mode | standard mode | strict mode |
 |---|---:|---:|---:|
 | No host screen | 290 | 175 | 111 |
-| Female-anatomy preset, ovary protected | 239 | 144 | 90 |
-| Male-anatomy preset, testis protected | 49 | 16 | 7 |
+| Female-anatomy preset, default protection | 290 | 175 | 111 |
+| Male-anatomy preset, default protection | 290 | 175 | 111 |
 
-Accepting testis loss in the same male-anatomy preset raises its all-mode result
-from **49 to 251**. That is a deliberate change in the permitted exposure, not new
-cancer evidence or demonstrated tolerability. The corresponding female-anatomy
-comparison is **239 to 272** when ovary loss is accepted. Presets retain explicit
-anatomy and current-state assumptions; actual organs must be verified separately.
+In all mode, protecting **only ovary retains 252 CTAs**; protecting **only testis
+retains 62**. Both are explicit subsets of the 290, exposed through the same API.
+
+Earlier review counts of 49 for the male preset and 239 for the female preset
+included implicit protection of gonads and adult accessory tissues. They are no
+longer defaults. Those smaller sets remain available by explicitly requesting
+the corresponding tissues. Presets retain explicit anatomy and current-state
+assumptions; actual organs must be verified separately.
 
 Report each result with its catalog version, set, evidence mode and host context.
 For example, “290 broad CTAs; 175 standard CTAs; host context not applied” is

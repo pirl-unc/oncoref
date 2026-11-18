@@ -33,7 +33,9 @@ oncoref antigens subtract protein.fa --equiv ILV --max-distance 1
 
 `--set` accepts `CTA`, `CA`, `RA`, `CA|RA`, `Unsafe`, `Other`, and `Unsafe|Other`.
 `--profile` accepts `all` (no host screen), `female-patient` and `male-patient`
-(assumed anatomy, with present gonads protected). `--accept-loss` (legacy alias
+(assumed anatomy, with no reproductive tissue protected by default). Select
+`--protect-tissue testis` or `--protect-tissue ovary` to request smaller sets.
+`--accept-loss` (legacy alias
 `--allow-tissue`) explicitly accepts tissue loss; `--absent-tissue` records absent
 anatomy/state; `--protect-tissue` overrides an exception. `breast` expands to both
 mammary states. `--pregnant` also protects the milk-secretory state, and pregnancy

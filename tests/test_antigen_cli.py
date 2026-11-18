@@ -111,10 +111,20 @@ def test_cli_host_profiles_and_tissue_toggles(capsys):
     assert {r["entity_id"] for r in rows} == set(
         antigen_sets.proteins("CTA", profile="female-patient", lactating=True).entity_id
     )
-    assert "ovary" in metadata["host_context"]["protected"]
+    assert metadata["host_context"]["protected"] == ["lactating_breast"]
     assert (
         cli.main(
-            ["antigens", "explain", "PRAME", "--profile", "female-patient", "--format", "json"]
+            [
+                "antigens",
+                "explain",
+                "PRAME",
+                "--profile",
+                "female-patient",
+                "--protect-tissue",
+                "endometrium",
+                "--format",
+                "json",
+            ]
         )
         == 0
     )

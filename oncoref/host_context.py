@@ -17,7 +17,7 @@ import pandas as pd
 
 from . import target_selection as catalog
 
-POLICY_ID = "oncoref.host-selection.2026-11-17.2"
+POLICY_ID = "oncoref.host-selection.2026-11-17.3"
 COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
 
 
@@ -39,7 +39,7 @@ def normalize(values) -> tuple[str, ...]:
 
 @dataclass(frozen=True)
 class HostContext:
-    """Protect every compartment except explicitly absent or accepted-loss ones.
+    """Protect only explicitly requested compartments; default protection is empty.
 
     The RNA limits are independent research cutoffs in their native units. They
     do not convert nTPM to TPM or establish tolerability. A generic compartment
@@ -51,12 +51,15 @@ class HostContext:
     max_tpm: float = 4.0
     max_ntpm: float = 4.0
     assumptions: tuple[str, ...] = ()
+    protect: tuple[str, ...] = ()
 
     def __post_init__(self):
-        for field in ("absent", "accept_loss"):
+        for field in ("absent", "accept_loss", "protect"):
             object.__setattr__(self, field, normalize(getattr(self, field)))
         if set(self.absent) & set(self.accept_loss):
             raise ValueError("A compartment cannot be both absent and accepted for loss")
+        if set(self.protect) & (set(self.absent) | set(self.accept_loss)):
+            raise ValueError("A protected compartment cannot be absent or accepted for loss")
         for field in ("max_tpm", "max_ntpm"):
             value = getattr(self, field)
             if (
@@ -73,7 +76,7 @@ class HostContext:
 
     @property
     def protected(self) -> tuple[str, ...]:
-        return tuple(c for c in COMPARTMENTS if c not in {*self.absent, *self.accept_loss})
+        return self.protect
 
     def as_dict(self) -> dict:
         return {"policy_id": POLICY_ID, **asdict(self), "protected": self.protected}
@@ -85,6 +88,8 @@ class HostContext:
             else "Accept loss"
             if c in self.accept_loss
             else "Protect"
+            if c in self.protect
+            else "Not protected"
             for c in COMPARTMENTS
         }
 
@@ -106,13 +111,13 @@ def from_legacy(
         raise ValueError("Compartment choices conflict")
     if profile == "core":
         raise ValueError(
-            "core describes biological origin, not host protection; use an explicit HostContext and accept_loss choices"
+            "core describes biological origin, not host protection; use explicit HostContext protection choices"
         )
     if profile not in {"all", "male-patient", "female-patient"}:
         raise ValueError("Unknown host profile")
     if not any((profile != "all", pregnant, lactating, allow, protect, absent_override)):
         return None
-    absent, accepted, notes = set(), set(), []
+    absent, accepted, protected, notes = set(), set(), set(protect), []
     if profile in {"male-patient", "female-patient"}:
         opposite = (
             (*catalog.FEMALE_TRACT_COMPARTMENTS, "ovary")
@@ -134,19 +139,26 @@ def from_legacy(
                 "Assumes inactive milk-secretory state, not an absent breast; state inference has limited sampling"
             )
     else:
-        # A custom policy must name all exceptions. Unspecified organs stay protected.
-        notes.append("Custom context: all unspecified compartments protected")
+        notes.append("Custom context: only explicitly requested compartments protected")
+    notes.append("Unspecified reproductive compartments are not protected by this screen")
     if pregnant:
         absent.difference_update(("embryo", "placenta", "lactating_breast"))
-        accepted.difference_update(("embryo", "placenta", "lactating_breast"))
+        protected.update(("embryo", "placenta", "lactating_breast"))
     if lactating:
         absent.discard("lactating_breast")
+        protected.add("lactating_breast")
         accepted.discard("lactating_breast")
     absent.difference_update((*allow, *protect))
     accepted.difference_update((*protect, *absent_override))
     absent.update(absent_override)
     accepted.update(allow)
-    return HostContext(absent=tuple(absent), accept_loss=tuple(accepted), assumptions=tuple(notes))
+    protected.difference_update((*allow, *absent_override))
+    return HostContext(
+        absent=tuple(absent),
+        accept_loss=tuple(accepted),
+        protect=tuple(protected),
+        assumptions=tuple(notes),
+    )
 
 
 @cache
@@ -181,7 +193,11 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
     """Evaluate protection independently of target-set membership and paper counts."""
     if host is not None and not isinstance(host, HostContext):
         raise ValueError("host must be a HostContext")
-    evidence = _evidence() if host is not None and evidence is None else (evidence or {})
+    evidence = (
+        _evidence()
+        if host is not None and host.protected and evidence is None
+        else (evidence or {})
+    )
     rows = []
     for row in table.itertuples():
         rejected, unknown, observed = [], [], []

@@ -4,10 +4,11 @@
 A CTA can fail a host screen without ceasing to be a CTA. This API supports research
 selection; its expression cutoffs are not clinical injury thresholds.
 
-## The three choices
+## Protection choices
 
 | Choice | Meaning | What it does not establish |
 |---|---|---|
+| Not protected (default) | Apply no additional host restriction for this compartment | Does not mean absent, tolerable to lose, or clinically safe |
 | Protect | Preserve the named tissue or physiological compartment | A low RNA value does not prove no injury |
 | Accept loss | Explicitly accept loss of that compartment in the scenario | Acceptable lasting loss does not establish acceptable acute inflammation |
 | Absent | Declare that the organ, pregnancy compartment or physiological state is absent/inactive | This does not erase expression elsewhere or sequence cross-reactivity |
@@ -26,8 +27,7 @@ from oncoref.host_context import HostContext
 
 # Illustrative declarations, not a patient recommendation.
 host = HostContext(
-    absent=("embryo", "placenta"),
-    accept_loss=("testis",),
+    protect=("ovary", "endometrium"),
     max_tpm=4,
     max_ntpm=4,
 )
@@ -37,13 +37,15 @@ decisions = selection.decisions()
 assumptions = selection.metadata
 ```
 
-Every unspecified compartment is protected. `absent` and `accept_loss` must be
-explicit, disjoint tuples. All 12 current compartments are available, including
+Every unspecified compartment is **not protected**. `HostContext()` and both
+anatomy presets retain the full candidate set at the chosen evidence mode.
+`protect`, `absent` and `accept_loss` must be explicit, disjoint tuples.
+All 12 current compartments are available, including
 both mammary states. `breast` expands to both. These conditional compartments
 supplement the catalog's shared normal screen; they do not represent every organ.
 
 Compatibility presets `male-patient` and `female-patient` encode **assumed anatomy**,
-not anatomy inferred from sex or chromosomes. They protect present gonads, assume no
+not anatomy inferred from sex or chromosomes. They protect no reproductive tissue by default, assume no
 current pregnancy or lactation, and return those assumptions in metadata. Override
 actual organs with `absent_tissues`, `protect_tissues` and `allow_tissues` (the legacy
 name for accepting loss). Surgery must be represented by verified absence, not by
@@ -109,6 +111,11 @@ Petropoulos preimplantation and Tyser early gastrulation measurements do not cov
 all fetal stages. Protecting the embryo compartment therefore remains unresolved,
 even when its measured early-stage maximum is zero. A current nonpregnant assumption
 also does not address future pregnancy during a persistent treatment.
+
+Explicit `pregnant=True` and `lactating=True` are protection shortcuts for those
+scenarios: pregnancy protects embryo, placenta and the milk-secretory compartment;
+lactation protects the milk-secretory compartment. Other reproductive tissues
+still require `protect_tissues` or `HostContext(protect=...)`.
 
 Clinical experience with one target or product is not a universal host exemption.
 For example, the MAGE-A4 product's label reports insufficient pregnancy data and

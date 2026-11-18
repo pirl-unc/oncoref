@@ -30,7 +30,8 @@ classifies **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only, 1,
    and Reproductive Antigens (**RA = 403**) independently require **≥ 10 × H₀** in QC-passing
    tumors or reproductive/embryonic samples. Their intersection is the default broad **CTA (290)** set.
 3. **Host selection:** Protect / Accept loss / Absent are explicit choices. Anatomy
-   presets protect present gonads. Missing exposure evidence remains unresolved;
+   presets protect no reproductive tissue by default; protection is opt-in.
+   Missing evidence for explicitly protected tissue remains unresolved;
    a host rejection does not relabel a CTA. [Contract and limits](host-selection.md).
 
 ![End-to-end curation architecture](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
