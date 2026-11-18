@@ -87,7 +87,17 @@ def hpa_screen(abundance, panels, q):
     )
 
 
-def donor_statistics(raw, q, normal, catalog, probable, flagged):
+def source_matched_maximum(values, sample_panels, panel_groups):
+    """Omit a group observation only when it belongs wholly to one matched source panel."""
+    adjusted = values.copy()
+    for sample in values.columns.intersection(sample_panels):
+        for panel in sample_panels[sample]:
+            groups = adjusted.index.intersection(panel_groups[panel])
+            adjusted.loc[groups, sample] = np.nan
+    return adjusted.max(axis=1).fillna(values.max(axis=1))
+
+
+def donor_statistics(raw, q, normal, catalog, sample_panels, flagged, panels):
     ids = pd.read_csv(BASE / "alternative-evidence/gtex_tissue_rna-row-decisions.csv.gz")
     ids = ids.dropna(subset=["row_position"])
     med = pd.read_csv(
@@ -105,7 +115,14 @@ def donor_statistics(raw, q, normal, catalog, probable, flagged):
             strict=True,
         )
     )
-    sizes = catalog.member_gene_ids.map(lambda s: len(json.loads(s)))
+    members = catalog.member_gene_ids.map(lambda s: frozenset(json.loads(s)))
+    sizes = members.map(len)
+    panel_groups = {}
+    for name, versioned_ids in panels.items():
+        loci = {canonical[g.encode()] for g in versioned_ids if g.encode() in canonical}
+        panel_groups[name] = [
+            entity for entity, group in members.items() if group and group <= loci
+        ]
     parts, maxima = [], []
     for site, table in normal[normal.source_id.eq(SOURCE_ID)].groupby("source_context"):
         file = raw / (site.lower() + ".gct.gz")
@@ -129,7 +146,7 @@ def donor_statistics(raw, q, normal, catalog, probable, flagged):
             vals.max(axis=1).loc[ref.index], ref
         ):
             raise ValueError(f"Cannot reproduce original sample maxima in {site}")
-        clean = vals.loc[:, ~vals.columns.isin(probable)]
+        clean = vals.loc[:, ~vals.columns.isin(sample_panels)]
         v = vals.to_numpy()
         if not np.isfinite(v).all() or clean.empty:
             raise ValueError(f"Incomplete readings in {site}")
@@ -137,7 +154,10 @@ def donor_statistics(raw, q, normal, catalog, probable, flagged):
             {
                 "max": np.max(v, axis=1),
                 "without_M": clean.max(axis=1),
+                "source_matched": source_matched_maximum(vals, sample_panels, panel_groups),
                 "second_donor": np.partition(v, -2, axis=1)[:, -2],
+                "p99_rank": np.quantile(v, 0.99, method="inverted_cdf", axis=1),
+                "p99": np.quantile(v, 0.99, axis=1),
                 "p95": np.quantile(v, 0.95, axis=1),
                 "p75": np.quantile(v, 0.75, axis=1),
             },
@@ -149,6 +169,7 @@ def donor_statistics(raw, q, normal, catalog, probable, flagged):
             idx = peaked.entity_id
             peaked["site_donors"] = len(donors)
             peaked["second_donor_tpm"] = stats.second_donor.reindex(idx).to_numpy()
+            peaked["site_p99_tpm"] = stats.p99.reindex(idx).to_numpy()
             peaked["site_p95_tpm"] = stats.p95.reindex(idx).to_numpy()
             peaked["site_without_M_tpm"] = stats.without_M.reindex(idx).to_numpy()
             maxima.append(peaked)
@@ -191,7 +212,10 @@ def run(raw, out):
     signals = pd.read_csv(out / "signals.csv.gz")
     matched = set(signals.loc[signals.probable, "sample_id"])
     flags = set(hflags.sample_id) | set(signals.loc[signals.score.ge(0.01), "sample_id"])
-    stats, maxima = donor_statistics(raw, q, normal, cat, matched, flags)
+    sample_panels = (
+        signals.loc[signals.probable].groupby("sample_id").source_panel.agg(set).to_dict()
+    )
+    stats, maxima = donor_statistics(raw, q, normal, cat, sample_panels, flags, panels)
     fixed = (
         normal.loc[normal.source_id.ne(SOURCE_ID)]
         .groupby("entity_id")
@@ -211,7 +235,7 @@ def run(raw, out):
     if biopsies.site.isna().any():
         raise ValueError("Unknown HPA biopsy")
     tissue_values = biopsies.groupby(["entity_id", "site"]).value
-    for label, quantile in [("p95", 0.95), ("p75", 0.75)]:
+    for label, quantile in [("p99", 0.99), ("p95", 0.95), ("p75", 0.75)]:
         hp = tissue_values.quantile(quantile).where(tissue_values.count() >= 3, tissue_values.max())
         hp = hp.groupby("entity_id").max()
         ceiling["both_" + label] = pd.concat([stats[label], hp, other], axis=1).max(axis=1)
@@ -247,6 +271,7 @@ def run(raw, out):
     top["flag"] = np.where(top.sample_id.isin(matched), "M", "O")
     top["protein"] = top.entity_id.map(cat.protein_group_label)
     top["ceiling_without_M"] = top.entity_id.map(ceiling.without_M)
+    top["ceiling_source_matched"] = top.entity_id.map(ceiling.source_matched)
     top = top.merge(
         maxima[
             [
@@ -254,6 +279,7 @@ def run(raw, out):
                 "sample_id",
                 "site_donors",
                 "second_donor_tpm",
+                "site_p99_tpm",
                 "site_p95_tpm",
                 "site_without_M_tpm",
             ]
@@ -272,8 +298,10 @@ def run(raw, out):
                 "flag",
                 "value",
                 "ceiling_without_M",
+                "ceiling_source_matched",
                 "site_donors",
                 "second_donor_tpm",
+                "site_p99_tpm",
                 "site_p95_tpm",
                 "site_without_M_tpm",
             ]

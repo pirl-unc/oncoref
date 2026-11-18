@@ -30,17 +30,27 @@ Of the HPA biopsies, 176 from 34 tissues had at least two same-tissue peers. For
 
 ## Sensitivity of the tumor 10× threshold
 
-The analysis reconstructs within-sample protein-group sums and reproduces every assessed group's catalog baseline. Each alternative is computed within each healthy tissue site before taking the maximum across sites and the remaining normal and Disposable references. Reproductive biopsies remain in their assigned compartments. Individual GTEx samples contribute once per donor within a site. Quantiles use linear interpolation. When both sample sources vary, HPA retains its maximum for tissues with fewer than three measured biopsies. Every scenario retains the 1 TPM floor. The outcome below is the tumor expression gate alone.
+The analysis reconstructs within-sample protein-group sums and reproduces every assessed group's catalog baseline. Each alternative is computed within each healthy tissue site before taking the maximum across sites and the remaining normal and Disposable references. Reproductive biopsies remain in their assigned compartments. Individual GTEx samples contribute once per donor within a site. P99 is reported both as an observed donor rank and with linear interpolation. P95 and P75 use linear interpolation. When both sample sources vary, HPA retains its maximum for tissues with fewer than three measured biopsies. Every scenario retains the 1 TPM floor. The outcome below is the tumor expression gate alone.
 
 | Healthy tissue statistic | Of 918 over tumor 10× | Of the 98 former CTAs now RA-only over tumor 10× |
 |---|---:|---:|
 | Current maximum | 356 | 0 |
 | Maximum after omitting GTEx M libraries | 366 | 10 |
+| Maximum after omitting only source-panel observations in matched GTEx libraries | 365 | 9 |
 | Second-highest GTEx donor in each site | 410 | 33 |
+| GTEx P99, nearest rank | 473 | 84 |
+| GTEx P99, interpolated | 481 | 89 |
 | GTEx 95th percentile | 515 | 95 |
 | GTEx 75th percentile | 536 | 98 |
+| GTEx and HPA P99, interpolated | 482 | 89 |
 | GTEx and HPA 95th percentile | 518 | 95 |
 | GTEx and HPA 75th percentile | 552 | 98 |
+
+Nearest-rank P99 selects the observed value at rank `ceil(0.99 × donors)` in ascending TPM order. This retains the maximum in sites with fewer than 100 donors. Across the 52 GTEx sites, five have fewer than 100. In the GTEx-only scenario, HPA biopsy maxima and other reference sources still contribute. For PRM2, nearest-rank P99 is 18.62 TPM in esophagus muscularis and 25.05 TPM in tibial nerve.
+
+For an automated enrichment rule, use the highest tissue-specific nearest-rank P99 from GTEx alongside the existing other normal references, Disposable reference and 1 TPM floor. The existing orthogonal normal-expression gates act independently. This rule always resolves the influence of a single outlier when donor measurements are available. The catalog's existing required-coverage rule still applies to missing tissues. The maximum and the sample flags remain available to explain the decision. This is an evaluated policy option.
+
+The source-panel maximum scenario tests a separate carryover hypothesis. It omits a GTEx group observation only when its sample has a batch-supported different-donor match and every member locus is a marker of that matched source organ. In a site with no remaining observation for the group, it uses the original maximum. It leaves outlier-only samples in the calculation.
 
 For PRM2, the GTEx esophagus muscularis maximum is 3,047.26 TPM, the second-highest donor reaches 49.93, P95 is 5.65, and P75 is 2.12. Ten of 561 donors reach 10 TPM. In tibial nerve, the corresponding values are 1,495.04, 214.78, 6.04 and 1.72 TPM, and 19 of 670 donors reach 10 TPM. These are bulk RNA measurements.
 
