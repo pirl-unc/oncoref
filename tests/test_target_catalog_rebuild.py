@@ -77,7 +77,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
         "BOD1L2",
     ]:
         assert by_name.loc[name, "category"] == "CTA"
-        assert by_name.loc[name, "tumor_top_sample"] == "TCGA-2G-AAFL-01"
+        assert by_name.loc[name, "tumor_top_sample"] == "TREEHOUSE_POLYA_25_01:TCGA-2G-AAFL-01"
     for name in [
         "MAGEC2",
         "PRDM14",
@@ -224,7 +224,7 @@ def test_missing_comparison_is_not_reported_as_zero(catalog):
     assert coverage.status.eq("assessed").sum() == 130
     germ = coverage[coverage.cancer_code.eq("TGCT")]
     assert len(germ) == 1 and germ.status.eq("assessed").all()
-    assert germ.samples.iloc[0] == 147
+    assert germ.samples.iloc[0] == 154
     nutm = coverage[coverage.cancer_code.eq("NUTM")]
     assert len(nutm) == 1 and not nutm.status.eq("assessed").any()
 
@@ -302,7 +302,7 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 215
+    assert catalog[catalog.is_cta].published_nomination.sum() == 227
     assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 51
 
 
@@ -401,7 +401,7 @@ def test_rebuild_patient_metadata_matches_shared_api():
     metadata = pd.read_csv(OUT / "tumor-samples.csv.gz", keep_default_na=False)
     expected = sample_api.sample_identities(metadata[["source_cohort", "sample_id"]])
     pd.testing.assert_frame_equal(metadata[expected.columns], expected)
-    assert metadata.participant_id.ne("").sum() == 13157
+    assert metadata.participant_id.ne("").sum() == 13164
     assert not metadata.cancer_code.isin(policy.GERM_CELL_TUMORS).any()
     assert metadata.patient_identity_status.eq("conflict").sum() == 0
 
@@ -430,7 +430,7 @@ def test_lactating_mammary_separation_and_cta_tiers(catalog):
     non_ctas = catalog[~catalog.is_cta]
     assert non_ctas.cta_tier.fillna("").eq("").all()
     assert ctas.cta_tier.value_counts().to_dict() == {
-        "core": 257,
+        "core": 270,
         "extended_only": 24,
         "core_with_extended_exposure": 9,
     }

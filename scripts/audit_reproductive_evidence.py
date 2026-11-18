@@ -85,6 +85,8 @@ def group_values(raw, lookup, genes, sizes, contexts):
     if d.duplicated(["gene_id", *contexts]).any():
         raise ValueError("Duplicate source measurements cannot be added")
     good = d[d.nTPM.notna()]
+    if not np.isfinite(good.nTPM).all() or good.nTPM.lt(0).any():
+        raise ValueError("Invalid source expression")
     g = (
         good.groupby(["entity_id", *contexts], dropna=False)
         .agg(value=("nTPM", "sum"), measured=("gene_id", "nunique"))
@@ -242,6 +244,8 @@ def main():
         row["normal_UMI_peak_pct"] = float(d.multi_pct.max()) if len(d) else np.nan
         rows.append(row)
     comparison = pd.DataFrame(rows)
+    denominator = comparison[["N_reference_TPM", "D_TPM"]].max(axis=1).clip(lower=1)
+    comparison["bulk_R_fold"] = comparison.R_bulk_TPM / denominator
     write(comparison, "expression-comparison.csv")
     ca = comparison[comparison.baseline_classification.eq("Cancer Antigen only")]
     assert len(ca) == 78
@@ -355,6 +359,8 @@ def render(ca, review):
         v = number(row[key])
         return v if v == "—" else v + " · " + str(row[key + "_context"]).replace("|", "/")
 
+    bulk_candidates = ca[ca.bulk_R_fold.ge(target_selection.REPRODUCTIVE_FOLD)]
+
     lines = [
         "# Reproductive evidence and normal-cell holds",
         "",
@@ -371,6 +377,10 @@ def render(ca, review):
         "## The 78 CA-only proteins",
         "",
         "[Full numeric table, exact contexts and sources](ca-only-78.csv). The accepted RA fold uses the existing native-TPM witness/support rules, not the largest value across these assays.",
+        "",
+        f"**A source-selection gap affects {len(bulk_candidates)} of these proteins:** "
+        + ", ".join(bulk_candidates.protein)
+        + ". Their reproductive bulk TPM summaries clear the same normal/Disposable/1-TPM reference, but current RA admission uses individual HPA samples and supported embryo means, not GTEx tissue summaries. The CSV exposes this separate `bulk_R_fold`. This is not a cross-unit comparison. Before using these summaries for admission, verify the exact-locus quantification and underlying reproductive samples; a tissue summary does not supply an identified donor witness. [Follow-up](https://github.com/pirl-unc/oncoref/issues/716).",
         "",
         "| Protein | Normal bulk TPM | Reproductive bulk TPM | Normal cells nTPM | Reproductive cells nTPM | Observed embryo TPM | Accepted R fold |",
         "|---|---:|---:|---:|---:|---:|---:|",

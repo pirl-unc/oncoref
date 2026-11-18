@@ -26,7 +26,7 @@ SSX / GAGE / PAGE / XAGE,XAGE1A/B,CTA,8.80776,liver,1.6,462,2,,✓,off_target,of
 Testis / meiosis,SYCP1,CTA,5.30317,bone marrow,1.8,56,4,,✓,off_target,off_target,
 Testis / meiosis,TEX14,Unsafe,,,28.4,,4,,—,—,—,HPA tissue clusters
 Testis / meiosis,AKAP4,CTA,0.167549,kidney,0.0,16,3,,✓,✓,✓,
-Testis / meiosis,ODF1,CTA,0.623562,basal ganglia,3.4,31,2,,✓,✓,papers,
+Testis / meiosis,ODF1,CTA,0.623562,basal ganglia,3.4,41,2,,✓,✓,papers,
 Testis / meiosis,ADAM2,CTA,0.6,midbrain,0.5,100,4,,✓,✓,✓,
 Testis / meiosis,TDRD1,Unsafe,,,10.8,,4,,—,—,—,Established rare normal-cell RNA
 Testis / meiosis,HORMAD1,Unsafe,,,14.8,,6,,—,—,—,HPA tissue clusters | DICE immune | Adult cornea | Established rare normal-cell RNA

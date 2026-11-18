@@ -1565,6 +1565,9 @@ unsuitable for absolute comparison with bulk RNA-seq TPM.
   Use `source_matrices.sample_qc(code)` for the live source-matrix QC audit and
   `source_matrices.sample_qc_manifest(...)` for the optional generated-bundle QC
   manifest that records which samples fed derived artifacts.
+  Advisory `sample_qc_notes` never change QC status or strict-pass inclusion.
+  Codes are defined once in `oncoref.library_qc.NOTES`; blocking failures remain
+  in `sample_qc_reasons`. See [the library policy](target-selection.md#tumor-quality-and-replication).
 
 ### Normalization API
 

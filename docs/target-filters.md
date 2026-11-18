@@ -1,6 +1,6 @@
 # Target filters and host selection
 
-Catalog `oncoref.target-selection.2026-11-17.1`; selection policy `oncoref.target-filters.2026-11-17.5`.
+Catalog `oncoref.target-selection.2026-11-18.1`; selection policy `oncoref.target-filters.2026-11-17.5`.
 Filters narrow biological candidates. Optional host constraints are a separate axis
 with their own versioned exposure evidence. [Full audit](audits/target-filters-20261112/index.md).
 
@@ -60,12 +60,12 @@ assumptions and override actual anatomy. `all` means no host screen. The former
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
-| `all` | none | **290** | 106 | 113 | 509 |
-| `female-patient` | none | **290** | 106 | 113 | 509 |
-| `female-patient (protect ovary)` | ovary | **252** | 100 | 101 | 453 |
-| `female-patient (lactating)` | lactating_breast | **286** | 104 | 110 | 500 |
+| `all` | none | **303** | 106 | 100 | 509 |
+| `female-patient` | none | **303** | 106 | 100 | 509 |
+| `female-patient (protect ovary)` | ovary | **264** | 100 | 89 | 453 |
+| `female-patient (lactating)` | lactating_breast | **299** | 104 | 97 | 500 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
-| `male-patient` | none | **290** | 106 | 113 | 509 |
+| `male-patient` | none | **303** | 106 | 100 | 509 |
 | `male-patient (protect testis)` | testis | **62** | 45 | 24 | 131 |
 | `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **49** | 37 | 14 | 100 |
 
@@ -80,7 +80,7 @@ state labels are inferred and do not prove expression absence in other hosts.
 | `all` | 509 | `{}` |
 | `loose` | 370 | `{'min_papers': 1}` |
 | `standard` | 247 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
-| `strict` | 110 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
+| `strict` | 115 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 
 Modes nest from all to strict. Baseline positive controls are regression checks;
 any of them may fail a host requirement. Paper counts measure scoped published

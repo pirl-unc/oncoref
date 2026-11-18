@@ -9,33 +9,33 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-17.1",
+    "policy_id": "oncoref.target-selection.2026-11-18.1",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18253,
       "Other": 1131,
-      "CTA": 290,
-      "Reproductive Antigen only": 113,
-      "Cancer Antigen only": 106
+      "CTA": 303,
+      "Cancer Antigen only": 106,
+      "Reproductive Antigen only": 100
     },
     "classifications": {
       "Unsafe": 18253,
       "Other:Review": 731,
-      "CTA": 290,
+      "CTA": 303,
       "Other:Expression": 254,
-      "Reproductive Antigen only": 113,
       "Cancer Antigen only": 106,
-      "Other:Tissue": 98,
+      "Reproductive Antigen only": 100,
+      "Other:Unscreened tissue": 98,
       "Other:Sequence": 48
     },
     "memberships": {
-      "is_cancer_antigen": 396,
+      "is_cancer_antigen": 409,
       "is_reproductive_antigen": 403,
-      "is_cta": 290,
+      "is_cta": 303,
       "is_target_candidate": 509
     },
     "cta_tiers": {
-      "core": 257,
+      "core": 270,
       "extended_only": 24,
       "core_with_extended_exposure": 9
     },
@@ -43,7 +43,7 @@
       {
         "released_category": "CTA",
         "category": "CTA",
-        "proteins": 275
+        "proteins": 288
       },
       {
         "released_category": "CTA",
@@ -58,7 +58,7 @@
       {
         "released_category": "CTA",
         "category": "Reproductive Antigen only",
-        "proteins": 107
+        "proteins": 94
       },
       {
         "released_category": "CTA",
@@ -188,14 +188,14 @@
       "urinary bladder"
     ],
     "assessed_cancer_statuses": {
-      "qualifies": 528,
-      "does_not_qualify": 390
+      "qualifies": 541,
+      "does_not_qualify": 377
     },
     "published_nomination_by_category": {
-      "CTA": 215,
+      "CTA": 227,
       "Cancer Antigen only": 51,
       "Other": 130,
-      "Reproductive Antigen only": 76,
+      "Reproductive Antigen only": 64,
       "Unsafe": 1761
     }
   },
@@ -288,8 +288,8 @@
     },
     "normal_library_qc": {
       "path": "normal-library-qc.csv",
-      "sha256": "3790558afcc63b2e10c3fff3fc937fd6326fc332d1d9bbcc9559aab3f7a7cda5",
-      "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence."
+      "sha256": "8151199bc28e1500d1886796c80de2b22ba62a1f62f6c3e23b712e3334adf11a",
+      "policy": "Signatures are evaluated within each tissue. Reproductive programs are advisory notes and never change sample eligibility. Other flags require adjudication; they never silently remove normal measurements from the denominator. Samples with blocking signatures cannot provide positive reproductive evidence."
     },
     "developmental_sources": [
       {
@@ -361,8 +361,8 @@
       "tongue",
       "urinary bladder"
     ],
-    "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
+    "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
   },
-  "data_sha256": "7fc9182bc4ed89535c4fc051bbd2980301ed958dfc14444556a2c4f6a31465d3",
+  "data_sha256": "b38716d7e9b7d69bc427ec0d63c74a3ba80651058b654fe068cb7abc8a45ffb2",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

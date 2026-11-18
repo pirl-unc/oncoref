@@ -87,8 +87,8 @@
   },
   "normal_library_qc": {
     "path": "normal-library-qc.csv",
-    "sha256": "3790558afcc63b2e10c3fff3fc937fd6326fc332d1d9bbcc9559aab3f7a7cda5",
-    "policy": "Signatures are evaluated within each tissue. Testis signatures are expected in normal testis. Flags require adjudication; they never silently remove normal measurements from the denominator. Flagged samples cannot provide positive reproductive evidence."
+    "sha256": "8151199bc28e1500d1886796c80de2b22ba62a1f62f6c3e23b712e3334adf11a",
+    "policy": "Signatures are evaluated within each tissue. Reproductive programs are advisory notes and never change sample eligibility. Other flags require adjudication; they never silently remove normal measurements from the denominator. Samples with blocking signatures cannot provide positive reproductive evidence."
   },
   "developmental_sources": [
     {
@@ -160,5 +160,5 @@
     "tongue",
     "urinary bladder"
   ],
-  "tumor_matrix_cache_sha256": "50b8339f5486cc73b0ffb0d9858a3d36ca8bc23cfd1fd1baeee13ae1af4a7d19"
+  "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
 }

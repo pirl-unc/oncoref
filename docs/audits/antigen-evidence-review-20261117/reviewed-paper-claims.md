@@ -143,3 +143,23 @@ The cytokine-driven regulation of secretoglobins in normal human upper airway an
 
 **SCGB1D4** (`ENSG00000197745`): qRT-PCR with sequenced PCR products. Source: Results, Figures 1-3; expression-regulation experiments. Limitations: Cellular location and protein production are unresolved; a normal-expression concern, not RA support or a tumor nomination.
 
+## [Kurji et al., 2010](https://doi.org/10.1167/iovs.09-3622)
+
+Microarray Analysis Identifies Changes in Inflammatory Gene Expression in Response to Amyloid-β Stimulation of Cultured Human Retinal Pigment Epithelial Cells
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| PSG8 | PSG8 | The PSG8-labelled probe has a reported 1.64-fold decrease after 24 hours of amyloid-β treatment (P=0.0123). This is an additional ocular RNA observation requiring assay-specific attribution. | Cultured human retinal pigment epithelial cells, amyloid-β treatment and control | normal_tissue_review |
+
+**PSG8** (`ENSG00000124467`): Agilent oligonucleotide microarray. Source: Table 2, PSG8 / NM_182707; microarray and qRT-PCR methods. Limitations: Probe specificity against other PSG genes has not been established in this review. PSG8 was not in the reported 17 upregulated genes selected for qRT-PCR validation. Cultured RPE is not evidence of expression in intact healthy retina or of PSG8 protein. This does not resolve the retinal single-cell mapping hold.
+
+## [Zhang et al., 2020](https://doi.org/10.1186/s12885-020-07155-y)
+
+Suppressing Dazl modulates tumorigenicity and stemness in human glioblastoma cells
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| DAZL | DAZL | The study reports higher DAZL RNA in glioblastoma and glioblastoma cell lines than the normal comparators. It supplies tumor-expression support, not a test of normal retinal astrocytes. | Human glioblastoma specimens and cell lines, with adjacent brain and commercial normal human astrocyte comparators | tumor_support, normal_tissue_review |
+
+**DAZL** (`ENSG00000092345`): qRT-PCR; the study also reports immunoblotting and perturbation experiments. Source: Figure 1; cell culture and qRT-PCR methods. Limitations: Relative expression in commercial normal human astrocytes does not establish absence in all normal astrocytes. The normal comparator is not the ocular astrocyte population with the Census signal. This review does not validate antibody specificity or use the paper to dismiss that signal.
+

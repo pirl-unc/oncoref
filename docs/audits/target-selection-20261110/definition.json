@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-17.1",
+  "policy_id": "oncoref.target-selection.2026-11-18.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -27,14 +27,14 @@
     "Unsafe",
     "Other:Review",
     "Other:Sequence",
-    "Other:Tissue",
+    "Other:Unscreened tissue",
     "set memberships"
   ],
   "other_subtypes": {
     "Review": "Required evidence is missing, unresolved, or fails a shared admission check.",
     "Sequence": "Nested protein without independent support, >=95% Unsafe 9-mer containment, or a read-through locus whose every coding transcript joins two separate genes.",
     "Expression": "Neither positive expression route qualifies, or the target maximum or Disposable cap fails.",
-    "Tissue": "The protein's recorded normal home is a tissue no expression panel resolves, and no reproductive or developmental evidence qualifies. Its tumor value was never compared with that tissue, so cancer evidence alone does not admit it."
+    "Unscreened tissue": "The protein's recorded normal home is a tissue no expression panel resolves, and no reproductive or developmental evidence qualifies. Its tumor value was never compared with that tissue, so cancer evidence alone does not admit it."
   },
   "home_tissue": {
     "unmeasured_tissues": [
@@ -45,7 +45,7 @@
       "dental pulp"
     ],
     "recorded_by": "A family rule, a recorded literature finding, or the nose and skin reference.",
-    "effect": "Without qualifying reproductive or developmental evidence: Other:Tissue. With it, the category is unchanged and the tissue stays on the row."
+    "effect": "Without qualifying reproductive or developmental evidence: Other:Unscreened tissue. With it, the category is unchanged and the tissue stays on the row."
   },
   "published_normal_expression": {
     "source": "oncoref/data/normal-expression-literature.json",
@@ -95,7 +95,7 @@
     "descriptive": "Counts at the actual tenfold threshold distinguish samples, known patients, anonymous samples and cancer types. Above-normal counts are legacy descriptors.",
     "excluded_tumors": {
       "codes": [],
-      "reason": "No histology is excluded wholesale. TGCT libraries that pass the coordinated spermatid-program screen may supply cancer evidence."
+      "reason": "No histology is excluded wholesale. Reproductive programs are advisory sample notes, not evidence of normal-cell contamination, and never exclude TGCT or other libraries. Independent QC exclusions still apply."
     },
     "comparability": "One documented comparison scale and complete required normal contexts. Equal unit names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling.",
     "missing_reference": "unassessed, never zero",

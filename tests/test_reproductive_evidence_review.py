@@ -38,6 +38,13 @@ def test_group_requires_every_locus_in_the_same_cell_context():
         )
 
 
+@pytest.mark.parametrize("value", [-1, float("inf")])
+def test_invalid_member_cannot_be_hidden_by_aggregation(value):
+    raw = pd.DataFrame({"Gene": ["a", "b"], "Tissue": ["testis"] * 2, "nTPM": [value, 10]})
+    with pytest.raises(ValueError, match="Invalid source expression"):
+        group_values(raw, {"a": "a", "b": "b"}, {"a": "p", "b": "p"}, {"p": 2}, ["Tissue"])
+
+
 @pytest.mark.parametrize("tissue", ["breast", "prostate", "testis", "ovary"])
 def test_reproductive_scope_keeps_accessory_tissues(tissue):
     assert scope(tissue) == "reproductive"
@@ -57,3 +64,17 @@ def test_ocular_paper_is_counterevidence_not_antigen_support():
     assert claim["gene_ids"] == ["ENSG00000124467"]
     assert claim["allowed_uses"] == ["normal_tissue_review"]
     assert "Probe specificity" in claim["limitations"]
+
+
+def test_review_holds_remain_in_default_subtraction_background():
+    from oncoref import antigen_sets
+
+    root = Path(__file__).parents[1]
+    cohort = pd.read_csv(
+        root / "docs/audits/antigen-evidence-review-20261118/requested-cohorts.csv"
+    )
+    holds = set(cohort.loc[cohort.baseline_classification.eq("Other:Review"), "entity_id"])
+    selection = antigen_sets.select("CA|RA")
+    assert len(holds) == 31
+    assert not holds & set(selection.proteins().entity_id)
+    assert holds <= set(selection.background_proteins().entity_id)

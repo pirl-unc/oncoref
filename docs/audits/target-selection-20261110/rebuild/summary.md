@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-17.1`, 19,893 human protein records. **290 CTA, 106 Cancer Antigen only, 113 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-18.1`, 19,893 human protein records. **303 CTA, 106 Cancer Antigen only, 100 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 
@@ -16,12 +16,12 @@ Reproductive protection is opt-in for every anatomy preset. Not protected, prote
 
 | Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
-| all | none | 290 | 106 | 113 | 509 |
-| female-patient | none | 290 | 106 | 113 | 509 |
-| female-patient (protect ovary) | ovary | 252 | 100 | 101 | 453 |
-| female-patient (lactating) | lactating_breast | 286 | 104 | 110 | 500 |
+| all | none | 303 | 106 | 100 | 509 |
+| female-patient | none | 303 | 106 | 100 | 509 |
+| female-patient (protect ovary) | ovary | 264 | 100 | 89 | 453 |
+| female-patient (lactating) | lactating_breast | 299 | 104 | 97 | 500 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
-| male-patient | none | 290 | 106 | 113 | 509 |
+| male-patient | none | 303 | 106 | 100 | 509 |
 | male-patient (protect testis) | testis | 62 | 45 | 24 | 131 |
 | male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
 
@@ -37,7 +37,7 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 ![Set overlap](summary/venn.png)
 
-Of 290 CTA, 215 are published nominations and 75 are not. 1,891 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 303 CTA, 227 are published nominations and 76 are not. 1,891 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
