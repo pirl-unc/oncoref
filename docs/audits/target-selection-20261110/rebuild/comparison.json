@@ -1,5 +1,5 @@
 {
-  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-18.4",
+  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-19.1",
   "unit": "TPM",
   "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
   "compatibility_basis": [
@@ -20,7 +20,7 @@
     "gallbladder",
     "tonsil"
   ],
-  "normal_statistic": "Maximum across GTEx v11 within-site linear donor P99, HPA v23 biopsy maxima and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
+  "normal_statistic": "Maximum across GTEx v11 within-site linear donor P95, HPA v23 normal biopsy P95 and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE within-population P95 for single loci and a conservative bound for unpaired loci",
   "batch_corrected": false,
   "limitations": [
     "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -31,28 +31,36 @@
   "participant_identity_policy": "oncoref.patient-identity.2026-11-10.1",
   "normal_sources": [
     {
-      "source": "rna_tissue_hpa",
-      "version": "v23",
       "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
-      "path": "tmp/target-rebuild-inputs/rna_tissue_hpa.tsv.zip",
-      "sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
-      "bytes": 6661353
+      "sha256": "52bd4b1771388372187a6edf8c7d58b68b5074772c83b46be7b71ee02e074b4d",
+      "archive_sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
+      "bytes": 37509845,
+      "source": "rna_tissue_hpa",
+      "version": "v23"
     },
     {
-      "source": "rna_tissue_gtex",
-      "version": "v23",
       "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
-      "path": "tmp/target-rebuild-inputs/rna_tissue_gtex.tsv.zip",
-      "sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
-      "bytes": 5960172
+      "sha256": "6d908d193fbcc5cf94f93645c26099db2a20baa6c0678090cdf7bb8b210a6b68",
+      "archive_sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
+      "bytes": 33210836,
+      "source": "rna_tissue_gtex",
+      "version": "v23"
     },
     {
-      "source": "rna_brain_gtex",
-      "version": "v23",
       "url": "https://v23.proteinatlas.org/download/rna_brain_gtex.tsv.zip",
-      "path": "tmp/target-rebuild-inputs/rna_brain_gtex.tsv.zip",
-      "sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
-      "bytes": 1633631
+      "sha256": "cc5637fa7a2f608a834221e1596109a43bb67ff5aa35a6c1c33cf28581ea1358",
+      "archive_sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
+      "bytes": 9400293,
+      "source": "rna_brain_gtex",
+      "version": "v23"
+    },
+    {
+      "url": "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+      "sha256": "1b7bee43cc0dea503ad292863fde238e0b249512a31b1badeb05d07253b20e9d",
+      "archive_sha256": "96e4be538cdf4c480ff15008206a721007e78a2571a2d5054463bf28fdd4bbb5",
+      "bytes": 238897363,
+      "source": "rna_brain_hpa",
+      "version": "v23"
     }
   ],
   "individual_tissue_source": {
@@ -125,7 +133,7 @@
     "registry": "oncoref/data/reference-releases.json",
     "sample_inventory": "gtex-library-qc.csv.gz",
     "scope": "All 52 primary tissue matrices; cultured cell lines excluded.",
-    "reduction": "Non-reproductive sites use gtex_donor_p99:v11, the linearly interpolated 99th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses."
+    "reduction": "Non-reproductive sites use gtex_donor_p95:v11, the linearly interpolated 95th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses."
   },
   "mammary_lactation": {
     "state_is_inferred": true,
@@ -670,25 +678,29 @@
   "developmental_sources": [
     {
       "role": "petropoulos_tpm",
-      "path": "/Users/iskander/.cache/oncoref/sources/sha256/f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334/petropoulos-tpm.zip",
+      "source": "petropoulos_embryonic_tpm",
+      "version": "E-MTAB-3929-20261028",
       "sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334",
       "source_id": "petropoulos_E-MTAB-3929"
     },
     {
       "role": "petropoulos_design",
-      "path": "/Users/iskander/.cache/oncoref/sources/sha256/c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573/petropoulos-design.tsv",
+      "source": "petropoulos_embryonic_design",
+      "version": "E-MTAB-3929-20261028",
       "sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573",
       "source_id": "petropoulos_E-MTAB-3929"
     },
     {
       "role": "tyser_tpm",
-      "path": "/Users/iskander/.cache/oncoref/sources/sha256/db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03/filtered-tpm.zip",
+      "source": "tyser_embryonic_tpm",
+      "version": "E-MTAB-9388-20261026",
       "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
       "source_id": "tyser_E-MTAB-9388"
     },
     {
       "role": "tyser_design",
-      "path": "/Users/iskander/.cache/oncoref/sources/sha256/5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3/experiment-design.tsv",
+      "source": "tyser_embryonic_design",
+      "version": "E-MTAB-9388-20261026",
       "sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3",
       "source_id": "tyser_E-MTAB-9388"
     }

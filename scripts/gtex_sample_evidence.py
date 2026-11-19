@@ -51,13 +51,13 @@ def sample_matrix(path, canonical):
     return pd.DataFrame.from_dict(values, orient="index", columns=samples), donors
 
 
-def donor_p99(values, donors):
-    """Linear P99 across measured donors after combining member loci within each sample."""
+def donor_percentile(values, donors, quantile=0.95):
+    """Linear quantile across measured donors after combining member loci within each sample."""
     if len(donors) != len(values.columns) or pd.isna(donors).any():
-        raise ValueError("GTEx P99 requires a donor for every sample")
+        raise ValueError("GTEx percentile requires a donor for every sample")
     # Give each donor one value if a later release includes replicate libraries.
     donor_values = values.T.groupby(donors, sort=False).median()
-    return donor_values.quantile(0.99, interpolation="linear").dropna()
+    return donor_values.quantile(quantile, interpolation="linear").dropna()
 
 
 def individual_samples(facts, mapped, tissue_columns, carryover_reference):
@@ -148,11 +148,13 @@ def individual_samples(facts, mapped, tissue_columns, carryover_reference):
             kind = "individual_gtex_sample"
             source = SOURCE_ID
         else:
-            frame = donor_p99(values, donors).rename("value").reset_index()
+            frame = donor_percentile(values, donors).rename("value").to_frame()
+            frame["n_observations"] = values.T.groupby(donors, sort=False).median().count()
+            frame = frame.reset_index()
             frame = frame.assign(
                 sample_id="", participant_id="", library_qc_review="", compartment=tissue
             )
-            statistic = "within-site donor P99, linear interpolation"
+            statistic = "within-site donor P95, linear interpolation"
             kind = "donor_percentile"
             source = PANEL["normal_source_id"]
         frame["member_count"] = frame.entity_id.map(counts)

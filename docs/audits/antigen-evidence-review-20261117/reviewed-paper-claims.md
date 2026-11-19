@@ -233,3 +233,13 @@ Gangliocytes in neuroblastic tumors express alarin, a novel peptide derived by d
 
 **GALP** (`ENSG00000197487`): Splice-product RT-PCR and alarin-directed immunohistochemistry. Source: RT-PCR in ganglioneuroma and staining in neuroblastic tumor tissues. Limitations: This finding does not assign the protein product in the catalog tumor or in hypothalamic cells.
 
+## [Marcinkowski et al., 2019](https://doi.org/10.1186/s40425-019-0678-x)
+
+Cancer targeting by TCR gene-engineered T cells directed against Kita-Kyushu Lung Cancer Antigen-1
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| CT83 | KK-LC-1 (CT83) | CT83 RNA localized to gastric and triple-negative breast tumor cells. | Human gastric and triple-negative breast cancers | tumor_support, cta_nomination |
+
+**CT83** (`ENSG00000204019`): RNA in situ hybridization (RNAscope). Source: Figure 4d–e, Results and Discussion. Limitations: A prevalence and cell-localization assay. No native TPM or patient-specific dosing information. Normal-tissue qRT-PCR in the same study included a low bladder signal.
+

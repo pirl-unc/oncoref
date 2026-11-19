@@ -120,7 +120,7 @@ def test_unassessed_association_is_not_negative_or_a_global_safety_hold():
     ]
 
 
-def test_unmeasured_home_tissue_needs_reproductive_evidence():
+def test_unmeasured_home_tissue_blocks_ca_with_or_without_reproductive_evidence():
     result = policy.classify(
         pd.DataFrame(
             [
@@ -134,7 +134,7 @@ def test_unmeasured_home_tissue_needs_reproductive_evidence():
     )
     assert result.classification.tolist() == [
         "Other:Unscreened tissue",
-        "CTA",
+        "Reproductive Antigen only",
         "Reproductive Antigen only",
         "Other:Review",
         "Cancer Antigen only",

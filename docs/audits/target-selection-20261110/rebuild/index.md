@@ -1,6 +1,6 @@
 # Rebuilt antigen catalog
 
-Policy `oncoref.target-selection.2026-11-18.4`. **308 CTA, 68 Cancer Antigen only, 131 Reproductive Antigen only, 1133 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
+Policy `oncoref.target-selection.2026-11-19.1`. **327 CTA, 70 Cancer Antigen only, 127 Reproductive Antigen only, 1116 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
 
 [Filterable protein table](report.html) · [Changes from 1.39.0](changes-from-1.39.csv) · [Transition counts](changes-from-1.39-summary.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 
@@ -20,10 +20,10 @@ Policy `oncoref.target-selection.2026-11-18.4`. **308 CTA, 68 Cancer Antigen onl
 | Established rare-cell RNA or published normal expression only | Unsafe | 125 | 1,640 |
 | Coverage, identity, translation or unresolved evidence | Other:Review | 731 | 909 |
 | Nested, Unsafe-contained or read-through sequence | Other:Sequence | 48 | 861 |
-| No qualifying expression, target maximum or Disposable cap | Other:Expression | 281 | 580 |
-| Home tissue no panel resolves, without reproductive evidence | Other:Unscreened tissue | 73 | 507 |
+| No qualifying expression, target maximum or Disposable cap | Other:Expression | 250 | 611 |
+| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 87 | 524 |
 
-The 507 remaining Candidate antigen proteins are 308 CTA, 68 Cancer Antigen only and 131 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
+The 524 remaining Candidate antigen proteins are 327 CTA, 70 Cancer Antigen only and 127 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
 
 ![Rebuilt counts](counts.png)
 
@@ -63,18 +63,18 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 | Draft | Now | Proteins |
 |---|---|---:|
-| CTA | Cancer Antigen only | 51 |
-| CTA | Other:Expression | 72 |
+| CTA | Cancer Antigen only | 47 |
+| CTA | Other:Expression | 60 |
 | CTA | Other:Review | 37 |
 | CTA | Other:Sequence | 7 |
-| CTA | Other:Unscreened tissue | 9 |
-| CTA | Reproductive Antigen only | 115 |
+| CTA | Other:Unscreened tissue | 11 |
+| CTA | Reproductive Antigen only | 110 |
 | CTA | Unsafe | 54 |
 | Cancer Antigen only | CTA | 1 |
-| Cancer Antigen only | Other:Expression | 160 |
+| Cancer Antigen only | Other:Expression | 142 |
 | Cancer Antigen only | Other:Review | 7 |
 | Cancer Antigen only | Other:Sequence | 2 |
-| Cancer Antigen only | Other:Unscreened tissue | 63 |
+| Cancer Antigen only | Other:Unscreened tissue | 75 |
 | Cancer Antigen only | Unsafe | 11 |
 | Other:Review | CTA | 2 |
 | Other:Review | Other:Expression | 20 |
@@ -82,7 +82,7 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 | Other:Review | Unsafe | 15 |
 | Other:Sequence | Other:Expression | 1 |
 | Other:Sequence | Other:Review | 1 |
-| Reproductive Antigen only | Other:Expression | 10 |
+| Reproductive Antigen only | Other:Expression | 9 |
 | Reproductive Antigen only | Other:Review | 1 |
 | Reproductive Antigen only | Other:Sequence | 1 |
 | Unsafe | CTA | 12 |
@@ -94,23 +94,23 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 The tenfold single-tumor rule accounts for the moves to Reproductive Antigen only and for Cancer Antigens only whose reproductive compartment does not reach the shared threshold. Known patient identity is a replication descriptor, not a single-sample admission gate.
 
-Cancer Antigens include 376 proteins; Reproductive Antigens include 439. Their intersection is CTA and their union contains 507 Candidate antigen proteins.
+Cancer Antigens include 397 proteins; Reproductive Antigens include 454. Their intersection is CTA and their union contains 524 Candidate antigen proteins.
 
-Other contains 731 review, 48 sequence, 281 expression, 73 unscreened tissue. A curated published target nomination is retained for 235 CTAs and 31 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 731 review, 48 sequence, 250 expression, 87 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 28 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Changes from release 1.36.0
 
 | Released category | Rebuilt category | Proteins |
 |---|---|---:|
-| CTA | CTA | 289 |
-| CTA | Cancer Antigen only | 37 |
-| CTA | Other | 108 |
-| CTA | Reproductive Antigen only | 124 |
+| CTA | CTA | 309 |
+| CTA | Cancer Antigen only | 33 |
+| CTA | Other | 98 |
+| CTA | Reproductive Antigen only | 118 |
 | CTA | Unsafe | 49 |
-| Other | CTA | 7 |
-| Other | Cancer Antigen only | 30 |
-| Other | Other | 957 |
-| Other | Reproductive Antigen only | 2 |
+| Other | CTA | 6 |
+| Other | Cancer Antigen only | 36 |
+| Other | Other | 950 |
+| Other | Reproductive Antigen only | 4 |
 | Other | Unsafe | 31 |
 | Unsafe | CTA | 12 |
 | Unsafe | Cancer Antigen only | 1 |
@@ -118,9 +118,9 @@ Other contains 731 review, 48 sequence, 281 expression, 73 unscreened tissue. A 
 | Unsafe | Reproductive Antigen only | 5 |
 | Unsafe | Unsafe | 18173 |
 
-New CTAs: MAGEC2, ANKRD60, VRTN, TTLL8, CHCT1, DPPA2, ADAD1, SPAG11B, C12orf50, ADAM18, TRIM60, SPAG11A, SPATA31A6, CSAG1, TXNDC8, KRTAP20-4, PPP1R2B, MAGEB6B, TPTE.
+New CTAs: MAGEC2, ANKRD60, VRTN, TTLL8, CHCT1, DPPA2, ADAD1, SPAG11B, C12orf50, ADAM18, TRIM60, SPAG11A, SPATA31A6, CSAG1, TXNDC8, PPP1R2B, MAGEB6B, TPTE.
 
-Former CTAs now requiring review: BPY2/B/C, CDY2A/B, DEFB130A/B, DAZL, EVX1, RGSL1, TBX22, CSTL1, CTAG2, CDX4, HHLA1, USP26, POM121L2, WFDC8, IZUMO2, ZSWIM2, DCST1, CAGE1, WFDC13, OR10G3, OR6F1, ZNF280A, TAS2R1, C8orf74, CDY1, CDY1B, XKR3, TENT5D, ARL13A, TSGA10IP, CCDC197, OR4N2, OR4M1, MAGEB10, GOLGA8J, OR1R1P, CALHM3, RIPPLY3, POTEC, OR56A3, OR51M1, PRR23B, DEFB132, KRTAP21-2, PPP3R2, KRTAP24-1, DCAF8L2, SPATA31D4, RGPD4, STPG3, OR8G1, RTP2, OR11A1, OR2J3, FBXO47, VCX3B, SMIM21, PRR23A, ZNF99, MINDY4B, TRIM77, C12orf71, CDRT15L2, GOLGA6B, GAGE10, ZNF705G, PSG3, GOLGA6L25, OR5H1, AK4P3, FAM237A, OR7E24, ENSG00000241690, PSG11, RBMY1D, EPPIN-WFDC6, TAF11L12, TRIM75, KIAA1210, TAF11L14, EXOC1L, OOSP4B, ENSG00000258417, GOLGA8T, DPEP2NB, KLF14, ATF7-NPFF, CTAGE15, ENSG00000273155, TMEM269, ENSG00000274944, GSTT4, POTEB3, PRAMEF18, CCDC201, HSFX4, LITAFD, C19orf85, CIROP, TAF11L11, CPHXL, PMIS2, TAF11L13, OR8B3, OR8B2, ENSG00000284934, CIMIP3, ENSG00000289809.
+Former CTAs now requiring review: BPY2/B/C, CDY2A/B, DEFB130A/B, DAZL, EVX1, RGSL1, TBX22, CSTL1, CTAG2, CDX4, HHLA1, USP26, POM121L2, WFDC8, IZUMO2, DCST1, CAGE1, WFDC13, OR10G3, OR6F1, ZNF280A, TAS2R1, C8orf74, CDY1, CDY1B, TENT5D, ARL13A, TSGA10IP, OR4N2, OR4M1, MAGEB10, GOLGA8J, OR1R1P, CALHM3, RIPPLY3, POTEC, OR56A3, OR51M1, PRR23B, DEFB132, KRTAP21-2, PPP3R2, KRTAP24-1, DCAF8L2, SPATA31D4, RGPD4, OR8G1, RTP2, OR11A1, OR2J3, FBXO47, VCX3B, SMIM21, PRR23A, ZNF99, MINDY4B, TRIM77, C12orf71, GOLGA6B, GAGE10, ZNF705G, PSG3, GOLGA6L25, OR5H1, AK4P3, FAM237A, OR7E24, ENSG00000241690, PSG11, RBMY1D, EPPIN-WFDC6, TAF11L12, TRIM75, TAF11L14, EXOC1L, OOSP4B, ENSG00000258417, GOLGA8T, DPEP2NB, KLF14, ATF7-NPFF, ENSG00000273155, TMEM269, ENSG00000274944, GSTT4, POTEB3, PRAMEF18, CCDC201, LITAFD, TAF11L11, CPHXL, PMIS2, TAF11L13, OR8B3, OR8B2, CIMIP3, ENSG00000289809, ETDA/B.
 
 ## Reproductive Antigens only
 
@@ -128,141 +128,137 @@ No tumor sample reaches 10 × the protein's non-reproductive normal maximum.
 
 | Protein | Tumor maximum TPM | Normal comparison TPM | Cancer assessment |
 |---|---:|---:|---|
-| DEFB104A/B | 5.94 | 5.61 | Below cancer rule |
-| DEFB107A/B | 2.4 | 0.117 | Below cancer rule |
+| DEFB104A/B | 5.94 | 5.06 | Below cancer rule |
+| DEFB107A/B | 2.4 | 0 | Below cancer rule |
 | GSC2 | 22.4 | 2.4 | Below cancer rule |
-| FNDC8 | 11.4 | 4.51 | Below cancer rule |
-| DEFB127 | 8.53 | 0.425 | Below cancer rule |
+| FNDC8 | 11.4 | 4.34 | Below cancer rule |
+| DEFB127 | 8.53 | 0.381 | Below cancer rule |
 | PRSS54 | 6.41 | 1.2 | Below cancer rule |
-| RSPH6A | 37.9 | 15 | Below cancer rule |
-| SPAM1 | 3.06 | 0.971 | Below cancer rule |
-| TTLL2 | 8.11 | 6.55 | Below cancer rule |
+| RSPH6A | 37.9 | 11.6 | Below cancer rule |
+| SPAM1 | 3.06 | 0.605 | Below cancer rule |
+| TTLL2 | 8.11 | 6.11 | Below cancer rule |
 | ATXN3L | 5.96 | 0.5 | Below cancer rule |
-| IRGC | 16.5 | 1.69 | Below cancer rule |
-| CST8 | 4.25 | 0.291 | Below cancer rule |
-| CST11 | 25.7 | 24 | Below cancer rule |
+| CST8 | 4.25 | 0.127 | Below cancer rule |
+| CST11 | 25.7 | 8.17 | Below cancer rule |
 | C20orf173 | 10.2 | 2.6 | Below cancer rule |
 | RFPL3 | 29.2 | 3.2 | Below cancer rule |
-| BMP15 | 3.33 | 0.457 | Below cancer rule |
-| SCP2D1 | 7.07 | 0.931 | Below cancer rule |
-| C4orf17 | 16.4 | 2.87 | Below cancer rule |
-| SLC25A52 | 5.58 | 2.97 | Below cancer rule |
-| ZIM3 | 3.58 | 1.07 | Below cancer rule |
-| CABS1 | 28.4 | 48.8 | Below cancer rule |
-| AKAP4 | 16 | 1.77 | Below cancer rule |
-| CPXCR1 | 3.33 | 0.544 | Below cancer rule |
-| TKTL2 | 20.2 | 6.76 | Below cancer rule |
-| PABPC3 | 69.7 | 7.03 | Below cancer rule |
-| GOLGA8F | 8.73 | 0.191 | Below cancer rule |
-| LRRC52 | 63.7 | 11 | Below cancer rule |
-| PDHA2 | 9.43 | 0.589 | Below cancer rule |
-| SMCP | 77.3 | 9.49 | Below cancer rule |
-| FAM170A | 3.45 | 1.14 | Below cancer rule |
-| SSMEM1 | 7.4 | 1.18 | Below cancer rule |
-| SPATA19 | 13.1 | 1.8 | Below cancer rule |
-| C16orf78 | 5.59 | 0.631 | Below cancer rule |
-| SUN5 | 4.94 | 0.298 | Below cancer rule |
-| GOLGA6C | 21.9 | 2.34 | Below cancer rule |
+| BMP15 | 3.33 | 0.254 | Below cancer rule |
+| SCP2D1 | 7.07 | 0.193 | Below cancer rule |
+| C4orf17 | 16.4 | 2.58 | Below cancer rule |
+| SLC25A52 | 5.58 | 2.65 | Below cancer rule |
+| ZIM3 | 3.58 | 0.9 | Below cancer rule |
+| CABS1 | 28.4 | 24.7 | Below cancer rule |
+| CPXCR1 | 3.33 | 0.195 | Below cancer rule |
+| TKTL2 | 20.2 | 5.66 | Below cancer rule |
+| PABPC3 | 69.7 | 6.26 | Below cancer rule |
+| GOLGA8F | 8.73 | 0.103 | Below cancer rule |
+| ZSWIM2 | 2.74 | 3.04 | Below cancer rule |
+| PDHA2 | 9.43 | 0.103 | Below cancer rule |
+| FAM170A | 3.45 | 0.671 | Below cancer rule |
+| SSMEM1 | 7.4 | 0.572 | Below cancer rule |
+| C16orf78 | 5.59 | 0.42 | Below cancer rule |
+| SUN5 | 4.94 | 0.141 | Below cancer rule |
+| GOLGA6C | 21.9 | 2.31 | Below cancer rule |
 | GOT1L1 | 7.06 | 0.9 | Below cancer rule |
-| GARIN3 | 3.07 | 2.07 | Below cancer rule |
-| FAM170B | 10.6 | 1.84 | Below cancer rule |
-| IQCF1 | 12.9 | 2.54 | Below cancer rule |
-| NLRP13 | 6.04 | 0.646 | Below cancer rule |
+| GARIN3 | 3.07 | 2.01 | Below cancer rule |
+| OR1N1 | 98.3 | 0.8 | Below cancer rule |
+| FAM170B | 10.6 | 5.08 | Below cancer rule |
+| IQCF1 | 12.9 | 1.64 | Below cancer rule |
+| NLRP13 | 6.04 | 0.131 | Below cancer rule |
 | SPATA3 | 24.1 | 3 | Below cancer rule |
-| GOLGA6L2 | 16.1 | 1.65 | Below cancer rule |
-| HIGD2B | 10.1 | 1.45 | Below cancer rule |
+| HIGD2B | 10.1 | 1.23 | Below cancer rule |
+| CCDC197 | 20.7 | 6.2 | Below cancer rule |
 | RBMXL3 | 12.9 | 1.3 | Below cancer rule |
-| DEFB114 | 7.64 | 0.125 | Below cancer rule |
-| CIMAP1A | 15 | 1.58 | Below cancer rule |
-| TNP2 | 9.04 | 0.607 | Below cancer rule |
+| DEFB114 | 7.64 | 0 | Below cancer rule |
+| TNP2 | 9.04 | 0.382 | Below cancer rule |
 | H1-8 | 7.68 | 1 | Below cancer rule |
 | EXD1 | 4.69 | 2 | Below cancer rule |
 | SIGLECL1 | 16.1 | 1.7 | Below cancer rule |
 | NLRP8 | 3.76 | 0.4 | Below cancer rule |
-| WFDC9 | 4.39 | 0.212 | Below cancer rule |
-| C3orf22 | 11.8 | 1.21 | Below cancer rule |
-| SPEM1 | 9.16 | 0.82 | Below cancer rule |
-| ADIG | 33.8 | 7.9 | Below cancer rule |
+| WFDC9 | 4.39 | 0.134 | Below cancer rule |
+| SPEM1 | 9.16 | 0.38 | Below cancer rule |
+| ADIG | 33.8 | 7.04 | Below cancer rule |
 | ZNF716 | 10.3 | 1.4 | Below cancer rule |
-| CCDC87 | 23.3 | 2.53 | Below cancer rule |
-| CYLC1 | 2.57 | 0.336 | Below cancer rule |
-| GOLGA8G | 6.24 | 1.12 | Below cancer rule |
-| DEFB108B | 10.4 | 1.44 | Below cancer rule |
-| SPPL2C | 17.7 | 16.2 | Below cancer rule |
-| DEFB128 | 4.76 | 0.241 | Below cancer rule |
-| TMEM262 | 47.4 | 7.4 | Below cancer rule |
-| MAGEB5 | 2.09 | 0.348 | Below cancer rule |
-| NANOS2 | 9.92 | 2.7 | Below cancer rule |
-| CATSPER4 | 8.09 | 1.03 | Below cancer rule |
-| TMCO2 | 29 | 3.76 | Below cancer rule |
-| FAM47B | 2.25 | 0.143 | Below cancer rule |
-| ZAR1L | 12.1 | 1.43 | Below cancer rule |
+| CCDC87 | 23.3 | 2.44 | Below cancer rule |
+| CYLC1 | 2.57 | 0.0532 | Below cancer rule |
+| GOLGA8G | 6.24 | 0.704 | Below cancer rule |
+| SPPL2C | 17.7 | 8.46 | Below cancer rule |
+| DEFB128 | 4.76 | 0.1 | Below cancer rule |
+| TMEM262 | 47.4 | 7.03 | Below cancer rule |
+| MAGEB5 | 2.09 | 0.209 | Below cancer rule |
+| NANOS2 | 9.92 | 1.3 | Below cancer rule |
+| CATSPER4 | 8.09 | 0.674 | Below cancer rule |
+| TMCO2 | 29 | 2.96 | Below cancer rule |
+| FAM47B | 2.25 | 0.0485 | Below cancer rule |
 | TBC1D28 | 4.07 | 0.9 | Below cancer rule |
-| PFN3 | 19.8 | 6.25 | Below cancer rule |
-| TOMM20L | 46.6 | 6.59 | Below cancer rule |
-| SPMIP10 | 14.1 | 5.13 | Below cancer rule |
+| OR10J1 | 27.5 | 1.2 | Below cancer rule |
+| PFN3 | 19.8 | 4.19 | Below cancer rule |
+| TOMM20L | 46.6 | 6.16 | Below cancer rule |
+| SPMIP10 | 14.1 | 4.5 | Below cancer rule |
 | ZNF705A | 19.6 | 3.5 | Below cancer rule |
-| MAGEB3 | 7.55 | 0.257 | Below cancer rule |
+| OR51C1 | 50 | 2.37 | Below cancer rule |
+| STPG3 | 136 | 16.8 | Below cancer rule |
+| MAGEB3 | 7.55 | 0.2 | Below cancer rule |
 | TEDDM1 | 15.2 | 3 | Below cancer rule |
-| FAM24A | 4.13 | 0.515 | Below cancer rule |
-| C10orf62 | 27.4 | 4.22 | Below cancer rule |
-| DEFB110 | 5.4 | 0.42 | Below cancer rule |
-| GLT6D1 | 7.41 | 2.26 | Below cancer rule |
-| CT83 | 193 | 19.4 | Below cancer rule |
-| SPANXN5 | 7.93 | 0.441 | Below cancer rule |
+| FAM24A | 4.13 | 0.5 | Below cancer rule |
+| C10orf62 | 27.4 | 3.4 | Below cancer rule |
+| DEFB110 | 5.4 | 0.336 | Below cancer rule |
+| GLT6D1 | 7.41 | 0.8 | Below cancer rule |
+| SPANXN5 | 7.93 | 0.218 | Below cancer rule |
 | PRAMEF17 | 5.69 | 0.2 | Below cancer rule |
 | PRAMEF19 | 9.62 | 0.8 | Below cancer rule |
-| DEFB121 | 2.15 | 0.138 | Below cancer rule |
-| OR2H1 | 3.45 | 0.756 | Below cancer rule |
-| SPATA31A1 | 6.83 | 0.152 | Below cancer rule |
-| PABPN1L | 58.5 | 20 | Below cancer rule |
-| SPATA31F1 | 8.67 | 0.927 | Below cancer rule |
-| RNASE13 | 26.6 | 4.82 | Below cancer rule |
-| TSSK1B | 6.49 | 0.481 | Below cancer rule |
-| TSGA13 | 5.95 | 1.13 | Below cancer rule |
-| WEE2 | 10.7 | 1.83 | Below cancer rule |
+| DEFB121 | 2.15 | 0.1 | Below cancer rule |
+| OR2H1 | 3.45 | 0.495 | Below cancer rule |
+| SPATA31A1 | 6.83 | 0.0408 | Below cancer rule |
+| PABPN1L | 58.5 | 11.8 | Below cancer rule |
+| SPATA31F1 | 8.67 | 0.9 | Below cancer rule |
+| KRTAP20-4 | 50.4 | 0.3 | Below cancer rule |
+| RNASE13 | 26.6 | 3.19 | Below cancer rule |
+| TSSK1B | 6.49 | 0.4 | Below cancer rule |
+| TSGA13 | 5.95 | 0.994 | Below cancer rule |
+| WEE2 | 10.7 | 1.67 | Below cancer rule |
 | EFCAB9 | 8.56 | 3.3 | Below cancer rule |
 | NOTO | 4.26 | 1.7 | Below cancer rule |
-| DEFB113 | 2.27 | 0.152 | Below cancer rule |
-| PSG7 | 55.4 | 6.79 | Below cancer rule |
-| POM121L12 | 7.05 | 0.135 | Below cancer rule |
-| ZNF735 | 5.29 | 0.252 | Below cancer rule |
-| GPX5 | 7.92 | 0.297 | Below cancer rule |
+| DEFB113 | 2.27 | 0 | Below cancer rule |
+| CDRT15L2 | 12 | 5.19 | Below cancer rule |
+| PSG7 | 55.4 | 6.12 | Below cancer rule |
+| POM121L12 | 7.05 | 0.0549 | Below cancer rule |
+| ZNF735 | 5.29 | 0.211 | Below cancer rule |
+| GPX5 | 7.92 | 0.253 | Below cancer rule |
 | KIF4B | 6.33 | 0.7 | Below cancer rule |
-| TEX46 | 16 | 3.87 | Below cancer rule |
+| TEX46 | 16 | 3.54 | Below cancer rule |
 | TEX50 | 12.9 | 1.3 | Below cancer rule |
-| C16orf82 | 26.2 | 4.43 | Below cancer rule |
-| FREY1 | 34.9 | 3.86 | Below cancer rule |
-| ENSG00000237378 | 6.52 | 1.26 | Below cancer rule |
-| TEX51 | 3.36 | 1.45 | Below cancer rule |
+| ENSG00000237378 | 6.52 | 1.09 | Below cancer rule |
+| TEX51 | 3.36 | 1.22 | Below cancer rule |
 | GOLGA6L24 | 2.27 | 0.2 | Below cancer rule |
-| TSPY9 | 5.93 | 1.2 | Below cancer rule |
-| PRR20G | 7.77 | 2.4 | Below cancer rule |
-| PRAMEF11 | 7.24 | 0.192 | Below cancer rule |
+| TSPY9 | 5.93 | 0.961 | Below cancer rule |
+| PRR20G | 7.77 | 0.449 | Below cancer rule |
+| PRAMEF11 | 7.24 | 0.0935 | Below cancer rule |
 | OR14A2 | 6.35 | 0.5 | Below cancer rule |
 | H2AL1Q | 4.02 | 2.6 | Below cancer rule |
 | P3R3URF | 16.5 | 3.4 | Below cancer rule |
-| PTTG1IP2 | 3.23 | 0.395 | Below cancer rule |
-| ZNF878 | 39.4 | 4.76 | Below cancer rule |
-| TLE7 | 1.34 | 0.189 | Below cancer rule |
-| IGBP1C | 7.1 | 0.704 | Below cancer rule |
-| TEX13A | 3.77 | 0.117 | Below cancer rule |
-| SPANXN2 | 1.81 | 0.163 | Below cancer rule |
-| SPMAP1 | 21.7 | 2.21 | Below cancer rule |
-| LYZL6 | 11.9 | 2.41 | Below cancer rule |
+| PTTG1IP2 | 3.23 | 0.3 | Below cancer rule |
+| ZNF878 | 39.4 | 3.94 | Below cancer rule |
+| TLE7 | 1.34 | 0.0722 | Below cancer rule |
+| IGBP1C | 7.1 | 0.351 | Below cancer rule |
+| TEX13A | 3.77 | 0.1 | Below cancer rule |
+| SPANXN2 | 1.81 | 0.11 | Below cancer rule |
+| OR4M2 | 30.2 | 0.201 | Below cancer rule |
+| LYZL6 | 11.9 | 1.98 | Below cancer rule |
 | GOLGA6L6 | 5.37 | 0.2 | Below cancer rule |
-| CT47C1 | 2.17 | 0.6 | Below cancer rule |
-| GOLGA6L22 | 5.33 | 0.794 | Below cancer rule |
-| PRAMEF13 | 4.53 | 0.0624 | Below cancer rule |
-| SPEM3 | 5.22 | 0.634 | Below cancer rule |
-| HSFX3 | 4.88 | 5.47 | Below cancer rule |
-| ENSG00000285566 | 8.23 | 0.388 | Below cancer rule |
+| CT47C1 | 2.17 | 0.3 | Below cancer rule |
+| GOLGA6L22 | 5.33 | 0.731 | Below cancer rule |
+| PRAMEF13 | 4.53 | 0.0436 | Below cancer rule |
+| SPEM3 | 5.22 | 0.317 | Below cancer rule |
+| HSFX4 | 19.2 | 7.4 | Below cancer rule |
+| HSFX3 | 4.88 | 4.93 | Below cancer rule |
+| ENSG00000285566 | 8.23 | 0.33 | Below cancer rule |
 | MSANTD5 | 3.43 | 2.2 | Below cancer rule |
-| SPADH | 11.7 | 7.53 | Below cancer rule |
+| SPADH | 11.7 | 2.84 | Below cancer rule |
 
 ## Evidence and reproduction
 
-The comparison uses source-native TPM, within-site GTEx v11 linear donor P99, HPA v23 individual biopsies and supported tissue/cell summaries. It is not a maximum over every healthy donor. It does not correct cross-study batch effects. NUTM's stored three-sample matrix fails the nonnegative-TPM check and is listed in the [coverage ledger](tumor-source-coverage.csv).
+The comparison uses source-native TPM, within-site GTEx v11 linear donor P95, HPA v23 within-tissue biopsy P95 and supported tissue/cell summaries. It is not a maximum over every healthy donor. It does not correct cross-study batch effects. NUTM's stored three-sample matrix fails the nonnegative-TPM check and is listed in the [coverage ledger](tumor-source-coverage.csv).
 
 [Full protein decisions](protein-decisions.csv.gz) · [All member genes](gene-decisions.csv.gz) · [HPA sample QC](normal-library-qc.csv) · [GTEx sample QC and donors](gtex-library-qc.csv.gz) · [Normal RNA source coverage](normal-rna/index.md) · [Normal comparison values](normal-comparison.csv.gz) · [Tumor witnesses](tumor-witnesses.csv.gz) · [Reproductive observations](reproductive-comparison.csv.gz) · [Reproductive witnesses](reproductive-witnesses.csv.gz) · [Paper claims](paper-attestations.json.gz) · [Input hashes](inputs.json).
 

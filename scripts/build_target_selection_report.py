@@ -168,7 +168,7 @@ Required coverage, identity, translation or unresolved evidence → <strong>Othe
 Nested, Unsafe-contained or read-through sequence → <strong>Other:Sequence</strong>.
 Target maximum or Disposable cap failure → <strong>Other:Expression</strong>.
 A recorded normal home that no expression panel resolves (nose, taste bud, hair follicle,
-tooth), without reproductive evidence → <strong>Other:Unscreened tissue</strong>.
+tooth), with no qualifying reproductive witness → <strong>Other:Unscreened tissue</strong>.
 The remaining proteins enter the two independent association checks.</p>
 <h2>Rare normal-cell RNA</h2>
 <p>Each adult donor is assessed separately in each named Vital or Protected cell population.
@@ -216,7 +216,7 @@ individual reproductive tissue sample or supported mean within one embryo and li
 Donors remain distinct from cells.</p>
 <p>Single-cell nTPM, UMI counts and qualitative protein staining retain their own evidence
 roles; they cannot be pooled into a native-TPM fold. The normal reference includes all
-GTEx v11 site-specific linear donor P99 and individual HPA v23 biopsies plus supported context summaries, not every healthy
+GTEx v11 site-specific linear donor P95 and HPA v23 within-tissue biopsy P95 plus supported context summaries, not every healthy
 donor. <a href="https://v23.proteinatlas.org/about/download">Pinned HPA sources</a>.</p>
 <h2>Published target support</h2>
 <p>A curated target nomination adds supporting evidence. Preserve the exact protein–paper

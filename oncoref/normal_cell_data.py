@@ -164,6 +164,16 @@ def iter_tables(source: str, *, genes=None, version=None, chunksize=512):
                 yield _ihc_with_summary(frame, profiles)
         return
     p = reference_data.ensure(source, version)
+    if p.suffix.lower() in {".xlsx", ".xls"}:
+        if selected is not None:
+            raise ValueError(
+                "Select native workbook columns with catalog.read_table() or use antigen_data.gene_list() for curated marker lists"
+            )
+        yield pd.read_excel(p)
+        return
+    table_name = p.name.removesuffix(".gz").lower()
+    if not table_name.endswith((".tsv", ".txt", ".csv", ".mtx_rows", ".mtx_cols")):
+        raise ValueError(f"Use catalog.ensure({source!r}) with the native {p.suffix} reader")
     counts = _is_count_matrix(source)
     for frame in pd.read_csv(
         p,
@@ -333,13 +343,20 @@ def observations(source: str, *, genes=None, version=None) -> pd.DataFrame:
         raise ValueError(
             "Use iter_tables() for developmental/culture count matrices; do not pool with adult normal tissue"
         )
+    if not {"TPM", "nTPM", "Level"}.intersection(native.columns):
+        raise ValueError(
+            "This source has native study-specific columns. Use catalog.ensure() or catalog.read_table()."
+        )
     out = pd.DataFrame(index=native.index)
     out["gene_id"] = native.get("Gene", native.get("ENSG ID", ""))
     out["gene_name"] = native.get("Gene name", "")
     out["source"] = source
     out["version"] = reference_data.resolve_version(source, version)
     out["taxonomy_id"] = 9606
-    out["tissue"] = native.get("Tissue", "blood" if "immune" in source else "")
+    out["tissue"] = native.get(
+        "Tissue",
+        native.get("Subregion", native.get("Brain region", "blood" if "immune" in source else "")),
+    )
     out["cell_type"] = native.get("Cell type", native.get("Immune cell", ""))
     out["cluster"] = native.get("Cluster", "")
     out["donor"] = native.get("Donor", "")
@@ -349,7 +366,20 @@ def observations(source: str, *, genes=None, version=None) -> pd.DataFrame:
     )
     out["stage"] = "adult"
     out["modality"] = "ihc" if "Level" in native else "rna"
-    unit = "nTPM" if "nTPM" in native else "TPM" if "TPM" in native else "staining"
+    native_bulk = {
+        "rna_tissue_hpa",
+        "rna_tissue_gtex",
+        "rna_brain_gtex",
+        "rna_brain_hpa",
+    }
+    unit = (
+        "TPM"
+        if source in native_bulk
+        else next((u for u in ("nTPM", "TPM") if u in native), "staining")
+    )
+    if "TPM" in native and "nTPM" in native:
+        out["native_tpm"] = pd.to_numeric(native["TPM"])
+        out["native_ntpm"] = pd.to_numeric(native["nTPM"])
     out["unit"] = unit
     out["value"] = pd.to_numeric(native[unit], errors="coerce") if unit != "staining" else np.nan
     out["level"] = native.get("Level", "")
@@ -556,3 +586,25 @@ def cornea_summary(*, genes=None) -> pd.DataFrame:
     result = _read_cornea_summary(dest, genes)
     result.attrs["source"] = reference_data.provenance(source)
     return result
+
+
+def olfactory_bulk_percentiles(source, *, genes=None, version=None):
+    """Within-biopsy FPKM or within-donor copy-number P95 in adult olfactory mucosa."""
+    if source not in {_olfactory_rna.BULK, _olfactory_rna.RECEPTORS, _olfactory_rna.COPIES}:
+        raise ValueError("Choose an Olender FPKM table or the Verbeurgt copy-number table")
+    native = table(source, genes=genes, version=version)
+    keys = [
+        "gene_name",
+        "gene_id",
+        "assay_id" if source == _olfactory_rna.COPIES else "locus",
+        "unit",
+    ]
+    identity = "donor" if source == _olfactory_rna.COPIES else "sample"
+    groups = (
+        native.groupby([*keys, identity], dropna=False)
+        .value.median()
+        .groupby(level=keys, dropna=False)
+    )
+    return pd.concat(
+        [groups.quantile(0.95).rename("p95"), groups.count().rename("n_observations")], axis=1
+    ).reset_index()

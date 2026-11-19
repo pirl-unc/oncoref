@@ -67,33 +67,44 @@ def test_live_gtex_witnesses_match_the_symmetric_ten_protein_audit():
     assert qc.participant_id.nunique() == 946 and qc.source_tissue.nunique() == 52
 
 
-def test_site_p99_uses_one_value_per_measured_donor():
+def test_site_p95_uses_one_value_per_measured_donor():
     values = pd.DataFrame([[0, 2, 8], [None, None, None], [None, None, 3]], index=["a", "b", "c"])
-    result = gtex.donor_p99(values, pd.Index(["first", "first", "second"]))
-    assert result.to_dict() == pytest.approx({"a": 7.93, "c": 3.0})
+    result = gtex.donor_percentile(values, pd.Index(["first", "first", "second"]))
+    assert result.to_dict() == pytest.approx({"a": 7.65, "c": 3.0})
     with pytest.raises(ValueError, match="donor"):
-        gtex.donor_p99(values, pd.Index(["first", None, "second"]))
+        gtex.donor_percentile(values, pd.Index(["first", None, "second"]))
 
 
-def test_live_normal_reference_matches_independent_p99_sensitivity():
+def test_live_ceiling_reproduces_accepted_normal_measurements():
     from oncoref import target_selection
 
     audit = Path(__file__).parents[1] / "docs/audits"
-    expected = pd.read_csv(
-        audit / "gtex-cross-tissue-signals/protein-sensitivity.csv.gz"
-    ).set_index("entity_id")
+    frame = pd.read_csv(
+        audit / "target-selection-20261110/rebuild/normal-comparison.csv.gz",
+        usecols=[
+            "entity_id",
+            "value",
+            "source_id",
+            "scope",
+            "sample_id",
+            "participant_id",
+            "source_context",
+            "qc_pass",
+            "identity_resolved",
+        ],
+    )
+    accepted = frame[
+        frame.qc_pass & frame.identity_resolved & frame.scope.isin(["normal", "disposable"])
+    ]
+    expected = accepted.groupby("entity_id").value.max()
     actual = target_selection.results().set_index("entity_id").loc[expected.index]
     assert actual[["normal_reference_tpm", "disposable_max_tpm"]].max(
         axis=1
-    ).tolist() == pytest.approx(expected.ceiling_p99.tolist())
-    frame = pd.read_csv(
-        audit / "target-selection-20261110/rebuild/normal-comparison.csv.gz",
-        usecols=["source_id", "scope", "sample_id", "participant_id", "source_context"],
-    )
-    p99 = frame[frame.source_id.eq("gtex_donor_p99:v11")]
-    assert p99.source_context.nunique() == 43
-    assert set(p99.scope) <= {"normal", "disposable"}
-    assert p99[["sample_id", "participant_id"]].isna().all().all()
+    ).tolist() == pytest.approx(expected.tolist())
+    p95 = frame[frame.source_id.eq("gtex_donor_p95:v11")]
+    assert p95.source_context.nunique() == 43
+    assert set(p95.scope) <= {"normal", "disposable"}
+    assert p95[["sample_id", "participant_id"]].isna().all().all()
     assert set(frame.loc[frame.source_id.eq(gtex.SOURCE_ID), "scope"]) == {"reproductive"}
 
 

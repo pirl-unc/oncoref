@@ -13,6 +13,7 @@ nav:
       - Host choices and tissue loss: host-selection.md
       - Why CTA counts changed: audits/cta-count-history-20261117/index.md
       - Antigen CLI and curation builds: curation.md
+      - Download antigen evidence: antigen-data.md
       - Antigen sequences and peptide subtraction: antigen-sequences.md
       - Current catalog & curation funnel: audits/target-selection-20261110/rebuild/index.md
       - Architecture & summary figures: audits/target-selection-20261110/rebuild/summary.md

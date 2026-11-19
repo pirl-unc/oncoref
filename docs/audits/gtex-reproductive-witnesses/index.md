@@ -1,12 +1,12 @@
 # Individual GTEx v11 tissue samples
 
-The catalog uses 18,637 primary tissue samples from 946 GTEx donors. Each of the 52 tissue files has a versioned URL and SHA-256 checksum in the reference registry. Individual reproductive samples can qualify RA. GTEx non-reproductive tissue sites contribute interpolated donor P99 to the shared CA and RA denominator. Complete member-locus TPMs are summed within each sample first. The full matrices retain every measurement.
+The catalog uses 18,637 primary tissue samples from 946 GTEx donors. Each of the 52 tissue files has a versioned URL and SHA-256 checksum in the reference registry. Individual reproductive samples can qualify RA. GTEx non-reproductive tissue sites contribute interpolated donor P95 to the shared CA and RA denominator. Complete member-locus TPMs are summed within each sample first. The full matrices retain every measurement.
 
 [GTEx and HPA contamination screen and donor sensitivity](../gtex-cross-tissue-signals/index.md) · [Source registry and rebuild instructions](../../curation.md) · [Sample inventory and QC](../target-selection-20261110/rebuild/gtex-library-qc.csv.gz) · [Comparison methods](../target-selection-20261110/rebuild/comparison.json)
 
 ## Symmetric comparison
 
-The live comparison reports how many of the 414 testis donors pass each protein’s current threshold and how many tumor-fold units its best tumor reaches. The full table compares the pre-GTEx catalog with the current P99 policy.
+The live comparison reports how many of the 414 testis donors pass each protein’s current threshold and how many tumor-fold units its best tumor reaches. The full table compares the pre-GTEx catalog with the current P95 policy.
 
 [Ten pilot proteins and their donor counts](symmetric-comparison.csv) · [All 918 fold comparisons and category transitions](catalog-comparison.csv.gz) · [Baseline catalog checksum](baseline.json)
 

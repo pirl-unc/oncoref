@@ -344,7 +344,7 @@ only the filters act on the tier.</p>
 <h3>What the curation filter layer removes</h3>
 {table(["Recorded tier", "Candidates", "Tissues", "Removed in"], tier_rows, numeric=(1,))}
 <h3>Family rules</h3>
-<p>A family member without reproductive evidence is Other:Unscreened tissue in the catalog when the family's home is a tissue no panel resolves. The counts are the members that remain candidates.</p>
+<p>Insufficient coverage of a family’s home tissue blocks CA membership. A qualifying reproductive witness can still establish RA membership. The counts are the members that remain candidates.</p>
 {table(["Family", "Candidates", "Tissue", "Tier", "Sources"], family_rows, numeric=(1,))}
 <h3>Tissues added to the tissue-tier registry</h3>
 <p>Written from abstracts on 2026-11-12. Olfactory epithelium moved to Manageable on 2026-11-15 on the

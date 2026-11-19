@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-18.4`: **308 CTA** · **68 Cancer Antigen only** · **131 Reproductive Antigen only** · **1,133 Other** · **18,253 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-19.1`: **327 CTA** · **70 Cancer Antigen only** · **127 Reproductive Antigen only** · **1,116 Other** · **18,253 Unsafe**.
 
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
@@ -32,16 +32,18 @@ Both CA and RA independently require **≥10 × H₀**, where
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
-| CA | At least one QC-passing tumor sample ≥10 × H₀ | 376 |
-| RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 439 |
-| CTA | Both routes | 308 |
-| CA∪RA | Either route | 507 |
+| CA | At least one QC-passing tumor sample ≥10 × H₀ | 397 |
+| RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 454 |
+| CTA | Both routes | 327 |
+| CA∪RA | Either route | 524 |
 
-GTEx v11 contributes the **linearly interpolated donor P99 within each non-reproductive tissue site**. Complete member-locus TPMs are summed within a library first. Reproductive sites, including breast and prostate, retain individual samples as RA witnesses. HPA v23 biopsies contribute individual maxima. Tissue and brain summaries, GTEx donor medians, Monaco and DICE each contribute their supported native TPM. The highest applicable value across these sources sets N or D. Single-cell and single-nucleus counts, nTPM and protein staining have separate normal-expression gates.
+GTEx v11 contributes the **linearly interpolated donor P95 within each non-reproductive tissue site**. Complete member-locus TPMs are summed within a library first. Reproductive sites, including breast and prostate, retain individual samples as RA witnesses. HPA v23 contributes the within-tissue biopsy P95 and the within-population sorted immune donor P95. DICE contributes a P95 for single loci. Its ranks lack specimen IDs, so identical-protein groups with multiple loci use the sum of measured member maxima as an upper bound. GTEx medians, HPA tissue and brain means, and Monaco cell means retain their published statistics. The highest applicable value across these sources sets N or D. Single-cell and single-nucleus counts, nTPM and protein staining have separate normal-expression gates.
 
 [All RNA sources, tissue coverage and set definitions](audits/target-selection-20261110/rebuild/normal-rna/index.md)
 
 ![Normal and reproductive TPM sources by tissue](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage.png)
+
+A small cohort can have a P95 close to its maximum. The underlying measurements and sample QC remain available. [Download the source data and literature controls](antigen-data.md).
 
 Missing required normal coverage does not become zero.
 [Source receipt](audits/target-selection-20261110/rebuild/comparison.json).
@@ -63,7 +65,7 @@ from one embryo are not independent donors. These positive-support requirements 
 | Unmeasured home tissue without qualifying reproductive evidence | Other:Unscreened tissue |
 | Neither enrichment route qualifies, or expression bounds fail | Other:Expression |
 
-Unsafe takes precedence, then Other:Review. Every failed gate remains on the row.
+Insufficient coverage of a documented normal home blocks the CA route even when RA qualifies. Unsafe takes precedence, then Other:Review. Every failed gate remains on the row.
 **Other describes unresolved or nonqualifying proteins, not absent normal expression.**
 Disposable expression has separate 32 TPM and 32 nTPM bounds in the catalog; these
 are not the limits for host-protected organs.
@@ -102,8 +104,7 @@ retains sources, adjudication and supersession history.
 ## Home tissue the panels do not resolve
 
 Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp are not
-resolved by the comparison panel. A recorded home yields Other:Unscreened tissue unless RA
-qualifies. The home remains recorded; RA membership does not establish a margin there.
+resolved by the native-TPM comparison panel. A protein with a documented home in one of these tissues can qualify as RA. CA and CTA require coverage of that home. A protein that reaches the cancer threshold alone is classified Other:Unscreened tissue.
 
 ## Tumor quality and replication
 

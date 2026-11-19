@@ -1,11 +1,11 @@
 {
   "schema": "oncoref.host-exposure.v1",
   "policy_id": "oncoref.host-selection.2026-11-18.2",
-  "catalog_policy_id": "oncoref.target-selection.2026-11-18.4",
-  "catalog_data_sha256": "08d021172d6d10c28b3f8de3f0392c3ddb658e767eb7a777c6b1483eb69d9283",
+  "catalog_policy_id": "oncoref.target-selection.2026-11-19.1",
+  "catalog_data_sha256": "78e555636c8ae28a0a0fab2a1dd288e7bbf7cd1ca0b0512f85e1400a7cc6134d",
   "sha256": "9665ec7a2ff8b731a708a03d825391abc1777f8e1c73ae621a28ba288adf6be7",
   "inputs": {
-    "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "efccb99f2efbb111c4aaf0245dea9fb191bf38410386f7677a00cb87ddd280c9",
+    "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "54ae2a80519110d276ecf2ad072eb1a488f4b10e98c08e463712e5c2d97ec2ee",
     "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
     "reference:hpa_single_cell_tissue:v23": "960b9cf2b4c1af231a8334ccfd83b7b32747a4d258d892e5b705bf2cdca763a7",
     "reference:hpa_normal_tissue:v23": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc"

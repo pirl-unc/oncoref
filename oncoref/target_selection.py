@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-18.4"
+POLICY_ID = "oncoref.target-selection.2026-11-19.1"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -110,7 +110,7 @@ def definition() -> dict:
             ),
             "Unscreened tissue": (
                 "The protein's recorded normal home is a tissue no expression panel resolves, "
-                "and no reproductive or developmental evidence qualifies. Its tumor value was "
+                "and no reproductive evidence qualifies for RA. Its tumor value was "
                 "never compared with that tissue, so cancer evidence alone does not admit it."
             ),
         },
@@ -120,8 +120,8 @@ def definition() -> dict:
                 "A family rule, a recorded literature finding, or the nose and skin reference."
             ),
             "effect": (
-                "Without qualifying reproductive or developmental evidence: Other:Unscreened tissue. "
-                "With it, the category is unchanged and the tissue stays on the row."
+                "Insufficient home-tissue coverage blocks cancer admission. "
+                "Reproductive enrichment can independently qualify RA."
             ),
         },
         "published_normal_expression": {
@@ -365,8 +365,8 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     missing required *normal* coverage blocks both sets.
 
     Optional ``home_tissue_unmeasured`` marks a protein whose recorded normal home no
-    panel resolves. Cancer evidence admits it only together with reproductive evidence;
-    alone it is Other:Unscreened tissue.
+    panel resolves. Cancer admission requires adequate home-tissue coverage.
+    Reproductive enrichment can still establish RA.
     """
     flags = ("unsafe", *SHARED_CHECKS)
     _require_columns(facts, {*flags, "cancer_evidence", "reproductive_evidence"})
@@ -382,7 +382,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
         home = d.home_tissue_unmeasured.astype(bool)
     else:
         home = pd.Series(False, index=d.index)
-    uncompared = eligible & d.cancer_evidence.eq("qualifies") & home & ~reproductive
+    uncompared = eligible & d.cancer_evidence.eq("qualifies") & home
     cancer = eligible & d.cancer_evidence.eq("qualifies") & ~uncompared
     d["eligible"] = eligible
     d["is_cancer_antigen"] = cancer

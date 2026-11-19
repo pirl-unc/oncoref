@@ -9,56 +9,56 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-18.4",
+    "policy_id": "oncoref.target-selection.2026-11-19.1",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18253,
-      "Other": 1133,
-      "CTA": 308,
-      "Reproductive Antigen only": 131,
-      "Cancer Antigen only": 68
+      "Other": 1116,
+      "CTA": 327,
+      "Reproductive Antigen only": 127,
+      "Cancer Antigen only": 70
     },
     "classifications": {
       "Unsafe": 18253,
       "Other:Review": 731,
-      "CTA": 308,
-      "Other:Expression": 281,
-      "Reproductive Antigen only": 131,
-      "Other:Unscreened tissue": 73,
-      "Cancer Antigen only": 68,
+      "CTA": 327,
+      "Other:Expression": 250,
+      "Reproductive Antigen only": 127,
+      "Other:Unscreened tissue": 87,
+      "Cancer Antigen only": 70,
       "Other:Sequence": 48
     },
     "memberships": {
-      "is_cancer_antigen": 376,
-      "is_reproductive_antigen": 439,
-      "is_cta": 308,
-      "is_target_candidate": 507
+      "is_cancer_antigen": 397,
+      "is_reproductive_antigen": 454,
+      "is_cta": 327,
+      "is_target_candidate": 524
     },
     "cta_tiers": {
-      "core": 201,
-      "core_with_extended_exposure": 88,
-      "extended_only": 19
+      "core": 206,
+      "core_with_extended_exposure": 100,
+      "extended_only": 21
     },
     "changes": [
       {
         "released_category": "CTA",
         "category": "CTA",
-        "proteins": 289
+        "proteins": 309
       },
       {
         "released_category": "CTA",
         "category": "Cancer Antigen only",
-        "proteins": 37
+        "proteins": 33
       },
       {
         "released_category": "CTA",
         "category": "Other",
-        "proteins": 108
+        "proteins": 98
       },
       {
         "released_category": "CTA",
         "category": "Reproductive Antigen only",
-        "proteins": 124
+        "proteins": 118
       },
       {
         "released_category": "CTA",
@@ -68,22 +68,22 @@
       {
         "released_category": "Other",
         "category": "CTA",
-        "proteins": 7
+        "proteins": 6
       },
       {
         "released_category": "Other",
         "category": "Cancer Antigen only",
-        "proteins": 30
+        "proteins": 36
       },
       {
         "released_category": "Other",
         "category": "Other",
-        "proteins": 957
+        "proteins": 950
       },
       {
         "released_category": "Other",
         "category": "Reproductive Antigen only",
-        "proteins": 2
+        "proteins": 4
       },
       {
         "released_category": "Other",
@@ -116,7 +116,7 @@
         "proteins": 18173
       }
     ],
-    "shared_eligible": 822,
+    "shared_eligible": 841,
     "assessed_for_cancer_evidence": 918,
     "unsafe_changes": {
       "released_unsafe_now_other": 86,
@@ -146,8 +146,8 @@
     },
     "expression_bounds": {
       "unassessed": 18975,
-      "pass": 876,
-      "fail": 42
+      "pass": 896,
+      "fail": 22
     },
     "comparison_required_contexts": [
       "adipose tissue",
@@ -188,19 +188,19 @@
       "urinary bladder"
     ],
     "assessed_cancer_statuses": {
-      "qualifies": 481,
-      "does_not_qualify": 437
+      "qualifies": 523,
+      "does_not_qualify": 395
     },
     "published_nomination_by_category": {
-      "CTA": 235,
-      "Cancer Antigen only": 31,
-      "Other": 121,
-      "Reproductive Antigen only": 85,
+      "CTA": 252,
+      "Cancer Antigen only": 28,
+      "Other": 115,
+      "Reproductive Antigen only": 77,
       "Unsafe": 1761
     }
   },
   "comparison": {
-    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-18.4",
+    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-19.1",
     "unit": "TPM",
     "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
     "compatibility_basis": [
@@ -221,7 +221,7 @@
       "gallbladder",
       "tonsil"
     ],
-    "normal_statistic": "Maximum across GTEx v11 within-site linear donor P99, HPA v23 biopsy maxima and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
+    "normal_statistic": "Maximum across GTEx v11 within-site linear donor P95, HPA v23 normal biopsy P95 and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE within-population P95 for single loci and a conservative bound for unpaired loci",
     "batch_corrected": false,
     "limitations": [
       "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -232,28 +232,36 @@
     "participant_identity_policy": "oncoref.patient-identity.2026-11-10.1",
     "normal_sources": [
       {
-        "source": "rna_tissue_hpa",
-        "version": "v23",
         "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
-        "path": "tmp/target-rebuild-inputs/rna_tissue_hpa.tsv.zip",
-        "sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
-        "bytes": 6661353
+        "sha256": "52bd4b1771388372187a6edf8c7d58b68b5074772c83b46be7b71ee02e074b4d",
+        "archive_sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c",
+        "bytes": 37509845,
+        "source": "rna_tissue_hpa",
+        "version": "v23"
       },
       {
-        "source": "rna_tissue_gtex",
-        "version": "v23",
         "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
-        "path": "tmp/target-rebuild-inputs/rna_tissue_gtex.tsv.zip",
-        "sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
-        "bytes": 5960172
+        "sha256": "6d908d193fbcc5cf94f93645c26099db2a20baa6c0678090cdf7bb8b210a6b68",
+        "archive_sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881",
+        "bytes": 33210836,
+        "source": "rna_tissue_gtex",
+        "version": "v23"
       },
       {
-        "source": "rna_brain_gtex",
-        "version": "v23",
         "url": "https://v23.proteinatlas.org/download/rna_brain_gtex.tsv.zip",
-        "path": "tmp/target-rebuild-inputs/rna_brain_gtex.tsv.zip",
-        "sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
-        "bytes": 1633631
+        "sha256": "cc5637fa7a2f608a834221e1596109a43bb67ff5aa35a6c1c33cf28581ea1358",
+        "archive_sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592",
+        "bytes": 9400293,
+        "source": "rna_brain_gtex",
+        "version": "v23"
+      },
+      {
+        "url": "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+        "sha256": "1b7bee43cc0dea503ad292863fde238e0b249512a31b1badeb05d07253b20e9d",
+        "archive_sha256": "96e4be538cdf4c480ff15008206a721007e78a2571a2d5054463bf28fdd4bbb5",
+        "bytes": 238897363,
+        "source": "rna_brain_hpa",
+        "version": "v23"
       }
     ],
     "individual_tissue_source": {
@@ -326,7 +334,7 @@
       "registry": "oncoref/data/reference-releases.json",
       "sample_inventory": "gtex-library-qc.csv.gz",
       "scope": "All 52 primary tissue matrices; cultured cell lines excluded.",
-      "reduction": "Non-reproductive sites use gtex_donor_p99:v11, the linearly interpolated 99th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses."
+      "reduction": "Non-reproductive sites use gtex_donor_p95:v11, the linearly interpolated 95th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses."
     },
     "mammary_lactation": {
       "state_is_inferred": true,
@@ -871,25 +879,29 @@
     "developmental_sources": [
       {
         "role": "petropoulos_tpm",
-        "path": "/Users/iskander/.cache/oncoref/sources/sha256/f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334/petropoulos-tpm.zip",
+        "source": "petropoulos_embryonic_tpm",
+        "version": "E-MTAB-3929-20261028",
         "sha256": "f5c21ca43b7fe229c976f8e3886802194887357c48179be94c7e5c31ce1b2334",
         "source_id": "petropoulos_E-MTAB-3929"
       },
       {
         "role": "petropoulos_design",
-        "path": "/Users/iskander/.cache/oncoref/sources/sha256/c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573/petropoulos-design.tsv",
+        "source": "petropoulos_embryonic_design",
+        "version": "E-MTAB-3929-20261028",
         "sha256": "c227a127610d8e7d8910478ed8106cc131a04599b6e80d312986252bcde83573",
         "source_id": "petropoulos_E-MTAB-3929"
       },
       {
         "role": "tyser_tpm",
-        "path": "/Users/iskander/.cache/oncoref/sources/sha256/db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03/filtered-tpm.zip",
+        "source": "tyser_embryonic_tpm",
+        "version": "E-MTAB-9388-20261026",
         "sha256": "db4a4190d03389345e9fcce1ad969a8df30667b0d7a51bd711cf652547d74f03",
         "source_id": "tyser_E-MTAB-9388"
       },
       {
         "role": "tyser_design",
-        "path": "/Users/iskander/.cache/oncoref/sources/sha256/5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3/experiment-design.tsv",
+        "source": "tyser_embryonic_design",
+        "version": "E-MTAB-9388-20261026",
         "sha256": "5e390d8f8febda88738c46907c7c70a26a6138d069baa20935b4005d176deff3",
         "source_id": "tyser_E-MTAB-9388"
       }
@@ -940,6 +952,6 @@
     ],
     "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
   },
-  "data_sha256": "08d021172d6d10c28b3f8de3f0392c3ddb658e767eb7a777c6b1483eb69d9283",
+  "data_sha256": "78e555636c8ae28a0a0fab2a1dd288e7bbf7cd1ca0b0512f85e1400a7cc6134d",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

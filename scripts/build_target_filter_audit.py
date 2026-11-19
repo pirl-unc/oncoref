@@ -474,9 +474,7 @@ finding that falls short of the rubric, a family rule, or the nose and skin refe
 
 {md(tier_rows)}
 
-Family rules. A member whose family's home is a tissue no panel resolves, and that has
-no reproductive evidence, is Other:Unscreened tissue in the catalog; the rows count the members
-that remain candidates:
+Insufficient coverage of a recorded family home blocks CA membership. Members with qualifying reproductive evidence can enter RA. The table counts members that remain candidates.
 
 {md(family_rows)}
 

@@ -92,7 +92,7 @@ def version_comparison(catalog):
                 str(int(counts["Reproductive Antigen only"])),
                 str(int(catalog.is_target_candidate.sum())),
                 f"{current_cta - previous:+d}",
-                "GTEx individual reproductive witnesses and within-site normal donor P99; reproductive-program flags are advisory",
+                "GTEx individual reproductive witnesses and within-site normal donor P95; reproductive-program flags are advisory",
             ]
         )
         + " |"

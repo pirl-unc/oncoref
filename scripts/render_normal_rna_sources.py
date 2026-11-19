@@ -18,9 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 BUILD = ROOT / "docs/audits/target-selection-20261110/rebuild"
 OUT = BUILD / "normal-rna"
 SOURCES = {
-    "gtex_donor_p99": (
-        "GTEx P99",
-        "GTEx v11. Linear 99th percentile within each anatomical site across donors.",
+    "gtex_donor_p95": (
+        "GTEx P95",
+        "GTEx v11. Linear 95th percentile within each anatomical site across donors.",
     ),
     "gtex_individual_tissue_tpm": (
         "GTEx samples",
@@ -32,7 +32,7 @@ SOURCES = {
     ),
     "hpa_tissue_samples": (
         "HPA biopsies",
-        "HPA v23. Within-biopsy transcript TPM summed by locus. Each healthy biopsy can set a maximum and each reproductive biopsy can witness RA. Donor IDs are unavailable.",
+        "HPA v23. Within-biopsy transcript TPM summed by locus. Within-tissue P95 sets the healthy biopsy reference and each reproductive biopsy can witness RA. Donor IDs are unavailable.",
     ),
     "rna_tissue_hpa": ("HPA tissue", "HPA v23 tissue means in TPM."),
     "rna_tissue_gtex": (
@@ -44,13 +44,17 @@ SOURCES = {
         "HPA brain subregion means in TPM, mapped to anatomical regions.",
     ),
     "rna_brain_gtex": ("GTEx brain via HPA", "GTEx brain region summaries distributed by HPA v23."),
+    "hpa_immune_cell_samples": (
+        "HPA sorted immune",
+        "P95 of donor-level native TPM within each sorted blood population.",
+    ),
     "hpa_immune_monaco": (
         "Monaco",
         "Mean TPM in sorted blood immune populations. The immune screen also evaluates these measurements.",
     ),
     "dice": (
         "DICE",
-        "Supported blood immune-cell TPM, using the third-highest observation and the conservative bound for unpaired protein-group members. The immune screen also uses DICE.",
+        "Supported blood immune-cell TPM, using within-population P95 for single loci and the conservative bound for unpaired protein-group members. The immune screen also uses DICE.",
     ),
     "petropoulos_E-MTAB-3929": (
         "Petropoulos",
@@ -283,7 +287,7 @@ def build():
     lines = [
         "# Normal RNA sources and antigen membership",
         "",
-        "Every native-TPM reference is evaluated within its anatomical context. The highest normal value from any source sets N. Disposable tissue supplies a separate D. Both antigen routes use **H₀ = max(N, D, 1 TPM)**. The source panels overlap; measurements are never added across studies.",
+        "Every native-TPM reference is evaluated within its anatomical context. The highest supported within-site statistic across sources sets N. Disposable tissue supplies a separate D. Both antigen routes use **H₀ = max(N, D, 1 TPM)**. The source panels overlap; measurements are never added across studies.",
         "",
         "[Cell and isoform evidence](../../../../curation.md#cell-and-isoform-evidence) describes expression in olfactory neurons, developing teeth, bone, and peri-implantation embryos, with the assay and age for each observation.",
         "",
@@ -344,7 +348,7 @@ def build():
             "",
             "## From measurements to memberships",
             "",
-            "For GTEx v11 normal sites, sum the measured loci encoding each identical protein within a library. Give each donor one value per site (median of replicate libraries), then take the linearly interpolated 99th percentile of the measured donors. Interpolation produces a tissue statistic without a sample or donor ID. HPA biopsies contribute their highest individual TPM per tissue. Missing required tissue coverage blocks qualification.",
+            "For GTEx v11 normal sites, sum the measured loci encoding each identical protein within a library. Give each donor one value per site (median of replicate libraries), then take the linearly interpolated 95th percentile of the measured donors. Interpolation produces a tissue statistic without a sample or donor ID. HPA biopsies contribute the linear P95 of measured biopsy TPM per healthy tissue. Missing required tissue coverage blocks qualification.",
             "",
             "![Sources setting the reference for each assessed protein](denominator-sources.png)",
             "",

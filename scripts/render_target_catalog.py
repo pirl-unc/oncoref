@@ -60,7 +60,7 @@ def funnel(data):
             "Other:Expression",
         ),
         (
-            "Home tissue no panel resolves, without reproductive evidence",
+            "Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness",
             data.classification.eq("Other:Unscreened tissue"),
             "Other:Unscreened tissue",
         ),
@@ -308,7 +308,7 @@ table{border-collapse:collapse;width:100%}th,td{padding:9px;text-align:left;bord
 <p><a href="summary/">All curation figures and count tables</a> · <a href="library-qc.csv.gz">Library QC measurements</a> · <a href="../../../antigen-sequences/">Set and peptide subtraction APIs</a></p>
 <p>Other: __OTHER_COUNTS__. The __RA_ONLY__ Reproductive Antigens only have no qualifying cancer evidence under this screen.</p>
 <p>The shared eligibility screen leaves __ELIGIBLE__ proteins. Cancer RNA needs one tumor sample, from any comparable TPM cohort, at ≥10 × max(N, D, 1), where N is the highest non-reproductive normal value and D the highest Disposable value. All qualifying 10× samples, known patients, anonymous samples and cancer types are counted separately. The highest tumor, reproductive or developmental value must exceed every measured nonreproductive and Disposable value, with Disposable expression at most 32 TPM and 32 nTPM. RA independently requires ≥10 × max(N, D, 1) in a reproductive tissue sample or supported embryo-specific lineage mean. Protein staining and incompatible RNA scales remain independent evidence layers; they cannot bypass the RNA fold.</p>
-<p class="note">The comparison uses native gene TPM with resolved identities and source quality checks. N includes within-site GTEx v11 linear donor P99, HPA v23 individual biopsies and supported tissue/cell summaries; it does not cover every healthy donor. Cross-study batch effects are not corrected. Other assay scales retain their independent normal-exclusion rules. <a href="normal-rna/">Normal RNA source coverage</a> · <a href="comparison.json">Exact comparison scope</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Cross-study methods</a>.</p>
+<p class="note">The comparison uses native gene TPM with resolved identities and source quality checks. N includes within-site GTEx v11 linear donor P95, HPA v23 within-tissue biopsy P95 and supported tissue/cell summaries; it does not cover every healthy donor. Cross-study batch effects are not corrected. Other assay scales retain their independent normal-exclusion rules. <a href="normal-rna/">Normal RNA source coverage</a> · <a href="comparison.json">Exact comparison scope</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Cross-study methods</a>.</p>
 <p><strong>NUTM coverage:</strong> the stored UNC three-sample matrix fails the nonnegative-TPM check and contributes no qualifying samples. Its failed source remains in the <a href="tumor-source-coverage.csv">coverage ledger</a>; <a href="https://github.com/pirl-unc/oncoref/issues/604">#604</a> and <a href="https://github.com/pirl-unc/oncoref/issues/665">#665</a> track the repair. No raw reads were re-quantified for this rebuild.</p>
 <h2>Changes from the released 1.39.0 catalog</h2><div class="summary"><table><thead><tr><th>Released category</th><th>New category</th><th>Proteins</th></tr></thead><tbody>__MIGRATIONS__</tbody></table></div>
 <p><a href="changes-from-1.39.csv">All changes since 1.39 and their evidence</a> · <a href="summary.json">Counts</a> · <a href="gene-decisions.csv.gz">All member genes</a> · <a href="protein-decisions.csv.gz">Full protein decisions</a></p>
@@ -502,7 +502,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         )
         + "| Protein | Tumor maximum TPM | Normal comparison TPM | Cancer assessment |\n"
         "|---|---:|---:|---|\n" + table_rows + "\n\n## Evidence and reproduction\n\n"
-        "The comparison uses source-native TPM, within-site GTEx v11 linear donor P99, HPA v23 individual biopsies and supported tissue/cell summaries. It is not a maximum over every healthy donor. "
+        "The comparison uses source-native TPM, within-site GTEx v11 linear donor P95, HPA v23 within-tissue biopsy P95 and supported tissue/cell summaries. It is not a maximum over every healthy donor. "
         "It does not correct cross-study batch effects. NUTM's stored three-sample matrix fails "
         "the nonnegative-TPM check and is listed in the [coverage ledger](tumor-source-coverage.csv).\n\n"
         "[Full protein decisions](protein-decisions.csv.gz) · [All member genes](gene-decisions.csv.gz) · "
@@ -559,6 +559,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "scripts/render_normal_rna_sources.py",
         "scripts/audit_normal_library_qc.py",
         "scripts/gtex_sample_evidence.py",
+        "scripts/bulk_normal_percentiles.py",
         "oncoref/normal_library_qc.py",
         "scripts/build_target_selection_report.py",
         "scripts/build_rare_cell_evidence.py",

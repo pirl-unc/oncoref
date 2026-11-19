@@ -29,10 +29,10 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18253,
-        "Other": 1133,
-        "CTA": 308,
-        "Cancer Antigen only": 68,
-        "Reproductive Antigen only": 131,
+        "Other": 1116,
+        "CTA": 327,
+        "Cancer Antigen only": 70,
+        "Reproductive Antigen only": 127,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -52,7 +52,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 474
+    assert len(policy.results(changed_only=True)) == 461
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -76,9 +76,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
         "IQCF5",
         "BOD1L2",
     ]:
-        assert by_name.loc[name, "category"] == (
-            "Reproductive Antigen only" if name == "SPATA19" else "CTA"
-        )
+        assert by_name.loc[name, "category"] == "CTA"
         assert by_name.loc[name, "tumor_top_sample"] == "TREEHOUSE_POLYA_25_01:TCGA-2G-AAFL-01"
     for name in [
         "MAGEC2",
@@ -149,7 +147,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     assert by_name.loc["BPIFB3", "classification"] == "Other:Unscreened tissue"
     # A confirmed finding below the rubric, and a family rule, are recorded only.
     assert by_name.loc["LRRC52", "literature_recorded_tier"] == "vital"
-    assert by_name.loc["LRRC52", "classification"] == "Reproductive Antigen only"
+    assert by_name.loc["LRRC52", "classification"] == "CTA"
     assert by_name.loc["OR2B2", "literature_family"] == "olfactory_receptor"
     assert by_name.loc["OR2B2", "literature_family_tier"] == "manageable"
     dismissed = catalog[catalog.is_target_candidate & catalog.rare_cell_status.eq("dismissed")]
@@ -167,7 +165,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
             catalog.released_category.eq("CTA") & catalog.readthrough_locus, "protein_group_label"
         ]
     )
-    assert len(held) == 108 and len(held - readthrough) == 102
+    assert len(held) == 98 and len(held - readthrough) == 92
     assert {"ATF7-NPFF", "ENSG00000273155"} <= readthrough <= held
     assert held >= {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
     assert by_name.loc["CDY1B", "cancer_evidence"] == "does_not_qualify"
@@ -175,7 +173,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     assert by_name.loc["CDY1B", "classification"] == "Other:Expression"
     # Unresolved patient identity no longer holds a protein: one sample decides.
     assert by_name.loc["FAM237A", "cancer_evidence"] == "does_not_qualify"
-    assert by_name.loc["FAM237A", "unresolved_patient_samples_above_normal"] == 0
+    assert by_name.loc["FAM237A", "unresolved_patient_samples_above_normal"] == 2
     assert by_name.loc["FAM237A", "tumor_fold"] < policy.TUMOR_FOLD
     assert by_name.loc["FAM237A", "classification"] == "Other:Expression"
     gene = by_name.loc["H2BW2", "representative_gene_id"]
@@ -190,8 +188,8 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
     assert len(maxima) == summary["assessed_for_cancer_evidence"] == 918
-    assert summary["shared_eligible"] == 822
-    assert summary["expression_bounds"]["fail"] == 42
+    assert summary["shared_eligible"] == 841
+    assert summary["expression_bounds"]["fail"] == 22
     failed = catalog[catalog.expression_bounds_status.eq("fail")]
     assert (
         not failed.is_target_candidate.any()
@@ -267,8 +265,11 @@ def test_tenfold_witness_tables_are_complete_and_reproductive_evidence_is_symmet
     assert development.participant_id.notna().all()
     normal = pd.read_csv(OUT / "normal-comparison.csv.gz")
     individual = normal[normal.observation_kind.eq("individual_tissue_sample")]
-    assert individual.sample_id.nunique() == 186
-    assert {"normal", "disposable", "reproductive"} <= set(individual.scope)
+    assert individual.sample_id.nunique() == 54
+    assert set(individual.scope) == {"reproductive"}
+    percentiles = normal[normal.observation_kind.eq("biopsy_percentile")]
+    assert set(percentiles.scope) == {"normal", "disposable"}
+    assert percentiles.sample_id.isna().all()
     assert individual.participant_id.isna().all()  # HPA does not supply donor identity.
 
 
@@ -304,8 +305,8 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
         assert row.nomination_scope == (
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
-    assert catalog[catalog.is_cta].published_nomination.sum() == 235
-    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 31
+    assert catalog[catalog.is_cta].published_nomination.sum() == 252
+    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 28
 
 
 def test_packaged_snapshot_matches_report_metadata(catalog):
@@ -313,9 +314,18 @@ def test_packaged_snapshot_matches_report_metadata(catalog):
     path = ROOT / "oncoref/data/target-selection.csv.gz"
     assert hashlib.sha256(path.read_bytes()).hexdigest() == meta["data_sha256"]
     assert meta["summary"] == json.loads((OUT / "summary.json").read_text())
-    assert meta["comparison"]["normal_sources"] == json.loads(
-        (OUT / "downloaded-hpa-sources.json").read_text()
-    )
+    from oncoref import reference_data
+
+    sources = meta["comparison"]["normal_sources"]
+    assert {row["source"] for row in sources} == {
+        "rna_tissue_hpa",
+        "rna_tissue_gtex",
+        "rna_brain_hpa",
+        "rna_brain_gtex",
+    }
+    for row in sources:
+        pin = reference_data.REFERENCE_SOURCES[row["source"]]["pins"][row["version"]]
+        assert all(row[key] == pin[key] for key in ("url", "sha256", "archive_sha256", "bytes"))
     assert catalog.policy.eq(policy.POLICY_ID).all()
     for category in policy.CATEGORIES:
         subset = pd.read_csv(OUT / (category.lower().replace(" ", "-") + ".csv.gz"))
@@ -434,9 +444,9 @@ def test_lactating_mammary_separation_and_cta_tiers(catalog):
     non_ctas = catalog[~catalog.is_cta]
     assert non_ctas.cta_tier.fillna("").eq("").all()
     assert ctas.cta_tier.value_counts().to_dict() == {
-        "core": 201,
-        "extended_only": 19,
-        "core_with_extended_exposure": 88,
+        "core": 206,
+        "extended_only": 21,
+        "core_with_extended_exposure": 100,
     }
     by_name = ctas.set_index("protein_group_label")
     assert by_name.loc["LALBA", "cta_tier"] == "extended_only"

@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 507
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 524
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -63,9 +63,10 @@ def test_off_target_knob_reads_tissue_tpm_and_includes_disposable(catalog):
     tissue = tf.select(tf.TargetFilter(max_off_target_tpm=1.0), catalog)
     assert tissue.normal_reference_tpm.lt(1.0).all() and tissue.disposable_max_tpm.lt(1.0).all()
     assert tissue.healthy_maximum_ntpm.ge(1.0).any()  # the knob does not read nTPM
-    # The catalog's reference N is never below the legacy bulk maximum.
+    # Reconstruct the filter from the two current source-native references.
     candidates = catalog[catalog.is_target_candidate]
-    assert candidates.normal_reference_tpm.ge(candidates.healthy_maximum_tpm - 1e-9).all()
+    expected = candidates.normal_reference_tpm.lt(1.0) & candidates.disposable_max_tpm.lt(1.0)
+    assert set(tissue.entity_id) == set(candidates.loc[expected, "entity_id"])
 
 
 def test_every_cancer_antigen_has_a_tumor_at_tenfold(catalog):
@@ -131,9 +132,9 @@ def test_patient_replication_uses_tenfold_known_patients_not_above_normal(catalo
 
 def test_cta_list_papers_count_only_where_they_nominate(catalog):
     papers = tf.paper_table()
-    from oncoref.cta_literature import attestations
+    from oncoref.cta_literature import current_attestations
 
-    links = attestations()
+    links = current_attestations()
     nominated = set(
         map(tuple, links[links.published_nomination][["entity_id", "source_id"]].to_numpy())
     )
@@ -217,7 +218,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 507 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 524 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()

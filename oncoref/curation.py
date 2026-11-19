@@ -67,6 +67,9 @@ def write_receipt(root):
     implementation = {
         "oncoref/curation.py",
         "oncoref/data/curation-build.json",
+        "oncoref/data/antigen-source-inventory.csv",
+        "oncoref/data/cta-literature-benchmarks.csv",
+        "oncoref/data/marcinkowski2019-ct83-expression.csv",
         "oncoref/target_filters.py",
         "oncoref/host_context.py",
         "scripts/cta_evidence_assets/target-selection-guide.md",

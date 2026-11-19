@@ -1,6 +1,6 @@
 # Normal RNA sources and antigen membership
 
-Every native-TPM reference is evaluated within its anatomical context. The highest normal value from any source sets N. Disposable tissue supplies a separate D. Both antigen routes use **H₀ = max(N, D, 1 TPM)**. The source panels overlap; measurements are never added across studies.
+Every native-TPM reference is evaluated within its anatomical context. The highest supported within-site statistic across sources sets N. Disposable tissue supplies a separate D. Both antigen routes use **H₀ = max(N, D, 1 TPM)**. The source panels overlap; measurements are never added across studies.
 
 [Cell and isoform evidence](../../../../curation.md#cell-and-isoform-evidence) describes expression in olfactory neurons, developing teeth, bone, and peri-implantation embryos, with the assay and age for each observation.
 
@@ -12,16 +12,17 @@ A colored cell indicates measured coverage for at least one assessed group. Repr
 
 | Source | Measurement and use |
 |---|---|
-| GTEx P99 | GTEx v11. Linear 99th percentile within each anatomical site across donors. |
+| GTEx P95 | GTEx v11. Linear 95th percentile within each anatomical site across donors. |
 | GTEx samples | GTEx v11. Individual reproductive samples can witness RA. |
 | GTEx median | GTEx v11. Published site-level donor medians, with exact member-locus mapping. |
-| HPA biopsies | HPA v23. Within-biopsy transcript TPM summed by locus. Each healthy biopsy can set a maximum and each reproductive biopsy can witness RA. Donor IDs are unavailable. |
+| HPA biopsies | HPA v23. Within-biopsy transcript TPM summed by locus. Within-tissue P95 sets the healthy biopsy reference and each reproductive biopsy can witness RA. Donor IDs are unavailable. |
 | HPA tissue | HPA v23 tissue means in TPM. |
 | GTEx via HPA | GTEx tissue summaries distributed in HPA v23. These overlap the GTEx resource. |
 | HPA brain | HPA brain subregion means in TPM, mapped to anatomical regions. |
 | GTEx brain via HPA | GTEx brain region summaries distributed by HPA v23. |
+| HPA sorted immune | P95 of donor-level native TPM within each sorted blood population. |
 | Monaco | Mean TPM in sorted blood immune populations. The immune screen also evaluates these measurements. |
-| DICE | Supported blood immune-cell TPM, using the third-highest observation and the conservative bound for unpaired protein-group members. The immune screen also uses DICE. |
+| DICE | Supported blood immune-cell TPM, using within-population P95 for single loci and the conservative bound for unpaired protein-group members. The immune screen also uses DICE. |
 | Petropoulos | Preimplantation embryo-lineage means in TPM; stage, cell and independent embryo support apply. |
 | Tyser | Carnegie stage 7 embryo-lineage means in TPM; cell and embryo support apply. |
 | HPA consensus | Normal tissue consensus nTPM defines anatomical coverage and contributes to the shared expression screen. |
@@ -37,7 +38,7 @@ Tissue names follow each panel's anatomical mapping. The downloadable inventory 
 
 | Source | Tissues represented |
 |---|---|
-| GTEx P99 | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, cerebellum, cerebral cortex, colon, esophagus, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, pancreas, peripheral nerve, pituitary gland, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, thyroid gland, urinary bladder |
+| GTEx P95 | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, cerebellum, cerebral cortex, colon, esophagus, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, pancreas, peripheral nerve, pituitary gland, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, thyroid gland, urinary bladder |
 | GTEx samples | breast, cervix, fallopian tube, ovary, prostate, testis, uterus, vagina |
 | GTEx median | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, breast, cerebellum, cerebral cortex, cervix, colon, esophagus, fallopian tube, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, ovary, pancreas, peripheral nerve, pituitary gland, prostate, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, testis, thyroid gland, urinary bladder, uterus, vagina |
 | HPA biopsies | adipose tissue, adrenal gland, appendix, bone marrow, breast, cerebral cortex, cervix, choroid plexus, colon, duodenum, endometrium, epididymis, esophagus, fallopian tube, gallbladder, heart muscle, kidney, liver, lung, lymph node, ovary, pancreas, parathyroid gland, placenta, prostate, rectum, salivary gland, seminal vesicle, skeletal muscle, skin, small intestine, smooth muscle, spleen, stomach, testis, thymus, thyroid gland, tongue, tonsil, urinary bladder |
@@ -45,6 +46,7 @@ Tissue names follow each panel's anatomical mapping. The downloadable inventory 
 | GTEx via HPA | adipose tissue, adrenal gland, amygdala, basal ganglia, breast, caudate, cerebellum, cerebral cortex, cervix, colon, endometrium, esophagus, fallopian tube, heart muscle, hippocampus, hypothalamus, kidney, liver, lung, ovary, pancreas, pituitary gland, prostate, retina, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, substantia nigra, testis, thyroid gland, urinary bladder, vagina |
 | HPA brain | amygdala, basal ganglia, cerebellum, cerebral cortex, choroid plexus, hippocampal formation, hypothalamus, medulla oblongata, midbrain, pons, spinal cord, thalamus, white matter |
 | GTEx brain via HPA | amygdala, basal ganglia, cerebellum, cerebral cortex, hippocampal formation, hypothalamus, midbrain, pituitary gland, retina, spinal cord |
+| HPA sorted immune | blood |
 | Monaco | blood |
 | DICE | blood |
 | Petropoulos | embryo |
@@ -80,16 +82,16 @@ The tissue-tier, immune, corneal and rare-cell screens can prevent shared eligib
 
 ## From measurements to memberships
 
-For GTEx v11 normal sites, sum the measured loci encoding each identical protein within a library. Give each donor one value per site (median of replicate libraries), then take the linearly interpolated 99th percentile of the measured donors. Interpolation produces a tissue statistic without a sample or donor ID. HPA biopsies contribute their highest individual TPM per tissue. Missing required tissue coverage blocks qualification.
+For GTEx v11 normal sites, sum the measured loci encoding each identical protein within a library. Give each donor one value per site (median of replicate libraries), then take the linearly interpolated 95th percentile of the measured donors. Interpolation produces a tissue statistic without a sample or donor ID. HPA biopsies contribute the linear P95 of measured biopsy TPM per healthy tissue. Missing required tissue coverage blocks qualification.
 
 ![Sources setting the reference for each assessed protein](denominator-sources.png)
 
 | Route after shared eligibility | Definition | Protein groups |
 |---|---|---:|
-| CA | At least one QC-passing tumor reaches 10 × H₀ | 376 |
-| RA | At least one reproductive sample or supported embryo-lineage observation reaches 10 × H₀ | 439 |
-| CTA | Both CA and RA | 308 |
-| CA ∪ RA | Either route | 507 |
+| CA | At least one QC-passing tumor reaches 10 × H₀ | 397 |
+| RA | At least one reproductive sample or supported embryo-lineage observation reaches 10 × H₀ | 454 |
+| CTA | Both CA and RA | 327 |
+| CA ∪ RA | Either route | 524 |
 
 ![Cancer and reproductive antigen overlap](../summary/venn.png)
 

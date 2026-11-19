@@ -870,6 +870,58 @@
       "sha256": "0a77c720827b39c5d6785e37014fa37ea7b0d1004cd36754515bc275dd4e6e87",
       "bytes": 1065443295,
       "archive_sha256": "0a77c720827b39c5d6785e37014fa37ea7b0d1004cd36754515bc275dd4e6e87"
+    },
+    "rna_tissue_hpa": {
+      "version": "v23",
+      "kind": "hpa",
+      "filename": "rna_tissue_hpa.tsv",
+      "description": "HPA v23 rna tissue hpa region or tissue summary, source-native TPM and nTPM columns",
+      "archive_format": "zip",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_hpa.tsv.zip",
+      "publication_url": "https://v23.proteinatlas.org/about/download",
+      "taxonomy_id": 9606,
+      "sha256": "52bd4b1771388372187a6edf8c7d58b68b5074772c83b46be7b71ee02e074b4d",
+      "bytes": 37509845,
+      "archive_sha256": "47f325ce9281ba94c64d8d0ba0c27bc3f2f6ed668fa8c8f1a9a10671e690025c"
+    },
+    "rna_tissue_gtex": {
+      "version": "v23",
+      "kind": "hpa",
+      "filename": "rna_tissue_gtex.tsv",
+      "description": "HPA v23 rna tissue gtex region or tissue summary, source-native TPM and nTPM columns",
+      "archive_format": "zip",
+      "url": "https://v23.proteinatlas.org/download/rna_tissue_gtex.tsv.zip",
+      "publication_url": "https://v23.proteinatlas.org/about/download",
+      "taxonomy_id": 9606,
+      "sha256": "6d908d193fbcc5cf94f93645c26099db2a20baa6c0678090cdf7bb8b210a6b68",
+      "bytes": 33210836,
+      "archive_sha256": "820cc275a8f3f4d162a2e0b87ed75f9a0e176538fa336320ea3179f9e459d881"
+    },
+    "rna_brain_gtex": {
+      "version": "v23",
+      "kind": "hpa",
+      "filename": "rna_brain_gtex.tsv",
+      "description": "HPA v23 rna brain gtex region or tissue summary, source-native TPM and nTPM columns",
+      "archive_format": "zip",
+      "url": "https://v23.proteinatlas.org/download/rna_brain_gtex.tsv.zip",
+      "publication_url": "https://v23.proteinatlas.org/about/download",
+      "taxonomy_id": 9606,
+      "sha256": "cc5637fa7a2f608a834221e1596109a43bb67ff5aa35a6c1c33cf28581ea1358",
+      "bytes": 9400293,
+      "archive_sha256": "4bcaf4dc8446116f6426a9e447a22b90acc6e05872c758b366e662c0a6c56592"
+    },
+    "rna_brain_hpa": {
+      "version": "v23",
+      "kind": "hpa",
+      "filename": "rna_brain_hpa.tsv",
+      "description": "HPA v23 rna brain hpa region or tissue summary, source-native TPM and nTPM columns",
+      "archive_format": "zip",
+      "url": "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+      "publication_url": "https://v23.proteinatlas.org/about/download",
+      "taxonomy_id": 9606,
+      "sha256": "1b7bee43cc0dea503ad292863fde238e0b249512a31b1badeb05d07253b20e9d",
+      "bytes": 238897363,
+      "archive_sha256": "96e4be538cdf4c480ff15008206a721007e78a2571a2d5054463bf28fdd4bbb5"
     }
   }
 }

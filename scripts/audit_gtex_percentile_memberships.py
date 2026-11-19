@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from audit_gtex_cross_tissue_signals import source_panels
-from gtex_sample_evidence import SOURCE, donor_p99, sample_matrix
+from gtex_sample_evidence import SOURCE, donor_percentile, sample_matrix
 
 from oncoref import reference_data
 from oncoref import target_selection as ts
@@ -84,17 +84,21 @@ def qc_scenarios(facts):
         sizes = groups.loc[list(removals)].map(len)
         sums = grouped.sum(min_count=1).where(grouped.count().eq(sizes, axis=0))
         rows = normal.loc[measured & normal.entity_id.isin(removals)]
-        original = donor_p99(sums, donors).reindex(rows.entity_id)
+        original = donor_percentile(sums, donors, 0.99).reindex(rows.entity_id)
         np.testing.assert_allclose(original, rows.value)
         for entity, samples in removals.items():
             if entity in sums.index:
                 sums.loc[entity, list(samples)] = np.nan
-        updated = donor_p99(sums, donors).reindex(rows.entity_id).fillna(original)
+        updated = donor_percentile(sums, donors, 0.99).reindex(rows.entity_id).fillna(original)
         normal.loc[rows.index, "value"] = updated.to_numpy()
     return normal.groupby("entity_id").value.max().reindex(facts.index), hpa
 
 
 def main():
+    if ts.POLICY_ID != "oncoref.target-selection.2026-11-18.4":
+        raise SystemExit(
+            "This historical P99 audit requires the 2026-11-18.4 catalog (commit 8e85f037)."
+        )
     ceilings = pd.read_csv(OUT / "protein-sensitivity.csv.gz").set_index("entity_id")
     fields = [
         "entity_id",

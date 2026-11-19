@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-18.4",
+  "policy_id": "oncoref.target-selection.2026-11-19.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -34,7 +34,7 @@
     "Review": "Required evidence is missing, unresolved, or fails a shared admission check.",
     "Sequence": "Nested protein without independent support, >=95% Unsafe 9-mer containment, or a read-through locus whose every coding transcript joins two separate genes.",
     "Expression": "Neither positive expression route qualifies, or the target maximum or Disposable cap fails.",
-    "Unscreened tissue": "The protein's recorded normal home is a tissue no expression panel resolves, and no reproductive or developmental evidence qualifies. Its tumor value was never compared with that tissue, so cancer evidence alone does not admit it."
+    "Unscreened tissue": "The protein's recorded normal home is a tissue no expression panel resolves, and no reproductive evidence qualifies for RA. Its tumor value was never compared with that tissue, so cancer evidence alone does not admit it."
   },
   "home_tissue": {
     "unmeasured_tissues": [
@@ -45,7 +45,7 @@
       "dental pulp"
     ],
     "recorded_by": "A family rule, a recorded literature finding, or the nose and skin reference.",
-    "effect": "Without qualifying reproductive or developmental evidence: Other:Unscreened tissue. With it, the category is unchanged and the tissue stays on the row."
+    "effect": "Insufficient home-tissue coverage blocks cancer admission. Reproductive enrichment can independently qualify RA."
   },
   "published_normal_expression": {
     "source": "oncoref/data/normal-expression-literature.json",

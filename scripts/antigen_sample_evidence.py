@@ -221,7 +221,7 @@ def developmental_samples(facts):
     """
     from scipy.io import mmread
 
-    from oncoref.curation import reference_input
+    from oncoref.curation import manifest, reference_input
     from oncoref.gene_matching import match_reference_genes, resolve_measurement_rows
     from oncoref.target_selection import developmental_donor_requirement
 
@@ -236,7 +236,7 @@ def developmental_samples(facts):
             provenance.append(
                 {
                     "role": role,
-                    "path": str(path.resolve()),
+                    **manifest()["reference_inputs"][role],
                     "sha256": sha256(path),
                     "source_id": source,
                 }

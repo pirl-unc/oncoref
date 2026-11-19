@@ -36,8 +36,8 @@
       "release": "v11",
       "tissues": "adult primary tissues",
       "unit": "TPM",
-      "normal_source_id": "gtex_donor_p99:v11",
-      "normal_statistic": "Linear donor P99 within each non-reproductive site",
+      "normal_source_id": "gtex_donor_p95:v11",
+      "normal_statistic": "Linear donor P95 within each non-reproductive site",
       "reproductive_statistic": "Individual sample TPM"
     }
   },
