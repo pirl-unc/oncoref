@@ -1,6 +1,6 @@
 # Rebuilt antigen catalog
 
-Policy `oncoref.target-selection.2026-11-18.3`. **308 CTA, 68 Cancer Antigen only, 131 Reproductive Antigen only, 1133 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
+Policy `oncoref.target-selection.2026-11-18.4`. **308 CTA, 68 Cancer Antigen only, 131 Reproductive Antigen only, 1133 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
 
 [Filterable protein table](report.html) · [Changes from 1.39.0](changes-from-1.39.csv) · [Transition counts](changes-from-1.39-summary.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 

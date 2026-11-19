@@ -3,7 +3,7 @@
 **The catalog assigns five categories and they are not changed here. Filters only
 remove proteins from the 507 Target candidates, through six layers that
 follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.5`, applied to
-catalog `oncoref.target-selection.2026-11-18.3`. Every number below is computed by
+catalog `oncoref.target-selection.2026-11-18.4`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
 These are outputs of screening rules. They are not validated tumor antigens.

@@ -1,0 +1,45 @@
+entity_id,protein_group_label,p99,p99_threshold_tpm,matched_p99,matched_p99_threshold_tpm,hpa_flag_sensitivity_p99,hpa_flag_sensitivity_p99_threshold_tpm,p95,p95_threshold_tpm
+PEG:3e415b8708d7e20a9f7b,AKAP4,Reproductive Antigen only,17.665408799999977,Reproductive Antigen only,17.665408799999977,Reproductive Antigen only,17.665408799999977,CTA,10.0
+PEG:319687183f4ce9523f0d,C16orf82,Reproductive Antigen only,44.25051799999986,Reproductive Antigen only,44.25051799999986,Reproductive Antigen only,44.25051799999986,CTA,22.568939999999984
+PEG:239b064b509fe82b6379,C19orf85,Other:Expression,194.12485999999979,Other:Expression,194.12485999999979,Other:Expression,194.12485999999979,Cancer Antigen only,51.30558999999987
+PEG:2794f50e6c794311fa72,CDRT15L2,Other:Expression,87.73360400000001,Other:Expression,87.73360400000001,Other:Expression,87.73360400000001,Reproductive Antigen only,51.86177999999998
+PEG:850fdd96c5da06df3e19,CER1,Cancer Antigen only,42.089964,Cancer Antigen only,42.089964,Cancer Antigen only,42.089964,CTA,27.019799999999996
+PEG:31c0e7ae49ba8a3975db,CIROP,Other:Expression,141.12049999999957,Other:Expression,141.12049999999957,Other:Expression,141.12049999999957,CTA,33.38129500000004
+PEG:39184a6829a33b6ab2b8,CT83,Reproductive Antigen only,193.84679999999958,Reproductive Antigen only,193.84679999999958,Reproductive Antigen only,193.84679999999958,CTA,86.03070000000001
+PEG:a8f90dfeb55ae984bf17,CTAGE15,Other:Expression,31.135477999999992,Other:Expression,31.135477999999992,Other:Expression,31.135477999999992,Cancer Antigen only,19.055355000000006
+PEG:672e705b44fa7730dc51,ENSG00000284934,Other:Expression,207.1780200000001,Other:Expression,207.1780200000001,Other:Expression,207.1780200000001,Cancer Antigen only,72.81983
+PEG:9d6abe9ca1723310d8dc,ERVV-1,Cancer Antigen only,64.01664000000002,Cancer Antigen only,64.01664000000002,Cancer Antigen only,64.01664000000002,CTA,41.28320000000001
+PEG:e2a9e6fdb6e94c2489f9,FAM170B,Reproductive Antigen only,18.375352000000017,Reproductive Antigen only,18.375352000000017,Reproductive Antigen only,18.375352000000017,CTA,10.0
+PEG:0679f9e7591a931eb660,FAM9A,Cancer Antigen only,39.13296899999972,Cancer Antigen only,39.13296899999972,Cancer Antigen only,39.13296899999972,CTA,17.0
+PEG:b8381968c624a7a365ef,FUT5,Other:Expression,29.883665,Other:Expression,29.883665,Other:Expression,29.883665,Cancer Antigen only,12.626405000000005
+PEG:4a182001281af71194cc,GFRA4,Other:Expression,320.60444999999925,Other:Expression,320.60444999999925,Other:Expression,320.60444999999925,Cancer Antigen only,103.77520000000001
+PEG:b2854c9d92a5f00ad8d1,HSFX4,Other:Expression,184.3633,Other:Expression,184.3633,Other:Expression,184.3633,Reproductive Antigen only,74.0213
+PEG:d4fc093cace3e8ca27cc,IRGC,Reproductive Antigen only,16.916689999999967,Reproductive Antigen only,16.916689999999967,Reproductive Antigen only,16.916689999999967,CTA,10.0
+PEG:116e4dd8138e6c26d50c,KIAA1210,Other:Expression,179.45168000000012,Other:Expression,179.45168000000012,Other:Expression,179.45168000000012,CTA,70.72244000000003
+PEG:d4180e1de0a87058593c,KRTAP12-4,Other:Expression,128.8305,Other:Expression,128.8305,Other:Expression,128.8305,Other:Unscreened tissue,28.96825
+PEG:cb43c14ce326f03602ec,KRTAP19-7,Other:Expression,148.4505,Other:Expression,148.4505,Other:Expression,148.4505,Other:Unscreened tissue,37.67475
+PEG:6e46b848b9cf5571eaf2,KRTAP20-1,Other:Expression,125.116,Other:Expression,125.116,Other:Expression,125.116,Other:Unscreened tissue,10.0
+PEG:ab528d81df8561b86c52,KRTAP20-2,Other:Expression,514.136,Other:Expression,514.136,Other:Expression,514.136,Other:Unscreened tissue,56.83135
+PEG:f9bac9ec8f55cf359c58,KRTAP21-1,Other:Expression,40.1389,Other:Expression,40.1389,Other:Expression,40.1389,Other:Unscreened tissue,10.0
+PEG:d89b534c216297fb1376,KRTAP21-2,Other:Expression,357.005,Other:Expression,357.005,Other:Expression,357.005,Other:Unscreened tissue,32.4066
+PEG:ac7748994a12c2c94b9a,KRTAP9-1,Other:Expression,37.4058,Other:Expression,37.4058,Other:Expression,37.4058,Other:Unscreened tissue,16.2466932313
+PEG:d9c186e07a9847164ac0,KRTAP9-6,Other:Expression,419.20349999999996,Other:Expression,419.20349999999996,Other:Expression,419.20349999999996,Other:Unscreened tissue,62.41315
+PEG:6aa6c074ed27b813e20a,KRTAP9-7,Other:Expression,1379.44,Other:Expression,1379.44,Other:Expression,1379.44,Other:Unscreened tissue,241.034
+PEG:0cb36841692fbc8278aa,LRRC52,Reproductive Antigen only,110.3660600000004,Reproductive Antigen only,110.3660600000004,Reproductive Antigen only,110.3660600000004,CTA,54.8407
+PEG:ae53a3d6f93ae7321fa2,MAGEC1,Cancer Antigen only,69.45222400000014,Cancer Antigen only,69.45222400000014,Cancer Antigen only,69.45222400000014,CTA,10.283179999999994
+PEG:913384bfcd8cc2059749,OR51C1,Other:Expression,55.91976199999977,Other:Expression,55.91976199999977,Other:Expression,55.91976199999977,CTA,23.715719999999973
+PEG:dca6ce5e3092779c0cac,OR52E2,Other:Expression,17.00690600000002,Other:Expression,17.00690600000002,Other:Expression,17.00690600000002,Other:Unscreened tissue,10.0
+PEG:53a1f1f19eb6188b7a32,OR6M1,Other:Expression,15.342743999999977,Other:Expression,15.342743999999977,Other:Expression,15.342743999999977,Other:Unscreened tissue,10.0
+PEG:cfbd871fd81368e25d03,OTOP1,Other:Expression,25.078899999999997,Other:Expression,25.078899999999997,Other:Expression,25.078899999999997,Cancer Antigen only,13.443750000000001
+PEG:de08c7c6995dfe5f18c0,PROKR1,Other:Expression,89.04425999999995,Other:Expression,89.04425999999995,Other:Expression,89.04425999999995,Cancer Antigen only,54.48657999999994
+PEG:8ce02989695ec9165acd,SAGE1,Cancer Antigen only,30.823726999999998,Cancer Antigen only,30.823726999999998,Cancer Antigen only,30.823726999999998,CTA,17.56895999999999
+PEG:2c6db6330fccee6eb8e2,SCYGR8,Other:Expression,685.0725,Other:Expression,685.0725,Other:Expression,685.0725,Cancer Antigen only,104.756
+PEG:5f7f44ada6c4691db55b,SMCP,Reproductive Antigen only,94.91784800000032,Reproductive Antigen only,94.91784800000032,Reproductive Antigen only,94.91784800000032,CTA,62.836225
+PEG:cf76a95a78d9079ba8a9,SMIM28,Other:Expression,175.98651999999998,Other:Expression,175.98651999999998,Other:Expression,175.98651999999998,Cancer Antigen only,118.7013999999998
+PEG:ba180054e19e985881aa,SPATA19,Reproductive Antigen only,18.004352999999963,Reproductive Antigen only,17.55768399999998,Reproductive Antigen only,18.004352999999963,CTA,10.0
+PEG:d99133e742eda2e7a2b9,STPG3,Other:Expression,214.28274999999954,Other:Expression,214.28274999999954,Other:Expression,214.28274999999954,Reproductive Antigen only,167.9133000000001
+PEG:314963d49c30c2168526,TAS1R2,Other:Expression,21.813950000000002,Other:Expression,21.813950000000002,Other:Expression,21.813950000000002,Other:Unscreened tissue,10.9178
+PEG:b0a3fa4ff2fcd422c314,TRIM48,Cancer Antigen only,51.865006000000534,Cancer Antigen only,51.865006000000534,Cancer Antigen only,51.865006000000534,CTA,19.45705500000001
+PEG:1001f66621e033eaa521,VHLL,Other:Expression,76.9723600000002,Other:Expression,76.9723600000002,Other:Expression,76.9723600000002,Cancer Antigen only,44.0
+PEG:6cd40ac662055cd0a70c,XKR3,Other:Expression,95.59054400000005,Other:Expression,95.59054400000005,Other:Expression,95.59054400000005,CTA,44.46682
+PEG:a82375b146f49aac7e7e,ZSWIM2,Other:Expression,36.23788799999999,Other:Expression,36.23788799999999,Other:Expression,36.23788799999999,Reproductive Antigen only,30.370499999999993

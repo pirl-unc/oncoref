@@ -1,5 +1,5 @@
 {
-  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-18.3",
+  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-18.4",
   "unit": "TPM",
   "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
   "compatibility_basis": [
@@ -664,7 +664,7 @@
   },
   "normal_library_qc": {
     "path": "normal-library-qc.csv",
-    "sha256": "8151199bc28e1500d1886796c80de2b22ba62a1f62f6c3e23b712e3334adf11a",
+    "sha256": "7855b036c7432ed759ba951871e0a153eaa22b35c2d2b83601a95dfa3ad48f22",
     "policy": "Signatures are evaluated within each tissue. Reproductive programs are advisory notes and never change sample eligibility. Other flags require adjudication; they never silently remove normal measurements from the denominator. Samples with blocking signatures cannot provide positive reproductive evidence."
   },
   "developmental_sources": [

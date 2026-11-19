@@ -4,7 +4,6 @@ import json
 from pathlib import Path
 
 import pandas as pd
-
 from cta_report_common import sha256, write_csv
 
 from oncoref import target_selection

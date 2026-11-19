@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-18.3`: **308 CTA** · **68 Cancer Antigen only** · **131 Reproductive Antigen only** · **1,133 Other** · **18,253 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-18.4`: **308 CTA** · **68 Cancer Antigen only** · **131 Reproductive Antigen only** · **1,133 Other** · **18,253 Unsafe**.
 
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·

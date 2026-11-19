@@ -170,13 +170,13 @@ def tissue_samples(facts, accepted_ids, *, genes=None):
     return pd.DataFrame(rows)
 
 
-def tissue_library_qc(genes, accepted_ids):
+def tissue_library_qc(genes, accepted_ids, carryover_reference):
     """Audit within tissue, with reproductive programs recorded as notes only.
 
     These are tumor-screen signatures, not validated normal-library exclusion
     criteria. Flagged normals remain in the denominator pending adjudication.
     """
-    from oncoref import library_qc
+    from oncoref import library_qc, normal_library_qc
     from oncoref.gene_matching import gene_identity_catalog
 
     lookup = accepted_ids.set_index("source_gene_id").canonical_gene_id
@@ -192,6 +192,13 @@ def tissue_library_qc(genes, accepted_ids):
     for tissue, samples in columns.groupby(lambda c: c.removeprefix("TPM.").rsplit(".", 1)[0]):
         audit = library_qc.signatures(
             values, list(samples), gene_ids=pd.Series(values.index), symbols=symbols
+        )
+        audit = audit.join(
+            normal_library_qc.published_carryover(
+                values.loc[values.index.intersection(carryover_reference.index), samples],
+                tissue,
+                carryover_reference,
+            )
         )
         audit["tissue"] = tissue
         audit["library_qc_review"] = audit.apply(
@@ -227,7 +234,12 @@ def developmental_samples(facts):
         archive_path, design_path = reference_input(archive_role), reference_input(design_role)
         for role, path in [(archive_role, archive_path), (design_role, design_path)]:
             provenance.append(
-                {"role": role, "path": str(path.resolve()), "sha256": sha256(path), "source_id": source}
+                {
+                    "role": role,
+                    "path": str(path.resolve()),
+                    "sha256": sha256(path),
+                    "source_id": source,
+                }
             )
         with zipfile.ZipFile(archive_path) as archive:
             name = next(n for n in archive.namelist() if n.endswith(".mtx"))

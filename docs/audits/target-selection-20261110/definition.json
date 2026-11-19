@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-18.3",
+  "policy_id": "oncoref.target-selection.2026-11-18.4",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -131,6 +131,7 @@
       ],
       "female_tract": [
         "fallopian tube",
+        "uterus",
         "endometrium",
         "cervix",
         "vagina"
@@ -144,7 +145,7 @@
       "cta_tiers": {
         "core": "Qualifies in embryo, placenta, testis or ovary, with all extended adult compartments <= 32 TPM and <= tumor_max_tpm / 10.",
         "core_with_extended_exposure": "Qualifies in embryo, placenta, testis or ovary, and also exceeds 32 TPM or lacks a 10x tumor margin in an extended adult compartment.",
-        "extended_only": "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, endometrium, cervix, vagina, lactating_breast or resting_breast."
+        "extended_only": "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, uterus, endometrium, cervix, vagina, lactating_breast or resting_breast."
       }
     }
   },

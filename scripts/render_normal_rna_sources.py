@@ -311,6 +311,28 @@ def build():
     for key, (label, _) in SOURCES.items():
         tissues = sorted(inventory.loc[inventory.family.eq(key), "tissue"].unique())
         lines.append(f"| {label} | {', '.join(tissues)} |")
+    qc = pd.read_csv(OUT / "carryover-summary.csv")
+    lines.extend(
+        [
+            "",
+            "## Cross-tissue RNA in individual libraries",
+            "",
+            "P denotes a pancreatic enzyme signature (PRSS1, CLPS, PNLIP, CELA3A). E denotes a squamous signature observed in esophageal mucosa (KRT4, KRT13). These markers come from [Nieuwenhuis et al.](https://www.nature.com/articles/s41467-020-15821-9).",
+            "",
+            "OncoRef compares each library with samples from the same anatomical site or sorted immune population. The panel requires at least three complete libraries. Every marker must exceed its within-site interpolated P95 and exceed the site median by at least 0.1% of its native GTEx median. The source organ is skipped. A blank flag means the panel could not be assessed. The thresholds here are OncoRef choices.",
+            "",
+            "These are advisory sample flags. Normal epithelial content can produce E, particularly in tissues with squamous epithelium. Shared marker expression alone cannot identify a transfer event. Tissue means, unpaired DICE ranks and single-cell UMI counts cannot support this within-library bulk TPM comparison.",
+            "",
+            "| Source | Libraries | P flagged / assessed | E flagged / assessed | Either |",
+            "|---|---:|---:|---:|---:|",
+            *(
+                f"| {row.source} | {row.libraries:,} | {row.P:,} / {row.P_assessed:,} | {row.E:,} / {row.E_assessed:,} | {row.either:,} |"
+                for row in qc.itertuples()
+            ),
+            "",
+            "[GTEx libraries](../gtex-library-qc.csv.gz) · [HPA tissue biopsies](../normal-library-qc.csv) · [HPA sorted immune libraries](immune-library-qc.csv) · [GTEx batch matches and percentile sensitivity](../../../gtex-cross-tissue-signals/index.md)",
+        ]
+    )
     lines.extend(
         [
             "",

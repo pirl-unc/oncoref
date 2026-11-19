@@ -50,7 +50,7 @@ The analysis reconstructs within-sample protein-group sums and reproduces every 
 
 Nearest-rank P99 selects the observed value at rank `ceil(0.99 × donors)` in ascending TPM order. This retains the maximum in sites with fewer than 100 donors. Across the 52 GTEx sites, five have fewer than 100. In the GTEx-only scenario, HPA biopsy maxima and other reference sources still contribute. For PRM2, nearest-rank P99 is 18.62 TPM in esophagus muscularis and 25.05 TPM in tibial nerve.
 
-For an automated enrichment rule, use the highest tissue-specific nearest-rank P99 from GTEx alongside the existing other normal references, Disposable reference and 1 TPM floor. The existing orthogonal normal-expression gates act independently. This rule always resolves the influence of a single outlier when donor measurements are available. The catalog's existing required-coverage rule still applies to missing tissues. The maximum and the sample flags remain available to explain the decision. This is an evaluated policy option.
+Nearest-rank P99 was evaluated during this audit. The current catalog uses linear interpolation. Both estimates can be influenced by individual observations, particularly in small tissues.
 
 The source-panel maximum scenario tests a separate carryover hypothesis. It omits a GTEx group observation only when its sample has a batch-supported different-donor match and every member locus is a marker of that matched source organ. In a site with no remaining observation for the group, it uses the original maximum. It leaves outlier-only samples in the calculation.
 
@@ -59,3 +59,20 @@ For PRM2, the GTEx esophagus muscularis maximum is 3,047.26 TPM, the second-high
 [Scenario totals](normal-sensitivity.csv) · [All 918 per-protein ceilings and tumor peaks](protein-sensitivity.csv.gz) · [Original 98 transitions](../gtex-esophagus-muscularis/tumor-evidence-98.csv)
 
 After running the GTEx screen above, run `PYTHONPATH=. python scripts/audit_healthy_sample_qc.py /path/to/tissue-shards` using the pinned HPA biopsy archive and the same catalog checkout.
+
+## P99, P95 and source-matched carryover in the current catalog
+
+The November 18 comparison holds tumor and reproductive observations fixed and reapplies the same eligibility rules. HPA maxima are retained except in the HPA-specific sensitivity. It reproduces each of the 918 assessed protein classifications at P99. The source-matched sensitivity recomputes donor P99 after omitting only observations where every locus encoding the protein belongs to a matched source-organ marker panel and the recipient library has a batch-supported different-donor match. All other measured protein–library pairs continue to contribute.
+
+| GTEx normal-site rule | CA | RA | CTA | CA ∪ RA |
+|---|---:|---:|---:|---:|
+| Interpolated P99 | 376 | 439 | 308 | 507 |
+| P99 after source-matched omissions | 376 | 439 | 308 | 507 |
+| P99 with flagged HPA normal biopsies omitted where peers remain | 376 | 439 | 308 | 507 |
+| Interpolated P95 | 398 | 453 | 326 | 525 |
+
+P95 admits 18 additional CTAs. Eight previously qualified only as RA, six only as CA, and four were Other:Expression. The source-matched sensitivity changes 12 thresholds and zero classifications. P95 changes 260 thresholds and 44 classifications. P95 also downweights high expression across multiple healthy donors. Retain P99 for primary membership and report P95 as a sensitivity analysis. The separate HPA sensitivity omitted normal observations from biopsies flagged by either the broad or the published-marker panel wherever another measured biopsy of the same tissue remained for that protein. This changed zero thresholds. Unknown carryover, especially without batch or donor information, remains possible.
+
+[Scenario totals](percentile-memberships.csv) · [Every classification transition and its scenario-specific 10× thresholds](percentile-transitions.csv) · [Cross-source pancreatic and esophageal signature counts](../target-selection-20261110/rebuild/normal-rna/index.md#cross-tissue-rna-in-individual-libraries)
+
+Reproduce this comparison with `PYTHONPATH=. python scripts/audit_gtex_percentile_memberships.py` from this policy checkout with the pinned GTEx shards and tissue medians staged.

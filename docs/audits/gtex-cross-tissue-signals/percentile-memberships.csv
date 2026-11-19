@@ -1,0 +1,5 @@
+normal_policy,assessed,changed_thresholds,changed_classifications,tumor_at_tenfold,CA,RA,CTA,union
+p99,918,0,0,481,376,439,308,507
+matched_p99,918,12,0,481,376,439,308,507
+hpa_flag_sensitivity_p99,918,0,0,481,376,439,308,507
+p95,918,260,44,515,398,453,326,525

@@ -12,7 +12,7 @@ Counts are identical selected-reference protein groups. CA-only and RA-only excl
 | 1.41 | 290 | 106 | 113 | 509 | +44 | Embryo gate repaired; 44 CTAs restored |
 | PR #699 | 290 | 106 | 113 | 509 | +0 | Compartment and host views; membership unchanged |
 | PR #700 | 290 | 106 | 113 | 509 | +0 | Explicit host choices and gene-specific paper uses; membership unchanged |
-| Current (oncoref.target-selection.2026-11-18.3) | 308 | 68 | 131 | 507 | +18 | GTEx individual reproductive witnesses and within-site normal donor P99; reproductive-program flags are advisory |
+| Current (oncoref.target-selection.2026-11-18.4) | 308 | 68 | 131 | 507 | +18 | GTEx individual reproductive witnesses and within-site normal donor P99; reproductive-program flags are advisory |
 
 The frozen 1.39 → 1.41 difference is 147: 78 CA-only, 35 Other:Review, 15 Other:Tissue, 12 Other:Expression and 7 RA-only. None became Unsafe. These are observed destinations, not independent causal attributions for overlapping gates.
 
@@ -27,4 +27,4 @@ Each optional mode below starts from the same 308 CTAs; losses are sequential wi
 
 Standard requires two counted tumor-support papers; reproductive-only papers remain separate support. The [IHC counterfactual](index.md#how-much-would-reproductive-high-ihc-add) is not enabled.
 
-Catalog `oncoref.target-selection.2026-11-18.3`; filter `oncoref.target-filters.2026-11-17.5`. Historical snapshots and exact transitions: [count history](../cta-count-history-20261117/index.md).
+Catalog `oncoref.target-selection.2026-11-18.4`; filter `oncoref.target-filters.2026-11-17.5`. Historical snapshots and exact transitions: [count history](../cta-count-history-20261117/index.md).

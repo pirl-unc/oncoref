@@ -95,3 +95,71 @@ def test_live_normal_reference_matches_independent_p99_sensitivity():
     assert set(p99.scope) <= {"normal", "disposable"}
     assert p99[["sample_id", "participant_id"]].isna().all().all()
     assert set(frame.loc[frame.source_id.eq(gtex.SOURCE_ID), "scope"]) == {"reproductive"}
+
+
+def test_published_markers_need_a_complete_coordinated_foreign_panel_and_peers():
+    from oncoref import normal_library_qc as qc
+
+    markers = [gene for _, symbols in qc.CARRYOVER_PANELS.values() for gene in symbols]
+    values = pd.DataFrame(0.0, index=markers, columns=["a", "b", "c", "isolated", "coordinated"])
+    values.loc["PRSS1", "isolated"] = 5
+    values["coordinated"] = 10
+    reference = pd.DataFrame({"code": ["P"] * 4 + ["E"] * 2, "scale": 1000.0}, index=markers)
+    flags = qc.published_carryover(values, "liver", reference)
+    assert flags.all(axis=1).tolist() == [False, False, False, False, True]
+    assert not flags.loc["isolated"].any()
+    assert (
+        qc.published_carryover(values, "Esophagus_Muscularis", reference).carryover_E.isna().all()
+    )
+    assert (
+        qc.published_carryover(values.drop(index="KRT4"), "liver", reference)
+        .carryover_E.isna()
+        .all()
+    )
+    assert qc.published_carryover(values.iloc[:, :2], "liver", reference).isna().all().all()
+    assert not qc.published_carryover(values * 0.01, "liver", reference).any().any()
+
+
+def test_reproductive_witness_anatomy_and_mammary_state_match_source_libraries():
+    import json
+
+    from oncoref import host_context
+
+    rebuild = Path(__file__).parents[1] / "docs/audits/target-selection-20261110/rebuild"
+    witnesses = pd.read_csv(rebuild / "reproductive-witnesses.csv.gz")
+    individual = witnesses[witnesses.source_id.eq(gtex.SOURCE_ID)]
+    uterus = individual[individual.source_context.eq("Uterus")]
+    assert len(uterus) and set(uterus.tissue) == set(uterus.compartment) == {"uterus"}
+    assert set(host_context.HostContext(protect=("uterus",)).protected) == {"uterus", "endometrium"}
+    assert set(host_context.HostContext(protect=("endometrium",)).protected) == {"endometrium"}
+    breast = individual[individual.tissue.eq("breast")]
+    audit = pd.read_csv(rebuild / "gtex-library-qc.csv.gz").set_index("sample_id")
+    assert len(breast) and breast.sample_id.map(audit.mammary_state_inference).equals(
+        breast.mammary_state_inference
+    )
+    for record in breast.mammary_state_inference.unique():
+        state = json.loads(record)
+        assert state["provider_confirmed"] is False and len(state["marker_tpm"]) == 4
+
+
+def test_cross_source_qc_counts_preserve_assessment_coverage():
+    rebuild = Path(__file__).parents[1] / "docs/audits/target-selection-20261110/rebuild"
+    report = pd.read_csv(rebuild / "normal-rna/carryover-summary.csv").set_index("source")
+    for source, filename in [
+        ("GTEx v11 tissue", "gtex-library-qc.csv.gz"),
+        ("HPA v23 tissue", "normal-library-qc.csv"),
+        ("HPA v23 sorted immune", "normal-rna/immune-library-qc.csv"),
+    ]:
+        data = pd.read_csv(rebuild / filename)
+        assert data.sample_id.is_unique
+        flags = data[["carryover_P", "carryover_E"]].astype("boolean")
+        row = report.loc[source]
+        assert (row.libraries, row.assessed, row.either) == (
+            len(flags),
+            flags.notna().any(axis=1).sum(),
+            flags.any(axis=1).sum(),
+        )
+        for code in ("P", "E"):
+            assert row[code] == flags["carryover_" + code].sum()
+            assert row[code + "_assessed"] == flags["carryover_" + code].count()
+    assert 0 < report.at["HPA v23 tissue", "assessed"] < report.at["HPA v23 tissue", "libraries"]

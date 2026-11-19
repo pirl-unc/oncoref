@@ -31,12 +31,7 @@ def normalized_ranks(a):
 
 
 def source_panels(sites):
-    median_path = ROOT / "tmp/cta-source-consolidation/gtex-v11-median-tpm.gct.gz"
-    if (
-        sha256(median_path)
-        != reference_data.REFERENCE_SOURCES["gtex_tissue_rna"]["pins"]["v11"]["sha256"]
-    ):
-        raise ValueError("Unexpected tissue medians")
+    median_path = reference_data.pinned_path("gtex_tissue_rna", "v11")
     med = pd.read_csv(median_path, sep="\t", skiprows=2).set_index("Name")[sites]
     abundance = med.T.groupby(organ).max().T
     panels = {}

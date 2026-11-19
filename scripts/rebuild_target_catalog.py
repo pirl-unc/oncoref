@@ -38,6 +38,7 @@ from oncoref import (  # noqa: E402
     cta_literature,
     cta_sequence_overlap,
     library_qc,
+    normal_library_qc,
     reference_data,
     source_matrices,
     target_selection,
@@ -56,7 +57,7 @@ FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 RAW = ROOT / "tmp/target-rebuild-inputs"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-18.3"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-18.4"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -360,6 +361,9 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         .replace("cMINUS1", "c-1"): value
         for key, value in GTEX_TISSUES.items()
     }
+    # The historical crosswalk grouped uterine bulk with endometrium. Keep the
+    # organ-level collection label when attributing individual witnesses.
+    gtex_columns["Uterus"] = "uterus"
     long = mapped.melt(
         id_vars="gene_id",
         value_vars=list(gtex_columns),
@@ -378,8 +382,9 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
 
         archive = reference_input("hpa_tissue_samples")
         genes = tissue_sample_genes(archive)
-        audit = tissue_library_qc(genes, hpa_ids)
-        gtex, gtex_audit = individual_samples(facts, mapped, gtex_columns)
+        carryover_reference = normal_library_qc.carryover_reference(mapped)
+        audit = tissue_library_qc(genes, hpa_ids, carryover_reference)
+        gtex, gtex_audit = individual_samples(facts, mapped, gtex_columns, carryover_reference)
         if write:
             write_csv(audit, OUT / "normal-library-qc.csv")
             write_csv(gtex_audit, OUT / "gtex-library-qc.csv.gz")

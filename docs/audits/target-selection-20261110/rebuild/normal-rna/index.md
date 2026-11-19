@@ -38,8 +38,8 @@ Tissue names follow each panel's anatomical mapping. The downloadable inventory 
 | Source | Tissues represented |
 |---|---|
 | GTEx P99 | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, cerebellum, cerebral cortex, colon, esophagus, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, pancreas, peripheral nerve, pituitary gland, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, thyroid gland, urinary bladder |
-| GTEx samples | breast, cervix, endometrium, fallopian tube, ovary, prostate, testis, vagina |
-| GTEx median | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, breast, cerebellum, cerebral cortex, cervix, colon, endometrium, esophagus, fallopian tube, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, ovary, pancreas, peripheral nerve, pituitary gland, prostate, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, testis, thyroid gland, urinary bladder, vagina |
+| GTEx samples | breast, cervix, fallopian tube, ovary, prostate, testis, uterus, vagina |
+| GTEx median | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, breast, cerebellum, cerebral cortex, cervix, colon, esophagus, fallopian tube, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, ovary, pancreas, peripheral nerve, pituitary gland, prostate, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, testis, thyroid gland, urinary bladder, uterus, vagina |
 | HPA biopsies | adipose tissue, adrenal gland, appendix, bone marrow, breast, cerebral cortex, cervix, choroid plexus, colon, duodenum, endometrium, epididymis, esophagus, fallopian tube, gallbladder, heart muscle, kidney, liver, lung, lymph node, ovary, pancreas, parathyroid gland, placenta, prostate, rectum, salivary gland, seminal vesicle, skeletal muscle, skin, small intestine, smooth muscle, spleen, stomach, testis, thymus, thyroid gland, tongue, tonsil, urinary bladder |
 | HPA tissue | adipose tissue, adrenal gland, appendix, bone marrow, breast, cerebral cortex, cervix, choroid plexus, colon, duodenum, endometrium, epididymis, esophagus, fallopian tube, gallbladder, heart muscle, kidney, liver, lung, lymph node, ovary, pancreas, parathyroid gland, placenta, prostate, rectum, salivary gland, seminal vesicle, skeletal muscle, skin, small intestine, smooth muscle, spleen, stomach, testis, thymus, thyroid gland, tongue, tonsil, urinary bladder |
 | GTEx via HPA | adipose tissue, adrenal gland, amygdala, basal ganglia, breast, caudate, cerebellum, cerebral cortex, cervix, colon, endometrium, esophagus, fallopian tube, heart muscle, hippocampus, hypothalamus, kidney, liver, lung, ovary, pancreas, pituitary gland, prostate, retina, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, substantia nigra, testis, thyroid gland, urinary bladder, vagina |
@@ -55,6 +55,22 @@ Tissue names follow each panel's anatomical mapping. The downloadable inventory 
 | HPA brain nTPM | amygdala, basal ganglia, cerebellum, cerebral cortex, choroid plexus, hippocampal formation, hypothalamus, medulla oblongata, midbrain, pons, spinal cord, thalamus, white matter |
 | Collin cornea | cornea/conjunctiva |
 | Census donors | adipose tissue, adrenal gland, blood, brain, colon, esophagus, eye, heart, kidney, liver, lung, lymph node, pancreas, small intestine, spinal cord, stomach, tongue, ureter, urinary bladder |
+
+## Cross-tissue RNA in individual libraries
+
+P denotes a pancreatic enzyme signature (PRSS1, CLPS, PNLIP, CELA3A). E denotes a squamous signature observed in esophageal mucosa (KRT4, KRT13). These markers come from [Nieuwenhuis et al.](https://www.nature.com/articles/s41467-020-15821-9).
+
+OncoRef compares each library with samples from the same anatomical site or sorted immune population. The panel requires at least three complete libraries. Every marker must exceed its within-site interpolated P95 and exceed the site median by at least 0.1% of its native GTEx median. The source organ is skipped. A blank flag means the panel could not be assessed. The thresholds here are OncoRef choices.
+
+These are advisory sample flags. Normal epithelial content can produce E, particularly in tissues with squamous epithelium. Shared marker expression alone cannot identify a transfer event. Tissue means, unpaired DICE ranks and single-cell UMI counts cannot support this within-library bulk TPM comparison.
+
+| Source | Libraries | P flagged / assessed | E flagged / assessed | Either |
+|---|---:|---:|---:|---:|
+| GTEx v11 tissue | 18,637 | 209 / 18,275 | 181 / 17,059 | 381 |
+| HPA v23 tissue | 186 | 2 / 176 | 1 / 173 | 3 |
+| HPA v23 sorted immune | 109 | 0 / 109 | 0 / 109 | 0 |
+
+[GTEx libraries](../gtex-library-qc.csv.gz) · [HPA tissue biopsies](../normal-library-qc.csv) · [HPA sorted immune libraries](immune-library-qc.csv) · [GTEx batch matches and percentile sensitivity](../../../gtex-cross-tissue-signals/index.md)
 
 ## Independent normal RNA screens
 

@@ -59,7 +59,8 @@
     },
     "plots": {
       "needs": [
-        "host_exposure"
+        "host_exposure",
+        "normal_library_qc"
       ],
       "argv": [
         "scripts/render_target_catalog.py"
@@ -119,6 +120,14 @@
       ],
       "argv": [
         "scripts/audit_gtex_symmetric_witnesses.py"
+      ]
+    },
+    "normal_library_qc": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_normal_library_qc.py"
       ]
     }
   },

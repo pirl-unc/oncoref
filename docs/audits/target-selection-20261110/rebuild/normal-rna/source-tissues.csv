@@ -130,11 +130,11 @@ gtex_donor_p99,gtex_donor_p99:v11,urinary bladder,Bladder,bulk,Normal
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,breast,Breast_Mammary_Tissue,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,cervix,Cervix_Ectocervix,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,cervix,Cervix_Endocervix,bulk,RA witness
-gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,endometrium,Uterus,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,fallopian tube,Fallopian_Tube,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,ovary,Ovary,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,prostate,Prostate,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,testis,Testis,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,uterus,Uterus,bulk,RA witness
 gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,vagina,Vagina,bulk,RA witness
 gtex_tissue_rna,gtex_tissue_rna:v11,adipose tissue,Adipose_Subcutaneous,bulk,Normal
 gtex_tissue_rna,gtex_tissue_rna:v11,adipose tissue,Adipose_Subcutaneous,bulk,Shared screen
@@ -178,8 +178,6 @@ gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Sigmoid,bulk,Normal
 gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Sigmoid,bulk,Shared screen
 gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Transverse,bulk,Normal
 gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Transverse,bulk,Shared screen
-gtex_tissue_rna,gtex_tissue_rna:v11,endometrium,Uterus,bulk,Reproductive context
-gtex_tissue_rna,gtex_tissue_rna:v11,endometrium,Uterus,bulk,Shared screen
 gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Gastroesophageal_Junction,bulk,Normal
 gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Gastroesophageal_Junction,bulk,Shared screen
 gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Mucosa,bulk,Normal
@@ -238,6 +236,8 @@ gtex_tissue_rna,gtex_tissue_rna:v11,thyroid gland,Thyroid,bulk,Normal
 gtex_tissue_rna,gtex_tissue_rna:v11,thyroid gland,Thyroid,bulk,Shared screen
 gtex_tissue_rna,gtex_tissue_rna:v11,urinary bladder,Bladder,bulk,Normal
 gtex_tissue_rna,gtex_tissue_rna:v11,urinary bladder,Bladder,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,uterus,Uterus,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,uterus,Uterus,bulk,Shared screen
 gtex_tissue_rna,gtex_tissue_rna:v11,vagina,Vagina,bulk,Reproductive context
 gtex_tissue_rna,gtex_tissue_rna:v11,vagina,Vagina,bulk,Shared screen
 hpa_brain,hpa_brain,amygdala,amygdala,,Shared screen

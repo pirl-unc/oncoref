@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from antigen_sample_evidence import LACTATION_MARKERS, mammary_states_from_panel
 
-from oncoref import curation, library_qc, reference_data, target_selection
+from oncoref import curation, library_qc, normal_library_qc, reference_data, target_selection
 from oncoref.gene_matching import gene_identity_catalog
 
 PANEL = curation.manifest()["reference_panels"]["gtex_individual_samples"]
@@ -60,14 +60,19 @@ def donor_p99(values, donors):
     return donor_values.quantile(0.99, interpolation="linear").dropna()
 
 
-def individual_samples(facts, mapped, tissue_columns):
+def individual_samples(facts, mapped, tissue_columns, carryover_reference):
     labels = gene_identity_catalog().set_index("canonical_gene_id").canonical_symbol.fillna("")
     group = {g: r.entity_id for r in facts.itertuples() for g in json.loads(r.member_gene_ids)}
     counts = facts.set_index("entity_id").member_count
     markers = labels[
         labels.str.match(library_qc.OLFACTORY_PATTERN) | labels.isin(LACTATION_MARKERS)
     ]
-    wanted = set(group) | set(markers.index) | set(library_qc.marker_panels().gene_id)
+    wanted = (
+        set(group)
+        | set(markers.index)
+        | set(library_qc.marker_panels().gene_id)
+        | set(carryover_reference.index)
+    )
     loci = mapped[mapped.gene_id.isin(wanted)]
     if loci.Name.duplicated().any() or loci.gene_id.duplicated().any():
         raise ValueError("Ambiguous GTEx source-to-canonical mapping")
@@ -92,6 +97,9 @@ def individual_samples(facts, mapped, tissue_columns):
             list(samples),
             gene_ids=pd.Series(genes.index),
             symbols=labels.reindex(genes.index),
+        )
+        audit = audit.join(
+            normal_library_qc.published_carryover(genes, native, carryover_reference)
         )
         audit["source_id"] = SOURCE_ID
         audit["tissue"] = tissue
@@ -132,6 +140,10 @@ def individual_samples(facts, mapped, tissue_columns):
             frame["participant_id"] = frame.sample_id.map(audit.participant_id)
             frame["library_qc_review"] = frame.sample_id.map(audit.library_qc_review)
             frame["compartment"] = frame.sample_id.map(compartments)
+            if tissue == "breast":
+                frame["mammary_state_inference"] = frame.sample_id.map(
+                    audit.mammary_state_inference
+                )
             statistic = "individual sample gene TPM"
             kind = "individual_gtex_sample"
             source = SOURCE_ID

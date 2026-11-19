@@ -1,0 +1,110 @@
+sample_id,participant_id,tissue,carryover_P,carryover_E
+940,a,eosinophil,False,False
+941,a,classical monocyte,False,False
+942,a,intermediate monocyte,False,False
+943,a,non-classical monocyte,False,False
+944,a,MAIT T-cell,False,False
+945,a,gdT-cell,False,False
+946,a,total PBMC,False,False
+947,a,plasmacytoid DC,False,False
+948,a,myeloid DC,False,False
+949,a,naive B-cell,False,False
+950,a,memory CD8 T-cell,False,False
+951,a,NK-cell,False,False
+952,a,memory CD4 T-cell,False,False
+953,a,naive CD4 T-cell,False,False
+954,a,naive CD8 T-cell,False,False
+955,a,memory B-cell,False,False
+956,a,T-reg,False,False
+957,a,neutrophil,False,False
+958,b,classical monocyte,False,False
+959,b,eosinophil,False,False
+960,b,gdT-cell,False,False
+961,b,intermediate monocyte,False,False
+962,b,MAIT T-cell,False,False
+963,b,memory B-cell,False,False
+964,b,memory CD4 T-cell,False,False
+965,b,memory CD8 T-cell,False,False
+966,b,myeloid DC,False,False
+967,b,naive B-cell,False,False
+968,b,naive CD4 T-cell,False,False
+969,b,naive CD8 T-cell,False,False
+970,b,neutrophil,False,False
+971,b,NK-cell,False,False
+973,b,plasmacytoid DC,False,False
+974,b,total PBMC,False,False
+975,b,T-reg,False,False
+976,c,basophil,False,False
+977,c,classical monocyte,False,False
+978,c,eosinophil,False,False
+979,c,gdT-cell,False,False
+980,c,intermediate monocyte,False,False
+981,c,MAIT T-cell,False,False
+982,c,memory B-cell,False,False
+983,c,memory CD4 T-cell,False,False
+984,c,memory CD8 T-cell,False,False
+985,c,myeloid DC,False,False
+986,c,naive B-cell,False,False
+987,c,naive CD4 T-cell,False,False
+988,c,naive CD8 T-cell,False,False
+989,c,neutrophil,False,False
+990,c,NK-cell,False,False
+991,c,non-classical monocyte,False,False
+992,c,plasmacytoid DC,False,False
+993,c,total PBMC,False,False
+994,c,T-reg,False,False
+995,d,basophil,False,False
+996,d,classical monocyte,False,False
+997,d,eosinophil,False,False
+998,d,gdT-cell,False,False
+999,d,intermediate monocyte,False,False
+1000,d,MAIT T-cell,False,False
+1001,d,memory B-cell,False,False
+1002,d,memory CD4 T-cell,False,False
+1003,d,memory CD8 T-cell,False,False
+1004,d,myeloid DC,False,False
+1005,d,naive B-cell,False,False
+1006,d,naive CD4 T-cell,False,False
+1007,d,naive CD8 T-cell,False,False
+1008,d,neutrophil,False,False
+1009,d,NK-cell,False,False
+1010,d,non-classical monocyte,False,False
+1011,d,plasmacytoid DC,False,False
+1012,d,total PBMC,False,False
+1013,d,T-reg,False,False
+1014,e,total PBMC,False,False
+1015,e,gdT-cell,False,False
+1016,e,eosinophil,False,False
+1017,e,neutrophil,False,False
+1018,e,classical monocyte,False,False
+1019,e,intermediate monocyte,False,False
+1020,e,non-classical monocyte,False,False
+1021,e,MAIT T-cell,False,False
+1022,e,basophil,False,False
+1023,e,naive CD4 T-cell,False,False
+1024,e,memory CD4 T-cell,False,False
+1025,e,naive CD8 T-cell,False,False
+1027,e,plasmacytoid DC,False,False
+1028,e,myeloid DC,False,False
+1029,e,naive B-cell,False,False
+1030,e,memory B-cell,False,False
+1031,e,NK-cell,False,False
+1032,e,T-reg,False,False
+1033,f,total PBMC,False,False
+1034,f,neutrophil,False,False
+1035,f,MAIT T-cell,False,False
+1036,f,gdT-cell,False,False
+1037,f,plasmacytoid DC,False,False
+1039,f,eosinophil,False,False
+1040,f,basophil,False,False
+1041,f,NK-cell,False,False
+1042,f,naive B-cell,False,False
+1043,f,memory B-cell,False,False
+1044,f,T-reg,False,False
+1045,f,classical monocyte,False,False
+1046,f,intermediate monocyte,False,False
+1047,f,non-classical monocyte,False,False
+1048,f,naive CD8 T-cell,False,False
+1049,f,memory CD8 T-cell,False,False
+1050,f,naive CD4 T-cell,False,False
+1051,f,memory CD4 T-cell,False,False

@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-18.3`, 19,893 human protein records. **308 CTA, 68 Cancer Antigen only, 131 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-18.4`, 19,893 human protein records. **308 CTA, 68 Cancer Antigen only, 131 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 

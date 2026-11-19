@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-18.3"
+POLICY_ID = "oncoref.target-selection.2026-11-18.4"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -63,7 +63,7 @@ UNMEASURED_HOME_TISSUES = (
 CORE_REPRODUCTIVE_COMPARTMENTS = ("embryo", "placenta", "testis", "ovary")
 #: Adult accessory reproductive, tract and mammary compartments (sex- or state-conditional).
 MALE_ACCESSORY_COMPARTMENTS = ("epididymis", "prostate", "seminal vesicle")
-FEMALE_TRACT_COMPARTMENTS = ("fallopian tube", "endometrium", "cervix", "vagina")
+FEMALE_TRACT_COMPARTMENTS = ("fallopian tube", "uterus", "endometrium", "cervix", "vagina")
 MAMMARY_COMPARTMENTS = ("lactating_breast", "resting_breast")
 EXTENDED_REPRODUCTIVE_COMPARTMENTS = (
     *MALE_ACCESSORY_COMPARTMENTS,
@@ -282,7 +282,7 @@ def definition() -> dict:
                     ),
                     "extended_only": (
                         "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, "
-                        "endometrium, cervix, vagina, lactating_breast or resting_breast."
+                        "uterus, endometrium, cervix, vagina, lactating_breast or resting_breast."
                     ),
                 },
             },
