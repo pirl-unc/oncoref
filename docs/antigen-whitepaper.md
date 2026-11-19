@@ -25,7 +25,7 @@ Bulk measurements inherit the organ assessment. A more permissive cell rule requ
 
 ## Evidence sources and what each contributes
 
-The [download inventory](antigen-whitepaper/sources.csv) gives the selector, version, description, source URL, local or upstream asset name, and SHA-256 for **310 registered files**. Several files can come from the same study, and some are derived observations from upstream files. The [source-by-tissue table](audits/target-selection-20261110/rebuild/normal-rna/source-tissues.csv) lists **1221 source/context rows**, including tissue, finer anatomical site or cell type, and analytical role.
+The [download inventory](antigen-whitepaper/sources.csv) gives the selector, version, description, source URL, local or upstream asset name, and SHA-256 for **312 registered files**. Several files can come from the same study, and some are derived observations from upstream files. The [source-by-tissue table](audits/target-selection-20261110/rebuild/normal-rna/source-tissues.csv) lists **1221 source/context rows**, including tissue, finer anatomical site or cell type, and analytical role.
 
 | Source family | Available evidence | Use in classification |
 |---|---|---|
@@ -43,10 +43,10 @@ The [download inventory](antigen-whitepaper/sources.csv) gives the selector, ver
 
 | Inventory role | Versioned files |
 | --- | --- |
-| assay observations | 3 |
+| assay observations | 4 |
 | cell atlas | 4 |
 | comparison or sample metadata | 9 |
-| curated data | 7 |
+| curated data | 8 |
 | curation input | 113 |
 | native assay or supplement | 42 |
 | tumor expression | 132 |

@@ -1489,6 +1489,22 @@
         }
       },
       "default_version": "b2eeede18472"
+    },
+    "antigen-widely-studied-contexts": {
+      "description": "Antigen curation assay observations \u2014 widely studied contexts",
+      "filename": "widely-studied-contexts.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "0afb3a4bba38": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/0afb3a4bba389e200cad4187d6f37e785001934f/docs/audits/cta-selection-20261028/widely-studied-contexts.csv.gz",
+          "sha256": "4526acec11d86866724404aa7e490f995a5b6b9d6110c6a27c7eb84d456c6034",
+          "archive_sha256": "4526acec11d86866724404aa7e490f995a5b6b9d6110c6a27c7eb84d456c6034",
+          "bytes": 169394,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "0afb3a4bba38"
     }
   }
 }
