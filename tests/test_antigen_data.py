@@ -92,3 +92,53 @@ def test_biopsy_p95_and_anonymous_witnesses_are_distinct():
     assert result.loc["lung", "value"] == pytest.approx(7.7)
     assert result.loc["lung", "n_observations"] == 2 and result.loc["lung", "sample_id"] == ""
     assert result.loc["testis", "sample_id"] == "four" and result.loc["testis", "value"] == 23
+
+
+def test_dice_uses_native_ranks_and_bounds_unpaired_loci(monkeypatch, tmp_path):
+    from scripts import bulk_normal_percentiles as bulk
+
+    path = tmp_path / "dice.csv"
+    pd.DataFrame(
+        {"Feature_name": ["A.1", "B.1", "C.1", "D.1"], "1": [2, 6, 9, 1], "2": [8, 7, 10, 2]}
+    ).to_csv(path, index=False)
+    facts = pd.DataFrame(
+        {
+            "entity_id": ["single", "pair", "missing"],
+            "member_count": [1, 2, 2],
+            "member_gene_ids": ['["A"]', '["B","C"]', '["D","E"]'],
+        }
+    )
+    monkeypatch.setattr(
+        bulk.reference_data, "REFERENCE_SOURCES", {"dice_x": {"version": "v1", "cell_type": "T"}}
+    )
+    monkeypatch.setattr(bulk, "_input", lambda name, receipts: path)
+    d = bulk.dice_percentiles(facts, {}).set_index("entity_id")
+    assert d.loc["single", "value"] == pytest.approx(7.7) and d.loc["single", "n_observations"] == 2
+    assert d.loc["pair", "value"] == 17 and pd.isna(d.loc["pair", "n_observations"])
+    assert not d.loc["missing", "qc_pass"] and pd.isna(d.loc["missing", "value"])
+
+
+def test_immune_percentile_sums_loci_before_each_donor_votes(monkeypatch, tmp_path):
+    from scripts import bulk_normal_percentiles as bulk
+
+    path = tmp_path / "immune.tsv"
+    rows = [
+        (locus, donor, sample, "NK", value)
+        for donor, sample, values in [
+            ("one", "a", (1, 2)),
+            ("one", "b", (3, 4)),
+            ("two", "c", (5, 8)),
+            ("three", "d", (100, None)),
+        ]
+        for locus, value in zip(["A", "B"], values)
+    ]
+    pd.DataFrame(rows, columns=["ENSG ID", "Donor", "Sample ID", "Immune cell", "TPM"]).to_csv(
+        path, sep="\t", index=False
+    )
+    facts = pd.DataFrame(
+        {"entity_id": ["pair"], "member_count": [2], "member_gene_ids": ['["A","B"]']}
+    )
+    ids = pd.DataFrame({"source_gene_id": ["A", "B"], "canonical_gene_id": ["A", "B"]})
+    monkeypatch.setattr(bulk, "_input", lambda name, receipts: path)
+    d = bulk.hpa_immune_percentiles(facts, ids, {}).iloc[0]
+    assert d.value == pytest.approx(12.6) and d.n_observations == 2
