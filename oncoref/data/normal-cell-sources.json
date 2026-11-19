@@ -828,6 +828,48 @@
       "sha256": "2551cfa61440b247ded1a2917d6e23c574c805509729043ce57a546b44aaaea8",
       "bytes": 10569,
       "archive_sha256": "2551cfa61440b247ded1a2917d6e23c574c805509729043ce57a546b44aaaea8"
+    },
+    "olfactory_olender_transcriptome": {
+      "version": "GSE80249-2016",
+      "kind": "reference",
+      "filename": "12864_2016_2960_MOESM2_ESM.xlsx",
+      "description": "Olender Table S2, genome-wide four human olfactory biopsies",
+      "archive_format": "file",
+      "url": "https://static-content.springer.com/esm/art%3A10.1186%2Fs12864-016-2960-3/MediaObjects/12864_2016_2960_MOESM2_ESM.xlsx",
+      "publication_url": "https://doi.org/10.1186/s12864-016-2960-3",
+      "taxonomy_id": 9606,
+      "unit": "FPKM",
+      "sha256": "5f66946292f50a8b805715f55544e3866fa8514c71eb80fb590035b8ea2ecfb0",
+      "bytes": 22846509,
+      "archive_sha256": "5f66946292f50a8b805715f55544e3866fa8514c71eb80fb590035b8ea2ecfb0"
+    },
+    "olfactory_olender_receptors": {
+      "version": "GSE80249-2016",
+      "kind": "reference",
+      "filename": "12864_2016_2960_MOESM5_ESM.xlsx",
+      "description": "Olender Table S7, receptor repertoire in the same four human olfactory biopsies",
+      "archive_format": "file",
+      "url": "https://static-content.springer.com/esm/art%3A10.1186%2Fs12864-016-2960-3/MediaObjects/12864_2016_2960_MOESM5_ESM.xlsx",
+      "publication_url": "https://doi.org/10.1186/s12864-016-2960-3",
+      "taxonomy_id": 9606,
+      "unit": "FPKM",
+      "sha256": "8529e9bd576acf6dfb25231f014d15929b0fcf293190098023995181740dc9b3",
+      "bytes": 165156,
+      "archive_sha256": "8529e9bd576acf6dfb25231f014d15929b0fcf293190098023995181740dc9b3"
+    },
+    "olfactory_mssm_nuclei": {
+      "version": "GSE317163-2025-12-27",
+      "kind": "reference",
+      "filename": "GSE317163_ent_cluster_rawcount.h5ad",
+      "description": "MSSM adult human olfactory biopsy atlas, six donors, full author-deposited nucleus counts and annotations",
+      "archive_format": "file",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE317nnn/GSE317163/suppl/GSE317163_ent_cluster_rawcount.h5ad",
+      "publication_url": "https://doi.org/10.1038/s41467-026-75722-1",
+      "taxonomy_id": 9606,
+      "unit": "UMI counts",
+      "sha256": "0a77c720827b39c5d6785e37014fa37ea7b0d1004cd36754515bc275dd4e6e87",
+      "bytes": 1065443295,
+      "archive_sha256": "0a77c720827b39c5d6785e37014fa37ea7b0d1004cd36754515bc275dd4e6e87"
     }
   }
 }

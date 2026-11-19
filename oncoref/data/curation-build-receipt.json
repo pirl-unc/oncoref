@@ -21,7 +21,7 @@
     "oncoref/curation.py": "cb49f00236840372461871b36f622c69f0c37cfa97c09c2a67d7bf46338224d8",
     "oncoref/data/cta-literature-followup.json": "8506402653f1de941f7b8e559a92678fd764fe002a5a5c654ca4cc1b6fd2cd19",
     "oncoref/data/curation-build.json": "f167ff456133a63d7f67ac959268039fd22c47901ff384efb60ef571c30ef8a7",
-    "oncoref/data/normal-cell-sources.json": "ff908db89db8beb5585f39b9f679f726b01c6c3e04dab02fd7a27ef6c8020bc1",
+    "oncoref/data/normal-cell-sources.json": "58faef472d6a939724099a6a0985cb053cf8a0a525662ca4a05b6f604db4550f",
     "oncoref/data/reference-releases.json": "cf8c26d9bc43f74a92d627753c662098ee236765e1eafaeed370a8ef46c4fb3d",
     "oncoref/gene_knowledge.py": "57bd6663530a84d9835c8f8a30fc8a19582520dd13f56699b772a1d68e6d498a",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",

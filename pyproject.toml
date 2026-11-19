@@ -42,12 +42,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+olfactory = ["h5py>=3"]
 quantitative = ["orfdata>=0.49.0,<1"]
 reports = ["reportlab>=4", "pypdf>=5", "Pillow", "xlrd>=2", "Markdown>=3.5"]
 genome = [
     "pyensembl>=2.27.0",
 ]
 dev = [
+    "h5py>=3",
     "orfdata>=0.49.0,<1; python_version >= '3.11'",
     "reportlab>=4",
     "pypdf>=5",

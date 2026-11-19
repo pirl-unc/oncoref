@@ -23,7 +23,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 from filelock import FileLock
 
-from . import reference_data
+from . import _olfactory_rna, reference_data
 from .gene_ids import canonical_gene_space, resolve_symbol
 from .load_dataset import get_data
 
@@ -131,6 +131,25 @@ def iter_tables(source: str, *, genes=None, version=None, chunksize=512):
     if source not in set(sources().source):
         raise ValueError(f"Not a normal-cell evidence source: {source}")
     selected = None if genes is None else set(genes)
+    if source in _olfactory_rna.SOURCES:
+        # Match exact current symbols only. Keep source-only features and their original labels.
+        canonical = canonical_gene_space()[["symbol", "ensembl_gene_id"]].dropna().drop_duplicates()
+        lookup = (
+            canonical.loc[~canonical.symbol.duplicated(keep=False)]
+            .set_index("symbol")
+            .ensembl_gene_id
+        )
+        if selected is not None:
+            selected = selected | set(lookup.index[lookup.isin(selected)])
+        native = _olfactory_rna.measurements(
+            reference_data.ensure(source, version), source, selected
+        )
+        native["gene_id"] = native.gene_name.map(lookup)
+        if chunksize < 1:
+            raise ValueError("chunksize must be positive")
+        for start in range(0, max(1, len(native)), chunksize):
+            yield native.iloc[start : start + chunksize]
+        return
     if source == "hpa_antibody_xml":
         p = _antibody_cache(version)
         profile_source = reference_data.ensure(
@@ -296,6 +315,18 @@ def observations(source: str, *, genes=None, version=None) -> pd.DataFrame:
     if source.startswith("dice_"):
         return dice_observations(source, genes=genes, version=version)
     native = table(source, genes=genes, version=version)
+    if source in _olfactory_rna.SOURCES:
+        out = native.assign(
+            source=source,
+            version=reference_data.resolve_version(source, version),
+            taxonomy_id=9606,
+            tissue="olfactory mucosa",
+            stage="adult",
+            modality="rna",
+        )
+        return out.reindex(
+            columns=[*OBSERVATION_COLUMNS, *out.columns.difference(OBSERVATION_COLUMNS)]
+        )
     if source.endswith("_cells") or source in ("hpa_gene_summary", "hpa_single_cell_clusters"):
         raise ValueError("Metadata source: use table(), not observations()")
     if _is_count_matrix(source):

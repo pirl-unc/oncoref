@@ -90,6 +90,8 @@ cell_type, resolution="cell")`.
 
 ## Cell and isoform evidence
 
+For receptor-level measurements from adult human nasal tissue, see [Adult olfactory expression](#adult-olfactory-expression).
+
 Use `cta_literature.paper_gene_claims(gene)` for the observation, assay, tissue or developmental stage, and permitted use. For studies with downloadable artifacts, the claim’s `provenance["reference_sources"]` lists the keys for `reference_data.ensure(key)`. These studies supply cell localization and molecular identity. The CA and RA fold calculations require native TPM.
 
 | Gene | Primary source | What the data establish |
@@ -100,3 +102,40 @@ Use `cta_literature.paper_gene_claims(gene)` for the observation, assay, tissue 
 | CER1 | [Peri-implantation embryos, E-MTAB-8060](https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8060) | Days 9 and 11 yielded hypoblast CER1 RNA. Day-9 staining localized protein. The count matrix supplies UMI measurements, and the published lineage summary identifies the sampled embryos. |
 | RPS4Y2 | [RPS4 tissue panel and primer supplement](https://doi.org/10.1186/1471-2199-11-33) | Transcript-directed assays distinguish splice products in testis and prostate. Attribution of the healthy naïve B-cell signal remains open. |
 | GALP | [Alarin study](https://pubmed.ncbi.nlm.nih.gov/16954604/) · [HYPOMAP collection](https://cellxgene.cziscience.com/collections/d0941303-7ce3-4422-9249-cf31eb98c480) | Alarin was observed in neuroblastic tumors. HYPOMAP already provides adult hypothalamus coverage in the [atlas inventory](audits/normal-cell-atlas-20261110/source-registry.csv). The product expressed in the catalog tumor and the normal hypothalamus remains unresolved. |
+
+### Adult olfactory expression
+
+Use the public dataset catalog to retrieve the original files and the normal-cell API to compare exact source features. The two Olender tables use the same four biopsies. The two Verbeurgt tables describe the same 26 donors. Each pair counts as one study.
+
+| Dataset ID | Data available downstream |
+|---|---|
+| `olfactory_olender_transcriptome` | Genome-wide biopsy expression from Olender Table S2, in FPKM. |
+| `olfactory_olender_receptors` | Receptor-specific Table S7, with the four unique-read FPKM columns, hg19 locus and a flag for the authors' 0.003 zero replacement. |
+| `olfactory_verbeurgt_cq`, `olfactory_verbeurgt_copies` | Receptor assay IDs and donor-level Cq or estimated copies per 20 ng of RNA. |
+| `olfactory_durante_supplement` | Reported positive sensory neurons per listed receptor in supplementary Table 7. The original workbook includes additional cell populations and tables. |
+| `olfactory_mssm_nuclei` | GSE317163. The full H5AD contains cell annotations and counts. The table reader summarizes the 448 author-labeled sensory-neuron nuclei by donor, retaining total nuclei, positive nuclei and UMI sum. Install `oncoref[olfactory]` for the H5AD reader. |
+
+```python
+from oncoref import catalog, normal_cell_data
+
+genes = ["OR6F1", "OR52D1", "OR4M2B", "OR2T4", "OR7E24"]
+bulk = normal_cell_data.observations("olfactory_olender_receptors", genes=genes)
+nuclei = normal_cell_data.observations("olfactory_mssm_nuclei", genes=genes)
+original = catalog.ensure("olfactory_mssm_nuclei")
+```
+
+| Receptor | Olender biopsies ≥0.01 FPKM / 4 | Peak FPKM | Verbeurgt donors ≥5 estimated copies / 26 | Durante positive neurons | MSSM positive sensory nuclei / 448 |
+|---|---:|---:|---:|---:|---:|
+| OR6F1 | 4 | 1.890 | 26 | 3 | — |
+| OR52D1 | 3 | 0.115 | 26 | — | — |
+| OR4M2B | — | — | — | — | — |
+| OR2T4 | 3 | 0.321 | 15 | — | — |
+| OR7E24 | 4 | 3.016 | 25 | 1 | 1 |
+
+A dash means the source lacks an exact-name feature or assay in the table used. A measured zero retains its feature and denominator. OR4M2 has a distinct source label and cannot establish OR4M2B expression without locus-specific attribution. The four replicated mucosal RNA observations document normal tissue exposure. Their native units do not enter the 10× TPM denominator or establish protein-level toxicity.
+
+[Olender bulk RNA](https://doi.org/10.1186/s12864-016-2960-3) · [Verbeurgt qPCR](https://doi.org/10.1371/journal.pone.0096333) · [Durante single-cell study](https://doi.org/10.1038/s41593-020-0587-9) · [MSSM single-nucleus atlas](https://doi.org/10.1038/s41467-026-75722-1)
+
+### What downstream users can retrieve
+
+`catalog.datasets()`, `catalog.versions(name)`, `catalog.ensure(name)` and `catalog.provenance(name)` cover registered assets. The data format and level of processing depend on the source. HPA normal-tissue IHC has scored observations, and the antibody XML adapter exposes antibody and reliability information. A paper’s curated gene list is also queryable evidence. For example, the da Silva tumor-proteomics list records nominations; its registry entry supplies no underlying raw mass spectra or peptide-level quantification. Some rebuild inputs have only an audit receipt, including the HPA-distributed GTEx tissue TPM archive recorded as `rna_tissue_gtex`. Dataset registration, a typed measurement reader and use in the CTA rule are separate properties.

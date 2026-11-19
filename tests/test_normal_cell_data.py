@@ -104,3 +104,43 @@ def test_cornea_annotation_mismatch_is_not_silently_dropped(tmp_path, monkeypatc
     )
     with pytest.raises(ValueError, match="do not match"):
         data.cornea_summary()
+
+
+def test_olfactory_exact_symbols_native_units_and_empty_result(tmp_path, monkeypatch):
+    from oncoref import _olfactory_rna as olf
+
+    source = tmp_path / "original.xlsx"
+    native = {"geneName": ["OR4M2", "OR6F1"], "locus": ["chr1:1-2", "chr1:3-4"]}
+    for sample in olf.BIOPSIES:
+        native[sample + "_Unique"] = [0.003, 1.5]
+    pd.DataFrame(native).to_excel(source, sheet_name="Table S7", index=False)
+    monkeypatch.setattr(reference_data, "ensure", lambda *args: source)
+    measured = data.observations(olf.RECEPTORS, genes=["OR4M2", "OR6F1"])
+    assert set(measured.unit) == {"FPKM"} and set(measured["sample"]) == set(olf.BIOPSIES)
+    assert measured.loc[measured.gene_name.eq("OR4M2"), "provider_zero_floor"].all()
+    assert data.observations(olf.RECEPTORS, genes=["OR4M2B"]).empty
+
+
+def test_olfactory_donor_summary_distinguishes_absent_features_from_observed_zero(tmp_path):
+    import numpy as np
+
+    from oncoref import _olfactory_rna as olf
+
+    h5py = pytest.importorskip("h5py")
+    path = tmp_path / "atlas.h5ad"
+    with h5py.File(path, "w") as f:
+        x = f.create_group("X")
+        x.attrs["encoding-type"] = "csr_matrix"
+        x["indices"] = [0, 1]
+        x["indptr"] = [0, 1, 1, 2]
+        x["data"] = [2, 4]
+        f["var/gene_name"] = np.array(["A", "B"], dtype="S")
+        f["obs/Cell identity/categories"] = np.array(["OSNs", "doublet"], dtype="S")
+        f["obs/Cell identity/codes"] = [0, 0, 1]
+        f["obs/donor_name/categories"] = np.array(["D1", "D2"], dtype="S")
+        f["obs/donor_name/codes"] = [0, 1, 1]
+    measured = olf.measurements(path, olf.NUCLEI, {"A", "B", "absent"})
+    assert set(measured.gene_name) == {"A", "B"}
+    a = measured.loc[measured.gene_name.eq("A")].sort_values("donor")
+    assert a.value.tolist() == [2, 0] and a.positive_nuclei.tolist() == [1, 0]
+    assert measured.nuclei.eq(1).all() and measured[measured.gene_name.eq("B")].value.eq(0).all()
