@@ -69,6 +69,7 @@ def write_receipt(root):
         "oncoref/antigen_data.py",
         "oncoref/catalog.py",
         "scripts/cta_evidence_assets/antigen-whitepaper.md",
+        "docs/audits/normal-cell-atlas-20261110/rare-cell/findings.csv",
         "oncoref/data/cta-trial-evidence.csv",
         "oncoref/data/curation-build.json",
         "oncoref/data/antigen-source-inventory.csv",

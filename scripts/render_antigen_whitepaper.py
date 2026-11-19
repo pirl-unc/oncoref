@@ -135,6 +135,44 @@ def study_table(proteins):
     )
 
 
+def ctag2_evidence(data):
+    row = data.loc[data.protein_group_label.eq("CTAG2")].iloc[0]
+    path = DOCS / "audits/normal-cell-atlas-20261110/rare-cell"
+    findings = pd.read_csv(path / "findings.csv")
+    findings = findings[findings.entity_id.eq(row.entity_id)]
+    risk = catalog.read_table("rare-cell-evidence").set_index("entity_id")
+    return {
+        "ctag2_cells": table(
+            [
+                "Organ",
+                "Strongest population",
+                "Studies",
+                "Donors with signal",
+                "Cells with ≥2 molecules in top donor",
+                "Grading",
+            ],
+            [
+                [
+                    r.tissue,
+                    r.top_cell_type,
+                    r.studies_multi_molecule,
+                    r.donors_multi_molecule,
+                    f"{r.top_n_multi:,}/{r.top_n_cells:,} ({r.top_multi_molecule_pct:.2f}%)",
+                    r.status,
+                ]
+                for r in findings.itertuples()
+            ],
+        ),
+        "ctag2_shared": f"{100 * risk.at[row.entity_id, 'shared_kmer_fraction']:.1f}%",
+        "ctag2_reference": number(row.normal_reference_tpm),
+        "ctag2_bar": number(row.single_tumor_threshold_tpm),
+        "ctag2_repro": number(row.reproductive_supported_tpm),
+        "ctag2_fold": number(row.reproductive_fold),
+        "ctag2_tumor": number(row.tumor_max_tpm),
+        "ctag2_patients": int(row.independent_patients_at_tenfold),
+    }
+
+
 def build():
     data = target_selection.results()
     meta = target_selection.metadata()["summary"]
@@ -166,22 +204,60 @@ def build():
         candidates.loc[ranked, "rank_" + name.lower().replace(" ", "_")] = pd.array(
             range(1, len(ranked) + 1), dtype="Int64"
         )
-    ranking_rows = []
-    for name in ("CTA", "CA only", "RA only"):
-        rank_col = "rank_" + name.lower().replace(" ", "_")
-        for r in candidates[candidates[rank_col].le(4)].itertuples():
-            ranking_rows.append(
+    witnesses = pd.read_csv(
+        BUILD / "tumor-witnesses.csv.gz",
+        usecols=["entity_id", "source_id", "sample_id", "value", "qc_pass", "identity_resolved"],
+    )
+    in_range = witnesses.loc[
+        witnesses.entity_id.isin(candidates.entity_id)
+        & witnesses.qc_pass
+        & witnesses.identity_resolved
+        & witnesses.value.between(136, 1300, inclusive="neither")
+    ]
+    peak_sections = []
+    for label, mask in [
+        ("CTA", ca & ra),
+        ("CA only", ca & ~ra),
+        ("RA only", ra & ~ca),
+        ("Other", data.category.eq("Other")),
+        ("Unsafe", data.category.eq("Unsafe")),
+    ]:
+        group = data[mask]
+        measured = group.dropna(subset=["tumor_max_tpm"]).sort_values(
+            PEAK, ascending=[False, True, True]
+        )
+        peak_sections.append(
+            f"### {label}\n\nTumor comparison available for {len(measured):,} of {len(group):,} groups."
+        )
+        if measured.empty:
+            continue
+        peak_sections.append(
+            table(
                 [
-                    r.protein_group_label,
-                    name,
-                    r.tumor_top_cancer_code,
-                    number(r.tumor_max_tpm),
-                    number(r.normal_reference_tpm),
-                    number(r.reproductive_supported_tpm),
-                    number(r.tumor_fold),
-                    int(r.independent_patients_at_tenfold),
-                ]
+                    "Rank",
+                    "Protein",
+                    "Peak cohort",
+                    "Tumor TPM",
+                    "N TPM",
+                    "Reproductive peak TPM",
+                    "Tumor fold",
+                    "Known patients at 10×",
+                ],
+                [
+                    [
+                        i,
+                        r.protein_group_label,
+                        r.tumor_top_cancer_code,
+                        number(r.tumor_max_tpm),
+                        number(r.normal_reference_tpm),
+                        number(r.reproductive_supported_tpm),
+                        number(r.tumor_fold),
+                        number(r.independent_patients_at_tenfold),
+                    ]
+                    for i, r in enumerate(measured.head(10).itertuples(), 1)
+                ],
             )
+        )
     study = study_table(data)
     inventory = antigen_data.sources().copy()
     inventory["contents"] = inventory.dataset.map(lambda name: catalog.dataset(name).description)
@@ -258,9 +334,19 @@ def build():
     # Include familiar reference points even when they have fewer curated CTA papers.
     anchors = study[study.protein_group_label.isin(["NY-ESO-1", "PRAME", "CT83", "CTAG2", "CAGE1"])]
     highlighted = pd.concat([most, anchors]).drop_duplicates("entity_id")
+    comparison_fields = ["normal_reference_tpm", "reproductive_supported_tpm", "tumor_max_tpm"]
+    skipped = (
+        highlighted.category.eq("Unsafe")
+        & highlighted.cancer_evidence.eq("unassessed")
+        & highlighted[comparison_fields].isna().all(axis=1)
+    )
+    skipped_ids = set(highlighted.loc[skipped, "entity_id"])
+
     numeric_cols = {"normal": "normal_reference_tpm", "reproductive": "reproductive_supported_tpm"}
 
     def measure(r, prefix):
+        if r.entity_id in skipped_ids:
+            return "NR"
         v = getattr(r, numeric_cols[prefix])
         where = getattr(r, prefix + "_source_context")
         return f"{number(v)} · {where}" if pd.notna(v) else "—"
@@ -296,8 +382,7 @@ def build():
         "studied": len(study),
         "held": len(held),
         "anchors": len(examples),
-        "top_ca": ", ".join(candidates[candidates.rank_ca.le(4)].protein_group_label),
-        "top_ra": ", ".join(candidates[candidates.rank_ra.le(4)].protein_group_label),
+        "nr_proteins": ", ".join(highlighted.loc[skipped, "protein_group_label"]),
         "sources": table(
             ["Inventory role", "Versioned files"], sorted(inventory.role.value_counts().items())
         ),
@@ -309,19 +394,10 @@ def build():
             ["First attributed exclusion", "Removed", "Remaining"],
             [[r.step, f"{r.removed:,}", f"{r.remaining:,}"] for r in funnel.itertuples()],
         ),
-        "peaks": table(
-            [
-                "Protein",
-                "Membership",
-                "Peak cohort",
-                "Tumor TPM",
-                "N TPM",
-                "RA peak TPM",
-                "Tumor fold",
-                "Known patients at 10×",
-            ],
-            ranking_rows,
-        ),
+        "peaks": "\n\n".join(peak_sections),
+        "range_observations": f"{len(in_range):,}",
+        "range_samples": f"{len(in_range[['source_id', 'sample_id']].drop_duplicates()):,}",
+        "midrange": int(candidates.tumor_max_tpm.between(136, 1300, inclusive="neither").sum()),
         "publications": table(
             [
                 "Protein",
@@ -340,7 +416,7 @@ def build():
                     measure(r, "reproductive"),
                     f"{number(r.tumor_max_tpm)} · {r.tumor_top_cancer_code}"
                     if pd.notna(r.tumor_max_tpm)
-                    else "—",
+                    else ("NR" if r.entity_id in skipped_ids else "—"),
                 ]
                 for r in highlighted.itertuples()
             ],
@@ -367,6 +443,7 @@ def build():
             ].itertuples(index=False, name=None),
         ),
     }
+    values.update(ctag2_evidence(data))
     outputs["antigen-whitepaper.md"] = Template(TEMPLATE.read_text()).substitute(values)
     return outputs
 

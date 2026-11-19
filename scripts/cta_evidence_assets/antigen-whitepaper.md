@@ -53,9 +53,17 @@ $sources
 
 **2. Check eligibility and coverage.** Missing required native-TPM coverage across $required healthy contexts, unresolved evidence or an unqualified translation can produce Other:Review. Unsupported nested sequences, read-through loci or ≥95% containment of the protein's 9-mers in Unsafe proteins can produce Other:Sequence. The catalog also checks a target maximum above background and a Disposable ceiling of $cap independently on TPM and nTPM. An unmeasured established home tissue blocks CA. RA can still qualify independently. GFY illustrates the distinction. Its adult human olfactory-neuron RNA establishes a normal home outside the native-TPM panel. Its tumor peak remains recorded. The Other:Unscreened tissue call reflects the missing like-for-like comparison. Developmental tooth expression for AMELX retains its fetal scope. [Adult olfactory study](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/) · [Cell and isoform findings](curation.md#cell-and-isoform-evidence)
 
+GFY, also called *Goofy*, is a Golgi-associated regulator of olfactory signaling. In mice, loss of Gfy altered the localization of adenylyl cyclase III (ADCY3), shortened olfactory cilia and reduced odor sensitivity. Adult human biopsy data detected GFY RNA in 94.1% of sampled mature and 70.3% of immature olfactory neurons. A separate HEK293T-cell study found that coexpressing Gfy with other trafficking factors increased surface expression of tested odorant receptors. The human biopsy establishes the cell lineage, while the mouse knockout directly tests the effect of gene loss on smell. [Mouse knockout study](https://pmc.ncbi.nlm.nih.gov/articles/PMC6619734/) · [Receptor trafficking experiments](https://pmc.ncbi.nlm.nih.gov/articles/PMC12677133/) · [Adult human olfactory atlas](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/)
+
 **3. Evaluate cancer and reproductive expression independently.** Let **N** be the highest applicable non-reproductive normal reference and **D** the Disposable maximum in native TPM. Each route requires **≥$fold × max(N, D, $floor TPM)**. One passing tumor sample can qualify CA. One measured reproductive sample or supported developmental observation can qualify RA. A well-sampled embryo lineage needs ≥20 cells, ≥5 cells at ≥1 TPM and ≥10% positive cells. A smaller lineage needs ≥5 cells, ≥50% positive cells and qualifying observations in two independent embryos of the same age and lineage. P95 reduces the influence of isolated healthy extremes. It cannot diagnose contamination or establish absence from a rare population.
 
 The following waterfall assigns each excluded record once. Other’s labels express the primary disposition and additional failures remain on the record. The pipeline compared native expression for **$assessed groups**, including counterfactual measurements for held proteins. **$shared** passed the shared eligibility checks. These two populations answer different questions.
+
+![Attrition across the entire protein catalog](audits/target-selection-20261110/rebuild/summary/funnel-all.png)
+
+![Attrition among published CTA or oncofetal nominations](audits/target-selection-20261110/rebuild/summary/funnel-published.png)
+
+The second figure starts with the published nomination subset. Each figure attributes a protein to its first failing gate.
 
 $funnel
 
@@ -69,7 +77,7 @@ $partition
 
 $publications
 
-N and the reproductive peak can come from different assays or donors. The downloadable table retains peak sources and contexts as recorded on the catalog row. At most ten tied normal contexts are shown there. All observations are available in the full comparison table. **—** means the catalog lacks that comparison. Early Unsafe exclusions commonly have no harmonized tumor peak. The finding that triggered exclusion can still be available in another unit.
+N and the reproductive peak can come from different assays or donors. The downloadable table retains peak sources and contexts as recorded on the catalog row. At most ten tied normal contexts are shown there. All observations are available in the full comparison table. **NR** means the shared screen excluded the group before the native-TPM comparison ran ($nr_proteins). The three cells on each such row refer to one skipped comparison. A tumor library or testis biopsy can still contain the transcript. **—** means a value is unavailable. The exclusion evidence and its native unit appear below.
 
 ### Studied proteins held or excluded
 
@@ -79,9 +87,23 @@ Selected examples below include additional paper-nominated proteins with consequ
 
 $excluded
 
+### Why CTAG2 (LAGE-1) is unresolved
+
+Two adult organs meet the donor-replication rule. The table shows each organ’s strongest donor/population. The study and donor totals apply to the organ. In lung, the counted signals agree on alveolar type 2 cells. In brain, they span several neuronal populations. The eye observations did not meet the replication or frequency criteria.
+
+$ctag2_cells
+
+**The open question is which locus produced the RNA.** $ctag2_shared of the distinct CTAG2 transcript 31-mers also occur at other loci, with CTAG1A and CTAG1B identified as sequence partners. That fraction describes the reference sequences. It does not estimate how many observed reads were misassigned. The matched bulk check supplied no independent confirmation in lung or brain. A locus-specific observation in the implicated normal cell populations would distinguish genuine sparse CTAG2 expression from counts attributable to a paralog. [Donor findings](audits/normal-cell-atlas-20261110/rare-cell/findings.csv) · [Mapping audit](audits/normal-cell-atlas-20261110/rare-cell/gene-mapping-risk.csv.gz)
+
+An independent qPCR study reported one low LAGE-1 signal in a panel of 15 normal-cell samples. The panel included pulmonary fibroblasts and astrocytes. Those measurements do not resolve the alveolar type 2 or cortical neuronal observations above. [Normal-cell qPCR panel](https://pmc.ncbi.nlm.nih.gov/articles/PMC3624013/)
+
+**The reproductive cutoff is a second, independent barrier.** Thymus sets N at $ctag2_reference TPM, giving a cutoff of $ctag2_bar TPM. The supported testis peak of $ctag2_repro TPM reaches $ctag2_fold×. The ovarian tumor peak is $ctag2_tumor TPM, and $ctag2_patients known patients meet the cancer cutoff across cohorts. If both normal signals were resolved as read misassignment, the current expression measurements would qualify CTAG2 as CA-only. The separate heart review found discordant RNA and cardiomyocyte staining. [Heart assay review](audits/ctag2-heart-evidence.md)
+
 ## Which proteins reach the highest tumor expression?
 
-Rank by the **maximum observed QC-passing tumor TPM**, with ties ordered by protein label and entity ID. The first four in inclusive **CA** are **$top_ca**. The first four in inclusive **RA** are **$top_ra**. The table splits the memberships so that high-expressing CA-only and RA-only groups remain visible. An RA-only peak can miss cancer enrichment or another CA-specific requirement. Known patients are counted at the tenfold threshold across cohorts, once per identified person. Anonymous samples have a separate count in the download.
+Each table starts again at rank 1 and shows up to ten protein groups in that category, ranked by **maximum observed QC-passing tumor TPM**. Ties are ordered by protein label and entity ID. Across the candidate union, **$midrange proteins** have peaks strictly between 136 and 1,300 TPM. A protein contributes one peak even if many samples fall within this interval. In the [retained tumor witnesses](audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz), the same interval contains **$range_observations candidate observations across $range_samples distinct source/sample IDs**. These counts cover the exported witnesses. The full matrices also contain observations below each protein’s witness threshold. Known patients at tenfold are counted once per identified person across cohorts.
+
+The CA-only and RA-only tables exclude CTAs. The Other table covers only groups that reached the quantitative comparison. A strong tumor peak can coexist with a coverage or attribution hold. RA-only groups can also exceed the cancer fold when their recorded normal home lacks coverage. The downloadable ranks include inclusive CA and RA.
 
 $peaks
 

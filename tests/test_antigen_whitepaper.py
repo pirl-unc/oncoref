@@ -37,3 +37,29 @@ def test_tables_agree_with_unfiltered_membership_and_preserve_unmeasured_peaks()
     assert "colon" in mage.matched_normal_assay and "nTPM" in mage.matched_normal_assay
     sources = pd.read_csv(ASSETS / "sources.csv", keep_default_na=False)
     pd.testing.assert_frame_equal(sources[antigen_data.sources().columns], antigen_data.sources())
+
+
+def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_comparisons():
+    paper = (DOCS / "antigen-whitepaper.md").read_text()
+    catalog = target_selection.results()
+    for title, category in [
+        ("CTA", "CTA"),
+        ("CA only", "Cancer Antigen only"),
+        ("RA only", "Reproductive Antigen only"),
+        ("Other", "Other"),
+    ]:
+        section = paper.split(f"### {title}\n", 1)[1].split("\n### ", 1)[0]
+        rows = [
+            line.split(" | ")
+            for line in section.splitlines()
+            if line.startswith("| ") and line[2].isdigit()
+        ]
+        measured = catalog[catalog.category.eq(category)].dropna(subset=["tumor_max_tpm"])
+        expected = measured.sort_values(
+            ["tumor_max_tpm", "protein_group_label", "entity_id"], ascending=[False, True, True]
+        ).head(10)
+        assert [row[1] for row in rows] == expected.protein_group_label.tolist()
+    assert "| MAGEA3 | 8 | Unsafe | NR | NR | NR |" in paper
+    for figure in ["funnel-all.png", "funnel-published.png"]:
+        path = f"audits/target-selection-20261110/rebuild/summary/{figure}"
+        assert f"]({path})" in paper and (DOCS / path).is_file()

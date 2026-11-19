@@ -61,9 +61,17 @@ The [download inventory](antigen-whitepaper/sources.csv) gives the selector, ver
 
 **2. Check eligibility and coverage.** Missing required native-TPM coverage across 36 healthy contexts, unresolved evidence or an unqualified translation can produce Other:Review. Unsupported nested sequences, read-through loci or ≥95% containment of the protein's 9-mers in Unsafe proteins can produce Other:Sequence. The catalog also checks a target maximum above background and a Disposable ceiling of 32 independently on TPM and nTPM. An unmeasured established home tissue blocks CA. RA can still qualify independently. GFY illustrates the distinction. Its adult human olfactory-neuron RNA establishes a normal home outside the native-TPM panel. Its tumor peak remains recorded. The Other:Unscreened tissue call reflects the missing like-for-like comparison. Developmental tooth expression for AMELX retains its fetal scope. [Adult olfactory study](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/) · [Cell and isoform findings](curation.md#cell-and-isoform-evidence)
 
+GFY, also called *Goofy*, is a Golgi-associated regulator of olfactory signaling. In mice, loss of Gfy altered the localization of adenylyl cyclase III (ADCY3), shortened olfactory cilia and reduced odor sensitivity. Adult human biopsy data detected GFY RNA in 94.1% of sampled mature and 70.3% of immature olfactory neurons. A separate HEK293T-cell study found that coexpressing Gfy with other trafficking factors increased surface expression of tested odorant receptors. The human biopsy establishes the cell lineage, while the mouse knockout directly tests the effect of gene loss on smell. [Mouse knockout study](https://pmc.ncbi.nlm.nih.gov/articles/PMC6619734/) · [Receptor trafficking experiments](https://pmc.ncbi.nlm.nih.gov/articles/PMC12677133/) · [Adult human olfactory atlas](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/)
+
 **3. Evaluate cancer and reproductive expression independently.** Let **N** be the highest applicable non-reproductive normal reference and **D** the Disposable maximum in native TPM. Each route requires **≥10 × max(N, D, 1 TPM)**. One passing tumor sample can qualify CA. One measured reproductive sample or supported developmental observation can qualify RA. A well-sampled embryo lineage needs ≥20 cells, ≥5 cells at ≥1 TPM and ≥10% positive cells. A smaller lineage needs ≥5 cells, ≥50% positive cells and qualifying observations in two independent embryos of the same age and lineage. P95 reduces the influence of isolated healthy extremes. It cannot diagnose contamination or establish absence from a rare population.
 
 The following waterfall assigns each excluded record once. Other’s labels express the primary disposition and additional failures remain on the record. The pipeline compared native expression for **918 groups**, including counterfactual measurements for held proteins. **841** passed the shared eligibility checks. These two populations answer different questions.
+
+![Attrition across the entire protein catalog](audits/target-selection-20261110/rebuild/summary/funnel-all.png)
+
+![Attrition among published CTA or oncofetal nominations](audits/target-selection-20261110/rebuild/summary/funnel-published.png)
+
+The second figure starts with the published nomination subset. Each figure attributes a protein to its first failing gate.
 
 | First attributed exclusion | Removed | Remaining |
 | --- | --- | --- |
@@ -99,14 +107,14 @@ The following waterfall assigns each excluded record once. Other’s labels expr
 
 | Protein | CTA papers | Catalog | N TPM · site | RA peak TPM · context | Tumor TPM · cohort |
 | --- | --- | --- | --- | --- | --- |
-| MAGEA3 | 8 | Unsafe | — | — | — |
+| MAGEA3 | 8 | Unsafe | NR | NR | NR |
 | MAGEA4 | 8 | CTA | 2.95 · lymph node | 327.97 · 4 day / unspecified lineage | 3,201.68 · SCLC |
 | DCAF4L2 | 7 | CTA | 0.12 · Brain_Substantia_nigra | 59.96 · Testis | 310.77 · NEC_LUNG_LARGECELL |
 | MAGEA1 | 7 | CTA | 0.21 · spleen | 31.36 · Testis | 346.43 · SCLC |
-| MAGEA12 | 7 | Unsafe | — | — | — |
-| MAGEB2 | 7 | Unsafe | — | — | — |
+| MAGEA12 | 7 | Unsafe | NR | NR | NR |
+| MAGEB2 | 7 | Unsafe | NR | NR | NR |
 | CT83 | 6 | CTA | 8.6 · Minor_Salivary_Gland | 445.31 · Testis | 193.17 · CESC |
-| CTCFL | 6 | Unsafe | — | — | — |
+| CTCFL | 6 | Unsafe | NR | NR | NR |
 | DPPA2 | 6 | CTA | 0.94 · B_CELL_NAIVE | 167.76 · 7 day / epiblast | 398.83 · RT |
 | GAGE1 | 6 | CTA | 0.7 · retina | 165.18 · 5 day / trophectoderm | 1,181.9 · SKCM |
 | PRAME | 6 | CTA | 10.93 · Adrenal_Gland | 310.91 · Testis | 3,692.46 · SCLC |
@@ -114,7 +122,7 @@ The following waterfall assigns each excluded record once. Other’s labels expr
 | CAGE1 | 3 | Other:Review | 0.94 · CD4_STIM | 32.98 · testis.349 | 17.4 · T_ALL |
 | CTAG2 | 3 | Other:Review | 10.67 · thymus | 101.92 · Testis | 604.33 · OV |
 
-N and the reproductive peak can come from different assays or donors. The downloadable table retains peak sources and contexts as recorded on the catalog row. At most ten tied normal contexts are shown there. All observations are available in the full comparison table. **—** means the catalog lacks that comparison. Early Unsafe exclusions commonly have no harmonized tumor peak. The finding that triggered exclusion can still be available in another unit.
+N and the reproductive peak can come from different assays or donors. The downloadable table retains peak sources and contexts as recorded on the catalog row. At most ten tied normal contexts are shown there. All observations are available in the full comparison table. **NR** means the shared screen excluded the group before the native-TPM comparison ran (MAGEA3, MAGEA12, MAGEB2, CTCFL). The three cells on each such row refer to one skipped comparison. A tumor library or testis biopsy can still contain the transcript. **—** means a value is unavailable. The exclusion evidence and its native unit appear below.
 
 ### Studied proteins held or excluded
 
@@ -136,24 +144,99 @@ Selected examples below include additional paper-nominated proteins with consequ
 | POTEC | Other:Review | Normal-expression evidence blocks admission — eye, corneal endothelial cell (replicated normal-cell signal with unresolved locus attribution) | — |
 | CAGE1 | Other:Review | Normal-expression evidence blocks admission — brain, dopaminergic neuron (replicated normal-cell signal with unresolved locus attribution) | — |
 
+### Why CTAG2 (LAGE-1) is unresolved
+
+Two adult organs meet the donor-replication rule. The table shows each organ’s strongest donor/population. The study and donor totals apply to the organ. In lung, the counted signals agree on alveolar type 2 cells. In brain, they span several neuronal populations. The eye observations did not meet the replication or frequency criteria.
+
+| Organ | Strongest population | Studies | Donors with signal | Cells with ≥2 molecules in top donor | Grading |
+| --- | --- | --- | --- | --- | --- |
+| lung | pulmonary alveolar type 2 cell | 2 | 3 | 166/3,865 (4.29%) | unresolved |
+| brain | L5 extratelencephalic projecting glutamatergic cortical neuron | 2 | 3 | 70/2,201 (3.18%) | unresolved |
+| eye | ciliary muscle cell | 2 | 2 | 21/1,049 (2.00%) | dismissed |
+
+**The open question is which locus produced the RNA.** 50.9% of the distinct CTAG2 transcript 31-mers also occur at other loci, with CTAG1A and CTAG1B identified as sequence partners. That fraction describes the reference sequences. It does not estimate how many observed reads were misassigned. The matched bulk check supplied no independent confirmation in lung or brain. A locus-specific observation in the implicated normal cell populations would distinguish genuine sparse CTAG2 expression from counts attributable to a paralog. [Donor findings](audits/normal-cell-atlas-20261110/rare-cell/findings.csv) · [Mapping audit](audits/normal-cell-atlas-20261110/rare-cell/gene-mapping-risk.csv.gz)
+
+An independent qPCR study reported one low LAGE-1 signal in a panel of 15 normal-cell samples. The panel included pulmonary fibroblasts and astrocytes. Those measurements do not resolve the alveolar type 2 or cortical neuronal observations above. [Normal-cell qPCR panel](https://pmc.ncbi.nlm.nih.gov/articles/PMC3624013/)
+
+**The reproductive cutoff is a second, independent barrier.** Thymus sets N at 10.67 TPM, giving a cutoff of 106.69 TPM. The supported testis peak of 101.92 TPM reaches 9.55×. The ovarian tumor peak is 604.33 TPM, and 247 known patients meet the cancer cutoff across cohorts. If both normal signals were resolved as read misassignment, the current expression measurements would qualify CTAG2 as CA-only. The separate heart review found discordant RNA and cardiomyocyte staining. [Heart assay review](audits/ctag2-heart-evidence.md)
+
 ## Which proteins reach the highest tumor expression?
 
-Rank by the **maximum observed QC-passing tumor TPM**, with ties ordered by protein label and entity ID. The first four in inclusive **CA** are **LALBA, TGM4, XAGE1A/B, SPANXA1/2**. The first four in inclusive **RA** are **LALBA, TGM4, XAGE1A/B, SPANXA1/2**. The table splits the memberships so that high-expressing CA-only and RA-only groups remain visible. An RA-only peak can miss cancer enrichment or another CA-specific requirement. Known patients are counted at the tenfold threshold across cohorts, once per identified person. Anonymous samples have a separate count in the download.
+Each table starts again at rank 1 and shows up to ten protein groups in that category, ranked by **maximum observed QC-passing tumor TPM**. Ties are ordered by protein label and entity ID. Across the candidate union, **106 proteins** have peaks strictly between 136 and 1,300 TPM. A protein contributes one peak even if many samples fall within this interval. In the [retained tumor witnesses](audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz), the same interval contains **4,488 candidate observations across 2,750 distinct source/sample IDs**. These counts cover the exported witnesses. The full matrices also contain observations below each protein’s witness threshold. Known patients at tenfold are counted once per identified person across cohorts.
 
-| Protein | Membership | Peak cohort | Tumor TPM | N TPM | RA peak TPM | Tumor fold | Known patients at 10× |
+The CA-only and RA-only tables exclude CTAs. The Other table covers only groups that reached the quantitative comparison. A strong tumor peak can coexist with a coverage or attribution hold. RA-only groups can also exceed the cancer fold when their recorded normal home lacks coverage. The downloadable ranks include inclusive CA and RA.
+
+### CTA
+
+Tumor comparison available for 327 of 327 groups.
+
+| Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| LALBA | CTA | BRCA | 79,700.44 | 0.78 | 45,625.2 | 79,700.44 | 25 |
-| TGM4 | CTA | PRAD | 17,629.45 | 5.67 | 22,106.5 | 3,107.11 | 94 |
-| XAGE1A/B | CTA | BRCA | 4,068.64 | 5.74 | 362.73 | 709.23 | 988 |
-| SPANXA1/2 | CTA | ESCA | 3,700.06 | 3 | 77.07 | 1,233.35 | 61 |
-| AMELX | CA only | RT | 1,696.17 | 1.9 | 2.29 | 892.72 | 30 |
-| HOXC12 | CA only | WILMS | 1,559.28 | 11.6 | 5.51 | 134.47 | 9 |
-| RPS4Y2 | CA only | B_ALL | 1,394.88 | 12.19 | 12.74 | 114.4 | 50 |
-| GALP | CA only | SARC_DSRCT | 1,332.56 | 1.02 | 1.05 | 1,308.13 | 22 |
-| STPG3 | RA only | NEC_MERKEL | 136.45 | 16.79 | 196.89 | 8.13 | 0 |
-| OR1N1 | RA only | OV | 98.33 | 0.8 | 12.16 | 98.33 | 12 |
-| PABPC3 | RA only | BL | 69.66 | 6.26 | 95.08 | 11.13 | 3 |
-| PABPN1L | RA only | B_ALL | 58.46 | 11.77 | 585.75 | 4.97 | 0 |
+| 1 | LALBA | BRCA | 79,700.44 | 0.78 | 45,625.2 | 79,700.44 | 25 |
+| 2 | TGM4 | PRAD | 17,629.45 | 5.67 | 22,106.5 | 3,107.11 | 94 |
+| 3 | XAGE1A/B | BRCA | 4,068.64 | 5.74 | 362.73 | 709.23 | 988 |
+| 4 | SPANXA1/2 | ESCA | 3,700.06 | 3 | 77.07 | 1,233.35 | 61 |
+| 5 | PRAME | SCLC | 3,692.46 | 10.93 | 310.91 | 337.97 | 1,206 |
+| 6 | SCGB1D4 | UCEC | 3,576.17 | 0.97 | 1,383.54 | 3,576.17 | 49 |
+| 7 | MAGEA4 | SCLC | 3,201.68 | 2.95 | 327.97 | 1,083.95 | 745 |
+| 8 | RLN1 | PRAD | 3,039.25 | 5.85 | 268.82 | 519.47 | 127 |
+| 9 | SEMG2 | PRAD | 3,033.78 | 9.52 | 26,737.9 | 318.52 | 7 |
+| 10 | VCY/1B | SKCM | 2,858.58 | 0.1 | 269.66 | 2,858.58 | 125 |
+
+### CA only
+
+Tumor comparison available for 69 of 69 groups.
+
+| Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | AMELX | RT | 1,696.17 | 1.9 | 2.29 | 892.72 | 30 |
+| 2 | HOXC12 | WILMS | 1,559.28 | 11.6 | 5.51 | 134.47 | 9 |
+| 3 | RPS4Y2 | B_ALL | 1,394.88 | 12.19 | 12.74 | 114.4 | 50 |
+| 4 | GALP | SARC_DSRCT | 1,332.56 | 1.02 | 1.05 | 1,308.13 | 22 |
+| 5 | SP7 | SARC_OS | 590.49 | 1.92 | 7.9 | 308.19 | 222 |
+| 6 | ZACN | SCLC | 526.62 | 22.49 | 21.96 | 23.41 | 1 |
+| 7 | IL36B | SARC_UPS | 498.45 | 20.17 | 9.83 | 24.71 | 1 |
+| 8 | SRMS | NET_RECTAL | 463.74 | 12.05 | 39.04 | 38.47 | 0 |
+| 9 | CSAG3 | LUSC | 336.48 | 4.27 | 22.46 | 78.72 | 401 |
+| 10 | DBX1 | SCLC | 297.51 | 0.78 | 1.65 | 297.51 | 74 |
+
+### RA only
+
+Tumor comparison available for 127 of 127 groups.
+
+| Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | STPG3 | NEC_MERKEL | 136.45 | 16.79 | 196.89 | 8.13 | 0 |
+| 2 | OR1N1 | OV | 98.33 | 0.8 | 12.16 | 98.33 | 12 |
+| 3 | PABPC3 | BL | 69.66 | 6.26 | 95.08 | 11.13 | 3 |
+| 4 | PABPN1L | B_ALL | 58.46 | 11.77 | 585.75 | 4.97 | 0 |
+| 5 | PSG7 | NEC_MERKEL | 55.42 | 6.12 | 70.23 | 9.05 | 0 |
+| 6 | KRTAP20-4 | NEC_LUNG_LARGECELL | 50.41 | 0.3 | 10.05 | 50.41 | 2 |
+| 7 | OR51C1 | PRAD | 50 | 2.37 | 43.5 | 21.08 | 8 |
+| 8 | TMEM262 | NEC_LUNG_LARGECELL | 47.43 | 7.03 | 123.95 | 6.74 | 0 |
+| 9 | TOMM20L | T_ALL | 46.57 | 6.16 | 73.76 | 7.57 | 0 |
+| 10 | ZNF878 | B_ALL | 39.39 | 3.94 | 48.31 | 10 | 0 |
+
+### Other
+
+Tumor comparison available for 395 of 1,117 groups.
+
+| Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | DSPP | HEPB | 1,695.58 | 0.6 | 0.21 | 1,695.58 | 1 |
+| 2 | GFY | RT | 1,575.56 | 2.65 | 14.05 | 594.83 | 41 |
+| 3 | PANX3 | SARC_OS | 1,387.97 | 2 | 2.32 | 692.34 | 155 |
+| 4 | CTAG2 | OV | 604.33 | 10.67 | 101.92 | 56.65 | 247 |
+| 5 | GLYATL3 | NET_MIDGUT | 479.55 | 1.58 | 0.32 | 302.67 | 29 |
+| 6 | RIPPLY3 | RT | 450.15 | 2.36 | 10.02 | 190.41 | 29 |
+| 7 | VCX3B | BRCA | 420.74 | 1.33 | 181.54 | 316.01 | 87 |
+| 8 | PSG3 | LUAD | 326.38 | 17.41 | 1,155.62 | 18.74 | 1 |
+| 9 | GSX2 | LAML_ELNint | 287.56 | 5.09 | 8.6 | 56.48 | 8 |
+| 10 | RGPD3 | T_ALL | 284.71 | 4.76 | 20.78 | 59.77 | 9 |
+
+### Unsafe
+
+Tumor comparison available for 0 of 18,253 groups.
 
 [All candidates, inclusive CA/RA/CTA ranks, sample and cohort identifiers, folds and patient support](antigen-whitepaper/tumor-ranks.csv). A peak measures abundance in a single library. The witness counts describe how often enrichment was observed in the available cohorts. Neither quantity measures the fraction of malignant cells expressing the protein.
 
