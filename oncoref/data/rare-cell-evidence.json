@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.rare-cell-evidence",
-  "policy_id": "oncoref.target-selection.2026-11-18.4",
+  "policy_id": "oncoref.target-selection.2026-11-19.1",
   "census_release": "2025-11-08",
   "filter": "is_primary_data == True and disease == 'normal' and tissue_type == 'tissue'",
   "count_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",

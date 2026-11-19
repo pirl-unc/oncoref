@@ -1,0 +1,8 @@
+list_id,gene_id,gene_name,basis,source_url,qualification
+CTA,ENSG00000204019,CT83,Autologous human tumor recognition and germline expression,https://doi.org/10.1158/0008-5472.CAN-05-3840,Catalog comparison separately retains salivary RNA
+CTA,ENSG00000155495,MAGEC1,CT7 protein detected in primary myeloma,https://pubmed.ncbi.nlm.nih.gov/15761016/,Literature designation; host expression assessed separately
+not-CTA,ENSG00000169214,OR6F1,Independent adult olfactory mucosa biopsy RNA and targeted donor qPCR,https://doi.org/10.1371/journal.pone.0096333,Project negative benchmark for reproductive restriction; Olender Table S7 also reports the exact source symbol
+not-CTA,ENSG00000181609,OR52D1,Independent adult olfactory mucosa biopsy RNA and targeted donor qPCR,https://doi.org/10.1371/journal.pone.0096333,Project negative benchmark for reproductive restriction; Olender Table S7 also reports the exact source symbol
+not-CTA,ENSG00000196944,OR2T4,Independent adult olfactory mucosa biopsy RNA and targeted donor qPCR,https://doi.org/10.1371/journal.pone.0096333,Project negative benchmark for reproductive restriction; Olender Table S7 also reports the exact source symbol
+not-CTA,ENSG00000237521,OR7E24,Independent adult olfactory mucosa biopsy RNA and targeted donor qPCR,https://doi.org/10.1371/journal.pone.0096333,Project negative benchmark for reproductive restriction; Olender Table S7 also reports the exact source symbol
+withhold,ENSG00000182974,OR4M2B,Presumed olfactory home; no locus-specific comparison in the available receptor tables,https://www.uniprot.org/uniprotkb/A0A0G2JMP0/entry,Coverage benchmark. Published OR4M2 measurements cannot establish OR4M2B expression.

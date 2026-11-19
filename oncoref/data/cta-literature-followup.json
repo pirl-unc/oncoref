@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.cta-literature-followup",
   "schema_version": 2,
-  "reviewed_on": "2026-11-18",
+  "reviewed_on": "2026-11-19",
   "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
   "sources": [
     {
@@ -953,6 +953,47 @@
           "reviewed_on": "2026-11-18",
           "provenance": {
             "pmid": "16954604"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1186/s40425-019-0678-x",
+      "citation": "Marcinkowski et al., 2019",
+      "title": "Cancer targeting by TCR gene-engineered T cells directed against Kita-Kyushu Lung Cancer Antigen-1",
+      "url": "https://doi.org/10.1186/s40425-019-0678-x",
+      "roles": [
+        "tumor",
+        "cta"
+      ],
+      "gene_list_scope": "CT83 in the tumor-expression analyses.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000204019"
+          ],
+          "protein": "CT83",
+          "reported_name": "KK-LC-1 (CT83)",
+          "reported_as": "CT83 RNA localized to gastric and triple-negative breast tumor cells.",
+          "scope": "Human tumor RNA localization by RNAscope; expression varied among specimens and cells.",
+          "taxonomy_id": 9606,
+          "context": "Human gastric and triple-negative breast cancers",
+          "assay": "RNA in situ hybridization (RNAscope)",
+          "source_location": "Figure 4d–e, Results and Discussion",
+          "evidence_types": [
+            "rna_expression",
+            "cta_nomination"
+          ],
+          "allowed_uses": [
+            "tumor_support",
+            "cta_nomination"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "A prevalence and cell-localization assay. No native TPM or patient-specific dosing information. Normal-tissue qRT-PCR in the same study included a low bladder signal.",
+          "reviewed_on": "2026-11-19",
+          "provenance": {
+            "dataset": "marcinkowski2019-ct83-expression",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6712783/#Fig4"
           }
         }
       ]
