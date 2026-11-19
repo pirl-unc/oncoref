@@ -12,7 +12,7 @@ MAGE-B/C,MAGEB4,CTA,0.0578279999999999,lymph node,0.0,29,1,,✓,papers,papers,
 MAGE-B/C,MAGEC1,CTA,1.0283179999999994,spleen,0.6,304,5,,✓,✓,exclusions,
 MAGE-B/C,MAGEC2,CTA,0.2175351999999999,pituitary gland,0.1,682,6,,✓,✓,exclusions,
 NY-ESO / LAGE / PRAME,NY-ESO-1,CTA,0.8434392,spleen,0.5,944,5,mapping risk,✓,✓,✓,
-NY-ESO / LAGE / PRAME,CTAG2,Other,10.668518999999998,,24.9,57,3,"mapping risk, literature conflict",—,—,—,
+NY-ESO / LAGE / PRAME,CTAG2,Other,6.9245700000000046,,24.9,87,3,"mapping risk, literature conflict",—,—,—,
 NY-ESO / LAGE / PRAME,PRAME,CTA,10.925400000000003,adrenal gland,20.3,338,6,"dismissed rare-cell, literature conflict",✓,off_target,off_target,
 NY-ESO / LAGE / PRAME,LAGE3,Unsafe,,,136.4,,0,,—,—,—,HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea
 SSX / GAGE / PAGE / XAGE,SSX1,CTA,2.6523355,thyroid gland,1.3,101,5,"mapping risk, literature conflict",✓,✓,✓,

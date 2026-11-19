@@ -1,28 +1,28 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-19.2",
+  "policy_id": "oncoref.target-selection.2026-11-19.3",
   "proteins": 19893,
   "categories": {
     "Unsafe": 18253,
-    "Other": 1117,
+    "Other": 1115,
     "CTA": 327,
-    "Reproductive Antigen only": 127,
-    "Cancer Antigen only": 69
+    "Reproductive Antigen only": 128,
+    "Cancer Antigen only": 70
   },
   "classifications": {
     "Unsafe": 18253,
     "Other:Review": 731,
     "CTA": 327,
-    "Other:Expression": 250,
-    "Reproductive Antigen only": 127,
+    "Other:Expression": 248,
+    "Reproductive Antigen only": 128,
     "Other:Unscreened tissue": 88,
-    "Cancer Antigen only": 69,
+    "Cancer Antigen only": 70,
     "Other:Sequence": 48
   },
   "memberships": {
-    "is_cancer_antigen": 396,
-    "is_reproductive_antigen": 454,
+    "is_cancer_antigen": 397,
+    "is_reproductive_antigen": 455,
     "is_cta": 327,
-    "is_target_candidate": 523
+    "is_target_candidate": 525
   },
   "cta_tiers": {
     "core": 206,
@@ -63,17 +63,17 @@
     {
       "released_category": "Other",
       "category": "Cancer Antigen only",
-      "proteins": 36
+      "proteins": 37
     },
     {
       "released_category": "Other",
       "category": "Other",
-      "proteins": 950
+      "proteins": 948
     },
     {
       "released_category": "Other",
       "category": "Reproductive Antigen only",
-      "proteins": 4
+      "proteins": 5
     },
     {
       "released_category": "Other",
@@ -167,14 +167,13 @@
     "spinal cord",
     "spleen",
     "stomach",
-    "thymus",
     "thyroid gland",
     "tongue",
     "urinary bladder"
   ],
   "assessed_cancer_statuses": {
-    "qualifies": 523,
-    "does_not_qualify": 395
+    "qualifies": 524,
+    "does_not_qualify": 394
   },
   "published_nomination_by_category": {
     "CTA": 252,

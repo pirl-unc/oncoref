@@ -56,7 +56,7 @@ BASE = ROOT / "docs/audits/cta-selection-20261028"
 FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-19.1"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-19.2"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -427,6 +427,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     normal["scope"] = normal.category.where(
         normal.category.isin(["reproductive", "disposable"]), "normal"
     )
+    normal.loc[normal.tissue.eq("thymus"), "scope"] = "thymic"
     normal["context_id"] = normal.tissue
     normal["qc_pass"] = normal.value.notna()
     normal["identity_resolved"] = normal.measured_members.eq(normal.member_count)
@@ -435,7 +436,9 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     concepts = anatomy(pd.DataFrame({"tissue": sorted(consensus.Tissue.unique())}))
     concepts = concepts.assign(source="hpa_rna_consensus", cell_type="bulk")
     concepts["category"] = tissue_tiers.context_tiers(concepts)
-    required = set(concepts.loc[~concepts.category.isin(["reproductive", "disposable"]), "tissue"])
+    required = set(
+        concepts.loc[~concepts.category.isin(["reproductive", "disposable"]), "tissue"]
+    ) - {"thymus"}
 
     from bulk_normal_percentiles import dice_percentiles, hpa_immune_percentiles, tissue_percentiles
 
@@ -1208,7 +1211,7 @@ def build(*, reuse_tumor_cache=False):
             "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
             "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
             "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
-            "Complete 36-context combined nonreproductive normal anatomy panel, plus observed native-TPM normal immune and brain measurements",
+            f"Complete {len(required)}-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Thymus is retained separately as protected-tissue evidence.",
         ],
         "expression_bounds": target_selection.definition()["expression_bounds"],
         "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,

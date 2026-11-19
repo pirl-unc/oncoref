@@ -1246,9 +1246,16 @@
           "archive_sha256": "54ae2a80519110d276ecf2ad072eb1a488f4b10e98c08e463712e5c2d97ec2ee",
           "bytes": 33529784,
           "taxon_id": 9606
+        },
+        "85db432ee5a7": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/85db432ee5a76f2acf399815a0acc88bf02cfe35/docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz",
+          "sha256": "be43b686625f3e5dfe473c64a663bc148ac3fe487a7568474a8237136dfaf61c",
+          "archive_sha256": "be43b686625f3e5dfe473c64a663bc148ac3fe487a7568474a8237136dfaf61c",
+          "bytes": 33529674,
+          "taxon_id": 9606
         }
       },
-      "default_version": "b2eeede18472"
+      "default_version": "85db432ee5a7"
     },
     "antigen-normal-comparison": {
       "description": "Antigen curation comparison or sample metadata \u2014 normal comparison",
@@ -1262,9 +1269,16 @@
           "archive_sha256": "1bfa890173ed679c6106aeeab064edd4da4c7d3ca43e74b788b5ff07aeaecb74",
           "bytes": 38579504,
           "taxon_id": 9606
+        },
+        "85db432ee5a7": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/85db432ee5a76f2acf399815a0acc88bf02cfe35/docs/audits/target-selection-20261110/rebuild/normal-comparison.csv.gz",
+          "sha256": "73d51135e0b4c4e86af406cc1c8f40f37e2ed47d63a4f3e6db2813e2c2a30452",
+          "archive_sha256": "73d51135e0b4c4e86af406cc1c8f40f37e2ed47d63a4f3e6db2813e2c2a30452",
+          "bytes": 38576348,
+          "taxon_id": 9606
         }
       },
-      "default_version": "b2eeede18472"
+      "default_version": "85db432ee5a7"
     },
     "antigen-tumor-witnesses": {
       "description": "Antigen curation comparison or sample metadata \u2014 tumor witnesses",
@@ -1278,9 +1292,16 @@
           "archive_sha256": "b8940aa19d15873906744fe1d5d32e675dc7cbe708112344d9d822c9d433d6a1",
           "bytes": 529581,
           "taxon_id": 9606
+        },
+        "85db432ee5a7": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/85db432ee5a76f2acf399815a0acc88bf02cfe35/docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
+          "sha256": "928824e95ea18012f909d18526ab6dfb970ee4a42b9fc6bf7860930bf97f142c",
+          "archive_sha256": "928824e95ea18012f909d18526ab6dfb970ee4a42b9fc6bf7860930bf97f142c",
+          "bytes": 537608,
+          "taxon_id": 9606
         }
       },
-      "default_version": "b2eeede18472"
+      "default_version": "85db432ee5a7"
     },
     "antigen-tumor-samples": {
       "description": "Antigen curation comparison or sample metadata \u2014 tumor samples",

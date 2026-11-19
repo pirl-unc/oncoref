@@ -912,7 +912,7 @@ hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.283,bulk,RA witness
 hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.349,bulk,RA witness
 hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.354,bulk,RA witness
 hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.371,bulk,RA witness
-hpa_tissue_samples,hpa_tissue_samples:v23,thymus,thymus,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,thymus,thymus,bulk,Thymic
 hpa_tissue_samples,hpa_tissue_samples:v23,thyroid gland,thyroid gland,bulk,Normal
 hpa_tissue_samples,hpa_tissue_samples:v23,tongue,tongue,bulk,Normal
 hpa_tissue_samples,hpa_tissue_samples:v23,tonsil,tonsil,bulk,Disposable
@@ -1204,7 +1204,7 @@ rna_tissue_hpa,rna_tissue_hpa:v23,smooth muscle,smooth muscle,bulk,Normal
 rna_tissue_hpa,rna_tissue_hpa:v23,spleen,spleen,bulk,Normal
 rna_tissue_hpa,rna_tissue_hpa:v23,stomach,stomach,bulk,Normal
 rna_tissue_hpa,rna_tissue_hpa:v23,testis,testis,bulk,Reproductive context
-rna_tissue_hpa,rna_tissue_hpa:v23,thymus,thymus,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,thymus,thymus,bulk,Thymic
 rna_tissue_hpa,rna_tissue_hpa:v23,thyroid gland,thyroid gland,bulk,Normal
 rna_tissue_hpa,rna_tissue_hpa:v23,tongue,tongue,bulk,Normal
 rna_tissue_hpa,rna_tissue_hpa:v23,tonsil,tonsil,bulk,Disposable

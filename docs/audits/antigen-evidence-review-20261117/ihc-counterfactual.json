@@ -1,6 +1,6 @@
 {
-  "catalog_policy": "oncoref.target-selection.2026-11-19.2",
-  "catalog_sha256": "1a1c08bf618c0108ea504d43ef8f631f86ee7137e4747b1ad4cbfe9922e47d72",
+  "catalog_policy": "oncoref.target-selection.2026-11-19.3",
+  "catalog_sha256": "02ad02529ec7bfe5e11c0c267a12e35bebb74a2e84d37ff1b7d56f1283dc9111",
   "source": "hpa_normal_tissue:v23",
   "source_sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
   "identity_mapping_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
@@ -65,8 +65,8 @@
   ],
   "baseline": {
     "CTA": 327,
-    "RA": 454,
-    "union": 523
+    "RA": 455,
+    "union": 525
   },
   "additional": {
     "CTA": 6,

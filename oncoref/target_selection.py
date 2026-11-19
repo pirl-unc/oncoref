@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-19.2"
+POLICY_ID = "oncoref.target-selection.2026-11-19.3"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -214,12 +214,12 @@ def definition() -> dict:
             "tumor_fold": TUMOR_FOLD,
             "rule": (
                 "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable "
-                "TPM cohort. N is the highest non-reproductive normal value, D the highest "
+                "TPM cohort. N is the highest non-thymic, non-reproductive normal value, D the highest "
                 "Disposable value. This is the only cancer route."
             ),
             "normal_reference": (
                 "N: maximum QC-passing, identity-resolved measurement in the declared compatible "
-                "normal panel, excluding Disposable and reproductive compartments. D is taken "
+                "peripheral panel, excluding thymus, Disposable and reproductive compartments. D is taken "
                 "separately; reproductive, placental and fetal compartments are never compared."
             ),
             "descriptive": (
@@ -423,12 +423,12 @@ def _assess_enrichment_rna(
 
     Both frames require ``entity_id, source_id, comparison_id, unit, value,
     qc_pass, identity_resolved``. Tumors also require ``sample_id, participant_id``;
-    normals require ``context_id, scope``. Scope is ``normal``, ``disposable`` or
+    normals require ``context_id, scope``. Scope is ``normal``, ``thymic``, ``disposable`` or
     ``reproductive`` and must come from reviewed compartment mappings, never from
     the organ name alone. Required contexts are the nonexempt normal contexts.
 
     Cancer evidence qualifies when one tumor sample reaches ``TUMOR_FOLD`` times the
-    highest non-reproductive value: max(normal, Disposable, ``DETECTION_FLOOR``).
+    highest peripheral non-reproductive value: max(normal, Disposable, ``DETECTION_FLOOR``).
     The receipt retains observed maxima, supporting samples, and missing coverage.
     Missing/failed normal observations cannot lower the comparison to zero. Counts of
     independent patients above the normal maximum are descriptive.
@@ -468,10 +468,14 @@ def _assess_enrichment_rna(
             raise ValueError("Expression must be finite and nonnegative, or missing")
     if len(entity_ids) != 1:
         raise ValueError("Assess one resolved protein identity at a time")
-    if not normals.scope.isin(["normal", "disposable", "reproductive"]).all():
+    if not normals.scope.isin(["normal", "disposable", "reproductive", "thymic"]).all():
         raise ValueError("Unknown normal compartment scope")
     if not normals.context_id.map(lambda v: isinstance(v, str) and bool(v.strip())).all():
         raise ValueError("Every normal observation requires a context ID")
+    if normals.context_id.eq("thymus").ne(normals.scope.eq("thymic")).any():
+        raise ValueError("Thymus observations require a separate thymic scope")
+    if "thymus" in required_normal_contexts:
+        raise ValueError("Thymus cannot be a required peripheral comparison context")
     if normals.groupby("context_id").scope.nunique().gt(1).any():
         raise ValueError("A normal context has conflicting compartment allowances")
     if not tumors.sample_id.map(lambda v: isinstance(v, str) and bool(v.strip())).all():

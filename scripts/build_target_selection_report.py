@@ -108,7 +108,9 @@ def figures():
         ylim=(0, 105),
     )
     ax.set_title(
-        "Cancer RNA evidence: one tumor at 10 × every non-reproductive normal", loc="left", pad=15
+        "Cancer RNA evidence: one tumor at 10 × every non-thymic, non-reproductive normal",
+        loc="left",
+        pad=15,
     )
     ax.spines[["right", "top"]].set_visible(False)
     ax.grid(alpha=0.15)

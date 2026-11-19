@@ -9,7 +9,7 @@ from oncoref import reference_data
 
 def tissue_percentiles(normal):
     mask = normal.source_id.eq("hpa_tissue_samples:v23") & normal.scope.isin(
-        ["normal", "disposable"]
+        ["normal", "disposable", "thymic"]
     )
     raw = normal.loc[mask].copy()
     if raw.empty:

@@ -307,7 +307,7 @@ table{border-collapse:collapse;width:100%}th,td{padding:9px;text-align:left;bord
 <figure><img src="summary/funnel-all.png" alt="Sequential curation funnel with removed and retained counts" style="width:100%;max-width:1300px"></figure>
 <p><a href="summary/">All curation figures and count tables</a> · <a href="library-qc.csv.gz">Library QC measurements</a> · <a href="../../../antigen-sequences/">Set and peptide subtraction APIs</a></p>
 <p>Other: __OTHER_COUNTS__. The __RA_ONLY__ Reproductive Antigens only have no qualifying cancer evidence under this screen.</p>
-<p>The shared eligibility screen leaves __ELIGIBLE__ proteins. Cancer RNA needs one tumor sample, from any comparable TPM cohort, at ≥10 × max(N, D, 1), where N is the highest non-reproductive normal value and D the highest Disposable value. All qualifying 10× samples, known patients, anonymous samples and cancer types are counted separately. The highest tumor, reproductive or developmental value must exceed every measured nonreproductive and Disposable value, with Disposable expression at most 32 TPM and 32 nTPM. RA independently requires ≥10 × max(N, D, 1) in a reproductive tissue sample or supported embryo-specific lineage mean. Protein staining and incompatible RNA scales remain independent evidence layers; they cannot bypass the RNA fold.</p>
+<p>The shared eligibility screen leaves __ELIGIBLE__ proteins. Cancer RNA needs one tumor sample, from any comparable TPM cohort, at ≥10 × max(N, D, 1), where N is the highest non-thymic, non-reproductive normal value and D the highest Disposable value. All qualifying 10× samples, known patients, anonymous samples and cancer types are counted separately. The highest tumor, reproductive or developmental value must exceed every measured nonreproductive and Disposable value, with Disposable expression at most 32 TPM and 32 nTPM. RA independently requires ≥10 × max(N, D, 1) in a reproductive tissue sample or supported embryo-specific lineage mean. Protein staining and incompatible RNA scales remain independent evidence layers; they cannot bypass the RNA fold.</p>
 <p class="note">The comparison uses native gene TPM with resolved identities and source quality checks. N includes within-site GTEx v11 linear donor P95, HPA v23 within-tissue biopsy P95 and supported tissue/cell summaries; it does not cover every healthy donor. Cross-study batch effects are not corrected. Other assay scales retain their independent normal-exclusion rules. <a href="normal-rna/">Normal RNA source coverage</a> · <a href="comparison.json">Exact comparison scope</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Cross-study methods</a>.</p>
 <p><strong>NUTM coverage:</strong> the stored UNC three-sample matrix fails the nonnegative-TPM check and contributes no qualifying samples. Its failed source remains in the <a href="tumor-source-coverage.csv">coverage ledger</a>; <a href="https://github.com/pirl-unc/oncoref/issues/604">#604</a> and <a href="https://github.com/pirl-unc/oncoref/issues/665">#665</a> track the repair. No raw reads were re-quantified for this rebuild.</p>
 <h2>Changes from the released 1.39.0 catalog</h2><div class="summary"><table><thead><tr><th>Released category</th><th>New category</th><th>Proteins</th></tr></thead><tbody>__MIGRATIONS__</tbody></table></div>
@@ -439,7 +439,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "| Coverage, identity and translation | Unchanged | Other:Review |\n"
         "| Sequence | Fewer than 95% of 9-mers inside Unsafe proteins; no unsupported nested protein or read-through locus | Other:Sequence |\n"
         "| Expression bounds | Target maximum above every measured nonreproductive and Disposable value; Disposable at most 32 TPM and 32 nTPM | Other:Expression |\n"
-        "| Cancer evidence | One tumor sample ≥10 × max(N, Disposable, 1), N the highest non-reproductive normal value | No Cancer Antigen membership |\n"
+        "| Cancer evidence | One tumor sample ≥10 × max(N, Disposable, 1), N the highest non-thymic, non-reproductive normal value | No Cancer Antigen membership |\n"
         "| Reproductive evidence | One reproductive sample or supported embryo-lineage mean ≥10 × max(N, Disposable, 1), on the same scale and reference as CA | No Reproductive Antigen membership |\n\n"
         "## Rare normal-cell RNA\n\n"
         "A count matrix cannot show where a read aligned, and one mis-assigned read per cell from a "
@@ -494,7 +494,7 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         + ".\n\nFormer CTAs now requiring review: "
         + ", ".join(held_cta.protein_group_label)
         + ".\n\n## Reproductive Antigens only\n\n"
-        + "No tumor sample reaches 10 × the protein's non-reproductive normal maximum"
+        + "No tumor sample reaches 10 × the protein's non-thymic, non-reproductive normal maximum"
         + (
             f"; {unresolved_reproductive} lack a complete normal comparison.\n\n"
             if unresolved_reproductive

@@ -150,15 +150,20 @@ def test_immune_percentile_sums_loci_before_each_donor_votes(monkeypatch, tmp_pa
 def test_baseline_panels_expose_only_their_own_scope(monkeypatch, tmp_path):
     raw = pd.DataFrame(
         {
-            "entity_id": ["a"] * 3 + ["b"],
-            "scope": ["normal", "disposable", "reproductive", "normal"],
-            "value": [1, 2, 1000, 5],
+            "entity_id": ["a"] * 4 + ["b"],
+            "scope": ["normal", "disposable", "reproductive", "thymic", "normal"],
+            "value": [1, 2, 1000, 30, 5],
         }
     )
     path = tmp_path / "healthy.csv"
     raw.to_csv(path, index=False)
     monkeypatch.setattr(catalog, "ensure", lambda *args, **kwargs: path)
-    for panel, expected in [("normal", [1]), ("disposable", [2]), ("healthy", [1, 2, 1000])]:
+    for panel, expected in [
+        ("normal", [1]),
+        ("disposable", [2]),
+        ("thymic", [30]),
+        ("healthy", [1, 2, 1000, 30]),
+    ]:
         assert antigen_data.expression(panel, entity_ids="a").value.tolist() == expected
 
 

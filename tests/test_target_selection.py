@@ -169,6 +169,15 @@ def test_ratio_boundaries_and_low_expression_floor(normal, values, status, route
     assert result["normal_maximum"] == normal
 
 
+def test_thymus_is_observed_separately_from_the_peripheral_cutoff():
+    positive, normal = observations((20, 0), (2, 1))
+    thymus = normal.iloc[[0]].assign(context_id="thymus", scope="thymic", value=100)
+    result = assess(positive, pd.concat([normal, thymus]))
+    assert result["status"] == "qualifies" and result["single_sample_threshold"] == 20
+    with pytest.raises(ValueError, match="separate thymic scope"):
+        assess(positive, pd.concat([normal, thymus.assign(scope="normal")]))
+
+
 def test_replicates_and_duplicate_cohort_views_are_one_participant():
     tumors, normals = observations()
     tumors["participant_id"] = "same-person"

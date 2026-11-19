@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-19.2",
+  "policy_id": "oncoref.target-selection.2026-11-19.3",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -90,8 +90,8 @@
   "cancer_rna": {
     "detection_floor": 1.0,
     "tumor_fold": 10.0,
-    "rule": "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable TPM cohort. N is the highest non-reproductive normal value, D the highest Disposable value. This is the only cancer route.",
-    "normal_reference": "N: maximum QC-passing, identity-resolved measurement in the declared compatible normal panel, excluding Disposable and reproductive compartments. D is taken separately; reproductive, placental and fetal compartments are never compared.",
+    "rule": "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable TPM cohort. N is the highest non-thymic, non-reproductive normal value, D the highest Disposable value. This is the only cancer route.",
+    "normal_reference": "N: maximum QC-passing, identity-resolved measurement in the declared compatible peripheral panel, excluding thymus, Disposable and reproductive compartments. D is taken separately; reproductive, placental and fetal compartments are never compared.",
     "descriptive": "Counts at the actual tenfold threshold distinguish samples, known patients, anonymous samples and cancer types. Above-normal counts are legacy descriptors.",
     "excluded_tumors": {
       "codes": [],

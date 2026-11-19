@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-19.2`, 19,893 human protein records. **327 CTA, 69 Cancer Antigen only, 127 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-19.3`, 19,893 human protein records. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 
@@ -16,12 +16,12 @@ Reproductive protection is opt-in for every anatomy preset. Not protected, prote
 
 | Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
-| all | none | 327 | 69 | 127 | 523 |
-| female-patient | none | 327 | 69 | 127 | 523 |
-| female-patient (protect ovary) | ovary | 277 | 66 | 112 | 455 |
-| female-patient (lactating) | lactating_breast | 320 | 66 | 123 | 509 |
+| all | none | 327 | 70 | 128 | 525 |
+| female-patient | none | 327 | 70 | 128 | 525 |
+| female-patient (protect ovary) | ovary | 277 | 67 | 113 | 457 |
+| female-patient (lactating) | lactating_breast | 320 | 67 | 124 | 511 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
-| male-patient | none | 327 | 69 | 127 | 523 |
+| male-patient | none | 327 | 70 | 128 | 525 |
 | male-patient (protect testis) | testis | 54 | 29 | 24 | 107 |
 | male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 40 | 23 | 11 | 74 |
 
@@ -57,8 +57,8 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Adult cornea RNA | 5 | 1,640 |
 | Coverage, identity, translation or unresolved evidence | 731 | 909 |
 | Nested, Unsafe-contained or read-through sequence | 48 | 861 |
-| No qualifying expression or bounds fail | 250 | 611 |
-| Home tissue no panel resolves | 88 | 523 |
+| No qualifying expression or bounds fail | 248 | 613 |
+| Home tissue no panel resolves | 88 | 525 |
 
 ![Published nominations](summary/funnel-published.png)
 

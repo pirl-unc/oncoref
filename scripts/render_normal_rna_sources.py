@@ -89,8 +89,8 @@ SOURCES = {
         "CELLxGENE Census donor-resolved single-cell and single-nucleus counts. The rare-cell gate uses within-donor frequency and study replication.",
     ),
 }
-ROLES = ["Normal", "Disposable", "RA witness", "Reproductive context", "Shared screen"]
-COLORS = ["#f1f3f4", "#336689", "#b07a35", "#277763", "#a9cdba", "#785780"]
+ROLES = ["Normal", "Disposable", "RA witness", "Reproductive context", "Shared screen", "Thymic"]
+COLORS = ["#f1f3f4", "#336689", "#b07a35", "#277763", "#a9cdba", "#785780", "#a05a66"]
 
 
 def measured_contexts():
@@ -115,6 +115,7 @@ def measured_contexts():
             d["role"] = d.scope.map(
                 {
                     "normal": "Normal",
+                    "thymic": "Thymic",
                     "disposable": "Disposable",
                     "developmental": "RA witness",
                     "reproductive": "Reproductive context",

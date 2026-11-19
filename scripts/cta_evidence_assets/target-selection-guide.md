@@ -29,7 +29,7 @@ Catalog `$policy_id`: $categories.
 ## One threshold, two compartments
 
 Both CA and RA independently require **≥10 × H₀**, where
-**H₀ = max(non-reproductive normal N, Disposable D, 1 TPM)**, after shared eligibility.
+**H₀ = max(non-thymic, non-reproductive normal N, Disposable D, 1 TPM)**, after shared eligibility.
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
@@ -37,6 +37,8 @@ Both CA and RA independently require **≥10 × H₀**, where
 | RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | $ra |
 | CTA | Both routes | $cta |
 | CA∪RA | Either route | $union |
+
+The thymus remains Protected. Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 
 GTEx v11 contributes the **linearly interpolated donor P95 within each non-reproductive tissue site**. Complete member-locus TPMs are summed within a library first. Reproductive sites, including breast and prostate, retain individual samples as RA witnesses. HPA v23 contributes the within-tissue biopsy P95 and the within-population sorted immune donor P95. DICE contributes a P95 for single loci. Its ranks lack specimen IDs, so identical-protein groups with multiple loci use the sum of measured member maxima as an upper bound. GTEx medians, HPA tissue and brain means, and Monaco cell means retain their published statistics. The highest applicable value across these sources sets N or D. Single-cell and single-nucleus counts, nTPM and protein staining have separate normal-expression gates.
 

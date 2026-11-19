@@ -1,6 +1,6 @@
 # Rebuilt antigen catalog
 
-Policy `oncoref.target-selection.2026-11-19.2`. **327 CTA, 69 Cancer Antigen only, 127 Reproductive Antigen only, 1117 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
+Policy `oncoref.target-selection.2026-11-19.3`. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1115 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
 
 [Filterable protein table](report.html) · [Changes from 1.39.0](changes-from-1.39.csv) · [Transition counts](changes-from-1.39-summary.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 
@@ -20,10 +20,10 @@ Policy `oncoref.target-selection.2026-11-19.2`. **327 CTA, 69 Cancer Antigen onl
 | Established rare-cell RNA or published normal expression only | Unsafe | 125 | 1,640 |
 | Coverage, identity, translation or unresolved evidence | Other:Review | 731 | 909 |
 | Nested, Unsafe-contained or read-through sequence | Other:Sequence | 48 | 861 |
-| No qualifying expression, target maximum or Disposable cap | Other:Expression | 250 | 611 |
-| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 88 | 523 |
+| No qualifying expression, target maximum or Disposable cap | Other:Expression | 248 | 613 |
+| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 88 | 525 |
 
-The 523 remaining Candidate antigen proteins are 327 CTA, 69 Cancer Antigen only and 127 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
+The 525 remaining Candidate antigen proteins are 327 CTA, 70 Cancer Antigen only and 128 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
 
 ![Rebuilt counts](counts.png)
 
@@ -37,7 +37,7 @@ The 523 remaining Candidate antigen proteins are 327 CTA, 69 Cancer Antigen only
 | Coverage, identity and translation | Unchanged | Other:Review |
 | Sequence | Fewer than 95% of 9-mers inside Unsafe proteins; no unsupported nested protein or read-through locus | Other:Sequence |
 | Expression bounds | Target maximum above every measured nonreproductive and Disposable value; Disposable at most 32 TPM and 32 nTPM | Other:Expression |
-| Cancer evidence | One tumor sample ≥10 × max(N, Disposable, 1), N the highest non-reproductive normal value | No Cancer Antigen membership |
+| Cancer evidence | One tumor sample ≥10 × max(N, Disposable, 1), N the highest non-thymic, non-reproductive normal value | No Cancer Antigen membership |
 | Reproductive evidence | One reproductive sample or supported embryo-lineage mean ≥10 × max(N, Disposable, 1), on the same scale and reference as CA | No Reproductive Antigen membership |
 
 ## Rare normal-cell RNA
@@ -64,14 +64,14 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 | Draft | Now | Proteins |
 |---|---|---:|
 | CTA | Cancer Antigen only | 47 |
-| CTA | Other:Expression | 60 |
+| CTA | Other:Expression | 59 |
 | CTA | Other:Review | 37 |
 | CTA | Other:Sequence | 7 |
 | CTA | Other:Unscreened tissue | 11 |
-| CTA | Reproductive Antigen only | 110 |
+| CTA | Reproductive Antigen only | 111 |
 | CTA | Unsafe | 54 |
 | Cancer Antigen only | CTA | 1 |
-| Cancer Antigen only | Other:Expression | 142 |
+| Cancer Antigen only | Other:Expression | 141 |
 | Cancer Antigen only | Other:Review | 7 |
 | Cancer Antigen only | Other:Sequence | 2 |
 | Cancer Antigen only | Other:Unscreened tissue | 75 |
@@ -93,9 +93,9 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 The tenfold single-tumor rule accounts for the moves to Reproductive Antigen only and for Cancer Antigens only whose reproductive compartment does not reach the shared threshold. Known patient identity is a replication descriptor, not a single-sample admission gate.
 
-Cancer Antigens include 396 proteins; Reproductive Antigens include 454. Their intersection is CTA and their union contains 523 Candidate antigen proteins.
+Cancer Antigens include 397 proteins; Reproductive Antigens include 455. Their intersection is CTA and their union contains 525 Candidate antigen proteins.
 
-Other contains 731 review, 48 sequence, 250 expression, 88 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 27 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 731 review, 48 sequence, 248 expression, 88 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 27 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Changes from release 1.36.0
 
@@ -107,9 +107,9 @@ Other contains 731 review, 48 sequence, 250 expression, 88 unscreened tissue. A 
 | CTA | Reproductive Antigen only | 118 |
 | CTA | Unsafe | 49 |
 | Other | CTA | 6 |
-| Other | Cancer Antigen only | 36 |
-| Other | Other | 950 |
-| Other | Reproductive Antigen only | 4 |
+| Other | Cancer Antigen only | 37 |
+| Other | Other | 948 |
+| Other | Reproductive Antigen only | 5 |
 | Other | Unsafe | 31 |
 | Unsafe | CTA | 12 |
 | Unsafe | Other | 69 |
@@ -122,7 +122,7 @@ Former CTAs now requiring review: BPY2/B/C, CDY2A/B, DEFB130A/B, DAZL, EVX1, RGS
 
 ## Reproductive Antigens only
 
-No tumor sample reaches 10 × the protein's non-reproductive normal maximum.
+No tumor sample reaches 10 × the protein's non-thymic, non-reproductive normal maximum.
 
 | Protein | Tumor maximum TPM | Normal comparison TPM | Cancer assessment |
 |---|---:|---:|---|
@@ -131,6 +131,7 @@ No tumor sample reaches 10 × the protein's non-reproductive normal maximum.
 | GSC2 | 22.4 | 2.4 | Below cancer rule |
 | FNDC8 | 11.4 | 4.34 | Below cancer rule |
 | DEFB127 | 8.53 | 0.381 | Below cancer rule |
+| H2BW2 | 13.8 | 2.72 | Below cancer rule |
 | PRSS54 | 6.41 | 1.2 | Below cancer rule |
 | RSPH6A | 37.9 | 11.6 | Below cancer rule |
 | SPAM1 | 3.06 | 0.605 | Below cancer rule |

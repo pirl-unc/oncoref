@@ -106,7 +106,7 @@ def gene_list(list_id: str) -> pd.DataFrame:
 def expression(panel: str, *, entity_ids=None, version=None) -> pd.DataFrame:
     """Catalog comparison observations with original TPM, source and sample identifiers.
 
-    Normal and disposable return their respective baseline scopes. Healthy
+    Normal, disposable and thymic return their respective scopes. Healthy
     returns the full tissue comparison, including reproductive tissues.
     Tumor rows are qualifying or above-normal witnesses. Use per-sample cohort
     matrices for all tumor expression values, including zeroes.
@@ -115,6 +115,7 @@ def expression(panel: str, *, entity_ids=None, version=None) -> pd.DataFrame:
         "normal": "normal-comparison",
         "disposable": "normal-comparison",
         "healthy": "normal-comparison",
+        "thymic": "normal-comparison",
         "reproductive": "reproductive-comparison",
         "tumor": "tumor-witnesses",
     }
@@ -132,7 +133,7 @@ def expression(panel: str, *, entity_ids=None, version=None) -> pd.DataFrame:
     for chunk in pd.read_csv(
         catalog.ensure(dataset, version=version), chunksize=100000, low_memory=False
     ):
-        if panel in {"normal", "disposable"}:
+        if panel in {"normal", "disposable", "thymic"}:
             chunk = chunk.loc[chunk.scope.eq(panel)]
         parts.append(chunk if wanted is None else chunk.loc[chunk.entity_id.isin(wanted)])
     return pd.concat(parts, ignore_index=True)

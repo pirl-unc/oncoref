@@ -10,7 +10,7 @@ cta,10.1186/s12967-024-04918-0,10,Seager et al. (2024),historical_catalog,Member
 cta,10.1186/s40425-019-0678-x,1,,,
 oncofetal,10.1016/j.celrep.2023.113114,29,"Smith et al., 2023",program_catalog,Single-cell RNA sequencing of KLE and SUSA cancer cell lines using published zygotic gene activation and eight-cell-like gene sets.
 oncofetal,10.1016/j.devcel.2019.06.011,22,"Chew et al., 2019",program_catalog,DUX4-induced gene program evaluated in human cancers; target definition also used induced myoblast experiments.
-reproductive,10.1038/s41467-021-22695-y,311,Gong et al. (2021),historical_catalog,Normal reproductive-tissue enrichment; no tumor validation; Placental RNA enrichment; no tumor-antigen validation
+reproductive,10.1038/s41467-021-22695-y,312,Gong et al. (2021),historical_catalog,Normal reproductive-tissue enrichment; no tumor validation; Placental RNA enrichment; no tumor-antigen validation
 reproductive,10.1371/journal.pone.0144155,6,Hirbo et al. (2015),historical_catalog,HPA v13 placenta-enriched nominations; 30/86 fast-evolving subset retained as metadata; not tumor validation
 reproductive,https://pmc.ncbi.nlm.nih.gov/articles/PMC4944136/,3,Characterization and target genes of nine human PRD-like homeobox domain genes expressed exclusively in early embryos,previous_individual_review,Human embryo transcripts and human stem-cell functional assays; Measurements include embryo transcripts and stem-cell functional assays.
 reproductive,10.1126/science.abo7923,2,,,

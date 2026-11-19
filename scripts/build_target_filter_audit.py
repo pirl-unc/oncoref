@@ -368,7 +368,7 @@ a protein into or out of Other or Unsafe.
 
 **One cancer rule.** A protein is a Cancer Antigen when one tumor sample, from any
 QC-passing comparable TPM cohort including germ cell tumors, is at least 10 times its highest
-non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
+non-thymic, non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
 below 1 TPM count as 1). The {len(antigens)} Cancer Antigens: {fold_text}.
 {int(antigens.samples_at_tenfold.eq(1).sum())} have exactly one qualifying sample;
 {int(antigens.independent_patients_at_tenfold.ge(2).sum())} have qualifying samples from

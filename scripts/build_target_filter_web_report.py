@@ -316,7 +316,7 @@ the first three rows.</p>
 
 <h2>2. Catalog funnel</h2>
 <p>How {total:,} proteins become {len(candidates)} candidates. Each step removes proteins into the category shown.
-A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM cohort, at 10 × every non-reproductive normal value.</p>
+A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM cohort, at 10 × every non-thymic, non-reproductive normal value.</p>
 {table(["Step", "Removed into", "Removed", "Remaining", ""], funnel_rows, numeric=(2, 3))}
 
 <h2>3. Filter modes and host toxicity profiles</h2>

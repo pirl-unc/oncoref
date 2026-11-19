@@ -9,7 +9,7 @@
   "oncoref/data/translation-qualification.csv.gz": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
   "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
   "oncoref/data/rare-cell-evidence.csv.gz": "daec8946abc0f3acf75d344b8e8ca7aba4ec333f9d07fcc9c5dddf0fabe34f3b",
-  "oncoref/data/rare-cell-evidence.json": "b8c8f838706208070eb7e0ffea544a023c9283660975a2b824433e6d881a9e71",
+  "oncoref/data/rare-cell-evidence.json": "acdb7af54d717814222d2257a6b562ab4b1574cc209da535fecd8c2051a8aad9",
   "oncoref/data/normal-expression-literature.json": "84aca72d34897bc01783a55fe66cb5e8e11871ca1e3708f056694c420b355f00",
   "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
   "reference:rna_tissue_hpa:v23": "52bd4b1771388372187a6edf8c7d58b68b5074772c83b46be7b71ee02e074b4d",

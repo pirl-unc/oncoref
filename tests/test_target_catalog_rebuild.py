@@ -29,10 +29,10 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18253,
-        "Other": 1117,
+        "Other": 1115,
         "CTA": 327,
-        "Cancer Antigen only": 69,
-        "Reproductive Antigen only": 127,
+        "Cancer Antigen only": 70,
+        "Reproductive Antigen only": 128,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
     assert catalog.is_target_candidate.equals(
@@ -52,7 +52,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 461
+    assert len(policy.results(changed_only=True)) == 463
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -60,6 +60,11 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
+    ctag2 = by_name.loc["CTAG2"]
+    assert ctag2.classification == "Other:Review" and ctag2.rare_cell_status == "unresolved"
+    assert ctag2.reproductive_fold > 10 and ctag2.tumor_fold > 10
+    assert {r["tissue"] for r in json.loads(ctag2.normal_reference_contexts)} == {"urinary bladder"}
+    assert "thymus" not in json.loads((OUT / "comparison.json").read_text())["required_contexts"]
     gfy = by_name.loc["GFY"]
     assert gfy.classification == "Other:Unscreened tissue"
     assert gfy.published_home_tissue == gfy.home_tissue == "olfactory epithelium"
@@ -113,9 +118,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
         assert by_name.loc[name, "rare_cell_status"] == "unresolved"
     # No tumor reaches 10x the normal maximum, so the cancer claim is not made.
     for name in ["H2BW2", "EXD1"]:
-        assert by_name.loc[name, "category"] == (
-            "Other" if name == "H2BW2" else "Reproductive Antigen only"
-        )
+        assert by_name.loc[name, "category"] == "Reproductive Antigen only"
         assert by_name.loc[name, "tumor_fold"] < policy.TUMOR_FOLD
     # PRAME is in the eye of two donors in two studies, 1.2-1.5% of cells in different
     # populations. Two lone donors that disagree on the cell type are a recorded warning.
@@ -274,7 +277,8 @@ def test_tenfold_witness_tables_are_complete_and_reproductive_evidence_is_symmet
     assert individual.sample_id.nunique() == 54
     assert set(individual.scope) == {"reproductive"}
     percentiles = normal[normal.observation_kind.eq("biopsy_percentile")]
-    assert set(percentiles.scope) == {"normal", "disposable"}
+    assert set(percentiles.scope) == {"normal", "disposable", "thymic"}
+    assert percentiles.tissue.eq("thymus").equals(percentiles.scope.eq("thymic"))
     assert percentiles.sample_id.isna().all()
     assert individual.participant_id.isna().all()  # HPA does not supply donor identity.
 
