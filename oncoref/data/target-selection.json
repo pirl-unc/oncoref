@@ -9,30 +9,30 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-19.2",
+    "policy_id": "oncoref.target-selection.2026-11-19.3",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18253,
-      "Other": 1117,
+      "Other": 1115,
       "CTA": 327,
-      "Reproductive Antigen only": 127,
-      "Cancer Antigen only": 69
+      "Reproductive Antigen only": 128,
+      "Cancer Antigen only": 70
     },
     "classifications": {
       "Unsafe": 18253,
       "Other:Review": 731,
       "CTA": 327,
-      "Other:Expression": 250,
-      "Reproductive Antigen only": 127,
+      "Other:Expression": 248,
+      "Reproductive Antigen only": 128,
       "Other:Unscreened tissue": 88,
-      "Cancer Antigen only": 69,
+      "Cancer Antigen only": 70,
       "Other:Sequence": 48
     },
     "memberships": {
-      "is_cancer_antigen": 396,
-      "is_reproductive_antigen": 454,
+      "is_cancer_antigen": 397,
+      "is_reproductive_antigen": 455,
       "is_cta": 327,
-      "is_target_candidate": 523
+      "is_target_candidate": 525
     },
     "cta_tiers": {
       "core": 206,
@@ -73,17 +73,17 @@
       {
         "released_category": "Other",
         "category": "Cancer Antigen only",
-        "proteins": 36
+        "proteins": 37
       },
       {
         "released_category": "Other",
         "category": "Other",
-        "proteins": 950
+        "proteins": 948
       },
       {
         "released_category": "Other",
         "category": "Reproductive Antigen only",
-        "proteins": 4
+        "proteins": 5
       },
       {
         "released_category": "Other",
@@ -177,14 +177,13 @@
       "spinal cord",
       "spleen",
       "stomach",
-      "thymus",
       "thyroid gland",
       "tongue",
       "urinary bladder"
     ],
     "assessed_cancer_statuses": {
-      "qualifies": 523,
-      "does_not_qualify": 395
+      "qualifies": 524,
+      "does_not_qualify": 394
     },
     "published_nomination_by_category": {
       "CTA": 252,
@@ -195,14 +194,14 @@
     }
   },
   "comparison": {
-    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-19.1",
+    "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-19.2",
     "unit": "TPM",
     "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
     "compatibility_basis": [
       "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
       "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
       "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
-      "Complete 36-context combined nonreproductive normal anatomy panel, plus observed native-TPM normal immune and brain measurements"
+      "Complete 35-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Thymus is retained separately as protected-tissue evidence."
     ],
     "expression_bounds": {
       "target_maximum": "max(tumor, adult reproductive, developmental) >= 1 and above every measured nonreproductive normal and Disposable value on the comparison scale.",
@@ -940,13 +939,12 @@
       "spinal cord",
       "spleen",
       "stomach",
-      "thymus",
       "thyroid gland",
       "tongue",
       "urinary bladder"
     ],
     "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
   },
-  "data_sha256": "1a1c08bf618c0108ea504d43ef8f631f86ee7137e4747b1ad4cbfe9922e47d72",
+  "data_sha256": "02ad02529ec7bfe5e11c0c267a12e35bebb74a2e84d37ff1b7d56f1283dc9111",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }
