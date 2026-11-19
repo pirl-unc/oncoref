@@ -35,7 +35,13 @@ def test_normal_paper_closes_coverage_but_does_not_become_nomination():
     assert row.nomination_sources == []
     assert row.exact_paper_sources == ["10.1371/journal.pone.0007682"]
     assert additions["sources"][0]["roles"] == ["normal_tissue"]
-    assert "unchanged" in additions["classification_effect"]
+    claim = next(
+        c
+        for c in additions["memberships"]
+        if gene in c["gene_ids"] and c["source_id"] == row.exact_paper_sources[0]
+    )
+    assert claim["unscreened_adult_home"] == "taste bud"
+    assert claim["allowed_uses"] == ["normal_tissue_review"]
 
 
 def test_current_nomination_adds_new_locus_without_changing_frozen_memberships():

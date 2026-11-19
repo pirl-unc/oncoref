@@ -200,6 +200,7 @@ def test_selection_views_and_host_background_share_one_decision(rows):
     )
     sequences = selected.sequences(genome=genome)
     assert set(sequences.gene_id) == selected.gene_ids()
+    assert sequences.matches_representative_sequence.isna().all()
     assert sequences.attrs["host_context"] == selected.metadata["host_context"]
     from oncoref.peptide_subtraction import MatchPolicy
 

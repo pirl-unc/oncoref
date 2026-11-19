@@ -248,7 +248,8 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
         raise ValueError("Current antigen sets require human Ensembl 115")
     rows, missing = [], []
     for protein in protein_rows.itertuples():
-        representatives = set(json.loads(protein.representative_sequence_sha256s))
+        raw_hashes = getattr(protein, "representative_sequence_sha256s", None)
+        representatives = None if pd.isna(raw_hashes) else set(json.loads(raw_hashes))
         for gene_id in json.loads(protein.member_gene_ids):
             found = False
             try:
@@ -271,7 +272,9 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
                         "transcript_biotype": transcript.biotype,
                         "sequence": sequence,
                         "sequence_sha256": digest,
-                        "matches_representative_sequence": digest in representatives,
+                        "matches_representative_sequence": (
+                            pd.NA if representatives is None else digest in representatives
+                        ),
                         "set": group,
                         "catalog_category": getattr(
                             protein, "catalog_category", getattr(protein, "category", "")
@@ -297,6 +300,9 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
             "selection_category",
             "background_reason",
         ],
+    )
+    result["matches_representative_sequence"] = result.matches_representative_sequence.astype(
+        "boolean"
     )
     result.attrs.update(protein_rows.attrs)
     result.attrs.update(
