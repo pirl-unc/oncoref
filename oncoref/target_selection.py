@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-19.1"
+POLICY_ID = "oncoref.target-selection.2026-11-19.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -86,7 +86,7 @@ def definition() -> dict:
         "categories": list(CATEGORIES),
         "shared_checks": list(SHARED_CHECKS),
         "sets": {
-            "Cancer Antigens": "eligible AND cancer evidence qualifies",
+            "Cancer Antigens": "eligible AND cancer evidence qualifies AND recorded normal home is covered",
             "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
             "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
             "Candidate antigen proteins": "Cancer Antigens UNION Reproductive Antigens",
@@ -117,7 +117,7 @@ def definition() -> dict:
         "home_tissue": {
             "unmeasured_tissues": list(UNMEASURED_HOME_TISSUES),
             "recorded_by": (
-                "A family rule, a recorded literature finding, or the nose and skin reference."
+                "A family rule, a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference."
             ),
             "effect": (
                 "Insufficient home-tissue coverage blocks cancer admission. "

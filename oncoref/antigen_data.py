@@ -3,6 +3,7 @@
 import pandas as pd
 
 from . import catalog, cta_literature, cta_sources, reference_data
+from .gene_matching import gene_identity_catalog
 
 COLUMNS = ("list_id", "gene_id", "gene_name", "reported_name", "evidence", "source_url", "scope")
 
@@ -32,10 +33,7 @@ def gene_list(list_id: str) -> pd.DataFrame:
     family, _, key = list_id.partition("/")
     if family == "benchmark":
         data = catalog.read_table("cta-literature-benchmarks")
-        subset = (
-            data.list_id.isin(["not-CTA", "withhold"]) if key == "not-CTA" else data.list_id.eq(key)
-        )
-        rows = data[subset].rename(
+        rows = data[data.list_id.eq(key)].rename(
             columns={"basis": "evidence", "qualification": "scope", "list_id": "control_basis"}
         )
         rows = rows.assign(reported_name=rows.gene_name)
@@ -58,8 +56,6 @@ def gene_list(list_id: str) -> pd.DataFrame:
             .assign(source_url=source.at[key, "source_url"])
         )
     elif list_id == "markers/human_primary_osteoblast_markers":
-        from .gene_matching import gene_identity_catalog
-
         spec = reference_data.REFERENCE_SOURCES[key]
         native = pd.read_excel(reference_data.pinned_path(key, spec["version"]), header=1)
         identity = gene_identity_catalog()[
@@ -89,12 +85,14 @@ def gene_list(list_id: str) -> pd.DataFrame:
             .rename(
                 columns={
                     "gene_ids": "gene_id",
-                    "protein": "gene_name",
+                    "protein": "reported_protein",
                     "reported_as": "evidence",
                 }
             )
             .assign(source_url=source["url"])
         )
+        symbols = gene_identity_catalog().set_index("canonical_gene_id").canonical_symbol
+        rows["gene_name"] = rows.gene_id.map(symbols)
     else:
         raise KeyError(list_id)
     if rows.empty:
@@ -108,11 +106,15 @@ def gene_list(list_id: str) -> pd.DataFrame:
 def expression(panel: str, *, entity_ids=None, version=None) -> pd.DataFrame:
     """Catalog comparison observations with original TPM, source and sample identifiers.
 
+    Normal and disposable return their respective baseline scopes. Healthy
+    returns the full tissue comparison, including reproductive tissues.
     Tumor rows are qualifying or above-normal witnesses. Use per-sample cohort
     matrices for all tumor expression values, including zeroes.
     """
     names = {
         "normal": "normal-comparison",
+        "disposable": "normal-comparison",
+        "healthy": "normal-comparison",
         "reproductive": "reproductive-comparison",
         "tumor": "tumor-witnesses",
     }
@@ -130,6 +132,8 @@ def expression(panel: str, *, entity_ids=None, version=None) -> pd.DataFrame:
     for chunk in pd.read_csv(
         catalog.ensure(dataset, version=version), chunksize=100000, low_memory=False
     ):
+        if panel in {"normal", "disposable"}:
+            chunk = chunk.loc[chunk.scope.eq(panel)]
         parts.append(chunk if wanted is None else chunk.loc[chunk.entity_id.isin(wanted)])
     return pd.concat(parts, ignore_index=True)
 

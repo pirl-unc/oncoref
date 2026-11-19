@@ -15,11 +15,13 @@ def test_cited_lists_keep_identity_and_scope():
     lists = antigen_data.gene_lists()
     assert lists.list_id.is_unique
     negative = antigen_data.gene_list("benchmark/not-CTA").set_index("gene_name")
-    assert set(negative.index) == {"OR4M2B", "OR52D1", "OR2T4", "OR6F1", "OR7E24"}
-    assert negative.at["OR4M2B", "control_basis"] == "withhold"
+    assert set(negative.index) == {"OR52D1", "OR2T4", "OR6F1", "OR7E24"}
+    withheld = antigen_data.gene_list("benchmark/withhold")
+    assert withheld.gene_name.tolist() == ["OR4M2B"]
+    assert negative.control_basis.eq("not-CTA").all()
     assert negative.gene_id.is_unique
     actual = target_selection.results().set_index("protein_group_label")
-    assert not actual.loc[negative.index, "is_cta"].any()
+    assert not actual.loc[[*negative.index, *withheld.gene_name], "is_cta"].any()
     positive = antigen_data.gene_list("benchmark/CTA")
     assert actual.loc[positive.gene_name, "is_cta"].all()
     claim = antigen_data.gene_list("paper/10.1186/s40425-019-0678-x").iloc[0]
@@ -41,6 +43,7 @@ def test_all_catalog_inputs_resolve_to_the_recorded_source_digest():
     assert sources.url.str.startswith("https://").all()
     for row in sources.itertuples():
         version = row.version or None
+        assert catalog.dataset(row.dataset).description
         assert catalog.resolve_version(row.dataset, version)
         if row.dataset in reference_data.REFERENCE_SOURCES:
             pin = reference_data.REFERENCE_SOURCES[row.dataset].get("pins", {}).get(version)
@@ -142,3 +145,32 @@ def test_immune_percentile_sums_loci_before_each_donor_votes(monkeypatch, tmp_pa
     monkeypatch.setattr(bulk, "_input", lambda name, receipts: path)
     d = bulk.hpa_immune_percentiles(facts, ids, {}).iloc[0]
     assert d.value == pytest.approx(12.6) and d.n_observations == 2
+
+
+def test_baseline_panels_expose_only_their_own_scope(monkeypatch, tmp_path):
+    raw = pd.DataFrame(
+        {
+            "entity_id": ["a"] * 3 + ["b"],
+            "scope": ["normal", "disposable", "reproductive", "normal"],
+            "value": [1, 2, 1000, 5],
+        }
+    )
+    path = tmp_path / "healthy.csv"
+    raw.to_csv(path, index=False)
+    monkeypatch.setattr(catalog, "ensure", lambda *args, **kwargs: path)
+    for panel, expected in [("normal", [1]), ("disposable", [2]), ("healthy", [1, 2, 1000])]:
+        assert antigen_data.expression(panel, entity_ids="a").value.tolist() == expected
+
+
+def test_each_locus_in_a_publication_claim_has_its_own_symbol(monkeypatch):
+    claim = {"protein": "ABC group", "gene_ids": ["id1", "id2"], "reported_name": "ABC"}
+    registry = {"sources": [{"source_id": "test", "url": "source", "gene_claims": [claim]}]}
+    monkeypatch.setattr(antigen_data.cta_literature, "publication_registry", lambda: registry)
+    monkeypatch.setattr(
+        antigen_data,
+        "gene_identity_catalog",
+        lambda: pd.DataFrame({"canonical_gene_id": ["id1", "id2"], "canonical_symbol": ["A", "B"]}),
+    )
+    data = antigen_data.gene_list("paper/test")
+    assert data.gene_name.tolist() == ["A", "B"]
+    assert data.reported_protein.eq("ABC group").all()

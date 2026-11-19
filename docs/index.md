@@ -5,6 +5,7 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 (TMB), checkpoint-inhibitor (ICI) response, normal-tissue injury tiers, and genome-wide
 Cancer and Reproductive Antigen (`CA`, `RA`, `CTA`) classification.
 
+[Antigen catalog whitepaper](antigen-whitepaper.md) ·
 [Current antigen policy](target-selection.md) ·
 [Host profiles & candidate filters](target-filters.md) ·
 [CLI & curation build](curation.md) ·
@@ -16,7 +17,7 @@ Cancer and Reproductive Antigen (`CA`, `RA`, `CTA`) classification.
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
 [rebuilt catalog](audits/target-selection-20261110/rebuild/index.md)
-classifies **327 CTA, 70 Cancer Antigen only, 127 Reproductive Antigen only, 1,116 Other and
+classifies **327 CTA, 69 Cancer Antigen only, 127 Reproductive Antigen only, 1,117 Other and
 18,253 Unsafe**:
 
 1. **Shared normal-expression screen:** Seven normal-expression layers

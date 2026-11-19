@@ -1,12 +1,12 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-19.1",
+  "policy_id": "oncoref.target-selection.2026-11-19.2",
   "proteins": 19893,
   "categories": {
     "Unsafe": 18253,
-    "Other": 1116,
+    "Other": 1117,
     "CTA": 327,
     "Reproductive Antigen only": 127,
-    "Cancer Antigen only": 70
+    "Cancer Antigen only": 69
   },
   "classifications": {
     "Unsafe": 18253,
@@ -14,15 +14,15 @@
     "CTA": 327,
     "Other:Expression": 250,
     "Reproductive Antigen only": 127,
-    "Other:Unscreened tissue": 87,
-    "Cancer Antigen only": 70,
+    "Other:Unscreened tissue": 88,
+    "Cancer Antigen only": 69,
     "Other:Sequence": 48
   },
   "memberships": {
-    "is_cancer_antigen": 397,
+    "is_cancer_antigen": 396,
     "is_reproductive_antigen": 454,
     "is_cta": 327,
-    "is_target_candidate": 524
+    "is_target_candidate": 523
   },
   "cta_tiers": {
     "core": 206,
@@ -87,13 +87,8 @@
     },
     {
       "released_category": "Unsafe",
-      "category": "Cancer Antigen only",
-      "proteins": 1
-    },
-    {
-      "released_category": "Unsafe",
       "category": "Other",
-      "proteins": 68
+      "proteins": 69
     },
     {
       "released_category": "Unsafe",
@@ -183,8 +178,8 @@
   },
   "published_nomination_by_category": {
     "CTA": 252,
-    "Cancer Antigen only": 28,
-    "Other": 115,
+    "Cancer Antigen only": 27,
+    "Other": 116,
     "Reproductive Antigen only": 77,
     "Unsafe": 1761
   }

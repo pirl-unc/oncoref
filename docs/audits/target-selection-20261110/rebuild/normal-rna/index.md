@@ -88,10 +88,10 @@ For GTEx v11 normal sites, sum the measured loci encoding each identical protein
 
 | Route after shared eligibility | Definition | Protein groups |
 |---|---|---:|
-| CA | At least one QC-passing tumor reaches 10 × H₀ | 397 |
+| CA | At least one QC-passing tumor reaches 10 × H₀ | 396 |
 | RA | At least one reproductive sample or supported embryo-lineage observation reaches 10 × H₀ | 454 |
 | CTA | Both CA and RA | 327 |
-| CA ∪ RA | Either route | 524 |
+| CA ∪ RA | Either route | 523 |
 
 ![Cancer and reproductive antigen overlap](../summary/venn.png)
 

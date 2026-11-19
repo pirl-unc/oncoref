@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-19.1",
+  "policy_id": "oncoref.target-selection.2026-11-19.2",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -18,7 +18,7 @@
     "sequence_pass"
   ],
   "sets": {
-    "Cancer Antigens": "eligible AND cancer evidence qualifies",
+    "Cancer Antigens": "eligible AND cancer evidence qualifies AND recorded normal home is covered",
     "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
     "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
     "Candidate antigen proteins": "Cancer Antigens UNION Reproductive Antigens"
@@ -44,7 +44,7 @@
       "hair follicle",
       "dental pulp"
     ],
-    "recorded_by": "A family rule, a recorded literature finding, or the nose and skin reference.",
+    "recorded_by": "A family rule, a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference.",
     "effect": "Insufficient home-tissue coverage blocks cancer admission. Reproductive enrichment can independently qualify RA."
   },
   "published_normal_expression": {

@@ -1,8 +1,8 @@
 previous_classification,classification,proteins
-CTA,Cancer Antigen only,48
+CTA,Cancer Antigen only,47
 CTA,Other:Expression,15
 CTA,Other:Review,35
-CTA,Other:Unscreened tissue,12
+CTA,Other:Unscreened tissue,13
 CTA,Reproductive Antigen only,20
 Cancer Antigen only,CTA,1
 Cancer Antigen only,Other:Expression,8

@@ -29,9 +29,9 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
         "Unsafe": 18253,
-        "Other": 1116,
+        "Other": 1117,
         "CTA": 327,
-        "Cancer Antigen only": 70,
+        "Cancer Antigen only": 69,
         "Reproductive Antigen only": 127,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
@@ -60,6 +60,12 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
 
 def test_named_assignments_and_accepted_review_holds(catalog):
     by_name = catalog.set_index("protein_group_label")
+    gfy = by_name.loc["GFY"]
+    assert gfy.classification == "Other:Unscreened tissue"
+    assert gfy.published_home_tissue == gfy.home_tissue == "olfactory epithelium"
+    assert gfy.cancer_evidence == "qualifies" and not gfy.is_cancer_antigen
+    assert by_name.loc["CALHM3", "published_home_tissue"] == "taste bud"
+    assert pd.isna(by_name.loc["AMELX", "published_home_tissue"])
     # Reproductive coexpression is advisory, not evidence against tumor origin.
     for name in [
         "ZNRF4",
@@ -306,7 +312,7 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
             "all_members" if covered == genes else "some_members" if covered else "none"
         )
     assert catalog[catalog.is_cta].published_nomination.sum() == 252
-    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 28
+    assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 27
 
 
 def test_packaged_snapshot_matches_report_metadata(catalog):

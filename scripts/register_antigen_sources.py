@@ -79,6 +79,12 @@ def register(revision):
         )
         if spec["filename"] != path.name:
             raise ValueError(f"Ambiguous source name: {path}")
+        # Unchanged source bytes retain the same immutable download and selector.
+        for existing, previous in spec["versions"].items():
+            if previous["sha256"] == digest and previous["url"].endswith("/" + path.as_posix()):
+                spec["default_version"] = existing
+                record(name, existing, role, digest, previous["url"], str(path))
+                return
         spec["default_version"] = version
         spec["versions"][version] = {
             "url": url,
@@ -106,6 +112,11 @@ def register(revision):
                 ref(name, version, "curation input", digest)
             elif not key.endswith(".py"):
                 artifact(key, "curation input", digest)
+
+    artifact(
+        Path("docs/audits/cta-selection-20261028/widely-studied-contexts.csv.gz"),
+        "assay observations",
+    )
 
     matrices = json.loads(
         (
@@ -150,6 +161,7 @@ def register(revision):
         artifact(EVIDENCE / filename, "assay observations")
     for filename in [
         "cta-literature-benchmarks.csv",
+        "cta-trial-evidence.csv",
         "normal-cell-publication-evidence.csv",
         "marcinkowski2019-ct83-expression.csv",
         "cta-publication-sources.csv",

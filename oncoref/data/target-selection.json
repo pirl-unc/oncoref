@@ -9,14 +9,14 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-19.1",
+    "policy_id": "oncoref.target-selection.2026-11-19.2",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18253,
-      "Other": 1116,
+      "Other": 1117,
       "CTA": 327,
       "Reproductive Antigen only": 127,
-      "Cancer Antigen only": 70
+      "Cancer Antigen only": 69
     },
     "classifications": {
       "Unsafe": 18253,
@@ -24,15 +24,15 @@
       "CTA": 327,
       "Other:Expression": 250,
       "Reproductive Antigen only": 127,
-      "Other:Unscreened tissue": 87,
-      "Cancer Antigen only": 70,
+      "Other:Unscreened tissue": 88,
+      "Cancer Antigen only": 69,
       "Other:Sequence": 48
     },
     "memberships": {
-      "is_cancer_antigen": 397,
+      "is_cancer_antigen": 396,
       "is_reproductive_antigen": 454,
       "is_cta": 327,
-      "is_target_candidate": 524
+      "is_target_candidate": 523
     },
     "cta_tiers": {
       "core": 206,
@@ -97,13 +97,8 @@
       },
       {
         "released_category": "Unsafe",
-        "category": "Cancer Antigen only",
-        "proteins": 1
-      },
-      {
-        "released_category": "Unsafe",
         "category": "Other",
-        "proteins": 68
+        "proteins": 69
       },
       {
         "released_category": "Unsafe",
@@ -193,8 +188,8 @@
     },
     "published_nomination_by_category": {
       "CTA": 252,
-      "Cancer Antigen only": 28,
-      "Other": 115,
+      "Cancer Antigen only": 27,
+      "Other": 116,
       "Reproductive Antigen only": 77,
       "Unsafe": 1761
     }
@@ -952,6 +947,6 @@
     ],
     "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
   },
-  "data_sha256": "78e555636c8ae28a0a0fab2a1dd288e7bbf7cd1ca0b0512f85e1400a7cc6134d",
+  "data_sha256": "1a1c08bf618c0108ea504d43ef8f631f86ee7137e4747b1ad4cbfe9922e47d72",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }

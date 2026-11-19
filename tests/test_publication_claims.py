@@ -181,3 +181,15 @@ def test_alarin_has_one_current_product_specific_claim():
     assert len(alarin) == 1
     assert "identity_review" in alarin.iloc[0].allowed_uses
     assert not alarin.iloc[0].eligible_for_coverage
+
+
+def test_unscreened_adult_home_requires_a_scoped_human_claim():
+    ledger = deepcopy(literature.publication_registry())
+    claim = next(g for s in ledger["sources"] for g in s["gene_claims"] if g["protein"] == "GFY")
+    assert claim["unscreened_adult_home"] == "olfactory epithelium"
+    assert "olfactory epithelium" in set(
+        literature.paper_gene_claims("GFY").unscreened_adult_home.dropna()
+    )
+    claim["unscreened_adult_home"] = "typo"
+    with pytest.raises(ValueError, match="canonical unscreened tissue"):
+        literature.validate_publications(ledger)

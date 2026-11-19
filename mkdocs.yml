@@ -7,6 +7,7 @@ theme:
 nav:
   - Home: index.md
   - Antigen Curation & Sets:
+      - Antigen catalog whitepaper: antigen-whitepaper.md
       - Cancer and Reproductive Antigens: target-selection.md
       - Normal RNA sources and tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
       - Host profiles and candidate filters: target-filters.md

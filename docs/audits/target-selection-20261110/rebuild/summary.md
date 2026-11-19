@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-19.1`, 19,893 human protein records. **327 CTA, 70 Cancer Antigen only, 127 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-19.2`, 19,893 human protein records. **327 CTA, 69 Cancer Antigen only, 127 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 
@@ -16,12 +16,12 @@ Reproductive protection is opt-in for every anatomy preset. Not protected, prote
 
 | Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
-| all | none | 327 | 70 | 127 | 524 |
-| female-patient | none | 327 | 70 | 127 | 524 |
+| all | none | 327 | 69 | 127 | 523 |
+| female-patient | none | 327 | 69 | 127 | 523 |
 | female-patient (protect ovary) | ovary | 277 | 66 | 112 | 455 |
-| female-patient (lactating) | lactating_breast | 320 | 67 | 123 | 510 |
+| female-patient (lactating) | lactating_breast | 320 | 66 | 123 | 509 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
-| male-patient | none | 327 | 70 | 127 | 524 |
+| male-patient | none | 327 | 69 | 127 | 523 |
 | male-patient (protect testis) | testis | 54 | 29 | 24 | 107 |
 | male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 40 | 23 | 11 | 74 |
 
@@ -37,7 +37,7 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 ![Set overlap](summary/venn.png)
 
-Of 327 CTA, 252 are published nominations and 75 are not. 1,876 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
@@ -58,7 +58,7 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Coverage, identity, translation or unresolved evidence | 731 | 909 |
 | Nested, Unsafe-contained or read-through sequence | 48 | 861 |
 | No qualifying expression or bounds fail | 250 | 611 |
-| Home tissue no panel resolves | 87 | 524 |
+| Home tissue no panel resolves | 88 | 523 |
 
 ![Published nominations](summary/funnel-published.png)
 
@@ -75,7 +75,7 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Coverage, identity, translation or unresolved evidence | 65 | 407 |
 | Nested, Unsafe-contained or read-through sequence | 7 | 400 |
 | No qualifying expression or bounds fail | 27 | 373 |
-| Home tissue no panel resolves | 16 | 357 |
+| Home tissue no panel resolves | 17 | 356 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 

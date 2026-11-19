@@ -79,7 +79,7 @@ _BUNDLE_DESCRIPTIONS = {
 
 @dataclass(frozen=True)
 class Dataset:
-    """Dataset name, storage kind (bundle, hpa, reference or wheel), and description."""
+    """Dataset name, storage kind (bundle, hpa, reference, source or wheel), and description."""
 
     name: str
     kind: str
@@ -116,9 +116,22 @@ def _by_name() -> dict[str, Dataset]:
 
 def dataset(name: str) -> Dataset:
     """The :class:`Dataset` for ``name``; raises ``KeyError`` if unknown."""
+    if name.startswith(_PER_SAMPLE):
+        try:
+            info = source_matrices.cohort_info(name[len(_PER_SAMPLE) :])
+        except source_matrices.SourceMatrixError as exc:
+            raise KeyError(name) from exc
+        return Dataset(
+            name,
+            "source",
+            f"Per-sample expression matrix for {info['cancer_code']} from {info['source_cohort']}",
+        )
     # Inventory names omit .csv for legacy bundle tables. Accept those stable
     # names as well as the concrete artifact names used by the cache backend.
     name = {p.removesuffix(".csv"): p for p in data_bundle.DOWNLOADABLE_PATHS}.get(name, name)
+    wheel = {**data_manifest.WHEEL, **data_manifest.CANCERDATA_ORIGINATED}
+    if name in wheel and name not in _by_name():
+        return Dataset(name, "wheel", wheel[name][1])
     # Accept an exact shipped filename, including metadata alongside a like-named table.
     if (
         name not in _by_name()
@@ -126,9 +139,6 @@ def dataset(name: str) -> Dataset:
         and (Path(__file__).parent / "data" / name).is_file()
     ):
         return Dataset(name, "wheel", "Packaged OncoRef data file")
-    wheel = {**data_manifest.WHEEL, **data_manifest.CANCERDATA_ORIGINATED}
-    if name in wheel and name not in _by_name():
-        return Dataset(name, "wheel", wheel[name][1])
     try:
         return _by_name()[name]
     except KeyError:

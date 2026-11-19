@@ -229,7 +229,7 @@ def loss_consequences(gene: str) -> list[dict]:
 
 
 def sequences(group="CTA", *, genome=None, **selection) -> pd.DataFrame:
-    """Annotated translations of the exact same profiled protein selection."""
+    """Translations from selected loci, with an exact catalog sequence match flag."""
     return _sequences(proteins(group, **selection), group, genome=genome)
 
 
@@ -248,6 +248,7 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
         raise ValueError("Current antigen sets require human Ensembl 115")
     rows, missing = [], []
     for protein in protein_rows.itertuples():
+        representatives = set(json.loads(protein.representative_sequence_sha256s))
         for gene_id in json.loads(protein.member_gene_ids):
             found = False
             try:
@@ -261,6 +262,7 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
                 if not sequence:
                     continue
                 found = True
+                digest = hashlib.sha256(sequence.encode()).hexdigest()
                 rows.append(
                     {
                         "entity_id": protein.entity_id,
@@ -268,7 +270,8 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
                         "transcript_id": transcript.id,
                         "transcript_biotype": transcript.biotype,
                         "sequence": sequence,
-                        "sequence_sha256": hashlib.sha256(sequence.encode()).hexdigest(),
+                        "sequence_sha256": digest,
+                        "matches_representative_sequence": digest in representatives,
                         "set": group,
                         "catalog_category": getattr(
                             protein, "catalog_category", getattr(protein, "category", "")
@@ -288,6 +291,7 @@ def _sequences(protein_rows, group, *, genome=None) -> pd.DataFrame:
             "transcript_biotype",
             "sequence",
             "sequence_sha256",
+            "matches_representative_sequence",
             "set",
             "catalog_category",
             "selection_category",

@@ -13,12 +13,12 @@ staining = catalog.read_table("marcinkowski2019-ct83-expression")
 lists = antigen_data.gene_lists()
 positive_controls = antigen_data.gene_list("benchmark/CTA")
 negative_controls = antigen_data.gene_list("benchmark/not-CTA")
-coverage_controls = antigen_data.gene_list("benchmark/withhold")
+coverage_controls = antigen_data.gene_list("benchmark/withhold")  # separate from negative controls
 ```
 
 | Evidence | What the download contains |
 |---|---|
-| Normal and reproductive comparison | One protein group, source and site or sample per observation. Scope, native TPM, statistic, QC and locus coverage travel with each row. The reproductive panel includes embryo and lineage support. |
+| Normal and reproductive comparison | One protein group, source and site or sample per observation. Scope, native TPM, statistic, QC and locus coverage travel with each row. Use `normal` for the non-reproductive N scope, `disposable` for D, and `healthy` for the complete tissue comparison, including reproductive tissues. These views retain QC and missing observations. The `reproductive` panel includes embryo and lineage support. |
 | Tumor RNA | The tumor witness table contains retained above-background observations. Use the inventory’s versioned `per-sample:<cohort>` entries for complete native matrices, including low and zero values. |
 | Normal single-cell, single-nucleus RNA and IHC | `normal_cell_data.observations()` exposes supported assays with source identifiers, units, populations or staining levels. The inventory includes donor-level Census findings, HPA assays, supplementary tables and their upstream sources. Use the native file reader for RDS, Matrix Market, compound archives or study documents. |
 | Literature, nomination tables and proteomics lists | `gene_lists()` enumerates published intake tables, reviewed claims and benchmark lists. `gene_list()` returns source-reported labels, resolved identities, evidence and scope. A proteomics nomination retains the paper’s identification scope. |
@@ -43,6 +43,6 @@ The RNAscope series counted tumors containing positive cells. The bulk 10× colu
 
 ## Literature controls
 
-The benchmark is a test of the enrichment and tissue-coverage rules. CT83 and MAGEC1 have published positive evidence. OR6F1, OR52D1, OR2T4 and OR7E24 have direct adult olfactory observations. The expected-negative list also includes OR4M2B with `control_basis="withhold"`. Its normal home lacks locus-resolved quantitative coverage. Published OR4M2 rows refer to a different human locus. Each control carries a citation and a qualification. The classifier reads expression, coverage and shared eligibility independently of these lists.
+The benchmark is a test of the enrichment and tissue-coverage rules. CT83 and MAGEC1 have published positive evidence. OR6F1, OR52D1, OR2T4 and OR7E24 have direct adult olfactory observations. OR4M2B appears in the separate `benchmark/withhold` list. Its normal home lacks locus-resolved quantitative coverage. Published OR4M2 rows refer to a different human locus. Each control carries a citation and a qualification. The classifier reads expression, coverage and shared eligibility independently of these lists.
 
 The healthy reference uses the linearly interpolated P95 within each measured tissue or sorted blood population where native TPM distributions exist. Replicate libraries from an identified donor receive one vote. Anonymous HPA biopsies receive one vote per biopsy. Small panels can have a P95 close to their largest observation. Summary-only inputs retain their published mean or median. DICE supplies unpaired specimen ranks, so a multi-locus group's conservative upper bound is recorded explicitly. Adult olfactory biopsy FPKM and donor qPCR copy estimates also have source-native P95 summaries through `normal_cell_data.olfactory_bulk_percentiles()`. Their units stay outside the TPM denominator. Reproductive and tumor samples can each establish positive enrichment at 10×. [Source coverage and measurements](audits/target-selection-20261110/rebuild/normal-rna/index.md)

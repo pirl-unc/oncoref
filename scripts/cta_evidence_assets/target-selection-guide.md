@@ -6,6 +6,7 @@ presentation or clinical safety.
 
 Catalog `$policy_id`: $categories.
 
+[Catalog whitepaper and study tables](antigen-whitepaper.md) ·
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
 [Host choices](host-selection.md) · [Optional filters](target-filters.md)

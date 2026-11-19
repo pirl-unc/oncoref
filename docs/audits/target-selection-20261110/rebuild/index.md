@@ -1,6 +1,6 @@
 # Rebuilt antigen catalog
 
-Policy `oncoref.target-selection.2026-11-19.1`. **327 CTA, 70 Cancer Antigen only, 127 Reproductive Antigen only, 1116 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
+Policy `oncoref.target-selection.2026-11-19.2`. **327 CTA, 69 Cancer Antigen only, 127 Reproductive Antigen only, 1117 Other and 18,253 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
 
 [Filterable protein table](report.html) · [Changes from 1.39.0](changes-from-1.39.csv) · [Transition counts](changes-from-1.39-summary.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 
@@ -21,9 +21,9 @@ Policy `oncoref.target-selection.2026-11-19.1`. **327 CTA, 70 Cancer Antigen onl
 | Coverage, identity, translation or unresolved evidence | Other:Review | 731 | 909 |
 | Nested, Unsafe-contained or read-through sequence | Other:Sequence | 48 | 861 |
 | No qualifying expression, target maximum or Disposable cap | Other:Expression | 250 | 611 |
-| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 87 | 524 |
+| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 88 | 523 |
 
-The 524 remaining Candidate antigen proteins are 327 CTA, 70 Cancer Antigen only and 127 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
+The 523 remaining Candidate antigen proteins are 327 CTA, 69 Cancer Antigen only and 127 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
 
 ![Rebuilt counts](counts.png)
 
@@ -53,7 +53,7 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 80 draft non-Unsafe proteins become Unsafe, among them ADAM7, RBM46, C5orf47, SPINT4, MROH2A, CCDC172, SMIM23, MMP20, SPACA3, OR51D1, DGAT2L6, C5orf52, OOSP3, ERICH6. 4 candidates carry a dismissed signal, among them LRRIQ4, C12orf50, PRAME, EXD1.
 
-**18 proteins that were Unsafe only through the pooled 1% detection flag are candidates again**: ADAD1, ADAM18, C12orf50, CHCT1, CSAG1, DPPA2, EXD1, GFY, NLRP8, PABPC3, PPP1R2B, RSPH6A, SPAG11A, SPAG11B, SPATA3, TPTE, TRIM60, VRTN. Each was taken through the literature review below and none has a gene-specific report of expression in vital normal tissue. That is a search result, not proof of absence. [Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).
+**17 proteins that were Unsafe only through the pooled 1% detection flag are candidates again**: ADAD1, ADAM18, C12orf50, CHCT1, CSAG1, DPPA2, EXD1, NLRP8, PABPC3, PPP1R2B, RSPH6A, SPAG11A, SPAG11B, SPATA3, TPTE, TRIM60, VRTN. Each was taken through the literature review below and none has a gene-specific report of expression in vital normal tissue. That is a search result, not proof of absence. [Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).
 
 ## Literature review
 
@@ -86,17 +86,16 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 | Reproductive Antigen only | Other:Review | 1 |
 | Reproductive Antigen only | Other:Sequence | 1 |
 | Unsafe | CTA | 12 |
-| Unsafe | Cancer Antigen only | 1 |
 | Unsafe | Other:Expression | 3 |
 | Unsafe | Other:Review | 64 |
-| Unsafe | Other:Unscreened tissue | 1 |
+| Unsafe | Other:Unscreened tissue | 2 |
 | Unsafe | Reproductive Antigen only | 5 |
 
 The tenfold single-tumor rule accounts for the moves to Reproductive Antigen only and for Cancer Antigens only whose reproductive compartment does not reach the shared threshold. Known patient identity is a replication descriptor, not a single-sample admission gate.
 
-Cancer Antigens include 397 proteins; Reproductive Antigens include 454. Their intersection is CTA and their union contains 524 Candidate antigen proteins.
+Cancer Antigens include 396 proteins; Reproductive Antigens include 454. Their intersection is CTA and their union contains 523 Candidate antigen proteins.
 
-Other contains 731 review, 48 sequence, 250 expression, 87 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 28 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 731 review, 48 sequence, 250 expression, 88 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 27 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Changes from release 1.36.0
 
@@ -113,8 +112,7 @@ Other contains 731 review, 48 sequence, 250 expression, 87 unscreened tissue. A 
 | Other | Reproductive Antigen only | 4 |
 | Other | Unsafe | 31 |
 | Unsafe | CTA | 12 |
-| Unsafe | Cancer Antigen only | 1 |
-| Unsafe | Other | 68 |
+| Unsafe | Other | 69 |
 | Unsafe | Reproductive Antigen only | 5 |
 | Unsafe | Unsafe | 18173 |
 

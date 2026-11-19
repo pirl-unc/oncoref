@@ -265,6 +265,7 @@ def write_guide(definition):
             "signal",
             "replication",
             "single_study",
+            "protected",
             "confirmation",
             "established",
             "unresolved",

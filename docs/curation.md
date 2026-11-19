@@ -92,7 +92,7 @@ cell_type, resolution="cell")`.
 
 For receptor-level measurements from adult human nasal tissue, see [Adult olfactory expression](#adult-olfactory-expression).
 
-Use `cta_literature.paper_gene_claims(gene)` for the observation, assay, tissue or developmental stage, and permitted use. For studies with downloadable artifacts, the claim’s `provenance["reference_sources"]` lists the keys for `reference_data.ensure(key)`. These studies supply cell localization and molecular identity. The CA and RA fold calculations require native TPM.
+Use `cta_literature.paper_gene_claims(gene)` for the observation, assay, tissue or developmental stage, and permitted use. For studies with downloadable artifacts, the claim’s `provenance["reference_sources"]` lists the keys for `reference_data.ensure(key)`. These studies supply cell localization and molecular identity. A scoped `unscreened_adult_home` in a reviewed human gene claim supplies anatomy to the coverage check. GFY has a documented adult olfactory home, so its tumor enrichment requires adequate native-TPM coverage there. The CA and RA fold calculations require native TPM.
 
 | Gene | Primary source | What the data establish |
 |---|---|---|

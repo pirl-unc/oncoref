@@ -169,6 +169,18 @@ def shared_facts():
             "",
         )
     )
+    # A reviewed adult home has the same coverage consequence regardless of publication.
+    homes = defaultdict(set)
+    for source in cta_literature.publication_registry()["sources"]:
+        for claim in source["gene_claims"]:
+            if "unscreened_adult_home" in claim:
+                for gene_id in claim["gene_ids"]:
+                    homes[gene_id].add(claim["unscreened_adult_home"])
+    f["published_home_tissue"] = f.member_gene_ids.map(
+        lambda ids: "; ".join(
+            sorted({home for gene in json.loads(ids) for home in homes.get(gene, ())})
+        )
+    )
     # The recorded home, when it is a tissue no panel resolves (see classify).
     recorded = (
         family_tissue
@@ -176,6 +188,8 @@ def shared_facts():
         + f.literature_recorded_tissue.fillna("")
         + "; "
         + f.reference_recorded_tissue
+        + "; "
+        + f.published_home_tissue
     )
     f["home_tissue"] = recorded.map(
         lambda text: "; ".join(
@@ -1333,6 +1347,7 @@ def build(*, reuse_tumor_cache=False):
         "literature_family",
         "literature_family_tier",
         "home_tissue",
+        "published_home_tissue",
         "reference_recorded_tissue",
         "reference_recorded_tier",
         "reference_recorded_basis",

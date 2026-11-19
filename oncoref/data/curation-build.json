@@ -129,6 +129,15 @@
       "argv": [
         "scripts/audit_normal_library_qc.py"
       ]
+    },
+    "whitepaper": {
+      "needs": [
+        "filter_audit",
+        "plots"
+      ],
+      "argv": [
+        "scripts/render_antigen_whitepaper.py"
+      ]
     }
   },
   "output_roots": [
@@ -136,7 +145,8 @@
     "docs/audits/target-filters-20261112",
     "docs/audits/antigen-evidence-review-20261117",
     "docs/audits/antigen-evidence-review-20261118",
-    "docs/audits/gtex-reproductive-witnesses"
+    "docs/audits/gtex-reproductive-witnesses",
+    "docs/antigen-whitepaper"
   ],
   "outputs": [
     "oncoref/data/target-selection.csv.gz",
@@ -148,6 +158,7 @@
     "docs/target-selection.md",
     "docs/target-filters.md",
     "oncoref/data/host-exposure.csv.gz",
-    "oncoref/data/host-exposure.json"
+    "oncoref/data/host-exposure.json",
+    "docs/antigen-whitepaper.md"
   ]
 }

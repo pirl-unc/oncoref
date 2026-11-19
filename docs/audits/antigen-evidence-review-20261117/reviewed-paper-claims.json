@@ -2,7 +2,7 @@
   "schema": "oncoref.cta-literature-followup",
   "schema_version": 2,
   "reviewed_on": "2026-11-19",
-  "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
+  "classification_effect": "Scoped publication evidence. An adjudicated unscreened_adult_home records anatomy for the home-tissue coverage check. Paper counts do not determine biological membership.",
   "sources": [
     {
       "source_id": "10.1371/journal.pone.0007682",
@@ -38,7 +38,8 @@
           "assay": "Microdissection and semi-quantitative PCR",
           "source_location": "Human taste-bud results and Figure 10D; Methods: human tissue collection and PCR",
           "limitations": "Human data are RNA from a microdissected compartment. Cell-subtype in situ experiments elsewhere in this paper used macaques. This is not human protein detection or a therapeutic depletion experiment.",
-          "reviewed_on": "2026-11-17"
+          "reviewed_on": "2026-11-17",
+          "unscreened_adult_home": "taste bud"
         }
       ],
       "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
@@ -700,7 +701,8 @@
             "reference_sources": [
               "olfactory_durante_supplement"
             ]
-          }
+          },
+          "unscreened_adult_home": "olfactory epithelium"
         }
       ]
     },
