@@ -36,8 +36,9 @@ def test_report_receipts_and_complete_assessment_exports():
     assert set(exported.id) == set(tissue_tiers.registry_assessments().id)
     assert exported.evidence_scope.notna().all()
     assert set(pd.read_csv(REPORT / "references.csv").reference_id) == set(doc["references"])
-    assert len(pd.read_csv(REPORT / "canonical-anatomy.csv")) == len(
-        tissue_tiers.anatomy_inventory()
+    historical = set(pd.read_csv(REPORT / "canonical-anatomy.csv").concept_id)
+    assert set(tissue_tiers.anatomy_inventory().concept_id) == historical | set(
+        tissue_tiers.updates().id
     )
 
 

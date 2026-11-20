@@ -1,9 +1,9 @@
 # Target filters: categories, knobs and where proteins land
 
 **The catalog assigns five categories and they are not changed here. Filters only
-remove proteins from the 509 Target candidates, through six layers that
+remove proteins from the 525 Target candidates, through six layers that
 follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.5`, applied to
-catalog `oncoref.target-selection.2026-11-18.1`. Every number below is computed by
+catalog `oncoref.target-selection.2026-11-19.4`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
 These are outputs of screening rules. They are not validated tumor antigens.
@@ -12,24 +12,24 @@ These are outputs of screening rules. They are not validated tumor antigens.
 
 | Category | Proteins | Rule |
 |---|---|---|
-| CTA | 303 | Passes the shared screen; cancer evidence and reproductive evidence both qualify |
-| Cancer Antigen only | 106 | Passes the shared screen; only cancer evidence qualifies |
-| Reproductive Antigen only | 100 | Passes the shared screen; only reproductive evidence qualifies |
-| Other | 1,131 | Not excluded, but fails coverage, identity, expression bounds, sequence, the home-tissue rule or both evidence routes |
-| Unsafe | 18,253 | An accepted normal-tissue or clinical exclusion |
+| CTA | 327 | Passes the shared screen; cancer evidence and reproductive evidence both qualify |
+| Cancer Antigen only | 70 | Passes the shared screen; only cancer evidence qualifies |
+| Reproductive Antigen only | 128 | Passes the shared screen; only reproductive evidence qualifies |
+| Other | 1,118 | Not excluded, but fails coverage, identity, expression bounds, sequence, the home-tissue rule or both evidence routes |
+| Unsafe | 18,250 | An accepted normal-tissue or clinical exclusion |
 
-Target candidates are the first three rows: 509 proteins. A filter never moves
+Target candidates are the first three rows: 525 proteins. A filter never moves
 a protein into or out of Other or Unsafe.
 
 **One cancer rule.** A protein is a Cancer Antigen when one tumor sample, from any
 QC-passing comparable TPM cohort including germ cell tumors, is at least 10 times its highest
-non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
-below 1 TPM count as 1). The 409 Cancer Antigens: 101 at 10 to 20x, 128 at 20 to 50x, 56 at 50 to 100x, 111 at 100 to 1000x, 13 at 1000x or more.
-87 have exactly one qualifying sample;
-260 have qualifying samples from
+non-thymic, non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
+below 1 TPM count as 1). The 397 Cancer Antigens: 114 at 10 to 20x, 118 at 20 to 50x, 46 at 50 to 100x, 106 at 100 to 1000x, 13 at 1000x or more.
+97 have exactly one qualifying sample;
+245 have qualifying samples from
 at least two known patients. Anonymous samples are reported separately.
 RA uses the same 10× denominator in reproductive tissue or a supported embryo-lineage mean.
-98 proteins whose normal home is a tissue no panel resolves are
+88 proteins whose normal home is a tissue no panel resolves are
 Other:Unscreened tissue unless reproductive evidence qualifies.
 
 ## 2. The six filter layers
@@ -40,12 +40,12 @@ value, and a missing measurement never passes.
 
 | Layer | Question | Knobs | Removed by `strict`, alone |
 |---|---|---|---|
-| 1 `off_target` | How low must expression be outside tumors and reproductive tissue? | `max_off_target_tpm` | 50 |
-| 2 `curation` | Is the protein's recorded normal home in a tissue of this tier or above? | `normal_function` | 9 |
+| 1 `off_target` | How low must expression be outside tumors and reproductive tissue? | `max_off_target_tpm` | 77 |
+| 2 `curation` | Is the protein's recorded normal home in a tissue of this tier or above? | `normal_function` | 8 |
 | 3 `host` | Do protected compartments have sufficient coverage and bounded exposure? | `host` (HostContext), or explicit profile/tissue choices | 0 |
-| 4 `sets` | How much biological enrichment/replication, and which set? | `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 206 |
-| 5 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 330 |
-| 6 `exclusions` | Which gene families do you rule out by name? | `exclude_prefixes`, `except_labels` | 16 |
+| 4 `sets` | How much biological enrichment/replication, and which set? | `min_tumor_fold`, `min_reproductive_fold`, `min_tumor_patients`, `membership` | 198 |
+| 5 `papers` | How many papers nominate it or report it in tumors? | `min_papers` | 340 |
+| 6 `exclusions` | Which gene families do you rule out by name? | `exclude_prefixes`, `except_labels` | 17 |
 
 **Layer 3 tightens the two sets independently.** Both fold knobs raise the catalog's 10x;
 a protein that loses Cancer Antigen membership keeps its Reproductive Antigen
@@ -59,45 +59,44 @@ layer 3 has tightened Cancer Antigens.
 
 | Knob | Value | Kept | CTA | Cancer Antigen only | Reproductive Antigen only |
 |---|---|---|---|---|---|
-| `max_off_target_tpm` | 5.0 | 475 | 287 | 94 | 94 |
-| `max_off_target_tpm` | 2.0 | 380 | 242 | 66 | 72 |
-| `max_off_target_tpm` | 1.0 | 269 | 173 | 42 | 54 |
-| `max_off_target_tpm` | 0.5 | 161 | 90 | 31 | 40 |
-| `max_off_target_tpm` | 0.1 | 39 | 19 | 9 | 11 |
-| `normal_function` | no_vital | 505 | 301 | 104 | 100 |
-| `normal_function` | no_protected | 500 | 298 | 103 | 99 |
-| `normal_function` | no_manageable | 492 | 294 | 101 | 97 |
-| `min_tumor_fold` | 20.0 | 470 | 241 | 67 | 162 |
-| `min_tumor_fold` | 30.0 | 450 | 199 | 47 | 204 |
-| `min_tumor_fold` | 50.0 | 431 | 152 | 28 | 251 |
-| `min_tumor_fold` | 100.0 | 420 | 107 | 17 | 296 |
-| `min_reproductive_fold` | 20.0 | 480 | 249 | 160 | 71 |
-| `min_reproductive_fold` | 30.0 | 468 | 221 | 188 | 59 |
-| `min_reproductive_fold` | 50.0 | 453 | 177 | 232 | 44 |
-| `min_reproductive_fold` | 100.0 | 437 | 135 | 274 | 28 |
-| `min_tumor_patients` | 1 | 479 | 268 | 76 | 135 |
-| `min_tumor_patients` | 2 | 456 | 207 | 53 | 196 |
-| `min_tumor_patients` | 3 | 450 | 179 | 47 | 224 |
-| `min_tumor_patients` | 5 | 438 | 146 | 35 | 257 |
-| `membership` | cancer_antigen | 409 | 303 | 106 | 0 |
-| `membership` | reproductive_antigen | 403 | 303 | 0 | 100 |
-| `membership` | cta | 303 | 303 | 0 | 0 |
-| `min_papers` | 1 | 370 | 250 | 53 | 67 |
-| `min_papers` | 2 | 263 | 192 | 31 | 40 |
-| `min_papers` | 3 | 179 | 140 | 11 | 28 |
-| `min_papers` | 4 | 67 | 61 | 4 | 2 |
+| `max_off_target_tpm` | 5.0 | 471 | 307 | 54 | 110 |
+| `max_off_target_tpm` | 2.0 | 374 | 255 | 38 | 81 |
+| `max_off_target_tpm` | 1.0 | 253 | 168 | 19 | 66 |
+| `max_off_target_tpm` | 0.5 | 151 | 91 | 13 | 47 |
+| `max_off_target_tpm` | 0.1 | 36 | 22 | 4 | 10 |
+| `normal_function` | no_vital | 521 | 324 | 69 | 128 |
+| `normal_function` | no_protected | 517 | 321 | 69 | 127 |
+| `normal_function` | no_manageable | 508 | 320 | 68 | 120 |
+| `min_tumor_fold` | 20.0 | 493 | 245 | 38 | 210 |
+| `min_tumor_fold` | 30.0 | 478 | 201 | 23 | 254 |
+| `min_tumor_fold` | 50.0 | 469 | 151 | 14 | 304 |
+| `min_tumor_fold` | 100.0 | 463 | 111 | 8 | 344 |
+| `min_reproductive_fold` | 20.0 | 492 | 287 | 110 | 95 |
+| `min_reproductive_fold` | 30.0 | 478 | 262 | 135 | 81 |
+| `min_reproductive_fold` | 50.0 | 458 | 215 | 182 | 61 |
+| `min_reproductive_fold` | 100.0 | 440 | 175 | 222 | 43 |
+| `min_tumor_patients` | 1 | 508 | 286 | 53 | 169 |
+| `min_tumor_patients` | 2 | 488 | 212 | 33 | 243 |
+| `min_tumor_patients` | 3 | 484 | 182 | 29 | 273 |
+| `min_tumor_patients` | 5 | 478 | 140 | 23 | 315 |
+| `membership` | cancer_antigen | 397 | 327 | 70 | 0 |
+| `membership` | reproductive_antigen | 455 | 327 | 0 | 128 |
+| `membership` | cta | 327 | 327 | 0 | 0 |
+| `min_papers` | 1 | 385 | 274 | 30 | 81 |
+| `min_papers` | 2 | 271 | 211 | 14 | 46 |
+| `min_papers` | 3 | 185 | 148 | 3 | 34 |
+| `min_papers` | 4 | 69 | 65 | 1 | 3 |
 
 ## 4. Filter modes and host toxicity profiles
 
 `all` → `loose` → `standard` → `strict`: each mode keeps a subset of the one before.
-Every mode keeps the positive controls PRAME, NY-ESO-1, MAGEA4; a test fails
-if a change to a mode drops one.
+The reference proteins PRAME, NY-ESO-1, MAGEA4 pass through the same thresholds as every other protein.
 
 | Filter mode | Kept | CTA | Cancer Antigen only | Reproductive Antigen only |
 |---|---|---|---|---|
-| `all` | 509 | 303 | 106 | 100 |
-| `loose` | 370 | 250 | 53 | 67 |
-| `standard` | 247 | 183 | 28 | 36 |
+| `all` | 525 | 327 | 70 | 128 |
+| `loose` | 385 | 274 | 30 | 81 |
+| `standard` | 248 | 199 | 13 | 36 |
 | `strict` | 115 | 115 | 0 | 0 |
 
 ### `loose`
@@ -105,7 +104,7 @@ if a change to a mode drops one.
 - Sets: keep proteins that are then in either antigen set.
 - Papers: at least 1 distinct paper(s) nominating it or reporting it in tumors.
 
-Target candidates **509** → off_target **509** → curation **509** → host **509** → sets **509** → papers **370** → exclusions **370**
+Target candidates **525** → off_target **525** → curation **525** → host **525** → sets **525** → papers **385** → exclusions **385**
 
 ### `standard`
 
@@ -114,7 +113,7 @@ Target candidates **509** → off_target **509** → curation **509** → host *
 - Sets: keep proteins that are then in either antigen set.
 - Papers: at least 2 distinct paper(s) nominating it or reporting it in tumors.
 
-Target candidates **509** → off_target **475** → curation **472** → host **472** → sets **472** → papers **247** → exclusions **247**
+Target candidates **525** → off_target **471** → curation **468** → host **468** → sets **468** → papers **248** → exclusions **248**
 
 ### `strict`
 
@@ -124,7 +123,7 @@ Target candidates **509** → off_target **475** → curation **472** → host *
 - Papers: at least 3 distinct paper(s) nominating it or reporting it in tumors.
 - Exclusions: drop labels starting with MAGE, except MAGEA4.
 
-Target candidates **509** → off_target **459** → curation **452** → host **452** → sets **274** → papers **126** → exclusions **115**
+Target candidates **525** → off_target **448** → curation **442** → host **442** → sets **287** → papers **126** → exclusions **115**
 
 ### Host anatomy and tissue-tolerance profiles
 
@@ -137,51 +136,51 @@ are screened separately; protected TPM also enters every off-target limit and ca
 
 | Profile | Protected compartments | CTA | CA only | RA only | CA | RA |
 |---|---|---|---|---|---|
-| all | none | 303 | 106 | 100 | 509 |
-| female-patient | none | 303 | 106 | 100 | 509 |
-| female-patient (protect ovary) | ovary | 264 | 100 | 89 | 453 |
-| female-patient (lactating) | lactating_breast | 299 | 104 | 97 | 500 |
+| all | none | 327 | 70 | 128 | 525 |
+| female-patient | none | 327 | 70 | 128 | 525 |
+| female-patient (protect ovary) | ovary | 277 | 67 | 113 | 457 |
+| female-patient (lactating) | lactating_breast | 320 | 67 | 124 | 511 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
-| male-patient | none | 303 | 106 | 100 | 509 |
-| male-patient (protect testis) | testis | 62 | 45 | 24 | 131 |
-| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
+| male-patient | none | 327 | 70 | 128 | 525 |
+| male-patient (protect testis) | testis | 54 | 29 | 24 | 107 |
+| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 40 | 23 | 11 | 74 |
 
 ## 5. Where the familiar CTAs land
 
 46 well-known names. In the catalog, 27 are Target
 candidates, 18 are Unsafe and
 1 Other. A mode column shows ✓ or the first layer
-that removes the protein. **11 pass every mode:** MAGEA4, NY-ESO-1, PRAME, SSX1, GAGE1, GAGE2A, PAGE1, AKAP4, ADAM2, TPTE, NUTM1.
+that removes the protein. **11 pass every mode:** MAGEA4, NY-ESO-1, SSX1, GAGE1, GAGE2A, PAGE1, AKAP4, ADAM2, TPTE, CT45A1, NUTM1.
 Flags and the nTPM column are reported for reading; no knob acts on them.
 
 | Name | Catalog | Off-target TPM | in | Off-target nTPM | Tumor fold | CTA papers | Flags | `loose` | `standard` | `strict` |
 |---|---|---|---|---|---|---|---|---|---|---|
-| MAGEA1 | CTA | 0.3 | spleen | 0.0 | 346 | 7 | literature conflict | ✓ | ✓ | exclusions |
-| MAGEA2 | CTA | 0.6 | adipose tissue | 0.8 | 234 | 4 | mapping risk | ✓ | ✓ | exclusions |
-| MAGEA4 | CTA | 3.6 | lymph node | 0.6 | 877 | 8 | literature conflict | ✓ | ✓ | ✓ |
-| MAGEA6 | CTA | 0.8 | adipose tissue | 0.2 | 539 | 6 | mapping risk | ✓ | ✓ | exclusions |
+| MAGEA1 | CTA | 0.2 | spleen | 0.0 | 346 | 7 | literature conflict | ✓ | ✓ | exclusions |
+| MAGEA2 | CTA | 0.6 | white matter | 0.8 | 234 | 4 | mapping risk | ✓ | ✓ | exclusions |
+| MAGEA4 | CTA | 3.0 | lymph node | 0.6 | 1084 | 8 | literature conflict | ✓ | ✓ | ✓ |
+| MAGEA6 | CTA | 0.7 | adipose tissue | 0.2 | 539 | 6 | mapping risk | ✓ | ✓ | exclusions |
 | MAGEA10 | CTA | 2.2 | white matter | 2.4 | 232 | 6 | mapping risk | ✓ | ✓ | exclusions |
-| MAGEB1 | CTA | 0.8 | lung | 0.0 | 93 | 6 | mapping risk | ✓ | ✓ | exclusions |
+| MAGEB1 | CTA | 0.5 | lung | 0.0 | 93 | 6 | mapping risk | ✓ | ✓ | exclusions |
 | MAGEB4 | CTA | 0.1 | lymph node | 0.0 | 29 | 1 |  | ✓ | papers | papers |
-| MAGEC1 | CTA | 0.5 | white matter | 0.6 | 313 | 5 |  | ✓ | ✓ | exclusions |
-| MAGEC2 | CTA | 0.2 | liver | 0.1 | 682 | 6 |  | ✓ | ✓ | exclusions |
-| NY-ESO-1 | CTA | 1.0 | spleen | 0.5 | 944 | 5 | mapping risk | ✓ | ✓ | ✓ |
-| PRAME | CTA | 3.0 | lung | 20.3 | 1225 | 6 | dismissed rare-cell, literature conflict | ✓ | ✓ | ✓ |
-| SSX1 | CTA | 1.6 | thyroid gland | 1.3 | 170 | 5 | mapping risk, literature conflict | ✓ | ✓ | ✓ |
-| SSX2 | CTA | 10.0 | thyroid gland | 2.8 | 34 | 6 | mapping risk, literature conflict | ✓ | off_target | off_target |
-| SSX4 | CTA | 0.6 | heart muscle | 0.2 | 413 | 2 | mapping risk | ✓ | ✓ | papers |
+| MAGEC1 | CTA | 1.0 | spleen | 0.6 | 304 | 5 |  | ✓ | ✓ | exclusions |
+| MAGEC2 | CTA | 0.2 | pituitary gland | 0.1 | 682 | 6 |  | ✓ | ✓ | exclusions |
+| NY-ESO-1 | CTA | 0.8 | spleen | 0.5 | 944 | 5 | mapping risk | ✓ | ✓ | ✓ |
+| PRAME | CTA | 10.9 | adrenal gland | 20.3 | 338 | 6 | dismissed rare-cell, literature conflict | ✓ | off_target | off_target |
+| SSX1 | CTA | 2.7 | thyroid gland | 1.3 | 101 | 5 | mapping risk, literature conflict | ✓ | ✓ | ✓ |
+| SSX2 | CTA | 9.4 | thyroid gland | 2.8 | 36 | 6 | mapping risk, literature conflict | ✓ | off_target | off_target |
+| SSX4 | CTA | 0.5 | heart muscle | 0.2 | 413 | 2 | mapping risk | ✓ | ✓ | papers |
 | GAGE1 | CTA | 0.7 | retina | 0.5 | 1182 | 6 | mapping risk | ✓ | ✓ | ✓ |
 | GAGE2A | CTA | 1.1 | retina | 0.8 | 1448 | 6 | mapping risk | ✓ | ✓ | ✓ |
-| PAGE1 | CTA | 0.2 | cerebral cortex | 0.0 | 1324 | 4 |  | ✓ | ✓ | ✓ |
-| XAGE1A/B | CTA | 8.8 | liver | 1.6 | 462 | 2 |  | ✓ | off_target | off_target |
-| SYCP1 | CTA | 5.3 | bone marrow | 1.8 | 56 | 4 |  | ✓ | off_target | off_target |
-| AKAP4 | CTA | 0.2 | kidney | 0.0 | 16 | 3 |  | ✓ | ✓ | ✓ |
-| ODF1 | CTA | 0.6 | basal ganglia | 3.4 | 41 | 2 |  | ✓ | ✓ | papers |
+| PAGE1 | CTA | 0.5 | blood | 0.0 | 1324 | 4 |  | ✓ | ✓ | ✓ |
+| XAGE1A/B | CTA | 5.7 | lung | 1.6 | 709 | 2 |  | ✓ | off_target | off_target |
+| SYCP1 | CTA | 4.7 | skin | 1.8 | 63 | 4 |  | ✓ | ✓ | off_target |
+| AKAP4 | CTA | 0.2 | adrenal gland | 0.0 | 16 | 3 |  | ✓ | ✓ | ✓ |
+| ODF1 | CTA | 1.6 | basal ganglia | 3.4 | 26 | 2 |  | ✓ | ✓ | papers |
 | ADAM2 | CTA | 0.6 | midbrain | 0.5 | 100 | 4 |  | ✓ | ✓ | ✓ |
 | TPTE | CTA | 2.0 | white matter | 2.5 | 61 | 3 | mapping risk | ✓ | ✓ | ✓ |
-| CT45A1 | CTA | 6.0 | lung | 0.8 | 67 | 3 | mapping risk | ✓ | off_target | off_target |
-| CT83 | CTA | 4.2 | salivary gland | 2.6 | 46 | 5 | literature conflict | ✓ | ✓ | off_target |
-| CSAG1 | CTA | 1.8 | lymph node | 1.9 | 481 | 1 | mapping risk, literature conflict | ✓ | papers | papers |
+| CT45A1 | CTA | 3.7 | lung | 0.8 | 107 | 3 | mapping risk | ✓ | ✓ | ✓ |
+| CT83 | CTA | 8.6 | salivary gland | 2.6 | 22 | 6 | literature conflict | ✓ | off_target | off_target |
+| CSAG1 | CTA | 2.6 | cerebral cortex | 1.9 | 346 | 1 | mapping risk, literature conflict | ✓ | papers | papers |
 | NUTM1 | CTA | 0.9 | cerebellum | 1.1 | 56 | 3 |  | ✓ | ✓ | ✓ |
 
 Not candidates in the catalog:
@@ -191,7 +190,7 @@ Not candidates in the catalog:
 | MAGEA3 | Unsafe |  | 53.1 | HPA tissue clusters |
 | MAGEA12 | Unsafe |  | 0.5 | Established rare normal-cell RNA |
 | MAGEB2 | Unsafe |  | 118.4 | HPA tissue clusters |
-| CTAG2 | Other | 11.9 | 24.9 |  |
+| CTAG2 | Other | 6.9 | 24.9 |  |
 | LAGE3 | Unsafe |  | 136.4 | HPA normal protein | Normal bulk | HPA tissue clusters | HPA immune | Monaco immune | DICE immune | Adult cornea |
 | PAGE4 | Unsafe |  | 23.3 | Normal bulk |
 | TEX14 | Unsafe |  | 28.4 | HPA tissue clusters |
@@ -211,38 +210,39 @@ Not candidates in the catalog:
 ## 6. The MAGE family
 
 `strict` drops every label starting with `MAGE` except MAGEA4:
-16 of 17 MAGE candidates. **This is a judgment by family name, not
+17 of 18 MAGE candidates. **This is a judgment by family name, not
 a measurement.** The last column shows what `strict` would decide from each protein's
-own data with the name rule switched off: 11 of the 16 it drops
+own data with the name rule switched off: 11 of the 17 it drops
 would pass (MAGEA1, MAGEA10, MAGEA11, MAGEA2/B, MAGEA6, MAGEA8, MAGEA9/B, MAGEB1, MAGEB16, MAGEC1, MAGEC2).
 
 | MAGE | Catalog | Off-target TPM | Off-target nTPM | Tumor fold | CTA papers | Mapping risk | `standard` | `strict` on its own data |
 |---|---|---|---|---|---|---|---|---|
-| MAGEA1 | CTA | 0.3 | 0.0 | 346.0 | 7 |  | ✓ | ✓ |
+| MAGEA1 | CTA | 0.2 | 0.0 | 346.0 | 7 |  | ✓ | ✓ |
 | MAGEA10 | CTA | 2.2 | 2.4 | 232.0 | 6 | yes | ✓ | ✓ |
-| MAGEA11 | CTA | 0.3 | 0.1 | 109.0 | 6 |  | ✓ | ✓ |
+| MAGEA11 | CTA | 1.0 | 0.1 | 109.0 | 6 |  | ✓ | ✓ |
 | MAGEA2/B | CTA | 0.6 | 0.8 | 234.0 | 4 | yes | ✓ | ✓ |
-| MAGEA4 | CTA | 3.6 | 0.6 | 877.0 | 8 |  | ✓ | ✓ |
-| MAGEA6 | CTA | 0.8 | 0.2 | 539.0 | 6 | yes | ✓ | ✓ |
+| MAGEA4 | CTA | 3.0 | 0.6 | 1,084.0 | 8 |  | ✓ | ✓ |
+| MAGEA6 | CTA | 0.7 | 0.2 | 539.0 | 6 | yes | ✓ | ✓ |
 | MAGEA8 | CTA | 1.0 | 1.0 | 205.0 | 4 |  | ✓ | ✓ |
-| MAGEA9/B | CTA | 1.0 | 0.2 | 321.0 | 4 |  | ✓ | ✓ |
-| MAGEB1 | CTA | 0.8 | 0.0 | 93.0 | 6 | yes | ✓ | ✓ |
+| MAGEA9/B | CTA | 0.7 | 0.2 | 321.0 | 4 |  | ✓ | ✓ |
+| MAGEB1 | CTA | 0.5 | 0.0 | 93.0 | 6 | yes | ✓ | ✓ |
 | MAGEB16 | CTA | 0.0 | 0.0 | 90.0 | 4 |  | ✓ | ✓ |
-| MAGEB17 | Cancer Antigen only | 1.9 | 2.8 | 80.0 | 0 |  | papers | sets |
-| MAGEB18 | Cancer Antigen only | 0.0 | 0.0 | 11.0 | 2 |  | ✓ | sets |
+| MAGEB17 | Cancer Antigen only | 7.8 | 2.8 | 19.0 | 0 |  | off_target | off_target |
+| MAGEB18 | CTA | 0.0 | 0.0 | 11.0 | 2 |  | ✓ | papers |
 | MAGEB3 | Reproductive Antigen only | 0.2 | 0.3 | 8.0 | 3 |  | ✓ | sets |
 | MAGEB4 | CTA | 0.1 | 0.0 | 29.0 | 1 |  | papers | papers |
-| MAGEB6B | Cancer Antigen only | 0.0 | 0.0 | 15.0 | 0 | yes | papers | sets |
-| MAGEC1 | CTA | 0.5 | 0.6 | 313.0 | 5 |  | ✓ | ✓ |
+| MAGEB5 | Reproductive Antigen only | 0.2 | 0.0 | 2.0 | 0 |  | papers | sets |
+| MAGEB6B | CTA | 0.0 | 0.0 | 15.0 | 0 | yes | papers | papers |
+| MAGEC1 | CTA | 1.0 | 0.6 | 304.0 | 5 |  | ✓ | ✓ |
 | MAGEC2 | CTA | 0.2 | 0.1 | 682.0 | 6 |  | ✓ | ✓ |
 
 ## 7. Disposable tissue and the "below 1 everywhere" list
 
-- **Disposable.** 19 of 509 candidates reach 1 TPM or 1 nTPM in
+- **Disposable.** 20 of 525 candidates reach 1 TPM or 1 nTPM in
   appendix, gallbladder or tonsil. The highest is
-  NLRP4 at 8.3 TPM.
+  NLRP4 at 7.8 TPM.
   [List](disposable-at-least-1.csv).
-- **Below 1 everywhere off target.** 243 candidates are below 1 TPM at tissue
+- **Below 1 everywhere off target.** 230 candidates are below 1 TPM at tissue
   level and below 1 HPA nTPM, single-cell clusters included.
   [List](off-target-below-1.csv). It is a list, not a knob or a catalog category.
 
@@ -283,17 +283,15 @@ finding that falls short of the rubric, a family rule, or the nose and skin refe
 | Recorded tier | Candidates | Tissues | Removed by `normal_function` |
 |---|---|---|---|
 | Vital | 4 | blood, eye, pancreas, skeletal muscle | `no_vital` and stricter |
-| Protected | 5 | blood, lymph node, skin, stomach | `no_protected` and stricter |
-| Manageable | 8 | adipose tissue, breast, olfactory epithelium, thyroid gland | `no_manageable` |
+| Protected | 4 | blood, lymph node, stomach | `no_protected` and stricter |
+| Manageable | 9 | breast, olfactory epithelium, thyroid gland | `no_manageable` |
 | Disposable | 2 | hair follicle, skin | never |
 
-Family rules. A member whose family's home is a tissue no panel resolves, and that has
-no reproductive evidence, is Other:Unscreened tissue in the catalog; the rows count the members
-that remain candidates:
+Insufficient coverage of a recorded family home blocks CA membership. Members with qualifying reproductive evidence can enter RA. The table counts members that remain candidates.
 
 | Family | Candidates | Tissue | Tier | Used by filters | Sources |
 |---|---|---|---|---|---|
-| Olfactory receptors | 4 | olfactory epithelium | Manageable | yes | PMID 24800820 |
+| Olfactory receptors | 6 | olfactory epithelium | Manageable | yes | PMID 24800820 |
 | Bitter taste receptors | 0 | taste bud | Protected | yes | PMID 18003842 |
 | Hair keratins and keratin-associated proteins | 1 | hair follicle | Disposable | yes | PMID 15028290; PMID 14962103; PMID 15144888; PMID 17235325; PMID 15086535; PMID 17301834 |
 | Trace-amine receptors | 0 | olfactory epithelium | Manageable | no | UniProt Q9P1P5; UniProt Q96RI9 |
@@ -320,15 +318,15 @@ Limits: candidate-sweep findings other than the exclusions carry the second read
 
 - **One tumor sample can admit a protein.** The rule asks for a single sample at 10x,
   as requested; it does not ask for replication. The most frequent top sample is
-  `TREEHOUSE_POLYA_25_01:TCGA-2G-AAFL-01`, the best tumor for 23 Cancer
+  `TREEHOUSE_POLYA_25_01:TCGA-2G-AAFL-01`, the best tumor for 22 Cancer
   Antigens. `samples_at_tenfold`, `independent_patients_at_tenfold`,
   `anonymous_samples_at_tenfold` and `cancer_types_at_tenfold` record qualifying support.
   `min_tumor_patients` optionally requires known-patient replication at the selected
   `min_tumor_fold` (10× by default).
-- **The paper layer does most of the cutting.** 342 of 509 candidates
-  are nominated by any CTA-list paper. `min_papers=3` keeps 179, and
-  142 of those are named by all of the three largest lists
-  (Wang et al. (2016), Chang et al. (2019), da Silva et al. (2017)).
+- **The paper layer does most of the cutting.** 356 of 525 candidates
+  are nominated by any CTA-list paper. `min_papers=3` keeps 185, and
+  148 of those are named by all of the three largest lists
+  (Chang et al. (2019), Wang et al. (2016), da Silva et al. (2017)).
 - **Paper counts are not independent replication.** The nominating sources are
   published catalogs and screens, and their lists overlap. Several lists naming a gene
   shows that several screens picked it, not that separate experiments confirmed it.

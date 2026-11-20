@@ -17,7 +17,7 @@ import pandas as pd
 
 from . import target_selection as catalog
 
-POLICY_ID = "oncoref.host-selection.2026-11-17.3"
+POLICY_ID = "oncoref.host-selection.2026-11-18.2"
 COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
 
 
@@ -26,6 +26,7 @@ def normalize(values) -> tuple[str, ...]:
         raise ValueError("Tissue choices must be tuples of names")
     found = set()
     aliases = {c.replace("_", " "): (c,) for c in COMPARTMENTS}
+    aliases["uterus"] = ("uterus", "endometrium")
     aliases.update(breast=catalog.MAMMARY_COMPARTMENTS, mammary=catalog.MAMMARY_COMPARTMENTS)
     for name in values:
         if not isinstance(name, str):

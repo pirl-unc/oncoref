@@ -148,7 +148,7 @@ def screening_roots() -> dict[str, list[str]]:
     return {
         tier: sorted(
             t
-            for r in _load()["assessments"]
+            for r in [*_current_base_rules(), *_update_document()["assessments"]]
             if r["level"] == "bulk" and r["tier"] == tier and r["system"] != "Reproductive"
             for t in r["tissues"]
         )
@@ -165,7 +165,9 @@ def _anatomy(tissue: str):
 
 
 @cache
-def _resolve(tissue: str, cell_type: str, taxon_id: int, stage: str, resolution: str):
+def _resolve(
+    tissue: str, cell_type: str, taxon_id: int, stage: str, resolution: str, current: bool
+):
     result = {
         "tier": "unresolved",
         "assessment_id": None,
@@ -184,14 +186,14 @@ def _resolve(tissue: str, cell_type: str, taxon_id: int, stage: str, resolution:
         result["reason"] = "outside_adult_human_policy"
         return result
     annotation, ancestors = _anatomy(tissue)
+    if annotation.concept_id in _update_document()["tissues"]:
+        # Added concepts are resolved by the separate, source-bound additions.
+        return result
     result["anatomical_membership"] = list(annotation.scopes)
     if not ancestors:
         return result
-    bulk = [
-        r
-        for r in _load()["assessments"]
-        if r["level"] == "bulk" and ancestors.intersection(r["tissues"])
-    ]
+    rules = _current_base_rules() if current else _load()["assessments"]
+    bulk = [r for r in rules if r["level"] == "bulk" and ancestors.intersection(r["tissues"])]
     # Explicit anatomical child overrides its parent (e.g. hair follicle / skin).
     exact = [r for r in bulk if annotation.concept_id in r["tissues"]]
     if exact:
@@ -207,7 +209,7 @@ def _resolve(tissue: str, cell_type: str, taxon_id: int, stage: str, resolution:
     if resolution == "cell" and cell_type:
         candidates = [
             r
-            for r in _load()["assessments"]
+            for r in rules
             if r["level"] == "cell"
             and ancestors.intersection(r["tissues"])
             and re.search(r["cell_pattern"], cell_type)
@@ -239,10 +241,11 @@ def _resolve(tissue: str, cell_type: str, taxon_id: int, stage: str, resolution:
     return result
 
 
-def registry_assess(
+def _assess(
     tissue: str,
     cell_type: str | None = None,
     *,
+    current: bool,
     taxon_id: int = 9606,
     stage: str = "adult",
     resolution: str = "bulk",
@@ -261,7 +264,14 @@ def registry_assess(
 
     cell = re.sub(r"[_-]+", " ", normalize(cell_type))
     cell = _load().get("cell_aliases", {}).get(cell, cell)
-    return deepcopy(_resolve(normalize(tissue), cell, taxon_id, normalize(stage), resolution))
+    return deepcopy(
+        _resolve(normalize(tissue), cell, taxon_id, normalize(stage), resolution, current)
+    )
+
+
+def registry_assess(tissue, cell_type=None, **options):
+    """Resolve the frozen base registry. Use assess() for current policy."""
+    return _assess(tissue, cell_type, current=False, **options)
 
 
 def context_tiers(contexts: pd.DataFrame) -> pd.Series:
@@ -287,7 +297,7 @@ def context_tiers(contexts: pd.DataFrame) -> pd.Series:
     )
     mapping = {}
     for t, c, cellular in keys.loc[eligible].drop_duplicates().itertuples(index=False, name=None):
-        finding = registry_assess(t, c, resolution="cell" if cellular else "bulk")
+        finding = assess(t, c, resolution="cell" if cellular else "bulk")
         mapping[(t, c, cellular)] = finding.get("fallback_tier", finding["tier"])
     assigned = pd.Series(
         [mapping.get(key, "unresolved") for key in keys.itertuples(index=False, name=None)],
@@ -315,13 +325,15 @@ def anatomy_inventory() -> pd.DataFrame:
             continue
         stage = {"embryo": "embryonic", "fetus": "fetal"}.get(cid, "adult")
         annotation = resolve_normal_tissue(cid, species="human", stage=stage)
-        r = registry_assess(cid, stage=stage)
+        r = assess(cid, stage=stage)
         reproductive = "reproductive" in annotation.scopes
         broad = cid in {"soft_tissue", "head", "foot"}
         rows.append(
             {
                 "concept_id": cid,
                 "label": concept["label"],
+                "parents": list(concept["parents"]),
+                "aliases": list(concept["aliases"]),
                 **r,
                 "anatomical_membership": list(annotation.scopes),
                 "selection_category": "Reproductive"
@@ -363,15 +375,39 @@ def _key(value) -> str:
 
 
 @cache
-def _load_updates():
-    """Tissues added after the base registry was bound into released receipts.
-
-    The base file is hashed into screening receipts, so additions are replayed
-    over it, as gene-knowledge updates are. An update may add a tissue the base
-    registry cannot resolve; it can never change a base assessment.
-    """
+def _update_document():
     payload = files("oncoref").joinpath("data/normal-tissue-tier-updates.yaml").read_bytes()
     doc = yaml.safe_load(payload)
+    doc["updates_id"] = (
+        "oncoref:tissue-tier-updates:v1:sha256:" + hashlib.sha256(payload).hexdigest()
+    )
+    return doc
+
+
+@cache
+def _current_base_rules():
+    rules = {r["id"]: r.copy() for r in _load()["assessments"]}
+    for key, change in _update_document().get("revisions", {}).items():
+        if (
+            key not in rules
+            or set(change) != {"previous_tier", "tier", "rationale", "inference"}
+            or rules[key]["tier"] != change["previous_tier"]
+            or change["tier"] not in TIERS
+            or not all(change.values())
+        ):
+            raise ValueError(f"Invalid tissue-tier revision for {key}")
+        rules[key].update(change)
+    return list(rules.values())
+
+
+@cache
+def _load_updates():
+    """Validate current additions and the immutable base to which revisions apply.
+
+    The base file is hashed into screening receipts, so additions are replayed
+    over it, as gene-knowledge updates are. Added concepts must have new identities. A revision names its prior tier.
+    """
+    doc = deepcopy(_update_document())
     base = _load()
     if doc.get("schema") != "oncoref.normal-tissue-tier-updates" or doc.get("schema_version") != 1:
         raise ValueError("Unsupported tissue-tier updates schema")
@@ -407,9 +443,6 @@ def _load_updates():
     for name in names:
         if registry_assess(name)["reason"] != "unresolved_anatomy":
             raise ValueError(f"A tier update would override the base registry: {name}")
-    doc["updates_id"] = (
-        "oncoref:tissue-tier-updates:v1:sha256:" + hashlib.sha256(payload).hexdigest()
-    )
     doc["names"] = names
     return doc
 
@@ -434,10 +467,10 @@ def update_references() -> pd.DataFrame:
 
 def assessments() -> pd.DataFrame:
     """Every tier rule: the base registry's, then the updates'. ``source`` says which."""
-    return pd.concat(
-        [registry_assessments().assign(source="registry"), updates().assign(source="update")],
-        ignore_index=True,
-    )
+    base = pd.DataFrame(deepcopy(_current_base_rules()))
+    base["source"] = "registry"
+    base.loc[base.id.isin(_update_document().get("revisions", {})), "source"] = "revision"
+    return pd.concat([base, updates().assign(source="update")], ignore_index=True)
 
 
 def references() -> pd.DataFrame:
@@ -462,8 +495,10 @@ def assess(tissue: str, cell_type: str | None = None, **options) -> dict:
     Takes the arguments of :func:`registry_assess`. An added tissue
     has a bulk rule only, so a cell population inherits its tissue.
     """
-    result = registry_assess(tissue, cell_type, **options)
+    result = _assess(tissue, cell_type, current=True, **options)
     doc = _load_updates()
+    if result["assessment_id"] in doc.get("revisions", {}):
+        result["updates_id"] = doc["updates_id"]
     added = doc["names"].get(_key(tissue))
     if added and result["reason"] == "unresolved_anatomy":
         chosen = next(r for r in doc["assessments"] if r["id"] == added)

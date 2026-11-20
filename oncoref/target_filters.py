@@ -2,7 +2,7 @@
 """Optional tightening of the Target candidate catalog, one named knob at a time.
 
 The catalog in :mod:`oncoref.target_selection` is the *frame*. A Cancer Antigen
-already has a tumor sample at 10 x every non-reproductive normal value, and the
+already has a tumor sample at 10 x every non-thymic, non-reproductive normal value, and the
 normal screens, published normal expression, coverage, identity and sequence have
 run. Catalog knobs read that catalog; optional host constraints read the separate
 versioned exposure evidence. Neither rewrites biological catalog membership:
@@ -86,7 +86,7 @@ class TargetFilter:
     max_off_target_tpm: float | None = None
     #: 2. Drop proteins whose recorded normal home is at or above this tier.
     normal_function: str = "any"  # "any" | "no_vital" | "no_protected" | "no_manageable"
-    #: 3. A Cancer Antigen's highest tumor / max(non-reproductive normal, 1). The
+    #: 3. A Cancer Antigen's highest tumor / max(non-thymic, non-reproductive normal, 1). The
     #: catalog already requires 10; a higher value moves weaker ones out of the set.
     min_tumor_fold: float = 10.0
     min_reproductive_fold: float = 10.0
@@ -423,7 +423,7 @@ def describe(f: TargetFilter | str) -> str:
     f = FILTER_MODES[f] if isinstance(f, str) else f
     lines = [
         "Start from the catalog's Target candidates: CA and RA independently require "
-        "10 x the non-reproductive normal reference in their respective compartments."
+        "10 x the non-thymic, non-reproductive normal reference in their respective compartments."
     ]
     if f.max_off_target_tpm is not None:
         lines.append(
@@ -448,11 +448,11 @@ def describe(f: TargetFilter | str) -> str:
     if f.min_tumor_fold > 10.0:
         lines.append(
             f"Sets: a Cancer Antigen's highest tumor is at least {f.min_tumor_fold:g} x "
-            f"max(non-reproductive normal, Disposable, 1 TPM)."
+            f"max(non-thymic, non-reproductive normal, Disposable, 1 TPM)."
         )
     if f.min_reproductive_fold > 10.0:
         lines.append(
-            f"Sets: reproductive evidence reaches at least {f.min_reproductive_fold:g} x max(non-reproductive normal, Disposable, 1 TPM)."
+            f"Sets: reproductive evidence reaches at least {f.min_reproductive_fold:g} x max(non-thymic, non-reproductive normal, Disposable, 1 TPM)."
         )
     if f.min_tumor_patients:
         lines.append(

@@ -1,0 +1,9 @@
+gene_id,gene_name,source,tissue,histology,assay,statistic,positive_specimens,assessed_specimens,unit,figure,publication_url
+ENSG00000204019,CT83,Marcinkowski 2019,stomach,gastric carcinoma,RNAscope,any positive tumor cells,9,13,specimens,4d,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,stomach,gastric carcinoma,RNAscope,at least 50% positive tumor cells,5,13,specimens,4d and Discussion,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,breast,triple-negative breast cancer,RNAscope,any positive tumor cells,4,9,specimens,4d,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,cervix,squamous carcinoma,qRT-PCR,detectable CT83,6,21,specimens,4c,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,cervix,adenocarcinoma,qRT-PCR,detectable CT83,5,8,specimens,4c,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,anus,anal cancer,qRT-PCR,detectable CT83,1,8,specimens,4c,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,head and neck,head and neck cancer,qRT-PCR,detectable CT83,0,5,specimens,4c,https://doi.org/10.1186/s40425-019-0678-x
+ENSG00000204019,CT83,Marcinkowski 2019,vagina,vaginal cancer,qRT-PCR,detectable CT83,0,2,specimens,4c,https://doi.org/10.1186/s40425-019-0678-x

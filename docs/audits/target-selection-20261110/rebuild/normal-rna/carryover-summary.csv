@@ -1,0 +1,4 @@
+source,libraries,assessed,P_assessed,P,E_assessed,E,either
+GTEx v11 tissue,18637,18637,18275,209,17059,181,381
+HPA v23 tissue,186,176,176,2,173,1,3
+HPA v23 sorted immune,109,109,109,0,109,0,0

@@ -1,4 +1,4 @@
-"""Registry updates add tissues and can never change a base assessment."""
+"""Current assessments combine new tissues and explicit dated revisions."""
 
 import hashlib
 from pathlib import Path
@@ -75,7 +75,7 @@ def test_base_assessments_pass_through_unchanged():
 
 def test_public_tables_cover_the_base_registry_and_its_updates():
     rules = tissue_tiers.assessments()
-    assert rules.source.value_counts().to_dict() == {"registry": 107, "update": 7}
+    assert rules.source.value_counts().to_dict() == {"registry": 106, "revision": 1, "update": 7}
     assert rules.id.is_unique
     ledger = tissue_tiers.references()
     assert ledger.reference_id.is_unique

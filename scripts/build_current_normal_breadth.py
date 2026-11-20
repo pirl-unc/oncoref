@@ -20,8 +20,10 @@ OUTPUT = ROOT / "docs/audits/normal-breadth-20261104"
 
 
 def build():
-    OUTPUT.mkdir(parents=True, exist_ok=True)
     policy = breadth.policy()
+    if policy["policy_id"] != "oncoref.normal-expression-breadth.2026-11-04.1":
+        raise ValueError("Reproduce the November 4 breadth audit from its recorded release")
+    OUTPUT.mkdir(parents=True, exist_ok=True)
     records = cta_selection.results()
     wanted = sorted({gene for genes in records.gene_ids for gene in genes})
     source = reference_data.provenance("hpa_rna_consensus", "v23", verify_content=True)

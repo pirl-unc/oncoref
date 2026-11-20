@@ -15,6 +15,7 @@
     "oncoref/data/target-selection.json": "75db95d2bb6d17b1bc5417deb19c15bd730aefa07b0e88eef5289ad36fd8a58e",
     "scripts/build_target_filter_audit.py": "3d8646637a3bc028a519d85fe62d6add33c92652539340aa0afd74aa2663f63c",
     "scripts/build_target_selection_report.py": "2086f96edb8db0c8a41be2b64098df07c47ed176f230ba41895b89ac9f88ae5f",
-    "scripts/build_cta_threshold_review.py": "6eb39e9d406310a258d1425cae15f4de440bc4dc4df41361002d8daf979cf5cd"
+    "scripts/build_cta_threshold_review.py": "6eb39e9d406310a258d1425cae15f4de440bc4dc4df41361002d8daf979cf5cd",
+    "oncoref/normal_cell_data.py": "e8f93223eae4d6eea774209f30aaea335e135654b5e106a0cfd5cdb342f5c56a"
   }
 }

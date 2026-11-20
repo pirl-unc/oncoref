@@ -67,9 +67,9 @@ is a published anchor. Our exact assignments remain project inferences:
 
 | Category | Assignment relevant to this review | Evidence and interpretation |
 |---|---|---|
-| Disposable | Cutaneous melanocytes, hair follicles, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
+| Disposable | Cutaneous melanocytes, hair follicles, adult human thymus, tonsil, appendix, gallbladder | Selected compartment-loss or organ-removal rationale; acute immune injury still needs review |
 | Manageable | Thyroid, adipose; resolved mature B cells | Still screened; any positive IHC excludes. This does not imply easy local control or harmless loss |
-| Protected | Whole skin, spleen, thymus, salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
+| Protected | Whole skin, spleen, salivary glands, cartilage, esophagus and other protected GI tissues, lymph nodes and remaining listed protected organs | Persistent dysfunction, structural damage or important mucosal/distributed function |
 | Vital | Existing vital and critical sensory/neurological organs | Highest protection priority; local access does not remove irreversible-loss concerns |
 
 Reproductive remains the separate anatomical/developmental union. See the
@@ -116,7 +116,7 @@ probability that a negative stain rules out antigen or peptide-HLA presentation.
 
 Review annotations do not themselves change thresholds. Complete routine negative
 IHC is required to earn relaxation, and any positive IHC outside Reproductive or
-Disposable excludes. Whole skin/salivary/thymus/spleen allowances from policy
+Disposable excludes. Whole skin/salivary/spleen allowances from policy
 2026-10-20.3 are retained only in immutable historical reports.
 
 Human clinical rationale is not transferred to dogs or mice. The shared vocabulary

@@ -235,6 +235,18 @@ SUPERSEDED: dict[str, str] = {
 #: regenerated here rather than copied from pirlygenes, so they aren't in the
 #: pirlygenes snapshot but DO ship in the wheel and belong in the inventory.
 CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
+    "antigen-source-inventory": (
+        "antigens",
+        "Versioned input, assay and comparison files used by the antigen catalog",
+    ),
+    "cta-literature-benchmarks": (
+        "antigens",
+        "Independent CTA classification controls with exact-gene evidence and coverage limitations",
+    ),
+    "marcinkowski2019-ct83-expression": (
+        "expression",
+        "Tumor-localized CT83 expression by histology and assay, Figure 4",
+    ),
     "transcript-selection": (
         "protein",
         "Pinned MANE/canonical representative decisions, exact versions, evidence holds and support flags",

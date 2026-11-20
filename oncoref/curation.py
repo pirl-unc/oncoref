@@ -66,7 +66,15 @@ def write_receipt(root):
     )
     implementation = {
         "oncoref/curation.py",
+        "oncoref/antigen_data.py",
+        "oncoref/catalog.py",
+        "scripts/cta_evidence_assets/antigen-whitepaper.md",
+        "docs/audits/normal-cell-atlas-20261110/rare-cell/findings.csv",
+        "oncoref/data/cta-trial-evidence.csv",
         "oncoref/data/curation-build.json",
+        "oncoref/data/antigen-source-inventory.csv",
+        "oncoref/data/cta-literature-benchmarks.csv",
+        "oncoref/data/marcinkowski2019-ct83-expression.csv",
         "oncoref/target_filters.py",
         "oncoref/host_context.py",
         "scripts/cta_evidence_assets/target-selection-guide.md",
@@ -74,8 +82,13 @@ def write_receipt(root):
         "oncoref/antigen_sets.py",
         "oncoref/antigen_cli.py",
         "oncoref/reference_data.py",
+        "scripts/gtex_sample_evidence.py",
         "oncoref/data/reference-releases.json",
+        "oncoref/data/normal-cell-sources.json",
+        "oncoref/data/cta-literature-followup.json",
         "oncoref/tissue_tiers.py",
+        "oncoref/normal_tissues.py",
+        "scripts/replay_cta_selection.py",
     }
     implementation.update(step["argv"][0] for step in spec["steps"].values())
     implementation.update(report["implementation_sha256"])

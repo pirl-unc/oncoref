@@ -1,0 +1,1222 @@
+family,source_id,tissue,source_context,cell_type,role
+census,census,adipose tissue,adipose tissue,,Shared screen
+census,census,adrenal gland,adrenal gland,,Shared screen
+census,census,blood,blood,,Shared screen
+census,census,brain,brain,,Shared screen
+census,census,colon,colon,,Shared screen
+census,census,esophagus,esophagus,,Shared screen
+census,census,eye,eye,,Shared screen
+census,census,heart,heart,,Shared screen
+census,census,kidney,kidney,,Shared screen
+census,census,liver,liver,,Shared screen
+census,census,lung,lung,,Shared screen
+census,census,lymph node,lymph node,,Shared screen
+census,census,pancreas,pancreas,,Shared screen
+census,census,small intestine,small intestine,,Shared screen
+census,census,spinal cord,spinal cord,,Shared screen
+census,census,stomach,stomach,,Shared screen
+census,census,tongue,tongue,,Shared screen
+census,census,ureter,ureter,,Shared screen
+census,census,urinary bladder,urinary bladder,,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,blood vessels,blood vessels,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,conjunctival basal epithelium,conjunctival basal epithelium,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,conjunctival superficial epithelium,conjunctival superficial epithelium,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,corneal basal epithelium,corneal basal epithelium,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,corneal endothelium,corneal endothelium,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,corneal stroma keratocytes,corneal stroma keratocytes,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,corneal stromal stem cells,corneal stromal stem cells,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,corneal superficial epithelium,corneal superficial epithelium,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,corneal suprabasal epithelial cells,corneal suprabasal epithelial cells,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,fibroblastic corneal endothelial cells,fibroblastic corneal endothelial cells,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,immune cells 1,immune cells 1,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,immune cells 2,immune cells 2,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,limbal fibroblasts,limbal fibroblasts,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,limbal neural crest progenitors,limbal neural crest progenitors,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,limbal progenitor cells,limbal progenitor cells,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,limbal stroma keratocytes,limbal stroma keratocytes,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,limbal superficial epithelium,limbal superficial epithelium,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,limbal suprabasal epithelial cells,limbal suprabasal epithelial cells,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,lymphatic vessels,lymphatic vessels,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,melanocytes,melanocytes,Shared screen
+cornea_collin_adult_counts,cornea_collin_adult_counts,cornea/conjunctiva,red blood cells,red blood cells,Shared screen
+dice,dice_b_cell_naive,blood,B_CELL_NAIVE,B_CELL_NAIVE,Shared screen
+dice,dice_b_cell_naive:DICE-DB1-20220223,blood,B_CELL_NAIVE,B_CELL_NAIVE,Normal
+dice,dice_cd4_naive,blood,CD4_NAIVE,CD4_NAIVE,Shared screen
+dice,dice_cd4_naive:DICE-DB1-20220223,blood,CD4_NAIVE,CD4_NAIVE,Normal
+dice,dice_cd4_stim,blood,CD4_STIM,CD4_STIM,Shared screen
+dice,dice_cd4_stim:DICE-DB1-20220223,blood,CD4_STIM,CD4_STIM,Normal
+dice,dice_cd8_naive,blood,CD8_NAIVE,CD8_NAIVE,Shared screen
+dice,dice_cd8_naive:DICE-DB1-20220223,blood,CD8_NAIVE,CD8_NAIVE,Normal
+dice,dice_cd8_stim,blood,CD8_STIM,CD8_STIM,Shared screen
+dice,dice_cd8_stim:DICE-DB1-20220223,blood,CD8_STIM,CD8_STIM,Normal
+dice,dice_m2,blood,M2,M2,Shared screen
+dice,dice_m2:DICE-DB1-20220223,blood,M2,M2,Normal
+dice,dice_monocytes,blood,MONOCYTES,MONOCYTES,Shared screen
+dice,dice_monocytes:DICE-DB1-20220223,blood,MONOCYTES,MONOCYTES,Normal
+dice,dice_nk,blood,NK,NK,Shared screen
+dice,dice_nk:DICE-DB1-20220223,blood,NK,NK,Normal
+dice,dice_tfh,blood,TFH,TFH,Shared screen
+dice,dice_tfh:DICE-DB1-20220223,blood,TFH,TFH,Normal
+dice,dice_th1,blood,TH1,TH1,Shared screen
+dice,dice_th17,blood,TH17,TH17,Shared screen
+dice,dice_th17:DICE-DB1-20220223,blood,TH17,TH17,Normal
+dice,dice_th1:DICE-DB1-20220223,blood,TH1,TH1,Normal
+dice,dice_th2,blood,TH2,TH2,Shared screen
+dice,dice_th2:DICE-DB1-20220223,blood,TH2,TH2,Normal
+dice,dice_thstar,blood,THSTAR,THSTAR,Shared screen
+dice,dice_thstar:DICE-DB1-20220223,blood,THSTAR,THSTAR,Normal
+dice,dice_treg_mem,blood,TREG_MEM,TREG_MEM,Shared screen
+dice,dice_treg_mem:DICE-DB1-20220223,blood,TREG_MEM,TREG_MEM,Normal
+dice,dice_treg_naive,blood,TREG_NAIVE,TREG_NAIVE,Shared screen
+dice,dice_treg_naive:DICE-DB1-20220223,blood,TREG_NAIVE,TREG_NAIVE,Normal
+gtex_donor_p95,gtex_donor_p95:v11,adipose tissue,Adipose_Subcutaneous,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,adipose tissue,Adipose_Visceral_Omentum,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,adrenal gland,Adrenal_Gland,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,amygdala,Brain_Amygdala,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,basal ganglia,Brain_Caudate_basal_ganglia,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,basal ganglia,Brain_Nucleus_accumbens_basal_ganglia,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,basal ganglia,Brain_Putamen_basal_ganglia,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,blood,Whole_Blood,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,blood vessel,Artery_Aorta,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,blood vessel,Artery_Coronary,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,blood vessel,Artery_Tibial,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,cerebellum,Brain_Cerebellar_Hemisphere,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,cerebellum,Brain_Cerebellum,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,cerebral cortex,Brain_Anterior_cingulate_cortex_BA24,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,cerebral cortex,Brain_Cortex,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,cerebral cortex,Brain_Frontal_Cortex_BA9,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,colon,Colon_Sigmoid,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,colon,Colon_Transverse,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,esophagus,Esophagus_Gastroesophageal_Junction,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,esophagus,Esophagus_Mucosa,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,esophagus,Esophagus_Muscularis,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,heart muscle,Heart_Atrial_Appendage,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,heart muscle,Heart_Left_Ventricle,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,hippocampal formation,Brain_Hippocampus,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,hypothalamus,Brain_Hypothalamus,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,kidney,Kidney_Cortex,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,kidney,Kidney_Medulla,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,liver,Liver,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,lung,Lung,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,midbrain,Brain_Substantia_nigra,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,pancreas,Pancreas,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,peripheral nerve,Nerve_Tibial,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,pituitary gland,Pituitary,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,salivary gland,Minor_Salivary_Gland,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,skeletal muscle,Muscle_Skeletal,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,skin,Skin_Not_Sun_Exposed_Suprapubic,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,skin,Skin_Sun_Exposed_Lower_leg,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,small intestine,Small_Intestine_Terminal_Ileum,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,spinal cord,Brain_Spinal_cord_cervical_c-1,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,spleen,Spleen,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,stomach,Stomach,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,thyroid gland,Thyroid,bulk,Normal
+gtex_donor_p95,gtex_donor_p95:v11,urinary bladder,Bladder,bulk,Normal
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,breast,Breast_Mammary_Tissue,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,cervix,Cervix_Ectocervix,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,cervix,Cervix_Endocervix,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,fallopian tube,Fallopian_Tube,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,ovary,Ovary,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,prostate,Prostate,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,testis,Testis,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,uterus,Uterus,bulk,RA witness
+gtex_individual_tissue_tpm,gtex_individual_tissue_tpm:v11,vagina,Vagina,bulk,RA witness
+gtex_tissue_rna,gtex_tissue_rna:v11,adipose tissue,Adipose_Subcutaneous,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,adipose tissue,Adipose_Subcutaneous,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,adipose tissue,Adipose_Visceral_Omentum,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,adipose tissue,Adipose_Visceral_Omentum,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,adrenal gland,Adrenal_Gland,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,adrenal gland,Adrenal_Gland,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,amygdala,Brain_Amygdala,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,amygdala,Brain_Amygdala,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,basal ganglia,Brain_Caudate_basal_ganglia,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,basal ganglia,Brain_Caudate_basal_ganglia,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,basal ganglia,Brain_Nucleus_accumbens_basal_ganglia,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,basal ganglia,Brain_Nucleus_accumbens_basal_ganglia,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,basal ganglia,Brain_Putamen_basal_ganglia,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,basal ganglia,Brain_Putamen_basal_ganglia,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,blood,Whole_Blood,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,blood,Whole_Blood,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,blood vessel,Artery_Aorta,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,blood vessel,Artery_Aorta,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,blood vessel,Artery_Coronary,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,blood vessel,Artery_Coronary,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,blood vessel,Artery_Tibial,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,blood vessel,Artery_Tibial,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,breast,Breast_Mammary_Tissue,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,breast,Breast_Mammary_Tissue,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebellum,Brain_Cerebellar_Hemisphere,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebellum,Brain_Cerebellar_Hemisphere,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebellum,Brain_Cerebellum,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebellum,Brain_Cerebellum,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebral cortex,Brain_Anterior_cingulate_cortex_BA24,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebral cortex,Brain_Anterior_cingulate_cortex_BA24,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebral cortex,Brain_Cortex,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebral cortex,Brain_Cortex,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebral cortex,Brain_Frontal_Cortex_BA9,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,cerebral cortex,Brain_Frontal_Cortex_BA9,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cervix,Cervix_Ectocervix,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,cervix,Cervix_Ectocervix,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,cervix,Cervix_Endocervix,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,cervix,Cervix_Endocervix,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Sigmoid,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Sigmoid,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Transverse,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,colon,Colon_Transverse,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Gastroesophageal_Junction,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Gastroesophageal_Junction,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Mucosa,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Mucosa,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Muscularis,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,esophagus,Esophagus_Muscularis,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,fallopian tube,Fallopian_Tube,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,fallopian tube,Fallopian_Tube,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,heart muscle,Heart_Atrial_Appendage,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,heart muscle,Heart_Atrial_Appendage,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,heart muscle,Heart_Left_Ventricle,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,heart muscle,Heart_Left_Ventricle,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,hippocampal formation,Brain_Hippocampus,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,hippocampal formation,Brain_Hippocampus,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,hypothalamus,Brain_Hypothalamus,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,hypothalamus,Brain_Hypothalamus,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,kidney,Kidney_Cortex,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,kidney,Kidney_Cortex,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,kidney,Kidney_Medulla,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,kidney,Kidney_Medulla,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,liver,Liver,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,liver,Liver,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,lung,Lung,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,lung,Lung,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,midbrain,Brain_Substantia_nigra,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,midbrain,Brain_Substantia_nigra,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,ovary,Ovary,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,ovary,Ovary,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,pancreas,Pancreas,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,pancreas,Pancreas,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,peripheral nerve,Nerve_Tibial,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,peripheral nerve,Nerve_Tibial,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,pituitary gland,Pituitary,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,pituitary gland,Pituitary,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,prostate,Prostate,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,prostate,Prostate,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,salivary gland,Minor_Salivary_Gland,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,salivary gland,Minor_Salivary_Gland,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,skeletal muscle,Muscle_Skeletal,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,skeletal muscle,Muscle_Skeletal,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,skin,Skin_Not_Sun_Exposed_Suprapubic,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,skin,Skin_Not_Sun_Exposed_Suprapubic,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,skin,Skin_Sun_Exposed_Lower_leg,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,skin,Skin_Sun_Exposed_Lower_leg,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,small intestine,Small_Intestine_Terminal_Ileum,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,small intestine,Small_Intestine_Terminal_Ileum,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,spinal cord,Brain_Spinal_cord_cervical_c-1,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,spinal cord,Brain_Spinal_cord_cervical_c-1,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,spleen,Spleen,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,spleen,Spleen,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,stomach,Stomach,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,stomach,Stomach,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,testis,Testis,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,testis,Testis,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,thyroid gland,Thyroid,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,thyroid gland,Thyroid,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,urinary bladder,Bladder,bulk,Normal
+gtex_tissue_rna,gtex_tissue_rna:v11,urinary bladder,Bladder,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,uterus,Uterus,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,uterus,Uterus,bulk,Shared screen
+gtex_tissue_rna,gtex_tissue_rna:v11,vagina,Vagina,bulk,Reproductive context
+gtex_tissue_rna,gtex_tissue_rna:v11,vagina,Vagina,bulk,Shared screen
+hpa_brain,hpa_brain,amygdala,amygdala,,Shared screen
+hpa_brain,hpa_brain,amygdala,basal amygdala,,Shared screen
+hpa_brain,hpa_brain,amygdala,central amygdala,,Shared screen
+hpa_brain,hpa_brain,amygdala,corticomedial amygdala,,Shared screen
+hpa_brain,hpa_brain,amygdala,lateral amygdala,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,caudate nucleus,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,"globus pallidus, externus",,Shared screen
+hpa_brain,hpa_brain,basal ganglia,"globus pallidus, internus",,Shared screen
+hpa_brain,hpa_brain,basal ganglia,nucleus accumbens,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,nucleus basalis of Meynert,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,nucleus of the diagonal band,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,putamen,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,septal nuclei,,Shared screen
+hpa_brain,hpa_brain,basal ganglia,"stria terminalis, bed nucleus",,Shared screen
+hpa_brain,hpa_brain,cerebellum,cerebellar cortex,,Shared screen
+hpa_brain,hpa_brain,cerebellum,cerebellar nuclei,,Shared screen
+hpa_brain,hpa_brain,cerebellum,flocculonodular lobe,,Shared screen
+hpa_brain,hpa_brain,cerebellum,vermis,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,angular gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"anterior cingulate cortex, supragenual-dorsal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"anterior cingulate cortex, supragenual-ventral",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"anterior insular cortex, dorsal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"anterior insular cortex, ventral",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"area parastriata, inferior",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"area parastriata, parietal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"area parastriata, superior",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"area parastriata, temporal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,area striata,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,claustrum,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,frontal eye field,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,frontal operculum,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,fusiform gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"inferior frontal gyrus, opercular",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,inferior parietal lobule,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,inferior temporal gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,intraparietal deep sulcus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,lingual gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,middle cingulate cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,middle temporal gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,occipital cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,olfactory area,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,olfactory tubercle,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"orbitofrontal gyrus, anterior",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"paracentral lobule, anterior",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"paracentral lobule, posterior",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,parietal operculum,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,parieto-insular cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,parieto-occipital transitional area,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,piriform cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,postcentral gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"postcentral gyrus, dorsal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"postcentral gyrus, middle",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"postcentral gyrus, ventral",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,posterior cingulate cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"posterior cingulate cortex, dorsal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"posterior cingulate cortex, ventral",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,posterior insular cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,precentral gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"precentral gyrus, dorsal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"precentral gyrus, middle",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"precentral gyrus, ventral",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,precuneus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"premotor cortex, dorsal",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"premotor cortex, ventral",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,retrosplenial cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"subcentral gyrus, S2",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,superior parietal lobule,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,superior temporal gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,supplementary motor cortex,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,supramarginal gyrus,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,temporal pole,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"temporo-insular cortex, parainsular gyrus",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,temporo-occipital transitional zone,,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"transversal temporal gyrus, anterior",,Shared screen
+hpa_brain,hpa_brain,cerebral cortex,"transversal temporal gyrus, posterior",,Shared screen
+hpa_brain,hpa_brain,choroid plexus,choroid plexus,,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,dentate gyrus,,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,entorhinal gyrus,,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,hippocampus,,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,"hippocampus, CA1",,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,"hippocampus, CA2",,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,"hippocampus, CA3",,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,parahippocampal cortex,,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,perirhinal gyrus,,Shared screen
+hpa_brain,hpa_brain,hippocampal formation,subiculum,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,arcuate nucleus,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,dorsomedial nucleus,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,lateral hypothalamic area,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,mammillary body,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,paraventricular nucleus,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,preoptic area,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,supraoptic nucleus,,Shared screen
+hpa_brain,hpa_brain,hypothalamus,ventromedial nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,area postrema,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,dorsal medullary reticular nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,dorsal motor vagal complex,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,"gigantocellular reticular nuclei, medullary",,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,"gigantocellular reticular nuclei, pars",,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,inferior olive,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,lateral medullary reticular nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,medial olivary nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,medial vestibular nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,motor hypoglossal nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,nucleus ambiguus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,nucleus cuneatus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,nucleus gracilis,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,nucleus raphe obscurus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,nucleus raphe pallidus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,nucleus tractus solitarii,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,parvicellular reticular nuclei,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,"parvicellular reticular nuclei, medullary",,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,peritrigeminal nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,prepositus hypoglossal nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,"spinal trigeminal nucleus, caudal",,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,"spinal trigeminal nucleus, interpolar",,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,spinal vestibular nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,superior vestibular nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,ventral medullary reticular nucleus,,Shared screen
+hpa_brain,hpa_brain,medulla oblongata,"ventrolateral medulla, A1-C1 cell groups",,Shared screen
+hpa_brain,hpa_brain,midbrain,cuneiform nucleus,,Shared screen
+hpa_brain,hpa_brain,midbrain,dorsal raphe nucleus,,Shared screen
+hpa_brain,hpa_brain,midbrain,inferior colliculus,,Shared screen
+hpa_brain,hpa_brain,midbrain,median raphe nucleus,,Shared screen
+hpa_brain,hpa_brain,midbrain,"periaquaductal grey, anterior",,Shared screen
+hpa_brain,hpa_brain,midbrain,"periaquaductal grey, dorsal",,Shared screen
+hpa_brain,hpa_brain,midbrain,"periaquaductal grey, lateral",,Shared screen
+hpa_brain,hpa_brain,midbrain,pretectal area,,Shared screen
+hpa_brain,hpa_brain,midbrain,red nucleus,,Shared screen
+hpa_brain,hpa_brain,midbrain,substantia nigra,,Shared screen
+hpa_brain,hpa_brain,midbrain,superior colliculus,,Shared screen
+hpa_brain,hpa_brain,midbrain,ventral tegmental area,,Shared screen
+hpa_brain,hpa_brain,pons,Kolliker-Fuse nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,"anterior cochlear nucleus, ventral",,Shared screen
+hpa_brain,hpa_brain,pons,dorsal cochlear nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,dorsal tegmental nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,dorsolateral tegmental area,,Shared screen
+hpa_brain,hpa_brain,pons,lateral lemniscal nuclei,,Shared screen
+hpa_brain,hpa_brain,pons,lateral parabrachial nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,lateral vestibular nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,locus coeruleus,,Shared screen
+hpa_brain,hpa_brain,pons,medial parabrachial nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,medial periolivary nuclei,,Shared screen
+hpa_brain,hpa_brain,pons,motor facial nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,motor trigeminal nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,nuclei of the trapezoid body,,Shared screen
+hpa_brain,hpa_brain,pons,nucleus raphe magnus,,Shared screen
+hpa_brain,hpa_brain,pons,paramedian reticular nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,pedunculopontine tegmental nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,pontine nuclei,,Shared screen
+hpa_brain,hpa_brain,pons,pontine raphe nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,posteroventral cochlear nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,principal sensory trigeminal nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,"reticular pontine nucleus, caudal",,Shared screen
+hpa_brain,hpa_brain,pons,"reticular pontine nucleus, oral",,Shared screen
+hpa_brain,hpa_brain,pons,reticulotegmental nucleus,,Shared screen
+hpa_brain,hpa_brain,pons,"spinal trigeminal nucleus, oral",,Shared screen
+hpa_brain,hpa_brain,pons,subcoeruleus area,,Shared screen
+hpa_brain,hpa_brain,pons,superior olive,,Shared screen
+hpa_brain,hpa_brain,pons,ventral periolivary nuclei,,Shared screen
+hpa_brain,hpa_brain,pons,"ventrolateral tegmental area, A5 NE cell group",,Shared screen
+hpa_brain,hpa_brain,spinal cord,"cervical spinal cord, central gray",,Shared screen
+hpa_brain,hpa_brain,spinal cord,"cervical spinal cord, dorsal horn",,Shared screen
+hpa_brain,hpa_brain,spinal cord,"cervical spinal cord, ventral horn",,Shared screen
+hpa_brain,hpa_brain,thalamus,"anterior thalamic nucleus, ventral",,Shared screen
+hpa_brain,hpa_brain,thalamus,centromedial thalamic nucleus,,Shared screen
+hpa_brain,hpa_brain,thalamus,habenula,,Shared screen
+hpa_brain,hpa_brain,thalamus,lateral geniculate body,,Shared screen
+hpa_brain,hpa_brain,thalamus,lateral thalamic nuclei,,Shared screen
+hpa_brain,hpa_brain,thalamus,medial dorsal thalamic nucleus,,Shared screen
+hpa_brain,hpa_brain,thalamus,medial geniculate body,,Shared screen
+hpa_brain,hpa_brain,thalamus,nucleus reuniens,,Shared screen
+hpa_brain,hpa_brain,thalamus,nucleus rhomboideus,,Shared screen
+hpa_brain,hpa_brain,thalamus,posterior thalamic nucleus,,Shared screen
+hpa_brain,hpa_brain,thalamus,pulvinar,,Shared screen
+hpa_brain,hpa_brain,thalamus,subthalamic nucleus,,Shared screen
+hpa_brain,hpa_brain,thalamus,ventral posterolateral thalamic nucleus,,Shared screen
+hpa_brain,hpa_brain,thalamus,ventral posteromedial thalamic nucleus,,Shared screen
+hpa_brain,hpa_brain,thalamus,ventral thalamic nuclei,,Shared screen
+hpa_brain,hpa_brain,thalamus,zona incerta,,Shared screen
+hpa_brain,hpa_brain,white matter,angular gyrus (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,anterior funiculus (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,area striata (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,cerebellar white matter,,Shared screen
+hpa_brain,hpa_brain,white matter,"corpus callosum, genu (white matter)",,Shared screen
+hpa_brain,hpa_brain,white matter,"corpus callosum, splenium (white matter)",,Shared screen
+hpa_brain,hpa_brain,white matter,dorsal funiculus (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,lateral funiculus (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,occipital cortex (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,parahippocampal cortex (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,parieto-temporal junction (white matter),,Shared screen
+hpa_brain,hpa_brain,white matter,"somatomor cortex, precentral gyrus (white matter)",,Shared screen
+hpa_brain,hpa_brain,white matter,"somatosensory cortex, postcentral gyrus, ventral (white matter)",,Shared screen
+hpa_brain,hpa_brain,white matter,temporal white matter,,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,MAIT T-cell,MAIT T-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,NK-cell,NK-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,T-reg,T-reg,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,basophil,basophil,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,classical monocyte,classical monocyte,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,eosinophil,eosinophil,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,gdT-cell,gdT-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,gdt-cell,gdt-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,intermediate monocyte,intermediate monocyte,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,mait t-cell,mait t-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,memory B-cell,memory B-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,memory CD4 T-cell,memory CD4 T-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,memory CD8 T-cell,memory CD8 T-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,memory b-cell,memory b-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,memory cd4 t-cell,memory cd4 t-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,memory cd8 t-cell,memory cd8 t-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,myeloid DC,myeloid DC,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,myeloid dc,myeloid dc,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,naive B-cell,naive B-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,naive CD4 T-cell,naive CD4 T-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,naive CD8 T-cell,naive CD8 T-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,naive b-cell,naive b-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,naive cd4 t-cell,naive cd4 t-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,naive cd8 t-cell,naive cd8 t-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,neutrophil,neutrophil,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,nk-cell,nk-cell,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,non-classical monocyte,non-classical monocyte,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,plasmacytoid DC,plasmacytoid DC,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,plasmacytoid dc,plasmacytoid dc,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,t-reg,t-reg,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,total PBMC,total PBMC,Shared screen
+hpa_immune_cell,hpa_immune_cell,blood,total pbmc,total pbmc,Shared screen
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,MAIT T-cell,MAIT T-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,NK-cell,NK-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,T-reg,T-reg,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,basophil,basophil,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,classical monocyte,classical monocyte,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,eosinophil,eosinophil,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,gdT-cell,gdT-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,intermediate monocyte,intermediate monocyte,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,memory B-cell,memory B-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,memory CD4 T-cell,memory CD4 T-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,memory CD8 T-cell,memory CD8 T-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,myeloid DC,myeloid DC,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,naive B-cell,naive B-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,naive CD4 T-cell,naive CD4 T-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,naive CD8 T-cell,naive CD8 T-cell,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,neutrophil,neutrophil,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,non-classical monocyte,non-classical monocyte,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,plasmacytoid DC,plasmacytoid DC,Normal
+hpa_immune_cell_samples,hpa_immune_cell_samples:v23,blood,total PBMC,total PBMC,Normal
+hpa_immune_monaco,hpa_immune_monaco,blood,Central memory CD8 T-cell,Central memory CD8 T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Effector memory CD8 T-cell,Effector memory CD8 T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Exhausted memory B-cell,Exhausted memory B-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,MAIT T-cell,MAIT T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Memory CD4 T-cell TFH,Memory CD4 T-cell TFH,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Memory CD4 T-cell Th1,Memory CD4 T-cell Th1,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Memory CD4 T-cell Th1/Th17,Memory CD4 T-cell Th1/Th17,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Memory CD4 T-cell Th17,Memory CD4 T-cell Th17,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Memory CD4 T-cell Th2,Memory CD4 T-cell Th2,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,NK-cell,NK-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Non-Vd2 gdTCR,Non-Vd2 gdTCR,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Non-switched memory B-cell,Non-switched memory B-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Plasmablast,Plasmablast,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Progenitor cell,Progenitor cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Switched memory B-cell,Switched memory B-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,T-reg,T-reg,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Terminal effector memory CD4 T-cell,Terminal effector memory CD4 T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Terminal effector memory CD8 T-cell,Terminal effector memory CD8 T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,Vd2 gdTCR,Vd2 gdTCR,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,basophil,basophil,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,central memory cd8 t-cell,central memory cd8 t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,classical monocyte,classical monocyte,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,effector memory cd8 t-cell,effector memory cd8 t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,exhausted memory b-cell,exhausted memory b-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,intermediate monocyte,intermediate monocyte,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,mait t-cell,mait t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,memory cd4 t-cell tfh,memory cd4 t-cell tfh,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,memory cd4 t-cell th1,memory cd4 t-cell th1,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,memory cd4 t-cell th1/th17,memory cd4 t-cell th1/th17,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,memory cd4 t-cell th17,memory cd4 t-cell th17,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,memory cd4 t-cell th2,memory cd4 t-cell th2,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,myeloid DC,myeloid DC,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,myeloid dc,myeloid dc,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,naive B-cell,naive B-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,naive CD4 T-cell,naive CD4 T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,naive CD8 T-cell,naive CD8 T-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,naive b-cell,naive b-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,naive cd4 t-cell,naive cd4 t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,naive cd8 t-cell,naive cd8 t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,neutrophil,neutrophil,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,nk-cell,nk-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,non-classical monocyte,non-classical monocyte,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,non-switched memory b-cell,non-switched memory b-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,non-vd2 gdtcr,non-vd2 gdtcr,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,plasmablast,plasmablast,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,plasmacytoid DC,plasmacytoid DC,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,plasmacytoid dc,plasmacytoid dc,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,progenitor cell,progenitor cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,switched memory b-cell,switched memory b-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,t-reg,t-reg,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,terminal effector memory cd4 t-cell,terminal effector memory cd4 t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,terminal effector memory cd8 t-cell,terminal effector memory cd8 t-cell,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,total PBMC,total PBMC,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,total pbmc,total pbmc,Shared screen
+hpa_immune_monaco,hpa_immune_monaco,blood,vd2 gdtcr,vd2 gdtcr,Shared screen
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Central memory CD8 T-cell,Central memory CD8 T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Effector memory CD8 T-cell,Effector memory CD8 T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Exhausted memory B-cell,Exhausted memory B-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,MAIT T-cell,MAIT T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Memory CD4 T-cell TFH,Memory CD4 T-cell TFH,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Memory CD4 T-cell Th1,Memory CD4 T-cell Th1,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Memory CD4 T-cell Th1/Th17,Memory CD4 T-cell Th1/Th17,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Memory CD4 T-cell Th17,Memory CD4 T-cell Th17,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Memory CD4 T-cell Th2,Memory CD4 T-cell Th2,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,NK-cell,NK-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Non-Vd2 gdTCR,Non-Vd2 gdTCR,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Non-switched memory B-cell,Non-switched memory B-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Plasmablast,Plasmablast,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Progenitor cell,Progenitor cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Switched memory B-cell,Switched memory B-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,T-reg,T-reg,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Terminal effector memory CD4 T-cell,Terminal effector memory CD4 T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Terminal effector memory CD8 T-cell,Terminal effector memory CD8 T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,Vd2 gdTCR,Vd2 gdTCR,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,basophil,basophil,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,classical monocyte,classical monocyte,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,intermediate monocyte,intermediate monocyte,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,myeloid DC,myeloid DC,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,naive B-cell,naive B-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,naive CD4 T-cell,naive CD4 T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,naive CD8 T-cell,naive CD8 T-cell,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,neutrophil,neutrophil,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,non-classical monocyte,non-classical monocyte,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,plasmacytoid DC,plasmacytoid DC,Normal
+hpa_immune_monaco,hpa_immune_monaco:v23,blood,total PBMC,total PBMC,Normal
+hpa_rna_consensus,hpa_rna_consensus:v23,adipose tissue,adipose tissue,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,adrenal gland,adrenal gland,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,amygdala,amygdala,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,appendix,appendix,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,basal ganglia,basal ganglia,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,bone marrow,bone marrow,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,breast,breast,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,cerebellum,cerebellum,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,cerebral cortex,cerebral cortex,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,cervix,cervix,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,choroid plexus,choroid plexus,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,colon,colon,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,duodenum,duodenum,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,endometrium,endometrium,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,epididymis,epididymis,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,esophagus,esophagus,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,fallopian tube,fallopian tube,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,gallbladder,gallbladder,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,heart muscle,heart muscle,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,hippocampal formation,hippocampal formation,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,hypothalamus,hypothalamus,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,kidney,kidney,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,liver,liver,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,lung,lung,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,lymph node,lymph node,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,midbrain,midbrain,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,ovary,ovary,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,pancreas,pancreas,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,parathyroid gland,parathyroid gland,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,pituitary gland,pituitary gland,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,placenta,placenta,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,prostate,prostate,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,rectum,rectum,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,retina,retina,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,salivary gland,salivary gland,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,seminal vesicle,seminal vesicle,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,skeletal muscle,skeletal muscle,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,skin,skin,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,small intestine,small intestine,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,smooth muscle,smooth muscle,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,spinal cord,spinal cord,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,spleen,spleen,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,stomach,stomach,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,testis,testis,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,thymus,thymus,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,thyroid gland,thyroid gland,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,tongue,tongue,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,tonsil,tonsil,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,urinary bladder,urinary bladder,,Shared screen
+hpa_rna_consensus,hpa_rna_consensus:v23,vagina,vagina,,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,adipocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,dendritic cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,monocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,nk-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,schwann cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,adipose tissue,adipose tissue,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bone marrow,bone marrow,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bone marrow,bone marrow,erythroid cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bone marrow,bone marrow,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bone marrow,bone marrow,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bone marrow,bone marrow,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,brain,brain,astrocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,brain,brain,excitatory neurons,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,brain,brain,inhibitory neurons,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,brain,brain,microglial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,brain,brain,oligodendrocyte precursor cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,brain,brain,oligodendrocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,adipocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,breast glandular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,breast myoepithelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,breast,breast,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bronchus,bronchus,basal respiratory cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bronchus,bronchus,ciliated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bronchus,bronchus,club cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bronchus,bronchus,ionocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,bronchus,bronchus,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,colon,colon,distal enterocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,colon,colon,enteroendocrine cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,colon,colon,intestinal goblet cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,colon,colon,paneth cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,colon,colon,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,colon,colon,undifferentiated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,ciliated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,endometrial stromal cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,glandular and luminal cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,endometrium,endometrium,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,basal squamous epithelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,schwann cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,squamous epithelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,esophagus,esophagus,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,eye,eye,bipolar cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,eye,eye,cone photoreceptor cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,eye,eye,horizontal cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,eye,eye,muller glia cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,eye,eye,rod photoreceptor cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,ciliated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,granulocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,lymphatic endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,neutrophils,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,secretory cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,fallopian tube,fallopian tube,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,heart muscle,heart muscle,cardiomyocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,heart muscle,heart muscle,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,heart muscle,heart muscle,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,heart muscle,heart muscle,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,kidney,kidney,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,kidney,kidney,collecting duct cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,kidney,kidney,distal tubular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,kidney,kidney,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,kidney,kidney,proximal tubular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,kidney,kidney,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,cholangiocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,erythroid cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,hepatocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,kupffer cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,liver,liver,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,alveolar cells type 1,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,alveolar cells type 2,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,ciliated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,club cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,granulocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lung,lung,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lymph node,lymph node,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lymph node,lymph node,mixed cell types,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,lymph node,lymph node,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,granulosa cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,lymphatic endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,mixed immune cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,oocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,ovarian stromal cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,ovary,ovary,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,ductal cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,exocrine glandular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,mixed cell types,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,mixed immune cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pancreas,pancreas,pancreatic endocrine cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,dendritic cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,monocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,nk-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,platelets,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,pbmc,pbmc,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,cytotrophoblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,extravillous trophoblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,hofbauer cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,mixed immune cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,syncytiotrophoblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,placenta,placenta,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,basal prostatic cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,club cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,mixed cell types,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,prostatic glandular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,prostate,prostate,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,rectum,rectum,distal enterocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,rectum,rectum,enteroendocrine cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,rectum,rectum,intestinal goblet cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,rectum,rectum,mixed immune cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,rectum,rectum,paneth cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,rectum,rectum,undifferentiated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,mixed immune cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,mucus glandular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,salivary duct cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,serous glandular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,salivary gland,salivary gland,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,mixed cell types,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,skeletal myocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skeletal muscle,skeletal muscle,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,basal keratinocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,granulocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,langerhans cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,melanocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,suprabasal keratinocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,skin,skin,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,small intestine,small intestine,enteroendocrine cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,small intestine,small intestine,intestinal goblet cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,small intestine,small intestine,mixed immune cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,small intestine,small intestine,paneth cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,small intestine,small intestine,proximal enterocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,small intestine,small intestine,undifferentiated cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,spleen,spleen,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,spleen,spleen,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,spleen,spleen,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,spleen,spleen,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,stomach,stomach,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,stomach,stomach,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,stomach,stomach,gastric mucus-secreting cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,stomach,stomach,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,stomach,stomach,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,stomach,stomach,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,early spermatids,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,late spermatids,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,leydig cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,peritubular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,sertoli cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,spermatocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,testis,testis,spermatogonia,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,b-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,mesothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,plasma cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,thymus,thymus,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,basal keratinocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,granulocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,serous glandular cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,suprabasal keratinocytes,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,tongue,tongue,t-cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,vascular,vascular,endothelial cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,vascular,vascular,fibroblasts,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,vascular,vascular,macrophages,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,vascular,vascular,schwann cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,vascular,vascular,smooth muscle cells,Shared screen
+hpa_single_cell_tissue,hpa_single_cell_tissue:v23,vascular,vascular,t-cells,Shared screen
+hpa_tissue_samples,hpa_tissue_samples:v23,adipose tissue,adipose tissue,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,adrenal gland,adrenal gland,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,appendix,appendix,bulk,Disposable
+hpa_tissue_samples,hpa_tissue_samples:v23,bone marrow,bone marrow,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,breast,breast.373,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,breast,breast.390,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,breast,breast.405,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,breast,breast.410,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,cerebral cortex,cerebral cortex,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,cervix,cervix.374,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,cervix,cervix.383,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,choroid plexus,choroid plexus,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,colon,colon,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,duodenum,duodenum,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,endometrium,endometrium.113,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,endometrium,endometrium.114,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,endometrium,endometrium.268,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,endometrium,endometrium.297,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,endometrium,endometrium.301,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,epididymis,epididymis.407,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,esophagus,esophagus,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,fallopian tube,fallopian tube.136,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,fallopian tube,fallopian tube.304,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,fallopian tube,fallopian tube.305,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,fallopian tube,fallopian tube.306,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,fallopian tube,fallopian tube.307,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,gallbladder,gallbladder,bulk,Disposable
+hpa_tissue_samples,hpa_tissue_samples:v23,heart muscle,heart muscle,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,kidney,kidney,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,liver,liver,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,lung,lung,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,lymph node,lymph node,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.192,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.193,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.308,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.3662,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.3663,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.3664,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,ovary,ovary.3665,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,pancreas,pancreas,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,parathyroid gland,parathyroid gland,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.200,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.202,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.203,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.204,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.375,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.385,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.398,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,placenta,placenta.413,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.205,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.206,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.207,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.361,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.364,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.365,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.388,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.412,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,prostate,prostate.59,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,rectum,rectum,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,salivary gland,salivary gland,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,seminal vesicle,seminal vesicle.386,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,seminal vesicle,seminal vesicle.404,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,seminal vesicle,seminal vesicle.409,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,skeletal muscle,skeletal muscle,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,skin,skin,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,small intestine,small intestine,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,smooth muscle,smooth muscle,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,spleen,spleen,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,stomach,stomach,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.244,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.278,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.279,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.280,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.281,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.282,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.283,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.349,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.354,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,testis,testis.371,bulk,RA witness
+hpa_tissue_samples,hpa_tissue_samples:v23,thymus,thymus,bulk,Thymic
+hpa_tissue_samples,hpa_tissue_samples:v23,thyroid gland,thyroid gland,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,tongue,tongue,bulk,Normal
+hpa_tissue_samples,hpa_tissue_samples:v23,tonsil,tonsil,bulk,Disposable
+hpa_tissue_samples,hpa_tissue_samples:v23,urinary bladder,urinary bladder,bulk,Normal
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,3 day / unspecified lineage,3 day / unspecified lineage,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,4 day / unspecified lineage,4 day / unspecified lineage,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,5 day / epiblast,5 day / epiblast,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,5 day / primitive endoderm,5 day / primitive endoderm,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,5 day / trophectoderm,5 day / trophectoderm,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,5 day / unspecified lineage,5 day / unspecified lineage,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,6 day / epiblast,6 day / epiblast,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,6 day / primitive endoderm,6 day / primitive endoderm,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,6 day / trophectoderm,6 day / trophectoderm,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,7 day / epiblast,7 day / epiblast,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,7 day / primitive endoderm,7 day / primitive endoderm,RA witness
+petropoulos_E-MTAB-3929,petropoulos_E-MTAB-3929,embryo,7 day / trophectoderm,7 day / trophectoderm,RA witness
+rna_brain_gtex,rna_brain_gtex:v23,amygdala,amygdala,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,basal ganglia,basal ganglia,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,cerebellum,cerebellum,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,cerebral cortex,cerebral cortex,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,hippocampal formation,hippocampal formation,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,hypothalamus,hypothalamus,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,midbrain,midbrain,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,pituitary gland,pituitary gland,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,retina,retina,bulk,Normal
+rna_brain_gtex,rna_brain_gtex:v23,spinal cord,spinal cord,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,amygdala,amygdala,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,amygdala,basal amygdala,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,amygdala,central amygdala,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,amygdala,corticomedial amygdala,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,amygdala,lateral amygdala,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,caudate nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,"globus pallidus, externus",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,"globus pallidus, internus",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,nucleus accumbens,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,nucleus basalis of Meynert,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,nucleus of the diagonal band,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,putamen,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,septal nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,basal ganglia,"stria terminalis, bed nucleus",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebellum,cerebellar cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebellum,cerebellar nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebellum,flocculonodular lobe,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebellum,vermis,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,angular gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"anterior cingulate cortex, supragenual-dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"anterior cingulate cortex, supragenual-ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"anterior insular cortex, dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"anterior insular cortex, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"area parastriata, inferior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"area parastriata, parietal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"area parastriata, superior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"area parastriata, temporal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,area striata,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,claustrum,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,frontal eye field,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,frontal operculum,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,fusiform gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"inferior frontal gyrus, opercular",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,inferior parietal lobule,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,inferior temporal gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,intraparietal deep sulcus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,lingual gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,middle cingulate cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,middle temporal gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,occipital cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,olfactory area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,olfactory tubercle,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"orbitofrontal gyrus, anterior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"paracentral lobule, anterior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"paracentral lobule, posterior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,parietal operculum,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,parieto-insular cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,parieto-occipital transitional area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,piriform cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,postcentral gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"postcentral gyrus, dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"postcentral gyrus, middle",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"postcentral gyrus, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,posterior cingulate cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"posterior cingulate cortex, dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"posterior cingulate cortex, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,posterior insular cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,precentral gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"precentral gyrus, dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"precentral gyrus, middle",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"precentral gyrus, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,precuneus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"premotor cortex, dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"premotor cortex, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,retrosplenial cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"subcentral gyrus, S2",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,superior parietal lobule,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,superior temporal gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,supplementary motor cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,supramarginal gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,temporal pole,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"temporo-insular cortex, parainsular gyrus",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,temporo-occipital transitional zone,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"transversal temporal gyrus, anterior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,cerebral cortex,"transversal temporal gyrus, posterior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,choroid plexus,choroid plexus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,dentate gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,entorhinal gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,hippocampus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,"hippocampus, CA1",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,"hippocampus, CA2",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,"hippocampus, CA3",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,parahippocampal cortex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,perirhinal gyrus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hippocampal formation,subiculum,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,arcuate nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,dorsomedial nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,lateral hypothalamic area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,mammillary body,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,paraventricular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,preoptic area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,supraoptic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,hypothalamus,ventromedial nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,area postrema,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,dorsal medullary reticular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,dorsal motor vagal complex,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,"gigantocellular reticular nuclei, medullary",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,"gigantocellular reticular nuclei, pars",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,inferior olive,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,lateral medullary reticular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,medial olivary nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,medial vestibular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,motor hypoglossal nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,nucleus ambiguus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,nucleus cuneatus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,nucleus gracilis,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,nucleus raphe obscurus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,nucleus raphe pallidus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,nucleus tractus solitarii,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,parvicellular reticular nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,"parvicellular reticular nuclei, medullary",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,peritrigeminal nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,prepositus hypoglossal nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,"spinal trigeminal nucleus, caudal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,"spinal trigeminal nucleus, interpolar",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,spinal vestibular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,superior vestibular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,ventral medullary reticular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,medulla oblongata,"ventrolateral medulla, A1-C1 cell groups",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,cuneiform nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,dorsal raphe nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,inferior colliculus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,median raphe nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,"periaquaductal grey, anterior",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,"periaquaductal grey, dorsal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,"periaquaductal grey, lateral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,pretectal area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,red nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,substantia nigra,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,superior colliculus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,midbrain,ventral tegmental area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,Kolliker-Fuse nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,"anterior cochlear nucleus, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,dorsal cochlear nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,dorsal tegmental nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,dorsolateral tegmental area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,lateral lemniscal nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,lateral parabrachial nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,lateral vestibular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,locus coeruleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,medial parabrachial nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,medial periolivary nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,motor facial nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,motor trigeminal nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,nuclei of the trapezoid body,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,nucleus raphe magnus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,paramedian reticular nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,pedunculopontine tegmental nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,pontine nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,pontine raphe nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,posteroventral cochlear nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,principal sensory trigeminal nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,"reticular pontine nucleus, caudal",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,"reticular pontine nucleus, oral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,reticulotegmental nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,"spinal trigeminal nucleus, oral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,subcoeruleus area,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,superior olive,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,ventral periolivary nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,pons,"ventrolateral tegmental area, A5 NE cell group",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,spinal cord,"cervical spinal cord, central gray",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,spinal cord,"cervical spinal cord, dorsal horn",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,spinal cord,"cervical spinal cord, ventral horn",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,"anterior thalamic nucleus, ventral",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,centromedial thalamic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,habenula,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,lateral geniculate body,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,lateral thalamic nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,medial dorsal thalamic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,medial geniculate body,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,nucleus reuniens,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,nucleus rhomboideus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,posterior thalamic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,pulvinar,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,subthalamic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,ventral posterolateral thalamic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,ventral posteromedial thalamic nucleus,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,ventral thalamic nuclei,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,thalamus,zona incerta,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,angular gyrus (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,anterior funiculus (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,area striata (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,cerebellar white matter,bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,"corpus callosum, genu (white matter)",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,"corpus callosum, splenium (white matter)",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,dorsal funiculus (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,lateral funiculus (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,occipital cortex (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,parahippocampal cortex (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,parieto-temporal junction (white matter),bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,"somatomor cortex, precentral gyrus (white matter)",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,"somatosensory cortex, postcentral gyrus, ventral (white matter)",bulk,Normal
+rna_brain_hpa,rna_brain_hpa:v23,white matter,temporal white matter,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,adipose tissue,adipose tissue,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,adrenal gland,adrenal gland,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,amygdala,amygdala,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,basal ganglia,nucleus accumbens,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,basal ganglia,putamen,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,breast,breast,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,caudate,caudate,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,cerebellum,cerebellum,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,cerebral cortex,cerebral cortex,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,cervix,cervix,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,colon,colon,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,endometrium,endometrium,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,esophagus,esophagus,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,fallopian tube,fallopian tube,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,heart muscle,heart muscle,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,hippocampus,hippocampus,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,hypothalamus,hypothalamus,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,kidney,kidney,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,liver,liver,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,lung,lung,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,ovary,ovary,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,pancreas,pancreas,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,pituitary gland,pituitary gland,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,prostate,prostate,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,retina,retina,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,salivary gland,salivary gland,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,skeletal muscle,skeletal muscle,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,skin,skin,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,small intestine,small intestine,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,spinal cord,spinal cord,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,spleen,spleen,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,stomach,stomach,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,substantia nigra,substantia nigra,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,testis,testis,bulk,Reproductive context
+rna_tissue_gtex,rna_tissue_gtex:v23,thyroid gland,thyroid gland,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,urinary bladder,urinary bladder,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,vagina,vagina,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,adipose tissue,adipose tissue,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,adrenal gland,adrenal gland,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,appendix,appendix,bulk,Disposable
+rna_tissue_hpa,rna_tissue_hpa:v23,bone marrow,bone marrow,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,breast,breast,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,cerebral cortex,cerebral cortex,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,cervix,cervix,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,choroid plexus,choroid plexus,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,colon,colon,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,duodenum,duodenum,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,endometrium,endometrium,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,epididymis,epididymis,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,esophagus,esophagus,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,fallopian tube,fallopian tube,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,gallbladder,gallbladder,bulk,Disposable
+rna_tissue_hpa,rna_tissue_hpa:v23,heart muscle,heart muscle,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,kidney,kidney,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,liver,liver,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,lung,lung,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,lymph node,lymph node,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,ovary,ovary,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,pancreas,pancreas,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,parathyroid gland,parathyroid gland,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,placenta,placenta,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,prostate,prostate,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,rectum,rectum,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,salivary gland,salivary gland,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,seminal vesicle,seminal vesicle,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,skeletal muscle,skeletal muscle,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,skin,skin,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,small intestine,small intestine,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,smooth muscle,smooth muscle,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,spleen,spleen,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,stomach,stomach,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,testis,testis,bulk,Reproductive context
+rna_tissue_hpa,rna_tissue_hpa:v23,thymus,thymus,bulk,Thymic
+rna_tissue_hpa,rna_tissue_hpa:v23,thyroid gland,thyroid gland,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,tongue,tongue,bulk,Normal
+rna_tissue_hpa,rna_tissue_hpa:v23,tonsil,tonsil,bulk,Disposable
+rna_tissue_hpa,rna_tissue_hpa:v23,urinary bladder,urinary bladder,bulk,Normal
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / advanced mesoderm,Carnegie stage 7 / advanced mesoderm,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / axial mesoderm,Carnegie stage 7 / axial mesoderm,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / ectodermal cell,Carnegie stage 7 / ectodermal cell,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / emergent mesoderm,Carnegie stage 7 / emergent mesoderm,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / endodermal cell,Carnegie stage 7 / endodermal cell,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / epiblast cell,Carnegie stage 7 / epiblast cell,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / erythrocyte,Carnegie stage 7 / erythrocyte,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / hemogenic endothelial progenitor,Carnegie stage 7 / hemogenic endothelial progenitor,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / nascent mesoderm,Carnegie stage 7 / nascent mesoderm,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / primitive streak,Carnegie stage 7 / primitive streak,RA witness
+tyser_E-MTAB-9388,tyser_E-MTAB-9388,embryo,Carnegie stage 7 / yolk sac mesoderm,Carnegie stage 7 / yolk sac mesoderm,RA witness

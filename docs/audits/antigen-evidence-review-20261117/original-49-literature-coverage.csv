@@ -1,6 +1,6 @@
 entity_id,protein_group_label,all_curated_sources,coverage_eligible_sources,counted_tumor_support_sources,reproductive_sources,source_ids
 PEG:fc07fc97ea162202bc26,ANTXRL,1,1,0,1,"[""10.1038/s41467-021-22695-y""]"
-PEG:850fdd96c5da06df3e19,CER1,2,2,0,1,"[""10.1006/geno.1998.5671"", ""10.3390/cells9020509""]"
+PEG:850fdd96c5da06df3e19,CER1,3,3,0,2,"[""10.1006/geno.1998.5671"", ""10.1038/s41467-021-23758-w"", ""10.3390/cells9020509""]"
 PEG:31c0e7ae49ba8a3975db,CIROP,1,1,0,1,"[""10.1038/s41588-021-00970-4""]"
 PEG:db99ef5b43a7c07dff3e,CST11,1,1,0,1,"[""10.1210/endo.143.7.8925""]"
 PEG:600c83d1025a1092f9fd,DEFB112,1,1,0,0,"[""10.18632/oncotarget.21715""]"

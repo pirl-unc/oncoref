@@ -368,7 +368,7 @@ a protein into or out of Other or Unsafe.
 
 **One cancer rule.** A protein is a Cancer Antigen when one tumor sample, from any
 QC-passing comparable TPM cohort including germ cell tumors, is at least 10 times its highest
-non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
+non-thymic, non-reproductive normal value (normal tissue, immune cells and Disposable tissue; values
 below 1 TPM count as 1). The {len(antigens)} Cancer Antigens: {fold_text}.
 {int(antigens.samples_at_tenfold.eq(1).sum())} have exactly one qualifying sample;
 {int(antigens.independent_patients_at_tenfold.ge(2).sum())} have qualifying samples from
@@ -400,8 +400,7 @@ layer 3 has tightened Cancer Antigens.
 ## 4. Filter modes and host toxicity profiles
 
 `all` → `loose` → `standard` → `strict`: each mode keeps a subset of the one before.
-Every mode keeps the positive controls {", ".join(tf.POSITIVE_CONTROLS)}; a test fails
-if a change to a mode drops one.
+The reference proteins {", ".join(tf.POSITIVE_CONTROLS)} pass through the same thresholds as every other protein.
 
 {md(modes)}
 
@@ -475,9 +474,7 @@ finding that falls short of the rubric, a family rule, or the nose and skin refe
 
 {md(tier_rows)}
 
-Family rules. A member whose family's home is a tissue no panel resolves, and that has
-no reproductive evidence, is Other:Unscreened tissue in the catalog; the rows count the members
-that remain candidates:
+Insufficient coverage of a recorded family home blocks CA membership. Members with qualifying reproductive evidence can enter RA. The table counts members that remain candidates.
 
 {md(family_rows)}
 

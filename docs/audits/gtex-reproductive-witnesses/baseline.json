@@ -1,0 +1,7 @@
+{
+  "commit": "39b228806dad11122557dcbbf1827c3ced2bde1e",
+  "source": "oncoref/data/target-selection.csv.gz",
+  "source_sha256": "b38716d7e9b7d69bc427ec0d63c74a3ba80651058b654fe068cb7abc8a45ffb2",
+  "projection": "pre-gtex-catalog.csv.gz",
+  "projection_sha256": "07a1e3aa39adcb0d2f5276079998f07dd8d862b2fa81f77b9a7f56c8fb64ebd2"
+}

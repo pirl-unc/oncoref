@@ -1,3 +1,4 @@
+import hashlib
 import json
 from types import SimpleNamespace
 
@@ -32,6 +33,10 @@ def test_sequences_include_every_annotated_translation_and_report_gaps(monkeypat
         lambda group: pd.DataFrame(
             {
                 "entity_id": ["p1", "p2"],
+                "representative_sequence_sha256s": [
+                    json.dumps([hashlib.sha256(b"ACDEFGHIK").hexdigest()]),
+                    "[]",
+                ],
                 "member_gene_ids": ['["g1"]', '["g2"]'],
             }
         ),
@@ -48,6 +53,7 @@ def test_sequences_include_every_annotated_translation_and_report_gaps(monkeypat
         gene_by_id=lambda gene: SimpleNamespace(transcripts=transcripts if gene == "g1" else []),
     )
     result = antigen_sets.sequences("Unsafe", genome=genome)
+    assert result.matches_representative_sequence.tolist() == [True, True, False]
     assert list(result.transcript_id) == ["t1", "t2", "t3"]
     assert set(result.transcript_biotype) == {
         "protein_coding",

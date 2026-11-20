@@ -1,5 +1,8 @@
 # Antigen sets and peptide subtraction
 
+Sequence rows cover all annotated translations of selected member loci. Use `matches_representative_sequence` for exact amino-acid matches to a catalog representative. A custom selection that omits reference hashes yields a missing match value. Tumor RNA measurements are at locus or group resolution.
+
+
 `antigen_sets` reads the current catalog. CTA is CA ∩ RA; CA includes cancer-only
 proteins and CTA, RA includes reproductive-only proteins and CTA, and `CA|RA`
 returns **candidate antigen proteins**. The union name describes a research

@@ -316,11 +316,11 @@ the first three rows.</p>
 
 <h2>2. Catalog funnel</h2>
 <p>How {total:,} proteins become {len(candidates)} candidates. Each step removes proteins into the category shown.
-A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM cohort, at 10 × every non-reproductive normal value.</p>
+A Cancer Antigen needs one QC-passing tumor sample, from any comparable TPM cohort, at 10 × every non-thymic, non-reproductive normal value.</p>
 {table(["Step", "Removed into", "Removed", "Remaining", ""], funnel_rows, numeric=(2, 3))}
 
 <h2>3. Filter modes and host toxicity profiles</h2>
-<p>Each mode keeps a subset of the one before. Every mode keeps {", ".join(tf.POSITIVE_CONTROLS)}.
+<p>Each mode keeps a subset of the one before. Reference proteins {", ".join(tf.POSITIVE_CONTROLS)} follow the same thresholds.
 Categories are the ones after the fold knob has tightened Cancer Antigens.</p>
 {table(["Filter mode", "Kept", *CATEGORIES[:3], ""], mode_rows, numeric=(1, 2, 3, 4))}
 <h3>Host anatomy and tissue-tolerance profiles</h3>
@@ -344,7 +344,7 @@ only the filters act on the tier.</p>
 <h3>What the curation filter layer removes</h3>
 {table(["Recorded tier", "Candidates", "Tissues", "Removed in"], tier_rows, numeric=(1,))}
 <h3>Family rules</h3>
-<p>A family member without reproductive evidence is Other:Unscreened tissue in the catalog when the family's home is a tissue no panel resolves. The counts are the members that remain candidates.</p>
+<p>Insufficient coverage of a family’s home tissue blocks CA membership. A qualifying reproductive witness can still establish RA membership. The counts are the members that remain candidates.</p>
 {table(["Family", "Candidates", "Tissue", "Tier", "Sources"], family_rows, numeric=(1,))}
 <h3>Tissues added to the tissue-tier registry</h3>
 <p>Written from abstracts on 2026-11-12. Olfactory epithelium moved to Manageable on 2026-11-15 on the

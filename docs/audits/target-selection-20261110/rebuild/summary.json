@@ -1,54 +1,54 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-18.1",
+  "policy_id": "oncoref.target-selection.2026-11-19.4",
   "proteins": 19893,
   "categories": {
-    "Unsafe": 18253,
-    "Other": 1131,
-    "CTA": 303,
-    "Cancer Antigen only": 106,
-    "Reproductive Antigen only": 100
+    "Unsafe": 18250,
+    "Other": 1118,
+    "CTA": 327,
+    "Reproductive Antigen only": 128,
+    "Cancer Antigen only": 70
   },
   "classifications": {
-    "Unsafe": 18253,
-    "Other:Review": 731,
-    "CTA": 303,
-    "Other:Expression": 254,
-    "Cancer Antigen only": 106,
-    "Reproductive Antigen only": 100,
-    "Other:Unscreened tissue": 98,
+    "Unsafe": 18250,
+    "Other:Review": 734,
+    "CTA": 327,
+    "Other:Expression": 248,
+    "Reproductive Antigen only": 128,
+    "Other:Unscreened tissue": 88,
+    "Cancer Antigen only": 70,
     "Other:Sequence": 48
   },
   "memberships": {
-    "is_cancer_antigen": 409,
-    "is_reproductive_antigen": 403,
-    "is_cta": 303,
-    "is_target_candidate": 509
+    "is_cancer_antigen": 397,
+    "is_reproductive_antigen": 455,
+    "is_cta": 327,
+    "is_target_candidate": 525
   },
   "cta_tiers": {
-    "core": 270,
-    "extended_only": 24,
-    "core_with_extended_exposure": 9
+    "core": 206,
+    "core_with_extended_exposure": 100,
+    "extended_only": 21
   },
   "changes": [
     {
       "released_category": "CTA",
       "category": "CTA",
-      "proteins": 288
+      "proteins": 309
     },
     {
       "released_category": "CTA",
       "category": "Cancer Antigen only",
-      "proteins": 57
+      "proteins": 33
     },
     {
       "released_category": "CTA",
       "category": "Other",
-      "proteins": 119
+      "proteins": 98
     },
     {
       "released_category": "CTA",
       "category": "Reproductive Antigen only",
-      "proteins": 94
+      "proteins": 118
     },
     {
       "released_category": "CTA",
@@ -58,22 +58,22 @@
     {
       "released_category": "Other",
       "category": "CTA",
-      "proteins": 3
+      "proteins": 6
     },
     {
       "released_category": "Other",
       "category": "Cancer Antigen only",
-      "proteins": 48
+      "proteins": 37
     },
     {
       "released_category": "Other",
       "category": "Other",
-      "proteins": 943
+      "proteins": 948
     },
     {
       "released_category": "Other",
       "category": "Reproductive Antigen only",
-      "proteins": 2
+      "proteins": 5
     },
     {
       "released_category": "Other",
@@ -87,29 +87,24 @@
     },
     {
       "released_category": "Unsafe",
-      "category": "Cancer Antigen only",
-      "proteins": 1
-    },
-    {
-      "released_category": "Unsafe",
       "category": "Other",
-      "proteins": 69
+      "proteins": 72
     },
     {
       "released_category": "Unsafe",
       "category": "Reproductive Antigen only",
-      "proteins": 4
+      "proteins": 5
     },
     {
       "released_category": "Unsafe",
       "category": "Unsafe",
-      "proteins": 18173
+      "proteins": 18170
     }
   ],
-  "shared_eligible": 846,
-  "assessed_for_cancer_evidence": 918,
+  "shared_eligible": 841,
+  "assessed_for_cancer_evidence": 921,
   "unsafe_changes": {
-    "released_unsafe_now_other": 86,
+    "released_unsafe_now_other": 89,
     "newly_unsafe": 80
   },
   "rare_cell": {
@@ -122,8 +117,8 @@
       "dismissed": 7
     },
     "action": {
-      "none": 19504,
-      "review": 260,
+      "none": 19501,
+      "review": 263,
       "unsafe": 129
     },
     "legacy_flag_unassessed": 0
@@ -135,9 +130,9 @@
     "confirm_detection": 2
   },
   "expression_bounds": {
-    "unassessed": 18975,
-    "pass": 902,
-    "fail": 16
+    "unassessed": 18972,
+    "pass": 899,
+    "fail": 22
   },
   "comparison_required_contexts": [
     "adipose tissue",
@@ -172,20 +167,19 @@
     "spinal cord",
     "spleen",
     "stomach",
-    "thymus",
     "thyroid gland",
     "tongue",
     "urinary bladder"
   ],
   "assessed_cancer_statuses": {
-    "qualifies": 541,
-    "does_not_qualify": 377
+    "qualifies": 527,
+    "does_not_qualify": 394
   },
   "published_nomination_by_category": {
-    "CTA": 227,
-    "Cancer Antigen only": 51,
-    "Other": 130,
-    "Reproductive Antigen only": 64,
-    "Unsafe": 1761
+    "CTA": 252,
+    "Cancer Antigen only": 27,
+    "Other": 118,
+    "Reproductive Antigen only": 77,
+    "Unsafe": 1759
   }
 }

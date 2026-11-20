@@ -79,7 +79,7 @@ _BUNDLE_DESCRIPTIONS = {
 
 @dataclass(frozen=True)
 class Dataset:
-    """Dataset name, storage kind (bundle, hpa, reference or wheel), and description."""
+    """Dataset name, storage kind (bundle, hpa, reference, source or wheel), and description."""
 
     name: str
     kind: str
@@ -116,12 +116,29 @@ def _by_name() -> dict[str, Dataset]:
 
 def dataset(name: str) -> Dataset:
     """The :class:`Dataset` for ``name``; raises ``KeyError`` if unknown."""
+    if name.startswith(_PER_SAMPLE):
+        try:
+            info = source_matrices.cohort_info(name[len(_PER_SAMPLE) :])
+        except source_matrices.SourceMatrixError as exc:
+            raise KeyError(name) from exc
+        return Dataset(
+            name,
+            "source",
+            f"Per-sample expression matrix for {info['cancer_code']} from {info['source_cohort']}",
+        )
     # Inventory names omit .csv for legacy bundle tables. Accept those stable
     # names as well as the concrete artifact names used by the cache backend.
     name = {p.removesuffix(".csv"): p for p in data_bundle.DOWNLOADABLE_PATHS}.get(name, name)
     wheel = {**data_manifest.WHEEL, **data_manifest.CANCERDATA_ORIGINATED}
     if name in wheel and name not in _by_name():
         return Dataset(name, "wheel", wheel[name][1])
+    # Accept an exact shipped filename, including metadata alongside a like-named table.
+    if (
+        name not in _by_name()
+        and Path(name).name == name
+        and (Path(__file__).parent / "data" / name).is_file()
+    ):
+        return Dataset(name, "wheel", "Packaged OncoRef data file")
     try:
         return _by_name()[name]
     except KeyError:
@@ -246,9 +263,14 @@ def _wheel_path(name: str) -> Path:
         *(root / (name + suffix) for suffix in (".csv", ".csv.gz", ".json", ".yaml", ".yml")),
     ]
     matches = [path for path in candidates if path.is_file()]
-    if len(matches) != 1:
-        raise FileNotFoundError(f"Expected one packaged artifact for {name!r}, found {matches}")
-    return matches[0]
+    if not matches:
+        raise FileNotFoundError(f"No packaged artifact for {name!r}")
+    if len(matches) == 1:
+        return matches[0]
+    tables = [path for path in matches if path.name.endswith((".csv", ".csv.gz"))]
+    if len(matches) == 2 and len(tables) == 1 and root / (name + ".json") in matches:
+        return tables[0]
+    raise ValueError(f"Ambiguous packaged artifact {name!r}. Use an exact filename.")
 
 
 def provenance(
@@ -764,3 +786,29 @@ def status(
             }
         )
     return rows
+
+
+def read_table(name: str, version: str | None = None, **options):
+    """Open a catalog table with native units and columns; pass pandas reader options.
+
+    GCT metadata lines are skipped. Excel defaults to the first sheet. For compound
+    archives, specialized assay formats and documents, ensure() returns the complete file.
+    """
+    import pandas as pd
+
+    path = ensure(name, version=version)
+    filename = path.name.lower().removesuffix(".gz")
+    if filename.endswith(".parquet"):
+        return pd.read_parquet(path, **options)
+    if filename.endswith((".xlsx", ".xls")):
+        return pd.read_excel(path, **options)
+    if filename.endswith((".tsv", ".gct", ".csv", ".mtx_rows", ".mtx_cols")):
+        if filename.endswith(".gct"):
+            options.setdefault("skiprows", 2)
+        if filename.endswith((".mtx_rows", ".mtx_cols")):
+            options.setdefault("header", None)
+        options.setdefault("sep", "," if filename.endswith(".csv") else "\t")
+        return pd.read_csv(path, **options)
+    raise ValueError(
+        f"{path.name} needs its native reader. Use catalog.ensure({name!r}) for the file."
+    )

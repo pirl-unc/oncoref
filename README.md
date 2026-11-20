@@ -10,13 +10,13 @@ HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
 calibration sources — behind one small Python API, a data fetch/cache CLI, and a
 set of reference plots.
 
-The [rebuilt target catalog](docs/audits/target-selection-20261110/rebuild/index.md) contains **303 CTA, 106 Cancer Antigen only, 100 Reproductive Antigen only, 1,131 Other and
-18,253 Unsafe**. [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen and independently require ≥10 × max(non-reproductive normal, Disposable, 1 TPM) in their respective compartments. CTA is their intersection; candidate antigen proteins is their union. [Host selection](docs/host-selection.md) is a separate decision: Protect / Accept loss / Absent, with explicit anatomy assumptions and unresolved coverage. Biological membership remains unchanged when the host screen rejects a protein. Accepted normal exclusions remain `Unsafe`; strong unresolved signals require review (`Other:Review`). [Interactive catalog](docs/audits/target-selection-20261110/rebuild/report.html) · [Architecture & figures](docs/audits/target-selection-20261110/rebuild/summary.md) · [Antigen sets and Unsafe|Other peptide subtraction](docs/antigen-sequences.md) · [CLI & curation build](docs/curation.md).
+The [rebuilt target catalog](docs/audits/target-selection-20261110/rebuild/index.md) contains **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,118 Other and
+18,250 Unsafe**. [Normal RNA sources and tissue coverage](docs/audits/target-selection-20261110/rebuild/normal-rna/index.md). [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen and independently require ≥10 × max(non-reproductive normal, Disposable, 1 TPM), excluding thymus from both terms, in their respective compartments. CTA is their intersection; candidate antigen proteins is their union. [Host selection](docs/host-selection.md) is a separate decision: Protect / Accept loss / Absent, with explicit anatomy assumptions and unresolved coverage. Biological membership remains unchanged when the host screen rejects a protein. Accepted normal exclusions remain `Unsafe`; strong unresolved signals require review (`Other:Review`). [Interactive catalog](docs/audits/target-selection-20261110/rebuild/report.html) · [Architecture & figures](docs/audits/target-selection-20261110/rebuild/summary.md) · [Antigen sets and Unsafe|Other peptide subtraction](docs/antigen-sequences.md) · [CLI & curation build](docs/curation.md).
 
 ```python
 from oncoref import antigen_sets, target_filters, target_selection
 
-all_ctas = antigen_sets.proteins("CTA")                              # 290 default CTAs
+all_ctas = antigen_sets.proteins("CTA")
 selection = antigen_sets.select("CTA", mode="standard")
 proteins = selection.proteins()
 decisions = selection.decisions()

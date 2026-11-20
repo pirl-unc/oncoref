@@ -444,6 +444,1267 @@
           "taxon_id": 9606
         }
       }
+    },
+    "gtex_individual_tissue_tpm": {
+      "description": "GTEx v11 adult primary tissue individual-sample gene TPM (one matrix per tissue)",
+      "filename": "gene_tpm.gct.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "default_version": "v11-testis",
+      "versions": {
+        "v11-adipose_subcutaneous": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_adipose_subcutaneous.gct.gz",
+          "sha256": "bd4382ea3d5197f7ed3396bc42cd156d5500142eafd6c2c87b335e2fd3cf8c34",
+          "bytes": 99789222,
+          "archive_sha256": "bd4382ea3d5197f7ed3396bc42cd156d5500142eafd6c2c87b335e2fd3cf8c34",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-adipose_visceral_omentum": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_adipose_visceral_omentum.gct.gz",
+          "sha256": "e9c7627bbd7a2e2cf3419136d63a5fe44521ce33fee09e74ff9e8d373f93a55c",
+          "bytes": 82516499,
+          "archive_sha256": "e9c7627bbd7a2e2cf3419136d63a5fe44521ce33fee09e74ff9e8d373f93a55c",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-adrenal_gland": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_adrenal_gland.gct.gz",
+          "sha256": "c4ce3dfe94a7e019eec293d2842ac3c3cc2086b5a1764dabe70db9a21984571a",
+          "bytes": 41103905,
+          "archive_sha256": "c4ce3dfe94a7e019eec293d2842ac3c3cc2086b5a1764dabe70db9a21984571a",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-artery_aorta": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_artery_aorta.gct.gz",
+          "sha256": "a9326dc8248655740a74f486a833d710d23c6b3e12b5b8aa8ce5e651164b790f",
+          "bytes": 65015914,
+          "archive_sha256": "a9326dc8248655740a74f486a833d710d23c6b3e12b5b8aa8ce5e651164b790f",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-artery_coronary": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_artery_coronary.gct.gz",
+          "sha256": "4f029a1b4f9efd65425fac8ee81eebb18f2db4ffd6276bf0d5b7b4075310c90e",
+          "bytes": 38421930,
+          "archive_sha256": "4f029a1b4f9efd65425fac8ee81eebb18f2db4ffd6276bf0d5b7b4075310c90e",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-artery_tibial": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_artery_tibial.gct.gz",
+          "sha256": "5635867e608cf8f43a534ecb0fecc99883732701575b35507781f4238953c32e",
+          "bytes": 91486177,
+          "archive_sha256": "5635867e608cf8f43a534ecb0fecc99883732701575b35507781f4238953c32e",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-bladder": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_bladder.gct.gz",
+          "sha256": "a9080908f0c8e777008c3d310b664e78467432752cf1f8779664480de4702987",
+          "bytes": 12151160,
+          "archive_sha256": "a9080908f0c8e777008c3d310b664e78467432752cf1f8779664480de4702987",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_amygdala": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_amygdala.gct.gz",
+          "sha256": "1133cb553934b6fde30410616bc2d2458a92d828c42a3dcaeb5ec46efd337314",
+          "bytes": 25982120,
+          "archive_sha256": "1133cb553934b6fde30410616bc2d2458a92d828c42a3dcaeb5ec46efd337314",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_anterior_cingulate_cortex_ba24": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_anterior_cingulate_cortex_ba24.gct.gz",
+          "sha256": "d6a0d1f0599f2c9d6ee5a4a6ffc89329b5ce3804efec372fa1ddaa171849e8ad",
+          "bytes": 33977405,
+          "archive_sha256": "d6a0d1f0599f2c9d6ee5a4a6ffc89329b5ce3804efec372fa1ddaa171849e8ad",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_caudate_basal_ganglia": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_caudate_basal_ganglia.gct.gz",
+          "sha256": "88eedf2f1aff4ffa4624f37e45a10845a4fff801ecbefc444ba68445c8658f5e",
+          "bytes": 43777033,
+          "archive_sha256": "88eedf2f1aff4ffa4624f37e45a10845a4fff801ecbefc444ba68445c8658f5e",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_cerebellar_hemisphere": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_cerebellar_hemisphere.gct.gz",
+          "sha256": "7efb43e8e8879d100bb8069177d382faf7c5d1eb07352e0f7ed183ea1e6fee98",
+          "bytes": 40831185,
+          "archive_sha256": "7efb43e8e8879d100bb8069177d382faf7c5d1eb07352e0f7ed183ea1e6fee98",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_cerebellum": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_cerebellum.gct.gz",
+          "sha256": "a8ace2f8f6fe3ea641db2eaeebc99c8639a34f807cbf3646a69cd59aef8e93b6",
+          "bytes": 40056333,
+          "archive_sha256": "a8ace2f8f6fe3ea641db2eaeebc99c8639a34f807cbf3646a69cd59aef8e93b6",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_cortex": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_cortex.gct.gz",
+          "sha256": "f37f3a68a7551ff220d66aad4d8c61f33f63127c0ca27324e5be55fb73618a34",
+          "bytes": 40260080,
+          "archive_sha256": "f37f3a68a7551ff220d66aad4d8c61f33f63127c0ca27324e5be55fb73618a34",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_frontal_cortex_ba9": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_frontal_cortex_ba9.gct.gz",
+          "sha256": "cb66941ca9b7507892ed8203d837c740b73f6d51e0ec9ff623b20672058ada46",
+          "bytes": 39607630,
+          "archive_sha256": "cb66941ca9b7507892ed8203d837c740b73f6d51e0ec9ff623b20672058ada46",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_hippocampus": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_hippocampus.gct.gz",
+          "sha256": "0e87d17e792f0ad356119449d591d7ebc4d6f27ff577cfb8aaa00b65027c71b0",
+          "bytes": 36779218,
+          "archive_sha256": "0e87d17e792f0ad356119449d591d7ebc4d6f27ff577cfb8aaa00b65027c71b0",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_hypothalamus": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_hypothalamus.gct.gz",
+          "sha256": "57894cee5ff437082c392bb7667f14cb8e214c14350d011459376a433c8e489c",
+          "bytes": 38104544,
+          "archive_sha256": "57894cee5ff437082c392bb7667f14cb8e214c14350d011459376a433c8e489c",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_nucleus_accumbens_basal_ganglia": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_nucleus_accumbens_basal_ganglia.gct.gz",
+          "sha256": "31eee2d806c9b0f34ecbf4cc951840ba0f84224dd6138d5bb376c24cac294b7e",
+          "bytes": 41971850,
+          "archive_sha256": "31eee2d806c9b0f34ecbf4cc951840ba0f84224dd6138d5bb376c24cac294b7e",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_putamen_basal_ganglia": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_putamen_basal_ganglia.gct.gz",
+          "sha256": "6ec622239464c7e6d029c8064125ac35f4e1ffb129b0d5242bd25dd2ae4f55a6",
+          "bytes": 36083656,
+          "archive_sha256": "6ec622239464c7e6d029c8064125ac35f4e1ffb129b0d5242bd25dd2ae4f55a6",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_spinal_cord_cervical_c-1": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_spinal_cord_cervical_c-1.gct.gz",
+          "sha256": "63a8b8ec107a025e97110e09543bfe31b764099aceb56f1127c71f08d62206ff",
+          "bytes": 29258003,
+          "archive_sha256": "63a8b8ec107a025e97110e09543bfe31b764099aceb56f1127c71f08d62206ff",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-brain_substantia_nigra": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_brain_substantia_nigra.gct.gz",
+          "sha256": "5d7e6dbfb7501904e835400fd4110fc51d07dcb42aa0ad5dee4da1dba8dd8f4e",
+          "bytes": 26213258,
+          "archive_sha256": "5d7e6dbfb7501904e835400fd4110fc51d07dcb42aa0ad5dee4da1dba8dd8f4e",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-breast_mammary_tissue": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_breast_mammary_tissue.gct.gz",
+          "sha256": "ea9f79fffe01591e69f7e27830b8ff767b39024aa1892b88a4cf3005a7a03050",
+          "bytes": 74536131,
+          "archive_sha256": "ea9f79fffe01591e69f7e27830b8ff767b39024aa1892b88a4cf3005a7a03050",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-cervix_ectocervix": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_cervix_ectocervix.gct.gz",
+          "sha256": "e4e479fcca24df858c632b93636001fa870f6464c5dc0aaf3948044c8ec669ad",
+          "bytes": 4378019,
+          "archive_sha256": "e4e479fcca24df858c632b93636001fa870f6464c5dc0aaf3948044c8ec669ad",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-cervix_endocervix": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_cervix_endocervix.gct.gz",
+          "sha256": "ee2f622669a9dcdac42b072bcf2a545739b53044650c70c881e09ff77f71c396",
+          "bytes": 4277433,
+          "archive_sha256": "ee2f622669a9dcdac42b072bcf2a545739b53044650c70c881e09ff77f71c396",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-colon_sigmoid": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_colon_sigmoid.gct.gz",
+          "sha256": "30c026fb7eed717f27c45f27971064e6cc567fe9aec200655e91dfc380ff990c",
+          "bytes": 58530286,
+          "archive_sha256": "30c026fb7eed717f27c45f27971064e6cc567fe9aec200655e91dfc380ff990c",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-colon_transverse": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_colon_transverse.gct.gz",
+          "sha256": "45b9239e9ba6cf37a9d15aceb37e23cda8427dc5d3e1ef28df1e5114a5533a25",
+          "bytes": 68801158,
+          "archive_sha256": "45b9239e9ba6cf37a9d15aceb37e23cda8427dc5d3e1ef28df1e5114a5533a25",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-esophagus_gastroesophageal_junction": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_esophagus_gastroesophageal_junction.gct.gz",
+          "sha256": "d9945c761b3e10c7d41299a8caf92527d0c2828fdd1906bc1a9f8d8574e229bc",
+          "bytes": 55935600,
+          "archive_sha256": "d9945c761b3e10c7d41299a8caf92527d0c2828fdd1906bc1a9f8d8574e229bc",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-esophagus_mucosa": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_esophagus_mucosa.gct.gz",
+          "sha256": "124be51b79128be7039ff8b76b87731fdb2cb6c776f86d3ce850262122892ec1",
+          "bytes": 83496414,
+          "archive_sha256": "124be51b79128be7039ff8b76b87731fdb2cb6c776f86d3ce850262122892ec1",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-esophagus_muscularis": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_esophagus_muscularis.gct.gz",
+          "sha256": "5acfed9f432624a782ccbe6b5bff90e641b6c2343b0fc3d9d841a4802c347b88",
+          "bytes": 76288213,
+          "archive_sha256": "5acfed9f432624a782ccbe6b5bff90e641b6c2343b0fc3d9d841a4802c347b88",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-fallopian_tube": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_fallopian_tube.gct.gz",
+          "sha256": "8b153daa8d50f6f804f8a8d99586d10801d701d083583f7cd7ca674c48f9e6e8",
+          "bytes": 5213161,
+          "archive_sha256": "8b153daa8d50f6f804f8a8d99586d10801d701d083583f7cd7ca674c48f9e6e8",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-heart_atrial_appendage": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_heart_atrial_appendage.gct.gz",
+          "sha256": "d2fce7fb7babed077c39420f39344e6f65f86f522cbb272f415be1274acb83f9",
+          "bytes": 62725376,
+          "archive_sha256": "d2fce7fb7babed077c39420f39344e6f65f86f522cbb272f415be1274acb83f9",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-heart_left_ventricle": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_heart_left_ventricle.gct.gz",
+          "sha256": "1ab0fe876cd5d6de2bdcf0b4ddfa926a20c66cf95a8e17f2ef2ee037d3fb9384",
+          "bytes": 57103443,
+          "archive_sha256": "1ab0fe876cd5d6de2bdcf0b4ddfa926a20c66cf95a8e17f2ef2ee037d3fb9384",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-kidney_cortex": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_kidney_cortex.gct.gz",
+          "sha256": "85e58f75c3e5f7ad1c15f12d1c3ac089c1524d882fbaa716d630ee673706f7ab",
+          "bytes": 15673209,
+          "archive_sha256": "85e58f75c3e5f7ad1c15f12d1c3ac089c1524d882fbaa716d630ee673706f7ab",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-kidney_medulla": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_kidney_medulla.gct.gz",
+          "sha256": "d3f78feb9b7514a23f4d1088c58b116e733309b4ff89a3f78ba977d080b9ce1c",
+          "bytes": 2370543,
+          "archive_sha256": "d3f78feb9b7514a23f4d1088c58b116e733309b4ff89a3f78ba977d080b9ce1c",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-liver": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_liver.gct.gz",
+          "sha256": "5d01674c8bcf2414ea06fdb89e884af68ba286834d5cbdf1b84459aa951776e4",
+          "bytes": 34581723,
+          "archive_sha256": "5d01674c8bcf2414ea06fdb89e884af68ba286834d5cbdf1b84459aa951776e4",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-lung": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_lung.gct.gz",
+          "sha256": "8b002288f2f368f1f191c9c21535571ff052559978e979dbb6d5f9f3a7f13a23",
+          "bytes": 89007384,
+          "archive_sha256": "8b002288f2f368f1f191c9c21535571ff052559978e979dbb6d5f9f3a7f13a23",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-minor_salivary_gland": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_minor_salivary_gland.gct.gz",
+          "sha256": "77a1f611bc6c523e37a6c929a2de3083ff1773e2f615fb5448a24fcd5891f811",
+          "bytes": 27541463,
+          "archive_sha256": "77a1f611bc6c523e37a6c929a2de3083ff1773e2f615fb5448a24fcd5891f811",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-muscle_skeletal": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_muscle_skeletal.gct.gz",
+          "sha256": "8f31f0ae13ce80d049cdc46e7b0bdbb94b528f5ce39a2386fc103beea72c3fed",
+          "bytes": 100247614,
+          "archive_sha256": "8f31f0ae13ce80d049cdc46e7b0bdbb94b528f5ce39a2386fc103beea72c3fed",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-nerve_tibial": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_nerve_tibial.gct.gz",
+          "sha256": "68e1a68eb0f75a4bf948c3b751d7c1aab9c0330533ba69a954cdd8978d07bbb6",
+          "bytes": 98289305,
+          "archive_sha256": "68e1a68eb0f75a4bf948c3b751d7c1aab9c0330533ba69a954cdd8978d07bbb6",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-ovary": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_ovary.gct.gz",
+          "sha256": "73374f46a4460bf4b4dfe10f6fe0fb4f6b7e7c2f8ddb70d492e492f3434ab62f",
+          "bytes": 28753580,
+          "archive_sha256": "73374f46a4460bf4b4dfe10f6fe0fb4f6b7e7c2f8ddb70d492e492f3434ab62f",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-pancreas": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_pancreas.gct.gz",
+          "sha256": "68fadde2d73933d06ed87c7ceeaca0a0d842ed57bbdc1eaf2fa0596fda5f8723",
+          "bytes": 47769758,
+          "archive_sha256": "68fadde2d73933d06ed87c7ceeaca0a0d842ed57bbdc1eaf2fa0596fda5f8723",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-pituitary": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_pituitary.gct.gz",
+          "sha256": "c61337120bc1d41457326602617c996e461de78ac38624cb3296324da1757c86",
+          "bytes": 48718464,
+          "archive_sha256": "c61337120bc1d41457326602617c996e461de78ac38624cb3296324da1757c86",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-prostate": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_prostate.gct.gz",
+          "sha256": "13e03f8826f174ee6ad802d10a8b5123f96a7430fe275c6e5bf0f710a2937075",
+          "bytes": 42849753,
+          "archive_sha256": "13e03f8826f174ee6ad802d10a8b5123f96a7430fe275c6e5bf0f710a2937075",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-skin_not_sun_exposed_suprapubic": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_skin_not_sun_exposed_suprapubic.gct.gz",
+          "sha256": "3042c7831ae5755120ec7c6d4d14ca5e1c53cffb459ee23d01c88401d4030b4c",
+          "bytes": 93413545,
+          "archive_sha256": "3042c7831ae5755120ec7c6d4d14ca5e1c53cffb459ee23d01c88401d4030b4c",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-skin_sun_exposed_lower_leg": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_skin_sun_exposed_lower_leg.gct.gz",
+          "sha256": "0efd8cd99be8ea9f3aa92f0c85099f6a362b62a8c82ccc42315304e4791dc1cd",
+          "bytes": 108174220,
+          "archive_sha256": "0efd8cd99be8ea9f3aa92f0c85099f6a362b62a8c82ccc42315304e4791dc1cd",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-small_intestine_terminal_ileum": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_small_intestine_terminal_ileum.gct.gz",
+          "sha256": "3349adf75bf5ecc58edc12fe9deb37d3d13ab073338ff537eed6310569fe86a7",
+          "bytes": 31569169,
+          "archive_sha256": "3349adf75bf5ecc58edc12fe9deb37d3d13ab073338ff537eed6310569fe86a7",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-spleen": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_spleen.gct.gz",
+          "sha256": "9cd910609d1219d0e2c2f2d9c4df04b4620acc71e96fa6cfaf8e9ebcfb8ac832",
+          "bytes": 41169449,
+          "archive_sha256": "9cd910609d1219d0e2c2f2d9c4df04b4620acc71e96fa6cfaf8e9ebcfb8ac832",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-stomach": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_stomach.gct.gz",
+          "sha256": "1a3b8a6894f4d6324a3335a14a174667b57e26d7c5ce4f7f2f91a890d878dc37",
+          "bytes": 56252468,
+          "archive_sha256": "1a3b8a6894f4d6324a3335a14a174667b57e26d7c5ce4f7f2f91a890d878dc37",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-testis": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_testis.gct.gz",
+          "sha256": "d2f63d00c9cfd7151e108d6521b47142435eef6fc79371ec6a637e9ce23130fd",
+          "bytes": 84558723,
+          "archive_sha256": "d2f63d00c9cfd7151e108d6521b47142435eef6fc79371ec6a637e9ce23130fd",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-thyroid": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_thyroid.gct.gz",
+          "sha256": "e55415b7cadce1dc04e413fadd8202b09bf76c49ccf59a3363daf25858fec785",
+          "bytes": 100006375,
+          "archive_sha256": "e55415b7cadce1dc04e413fadd8202b09bf76c49ccf59a3363daf25858fec785",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-uterus": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_uterus.gct.gz",
+          "sha256": "3d2efe6aa8c584f36d30fc1fdd60b1e7206c1929871adbf8acbe2ee0f32b47a0",
+          "bytes": 22954309,
+          "archive_sha256": "3d2efe6aa8c584f36d30fc1fdd60b1e7206c1929871adbf8acbe2ee0f32b47a0",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-vagina": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_vagina.gct.gz",
+          "sha256": "a34f6cb9ee4d2cd8100905e4aa9805bf42a1dba6e5ec7876afe4aeaf724e6fef",
+          "bytes": 25578845,
+          "archive_sha256": "a34f6cb9ee4d2cd8100905e4aa9805bf42a1dba6e5ec7876afe4aeaf724e6fef",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        },
+        "v11-whole_blood": {
+          "url": "https://storage.googleapis.com/adult-gtex/bulk-gex/v11/rna-seq/tpms-by-tissue/gene_tpm_adult_gtex_v11_whole_blood.gct.gz",
+          "sha256": "0f3b74989f28c77473c86386730177cd40a01827a7fb808f7c2d6b4e0eac278a",
+          "bytes": 93674275,
+          "archive_sha256": "0f3b74989f28c77473c86386730177cd40a01827a7fb808f7c2d6b4e0eac278a",
+          "reference": "GENCODE v47",
+          "processing_pipeline": "RNA-SeQC 2.4.3",
+          "unit": "TPM",
+          "statistic": "individual tissue sample",
+          "taxon_id": 9606
+        }
+      }
+    },
+    "antigen-protein-group-classifications": {
+      "description": "Antigen curation curation input \u2014 protein group classifications",
+      "filename": "protein-group-classifications.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
+          "sha256": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
+          "archive_sha256": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
+          "bytes": 5742904,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-hpa_rna_consensus-accepted-identities": {
+      "description": "Antigen curation curation input \u2014 hpa_rna_consensus accepted identities",
+      "filename": "hpa_rna_consensus-accepted-identities.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz",
+          "sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+          "archive_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+          "bytes": 108970,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-hpa-brain-anatomy": {
+      "description": "Antigen curation curation input \u2014 hpa brain anatomy",
+      "filename": "hpa-brain-anatomy.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/alternative-evidence/hpa-brain-anatomy.csv",
+          "sha256": "e74e0a1935f72ec7ed615ae2f81ad01dd04c00d355569561be745d6e3d2785f1",
+          "archive_sha256": "e74e0a1935f72ec7ed615ae2f81ad01dd04c00d355569561be745d6e3d2785f1",
+          "bytes": 7514,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-hpa_brain-row-decisions": {
+      "description": "Antigen curation curation input \u2014 hpa_brain row decisions",
+      "filename": "hpa_brain-row-decisions.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/alternative-evidence/hpa_brain-row-decisions.csv.gz",
+          "sha256": "48b67cecfa4e72e937ada805d2c1a803cd2d082eddc308f2c2770f69022e4bba",
+          "archive_sha256": "48b67cecfa4e72e937ada805d2c1a803cd2d082eddc308f2c2770f69022e4bba",
+          "bytes": 164911,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-gtex_tissue_rna-row-decisions": {
+      "description": "Antigen curation curation input \u2014 gtex_tissue_rna row decisions",
+      "filename": "gtex_tissue_rna-row-decisions.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/alternative-evidence/gtex_tissue_rna-row-decisions.csv.gz",
+          "sha256": "85d9779dc98116b1dbcacc9dad58498facd6c03f67e4c2723b3ccc6a4b727b02",
+          "archive_sha256": "85d9779dc98116b1dbcacc9dad58498facd6c03f67e4c2723b3ccc6a4b727b02",
+          "bytes": 672208,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-hpa_immune_monaco-accepted-identities": {
+      "description": "Antigen curation curation input \u2014 hpa_immune_monaco accepted identities",
+      "filename": "hpa_immune_monaco-accepted-identities.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/hpa_immune_monaco-accepted-identities.csv.gz",
+          "sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+          "archive_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+          "bytes": 108970,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-manifest-tumor-identity-repair": {
+      "description": "Antigen curation curation input \u2014 manifest",
+      "filename": "manifest.json",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/tumor-identity-repair/manifest.json",
+          "sha256": "3de0d32c466bca3d851963d65595bdc4c5be84f653061515f0710973b100ff89",
+          "archive_sha256": "3de0d32c466bca3d851963d65595bdc4c5be84f653061515f0710973b100ff89",
+          "bytes": 48787,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-cohort-availability": {
+      "description": "Antigen curation curation input \u2014 cohort availability",
+      "filename": "cohort-availability.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/tumor-identity-repair/cohort-availability.csv",
+          "sha256": "00f3250dea4d461f9e3ecde0f66c7b0fdbc710bdedc71e0adfecb65ac0a7cbe8",
+          "archive_sha256": "00f3250dea4d461f9e3ecde0f66c7b0fdbc710bdedc71e0adfecb65ac0a7cbe8",
+          "bytes": 19566,
+          "taxon_id": 9606
+        },
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-expanded-funnel-20261027/tumor-union/cohort-availability.csv",
+          "sha256": "dbaf442e5259940403f1cc809514a7808541f103e1436c5543b3d0f1b1d81443",
+          "archive_sha256": "dbaf442e5259940403f1cc809514a7808541f103e1436c5543b3d0f1b1d81443",
+          "bytes": 20266,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-sample-identity": {
+      "description": "Antigen curation curation input \u2014 sample identity",
+      "filename": "sample-identity.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/cta-selection-20261028/tumor-identity-repair/sample-identity.csv.gz",
+          "sha256": "762e95ea089a9f1f5ed94228ef0a8ccd18d5700f677a551e3879ee0b432733c5",
+          "archive_sha256": "762e95ea089a9f1f5ed94228ef0a8ccd18d5700f677a551e3879ee0b432733c5",
+          "bytes": 60248,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-donor-populations": {
+      "description": "Antigen curation curation input \u2014 donor populations",
+      "filename": "donor-populations.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/rare-cell/donor-populations.csv.gz",
+          "sha256": "552922b662cefee584a9564afba6bb3635c00d7eb37f1820859632eb7f6f0e93",
+          "archive_sha256": "552922b662cefee584a9564afba6bb3635c00d7eb37f1820859632eb7f6f0e93",
+          "bytes": 13590563,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-selected-proteins": {
+      "description": "Antigen curation curation input \u2014 selected proteins",
+      "filename": "selected-proteins.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/rare-cell/selected-proteins.csv.gz",
+          "sha256": "76b18e3b031128324c2522e235dd35d5b2ec92c65c59366281f2315566323b57",
+          "archive_sha256": "76b18e3b031128324c2522e235dd35d5b2ec92c65c59366281f2315566323b57",
+          "bytes": 40793,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-bulk-confirmation": {
+      "description": "Antigen curation curation input \u2014 bulk confirmation",
+      "filename": "bulk-confirmation.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/rare-cell/bulk-confirmation.csv.gz",
+          "sha256": "eaf3cd30ea93374bff020564f4e4a6102c9592558235c3b21b05b8d01be5924d",
+          "archive_sha256": "eaf3cd30ea93374bff020564f4e4a6102c9592558235c3b21b05b8d01be5924d",
+          "bytes": 133768,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-threshold-sensitivity": {
+      "description": "Antigen curation curation input \u2014 threshold sensitivity",
+      "filename": "threshold-sensitivity.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/rare-cell/threshold-sensitivity.csv",
+          "sha256": "e5fbd5b39d5d9d23194e877ae9f535fdbf0f4217847134d60e71862adc5a7ba3",
+          "archive_sha256": "e5fbd5b39d5d9d23194e877ae9f535fdbf0f4217847134d60e71862adc5a7ba3",
+          "bytes": 306,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-reproductive-comparison": {
+      "description": "Antigen curation curation input \u2014 reproductive comparison",
+      "filename": "reproductive-comparison.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz",
+          "sha256": "54ae2a80519110d276ecf2ad072eb1a488f4b10e98c08e463712e5c2d97ec2ee",
+          "archive_sha256": "54ae2a80519110d276ecf2ad072eb1a488f4b10e98c08e463712e5c2d97ec2ee",
+          "bytes": 33529784,
+          "taxon_id": 9606
+        },
+        "85db432ee5a7": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/85db432ee5a76f2acf399815a0acc88bf02cfe35/docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz",
+          "sha256": "be43b686625f3e5dfe473c64a663bc148ac3fe487a7568474a8237136dfaf61c",
+          "archive_sha256": "be43b686625f3e5dfe473c64a663bc148ac3fe487a7568474a8237136dfaf61c",
+          "bytes": 33529674,
+          "taxon_id": 9606
+        },
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz",
+          "sha256": "d981886da877b455d917db78268279da03db599e5a3589814eac46f71f940a06",
+          "archive_sha256": "d981886da877b455d917db78268279da03db599e5a3589814eac46f71f940a06",
+          "bytes": 33643663,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-normal-comparison": {
+      "description": "Antigen curation comparison or sample metadata \u2014 normal comparison",
+      "filename": "normal-comparison.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/normal-comparison.csv.gz",
+          "sha256": "1bfa890173ed679c6106aeeab064edd4da4c7d3ca43e74b788b5ff07aeaecb74",
+          "archive_sha256": "1bfa890173ed679c6106aeeab064edd4da4c7d3ca43e74b788b5ff07aeaecb74",
+          "bytes": 38579504,
+          "taxon_id": 9606
+        },
+        "85db432ee5a7": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/85db432ee5a76f2acf399815a0acc88bf02cfe35/docs/audits/target-selection-20261110/rebuild/normal-comparison.csv.gz",
+          "sha256": "73d51135e0b4c4e86af406cc1c8f40f37e2ed47d63a4f3e6db2813e2c2a30452",
+          "archive_sha256": "73d51135e0b4c4e86af406cc1c8f40f37e2ed47d63a4f3e6db2813e2c2a30452",
+          "bytes": 38576348,
+          "taxon_id": 9606
+        },
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/target-selection-20261110/rebuild/normal-comparison.csv.gz",
+          "sha256": "ee8e0bd87a24dee0ddb5ad0f05128a3186a0747bf6f18bad4e3d2c43aef48355",
+          "archive_sha256": "ee8e0bd87a24dee0ddb5ad0f05128a3186a0747bf6f18bad4e3d2c43aef48355",
+          "bytes": 38713038,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-tumor-witnesses": {
+      "description": "Antigen curation comparison or sample metadata \u2014 tumor witnesses",
+      "filename": "tumor-witnesses.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
+          "sha256": "b8940aa19d15873906744fe1d5d32e675dc7cbe708112344d9d822c9d433d6a1",
+          "archive_sha256": "b8940aa19d15873906744fe1d5d32e675dc7cbe708112344d9d822c9d433d6a1",
+          "bytes": 529581,
+          "taxon_id": 9606
+        },
+        "85db432ee5a7": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/85db432ee5a76f2acf399815a0acc88bf02cfe35/docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
+          "sha256": "928824e95ea18012f909d18526ab6dfb970ee4a42b9fc6bf7860930bf97f142c",
+          "archive_sha256": "928824e95ea18012f909d18526ab6dfb970ee4a42b9fc6bf7860930bf97f142c",
+          "bytes": 537608,
+          "taxon_id": 9606
+        },
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
+          "sha256": "63208c7c19d3341e7c4eedcdf3d6b5fe56157351ea37635fe47760a3db6ca5ff",
+          "archive_sha256": "63208c7c19d3341e7c4eedcdf3d6b5fe56157351ea37635fe47760a3db6ca5ff",
+          "bytes": 541845,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-tumor-samples": {
+      "description": "Antigen curation comparison or sample metadata \u2014 tumor samples",
+      "filename": "tumor-samples.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/tumor-samples.csv.gz",
+          "sha256": "18573851e0d988d716def32ba38c0b213fb68d42afd9f0cb19e3fa3a4b7da0bc",
+          "archive_sha256": "18573851e0d988d716def32ba38c0b213fb68d42afd9f0cb19e3fa3a4b7da0bc",
+          "bytes": 183080,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-gtex-library-qc": {
+      "description": "Antigen curation comparison or sample metadata \u2014 gtex library qc",
+      "filename": "gtex-library-qc.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/gtex-library-qc.csv.gz",
+          "sha256": "32c9cc1f8d865077f69b2dd2676ed69ae3a887998f457bf4bfd7dd58173157f5",
+          "archive_sha256": "32c9cc1f8d865077f69b2dd2676ed69ae3a887998f457bf4bfd7dd58173157f5",
+          "bytes": 1522064,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-normal-library-qc": {
+      "description": "Antigen curation comparison or sample metadata \u2014 normal library qc",
+      "filename": "normal-library-qc.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/normal-library-qc.csv",
+          "sha256": "7855b036c7432ed759ba951871e0a153eaa22b35c2d2b83601a95dfa3ad48f22",
+          "archive_sha256": "7855b036c7432ed759ba951871e0a153eaa22b35c2d2b83601a95dfa3ad48f22",
+          "bytes": 32852,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-immune-library-qc": {
+      "description": "Antigen curation comparison or sample metadata \u2014 immune library qc",
+      "filename": "immune-library-qc.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/normal-rna/immune-library-qc.csv",
+          "sha256": "712eae86dc326bc4f65bb947a118b28f059abfc1e60b7f35854a7826c0ed6253",
+          "archive_sha256": "712eae86dc326bc4f65bb947a118b28f059abfc1e60b7f35854a7826c0ed6253",
+          "bytes": 3588,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-tumor-source-coverage": {
+      "description": "Antigen curation comparison or sample metadata \u2014 tumor source coverage",
+      "filename": "tumor-source-coverage.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/tumor-source-coverage.csv",
+          "sha256": "a944e8246112e8cd2a740e5f3063ab902c63323326e0831bd1502a523d64e1f4",
+          "archive_sha256": "a944e8246112e8cd2a740e5f3063ab902c63323326e0831bd1502a523d64e1f4",
+          "bytes": 20884,
+          "taxon_id": 9606
+        },
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/target-selection-20261110/rebuild/tumor-source-coverage.csv",
+          "sha256": "9b93bc4cbd9868b30ce5f7df0f3ddc862e03662c1bea69388eb0fd06ab2ecb8f",
+          "archive_sha256": "9b93bc4cbd9868b30ce5f7df0f3ddc862e03662c1bea69388eb0fd06ab2ecb8f",
+          "bytes": 20884,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-source-registry": {
+      "description": "Antigen curation cell atlas \u2014 source registry",
+      "filename": "source-registry.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/source-registry.csv",
+          "sha256": "588f84a8a8b527998e41b5afddad8b23686d0922c66471fb6976463838afd27e",
+          "archive_sha256": "588f84a8a8b527998e41b5afddad8b23686d0922c66471fb6976463838afd27e",
+          "bytes": 69731,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-dataset-versions": {
+      "description": "Antigen curation cell atlas \u2014 dataset versions",
+      "filename": "dataset-versions.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/dataset-versions.csv",
+          "sha256": "950b6331b0987e4f0ec90637a4c6f26713f5d8071f3844206e6e49bf8992ece8",
+          "archive_sha256": "950b6331b0987e4f0ec90637a4c6f26713f5d8071f3844206e6e49bf8992ece8",
+          "bytes": 293010,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-panel": {
+      "description": "Antigen curation cell atlas \u2014 panel",
+      "filename": "panel.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/rare-cell/panel.csv",
+          "sha256": "71145295ed9433f1e52e190eda7e41945c1216149cb1e3c385184aa305609a1e",
+          "archive_sha256": "71145295ed9433f1e52e190eda7e41945c1216149cb1e3c385184aa305609a1e",
+          "bytes": 930,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-siletti-granule-gene-detection": {
+      "description": "Antigen curation cell atlas \u2014 siletti granule gene detection",
+      "filename": "siletti-granule-gene-detection.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/normal-cell-atlas-20261110/siletti-granule-gene-detection.csv.gz",
+          "sha256": "e9515ddf5627874360cf7e37dc69c70b3d487b059829ef25079c86a18af83a78",
+          "archive_sha256": "e9515ddf5627874360cf7e37dc69c70b3d487b059829ef25079c86a18af83a78",
+          "bytes": 2039649,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-hpa-assay-measurements": {
+      "description": "Antigen curation assay observations \u2014 hpa assay measurements",
+      "filename": "hpa-assay-measurements.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/antigen-evidence-review-20261118/hpa-assay-measurements.csv.gz",
+          "sha256": "0896651e84c90905a365155ef8e419d5f1195edec770363a8cad8d515e2b9245",
+          "archive_sha256": "0896651e84c90905a365155ef8e419d5f1195edec770363a8cad8d515e2b9245",
+          "bytes": 699930,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-protein-staining": {
+      "description": "Antigen curation assay observations \u2014 protein staining",
+      "filename": "protein-staining.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/antigen-evidence-review-20261118/protein-staining.csv.gz",
+          "sha256": "c4d6200c394db942bc861c6531b5e9ef77b7024e40451a9a924f9d8c148d2a88",
+          "archive_sha256": "c4d6200c394db942bc861c6531b5e9ef77b7024e40451a9a924f9d8c148d2a88",
+          "bytes": 14963,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-donor-evidence": {
+      "description": "Antigen curation assay observations \u2014 donor evidence",
+      "filename": "donor-evidence.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/antigen-evidence-review-20261118/donor-evidence.csv.gz",
+          "sha256": "f6d0f869e34e2bc5e10a75259f539c337c7fe6e0ec87f84e11e2632c22c42300",
+          "archive_sha256": "f6d0f869e34e2bc5e10a75259f539c337c7fe6e0ec87f84e11e2632c22c42300",
+          "bytes": 1599585,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-library-qc": {
+      "description": "Antigen curation comparison or sample metadata \u2014 library qc",
+      "filename": "library-qc.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "b2eeede18472": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/b2eeede1847254212c4c11b207aa11386d2de8ca/docs/audits/target-selection-20261110/rebuild/library-qc.csv.gz",
+          "sha256": "f3b28afecc972d7f7106345d934571b038a17d9201ff708973932b945aa7a069",
+          "archive_sha256": "f3b28afecc972d7f7106345d934571b038a17d9201ff708973932b945aa7a069",
+          "bytes": 350090,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "b2eeede18472"
+    },
+    "antigen-widely-studied-contexts": {
+      "description": "Antigen curation assay observations \u2014 widely studied contexts",
+      "filename": "widely-studied-contexts.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "0afb3a4bba38": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/0afb3a4bba389e200cad4187d6f37e785001934f/docs/audits/cta-selection-20261028/widely-studied-contexts.csv.gz",
+          "sha256": "4526acec11d86866724404aa7e490f995a5b6b9d6110c6a27c7eb84d456c6034",
+          "archive_sha256": "4526acec11d86866724404aa7e490f995a5b6b9d6110c6a27c7eb84d456c6034",
+          "bytes": 169394,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "0afb3a4bba38"
+    },
+    "antigen-revised-tissue-gate-inputs": {
+      "description": "Antigen curation curation input \u2014 revised tissue gate inputs",
+      "filename": "revised-tissue-gate-inputs.json",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/target-selection-20261110/rebuild/revised-tissue-gate-inputs.json",
+          "sha256": "ab9756c252651e353b6c5ea5a3fea3d1966d969518a76499e8287419d78b57c7",
+          "archive_sha256": "ab9756c252651e353b6c5ea5a3fea3d1966d969518a76499e8287419d78b57c7",
+          "bytes": 2059,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-revised-tissue-gates": {
+      "description": "Antigen curation curation input \u2014 revised tissue gates",
+      "filename": "revised-tissue-gates.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/target-selection-20261110/rebuild/revised-tissue-gates.csv",
+          "sha256": "b8314c33881065f2adb764082421f88296fab51a22e0229cf4118263f327e0a9",
+          "archive_sha256": "b8314c33881065f2adb764082421f88296fab51a22e0229cf4118263f327e0a9",
+          "bytes": 884,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-normal-bulk": {
+      "description": "Antigen curation curation input \u2014 normal bulk",
+      "filename": "normal-bulk.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-selection-20261028/alternative-evidence/normal-bulk.csv.gz",
+          "sha256": "1fc0c409e9ee4c9e7e14faed065b361d1371109fadee57d0c008509814092be5",
+          "archive_sha256": "1fc0c409e9ee4c9e7e14faed065b361d1371109fadee57d0c008509814092be5",
+          "bytes": 8075539,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-hpa-protein-evidence": {
+      "description": "Antigen curation curation input \u2014 hpa protein evidence",
+      "filename": "hpa-protein-evidence.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-selection-20261028/hpa-protein-evidence.csv.gz",
+          "sha256": "57eafe9fb8fd029171773b5b32b2e955fae363a77ccb393a0ddb164fbc8a7e69",
+          "archive_sha256": "57eafe9fb8fd029171773b5b32b2e955fae363a77ccb393a0ddb164fbc8a7e69",
+          "bytes": 5181523,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-hpa_immune_cell-accepted-identities": {
+      "description": "Antigen curation curation input \u2014 hpa_immune_cell accepted identities",
+      "filename": "hpa_immune_cell-accepted-identities.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-selection-20261028/hpa_immune_cell-accepted-identities.csv.gz",
+          "sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+          "archive_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
+          "bytes": 108970,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-hpa_single_cell_tissue-accepted-identities": {
+      "description": "Antigen curation curation input \u2014 hpa_single_cell_tissue accepted identities",
+      "filename": "hpa_single_cell_tissue-accepted-identities.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-selection-20261028/hpa_single_cell_tissue-accepted-identities.csv.gz",
+          "sha256": "959cf1ee70f7f4426eea3a7564396df7232100872eb0782850c510110f1181ae",
+          "archive_sha256": "959cf1ee70f7f4426eea3a7564396df7232100872eb0782850c510110f1181ae",
+          "bytes": 108591,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-normal-peak-evidence": {
+      "description": "Antigen curation curation input \u2014 normal peak evidence",
+      "filename": "normal-peak-evidence.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-selection-20261028/normal-peak-evidence.csv.gz",
+          "sha256": "6e85b03896475836728baae075be7fda352f5e13215480c9838d36533845755b",
+          "archive_sha256": "6e85b03896475836728baae075be7fda352f5e13215480c9838d36533845755b",
+          "bytes": 6725324,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-bulk-contexts": {
+      "description": "Antigen curation curation input \u2014 bulk contexts",
+      "filename": "bulk-contexts.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-transcript-selection-20261108/inputs/frozen/bulk-contexts.csv.gz",
+          "sha256": "ce2a1834f5d066cac533eb52d825d9a3100ba04d234de648d2ddbe871a71cbcf",
+          "archive_sha256": "ce2a1834f5d066cac533eb52d825d9a3100ba04d234de648d2ddbe871a71cbcf",
+          "bytes": 5790161,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
+    },
+    "antigen-cluster-contexts": {
+      "description": "Antigen curation curation input \u2014 cluster contexts",
+      "filename": "cluster-contexts.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "versions": {
+        "4a52f16362d3": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/4a52f16362d30afafcfe2ee0543e7a5ef8de5074/docs/audits/cta-transcript-selection-20261108/inputs/regrouped/group-normal/cluster-contexts.csv.gz",
+          "sha256": "cc65c777bda10f8eb78cef4c3216f1e93d8369331f41b5b7a67c1353336cfade",
+          "archive_sha256": "cc65c777bda10f8eb78cef4c3216f1e93d8369331f41b5b7a67c1353336cfade",
+          "bytes": 1340010,
+          "taxon_id": 9606
+        }
+      },
+      "default_version": "4a52f16362d3"
     }
   }
 }

@@ -36,6 +36,7 @@ EVIDENCE_TYPES = frozenset(
     {
         "rna_expression",
         "induced_rna_expression",
+        "immunostaining",
         "ribosome_profiling",
         "regulatory_assay",
         "combined_gene_perturbation",
@@ -415,6 +416,19 @@ def validate_publications(data):
                 "mass_spectrometry",
             }:
                 raise ValueError("Translation support requires translation/protein evidence")
+            if "unscreened_adult_home" in claim:
+                from .target_selection import UNMEASURED_HOME_TISSUES
+
+                home = claim["unscreened_adult_home"]
+                if (
+                    "normal_tissue_review" not in uses
+                    or not claim["eligible_for_coverage"]
+                    or not isinstance(home, str)
+                    or home not in UNMEASURED_HOME_TISSUES
+                ):
+                    raise ValueError(
+                        "Adult normal home requires a scoped human finding and a canonical unscreened tissue"
+                    )
 
 
 def publication_registry() -> dict:
@@ -450,6 +464,12 @@ def paper_gene_claims(gene: str | None = None, *, use: str | None = None) -> pd.
     rows = {}
     for record in current_attestations(gene).to_dict("records"):
         for claim in record["gene_claims"]:
+            # The reviewed claim also appears on historical occurrences of this DOI.
+            if (
+                claim["curation_status"] == "reviewed_gene_claim"
+                and record["origin"] != "literature_followup"
+            ):
+                continue
             if use is not None and use not in claim["allowed_uses"]:
                 continue
             row = {
@@ -470,6 +490,7 @@ def paper_gene_claims(gene: str | None = None, *, use: str | None = None) -> pd.
             "reported_as",
             "reported_name",
             "context",
+            "unscreened_adult_home",
             "assay",
             "evidence_types",
             "allowed_uses",

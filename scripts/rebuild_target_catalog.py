@@ -31,11 +31,14 @@ from antigen_sample_evidence import (  # noqa: E402
 from build_cta_alternative_evidence import GTEX_TISSUES, anatomy  # noqa: E402
 from build_cta_candidate_evidence import replay_updates  # noqa: E402
 from cta_report_common import sha256, write_csv  # noqa: E402
+from gtex_sample_evidence import SOURCE as GTEX_SOURCE  # noqa: E402
+from gtex_sample_evidence import individual_samples  # noqa: E402
 
 from oncoref import (  # noqa: E402
     cta_literature,
     cta_sequence_overlap,
     library_qc,
+    normal_library_qc,
     reference_data,
     source_matrices,
     target_selection,
@@ -51,10 +54,9 @@ from oncoref.gene_matching import (  # noqa: E402
 
 BASE = ROOT / "docs/audits/cta-selection-20261028"
 FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
-RAW = ROOT / "tmp/target-rebuild-inputs"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-17.1"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-19.2"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -67,7 +69,15 @@ DISPOSABLE_NTPM_TISSUES = ["appendix", "gallbladder", "tonsil"]
 
 def read(path, **kwargs):
     path = Path(path)
-    INPUTS[str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)] = sha256(path)
+    INPUTS[str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path.resolve())] = (
+        sha256(path)
+    )
+    return pd.read_csv(path, low_memory=False, **kwargs)
+
+
+def read_reference(name, version, **kwargs):
+    path = reference_data.ensure(name, version)
+    INPUTS[f"reference:{name}:{version}"] = sha256(path)
     return pd.read_csv(path, low_memory=False, **kwargs)
 
 
@@ -94,6 +104,18 @@ def shared_facts():
     layers = [c[7:] for c in f if c.startswith("unsafe:")]
     if not f.category.eq("Unsafe").eq(f[["unsafe:" + n for n in layers]].any(axis=1)).all():
         raise ValueError("Unsafe calls do not decompose into their evidence layers")
+    gate_receipt = OUT / "revised-tissue-gate-inputs.json"
+    INPUTS[str(gate_receipt.relative_to(ROOT))] = sha256(gate_receipt)
+    revised = read(OUT / "revised-tissue-gates.csv")
+    for assay, group in revised.groupby("assay"):
+        if (
+            group.gene_id.duplicated().any()
+            or not group.gene_id.isin(f.representative_gene_id).all()
+        ):
+            raise ValueError(f"Invalid tissue gate identities for {assay}")
+        for prefix, field in [("hold:", "candidate_exclusion"), ("unsafe:", "unsafe_evidence")]:
+            values = f.representative_gene_id.map(group.set_index("gene_id")[field])
+            f.loc[values.notna(), prefix + assay] = values.dropna().astype(bool)
     for name in ["rare-cell-evidence.csv.gz", "rare-cell-evidence.json"]:
         INPUTS[f"oncoref/data/{name}"] = sha256(ROOT / "oncoref/data" / name)
     provenance = json.loads((ROOT / "oncoref/data/rare-cell-evidence.json").read_text())
@@ -104,12 +126,14 @@ def shared_facts():
     rare = pd.read_csv(ROOT / "oncoref/data/rare-cell-evidence.csv.gz").set_index("entity_id")
     kept = [n for n in layers if n not in LEGACY_RARE]
     other_unsafe = f[["unsafe:" + n for n in kept]].any(axis=1)
-    if not other_unsafe[~f.entity_id.isin(rare.index)].all():
+    missing_rare = ~other_unsafe & ~f.entity_id.isin(rare.index)
+    if not f.loc[missing_rare, "representative_gene_id"].isin(revised.gene_id).all():
         raise ValueError("A protein without another exclusion lacks rare-cell evidence")
     rare_columns = [c for c in rare if c not in {"protein_group_label", "member_gene_ids"}]
     f = f.drop(columns=[c for c in rare_columns if c in f]).join(rare[rare_columns], on="entity_id")
     f["rare_cell_status"] = f.rare_cell_status.fillna("not_extracted")
     f["rare_cell_action"] = f.rare_cell_action.fillna("none")
+    f.loc[missing_rare, "rare_cell_action"] = "review"
     # A pooled flag that the donor build could not measure stays unresolved.
     f["rare_cell_legacy_only"] = (
         f["hold:Rare vital-tissue cell expression"]
@@ -159,6 +183,18 @@ def shared_facts():
             "",
         )
     )
+    # A reviewed adult home has the same coverage consequence regardless of publication.
+    homes = defaultdict(set)
+    for source in cta_literature.publication_registry()["sources"]:
+        for claim in source["gene_claims"]:
+            if "unscreened_adult_home" in claim:
+                for gene_id in claim["gene_ids"]:
+                    homes[gene_id].add(claim["unscreened_adult_home"])
+    f["published_home_tissue"] = f.member_gene_ids.map(
+        lambda ids: "; ".join(
+            sorted({home for gene in json.loads(ids) for home in homes.get(gene, ())})
+        )
+    )
     # The recorded home, when it is a tissue no panel resolves (see classify).
     recorded = (
         family_tissue
@@ -166,6 +202,8 @@ def shared_facts():
         + f.literature_recorded_tissue.fillna("")
         + "; "
         + f.reference_recorded_tissue
+        + "; "
+        + f.published_home_tissue
     )
     f["home_tissue"] = recorded.map(
         lambda text: "; ".join(
@@ -275,13 +313,36 @@ def group_normal_rows(raw, facts, *, source, statistic, gene_col="gene_id"):
     return grouped.assign(source_id=source, statistic=statistic, unit="TPM", cell_type="bulk")
 
 
+def write_hpa_context_inventory():
+    """Keep the report rebuildable from the compact HPA v23 tissue and cell inventory."""
+    rows = []
+    for key in ["hpa_rna_consensus", "hpa_single_cell_tissue"]:
+        fields = {"Tissue": "tissue"}
+        if key == "hpa_single_cell_tissue":
+            fields["Cell type"] = "cell_type"
+        pieces = [
+            x.drop_duplicates()
+            for x in pd.read_csv(
+                reference_data.ensure(key, "v23"),
+                sep="\t",
+                usecols=list(fields),
+                chunksize=250000,
+            )
+        ]
+        sites = pd.concat(pieces).drop_duplicates().rename(columns=fields)
+        rows.append(
+            sites.assign(
+                family=key,
+                source_id=key + ":v23",
+                source_context=sites.tissue,
+                role="Shared screen",
+            )
+        )
+    write_csv(pd.concat(rows, ignore_index=True), OUT / "hpa-normal-source-contexts.csv")
+
+
 def normal_panel(facts, write=True, *, include_individual_samples=True):
     rows = []
-    downloads = OUT / "downloaded-hpa-sources.json"
-    INPUTS[str(downloads.relative_to(ROOT))] = sha256(downloads)
-    for source in json.loads(downloads.read_text()):
-        if sha256(ROOT / source["path"]) != source["sha256"]:
-            raise ValueError(f"Changed normal source: {source['source']}")
     hpa_ids = read(BASE / "hpa_rna_consensus-accepted-identities.csv.gz")
     lookup = hpa_ids.set_index("source_gene_id").canonical_gene_id
     for name, context in [
@@ -289,7 +350,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         ("rna_tissue_gtex", "Tissue"),
         ("rna_brain_gtex", "Brain region"),
     ]:
-        raw = read(RAW / f"{name}.tsv.zip", sep="\t")
+        raw = read_reference(name, "v23", sep="\t")
         raw["gene_id"] = raw.Gene.map(lookup)
         raw["tissue"] = raw[context]
         raw["source_context"] = raw[context]
@@ -297,7 +358,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         rows.append(
             group_normal_rows(raw, facts, source=name + ":v23", statistic="tissue mean TPM")
         )
-    raw = read(ROOT / "tmp/cta-source-consolidation/rna_brain_hpa.tsv.zip", sep="\t")
+    raw = read_reference("rna_brain_hpa", "v23", sep="\t")
     crosswalk = read(BASE / "alternative-evidence/hpa-brain-anatomy.csv")
     if set(raw.Subregion) != set(crosswalk.Subregion):
         raise ValueError("Changed brain anatomy")
@@ -315,9 +376,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         group_normal_rows(raw, facts, source="rna_brain_hpa:v23", statistic="subregion mean TPM")
     )
 
-    raw = read(
-        ROOT / "tmp/cta-source-consolidation/gtex-v11-median-tpm.gct.gz", sep="\t", skiprows=2
-    )
+    raw = read_reference("gtex_tissue_rna", "v11", sep="\t", skiprows=2)
     decisions = read(BASE / "alternative-evidence/gtex_tissue_rna-row-decisions.csv.gz")
     chosen = decisions[decisions.row_position.notna()]
     mapped = raw.iloc[chosen.row_position.astype(int)].copy()
@@ -328,6 +387,9 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         .replace("cMINUS1", "c-1"): value
         for key, value in GTEX_TISSUES.items()
     }
+    # The historical crosswalk grouped uterine bulk with endometrium. Keep the
+    # organ-level collection label when attributing individual witnesses.
+    gtex_columns["Uterus"] = "uterus"
     long = mapped.melt(
         id_vars="gene_id",
         value_vars=list(gtex_columns),
@@ -346,9 +408,12 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
 
         archive = reference_input("hpa_tissue_samples")
         genes = tissue_sample_genes(archive)
-        audit = tissue_library_qc(genes, hpa_ids)
+        carryover_reference = normal_library_qc.carryover_reference(mapped)
+        audit = tissue_library_qc(genes, hpa_ids, carryover_reference)
+        gtex, gtex_audit = individual_samples(facts, mapped, gtex_columns, carryover_reference)
         if write:
             write_csv(audit, OUT / "normal-library-qc.csv")
+            write_csv(gtex_audit, OUT / "gtex-library-qc.csv.gz")
         individual = tissue_samples(facts, hpa_ids, genes=genes)
         individual = individual.merge(
             audit[["sample_id", "library_qc_review"]], on="sample_id", validate="many_to_one"
@@ -357,8 +422,16 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
             facts.set_index("entity_id").member_count
         )
         individual["measured_members"] = individual.member_count.where(individual.identity_resolved)
-        normal = pd.concat([normal, individual], ignore_index=True)
-        INPUTS[str(archive)] = HPA_SOURCE["sha256"]
+        normal = pd.concat([normal, individual, gtex], ignore_index=True)
+        INPUTS["reference:hpa_individual_tissue_tpm:v23"] = HPA_SOURCE["sha256"]
+        INPUTS.update(
+            {
+                f"reference:{GTEX_SOURCE}:v11-{native.lower()}": reference_data.REFERENCE_SOURCES[
+                    GTEX_SOURCE
+                ]["pins"]["v11-" + native.lower()]["sha256"]
+                for native in gtex_columns
+            }
+        )
     normal["tissue"] = normal.tissue.replace(
         {"nucleus accumbens": "basal ganglia", "putamen": "basal ganglia"}
     )
@@ -368,41 +441,26 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     normal["scope"] = normal.category.where(
         normal.category.isin(["reproductive", "disposable"]), "normal"
     )
+    normal.loc[normal.tissue.eq("thymus"), "scope"] = "thymic"
     normal["context_id"] = normal.tissue
     normal["qc_pass"] = normal.value.notna()
     normal["identity_resolved"] = normal.measured_members.eq(normal.member_count)
     # Same combined anatomical coverage rule, now requiring native TPM support.
-    consensus = read(
-        reference_data.local_path("hpa_rna_consensus", "v23"), sep="\t", usecols=["Tissue"]
-    )
+    consensus = read_reference("hpa_rna_consensus", "v23", sep="\t", usecols=["Tissue"])
     concepts = anatomy(pd.DataFrame({"tissue": sorted(consensus.Tissue.unique())}))
     concepts = concepts.assign(source="hpa_rna_consensus", cell_type="bulk")
     concepts["category"] = tissue_tiers.context_tiers(concepts)
-    required = set(concepts.loc[~concepts.category.isin(["reproductive", "disposable"]), "tissue"])
+    required = set(
+        concepts.loc[~concepts.category.isin(["reproductive", "disposable"]), "tissue"]
+    ) - {"thymus"}
 
-    # DICE is already a supported native-TPM statistic. Unpaired protein groups
-    # retain the conservative upper bound rather than adding unrelated donors.
-    immune = read(FROZEN / "immune-cornea-contexts.csv.gz")
-    groups = read(FROZEN / "dice-group-contexts.csv.gz")
+    from bulk_normal_percentiles import dice_percentiles, hpa_immune_percentiles, tissue_percentiles
+
+    normal = tissue_percentiles(normal)
     immune = pd.concat(
-        [immune[immune.unit.eq("TPM") & immune.source.str.startswith("dice_")], groups],
-        ignore_index=True,
+        [dice_percentiles(facts, INPUTS), hpa_immune_percentiles(facts, hpa_ids, INPUTS)]
     )
-    rep_to_entity = facts.set_index("representative_gene_id").entity_id
-    immune = immune[immune.gene_id.isin(rep_to_entity.index)].copy()
-    immune["entity_id"] = immune.gene_id.map(rep_to_entity)
-    immune["value"] = immune.get("value_upper", pd.Series(np.nan, index=immune.index)).fillna(
-        immune.value
-    )
-    immune["source_id"] = immune.source.astype(str) + ":" + immune.version.astype(str)
-    immune["source_context"] = immune.cell_type
-    immune["context_id"] = "blood"
-    immune["scope"] = "normal"
-    immune["statistic"] = "supported immune TPM; DICE third-highest, group upper bound if unpaired"
-    immune["qc_pass"] = immune.value.notna()
-    immune["identity_resolved"] = True
-    monaco_path = reference_data.local_path("hpa_immune_monaco", "v23")
-    monaco = read(monaco_path, sep="\t")
+    monaco = read_reference("hpa_immune_monaco", "v23", sep="\t")
     monaco_ids = read(BASE / "hpa_immune_monaco-accepted-identities.csv.gz")
     monaco["gene_id"] = monaco.Gene.map(monaco_ids.set_index("source_gene_id").canonical_gene_id)
     monaco["value"] = monaco.TPM
@@ -442,6 +500,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         "context_id",
         "scope",
         "statistic",
+        "n_observations",
         "unit",
         "value",
         "qc_pass",
@@ -463,12 +522,11 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
 
 def disposable_ntpm(candidates):
     """HPA consensus nTPM in Disposable bulk tissues; a separate scale from TPM."""
-    source = Path(reference_data.local_path("hpa_rna_consensus", "v23"))
     identities = read(BASE / "hpa_rna_consensus-accepted-identities.csv.gz")
     lookup = {
         g: r.entity_id for r in candidates.itertuples() for g in json.loads(r.member_gene_ids)
     }
-    raw = read(source, sep="\t")
+    raw = read_reference("hpa_rna_consensus", "v23", sep="\t")
     raw = raw[raw.Tissue.isin(DISPOSABLE_NTPM_TISSUES)].copy()
     raw["entity_id"] = raw.Gene.map(identities.set_index("source_gene_id").canonical_gene_id).map(
         lookup
@@ -568,6 +626,17 @@ def annotate_papers(decisions):
     return pd.concat([result.reset_index(drop=True), pd.DataFrame(annotations)], axis=1)
 
 
+def pinned_tumor_matrix(path, digest):
+    from oncoref import catalog
+
+    path = Path(path)
+    if not path.is_file():
+        path = catalog.ensure("per-sample:" + path.stem, version=path.parent.name)
+    if sha256(path) != digest:
+        raise ValueError(f"Changed tumor matrix: {path}")
+    return path
+
+
 def tumors(facts):
     """Read all pinned matrices; retain per-protein, per-physical-sample values."""
     folder = BASE / "tumor-identity-repair"
@@ -585,8 +654,7 @@ def tumors(facts):
     identity_cache = {}
     for job in available.itertuples():
         path, digest = paths[job.cancer_code]
-        if sha256(path) != digest:
-            raise ValueError(f"Changed tumor matrix: {path}")
+        path = pinned_tumor_matrix(path, digest)
         if job.cancer_code in target_selection.GERM_CELL_TUMORS:
             coverage.append(
                 {
@@ -749,8 +817,7 @@ def cached_tumors(facts):
             raise ValueError(f"Changed cached comparison input: {name}")
     manifest = json.loads((BASE / "tumor-identity-repair/manifest.json").read_text())
     for name, digest in manifest["matrices"].items():
-        if sha256(Path(name)) != digest:
-            raise ValueError(f"Changed pinned tumor matrix: {name}")
+        pinned_tumor_matrix(name, digest)
     coverage = pd.read_csv(OUT / "tumor-source-coverage.csv")
     if coverage.cancer_code.isin(target_selection.GERM_CELL_TUMORS).any():
         raise ValueError("Excluded histologies require a fresh tumor extraction")
@@ -772,6 +839,7 @@ def build(*, reuse_tumor_cache=False):
     selected = facts[facts.comparison_eligible].copy()
     print(f"Common eligibility: {len(selected)} / {len(facts)}", flush=True)
     normal, required = normal_panel(selected)
+    write_hpa_context_inventory()
     development, development_provenance = developmental_samples(selected)
     development["comparison_id"] = COMPARISON_ID
     reproductive = pd.concat(
@@ -785,7 +853,7 @@ def build(*, reuse_tumor_cache=False):
     reproductive["qc_pass"] &= reproductive.library_qc_review.fillna("").eq("")
     write_csv(reproductive, OUT / "reproductive-comparison.csv.gz")
     for source in development_provenance:
-        INPUTS[source["path"]] = source["sha256"]
+        INPUTS[f"reference:{source['source']}:{source['version']}"] = source["sha256"]
     matrix, meta = cached_tumors(selected) if reuse_tumor_cache else tumors(selected)
     meta = meta.set_index("sample_key").loc[matrix.index]
     summaries, witnesses, reproductive_witnesses = [], [], []
@@ -899,7 +967,11 @@ def build(*, reuse_tumor_cache=False):
                 "cancer_routes": " | ".join(receipt["routes"]),
                 "normal_reference_tpm": receipt["normal_maximum"],
                 "normal_reference_contexts": json.dumps(
-                    receipt["normal_maximum_observations"][:10]
+                    pd.DataFrame(receipt["normal_maximum_observations"][:10])
+                    .astype(object)
+                    .where(lambda d: d.notna(), None)
+                    .to_dict("records"),
+                    allow_nan=False,
                 ),
                 "normal_reference_tied_contexts": len(receipt["normal_maximum_observations"]),
                 "missing_comparison_contexts": json.dumps(receipt["missing_normal_contexts"]),
@@ -1042,13 +1114,16 @@ def build(*, reuse_tumor_cache=False):
             + (["Target maximum or Disposable cap fails"] if failed else [])
         )
         if not r.shared_eligible
-        else f"Normal home is {r.home_tissue}, which no expression panel resolves; tumor "
-        "expression alone does not admit it and no reproductive/developmental evidence qualifies"
+        else f"Normal home is {r.home_tissue}, without sufficient locus-specific normal coverage for cancer admission"
         if r.subtype == "Unscreened tissue"
         else "Cancer and reproductive/developmental evidence qualify"
         if r.category == "CTA"
         else "Cancer tenfold evidence qualifies; reproductive tenfold evidence does not qualify"
         if r.category == "Cancer Antigen only"
+        else f"Reproductive enrichment qualifies. Cancer admission lacks coverage of {r.home_tissue}."
+        if r.category == "Reproductive Antigen only"
+        and r.cancer_evidence == "qualifies"
+        and r.home_tissue
         else "Reproductive/developmental evidence qualifies; " + r.cancer_assessment_reason
         if r.category == "Reproductive Antigen only"
         else "Neither tenfold compartment qualifies; "
@@ -1150,11 +1225,11 @@ def build(*, reuse_tumor_cache=False):
             "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
             "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
             "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
-            "Complete 36-context combined nonreproductive normal anatomy panel, plus observed native-TPM normal immune and brain measurements",
+            f"Complete {len(required)}-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Adult whole thymus is Disposable and retained in the separate thymic scope.",
         ],
         "expression_bounds": target_selection.definition()["expression_bounds"],
         "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,
-        "normal_statistic": "Maximum of individual HPA tissue samples and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE third-highest TPM",
+        "normal_statistic": "Maximum across GTEx v11 within-site linear donor P95, HPA v23 normal biopsy P95 and supported context statistics: tissue/subregion means, GTEx v11 donor medians, and immune summaries including DICE within-population P95 for single loci and a conservative bound for unpaired loci",
         "batch_corrected": False,
         "limitations": [
             "Quantifier, library preparation and study effects are retained; the fold rule is a screening convention",
@@ -1163,8 +1238,27 @@ def build(*, reuse_tumor_cache=False):
         ],
         "participant_identity": "Shared sample_identities API joins curated case/donor mappings and documented TCGA, TARGET, MMRF and Treehouse identifiers. Every sample retains identity status, basis and references. Unresolved or conflicting identities support only the single-sample route.",
         "participant_identity_policy": sample_api.PATIENT_IDENTITY_POLICY,
-        "normal_sources": json.loads((OUT / "downloaded-hpa-sources.json").read_text()),
+        "normal_sources": [
+            {key: pin[key] for key in ("url", "sha256", "archive_sha256", "bytes")}
+            | {"source": name, "version": "v23"}
+            for name in ("rna_tissue_hpa", "rna_tissue_gtex", "rna_brain_gtex", "rna_brain_hpa")
+            for pin in [reference_data.REFERENCE_SOURCES[name]["pins"]["v23"]]
+        ],
         "individual_tissue_source": HPA_SOURCE,
+        "gtex_individual_tissue_source": {
+            "source": GTEX_SOURCE,
+            "release": "v11",
+            "unit": "TPM",
+            "shards": sorted(
+                v
+                for v in reference_data.REFERENCE_SOURCES[GTEX_SOURCE]["pins"]
+                if v.startswith("v11-")
+            ),
+            "registry": "oncoref/data/reference-releases.json",
+            "sample_inventory": "gtex-library-qc.csv.gz",
+            "scope": "All 52 primary tissue matrices; cultured cell lines excluded.",
+            "reduction": "Non-reproductive sites use gtex_donor_p95:v11, the linearly interpolated 95th percentile across GTEX donors after complete within-sample protein-group sums and within-donor replicate medians. Reproductive sites retain individual sample witnesses.",
+        },
         "mammary_lactation": {
             "state_is_inferred": True,
             "unknown_marker_coverage_is_resting": False,
@@ -1270,6 +1364,7 @@ def build(*, reuse_tumor_cache=False):
         "literature_family",
         "literature_family_tier",
         "home_tissue",
+        "published_home_tissue",
         "reference_recorded_tissue",
         "reference_recorded_tier",
         "reference_recorded_basis",

@@ -1,0 +1,12 @@
+reference_statistic,proteins,tumor_10x,gained,lower_threshold
+max,918,356,0,0
+without_M,918,366,10,145
+source_matched,918,365,9,127
+second_donor,918,410,54,544
+p99_rank,918,473,117,540
+p99,918,481,125,544
+p95,918,515,159,544
+p75,918,536,180,544
+both_p99,918,482,126,594
+both_p95,918,518,162,594
+both_p75,918,552,196,594

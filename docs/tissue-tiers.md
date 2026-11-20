@@ -1,5 +1,8 @@
 # Normal-tissue tiers
 
+[Organ and cell injury hierarchy with supporting sources](tissue-hierarchy.md)
+
+
 OncoRef 1.29.0 centralizes **Vital / Protected / Manageable / Disposable** calls for adult human organs and resolved cell populations. The [complete report](audits/tissue-hazards-1.29.0/index.md) includes 107 assessments, 50 linked references, four generated figures, every canonical human anatomy concept and the native source mappings. A [searchable HTML report](audits/tissue-hazards-1.29.0/report.html), [PDF](audits/tissue-hazards-1.29.0/tissue-hazard-ontology.pdf) and CSV/JSON exports accompany it.
 
 The tiers describe **consequences of sustained injury**, including loss of repair capacity. They are policy judgments, not measured fatality probabilities. The evidence ledger distinguishes clinical cell-therapy injury, selective animal depletion, regeneration experiments, functional disease analogies, surgical cohorts and anatomical references. An anatomy-only citation supports identity, not tolerability. This is a curated evidence review, not an exhaustive systematic review.
@@ -7,9 +10,9 @@ The tiers describe **consequences of sustained injury**, including loss of repai
 | Tier | Interpretation | Examples and boundaries |
 |---|---|---|
 | Vital | Highest protection priority for life-threatening failure, major irreversible sensory/neurological injury or indispensable repair | Heart, neurons, podocytes, AT1/AT2, airway club/basal and intestinal crypt compartments. Compensation after finite depletion remains relevant. |
-| Protected | Persistent injury is consequential and compensation or control is insufficiently established | Ciliated/goblet airway cells, salivary tissue, generic fibroblasts, whole skin, spleen and thymus. This is not a finding of clinical safety. |
+| Protected | Persistent injury is consequential and compensation or control is insufficiently established | Ciliated/goblet airway cells, salivary tissue, generic fibroblasts, whole skin and spleen. This is not a finding of clinical safety. |
 | Manageable | Defined loss has a credible compensation or treatment precedent | Thyroid and mature B cells; replacement/support does not control every inflammatory manifestation. Adipose and mammary calls retain explicit inference and extent limitations. |
-| Disposable | Narrow conditional compartment-loss allowance | Cutaneous melanocytes, hair follicles, appendix, gallbladder and tonsil. Shared cells elsewhere and in-situ inflammation require separate assessment. |
+| Disposable | Narrow conditional compartment-loss allowance | Cutaneous melanocytes, hair follicles, adult whole thymus, appendix, gallbladder and tonsil. Shared cells elsewhere and in-situ inflammation require separate assessment. |
 
 ## How a tier is chosen
 
@@ -80,8 +83,7 @@ precedent above.**
 The base registry is `oncoref/data/normal-tissue-tiers.yaml`. Additions live in
 `oncoref/data/normal-tissue-tier-updates.yaml` and are replayed over it, as
 gene-knowledge updates are. `tissue_tiers.assess()` resolves both;
-`tissue_tiers.registry_assess()` answers from the base registry alone. An update can
-only add a tissue the base registry does not resolve.
+`tissue_tiers.registry_assess()` answers from the base registry alone. Additions introduce new anatomy. A revision records its previous tier and the basis for the new assignment. The adult whole-thymus revision takes effect in 1.43.0.
 
 | Tissue | Tier | Confidence |
 |---|---|---|

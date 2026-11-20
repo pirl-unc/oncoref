@@ -120,7 +120,7 @@ def test_unassessed_association_is_not_negative_or_a_global_safety_hold():
     ]
 
 
-def test_unmeasured_home_tissue_needs_reproductive_evidence():
+def test_unmeasured_home_tissue_blocks_ca_with_or_without_reproductive_evidence():
     result = policy.classify(
         pd.DataFrame(
             [
@@ -134,7 +134,7 @@ def test_unmeasured_home_tissue_needs_reproductive_evidence():
     )
     assert result.classification.tolist() == [
         "Other:Unscreened tissue",
-        "CTA",
+        "Reproductive Antigen only",
         "Reproductive Antigen only",
         "Other:Review",
         "Cancer Antigen only",
@@ -167,6 +167,15 @@ def test_ratio_boundaries_and_low_expression_floor(normal, values, status, route
     assert result["status"] == status
     assert result["routes"] == routes
     assert result["normal_maximum"] == normal
+
+
+def test_thymus_is_observed_separately_from_the_peripheral_cutoff():
+    positive, normal = observations((20, 0), (2, 1))
+    thymus = normal.iloc[[0]].assign(context_id="thymus", scope="thymic", value=100)
+    result = assess(positive, pd.concat([normal, thymus]))
+    assert result["status"] == "qualifies" and result["single_sample_threshold"] == 20
+    with pytest.raises(ValueError, match="separate thymic scope"):
+        assess(positive, pd.concat([normal, thymus.assign(scope="normal")]))
 
 
 def test_replicates_and_duplicate_cohort_views_are_one_participant():
@@ -387,7 +396,9 @@ def test_rare_cell_outcomes_distinguish_exclusion_review_and_weak_evidence():
     kwargs = {"mapping_risk": False, "confirmed_tissues": set()}
     lone = policy.assess_rare_cell_rna(apart, **kwargs)
     assert (lone["status"], lone["action"]) == ("dismissed", "none")
-    assert "different cell types" in lone["findings"][0]["basis"]
+    assert (
+        "insufficient independent donor and cell-type concordance" in lone["findings"][0]["basis"]
+    )
     assert not lone["findings"][0]["replicated"]
     confirmed = policy.assess_rare_cell_rna(apart, mapping_risk=False, confirmed_tissues={"brain"})
     assert confirmed["status"] == "established"
@@ -482,3 +493,13 @@ def test_report_embeds_both_figures_without_conflicting_svg_ids():
     parser.feed(path.read_text())
     assert parser.figures == 2
     assert len(parser.ids) == len(set(parser.ids))
+
+
+def test_shared_allen_donor_across_atlases_cannot_replicate_itself():
+    sources = ["1ca90a2d-2943-483d-b678-b809bf464c30", "d17249d2-0e6e-4500-abb8-e6c93fa1ac6f"]
+    rows = rare(TWO_STUDIES).assign(source_id=sources, donor_id="H18.30.002")
+    kwargs = {"mapping_risk": False, "confirmed_tissues": set()}
+    finding = policy.assess_rare_cell_rna(rows, **kwargs)["findings"][0]
+    assert finding["donors_multi_molecule"] == 1 and not finding["replicated"]
+    rows.loc[1, "donor_id"] = "H20.33.014"
+    assert policy.assess_rare_cell_rna(rows, **kwargs)["status"] == "established"

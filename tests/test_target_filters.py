@@ -20,7 +20,7 @@ def kept(f, catalog):
 
 def test_default_filter_is_the_plain_catalog(catalog):
     d = tf.apply(tf.TargetFilter(), catalog)
-    assert d.keep.sum() == catalog.is_target_candidate.sum() == 509
+    assert d.keep.sum() == catalog.is_target_candidate.sum() == 525
     assert (d.keep == d.is_target_candidate).all()
     assert (d[d.keep].filtered_category == d[d.keep].category).all()
     assert tf.TargetFilter().changed() == {}
@@ -39,10 +39,16 @@ def test_no_knob_can_add_a_protein(catalog):
         assert kept(name, catalog) <= candidates
 
 
-def test_every_mode_keeps_the_positive_controls(catalog):
+def test_positive_controls_follow_the_same_thresholds(catalog):
+    expected = {
+        "all": set(tf.POSITIVE_CONTROLS),
+        "loose": set(tf.POSITIVE_CONTROLS),
+        "standard": {"MAGEA4", "NY-ESO-1"},
+        "strict": {"MAGEA4", "NY-ESO-1"},
+    }
     for name in tf.FILTER_MODES:
         labels = set(tf.select(name, catalog).protein_group_label)
-        assert set(tf.POSITIVE_CONTROLS) <= labels, name
+        assert set(tf.POSITIVE_CONTROLS) & labels == expected[name], name
 
 
 def test_layers_report_first_failure_in_order(catalog):
@@ -57,9 +63,10 @@ def test_off_target_knob_reads_tissue_tpm_and_includes_disposable(catalog):
     tissue = tf.select(tf.TargetFilter(max_off_target_tpm=1.0), catalog)
     assert tissue.normal_reference_tpm.lt(1.0).all() and tissue.disposable_max_tpm.lt(1.0).all()
     assert tissue.healthy_maximum_ntpm.ge(1.0).any()  # the knob does not read nTPM
-    # The catalog's reference N is never below the legacy bulk maximum.
+    # Reconstruct the filter from the two current source-native references.
     candidates = catalog[catalog.is_target_candidate]
-    assert candidates.normal_reference_tpm.ge(candidates.healthy_maximum_tpm - 1e-9).all()
+    expected = candidates.normal_reference_tpm.lt(1.0) & candidates.disposable_max_tpm.lt(1.0)
+    assert set(tissue.entity_id) == set(candidates.loc[expected, "entity_id"])
 
 
 def test_every_cancer_antigen_has_a_tumor_at_tenfold(catalog):
@@ -125,9 +132,9 @@ def test_patient_replication_uses_tenfold_known_patients_not_above_normal(catalo
 
 def test_cta_list_papers_count_only_where_they_nominate(catalog):
     papers = tf.paper_table()
-    from oncoref.cta_literature import attestations
+    from oncoref.cta_literature import current_attestations
 
-    links = attestations()
+    links = current_attestations()
     nominated = set(
         map(tuple, links[links.published_nomination][["entity_id", "source_id"]].to_numpy())
     )
@@ -139,6 +146,7 @@ def test_cta_list_papers_count_only_where_they_nominate(catalog):
 
 def test_missing_values_never_pass_a_threshold(catalog):
     row = catalog[catalog.protein_group_label == "MAGEA4"].copy()
+    row["normal_reference_tpm"] = 1.0
     assert tf.apply(tf.TargetFilter(max_off_target_tpm=4.0), row).keep.all()
     row["normal_reference_tpm"] = float("nan")
     d = tf.apply(tf.TargetFilter(max_off_target_tpm=4.0), row)
@@ -181,7 +189,7 @@ def test_mage_rule_drops_the_family_but_keeps_magea4(catalog):
     f = tf.TargetFilter(exclude_prefixes=("MAGE",), except_labels=("MAGEA4",))
     d = tf.apply(f, catalog)
     removed = d[d.is_target_candidate & ~d.keep]
-    assert len(removed) == 16
+    assert len(removed) == 17
     assert "MAGEC2" in set(removed.protein_group_label)
     assert removed.protein_group_label.str.startswith("MAGE").all()
     assert (removed.filter_failed == "exclusions").all()
@@ -210,7 +218,7 @@ def test_normal_function_knob_follows_the_tier_order(catalog):
         int(tf.apply(tf.TargetFilter(normal_function=value), catalog).keep.sum())
         for value in tf.NORMAL_FUNCTION
     ]
-    assert sizes[0] == 509 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
+    assert sizes[0] == 525 and sizes == sorted(sizes, reverse=True) and sizes[-1] < sizes[1]
     strict = tf.apply(tf.TargetFilter(normal_function="no_protected"), catalog)
     kept = strict[strict.keep]
     assert not kept.curated_tier.isin(["vital", "protected"]).any()

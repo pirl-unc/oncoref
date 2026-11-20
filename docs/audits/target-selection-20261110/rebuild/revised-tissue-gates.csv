@@ -1,0 +1,21 @@
+gene_id,assay,candidate_exclusion,unsafe_evidence
+ENSG00000071539,Normal bulk,False,False
+ENSG00000104147,Normal bulk,False,False
+ENSG00000115163,Normal bulk,False,False
+ENSG00000119457,HPA normal protein,False,False
+ENSG00000121570,Normal bulk,False,False
+ENSG00000129173,Normal bulk,False,False
+ENSG00000129195,Normal bulk,False,False
+ENSG00000129810,Normal bulk,False,False
+ENSG00000142945,HPA normal protein,False,False
+ENSG00000153303,HPA normal protein,False,False
+ENSG00000158485,Normal bulk,False,False
+ENSG00000163535,Normal bulk,False,False
+ENSG00000165480,Normal bulk,False,False
+ENSG00000166220,Normal bulk,False,False
+ENSG00000171403,Normal bulk,False,False
+ENSG00000175097,Normal bulk,True,False
+ENSG00000179934,HPA normal protein,False,False
+ENSG00000187862,Normal bulk,False,False
+ENSG00000222028,HPA normal protein,False,False
+ENSG00000222028,Normal bulk,False,False

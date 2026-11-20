@@ -1,8 +1,8 @@
 {
   "schema": "oncoref.cta-literature-followup",
   "schema_version": 2,
-  "reviewed_on": "2026-11-18",
-  "classification_effect": "Literature annotation and review recommendations. Released classification is unchanged by this file.",
+  "reviewed_on": "2026-11-19",
+  "classification_effect": "Scoped publication evidence. An adjudicated unscreened_adult_home records anatomy for the home-tissue coverage check. Paper counts do not determine biological membership.",
   "sources": [
     {
       "source_id": "10.1371/journal.pone.0007682",
@@ -38,7 +38,8 @@
           "assay": "Microdissection and semi-quantitative PCR",
           "source_location": "Human taste-bud results and Figure 10D; Methods: human tissue collection and PCR",
           "limitations": "Human data are RNA from a microdissected compartment. Cell-subtype in situ experiments elsewhere in this paper used macaques. This is not human protein detection or a therapeutic depletion experiment.",
-          "reviewed_on": "2026-11-17"
+          "reviewed_on": "2026-11-17",
+          "unscreened_adult_home": "taste bud"
         }
       ],
       "gene_list_scope": "Reviewed gene claims; not an exhaustive list of every gene mentioned in the paper."
@@ -660,6 +661,342 @@
           "scope": "The study reports higher DAZL RNA in glioblastoma and glioblastoma cell lines than the normal comparators. It supplies tumor-expression support, not a test of normal retinal astrocytes.",
           "eligible_for_coverage": true,
           "reviewed_on": "2026-11-18"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1038/s41593-020-0587-9",
+      "citation": "Durante et al., 2020",
+      "title": "Single-cell analysis of olfactory neurogenesis and differentiation in adult humans",
+      "url": "https://doi.org/10.1038/s41593-020-0587-9",
+      "roles": [
+        "normal_tissue"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000261949"
+          ],
+          "protein": "GFY",
+          "reported_name": "GFY",
+          "reported_as": "GFY RNA was detected in 94.1% of mature and 70.3% of immature olfactory sensory neurons.",
+          "scope": "GFY RNA was detected in 94.1% of mature and 70.3% of immature olfactory sensory neurons.",
+          "taxonomy_id": 9606,
+          "context": "Adult human olfactory epithelium",
+          "assay": "10x single-cell RNA sequencing",
+          "source_location": "Supplementary tables 3 and 5, GFY rows",
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "Cluster-level detection fractions pool cells and do not establish donor replication or absolute TPM.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "accession": "GSE139522",
+            "dataset_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE139522",
+            "reference_sources": [
+              "olfactory_durante_supplement"
+            ]
+          },
+          "unscreened_adult_home": "olfactory epithelium"
+        }
+      ]
+    },
+    {
+      "source_id": "10.1016/j.devcel.2023.07.013",
+      "citation": "Alghadeer et al., 2023",
+      "title": "Single-cell census of human tooth development enables generation of human enamel",
+      "url": "https://doi.org/10.1016/j.devcel.2023.07.013",
+      "roles": [
+        "normal_tissue"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000125363"
+          ],
+          "protein": "AMELX",
+          "reported_name": "AMELX",
+          "reported_as": "At 20–22 gestational weeks AMELX had positive counts in 55 of 67 AM-1 cells and 119 of 156 AM-2 cells.",
+          "scope": "At 20–22 gestational weeks AMELX had positive counts in 55 of 67 AM-1 cells and 119 of 156 AM-2 cells.",
+          "taxonomy_id": 9606,
+          "context": "Human fetal dental epithelium, 9–22 gestational weeks",
+          "assay": "Single-cell RNA counts in primary dental tissue",
+          "source_location": "Dental epithelial lineage count matrix, AM-1 and AM-2 clusters, 20_22gw",
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "Gestational-age bins can pool donors. These counts describe primary developing teeth and cannot estimate adult expression.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "accession": "GSE184749",
+            "dataset_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE184749",
+            "reference_sources": [
+              "human_fetal_dental_epithelium"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1038/s41586-024-08189-z",
+      "citation": "To et al., 2024",
+      "title": "A multi-omic atlas of human embryonic skeletal development",
+      "url": "https://doi.org/10.1038/s41586-024-08189-z",
+      "roles": [
+        "normal_tissue"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000170374"
+          ],
+          "protein": "SP7",
+          "reported_name": "SP7",
+          "reported_as": "SP7 marked developing osteogenic zones, with osterix protein localized in the embryonic cranium.",
+          "scope": "SP7 marked developing osteogenic zones, with osterix protein localized in the embryonic cranium.",
+          "taxonomy_id": 9606,
+          "context": "Human first-trimester limb and cranium; cranial staining at 8.5 and 10 post-conception weeks",
+          "assay": "Single-nucleus and spatial transcriptomics, whole-mount immunostaining",
+          "source_location": "Cranial osteogenic zones and supplementary videos 1 and 2",
+          "evidence_types": [
+            "rna_expression",
+            "immunostaining"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "The age-specific staining and spatial signal do not measure adult bone expression.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "accession": "E-MTAB-14385",
+            "dataset_url": "https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-14385",
+            "reference_sources": [
+              "human_skeletal_atlas_supplement"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.18632/aging.203452",
+      "citation": "Gong et al., 2021",
+      "title": "A systematic dissection of human primary osteoblasts in vivo at single-cell resolution",
+      "url": "https://doi.org/10.18632/aging.203452",
+      "roles": [
+        "normal_tissue"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000170374"
+          ],
+          "protein": "SP7",
+          "reported_name": "SP7",
+          "reported_as": "SP7 RNA was enriched in the O2 mature osteoblast cluster.",
+          "scope": "SP7 RNA was enriched in the O2 mature osteoblast cluster.",
+          "taxonomy_id": 9606,
+          "context": "Primary femoral-head osteoblasts from one 31-year-old man with osteoarthritis and osteopenia",
+          "assay": "Single-cell RNA sequencing of freshly isolated cells",
+          "source_location": "Supplementary Table 3, row 528, O2 versus other osteoblast clusters",
+          "evidence_types": [
+            "rna_expression"
+          ],
+          "allowed_uses": [
+            "normal_tissue_review"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "One surgical donor with bone disease. The within-study differential expression statistic cannot set a healthy bulk TPM ceiling.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "accession": "GSE147390",
+            "dataset_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147390",
+            "reference_sources": [
+              "human_primary_osteoblast_markers"
+            ],
+            "sample": "GSM4429895"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1038/s41467-021-23758-w",
+      "citation": "Molè et al., 2021",
+      "title": "A single cell characterisation of human embryogenesis identifies pluripotency transitions and putative anterior hypoblast centre",
+      "url": "https://doi.org/10.1038/s41467-021-23758-w",
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000147869"
+          ],
+          "protein": "CER1",
+          "reported_name": "CER1",
+          "reported_as": "A hypoblast subpopulation expressed CER1 RNA on days 9 and 11. Day-9 immunofluorescence localized CER1 protein in a subset of hypoblast cells.",
+          "scope": "A hypoblast subpopulation expressed CER1 RNA on days 9 and 11. Day-9 immunofluorescence localized CER1 protein in a subset of hypoblast cells.",
+          "taxonomy_id": 9606,
+          "context": "Human IVF embryos cultured to days 9 and 11 after fertilization",
+          "assay": "10x single-cell RNA sequencing and immunofluorescence",
+          "source_location": "Figure 3 and Supplementary Data 1",
+          "evidence_types": [
+            "rna_expression",
+            "immunostaining"
+          ],
+          "allowed_uses": [
+            "reproductive_support"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "The expression matrix contains UMI counts. Neither detection nor staining supplies a native TPM fold.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "accession": "E-MTAB-8060",
+            "dataset_url": "https://www.ebi.ac.uk/biostudies/arrayexpress/studies/E-MTAB-8060",
+            "reference_sources": [
+              "mole_embryo_counts",
+              "mole_embryo_genes",
+              "mole_embryo_barcodes",
+              "mole_embryo_metadata",
+              "mole_embryo_lineage_summary"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1186/1471-2199-11-33",
+      "citation": "Lopes et al., 2010",
+      "title": "The human RPS4 paralogue on Yq11.223 encodes a structurally conserved ribosomal protein and is preferentially expressed during spermatogenesis",
+      "url": "https://doi.org/10.1186/1471-2199-11-33",
+      "roles": [
+        "reproductive_developmental"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000280969"
+          ],
+          "protein": "RPS4Y2",
+          "reported_name": "RPS4Y2",
+          "reported_as": "Distinct RPS4Y2 splice products were detected in testis and prostate, with testicular expression associated with germ-cell content.",
+          "scope": "Distinct RPS4Y2 splice products were detected in testis and prostate, with testicular expression associated with germ-cell content.",
+          "taxonomy_id": 9606,
+          "context": "Human testis and prostate; testicular biopsies differing in germ-cell content",
+          "assay": "Paralog- and transcript-directed RT-PCR",
+          "source_location": "Figures 1 and 2, additional files 1 and 2",
+          "evidence_types": [
+            "rna_expression",
+            "assay_identity_review"
+          ],
+          "allowed_uses": [
+            "reproductive_support",
+            "identity_review"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "The study did not resolve the DICE naïve B-cell signal or quantify germ cells, prostate and B cells on a common TPM scale.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "reference_sources": [
+              "rps4_expression_primers",
+              "rps4_tissue_panel"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1385/jmn:29:2:145",
+      "citation": "Santic et al., 2006",
+      "title": "Gangliocytes in neuroblastic tumors express alarin, a novel peptide derived by differential splicing of the galanin-like peptide gene",
+      "url": "https://doi.org/10.1385/jmn:29:2:145",
+      "roles": [
+        "translation_identity"
+      ],
+      "gene_list_scope": "Selected human gene findings verified in this study.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000197487"
+          ],
+          "protein": "GALP",
+          "reported_name": "GALP",
+          "reported_as": "A GALP transcript skipping exon 3 encodes alarin. Alarin-directed staining was reported in neuroblastic tumors.",
+          "scope": "A GALP transcript skipping exon 3 encodes alarin. Alarin-directed staining was reported in neuroblastic tumors.",
+          "taxonomy_id": 9606,
+          "context": "Human ganglioneuroma and other neuroblastic tumors",
+          "assay": "Splice-product RT-PCR and alarin-directed immunohistochemistry",
+          "source_location": "RT-PCR in ganglioneuroma and staining in neuroblastic tumor tissues",
+          "evidence_types": [
+            "rna_expression",
+            "immunostaining",
+            "assay_identity_review"
+          ],
+          "allowed_uses": [
+            "identity_review",
+            "translation_context"
+          ],
+          "eligible_for_coverage": false,
+          "limitations": "This finding does not assign the protein product in the catalog tumor or in hypothalamic cells.",
+          "reviewed_on": "2026-11-18",
+          "provenance": {
+            "pmid": "16954604"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1186/s40425-019-0678-x",
+      "citation": "Marcinkowski et al., 2019",
+      "title": "Cancer targeting by TCR gene-engineered T cells directed against Kita-Kyushu Lung Cancer Antigen-1",
+      "url": "https://doi.org/10.1186/s40425-019-0678-x",
+      "roles": [
+        "tumor",
+        "cta"
+      ],
+      "gene_list_scope": "CT83 in the tumor-expression analyses.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000204019"
+          ],
+          "protein": "CT83",
+          "reported_name": "KK-LC-1 (CT83)",
+          "reported_as": "CT83 RNA localized to gastric and triple-negative breast tumor cells.",
+          "scope": "Human tumor RNA localization by RNAscope; expression varied among specimens and cells.",
+          "taxonomy_id": 9606,
+          "context": "Human gastric and triple-negative breast cancers",
+          "assay": "RNA in situ hybridization (RNAscope)",
+          "source_location": "Figure 4d–e, Results and Discussion",
+          "evidence_types": [
+            "rna_expression",
+            "cta_nomination"
+          ],
+          "allowed_uses": [
+            "tumor_support",
+            "cta_nomination"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "A prevalence and cell-localization assay. No native TPM or patient-specific dosing information. Normal-tissue qRT-PCR in the same study included a low bladder signal.",
+          "reviewed_on": "2026-11-19",
+          "provenance": {
+            "dataset": "marcinkowski2019-ct83-expression",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6712783/#Fig4"
+          }
         }
       ]
     }

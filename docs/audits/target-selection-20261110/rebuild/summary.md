@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-18.1`, 19,893 human protein records. **303 CTA, 106 Cancer Antigen only, 100 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-19.4`, 19,893 human protein records. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 
@@ -16,14 +16,14 @@ Reproductive protection is opt-in for every anatomy preset. Not protected, prote
 
 | Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
-| all | none | 303 | 106 | 100 | 509 |
-| female-patient | none | 303 | 106 | 100 | 509 |
-| female-patient (protect ovary) | ovary | 264 | 100 | 89 | 453 |
-| female-patient (lactating) | lactating_breast | 299 | 104 | 97 | 500 |
+| all | none | 327 | 70 | 128 | 525 |
+| female-patient | none | 327 | 70 | 128 | 525 |
+| female-patient (protect ovary) | ovary | 277 | 67 | 113 | 457 |
+| female-patient (lactating) | lactating_breast | 320 | 67 | 124 | 511 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
-| male-patient | none | 303 | 106 | 100 | 509 |
-| male-patient (protect testis) | testis | 62 | 45 | 24 | 131 |
-| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 49 | 37 | 14 | 100 |
+| male-patient | none | 327 | 70 | 128 | 525 |
+| male-patient (protect testis) | testis | 54 | 29 | 24 | 107 |
+| male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 40 | 23 | 11 | 74 |
 
 [Profile table CSV](summary/cta-profiles.csv)
 
@@ -37,7 +37,7 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 ![Set overlap](summary/venn.png)
 
-Of 303 CTA, 227 are published nominations and 76 are not. 1,891 published nominations are in neither set: 1,761 of all 2,233 nominations are Unsafe, 65 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,759 of all 2,233 nominations are Unsafe, 67 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ## Funnel by filtering idea
 
@@ -48,34 +48,34 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Filtering idea | Removed here | Remaining |
 |---|---|---|
 | All assessed proteins | 0 | 19,893 |
-| Bulk tissue RNA above the tissue ceiling | 17,522 | 2,371 |
-| Cell-type cluster RNA (HPA single cell) | 424 | 1,947 |
-| Sorted immune-cell RNA | 96 | 1,851 |
-| Rare-cell RNA established by donor | 107 | 1,744 |
-| Normal-tissue protein (IHC) | 50 | 1,694 |
-| Curated or published normal expression | 49 | 1,645 |
-| Adult cornea RNA | 5 | 1,640 |
-| Coverage, identity, translation or unresolved evidence | 731 | 909 |
+| Bulk tissue RNA above the tissue ceiling | 17,507 | 2,386 |
+| Cell-type cluster RNA (HPA single cell) | 436 | 1,950 |
+| Sorted immune-cell RNA | 96 | 1,854 |
+| Rare-cell RNA established by donor | 107 | 1,747 |
+| Normal-tissue protein (IHC) | 50 | 1,697 |
+| Curated or published normal expression | 49 | 1,648 |
+| Adult cornea RNA | 5 | 1,643 |
+| Coverage, identity, translation or unresolved evidence | 734 | 909 |
 | Nested, Unsafe-contained or read-through sequence | 48 | 861 |
-| No qualifying expression or bounds fail | 254 | 607 |
-| Home tissue no panel resolves | 98 | 509 |
+| No qualifying expression or bounds fail | 248 | 613 |
+| Home tissue no panel resolves | 88 | 525 |
 
 ![Published nominations](summary/funnel-published.png)
 
 | Filtering idea | Removed here | Remaining |
 |---|---|---|
 | Published CTA / oncofetal nominations | 0 | 2,233 |
-| Bulk tissue RNA above the tissue ceiling | 1,464 | 769 |
-| Cell-type cluster RNA (HPA single cell) | 174 | 595 |
-| Sorted immune-cell RNA | 25 | 570 |
-| Rare-cell RNA established by donor | 68 | 502 |
-| Normal-tissue protein (IHC) | 19 | 483 |
-| Curated or published normal expression | 10 | 473 |
-| Adult cornea RNA | 1 | 472 |
-| Coverage, identity, translation or unresolved evidence | 65 | 407 |
+| Bulk tissue RNA above the tissue ceiling | 1,454 | 779 |
+| Cell-type cluster RNA (HPA single cell) | 182 | 597 |
+| Sorted immune-cell RNA | 25 | 572 |
+| Rare-cell RNA established by donor | 68 | 504 |
+| Normal-tissue protein (IHC) | 19 | 485 |
+| Curated or published normal expression | 10 | 475 |
+| Adult cornea RNA | 1 | 474 |
+| Coverage, identity, translation or unresolved evidence | 67 | 407 |
 | Nested, Unsafe-contained or read-through sequence | 7 | 400 |
-| No qualifying expression or bounds fail | 42 | 358 |
-| Home tissue no panel resolves | 16 | 342 |
+| No qualifying expression or bounds fail | 27 | 373 |
+| Home tissue no panel resolves | 17 | 356 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 
@@ -85,12 +85,12 @@ Steps that remove no published nomination are omitted from the second funnel. [A
 
 | Layer | Unsafe proteins flagged | Only reason |
 |---|---|---|
-| Normal bulk | 17,522 | 560 |
-| HPA tissue clusters | 17,053 | 268 |
+| Normal bulk | 17,507 | 558 |
+| HPA tissue clusters | 17,053 | 271 |
 | Adult cornea | 12,095 | 5 |
 | DICE immune | 11,632 | 45 |
 | Monaco immune | 11,264 | 19 |
-| HPA normal protein | 10,157 | 47 |
+| HPA normal protein | 10,152 | 47 |
 | HPA immune | 7,973 | 14 |
 | Established rare normal-cell RNA | 129 | 106 |
 | Reviewed normal-cell knowledge | 32 | 31 |
@@ -115,7 +115,7 @@ One value per protein on each source's own scale; scales are never pooled. Count
 
 ## Shared enrichment rule
 
-Both CA and RA independently require 10× max(N, Disposable, 1). The cancer panel below shows the tumor side.
+Both CA and RA independently require 10× max(N, D, 1 TPM). Both normal compartments exclude thymus. The cancer panel below shows the tumor side.
 
 ![Tumor against normal](summary/tumor-normal.png)
 
@@ -131,7 +131,7 @@ Both CA and RA independently require 10× max(N, Disposable, 1). The cancer pane
 
 - Required normal coverage incomplete: 400
 - Identity or translation unresolved: 102
-- Normal signal blocks admission (not Unsafe): 229
+- Normal signal blocks admission (not Unsafe): 232
 - Other unresolved evidence or comparison: 0
 
 A protein can use several routes, so route counts exceed set sizes.

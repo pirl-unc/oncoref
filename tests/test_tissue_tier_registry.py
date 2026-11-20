@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 
 from oncoref import tissue_tiers as h
-from oncoref.normal_tissues import normal_tissue_screening_tier, resolve_normal_tissue
+from oncoref.normal_tissues import normal_tissue_category, resolve_normal_tissue
 
 
 @pytest.mark.parametrize(
@@ -104,7 +104,7 @@ def test_every_existing_somatic_root_has_a_cited_bulk_call():
         assert result["tier"] in h.TIERS, (root, result)
         assert result["references"]
         a = resolve_normal_tissue(root, species="human")
-        assert normal_tissue_screening_tier(a) == result["tier"]
+        assert normal_tissue_category(a) == result["tier"]
 
 
 def test_cell_override_is_consistent_for_rna_and_ihc_but_not_bulk():
@@ -128,12 +128,14 @@ def test_conflicting_equal_priority_rules_fail_closed(monkeypatch):
     rule.update(id="conflict", tier="manageable")
     doc["assessments"].append(rule)
     monkeypatch.setattr(h, "_load", lambda: doc)
+    h._current_base_rules.cache_clear()
     h._resolve.cache_clear()
     try:
         assert (
             h.assess("lung", "ciliated cells", resolution="cell")["reason"] == "ambiguous_cell_rule"
         )
     finally:
+        h._current_base_rules.cache_clear()
         h._resolve.cache_clear()
 
 

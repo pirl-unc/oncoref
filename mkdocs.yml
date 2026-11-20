@@ -7,11 +7,14 @@ theme:
 nav:
   - Home: index.md
   - Antigen Curation & Sets:
+      - Antigen catalog whitepaper: antigen-whitepaper.md
       - Cancer and Reproductive Antigens: target-selection.md
+      - Normal RNA sources and tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
       - Host profiles and candidate filters: target-filters.md
       - Host choices and tissue loss: host-selection.md
       - Why CTA counts changed: audits/cta-count-history-20261117/index.md
       - Antigen CLI and curation builds: curation.md
+      - Download antigen evidence: antigen-data.md
       - Antigen sequences and peptide subtraction: antigen-sequences.md
       - Current catalog & curation funnel: audits/target-selection-20261110/rebuild/index.md
       - Architecture & summary figures: audits/target-selection-20261110/rebuild/summary.md
@@ -24,6 +27,7 @@ nav:
       - How CTpedia genes are classified: ctpedia-filtering.md
   - Tissues & Toxicity:
       - Tissue tiers: tissue-tiers.md
+      - Organ and cell evidence: tissue-hierarchy.md
       - Normal tissue scopes: normal-tissue-scopes.md
       - Tissue injury and manageability: normal-tissue-manageability.md
       - Patient-context gene filters: normal-tissue-gene-filters.md
@@ -39,7 +43,8 @@ nav:
       - Shared reference identities: reference-identity.md
       - Figures: figures.md
   - Release Notes:
-      - Current release 1.42.0: cta-release-1.42.0.md
+      - Current release 1.43.0: cta-release-1.43.0.md
+      - Release 1.42.0: cta-release-1.42.0.md
       - Previous release 1.41.0: cta-release-1.41.0.md
       - Curation policy 1.40.0: cta-release-1.40.0.md
       - Previous release 1.39.0: cta-release-1.39.0.md

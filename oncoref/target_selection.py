@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-18.1"
+POLICY_ID = "oncoref.target-selection.2026-11-19.4"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -63,7 +63,7 @@ UNMEASURED_HOME_TISSUES = (
 CORE_REPRODUCTIVE_COMPARTMENTS = ("embryo", "placenta", "testis", "ovary")
 #: Adult accessory reproductive, tract and mammary compartments (sex- or state-conditional).
 MALE_ACCESSORY_COMPARTMENTS = ("epididymis", "prostate", "seminal vesicle")
-FEMALE_TRACT_COMPARTMENTS = ("fallopian tube", "endometrium", "cervix")
+FEMALE_TRACT_COMPARTMENTS = ("fallopian tube", "uterus", "endometrium", "cervix", "vagina")
 MAMMARY_COMPARTMENTS = ("lactating_breast", "resting_breast")
 EXTENDED_REPRODUCTIVE_COMPARTMENTS = (
     *MALE_ACCESSORY_COMPARTMENTS,
@@ -86,7 +86,7 @@ def definition() -> dict:
         "categories": list(CATEGORIES),
         "shared_checks": list(SHARED_CHECKS),
         "sets": {
-            "Cancer Antigens": "eligible AND cancer evidence qualifies",
+            "Cancer Antigens": "eligible AND cancer evidence qualifies AND recorded normal home is covered",
             "Reproductive Antigens": "eligible AND reproductive/developmental evidence qualifies",
             "CTA": "Cancer Antigens INTERSECTION Reproductive Antigens",
             "Candidate antigen proteins": "Cancer Antigens UNION Reproductive Antigens",
@@ -110,18 +110,18 @@ def definition() -> dict:
             ),
             "Unscreened tissue": (
                 "The protein's recorded normal home is a tissue no expression panel resolves, "
-                "and no reproductive or developmental evidence qualifies. Its tumor value was "
+                "and no reproductive evidence qualifies for RA. Its tumor value was "
                 "never compared with that tissue, so cancer evidence alone does not admit it."
             ),
         },
         "home_tissue": {
             "unmeasured_tissues": list(UNMEASURED_HOME_TISSUES),
             "recorded_by": (
-                "A family rule, a recorded literature finding, or the nose and skin reference."
+                "A family rule, a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference."
             ),
             "effect": (
-                "Without qualifying reproductive or developmental evidence: Other:Unscreened tissue. "
-                "With it, the category is unchanged and the tissue stays on the row."
+                "Insufficient home-tissue coverage blocks cancer admission. "
+                "Reproductive enrichment can independently qualify RA."
             ),
         },
         "published_normal_expression": {
@@ -154,9 +154,9 @@ def definition() -> dict:
                 f"cells carry >= {RARE_CELL_MULTI_MOLECULES} molecules."
             ),
             "replication": (
-                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} independent studies of the same "
+                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} atlas sources of the same "
                 f"organ, which agree on a cell type or include >= {RARE_CELL_REPLICATE_DONORS} "
-                "donors. Donors of one study share its libraries and reference; one donor in "
+                "distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in "
                 "each of two studies, in different cell types, agrees on nothing but the organ."
             ),
             "single_study": (
@@ -214,13 +214,13 @@ def definition() -> dict:
             "tumor_fold": TUMOR_FOLD,
             "rule": (
                 "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable "
-                "TPM cohort. N is the highest non-reproductive normal value, D the highest "
-                "Disposable value. This is the only cancer route."
+                "TPM cohort. N is the highest non-thymic, non-reproductive normal value, D the highest "
+                "non-thymic Disposable value. This is the only cancer route."
             ),
             "normal_reference": (
                 "N: maximum QC-passing, identity-resolved measurement in the declared compatible "
-                "normal panel, excluding Disposable and reproductive compartments. D is taken "
-                "separately; reproductive, placental and fetal compartments are never compared."
+                "peripheral panel, excluding thymus, Disposable and reproductive compartments. D is taken "
+                "from the non-thymic Disposable tissues. Reproductive and developmental observations only supply the positive route."
             ),
             "descriptive": (
                 "Counts at the actual tenfold threshold distinguish samples, known patients, "
@@ -273,7 +273,7 @@ def definition() -> dict:
                 "cta_tier_interpretation": "Legacy origin/exposure annotation retained for compatibility, not a toxicity tier or host eligibility rule. Use reproductive_qualifying_compartments for origins and HostContext for host choices.",
                 "cta_tiers": {
                     "core": (
-                        "Qualifies in embryo, placenta, testis or ovary, with all eight extended "
+                        "Qualifies in embryo, placenta, testis or ovary, with all extended "
                         "adult compartments <= 32 TPM and <= tumor_max_tpm / 10."
                     ),
                     "core_with_extended_exposure": (
@@ -282,7 +282,7 @@ def definition() -> dict:
                     ),
                     "extended_only": (
                         "Qualifies only via epididymis, prostate, seminal vesicle, fallopian tube, "
-                        "endometrium, cervix, lactating_breast or resting_breast."
+                        "uterus, endometrium, cervix, vagina, lactating_breast or resting_breast."
                     ),
                 },
             },
@@ -365,8 +365,8 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
     missing required *normal* coverage blocks both sets.
 
     Optional ``home_tissue_unmeasured`` marks a protein whose recorded normal home no
-    panel resolves. Cancer evidence admits it only together with reproductive evidence;
-    alone it is Other:Unscreened tissue.
+    panel resolves. Cancer admission requires adequate home-tissue coverage.
+    Reproductive enrichment can still establish RA.
     """
     flags = ("unsafe", *SHARED_CHECKS)
     _require_columns(facts, {*flags, "cancer_evidence", "reproductive_evidence"})
@@ -382,7 +382,7 @@ def classify(facts: pd.DataFrame) -> pd.DataFrame:
         home = d.home_tissue_unmeasured.astype(bool)
     else:
         home = pd.Series(False, index=d.index)
-    uncompared = eligible & d.cancer_evidence.eq("qualifies") & home & ~reproductive
+    uncompared = eligible & d.cancer_evidence.eq("qualifies") & home
     cancer = eligible & d.cancer_evidence.eq("qualifies") & ~uncompared
     d["eligible"] = eligible
     d["is_cancer_antigen"] = cancer
@@ -423,12 +423,12 @@ def _assess_enrichment_rna(
 
     Both frames require ``entity_id, source_id, comparison_id, unit, value,
     qc_pass, identity_resolved``. Tumors also require ``sample_id, participant_id``;
-    normals require ``context_id, scope``. Scope is ``normal``, ``disposable`` or
+    normals require ``context_id, scope``. Scope is ``normal``, ``thymic``, ``disposable`` or
     ``reproductive`` and must come from reviewed compartment mappings, never from
     the organ name alone. Required contexts are the nonexempt normal contexts.
 
     Cancer evidence qualifies when one tumor sample reaches ``TUMOR_FOLD`` times the
-    highest non-reproductive value: max(normal, Disposable, ``DETECTION_FLOOR``).
+    highest peripheral non-reproductive value: max(normal, Disposable, ``DETECTION_FLOOR``).
     The receipt retains observed maxima, supporting samples, and missing coverage.
     Missing/failed normal observations cannot lower the comparison to zero. Counts of
     independent patients above the normal maximum are descriptive.
@@ -468,10 +468,14 @@ def _assess_enrichment_rna(
             raise ValueError("Expression must be finite and nonnegative, or missing")
     if len(entity_ids) != 1:
         raise ValueError("Assess one resolved protein identity at a time")
-    if not normals.scope.isin(["normal", "disposable", "reproductive"]).all():
+    if not normals.scope.isin(["normal", "disposable", "reproductive", "thymic"]).all():
         raise ValueError("Unknown normal compartment scope")
     if not normals.context_id.map(lambda v: isinstance(v, str) and bool(v.strip())).all():
         raise ValueError("Every normal observation requires a context ID")
+    if normals.context_id.eq("thymus").ne(normals.scope.eq("thymic")).any():
+        raise ValueError("Thymus observations require a separate thymic scope")
+    if "thymus" in required_normal_contexts:
+        raise ValueError("Thymus cannot be a required peripheral comparison context")
     if normals.groupby("context_id").scope.nunique().gt(1).any():
         raise ValueError("A normal context has conflicting compartment allowances")
     if not tumors.sample_id.map(lambda v: isinstance(v, str) and bool(v.strip())).all():
@@ -751,14 +755,25 @@ def assess_rare_cell_rna(
     d["multi_molecule"] = enough & d.multi_molecule_pct.ge(RARE_CELL_DETECTION_PCT * factor)
     d["frequent"] = enough & d.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT * factor)
     d["donor"] = d.source_id + ":" + d.donor_id
+    # These Allen collections reuse institute donor IDs. Other studies can both
+    # call an unrelated participant "D1", so preserve their source namespace.
+    allen = d.source_id.isin(
+        {
+            "1ca90a2d-2943-483d-b678-b809bf464c30",
+            "283d65eb-dd53-496d-adb7-7570c7caa443",
+            "d17249d2-0e6e-4500-abb8-e6c93fa1ac6f",
+        }
+    ) & d.donor_id.str.fullmatch(r"H[0-9]{2}\.[0-9]{2}\.[0-9]{3}")
+    d.loc[allen, "donor"] = "Allen:" + d.loc[allen, "donor_id"]
     findings = []
     for (tier, tissue), group in d.groupby(["tier", "tissue"], sort=True):
         multi = group[group.multi_molecule]
         two_studies = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
         # Two lone donors in different cell types share only the organ label.
+        concordance = multi.groupby("cell_type")[["source_id", "donor"]].nunique()
+        same_cell = concordance.source_id.ge(RARE_CELL_REPLICATE_STUDIES) & concordance.donor.ge(2)
         replicated = two_studies and (
-            multi.donor.nunique() >= RARE_CELL_REPLICATE_DONORS
-            or multi.groupby("cell_type").source_id.nunique().max() >= RARE_CELL_REPLICATE_STUDIES
+            multi.donor.nunique() >= RARE_CELL_REPLICATE_DONORS or same_cell.any()
         )
         published = tissue in literature_tissues and group.detected.any()
         if not two_studies and not group.frequent.any() and not published:
@@ -787,7 +802,10 @@ def assess_rare_cell_rna(
                 "insufficient concordant signal; locus attribution uncertain",
             )
         elif two_studies:
-            status, basis = "dismissed", "two donors in different cell types; no bulk RNA"
+            status, basis = (
+                "dismissed",
+                "insufficient independent donor and cell-type concordance; no bulk RNA",
+            )
         else:
             status, basis = "dismissed", "one study only; no bulk RNA"
         ranked = multi if len(multi) else group[group.detected]

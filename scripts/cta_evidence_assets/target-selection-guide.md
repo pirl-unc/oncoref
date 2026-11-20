@@ -6,11 +6,14 @@ presentation or clinical safety.
 
 Catalog `$policy_id`: $categories.
 
+[Catalog whitepaper and study tables](antigen-whitepaper.md) ·
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
 [Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
 [Host choices](host-selection.md) · [Optional filters](target-filters.md)
 
-[Bulk/cell comparison for 78 CA-only proteins and review of 31 normal-cell holds](audits/antigen-evidence-review-20261118/index.md).
+[Pre-GTEx comparison for 78 CA-only proteins and 31 normal-cell holds](audits/antigen-evidence-review-20261118/index.md).
+
+[Individual GTEx samples and symmetric reassessment of the ten testis leads](audits/gtex-reproductive-witnesses/index.md).
 
 ## Three separate questions
 
@@ -26,7 +29,7 @@ Catalog `$policy_id`: $categories.
 ## One threshold, two compartments
 
 Both CA and RA independently require **≥10 × H₀**, where
-**H₀ = max(non-reproductive normal N, Disposable D, 1 TPM)**, after shared eligibility.
+**H₀ = max(non-thymic, non-reproductive normal N, Disposable D, 1 TPM)**, after shared eligibility.
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
@@ -35,9 +38,16 @@ Both CA and RA independently require **≥10 × H₀**, where
 | CTA | Both routes | $cta |
 | CA∪RA | Either route | $union |
 
-The normal reference includes individual HPA v23 samples, tissue/subregion summaries,
-GTEx v11 donor medians and supported immune summaries. All numerical fold comparisons
-use native TPM. nTPM, UMI counts and qualitative staining remain separate evidence.
+The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
+
+GTEx v11 contributes the **linearly interpolated donor P95 within each non-reproductive tissue site**. Complete member-locus TPMs are summed within a library first. Reproductive sites, including breast and prostate, retain individual samples as RA witnesses. HPA v23 contributes the within-tissue biopsy P95 and the within-population sorted immune donor P95. DICE contributes a P95 for single loci. Its ranks lack specimen IDs, so identical-protein groups with multiple loci use the sum of measured member maxima as an upper bound. GTEx medians, HPA tissue and brain means, and Monaco cell means retain their published statistics. The highest applicable value across these sources sets N or D. Single-cell and single-nucleus counts, nTPM and protein staining have separate normal-expression gates.
+
+[All RNA sources, tissue coverage and set definitions](audits/target-selection-20261110/rebuild/normal-rna/index.md)
+
+![Normal and reproductive TPM sources by tissue](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage.png)
+
+A small cohort can have a P95 close to its maximum. The underlying measurements and sample QC remain available. [Download the source data and literature controls](antigen-data.md).
+
 Missing required normal coverage does not become zero.
 [Source receipt](audits/target-selection-20261110/rebuild/comparison.json).
 
@@ -58,7 +68,7 @@ from one embryo are not independent donors. These positive-support requirements 
 | Unmeasured home tissue without qualifying reproductive evidence | Other:Unscreened tissue |
 | Neither enrichment route qualifies, or expression bounds fail | Other:Expression |
 
-Unsafe takes precedence, then Other:Review. Every failed gate remains on the row.
+Insufficient coverage of a documented normal home blocks the CA route even when RA qualifies. Unsafe takes precedence, then Other:Review. Every failed gate remains on the row.
 **Other describes unresolved or nonqualifying proteins, not absent normal expression.**
 Disposable expression has separate 32 TPM and 32 nTPM bounds in the catalog; these
 are not the limits for host-protected organs.
@@ -89,8 +99,7 @@ retains sources, adjudication and supersession history.
 ## Home tissue the panels do not resolve
 
 Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp are not
-resolved by the comparison panel. A recorded home yields Other:Unscreened tissue unless RA
-qualifies. The home remains recorded; RA membership does not establish a margin there.
+resolved by the native-TPM comparison panel. A protein with a documented home in one of these tissues can qualify as RA. CA and CTA require coverage of that home. A protein that reaches the cancer threshold alone is classified Other:Unscreened tissue.
 
 ## Tumor quality and replication
 

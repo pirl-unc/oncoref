@@ -111,8 +111,8 @@ def test_current_tiers_follow_bulk_registry_while_historical_replay_is_preserved
 
     current = anatomical_panel().set_index("compartment")
     old = historical_panel().set_index("compartment")
-    assert set(current.index) == set(old.index)
-    for tissue in ["skin", "spleen", "thymus"]:
+    assert set(current.index) == set(old.index) - {"thymus"}
+    for tissue in ["skin", "spleen"]:
         assert old.loc[tissue, "category"] == "manageable"
         assert current.loc[tissue, "category"] == "protected"
     for row in current.itertuples():

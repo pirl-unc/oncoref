@@ -30,6 +30,17 @@
       "version": "v23"
     }
   },
+  "reference_panels": {
+    "gtex_individual_samples": {
+      "source": "gtex_individual_tissue_tpm",
+      "release": "v11",
+      "tissues": "adult primary tissues",
+      "unit": "TPM",
+      "normal_source_id": "gtex_donor_p95:v11",
+      "normal_statistic": "Linear donor P95 within each non-reproductive site",
+      "reproductive_statistic": "Individual sample TPM"
+    }
+  },
   "steps": {
     "rare_cell": {
       "needs": [],
@@ -40,7 +51,8 @@
     },
     "catalog": {
       "needs": [
-        "rare_cell"
+        "rare_cell",
+        "tissue_gates"
       ],
       "argv": [
         "scripts/rebuild_target_catalog.py"
@@ -48,7 +60,8 @@
     },
     "plots": {
       "needs": [
-        "host_exposure"
+        "host_exposure",
+        "normal_library_qc"
       ],
       "argv": [
         "scripts/render_target_catalog.py"
@@ -102,12 +115,35 @@
         "scripts/audit_reproductive_ihc_route.py"
       ]
     },
-    "reproductive_evidence_review": {
+    "gtex_witness_audit": {
       "needs": [
         "catalog"
       ],
       "argv": [
-        "scripts/audit_reproductive_evidence.py"
+        "scripts/audit_gtex_symmetric_witnesses.py"
+      ]
+    },
+    "normal_library_qc": {
+      "needs": [
+        "catalog"
+      ],
+      "argv": [
+        "scripts/audit_normal_library_qc.py"
+      ]
+    },
+    "whitepaper": {
+      "needs": [
+        "filter_audit",
+        "plots"
+      ],
+      "argv": [
+        "scripts/render_antigen_whitepaper.py"
+      ]
+    },
+    "tissue_gates": {
+      "needs": [],
+      "argv": [
+        "scripts/rebuild_revised_tissue_gates.py"
       ]
     }
   },
@@ -115,7 +151,9 @@
     "docs/audits/target-selection-20261110/rebuild",
     "docs/audits/target-filters-20261112",
     "docs/audits/antigen-evidence-review-20261117",
-    "docs/audits/antigen-evidence-review-20261118"
+    "docs/audits/antigen-evidence-review-20261118",
+    "docs/audits/gtex-reproductive-witnesses",
+    "docs/antigen-whitepaper"
   ],
   "outputs": [
     "oncoref/data/target-selection.csv.gz",
@@ -127,6 +165,8 @@
     "docs/target-selection.md",
     "docs/target-filters.md",
     "oncoref/data/host-exposure.csv.gz",
-    "oncoref/data/host-exposure.json"
+    "oncoref/data/host-exposure.json",
+    "docs/antigen-whitepaper.md",
+    "docs/tissue-hierarchy.md"
   ]
 }
