@@ -63,6 +63,7 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
     assert "human antigen" not in paper.lower()
     for figure in [
         "summary/classification-overview.png",
+        "summary/decision-tree.png",
         "summary/normal-evidence-layers.png",
         "summary/funnel-all.png",
         "summary/funnel-published.png",

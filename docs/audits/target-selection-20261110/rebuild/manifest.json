@@ -3,7 +3,7 @@
   "implementation_sha256": {
     "scripts/rebuild_target_catalog.py": "53ee4dd32809a97b22cfa8cda6e753f99f7621853feb7598bd49aa9172b23663",
     "scripts/render_target_catalog.py": "dee4b9ed9d336a1b1e694e56692237b745b6398e36f160db11e679b93d6196f8",
-    "scripts/render_curation_summary.py": "7c7b230068dc260b528316c96bf5eab17bf7382ff86085c0876e696c6613c9f7",
+    "scripts/render_curation_summary.py": "18833c984b7f4775c4797ae06478738968cc7131e65069b5959ea8d51db0beee",
     "scripts/render_normal_rna_sources.py": "726f69b2a5d34349e9a497f1b3ae48a0bac9d9512e6e899d1bc7a623ec8c2295",
     "scripts/audit_normal_library_qc.py": "e17cc8ee990c613a902e3e16467bf52bc2d5d0ef23c90c1fb24b2877bc3a30eb",
     "scripts/gtex_sample_evidence.py": "f6bcfd85611e231fcebb1f5b04f7c4c01facfeee2bafdc431d4c622028f4fe4d",
@@ -83,6 +83,8 @@
     "summary/cta-profiles.csv": "59bec2d81f44beec44b6db444c73697f15f0e6967374871fedb2e264d1481777",
     "summary/cta-tiers-and-profiles.png": "1f428f5fb6295ae1c29bd9ee8cb4720f009462c7bfd39c3f4cf1f6f21660e2ed",
     "summary/cta-tiers-and-profiles.svg": "bc1927fa83f1482f9d8c9d7ff60540509945eb651d17ae11517087757018dab4",
+    "summary/decision-tree.png": "31e8b982849f182669e1435e18564d607527a9a9944e1b215a42ad2bcce3fda4",
+    "summary/decision-tree.svg": "eaf9d2611fee9a44c497ca380d09cb4d8b59889aee29f32b75f12943092fcc12",
     "summary/distributions.png": "0f0a4b6732560cac5d3018f6fa25d241b09ba19b0a0ce4cbe5660cd33e865508",
     "summary/funnel-all.csv": "dcd55e642075c1c91735b332124a229ee3bab203842b708721b2d558f07d8de1",
     "summary/funnel-all.png": "2351838b1e3995238dac4ee9f79e7519f83f6538a1a2eea470e288c193631e6a",

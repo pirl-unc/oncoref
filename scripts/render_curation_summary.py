@@ -2167,10 +2167,242 @@ def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
     return table
 
 
+def decision_tree(data, stem_path):
+    """Exact binary decision tree from 19,893 protein groups to every terminal leaf."""
+    n0 = len(data)
+    unsafe = data.category.eq("Unsafe")
+    d1 = data[~unsafe]
+    rev = d1.classification.eq("Other:Review")
+    d2 = d1[~rev]
+    seq = d2.classification.eq("Other:Sequence")
+    d3 = d2[~seq]
+    bounds_fail = ~d3.expression_bounds_pass.astype(bool)
+    d4 = d3[~bounds_fail]
+
+    n_unsafe = int(unsafe.sum())
+    n_rev = int(rev.sum())
+    n_seq = int(seq.sum())
+    n_b_fail = int(bounds_fail.sum())
+    n_elig = len(d4)
+    n_cta = int(d4.classification.eq("CTA").sum())
+    n_ca_only = int(d4.classification.eq("Cancer Antigen only").sum())
+    n_ra_only = int(d4.classification.eq("Reproductive Antigen only").sum())
+    n_unscr = int(d4.classification.eq("Other:Unscreened tissue").sum())
+    n_low = int(d4.classification.eq("Other:Expression").sum())
+    if n_unsafe + n_rev + n_seq + n_b_fail + n_cta + n_ca_only + n_ra_only + n_unscr + n_low != n0:
+        raise ValueError("Decision tree leaves do not sum to total protein groups")
+
+    fig, ax = plt.subplots(figsize=(11.2, 7.6))
+    ax.set_xlim(0, 11.2)
+    ax.set_ylim(0, 8.2)
+    ax.axis("off")
+
+    def box(
+        x, y, w, h, title, count="", fc="#f4f7fa", ec="#7d95a8", tc="#102a43", cc="#102a43", fs=9.2
+    ):
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                w,
+                h,
+                boxstyle="round,pad=0.04,rounding_size=0.14",
+                facecolor=fc,
+                edgecolor=ec,
+                linewidth=1.4,
+            )
+        )
+        if count:
+            ax.text(
+                x + w / 2,
+                y + h * 0.68,
+                title,
+                ha="center",
+                va="center",
+                fontsize=fs,
+                fontweight="bold",
+                color=tc,
+            )
+            ax.text(
+                x + w / 2,
+                y + h * 0.28,
+                count,
+                ha="center",
+                va="center",
+                fontsize=10.8,
+                fontweight="bold",
+                color=cc,
+            )
+        else:
+            ax.text(
+                x + w / 2,
+                y + h / 2,
+                title,
+                ha="center",
+                va="center",
+                fontsize=fs,
+                fontweight="bold",
+                color=tc,
+            )
+
+    def arrow(x0, y0, x1, y1, color="#526775"):
+        ax.annotate(
+            "",
+            xy=(x1, y1),
+            xytext=(x0, y0),
+            arrowprops={
+                "arrowstyle": "-|>,head_width=0.22,head_length=0.34",
+                "color": color,
+                "lw": 1.4,
+            },
+        )
+
+    # Spine coordinates (x centered at 3.25)
+    sx, sw = 0.55, 5.40
+    scx = sx + sw / 2
+    lx, lw = 7.45, 3.35
+
+    # Root
+    box(
+        sx + 0.85,
+        7.35,
+        sw - 1.70,
+        0.66,
+        f"Coding protein groups  ({n0:,})",
+        fc="#edf2f7",
+        ec="#627d98",
+        fs=10.2,
+    )
+
+    # 4 sequential binary decision nodes on spine -> right-side terminal leaves
+    steps = [
+        (
+            6.15,
+            "1. Normal-tissue RNA, rare-cell, IHC, or curated exclusion?",
+            "Yes",
+            "No",
+            len(d1),
+            ("Unsafe", f"{n_unsafe:,}", "#fbeeed", UNSAFE, "#8c2d2a"),
+        ),
+        (
+            4.95,
+            "2. Coverage gap, translation gap, or unresolved rare-cell?",
+            "Yes",
+            "No",
+            len(d2),
+            ("Other:Review", f"{n_rev:,}", "#fbf5e7", REVIEW, "#785416"),
+        ),
+        (
+            3.75,
+            "3. ≥95% Unsafe 9-mer overlap, nested, or read-through?",
+            "Yes",
+            "No",
+            len(d3),
+            ("Other:Sequence", f"{n_seq:,}", "#f3eff7", SEQUENCE, "#5b4975"),
+        ),
+        (
+            2.55,
+            "4. Target peak > healthy max & Disposable ≤ 32 TPM/nTPM?",
+            "No",
+            "Yes",
+            n_elig,
+            ("Other:Expression (bounds)", f"{n_b_fail:,}", "#f2f5f7", EXPRESSION, "#486581"),
+        ),
+    ]
+
+    prev_y = 7.33
+    for y, question, right_lbl, down_lbl, rem_n, (leaf_t, leaf_c, lfc, lec, ltc) in steps:
+        arrow(scx, prev_y, scx, y + 0.78)
+        box(sx, y, sw, 0.74, question, fc="#f8fafc", ec="#829ab1", fs=8.8)
+        # Right branch -> terminal leaf
+        arrow(sx + sw + 0.04, y + 0.37, lx - 0.04, y + 0.37, color=lec)
+        ax.text(
+            (sx + sw + lx) / 2,
+            y + 0.50,
+            right_lbl,
+            ha="center",
+            va="bottom",
+            fontsize=8.6,
+            fontweight="bold",
+            color=ltc,
+        )
+        box(lx, y, lw, 0.74, leaf_t, leaf_c, fc=lfc, ec=lec, tc=ltc, cc=ltc, fs=9.2)
+        # Downward label on spine
+        ax.text(
+            scx + 0.14,
+            y - 0.21,
+            f"{down_lbl}  ({rem_n:,})",
+            ha="left",
+            va="center",
+            fontsize=8.4,
+            fontweight="bold",
+            color="#334e68",
+        )
+        prev_y = y - 0.02
+
+    # Step 5: Symmetric 10x enrichment junction box -> 5 terminal leaves across bottom
+    j_y = 1.48
+    arrow(scx, prev_y, scx, j_y + 0.66)
+    box(
+        1.15,
+        j_y,
+        8.90,
+        0.62,
+        f"5. Shared-eligible ({n_elig:,}):  Tumor ≥ 10× H₀  and/or  Reproductive/embryo ≥ 10× H₀   [H₀ = max(N, D, 1 TPM)]",
+        fc="#edf4f7",
+        ec="#486581",
+        fs=8.9,
+    )
+
+    leaves = [
+        ("CTA\n(CA ∩ RA)", f"{n_cta:,}", "#ebf5ef", REPRODUCTIVE, "#1d573c", "Both ≥10×"),
+        ("CA only", f"{n_ca_only:,}", "#ebf4fa", CANCER, "#1a567b", "Tumor ≥10×"),
+        ("RA only", f"{n_ra_only:,}", "#f0f7f4", "#7db19a", "#266049", "Repro ≥10×"),
+        (
+            "Other:\nUnscreened",
+            f"{n_unscr:,}",
+            "#f5f7f9",
+            EXPRESSION,
+            "#486581",
+            "Unmeasured\nhome",
+        ),
+        ("Other:\nExpression", f"{n_low:,}", "#f5f7f9", EXPRESSION, "#486581", "Neither ≥10×"),
+    ]
+    w_leaf = 1.94
+    gap = 0.22
+    start_x = (11.2 - (len(leaves) * w_leaf + (len(leaves) - 1) * gap)) / 2
+    for i, (lt, lc, lfc, lec, ltc, branch_lbl) in enumerate(leaves):
+        bx = start_x + i * (w_leaf + gap)
+        bcx = bx + w_leaf / 2
+        arrow(bcx, j_y - 0.02, bcx, 0.94, color=lec)
+        ax.text(
+            bcx,
+            1.18,
+            branch_lbl,
+            ha="center",
+            va="center",
+            fontsize=7.7,
+            color="#334e68",
+            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.0},
+        )
+        box(bx, 0.08, w_leaf, 0.82, lt, lc, fc=lfc, ec=lec, tc=ltc, cc=ltc, fs=8.7)
+
+    ax.set_title(
+        "OncoRef classification decision tree (every protein group lands in exactly one leaf)",
+        loc="left",
+        fontsize=11.5,
+        fontweight="bold",
+        color="#102a43",
+        pad=8,
+    )
+    fig.tight_layout()
+    _save_both(fig, stem_path, dpi=165)
+
+
 def build():
     data = pd.read_csv(OUT / "protein-decisions.csv.gz", low_memory=False)
     FIG.mkdir(exist_ok=True)
     classification_overview(data, FIG / "classification-overview.png")
+    decision_tree(data, FIG / "decision-tree")
     normal_evidence_layers(data, FIG / "normal-evidence-layers.png")
     sex_restricted_antigens(
         data,
