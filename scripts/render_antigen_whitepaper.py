@@ -263,15 +263,19 @@ def build():
         ("CA only", ca & ~ra),
         ("RA only", ra & ~ca),
         ("Other", data.category.eq("Other")),
-        ("Unsafe", data.category.eq("Unsafe")),
     ]:
         group = data[mask]
         measured = group.dropna(subset=["tumor_max_tpm"]).sort_values(
             PEAK, ascending=[False, True, True]
         )
-        peak_sections.append(
-            f"### {label}\n\nTumor comparison available for {len(measured):,} of {len(group):,} groups."
-        )
+        if len(measured) == len(group):
+            note = f"Top 10 of {len(group):,} groups by peak tumor sample TPM."
+        else:
+            note = (
+                f"Top 10 of {len(measured):,} groups with complete baseline TPM "
+                f"(out of {len(group):,} total `{label}` groups)."
+            )
+        peak_sections.append(f"### {label}\n\n{note}")
         if measured.empty:
             continue
         peak_sections.append(
@@ -371,14 +375,66 @@ def build():
     ].copy()
     highlighted_holds = pd.concat([held, other_examples]).drop_duplicates("entity_id").copy()
 
+    gate_labels = {
+        "Normal bulk": "Bulk tissue RNA",
+        "HPA tissue clusters": "Single-cell clusters (HPA)",
+        "HPA normal protein": "Normal IHC",
+        "Accepted normal-protein evidence": "Curated protein staining",
+        "HPA immune": "Sorted immune RNA",
+        "Monaco immune": "Sorted immune RNA",
+        "DICE immune": "Sorted immune RNA",
+        "Adult cornea": "Adult cornea scRNA",
+        "Established rare normal-cell RNA": "Donor rare-cell RNA",
+        "Reviewed normal-cell knowledge": "Curated normal literature",
+        "Published normal-tissue expression": "Curated normal literature",
+    }
+    rare_basis_short = {
+        "detection confirmed by a published gene-specific assay": "qPCR-confirmed",
+        "replicated signal at a locus without mapping risk": "replicated, unique mapping",
+        "replicated normal-cell signal with unresolved locus attribution": "replicated, paralog-ambiguous",
+        "frequent single-study normal-cell signal with unresolved locus attribution": "single-study, paralog-ambiguous",
+    }
+    context_labels = {
+        "B_CELL_NAIVE": "naive B cells",
+        "CD4_STIM": "stimulated CD4 T cells",
+        "CD8_STIM": "stimulated CD8 T cells",
+        "NK_CELL": "NK cells",
+        "MONOCYTES": "monocytes",
+        "Bladder": "urinary bladder",
+    }
+
+    def clean_context_label(raw):
+        if pd.isna(raw) or not raw:
+            return "—"
+        parts = []
+        for token in str(raw).split(" | "):
+            t = token.strip()
+            if t in context_labels:
+                parts.append(context_labels[t])
+                continue
+            base, dot, suffix = t.rpartition(".")
+            if dot and suffix.isdigit():
+                t = base
+            if t.startswith("Brain_"):
+                t = t.removeprefix("Brain_")
+            if " day / unspecified lineage" in t:
+                t = t.replace(" day / unspecified lineage", "-day embryo")
+            elif " day / " in t:
+                t = t.replace(" day / ", "-day ")
+            parts.append(t.replace("_", " ").lower())
+        return " | ".join(dict.fromkeys(parts))
+
     def concise_gate(r):
         if r.category == "Unsafe":
-            reasons = r.Unsafe_reasons
-            if reasons == "Established rare normal-cell RNA" and pd.notna(r.rare_cell_basis):
-                return f"Established rare-cell RNA ({r.rare_cell_basis})"
-            return reasons
+            raw_parts = [p.strip() for p in str(r.Unsafe_reasons).split(" | ") if p.strip()]
+            mapped = list(dict.fromkeys(gate_labels.get(p, p) for p in raw_parts))
+            if raw_parts == ["Established rare normal-cell RNA"] and pd.notna(r.rare_cell_basis):
+                note = rare_basis_short.get(r.rare_cell_basis, r.rare_cell_basis)
+                return f"Donor rare-cell RNA ({note})"
+            return " + ".join(mapped)
         if r.subtype == "Review" and r.rare_cell_status == "unresolved":
-            return f"Unresolved rare-cell RNA ({r.rare_cell_basis})"
+            note = rare_basis_short.get(r.rare_cell_basis, r.rare_cell_basis)
+            return f"Donor rare-cell RNA ({note})"
         return r.disposition
 
     def strongest_signal(r):
@@ -413,7 +469,7 @@ def build():
         if r.entity_id in skipped_ids:
             return "NR"
         v = getattr(r, numeric_cols[prefix])
-        where = getattr(r, prefix + "_source_context")
+        where = clean_context_label(getattr(r, prefix + "_source_context"))
         return f"{number(v)} · {where}" if pd.notna(v) else "—"
 
     partition = data.groupby("classification").loci.agg(["size", "sum"])
@@ -421,10 +477,7 @@ def build():
     source_coverage = pd.read_csv(context_path)
     lit_sources = pd.read_csv(BUILD / "summary/literature-sources.csv")
     published = data.published_nomination.fillna(False).astype(bool)
-    other_counts = {
-        key: int(data.classification.eq(f"Other:{key}").sum())
-        for key in ("Review", "Sequence", "Expression", "Unscreened tissue")
-    }
+    other_compared_n = int(data[data.category.eq("Other")]["tumor_max_tpm"].notna().sum())
     profiles = target_filters.profile_summary(data).set_index("profile")
     testis_profile = profiles.loc["male-patient (protect testis)"]
     pregnant_profile = profiles.loc["female-patient (pregnant)"]
@@ -435,53 +488,9 @@ def build():
     )
     bulk_unsafe = unsafe_reasons.map(lambda s: "Normal bulk" in s)
     any_unsafe = data.category.eq("Unsafe")
-    headline = table(
-        ["Stage or set", "Protein groups", "Notes"],
-        [
-            [
-                "Human coding loci tracked",
-                f"{len(loci):,}",
-                f"Collapsed by identical representative amino-acid sequence into {len(data):,} protein groups",
-            ],
-            [
-                "Excluded by normal-tissue screens (`Unsafe`)",
-                f"{int(data.category.eq('Unsafe').sum()):,}",
-                "Bulk RNA, single-cell clusters, immune, cornea, rare-cell RNA, normal IHC, or curated normal findings",
-            ],
-            [
-                "Held or non-qualifying (`Other`)",
-                f"{int(data.category.eq('Other').sum()):,}",
-                (
-                    f"Coverage/translation/rare-cell review ({other_counts['Review']:,}), "
-                    f"sequence containment ({other_counts['Sequence']:,}), "
-                    f"expression bounds ({other_counts['Expression']:,}), "
-                    f"unscreened home tissue ({other_counts['Unscreened tissue']:,})"
-                ),
-            ],
-            [
-                "Shared-eligible before enrichment",
-                f"{meta['shared_eligible']:,}",
-                f"Native TPM compared for {meta['assessed_for_cancer_evidence']:,} groups (including counterfactuals for held proteins)",
-            ],
-            [
-                "Cancer Antigens (`CA`)",
-                f"{int(ca.sum()):,}",
-                f"{int((ca & ra).sum()):,} CTA + {int((ca & ~ra).sum()):,} CA only (≥10× non-thymic healthy reference)",
-            ],
-            [
-                "Reproductive Antigens (`RA`)",
-                f"{int(ra.sum()):,}",
-                f"{int((ca & ra).sum()):,} CTA + {int((ra & ~ca).sum()):,} RA only (≥10× on the same reference)",
-            ],
-            [
-                "Candidate antigen union (`CA ∪ RA`)",
-                f"{int((ca | ra).sum()):,}",
-                f"{int(((ca | ra) & published).sum()):,} previously nominated in curated CTA papers + {int(((ca | ra) & ~published).sum()):,} newly identified",
-            ],
-        ],
-    )
     values = {
         "policy": target_selection.POLICY_ID,
+        "other_compared": f"{other_compared_n:,}",
         "n": f"{len(data):,}",
         "loci": f"{len(loci):,}",
         "missing_seq": f"{data.representative_sequence_sha256s.map(json.loads).map(len).eq(0).sum():,}",
@@ -537,7 +546,6 @@ def build():
         "held": f"{len(held):,}",
         "anchors": f"{len(examples):,}",
         "nr_proteins": ", ".join(highlighted.loc[skipped, "protein_group_label"]),
-        "headline": headline,
         "sources": table(
             ["Inventory role", "Versioned files"],
             [[role, f"{count:,}"] for role, count in sorted(inventory.role.value_counts().items())],
@@ -586,7 +594,7 @@ def build():
             [
                 "Studied protein",
                 "Category",
-                "Excluding or holding gate",
+                "Excluding or review gate",
                 "Strongest measured normal signal",
             ],
             highlighted_holds.loc[

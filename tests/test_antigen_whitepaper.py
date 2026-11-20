@@ -89,7 +89,7 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
         "Oncofetal / DUX4 / embryo",
         "Placental / reproductive",
     } <= set(lit["antigen_class"])
-    excluded_section = paper.split("### Studied proteins held or excluded\n", 1)[1].split(
+    excluded_section = paper.split("### Studied proteins in Other or Unsafe\n", 1)[1].split(
         "\n## ", 1
     )[0]
     excluded_rows = [

@@ -11,24 +11,18 @@ extra_css:
 nav:
   - Home: index.md
   - Antigen Curation & Sets:
-      - Antigen catalog whitepaper: antigen-whitepaper.md
-      - Cancer and Reproductive Antigens: target-selection.md
-      - Normal RNA sources and tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
-      - Patient profiles and candidate filters: target-filters.md
-      - Patient anatomy and organ-loss filtering: host-selection.md
-      - Why CTA counts changed: audits/cta-count-history-20261117/index.md
-      - Antigen CLI and curation builds: curation.md
-      - Download antigen evidence: antigen-data.md
-      - Antigen sequences and peptide subtraction: antigen-sequences.md
-      - Catalog & curation funnel: audits/target-selection-20261110/rebuild/index.md
-      - Summary figures: audits/target-selection-20261110/rebuild/summary.md
-      - Target filter web summary: audits/target-filters-20261112/report.html
-      - Target filter & sweep report: audits/target-filters-20261112/index.md
-      - Rare normal-cell RNA by donor: audits/normal-cell-atlas-20261110/rare-cell/index.md
-      - Literature review of normal expression: audits/target-selection-20261110/rebuild/literature.md
-      - Normal-function literature sweep: audits/target-filters-20261112/normal-function-sweep.md
-      - Gene-by-gene sanity review: audits/target-selection-20261110/sanity-review/index.md
-      - How CTpedia genes are classified: ctpedia-filtering.md
+      - Antigen whitepaper: antigen-whitepaper.md
+      - Interactive protein catalog: audits/target-selection-20261110/rebuild/report.html
+      - Classification rules: target-selection.md
+      - Patient profiles & organ filters: target-filters.md
+      - Patient-anatomy rules & limits: host-selection.md
+      - Sequences & peptide subtraction: antigen-sequences.md
+      - Data & downloads: antigen-data.md
+      - CLI & curation builds: curation.md
+      - Summary figures & funnels: audits/target-selection-20261110/rebuild/summary.md
+      - Normal RNA tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
+      - Donor-level rare-cell RNA: audits/normal-cell-atlas-20261110/rare-cell/index.md
+      - CTpedia comparison: ctpedia-filtering.md
   - Tissues & Toxicity:
       - Tissue tiers: tissue-tiers.md
       - Organ and cell evidence: tissue-hierarchy.md
@@ -72,6 +66,13 @@ nav:
       - Release review and adoption 1.20.0: cta-release-1.20.0.md
       - CTA release review 1.19.1: audits/cta-release-1.19.1/index.md
   - Historical Snapshots & Audits:
+      - Catalog & curation funnel (1.44): audits/target-selection-20261110/rebuild/index.md
+      - Why CTA counts changed: audits/cta-count-history-20261117/index.md
+      - Target filter web summary: audits/target-filters-20261112/report.html
+      - Target filter & sweep report: audits/target-filters-20261112/index.md
+      - Literature review of normal expression: audits/target-selection-20261110/rebuild/literature.md
+      - Normal-function literature sweep: audits/target-filters-20261112/normal-function-sweep.md
+      - Gene-by-gene sanity review: audits/target-selection-20261110/sanity-review/index.md
       - Tenfold rule review (1.38): audits/cta-threshold-review-20261116/index.md
       - Draft catalog 2026-11-09: audits/target-selection-20261109/rebuild/index.md
       - Cancer antigen support audit: audits/target-selection-20261109/scrutiny/index.md

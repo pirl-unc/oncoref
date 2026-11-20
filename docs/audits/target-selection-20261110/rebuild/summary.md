@@ -53,35 +53,35 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 
 | Filtering idea | Removed here | Remaining |
 |---|---|---|
-| All assessed proteins | 0 | 19,893 |
-| Bulk tissue RNA above the tissue ceiling | 17,507 | 2,386 |
-| Cell-type cluster RNA (HPA single cell) | 436 | 1,950 |
-| Sorted immune-cell RNA | 96 | 1,854 |
-| Rare-cell RNA established by donor | 104 | 1,750 |
+| All coding protein groups | 0 | 19,893 |
+| Bulk tissue RNA | 17,507 | 2,386 |
+| Single-cell clusters (HPA scRNA) | 436 | 1,950 |
+| Sorted immune subsets | 96 | 1,854 |
+| Donor-replicated rare-cell RNA | 104 | 1,750 |
 | Normal-tissue protein (IHC) | 50 | 1,700 |
-| Curated or published normal expression | 49 | 1,651 |
-| Adult cornea RNA | 5 | 1,646 |
-| Coverage, identity, translation or unresolved evidence | 736 | 910 |
-| Nested, Unsafe-contained or read-through sequence | 48 | 862 |
-| No qualifying expression or bounds fail | 249 | 613 |
-| Home tissue no panel resolves | 88 | 525 |
+| Curated normal-tissue literature | 49 | 1,651 |
+| Adult cornea scRNA | 5 | 1,646 |
+| Incomplete coverage, translation, or paralog review | 736 | 910 |
+| Sequence overlap with Unsafe proteins | 48 | 862 |
+| Below 10× threshold or Disposable > 32 | 249 | 613 |
+| Unscreened adult normal organ | 88 | 525 |
 
 ![Published nominations](summary/funnel-published.png)
 
 | Filtering idea | Removed here | Remaining |
 |---|---|---|
 | Published CTA / oncofetal nominations | 0 | 2,233 |
-| Bulk tissue RNA above the tissue ceiling | 1,454 | 779 |
-| Cell-type cluster RNA (HPA single cell) | 182 | 597 |
-| Sorted immune-cell RNA | 25 | 572 |
-| Rare-cell RNA established by donor | 67 | 505 |
+| Bulk tissue RNA | 1,454 | 779 |
+| Single-cell clusters (HPA scRNA) | 182 | 597 |
+| Sorted immune subsets | 25 | 572 |
+| Donor-replicated rare-cell RNA | 67 | 505 |
 | Normal-tissue protein (IHC) | 19 | 486 |
-| Curated or published normal expression | 10 | 476 |
-| Adult cornea RNA | 1 | 475 |
-| Coverage, identity, translation or unresolved evidence | 68 | 407 |
-| Nested, Unsafe-contained or read-through sequence | 7 | 400 |
-| No qualifying expression or bounds fail | 27 | 373 |
-| Home tissue no panel resolves | 17 | 356 |
+| Curated normal-tissue literature | 10 | 476 |
+| Adult cornea scRNA | 1 | 475 |
+| Incomplete coverage, translation, or paralog review | 68 | 407 |
+| Sequence overlap with Unsafe proteins | 7 | 400 |
+| Below 10× threshold or Disposable > 32 | 27 | 373 |
+| Unscreened adult normal organ | 17 | 356 |
 
 Steps that remove no published nomination are omitted from the second funnel. [All proteins](summary/funnel-all.csv) · [Published](summary/funnel-published.csv)
 

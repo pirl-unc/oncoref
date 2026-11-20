@@ -94,6 +94,14 @@ SOURCES = {
     ),
 }
 ROLES = ["Normal", "Disposable", "RA witness", "Reproductive context", "Shared screen", "Thymic"]
+ROLE_LABELS = {
+    "Normal": "Healthy baseline (N)",
+    "Disposable": "Disposable (D)",
+    "RA witness": "Qualifies RA",
+    "Reproductive context": "Context only",
+    "Shared screen": "Safety screen",
+    "Thymic": "Thymic",
+}
 COLORS = ["#f1f3f4", "#336689", "#b07a35", "#277763", "#a9cdba", "#785780", "#a05a66"]
 
 
@@ -367,7 +375,9 @@ def plot_grid(data, keys, filename, *, title="", split_stems=None):
             _draw_coverage_panel(ax_s, grid[panel_keys], grp_list, panel_keys)
             ax_s.set_title(split_title, loc="left", fontsize=11.5, fontweight="bold", pad=16)
             fig_s.legend(
-                handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in panel_used],
+                handles=[
+                    Patch(color=COLORS[c], label=ROLE_LABELS[ROLES[c - 1]]) for c in panel_used
+                ],
                 loc="outside lower center",
                 ncol=len(panel_used),
                 frameon=False,
@@ -388,7 +398,7 @@ def plot_grid(data, keys, filename, *, title="", split_stems=None):
     if title:
         fig.suptitle(title, fontsize=12.5, fontweight="bold", color="#1d2f3a")
     fig.legend(
-        handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in used],
+        handles=[Patch(color=COLORS[c], label=ROLE_LABELS[ROLES[c - 1]]) for c in used],
         loc="outside lower center",
         ncol=len(used),
         frameon=False,

@@ -45,22 +45,22 @@ CANDIDATE, CANCER, REPRODUCTIVE, PUBLISHED, GREY = (
 
 #: Filtering ideas in the order drawn; each groups the evidence layers that implement it.
 IDEAS = [
-    ("Bulk tissue RNA above the tissue ceiling", {"Normal bulk"}),
-    ("Cell-type cluster RNA (HPA single cell)", {"HPA tissue clusters"}),
-    ("Sorted immune-cell RNA", {"HPA immune", "Monaco immune", "DICE immune"}),
-    ("Rare-cell RNA established by donor", {"Established rare normal-cell RNA"}),
+    ("Bulk tissue RNA", {"Normal bulk"}),
+    ("Single-cell clusters (HPA scRNA)", {"HPA tissue clusters"}),
+    ("Sorted immune subsets", {"HPA immune", "Monaco immune", "DICE immune"}),
+    ("Donor-replicated rare-cell RNA", {"Established rare normal-cell RNA"}),
     ("Normal-tissue protein (IHC)", {"HPA normal protein", "Accepted normal-protein evidence"}),
     (
-        "Curated or published normal expression",
+        "Curated normal-tissue literature",
         {"Reviewed normal-cell knowledge", "Published normal-tissue expression"},
     ),
-    ("Adult cornea RNA", {"Adult cornea"}),
+    ("Adult cornea scRNA", {"Adult cornea"}),
 ]
 OTHER = [
-    ("Coverage, identity, translation or unresolved evidence", "Other:Review", REVIEW),
-    ("Nested, Unsafe-contained or read-through sequence", "Other:Sequence", SEQUENCE),
-    ("No qualifying expression or bounds fail", "Other:Expression", EXPRESSION),
-    ("Home tissue no panel resolves", "Other:Unscreened tissue", EXPRESSION),
+    ("Incomplete coverage, translation, or paralog review", "Other:Review", REVIEW),
+    ("Sequence overlap with Unsafe proteins", "Other:Sequence", SEQUENCE),
+    ("Below 10× threshold or Disposable > 32", "Other:Expression", EXPRESSION),
+    ("Unscreened adult normal organ", "Other:Unscreened tissue", EXPRESSION),
 ]
 
 
@@ -248,9 +248,6 @@ def venn(data, path):
     cta_total = int((a & b).sum())
     cta_pub = int((a & b & c).sum())
     cta_new = int((a & b & ~c).sum())
-    ca_only = int((a & ~b).sum())
-    ra_only = int((~a & b).sum())
-    union_total = int((a | b).sum())
     pub_outside = int((~a & ~b & c).sum())
 
     fig, ax = plt.subplots(figsize=(9.2, 8.0))
@@ -316,22 +313,12 @@ def venn(data, path):
         fontsize=11.5,
         fontweight="bold",
     )
-    ax.text(
-        0,
-        -3.08,
-        f"Candidate union CA ∪ RA = {union_total:,} ({cta_total:,} CTA · {ca_only:,} CA only · {ra_only:,} RA only)  |  "
-        f"{pub_outside:,} published nominations excluded or held",
-        ha="center",
-        va="center",
-        fontsize=9.2,
-        color="#475b66",
-    )
     ax.set_xlim(-3.05, 3.05)
-    ax.set_ylim(-3.3, 2.95)
+    ax.set_ylim(-2.9, 2.9)
     ax.set_aspect("equal")
     ax.axis("off")
     ax.set_title(
-        f"Rule-derived sets against published nominations ({len(data):,} proteins; areas not to scale)",
+        f"Rule-derived sets vs. published nominations ({len(data):,} proteins; schematic)",
         fontsize=11.5,
         fontweight="bold",
         pad=8,
@@ -618,18 +605,18 @@ def distributions(data, path):
 
 
 def _draw_enrichment_panel(
-    ax, data, column, membership, title, ylabel, color, callouts, floor=0.05
+    ax, data, column, membership, member_label, title, ylabel, color, callouts, floor=0.05
 ):
     """Draw a single enrichment scatter plot against the shared non-thymic baseline."""
     d = data[data[column].notna()].copy()
     x = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=floor)
     y = d[column].clip(lower=floor)
-    held = ~d[membership] & d.classification.isin(["Other:Review", "Other:Unscreened tissue"])
-    below = ~d[membership] & ~held
+    other_hold = ~d[membership] & d.classification.isin(["Other:Review", "Other:Unscreened tissue"])
+    below = ~d[membership] & ~other_hold
     for label, mask, shade, z in [
-        ("Below threshold / non-member", below, "#b4c0c7", 1),
-        ("Held (Review / Unscreened)", held, REVIEW, 2),
-        ("Qualified membership", d[membership], color, 3),
+        ("Below 10× threshold", below, "#b4c0c7", 1),
+        ("Other (review or unscreened)", other_hold, REVIEW, 2),
+        (member_label, d[membership], color, 3),
     ]:
         ax.scatter(
             x[mask],
@@ -683,12 +670,12 @@ def _draw_enrichment_panel(
     ax.grid(True, which="major", color="#dce3e7", linewidth=0.6, alpha=0.7)
     ax.set_axisbelow(True)
     ax.set_xlabel(
-        "Highest non-thymic, non-reproductive reference max(Normal N, Disposable D) (TPM)",
+        "Healthy adult baseline max(Normal N, Disposable D) (TPM)",
         fontsize=9.8,
     )
     ax.set_ylabel(ylabel, fontsize=10)
     ax.set_title(
-        f"{title}: {len(d):,} measured proteins",
+        f"{title} · {len(d):,} compared proteins",
         loc="left",
         fontsize=11.5,
         fontweight="bold",
@@ -728,8 +715,9 @@ def tumor_normal(data, path):
         (
             "tumor_max_tpm",
             "is_cancer_antigen",
+            "Cancer Antigens: CA",
             "Cancer enrichment (CA)",
-            "Peak tumor sample expression across 129 cohorts (TPM)",
+            "Peak tumor sample expression (TPM)",
             CANCER,
             cancer_callouts,
             path.parent / "cancer-enrichment.png",
@@ -737,18 +725,28 @@ def tumor_normal(data, path):
         (
             "reproductive_supported_tpm",
             "is_reproductive_antigen",
+            "Reproductive Antigens: RA",
             "Reproductive and developmental enrichment (RA)",
-            "Peak reproductive biopsy or embryo-lineage expression (TPM)",
+            "Peak reproductive biopsy or embryo expression (TPM)",
             REPRODUCTIVE,
             repro_callouts,
             path.parent / "reproductive-enrichment.png",
         ),
     ]
     # Individual full-width figures for crisp readability in the whitepaper.
-    for column, membership, title, ylabel, color, callouts, out_path in specs:
+    for column, membership, member_label, title, ylabel, color, callouts, out_path in specs:
         fig, ax = plt.subplots(figsize=(8.8, 5.8))
         _draw_enrichment_panel(
-            ax, data, column, membership, title, ylabel, color, callouts, floor=floor
+            ax,
+            data,
+            column,
+            membership,
+            member_label,
+            title,
+            ylabel,
+            color,
+            callouts,
+            floor=floor,
         )
         fig.tight_layout()
         fig.savefig(out_path, dpi=160, bbox_inches="tight")
@@ -756,11 +754,20 @@ def tumor_normal(data, path):
 
     # Legacy combined side-by-side figure retained for summary.md.
     fig, axes = plt.subplots(1, 2, figsize=(14.2, 6.5), sharex=True, sharey=True)
-    for ax, (column, membership, title, ylabel, color, callouts, _) in zip(
+    for ax, (column, membership, member_label, title, ylabel, color, callouts, _) in zip(
         axes, specs, strict=True
     ):
         _draw_enrichment_panel(
-            ax, data, column, membership, title, ylabel, color, callouts, floor=floor
+            ax,
+            data,
+            column,
+            membership,
+            member_label,
+            title,
+            ylabel,
+            color,
+            callouts,
+            floor=floor,
         )
     fig.suptitle(
         "Shared 10× enrichment rule across cancer and reproductive compartments",
@@ -1289,9 +1296,9 @@ def _draw_host_outcomes(ax, profiles, labels):
     total_cta = int(profiles.CTA.max())
     small_notes = [[] for _ in range(len(profiles))]
     for column, label, short, color in [
-        ("CTA", "Retained for research screen", "retained", "#438a69"),
-        ("CTA_unresolved", "Unresolved coverage / evidence", "unresolved", "#b88a3c"),
-        ("CTA_excluded", "Excluded by patient-anatomy rule", "excluded", "#ac5552"),
+        ("CTA", "Retained", "retained", "#438a69"),
+        ("CTA_unresolved", "Unresolved (incomplete coverage)", "unresolved", "#b88a3c"),
+        ("CTA_excluded", "Excluded (expressed in protected organ)", "excluded", "#ac5552"),
     ]:
         values = profiles[column].to_numpy()
         ax.barh(y, values, left=left, label=label, color=color, height=0.68)
@@ -1321,15 +1328,15 @@ def _draw_host_outcomes(ax, profiles, labels):
                 fontsize=8.6,
                 color="#4d5f69",
             )
-    ax.set_xlim(0, total_cta * 1.24)
+    ax.set_xlim(0, total_cta * 1.16)
     ax.set_yticks(y, [s.replace("\n", " ") for s in labels], fontsize=9.4)
     ax.invert_yaxis()
-    ax.set_xlabel("Biological CTAs (identity unchanged)", fontsize=10)
+    ax.set_xlabel(f"Biological CTAs ({total_cta} total)", fontsize=10)
     ax.set_title(
-        "Patient-profile screening outcome for each CTA", loc="left", weight="bold", pad=12
+        "Patient-profile screening outcomes across 327 CTAs", loc="left", weight="bold", pad=12
     )
     ax.spines[["top", "right"]].set_visible(False)
-    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.15), frameon=False, fontsize=9.2)
+    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.15), ncol=2, frameon=False, fontsize=9.0)
 
 
 def cta_tiers_and_profiles(data, stem_path):
@@ -1352,8 +1359,21 @@ def cta_tiers_and_profiles(data, stem_path):
             for row in profiles.itertuples()
         ]
     )
-    labels = [r.replace("-patient", " anatomy").replace(" (", "\n(") for r in profiles.profile]
-    labels[0] = "Catalog only"
+    profile_renames = {
+        "all": "No filter (catalog)",
+        "none": "No filter (catalog)",
+        "female-patient": "Female",
+        "female-patient (protect ovary)": "Female\n(protect ovary)",
+        "female-patient (lactating)": "Female\n(lactating)",
+        "female-patient (pregnant)": "Female\n(pregnant)",
+        "male-patient": "Male",
+        "male-patient (protect testis)": "Male\n(protect testis)",
+        "male-patient (protect adult tissues)": "Male\n(protect all adult)",
+    }
+    labels = [
+        profile_renames.get(r, r.replace("-patient", "").replace(" (", "\n(").capitalize())
+        for r in profiles.profile
+    ]
 
     # Individual Figure A: Host-profile compartment choice matrix.
     fig_m, ax_m = plt.subplots(figsize=(10.2, 6.4))
@@ -1552,8 +1572,8 @@ def literature_sources(data, fig_path, csv_path):
         ("cta", "CTA", REPRODUCTIVE),
         ("ca_only", "CA only", CANCER),
         ("ra_only", "RA only", "#94c4ad"),
-        ("other", "Other (Review / Seq / Expr / Unscreened)", REVIEW),
-        ("unsafe", "Unsafe (normal-tissue excluded)", UNSAFE),
+        ("other", "Other", REVIEW),
+        ("unsafe", "Unsafe", UNSAFE),
     ]
     y = np.arange(len(plot_df))[::-1]
     totals = plot_df["mapped_proteins"].to_numpy(dtype=float)
@@ -1619,12 +1639,12 @@ def literature_sources(data, fig_path, csv_path):
         handles,
         labels,
         loc="lower center",
-        bbox_to_anchor=(0.48, -0.02),
-        ncol=3,
+        bbox_to_anchor=(0.50, -0.02),
+        ncol=5,
         frameon=False,
         fontsize=8.8,
     )
-    fig_c.subplots_adjust(left=0.32, right=0.78, top=0.90, bottom=0.15)
+    fig_c.subplots_adjust(left=0.32, right=0.80, top=0.90, bottom=0.13)
     fig_c.savefig(fig_path.parent / "literature-sources-counts.png", dpi=160, bbox_inches="tight")
     plt.close(fig_c)
 
@@ -1638,22 +1658,17 @@ def literature_sources(data, fig_path, csv_path):
         left_r += pcts
     for yi, row in zip(y, plot_df.itertuples()):
         cta_pct = 100.0 * row.cta / row.mapped_proteins if row.mapped_proteins else 0.0
-        cand_pct = (
-            100.0 * (row.cta + row.ca_only + row.ra_only) / row.mapped_proteins
-            if row.mapped_proteins
-            else 0.0
-        )
         ax_r.text(
-            101.8,
+            101.6,
             yi,
-            f"{cta_pct:.0f}% CTA ({cand_pct:.0f}% CA∪RA)",
+            f"{cta_pct:.0f}% CTA",
             va="center",
-            fontsize=8.7,
+            fontsize=8.8,
             fontweight="bold" if cta_pct >= 30 else "normal",
             color="#1f5e41" if cta_pct >= 30 else "#3e515c",
         )
-    _draw_class_dividers(ax_r, 146.0)
-    ax_r.set_xlim(0, 142)
+    _draw_class_dividers(ax_r, 118.5)
+    ax_r.set_xlim(0, 116)
     ax_r.set_xticks([0, 25, 50, 75, 100])
     ax_r.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
     ax_r.set_xlabel("Share of mapped proteins by OncoRef disposition")
@@ -1672,12 +1687,12 @@ def literature_sources(data, fig_path, csv_path):
         handles,
         labels,
         loc="lower center",
-        bbox_to_anchor=(0.48, -0.02),
-        ncol=3,
+        bbox_to_anchor=(0.50, -0.02),
+        ncol=5,
         frameon=False,
         fontsize=8.8,
     )
-    fig_r.subplots_adjust(left=0.32, right=0.78, top=0.90, bottom=0.15)
+    fig_r.subplots_adjust(left=0.32, right=0.80, top=0.90, bottom=0.13)
     fig_r.savefig(
         fig_path.parent / "literature-sources-retention.png", dpi=160, bbox_inches="tight"
     )
@@ -1821,7 +1836,7 @@ def normal_evidence_layers(data, path):
         ),
         ("Donor rare-cell UMI\n(CELLxGENE + Siletti)", {"Established rare normal-cell RNA"}),
         (
-            "Curated normal literature\n(912-protein rubric)",
+            "Curated normal literature\n(published anatomy)",
             {"Reviewed normal-cell knowledge", "Published normal-tissue expression"},
         ),
         ("Adult cornea scRNA\n(Collin CP10K)", {"Adult cornea"}),
@@ -1846,29 +1861,29 @@ def normal_evidence_layers(data, path):
     non_bulk = df.iloc[1:].copy().sort_values("beyond_bulk", ascending=True)
     y = np.arange(len(non_bulk))
 
-    fig, ax = plt.subplots(figsize=(8.6, 4.2))
+    fig, ax = plt.subplots(figsize=(8.2, 4.1))
     bars = ax.barh(y, non_bulk["beyond_bulk"], color=UNSAFE, height=0.62, alpha=0.88)
     max_v = max(non_bulk["beyond_bulk"].max(), 1)
     for bar, row in zip(bars, non_bulk.itertuples(), strict=True):
         w = bar.get_width()
         ax.text(
-            w + max_v * 0.02,
+            w + max_v * 0.022,
             bar.get_y() + bar.get_height() / 2,
-            f"+{row.beyond_bulk:,} missed by bulk RNA  ({row.total:,} total)",
+            f"+{row.beyond_bulk:,}  ({row.total:,} total)",
             va="center",
             ha="left",
-            fontsize=9.0,
+            fontsize=9.1,
             color="#1f2933",
         )
     ax.set_yticks(y, non_bulk["label"], fontsize=9.3)
-    ax.set_xlim(0, max_v * 1.62)
+    ax.set_xlim(0, max_v * 1.34)
     ax.set_xlabel(
-        "Unsafe proteins flagged despite passing bulk normal-tissue RNA ceilings", fontsize=9.8
+        "Additional Unsafe proteins caught after passing bulk tissue RNA ceilings", fontsize=9.8
     )
     ax.set_title(
-        "Why bulk RNA alone is insufficient: Unsafe proteins caught by complementary assays",
+        "Unsafe proteins caught beyond bulk tissue RNA",
         loc="left",
-        fontsize=11.0,
+        fontsize=11.2,
         fontweight="bold",
         color="#102a43",
         pad=10,
@@ -1988,11 +2003,17 @@ def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
         ("Shared male & female", "Shared male & female (SRA / CTA-MF)", "#c4a362"),
     ]
     subsets = [
-        ("All Reproductive Antigens\n(RA)", table),
-        ("Cancer–Testis Antigens\n(CTA = CA ∩ RA)", table[table["is_cta"]]),
-        ("Reproductive only\n(RA only)", table[~table["is_cta"]]),
+        (f"All Reproductive Antigens\n(RA, n = {len(table):,})", table),
+        (
+            f"Cancer–Testis Antigens\n(CTA, n = {int(table['is_cta'].sum()):,})",
+            table[table["is_cta"]],
+        ),
+        (
+            f"Reproductive only\n(RA only, n = {int((~table['is_cta']).sum()):,})",
+            table[~table["is_cta"]],
+        ),
     ]
-    fig, ax = plt.subplots(figsize=(10.2, 4.4))
+    fig, ax = plt.subplots(figsize=(9.8, 4.3))
     y = np.arange(len(subsets))[::-1]
     totals = np.array([len(df) for _, df in subsets], dtype=float)
     left = np.zeros(len(subsets))
@@ -2018,23 +2039,20 @@ def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
     for yi, (_, df) in zip(y, subsets, strict=True):
         f_safe = int(df["female_all_adult_eligible"].sum())
         m_safe = int(df["male_all_adult_eligible"].sum())
-        f_only = int(df["sex_restriction_class"].eq("Female-restricted").sum())
         ax.text(
-            102.0,
+            101.8,
             yi,
-            f"n={len(df):,}  |  {f_safe} female-safe · {m_safe} male-safe ({f_only} FRA/CTA-F)",
+            f"{f_safe} female-safe · {m_safe} male-safe",
             va="center",
             ha="left",
-            fontsize=8.6,
+            fontsize=8.9,
             color="#243b53",
         )
-    ax.set_xlim(0, 158)
+    ax.set_xlim(0, 134)
     ax.set_xticks([0, 25, 50, 75, 100])
     ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
     ax.set_yticks(y, [lbl for lbl, _ in subsets], fontsize=9.4)
-    ax.set_xlabel(
-        "Share of proteins under strict protection of all opposite-sex adult organs (including breast)"
-    )
+    ax.set_xlabel("Share of proteins (protecting all opposite-sex adult organs, including breast)")
     ax.set_title(
         "Sex-restricted Reproductive Antigens (MRA / FRA / ERA) and cross-sex CTA subsets",
         loc="left",
@@ -2320,12 +2338,12 @@ def decision_tree(data, stem_path):
             ("Other:Sequence", f"{n_seq:,}", "#f3eff7", SEQUENCE, "#5b4975"),
         ),
         (
-            2.55,
-            "4. Target peak > healthy max & Disposable ≤ 32 TPM/nTPM?",
+            2.62,
+            "4. Peak > healthy baseline & Disposable ≤ 32 TPM/nTPM?",
             "No",
             "Yes",
             n_elig,
-            ("Other:Expression (bounds)", f"{n_b_fail:,}", "#f2f5f7", EXPRESSION, "#486581"),
+            ("Other:Expression (≤ baseline)", f"{n_b_fail:,}", "#f2f5f7", EXPRESSION, "#486581"),
         ),
     ]
 
@@ -2349,7 +2367,7 @@ def decision_tree(data, stem_path):
         # Downward label on spine
         ax.text(
             scx + 0.14,
-            y - 0.21,
+            y - 0.20,
             f"{down_lbl}  ({rem_n:,})",
             ha="left",
             va="center",
@@ -2360,17 +2378,17 @@ def decision_tree(data, stem_path):
         prev_y = y - 0.02
 
     # Step 5: Symmetric 10x enrichment junction box -> 5 terminal leaves across bottom
-    j_y = 1.48
+    j_y = 1.54
     arrow(scx, prev_y, scx, j_y + 0.66)
     box(
         0.75,
         j_y,
         9.70,
         0.62,
-        f"5. Shared-eligible ({n_elig:,}):  Tumor ≥ 10× H₀  and/or  Reproductive/embryo ≥ 10× H₀   [H₀ = max(Normal N, Disposable D, 1 TPM)]",
+        f"5. Enrichment ≥ 10× healthy baseline H₀  ({n_elig:,} eligible; H₀ = max(Normal N, Disposable D, 1 TPM))",
         fc="#edf4f7",
         ec="#486581",
-        fs=8.7,
+        fs=8.9,
     )
 
     leaves = [
@@ -2383,7 +2401,7 @@ def decision_tree(data, stem_path):
             "#f5f7f9",
             EXPRESSION,
             "#486581",
-            "Unmeasured\nhome",
+            "Unscreened organ",
         ),
         ("Other:\nExpression", f"{n_low:,}", "#f5f7f9", EXPRESSION, "#486581", "Neither ≥10×"),
     ]
@@ -2393,18 +2411,18 @@ def decision_tree(data, stem_path):
     for i, (lt, lc, lfc, lec, ltc, branch_lbl) in enumerate(leaves):
         bx = start_x + i * (w_leaf + gap)
         bcx = bx + w_leaf / 2
-        arrow(bcx, j_y - 0.02, bcx, 0.94, color=lec)
+        arrow(bcx, j_y - 0.02, bcx, 0.92, color=lec)
         ax.text(
             bcx,
-            1.18,
+            1.24,
             branch_lbl,
             ha="center",
             va="center",
-            fontsize=7.7,
+            fontsize=7.9,
             color="#334e68",
-            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.0},
+            bbox={"facecolor": "white", "edgecolor": "none", "pad": 0.8},
         )
-        box(bx, 0.08, w_leaf, 0.82, lt, lc, fc=lfc, ec=lec, tc=ltc, cc=ltc, fs=8.7)
+        box(bx, 0.06, w_leaf, 0.82, lt, lc, fc=lfc, ec=lec, tc=ltc, cc=ltc, fs=8.7)
 
     ax.set_title(
         "OncoRef classification decision tree (every protein group lands in exactly one leaf)",
@@ -2434,8 +2452,8 @@ def build():
     counts = data.classification.value_counts()
     sets = venn(data, FIG / "venn.png")
     everything = draw_funnel(
-        funnel(data, "All assessed proteins"),
-        "Every assessed protein, by filtering idea",
+        funnel(data, "All coding protein groups"),
+        "Proteome-wide attrition across screening gates",
         FIG / "funnel-all.png",
     )
     source_to_tiers_architecture(data, everything, FIG / "source-to-tiers-architecture")
@@ -2445,7 +2463,7 @@ def build():
     published = data[data.published_nomination.fillna(False).astype(bool)]
     nominated = draw_funnel(
         funnel(published, "Published CTA / oncofetal nominations"),
-        "Published nominations through the same filters",
+        "Attrition of published CTA and oncofetal nominations",
         FIG / "funnel-published.png",
     )
     if everything.removed.iloc[1:].eq(0).any():

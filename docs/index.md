@@ -7,6 +7,7 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 <span class="cat cat-cta">CTA</span> classification.
 
 [Antigen whitepaper](antigen-whitepaper.md) ·
+[Interactive catalog](audits/target-selection-20261110/rebuild/report.html) ·
 [Classification rules](target-selection.md) ·
 [Patient profiles & filters](target-filters.md) ·
 [CLI & builds](curation.md) ·
@@ -33,10 +34,10 @@ classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,1
    Proteins passing both routes form the <span class="cat cat-cta">CTA</span> set.
 3. **Patient-specific filtering:** Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</span>,
    and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can
-   safely lose. Downstream filters (`HostContext` / `--profile`) mark reproductive compartments as
+   safely lose. Downstream patient profiles (`--profile` / `target_filters`) mark reproductive compartments as
    <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or
    <span class="cat cat-absent">Absent</span>. Anatomy presets leave reproductive tissues unprotected until you opt in;
-   missing evidence for a protected tissue holds the candidate as unresolved, and filtering out a target for a patient
+   missing evidence for a protected tissue marks the candidate unresolved, and filtering out a target for one patient
    never relabels its biological category ([rules and limits](host-selection.md)).
 
 ![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)

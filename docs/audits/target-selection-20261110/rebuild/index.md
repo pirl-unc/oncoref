@@ -18,8 +18,8 @@ Policy `oncoref.target-selection.2026-11-20.1`. **327 CTA, 70 Cancer Antigen onl
 |---|---|---:|---:|
 | Bulk, cluster, immune, protein or reviewed normal exclusion | Unsafe | 18,125 | 1,768 |
 | Established rare-cell RNA or published normal expression only | Unsafe | 122 | 1,646 |
-| Coverage, identity, translation or unresolved evidence | Other:Review | 736 | 910 |
-| Nested, Unsafe-contained or read-through sequence | Other:Sequence | 48 | 862 |
+| Incomplete coverage, translation, or paralog review | Other:Review | 736 | 910 |
+| Sequence overlap with Unsafe proteins | Other:Sequence | 48 | 862 |
 | No qualifying expression, target maximum or Disposable cap | Other:Expression | 249 | 613 |
 | Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 88 | 525 |
 

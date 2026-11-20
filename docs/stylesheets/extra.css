@@ -29,6 +29,25 @@
   color: #243b53;
 }
 
+/* Compact top jump-to bar for long technical pages */
+.col-md-9 .section-nav {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #486581;
+  padding: 0.45rem 0 0.65rem 0;
+  margin: 0.35rem 0 1.25rem 0;
+  border-top: 1px solid #e4ebf1;
+  border-bottom: 1px solid #e4ebf1;
+}
+
+.col-md-9 .section-nav a {
+  text-decoration: none;
+}
+
+.col-md-9 .section-nav a:hover {
+  text-decoration: underline;
+}
+
 /* Minimal typographic blockquote (no tinted card background) */
 .col-md-9 blockquote {
   background: transparent;

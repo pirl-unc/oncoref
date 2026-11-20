@@ -1,13 +1,13 @@
 step,removed,remaining,flagged_in_total
-All assessed proteins,0,19893,
-Bulk tissue RNA above the tissue ceiling,17507,2386,17507.0
-Cell-type cluster RNA (HPA single cell),436,1950,17053.0
-Sorted immune-cell RNA,96,1854,12880.0
-Rare-cell RNA established by donor,104,1750,126.0
+All coding protein groups,0,19893,
+Bulk tissue RNA,17507,2386,17507.0
+Single-cell clusters (HPA scRNA),436,1950,17053.0
+Sorted immune subsets,96,1854,12880.0
+Donor-replicated rare-cell RNA,104,1750,126.0
 Normal-tissue protein (IHC),50,1700,10160.0
-Curated or published normal expression,49,1651,51.0
-Adult cornea RNA,5,1646,12095.0
-"Coverage, identity, translation or unresolved evidence",736,910,
-"Nested, Unsafe-contained or read-through sequence",48,862,
-No qualifying expression or bounds fail,249,613,
-Home tissue no panel resolves,88,525,
+Curated normal-tissue literature,49,1651,51.0
+Adult cornea scRNA,5,1646,12095.0
+"Incomplete coverage, translation, or paralog review",736,910,
+Sequence overlap with Unsafe proteins,48,862,
+Below 10× threshold or Disposable > 32,249,613,
+Unscreened adult normal organ,88,525,
