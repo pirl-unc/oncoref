@@ -430,6 +430,11 @@ def build():
     pregnant_profile = profiles.loc["female-patient (pregnant)"]
     sex_table = pd.read_csv(BUILD / "summary/sex-restricted-antigens.csv")
     sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
+    unsafe_reasons = data.Unsafe_reasons.fillna("").map(
+        lambda v: set(v.split(" | ")) if v else set()
+    )
+    bulk_unsafe = unsafe_reasons.map(lambda s: "Normal bulk" in s)
+    any_unsafe = data.category.eq("Unsafe")
     headline = table(
         ["Stage or set", "Protein groups", "Notes"],
         [
@@ -492,6 +497,8 @@ def build():
         "published_outside": f"{int((~ca & ~ra & published).sum()):,}",
         "union": f"{int((ca | ra).sum()):,}",
         "unsafe_n": f"{int(data.category.eq('Unsafe').sum()):,}",
+        "bulk_unsafe_n": f"{int(bulk_unsafe.sum()):,}",
+        "non_bulk_added_n": f"{int((any_unsafe & ~bulk_unsafe).sum()):,}",
         "other_n": f"{int(data.category.eq('Other').sum()):,}",
         "testis_protected_cta": f"{int(testis_profile.CTA):,}",
         "pregnant_retained": f"{int(pregnant_profile.CTA):,}",

@@ -18,7 +18,7 @@ Every protein group lands in one of five mutually exclusive categories:
 
 ![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/classification-overview.png)
 
-*Figure 1.* Proteome partition across the five categories. Biological membership (<span class="cat cat-ca">CA</span>, <span class="cat cat-ra">RA</span>, <span class="cat cat-cta">CTA</span>) is independent of patient anatomy; patient-specific organ protection applies downstream without relabeling biological categories.
+*Figure 1.* Proteome partition across the five categories. In `H₀ = max(Normal N, Disposable D, 1 TPM)`, `N` is the protein's highest native TPM across vital, protected, and manageable healthy adult somatic organs and sorted immune subsets, and `D` is its maximum across non-thymic Disposable organs (appendix, gallbladder, tonsil). Biological membership (<span class="cat cat-ca">CA</span>, <span class="cat cat-ra">RA</span>, <span class="cat cat-cta">CTA</span>) is independent of patient anatomy; patient-specific organ protection applies downstream without relabeling biological categories.
 
 | Stage or set | Protein groups | Notes |
 | --- | --- | --- |
@@ -46,7 +46,7 @@ No single assay catches every normal-tissue risk. Each modality in OncoRef cover
 
 ![Unsafe proteins caught by complementary assays beyond bulk tissue RNA](audits/target-selection-20261110/rebuild/summary/normal-evidence-layers.png)
 
-*Figure 2.* `Unsafe` proteins passing bulk tissue RNA ceilings that are caught by single-cell clusters, sorted immune panels, normal IHC, donor-resolved rare-cell UMI counts, curated literature, or adult cornea scRNA.
+*Figure 2.* `Unsafe` proteins passing bulk tissue RNA ceilings that are caught by single-cell clusters, sorted immune panels, normal IHC, donor-resolved rare-cell UMI counts, curated literature, or adult cornea scRNA. Bulk tissue RNA alone flags **17,507** `Unsafe` proteins; the six complementary assays add **740** more (bars overlap where multiple non-bulk assays agree).
 
 ## 1. Screening decision tree, attrition, and the 10× enrichment rule
 
@@ -64,11 +64,11 @@ Both enrichment routes apply the same threshold—**≥10×** above **H₀ = max
 
 ![Cancer enrichment relative to the healthy adult reference](audits/target-selection-20261110/rebuild/summary/cancer-enrichment.png)
 
-*Figure 5.* Cancer enrichment (<span class="cat cat-ca">CA</span>) across all **923** protein groups with native-TPM comparisons.
+*Figure 5.* Cancer enrichment (<span class="cat cat-ca">CA</span>) across all **923** protein groups with native-TPM comparisons (values below 0.05 TPM clipped to the axis floor).
 
 ![Reproductive and developmental enrichment relative to the healthy adult reference](audits/target-selection-20261110/rebuild/summary/reproductive-enrichment.png)
 
-*Figure 6.* Reproductive and developmental enrichment (<span class="cat cat-ra">RA</span>) against the identical non-thymic healthy adult baseline.
+*Figure 6.* Reproductive and developmental enrichment (<span class="cat cat-ra">RA</span>) against the identical non-thymic healthy adult baseline (values below 0.05 TPM clipped to the axis floor).
 
 Exclusive category counts across the entire proteome:
 
@@ -273,7 +273,7 @@ Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</sp
 Because male and female reproductive organs are anatomically distinct, an antigen restricted to one sex's reproductive tract has no normal target organ in non-pregnant patients of the opposite sex. Oncology has no standard shorthand for this cross-sex distinction, so OncoRef partitions Reproductive Antigens (<span class="cat cat-ra">RA</span>) and their cancer intersection (<span class="cat cat-cta">CTA</span>) into four explicit sex-restriction classes under strict protection of all opposite-sex adult organs (including resting and lactating breast):
 
 - **Male-Restricted (`MRA`, `207` RAs · `CTA-M`, `136` CTAs — female-safe):** expressed in male reproductive organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`) and cleanly clearing every female adult reproductive and mammary organ (`XAGE1A/B`, `SPANXA1/2`, `MAGEA4`, `NY-ESO-1`, `VCY/1B`, plus male-accessory/prostate targets such as `PRR23D1/2`, `SPAG11A`, `POTEH`, `EDDM3B`). Relaxing resting-breast protection widens `CTA-M` to **213** CTAs, bringing in high-peak prostate and seminal-vesicle genes (`TGM4`, `SEMG2`) that show resting-breast RNA in GTEx.
-- **Embryo / Placenta-Only (`ERA`, `45` RAs · `CTA-E`, `38` CTAs — adult-absent in both sexes):** cleanly clear both all adult male and all non-pregnant adult female organs (`TBXT`, `MBD3L2`, `SSU72L2`, `TRIM48`, `TRIM43B`).
+- **Embryo / Placenta-Only (`ERA`, `45` RAs · `CTA-E`, `38` CTAs — adult-absent in both sexes):** cleanly clear both all adult male and all non-pregnant adult female organs (`TBXT`, `MBD3L2`, `SSU72L2`, `TRIM48`, `TRIM43B`). Although **155** RAs (**130** CTAs) reach ≥10× in embryo or placenta, most (`64` RAs / `57` CTAs, including `MAGEA4`, `VCY/1B`, `PAGE2`, and `GAGE1`) remain active in adult testis and therefore classify as `MRA`/`CTA-M`, while another `41` RAs (`33` CTAs) remain active in both male and female adult reproductive tissues; `ERA` retains only developmental factors silenced across every adult gonad and reproductive organ.
 - **Female-Restricted (`FRA`, `6` RAs · `CTA-F`, `2` CTAs — male-safe):** confined to female reproductive compartments (`ovary`, tract, `placenta`/`lactating_breast`) while cleanly clearing all male adult organs (`ERVV-1`, `ZP4`).
 - **Shared Male & Female (`SRA`, `197` RAs · `CTA-MF`, `151` CTAs):** expressed in adult reproductive or mammary compartments of both sexes (`PRAME`, `LALBA`, `SCGB1D4`).
 
@@ -285,7 +285,7 @@ The asymmetry is striking: **174** of **327** CTAs (`CTA-M + CTA-E`) clear every
 
 ![Male versus female reproductive-organ exposure across all CTAs](audits/target-selection-20261110/rebuild/summary/sex-restricted-landscape.png)
 
-*Figure 14.* Maximum male versus female sex-organ RNA across all **327** CTAs. Points in the lower-right (`CTA-M`, blue) are anatomically absent in non-pregnant women; points in the lower-left (`CTA-E`, green) are absent in both adult sexes; points in the upper-left (`CTA-F`, plum) are anatomically absent in men.
+*Figure 14.* Maximum male versus female sex-organ RNA across all **327** CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). Points in the lower-right (`CTA-M`, blue) are anatomically absent in non-pregnant women; ochre points in the lower-right (`TGM4`, `SEMG2`) have <4 TPM in female sex organs but ≥4 TPM in resting breast; points in the lower-left (`CTA-E`, green) are absent in both adult sexes; points in the upper-left (`CTA-F`, plum) are anatomically absent in men.
 
 ## 5. Methods: protein grouping, sources, and thresholds
 

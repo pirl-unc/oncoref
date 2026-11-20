@@ -352,17 +352,24 @@ def plot_grid(data, keys, filename, *, title="", split_stems=None):
 
     if split_stems is not None:
         for (split_name, split_title), grp_list in zip(split_stems, panel_specs, strict=True):
-            n_rows = sum(len(m) for _, m in grp_list)
+            row_order = [t for _, members in grp_list for t in members]
+            panel_keys = [k for k in keys if grid.loc[row_order, k].gt(0).any()]
+            panel_used = sorted(
+                int(v)
+                for v in np.unique(grid.loc[row_order, panel_keys].to_numpy(dtype=int))
+                if v > 0
+            )
+            n_rows = len(row_order)
             fig_s, ax_s = plt.subplots(
-                figsize=(max(8.8, len(keys) * 0.68), 2.6 + 0.27 * n_rows),
+                figsize=(max(7.6, len(panel_keys) * 0.78), 2.5 + 0.27 * n_rows),
                 layout="constrained",
             )
-            _draw_coverage_panel(ax_s, grid, grp_list, keys)
+            _draw_coverage_panel(ax_s, grid[panel_keys], grp_list, panel_keys)
             ax_s.set_title(split_title, loc="left", fontsize=11.5, fontweight="bold", pad=16)
             fig_s.legend(
-                handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in used],
+                handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in panel_used],
                 loc="outside lower center",
-                ncol=len(used),
+                ncol=len(panel_used),
                 frameon=False,
                 fontsize=9.2,
             )

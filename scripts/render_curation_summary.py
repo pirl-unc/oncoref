@@ -617,7 +617,9 @@ def distributions(data, path):
     plt.close(fig)
 
 
-def _draw_enrichment_panel(ax, data, column, membership, title, color, callouts, floor=0.05):
+def _draw_enrichment_panel(
+    ax, data, column, membership, title, ylabel, color, callouts, floor=0.05
+):
     """Draw a single enrichment scatter plot against the shared non-thymic baseline."""
     d = data[data[column].notna()].copy()
     x = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=floor)
@@ -680,8 +682,11 @@ def _draw_enrichment_panel(ax, data, column, membership, title, color, callouts,
     ax.set_yscale("log")
     ax.grid(True, which="major", color="#dce3e7", linewidth=0.6, alpha=0.7)
     ax.set_axisbelow(True)
-    ax.set_xlabel("Highest non-thymic, non-reproductive reference max(N, D) (TPM)", fontsize=10)
-    ax.set_ylabel("Highest supported expression (TPM)", fontsize=10)
+    ax.set_xlabel(
+        "Highest non-thymic, non-reproductive reference max(Normal N, Disposable D) (TPM)",
+        fontsize=9.8,
+    )
+    ax.set_ylabel(ylabel, fontsize=10)
     ax.set_title(
         f"{title}: {len(d):,} measured proteins",
         loc="left",
@@ -724,6 +729,7 @@ def tumor_normal(data, path):
             "tumor_max_tpm",
             "is_cancer_antigen",
             "Cancer enrichment (CA)",
+            "Peak tumor sample expression across 129 cohorts (TPM)",
             CANCER,
             cancer_callouts,
             path.parent / "cancer-enrichment.png",
@@ -732,22 +738,17 @@ def tumor_normal(data, path):
             "reproductive_supported_tpm",
             "is_reproductive_antigen",
             "Reproductive and developmental enrichment (RA)",
+            "Peak reproductive biopsy or embryo-lineage expression (TPM)",
             REPRODUCTIVE,
             repro_callouts,
             path.parent / "reproductive-enrichment.png",
         ),
     ]
     # Individual full-width figures for crisp readability in the whitepaper.
-    for column, membership, title, color, callouts, out_path in specs:
-        fig, ax = plt.subplots(figsize=(9.2, 6.2))
-        _draw_enrichment_panel(ax, data, column, membership, title, color, callouts, floor=floor)
-        fig.text(
-            0.01,
-            -0.02,
-            "Values below 0.05 TPM are clipped to the axis floor. Gold points above the dotted boundary clear the 10× rule but are held in Other:Review or Other:Unscreened tissue.",
-            ha="left",
-            fontsize=8.5,
-            color="#4e616b",
+    for column, membership, title, ylabel, color, callouts, out_path in specs:
+        fig, ax = plt.subplots(figsize=(8.8, 5.8))
+        _draw_enrichment_panel(
+            ax, data, column, membership, title, ylabel, color, callouts, floor=floor
         )
         fig.tight_layout()
         fig.savefig(out_path, dpi=160, bbox_inches="tight")
@@ -755,8 +756,12 @@ def tumor_normal(data, path):
 
     # Legacy combined side-by-side figure retained for summary.md.
     fig, axes = plt.subplots(1, 2, figsize=(14.2, 6.5), sharex=True, sharey=True)
-    for ax, (column, membership, title, color, callouts, _) in zip(axes, specs, strict=True):
-        _draw_enrichment_panel(ax, data, column, membership, title, color, callouts, floor=floor)
+    for ax, (column, membership, title, ylabel, color, callouts, _) in zip(
+        axes, specs, strict=True
+    ):
+        _draw_enrichment_panel(
+            ax, data, column, membership, title, ylabel, color, callouts, floor=floor
+        )
     fig.suptitle(
         "Shared 10× enrichment rule across cancer and reproductive compartments",
         fontsize=12.5,
@@ -1115,7 +1120,11 @@ def source_to_tiers_architecture(data, everything, stem_path):
 
     # Gate 2: Symmetric 10x enrichment (receives 842)
     gate_box(
-        2.75, 2.86, 5.30, 0.64, "2. Enrichment ≥ 10× healthy baseline  [H₀ = max(N, D, 1 TPM)]"
+        2.05,
+        2.86,
+        6.70,
+        0.64,
+        "2. Enrichment ≥ 10× healthy baseline  [H₀ = max(Normal N, Disposable D, 1 TPM)]",
     )
 
     # 4 mutually exclusive leaves summing to 842
@@ -1837,7 +1846,7 @@ def normal_evidence_layers(data, path):
     non_bulk = df.iloc[1:].copy().sort_values("beyond_bulk", ascending=True)
     y = np.arange(len(non_bulk))
 
-    fig, ax = plt.subplots(figsize=(9.4, 4.8))
+    fig, ax = plt.subplots(figsize=(8.6, 4.2))
     bars = ax.barh(y, non_bulk["beyond_bulk"], color=UNSAFE, height=0.62, alpha=0.88)
     max_v = max(non_bulk["beyond_bulk"].max(), 1)
     for bar, row in zip(bars, non_bulk.itertuples(), strict=True):
@@ -1845,33 +1854,24 @@ def normal_evidence_layers(data, path):
         ax.text(
             w + max_v * 0.02,
             bar.get_y() + bar.get_height() / 2,
-            f"+{row.beyond_bulk:,} missed by bulk RNA   ({row.total:,} flagged overall)",
+            f"+{row.beyond_bulk:,} missed by bulk RNA  ({row.total:,} total)",
             va="center",
             ha="left",
-            fontsize=8.8,
+            fontsize=9.0,
             color="#1f2933",
         )
-    ax.set_yticks(y, non_bulk["label"], fontsize=9.2)
-    ax.set_xlim(0, max_v * 1.92)
+    ax.set_yticks(y, non_bulk["label"], fontsize=9.3)
+    ax.set_xlim(0, max_v * 1.62)
     ax.set_xlabel(
         "Unsafe proteins flagged despite passing bulk normal-tissue RNA ceilings", fontsize=9.8
     )
     ax.set_title(
         "Why bulk RNA alone is insufficient: Unsafe proteins caught by complementary assays",
         loc="left",
-        fontsize=11.2,
+        fontsize=11.0,
         fontweight="bold",
         color="#102a43",
         pad=10,
-    )
-    ax.text(
-        0.0,
-        -0.19,
-        f"Bulk tissue RNA alone flags {df.iloc[0]['total']:,} Unsafe proteins; the six complementary modalities above catch an additional "
-        f"{int((seen & ~bulk_mask).sum()):,} Unsafe proteins (bars overlap where multiple non-bulk assays agree).",
-        transform=ax.transAxes,
-        fontsize=8.4,
-        color="#486581",
     )
     ax.grid(axis="x", color="#e3e8eb", linewidth=0.6)
     ax.set_axisbelow(True)
@@ -2181,14 +2181,6 @@ def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
         loc="upper right",
     )
     ax2.spines[["top", "right"]].set_visible(False)
-    fig2.text(
-        0.01,
-        -0.02,
-        "Dotted lines mark the 4 TPM protected-organ screening threshold. Points in the bottom-right colored ochre (e.g., TGM4, SEMG2) have <4 TPM in female sex organs but ≥4 TPM in resting breast.",
-        ha="left",
-        fontsize=8.3,
-        color="#486581",
-    )
     fig2.tight_layout()
     fig2.savefig(fig_scatter_path, dpi=160, bbox_inches="tight")
     plt.close(fig2)
@@ -2371,14 +2363,14 @@ def decision_tree(data, stem_path):
     j_y = 1.48
     arrow(scx, prev_y, scx, j_y + 0.66)
     box(
-        1.15,
+        0.75,
         j_y,
-        8.90,
+        9.70,
         0.62,
-        f"5. Shared-eligible ({n_elig:,}):  Tumor ≥ 10× H₀  and/or  Reproductive/embryo ≥ 10× H₀   [H₀ = max(N, D, 1 TPM)]",
+        f"5. Shared-eligible ({n_elig:,}):  Tumor ≥ 10× H₀  and/or  Reproductive/embryo ≥ 10× H₀   [H₀ = max(Normal N, Disposable D, 1 TPM)]",
         fc="#edf4f7",
         ec="#486581",
-        fs=8.9,
+        fs=8.7,
     )
 
     leaves = [
