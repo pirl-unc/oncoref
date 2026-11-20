@@ -337,7 +337,7 @@ def replay_contexts(
     conflicts = set(facts.loc[facts["Antibody concern"], "representative_gene_id"])
     single = set(facts.loc[facts.member_count.eq(1), "representative_gene_id"])
     crosswalk = read(CROSSWALK)
-    receipt = reference_data.provenance("hpa_single_cell_tissue", verify_content=True)
+    receipt = reference_data.provenance("hpa_single_cell_tissue", "v23", verify_content=True)
     lookup = (
         read(output / "hpa_single_cell_tissue-accepted-identities.csv.gz")
         .set_index("source_gene_id")

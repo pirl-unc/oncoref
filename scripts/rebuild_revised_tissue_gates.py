@@ -118,7 +118,7 @@ def main():
     )
     receipt = {str(p.relative_to(ROOT)): sha256(p) for p in inputs}
     for source in ["hpa_rna_consensus", "hpa_single_cell_tissue", "hpa_normal_tissue"]:
-        receipt[f"reference:{source}:v23"] = reference_data.provenance(source, verify_content=True)[
+        receipt[f"reference:{source}:v23"] = reference_data.provenance(source, "v23", verify_content=True)[
             "sha256"
         ]
     (OUT / "revised-tissue-gate-inputs.json").write_text(
