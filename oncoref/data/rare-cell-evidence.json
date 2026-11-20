@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.rare-cell-evidence",
-  "policy_id": "oncoref.target-selection.2026-11-19.3",
+  "policy_id": "oncoref.target-selection.2026-11-19.4",
   "census_release": "2025-11-08",
   "filter": "is_primary_data == True and disease == 'normal' and tissue_type == 'tissue'",
   "count_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",
@@ -25,11 +25,11 @@
     "reason": "Specific granule labels exist only in the dissection files"
   },
   "tier_registry_id": "oncoref:tissue-tiers:v1:sha256:e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd",
-  "tier_policy_id": "oncoref:tissue-tiers:v1:sha256:e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd+oncoref:tissue-tier-updates:v1:sha256:1a9e6e19735fa9722f7a8a18027691552f992859509a2ab5c4301b2084504028",
+  "tier_policy_id": "oncoref:tissue-tiers:v1:sha256:e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd+oncoref:tissue-tier-updates:v1:sha256:5fa9f1039f89599a4599bcf769e8ba1830c0689e276706141261d35c5e76f83e",
   "rules": {
     "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
     "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
-    "replication": "The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
+    "replication": "The signal in >= 2 atlas sources of the same organ, which agree on a cell type or include >= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
     "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules.",
     "protected": "Protected populations need 2 times these frequencies.",
     "single_molecules": "Single-molecule detection alone does not establish expression. Ambient RNA and read assignment are possible confounders, not demonstrated explanations.",
@@ -203,7 +203,7 @@
     "Donor overlap across collections has not been reviewed",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "daec8946abc0f3acf75d344b8e8ca7aba4ec333f9d07fcc9c5dddf0fabe34f3b",
+  "sha256": "df467974e4dcd53f219d908d1a67dfa05f7d60c7a48379849195aa604f606c76",
   "regrade": {
     "inputs_receipt": "docs/audits/normal-cell-atlas-20261110/rare-cell/regrade-inputs.json",
     "sha256": "16f22723456a7f9ffa537c44b7c368188c57b25a69287f228fec389ceeb7d7ac",

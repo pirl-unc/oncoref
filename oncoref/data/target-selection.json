@@ -9,18 +9,18 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-19.3",
+    "policy_id": "oncoref.target-selection.2026-11-19.4",
     "proteins": 19893,
     "categories": {
-      "Unsafe": 18253,
-      "Other": 1115,
+      "Unsafe": 18250,
+      "Other": 1118,
       "CTA": 327,
       "Reproductive Antigen only": 128,
       "Cancer Antigen only": 70
     },
     "classifications": {
-      "Unsafe": 18253,
-      "Other:Review": 731,
+      "Unsafe": 18250,
+      "Other:Review": 734,
       "CTA": 327,
       "Other:Expression": 248,
       "Reproductive Antigen only": 128,
@@ -98,7 +98,7 @@
       {
         "released_category": "Unsafe",
         "category": "Other",
-        "proteins": 69
+        "proteins": 72
       },
       {
         "released_category": "Unsafe",
@@ -108,13 +108,13 @@
       {
         "released_category": "Unsafe",
         "category": "Unsafe",
-        "proteins": 18173
+        "proteins": 18170
       }
     ],
     "shared_eligible": 841,
-    "assessed_for_cancer_evidence": 918,
+    "assessed_for_cancer_evidence": 921,
     "unsafe_changes": {
-      "released_unsafe_now_other": 86,
+      "released_unsafe_now_other": 89,
       "newly_unsafe": 80
     },
     "rare_cell": {
@@ -127,8 +127,8 @@
         "dismissed": 7
       },
       "action": {
-        "none": 19504,
-        "review": 260,
+        "none": 19501,
+        "review": 263,
         "unsafe": 129
       },
       "legacy_flag_unassessed": 0
@@ -140,8 +140,8 @@
       "confirm_detection": 2
     },
     "expression_bounds": {
-      "unassessed": 18975,
-      "pass": 896,
+      "unassessed": 18972,
+      "pass": 899,
       "fail": 22
     },
     "comparison_required_contexts": [
@@ -182,15 +182,15 @@
       "urinary bladder"
     ],
     "assessed_cancer_statuses": {
-      "qualifies": 524,
+      "qualifies": 527,
       "does_not_qualify": 394
     },
     "published_nomination_by_category": {
       "CTA": 252,
       "Cancer Antigen only": 27,
-      "Other": 116,
+      "Other": 118,
       "Reproductive Antigen only": 77,
-      "Unsafe": 1761
+      "Unsafe": 1759
     }
   },
   "comparison": {
@@ -201,7 +201,7 @@
       "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
       "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
       "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
-      "Complete 35-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Thymus is retained separately as protected-tissue evidence."
+      "Complete 35-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Adult whole thymus is Disposable and retained in the separate thymic scope."
     ],
     "expression_bounds": {
       "target_maximum": "max(tumor, adult reproductive, developmental) >= 1 and above every measured nonreproductive normal and Disposable value on the comparison scale.",
@@ -943,8 +943,8 @@
       "tongue",
       "urinary bladder"
     ],
-    "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
+    "tumor_matrix_cache_sha256": "e74c9127ce291ff151297e3501bda63a2b1d46bb9d6f76a0be515e76f9aec27c"
   },
-  "data_sha256": "02ad02529ec7bfe5e11c0c267a12e35bebb74a2e84d37ff1b7d56f1283dc9111",
+  "data_sha256": "5c9246deddaf0f4588fb07c17046dc1388ebdea8e69a2422be12ef0f90d31f5b",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
 }
