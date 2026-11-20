@@ -168,19 +168,147 @@ def independent_contexts():
     return pd.concat(frames, ignore_index=True).fillna("")
 
 
-def plot_grid(data, keys, filename):
-    cells = data.assign(code=data.role.map({r: i + 1 for i, r in enumerate(ROLES)}))
+TISSUE_ALIASES = {
+    "hippocampus": "hippocampal formation",
+}
+TISSUE_GROUPS = [
+    (
+        "Somatic organs",
+        [
+            "adipose tissue",
+            "adrenal gland",
+            "blood vessel",
+            "bronchus",
+            "colon",
+            "duodenum",
+            "esophagus",
+            "heart",
+            "heart muscle",
+            "kidney",
+            "liver",
+            "lung",
+            "pancreas",
+            "parathyroid gland",
+            "rectum",
+            "salivary gland",
+            "skeletal muscle",
+            "skin",
+            "small intestine",
+            "smooth muscle",
+            "stomach",
+            "thyroid gland",
+            "tongue",
+            "ureter",
+            "urinary bladder",
+            "vascular",
+        ],
+    ),
+    (
+        "Blood & immune",
+        ["blood", "bone marrow", "lymph node", "pbmc", "spleen"],
+    ),
+    (
+        "Disposable & thymic",
+        ["appendix", "gallbladder", "thymus", "tonsil"],
+    ),
+    (
+        "Brain, nerve & eye",
+        [
+            "amygdala",
+            "basal ganglia",
+            "brain",
+            "caudate",
+            "cerebellum",
+            "cerebral cortex",
+            "choroid plexus",
+            "cornea/conjunctiva",
+            "eye",
+            "hippocampal formation",
+            "hypothalamus",
+            "medulla oblongata",
+            "midbrain",
+            "peripheral nerve",
+            "pituitary gland",
+            "pons",
+            "retina",
+            "spinal cord",
+            "substantia nigra",
+            "thalamus",
+            "white matter",
+        ],
+    ),
+    (
+        "Reproductive & developmental",
+        [
+            "breast",
+            "cervix",
+            "embryo",
+            "endometrium",
+            "epididymis",
+            "fallopian tube",
+            "ovary",
+            "placenta",
+            "prostate",
+            "seminal vesicle",
+            "testis",
+            "uterus",
+            "vagina",
+        ],
+    ),
+]
+
+
+def _grouped_tissue_order(tissues):
+    """Order tissues by anatomical scope so coverage blocks align across panels."""
+    present = set(tissues)
+    ordered = []
+    assigned = set()
+    for group_name, members in TISSUE_GROUPS:
+        hits = [t for t in members if t in present]
+        if hits:
+            ordered.append((group_name, hits))
+            assigned.update(hits)
+    leftover = sorted(present - assigned)
+    if leftover:
+        ordered.append(("Other tissues", leftover))
+    return ordered
+
+
+def plot_grid(data, keys, filename, *, title=""):
+    cells = data.assign(
+        tissue=data.tissue.replace(TISSUE_ALIASES),
+        code=data.role.map({r: i + 1 for i, r in enumerate(ROLES)}),
+    )
     grid = (
         cells.pivot_table(index="tissue", columns="family", values="code", aggfunc="min")
         .reindex(columns=keys)
         .fillna(0)
     )
-    blocks = np.array_split(np.arange(len(grid)), 2)
+    groups = _grouped_tissue_order(grid.index)
+    # Partition groups cleanly into two balanced side-by-side panels without splitting a group.
+    total_rows = sum(len(members) for _, members in groups)
+    left_groups, right_groups, left_count = [], [], 0
+    for grp in groups:
+        if left_groups and left_count + len(grp[1]) > total_rows / 2 + 4:
+            right_groups.append(grp)
+        else:
+            left_groups.append(grp)
+            left_count += len(grp[1])
+    if not right_groups:
+        half = max(1, len(groups) // 2)
+        left_groups, right_groups = groups[:half], groups[half:]
+
+    panel_specs = [left_groups, right_groups]
+    max_rows = max(sum(len(m) for _, m in g) for g in panel_specs)
     fig, axes = plt.subplots(
-        1, 2, figsize=(max(10, len(keys) * 1.2), 2.9 + 0.24 * len(blocks[0])), layout="constrained"
+        1,
+        2,
+        figsize=(max(11.5, len(keys) * 1.18), 3.3 + 0.25 * max_rows),
+        layout="constrained",
     )
-    for ax, block in zip(axes, blocks, strict=True):
-        panel = grid.iloc[block]
+    for ax, grp_list in zip(axes, panel_specs, strict=True):
+        row_order = [t for _, members in grp_list for t in members]
+        panel = grid.reindex(index=row_order)
         ax.imshow(
             panel,
             aspect="auto",
@@ -189,23 +317,48 @@ def plot_grid(data, keys, filename):
             norm=BoundaryNorm(np.arange(-0.5, len(COLORS) + 0.5), len(COLORS)),
         )
         ax.set_xticks(
-            np.arange(len(keys)), [SOURCES[k][0] for k in keys], rotation=55, ha="left", fontsize=8
+            np.arange(len(keys)),
+            [SOURCES[k][0] for k in keys],
+            rotation=52,
+            ha="left",
+            fontsize=8.5,
         )
         ax.xaxis.tick_top()
-        ax.set_yticks(np.arange(len(panel)), panel.index, fontsize=8)
+        ax.set_yticks(np.arange(len(panel)), panel.index, fontsize=8.5)
         ax.tick_params(length=0)
         ax.set_xticks(np.arange(-0.5, len(keys)), minor=True)
         ax.set_yticks(np.arange(-0.5, len(panel)), minor=True)
         ax.grid(which="minor", color="white", linewidth=0.9)
         ax.tick_params(which="minor", length=0)
+        # Draw crisp section dividers and subtle group labels on the right margin.
+        cursor = 0
+        for idx, (group_name, members) in enumerate(grp_list):
+            if idx > 0:
+                ax.axhline(cursor - 0.5, color="#334854", linewidth=1.3)
+            mid = cursor + (len(members) - 1) / 2
+            ax.text(
+                len(keys) - 0.35,
+                mid,
+                f"  {group_name}",
+                va="center",
+                ha="left",
+                fontsize=7.8,
+                fontweight="bold",
+                color="#3b505c",
+                clip_on=False,
+            )
+            cursor += len(members)
         for spine in ax.spines.values():
             spine.set_visible(False)
+    if title:
+        fig.suptitle(title, fontsize=12.5, fontweight="bold", color="#1d2f3a")
     used = sorted(cells.code.unique())
     fig.legend(
         handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in used],
         loc="outside lower center",
         ncol=len(used),
         frameon=False,
+        fontsize=9,
     )
     fig.savefig(OUT / filename, dpi=165, bbox_inches="tight")
     plt.close(fig)
@@ -280,8 +433,18 @@ def build():
         .sort_values(["family", "tissue", "source_id", "source_context", "cell_type", "role"])
     )
     write_csv(inventory, OUT / "source-tissues.csv")
-    plot_grid(fold, [k for k in SOURCES if k in set(fold.family)], "tpm-coverage.png")
-    plot_grid(shared, [k for k in SOURCES if k in set(shared.family)], "shared-coverage.png")
+    plot_grid(
+        fold,
+        [k for k in SOURCES if k in set(fold.family)],
+        "tpm-coverage.png",
+        title="Native-TPM tissue coverage and analytical role across sources",
+    )
+    plot_grid(
+        shared,
+        [k for k in SOURCES if k in set(shared.family)],
+        "shared-coverage.png",
+        title="Independent normal RNA screens: tissue coverage by source",
+    )
     cat = target_selection.results()
     plot_reference_sources(cat)
     ca, ra = cat.is_cancer_antigen, cat.is_reproductive_antigen

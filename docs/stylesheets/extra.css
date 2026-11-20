@@ -1,0 +1,135 @@
+/* Clean reading layout and visual hierarchy for OncoRef documentation & whitepaper */
+
+.col-md-9 {
+  max-width: 960px;
+  line-height: 1.65;
+  color: #1f2d36;
+}
+
+.col-md-9 h1 {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.4rem;
+}
+
+.col-md-9 h2 {
+  margin-top: 2.6rem;
+  margin-bottom: 0.9rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid #e1e8ed;
+  font-weight: 650;
+  color: #162630;
+}
+
+.col-md-9 h3 {
+  margin-top: 1.7rem;
+  margin-bottom: 0.65rem;
+  font-weight: 600;
+  color: #213744;
+}
+
+.col-md-9 hr {
+  display: none;
+}
+
+/* Callout blockquotes */
+.col-md-9 blockquote {
+  background: #f5f9f7;
+  border-left: 4px solid #3f8f6b;
+  border-radius: 0 6px 6px 0;
+  padding: 0.85rem 1.15rem;
+  margin: 1.25rem 0;
+  color: #20343e;
+}
+
+.col-md-9 blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+/* Figures and captions */
+.col-md-9 img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.4rem auto 0.6rem auto;
+  padding: 0.55rem;
+  background: #ffffff;
+  border: 1px solid #e3eaef;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(20, 38, 48, 0.04);
+}
+
+.col-md-9 p > em:first-child:last-child {
+  display: block;
+  color: #4f636e;
+  font-size: 0.91rem;
+  line-height: 1.5;
+  margin-bottom: 1.35rem;
+}
+
+/* Crisp, airy tables */
+.col-md-9 table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.1rem 0 1.45rem 0;
+  font-size: 0.91rem;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+
+.col-md-9 table thead th {
+  background: #f1f5f8;
+  color: #1d313d;
+  font-weight: 600;
+  border-bottom: 2px solid #cfdbe3;
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+  vertical-align: bottom;
+}
+
+.col-md-9 table tbody td {
+  border-bottom: 1px solid #e5ecef;
+  padding: 0.52rem 0.7rem;
+  vertical-align: top;
+}
+
+.col-md-9 table tbody tr:hover {
+  background: #f8fbfd;
+}
+
+/* Collapsible detail drawers for dense reference material */
+.col-md-9 details {
+  margin: 1.15rem 0 1.5rem 0;
+  padding: 0.75rem 1.05rem;
+  background: #f8fafc;
+  border: 1px solid #dbe4ea;
+  border-radius: 7px;
+}
+
+.col-md-9 details[open] {
+  background: #fbfdfe;
+  padding-bottom: 0.95rem;
+}
+
+.col-md-9 details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #1c4e68;
+  list-style: disclosure-closed inside;
+}
+
+.col-md-9 details[open] > summary {
+  list-style: disclosure-open inside;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid #e4ecf0;
+}
+
+/* Compact metadata & supporting links bar */
+.col-md-9 code {
+  font-size: 0.87em;
+  background: #f0f4f7;
+  color: #1e3a4c;
+  padding: 0.12em 0.35em;
+  border-radius: 4px;
+}

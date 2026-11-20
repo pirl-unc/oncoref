@@ -41,7 +41,7 @@ classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,1
 [Curation figures & funnels](audits/target-selection-20261110/rebuild/summary.md) ·
 [Filter & host-profile report](audits/target-filters-20261112/report.html) ·
 [Donor-level rare-cell RNA](audits/normal-cell-atlas-20261110/rare-cell/index.md) ·
-[Release 1.43.0 notes](cta-release-1.43.0.md)
+[Release 1.43.1 notes](cta-release-1.43.1.md)
 
 ## Install & Quick Start
 

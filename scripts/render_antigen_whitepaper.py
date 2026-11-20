@@ -24,7 +24,7 @@ from oncoref import (  # noqa: E402
 DOCS = ROOT / "docs"
 BUILD = DOCS / "audits/target-selection-20261110/rebuild"
 ASSETS = "antigen-whitepaper"
-STUDY_CONTEXTS = DOCS / "audits/cta-selection-20261028/widely-studied-contexts.csv.gz"
+NORMAL_PEAKS = DOCS / "audits/cta-selection-20261028/normal-peak-evidence.csv.gz"
 TEMPLATE = ROOT / "scripts/cta_evidence_assets/antigen-whitepaper.md"
 PEAK = ["tumor_max_tpm", "protein_group_label", "entity_id"]
 
@@ -95,10 +95,10 @@ def study_table(proteins):
     data = data[data.papers_cta.gt(0) | data.familiar_names.notna() | data.clinical_sources.notna()]
     data = data.copy()
     data["disposition"] = [disposition(r) for r in data.itertuples()]
-    # This assay audit covers a subset of the familiar loci. Only quote a
-    # measurement when its specific gate still excludes the current group.
+    # Quote the strongest excluding normal-expression measurement whose specific
+    # gate and current injury tier still exclude the group.
     measurements = pd.read_csv(
-        STUDY_CONTEXTS,
+        NORMAL_PEAKS,
         usecols=[
             "gene_id",
             "tissue",
@@ -115,6 +115,7 @@ def study_table(proteins):
             "unsafe_evidence",
             "assay",
         ],
+        low_memory=False,
     )
     flags = data.loc[data.category.eq("Unsafe"), ["entity_id", "Unsafe_reasons"]]
     measured = (
@@ -365,14 +366,35 @@ def build():
     }
     examples = study[study.familiar_names.notna() | study.clinical_scope.notna()]
     held = examples[examples.category.isin(["Unsafe", "Other"])].copy()
-    held["short_reason"] = held.disposition.str.replace(
-        "Established rare normal-cell RNA — ", "", regex=False
-    )
     other_examples = study[
         study.protein_group_label.isin(["CAGE1", "DAZL", "POTEC"]) & study.category.eq("Other")
     ].copy()
-    other_examples["short_reason"] = other_examples.disposition
-    highlighted_holds = pd.concat([held, other_examples]).drop_duplicates("entity_id")
+    highlighted_holds = pd.concat([held, other_examples]).drop_duplicates("entity_id").copy()
+
+    def concise_gate(r):
+        if r.category == "Unsafe":
+            reasons = r.Unsafe_reasons
+            if reasons == "Established rare normal-cell RNA" and pd.notna(r.rare_cell_basis):
+                return f"Established rare-cell RNA ({r.rare_cell_basis})"
+            return reasons
+        if r.subtype == "Review" and r.rare_cell_status == "unresolved":
+            return f"Unresolved rare-cell RNA ({r.rare_cell_basis})"
+        return r.disposition
+
+    def strongest_signal(r):
+        if pd.notna(r.matched_normal_assay) and r.matched_normal_assay:
+            return r.matched_normal_assay
+        if pd.notna(r.finding_tissue) and pd.notna(r.finding_top_multi_molecule_pct):
+            return (
+                f"{r.finding_tissue}, {r.finding_top_cell_type} · "
+                f"{r.finding_top_multi_molecule_pct:.2f}% of cells (≥2 molecules)"
+            )
+        return "—"
+
+    highlighted_holds["concise_gate"] = [concise_gate(r) for r in highlighted_holds.itertuples()]
+    highlighted_holds["strongest_signal"] = [
+        strongest_signal(r) for r in highlighted_holds.itertuples()
+    ]
     most = study.head(10)
     # Include familiar reference points even when they have fewer curated CTA papers.
     anchors = study[study.protein_group_label.isin(["NY-ESO-1", "PRAME", "CT83", "CTAG2", "CAGE1"])]
@@ -397,12 +419,65 @@ def build():
     partition = data.groupby("classification").loci.agg(["size", "sum"])
     context_path = BUILD / "normal-rna/source-tissues.csv"
     source_coverage = pd.read_csv(context_path)
+    lit_sources = pd.read_csv(BUILD / "summary/literature-sources.csv")
+    published = data.published_nomination.fillna(False).astype(bool)
+    headline = table(
+        ["Stage or set", "Protein groups", "Notes"],
+        [
+            [
+                "Human coding loci tracked",
+                f"{len(loci):,}",
+                f"Collapsed by identical representative amino-acid sequence into {len(data):,} protein groups",
+            ],
+            [
+                "Excluded by normal-tissue screens (`Unsafe`)",
+                f"{int(data.category.eq('Unsafe').sum()):,}",
+                "Bulk RNA, single-cell clusters, immune, cornea, rare-cell RNA, normal IHC, or curated normal findings",
+            ],
+            [
+                "Held or non-qualifying (`Other`)",
+                f"{int(data.category.eq('Other').sum()):,}",
+                "Coverage/translation/rare-cell review (734), sequence containment (48), expression bounds (248), unscreened home tissue (88)",
+            ],
+            [
+                "Shared-eligible before enrichment",
+                f"{meta['shared_eligible']:,}",
+                f"Native TPM compared for {meta['assessed_for_cancer_evidence']:,} groups (including counterfactuals for held proteins)",
+            ],
+            [
+                "Cancer Antigens (`CA`)",
+                f"{int(ca.sum()):,}",
+                f"{int((ca & ra).sum()):,} CTA + {int((ca & ~ra).sum()):,} CA only (≥10× non-thymic healthy reference)",
+            ],
+            [
+                "Reproductive Antigens (`RA`)",
+                f"{int(ra.sum()):,}",
+                f"{int((ca & ra).sum()):,} CTA + {int((ra & ~ca).sum()):,} RA only (≥10× on the same reference)",
+            ],
+            [
+                "Candidate antigen union (`CA ∪ RA`)",
+                f"{int((ca | ra).sum()):,}",
+                f"{int(((ca | ra) & published).sum()):,} previously nominated in curated CTA papers + {int(((ca | ra) & ~published).sum()):,} newly identified",
+            ],
+        ],
+    )
     values = {
         "policy": target_selection.POLICY_ID,
         "n": f"{len(data):,}",
         "loci": f"{len(loci):,}",
         "missing_seq": f"{data.representative_sequence_sha256s.map(json.loads).map(len).eq(0).sum():,}",
-        "ca": ca.sum(),
+        "ca": f"{int(ca.sum()):,}",
+        "ca_only": f"{int((ca & ~ra).sum()):,}",
+        "ra": f"{int(ra.sum()):,}",
+        "ra_only": f"{int((ra & ~ca).sum()):,}",
+        "cta": f"{int((ca & ra).sum()):,}",
+        "cta_published": f"{int((ca & ra & published).sum()):,}",
+        "cta_new": f"{int((ca & ra & ~published).sum()):,}",
+        "published_noms": f"{int(published.sum()):,}",
+        "published_outside": f"{int((~ca & ~ra & published).sum()):,}",
+        "union": f"{int((ca | ra).sum()):,}",
+        "unsafe_n": f"{int(data.category.eq('Unsafe').sum()):,}",
+        "other_n": f"{int(data.category.eq('Other').sum()):,}",
         "fold": f"{target_selection.ENRICHMENT_FOLD:g}",
         "floor": f"{target_selection.DETECTION_FLOOR:g}",
         "cap": f"{target_selection.DISPOSABLE_CAP:g}",
@@ -413,21 +488,22 @@ def build():
             f"{v:g} for {k.title()}" for k, v in cta_selection_policy.TIER_BASES.items()
         ),
         "manageable_ceiling": f"{cta_selection_policy.MANAGEABLE_UNSAFE_FLOOR:g}",
-        "ra": ra.sum(),
-        "cta": (ca & ra).sum(),
-        "union": (ca | ra).sum(),
-        "shared": meta["shared_eligible"],
-        "assessed": meta["assessed_for_cancer_evidence"],
+        "shared": f"{meta['shared_eligible']:,}",
+        "assessed": f"{meta['assessed_for_cancer_evidence']:,}",
         "required": len(meta["comparison_required_contexts"]),
-        "files": len(inventory),
-        "cohorts": coverage.status.eq("assessed").sum(),
-        "tissue_rows": len(source_coverage),
-        "studied": len(study),
-        "held": len(held),
-        "anchors": len(examples),
+        "files": f"{len(inventory):,}",
+        "cohorts": f"{int(coverage.status.eq('assessed').sum()):,}",
+        "tissue_rows": f"{len(source_coverage):,}",
+        "lit_sources": f"{len(lit_sources):,}",
+        "studied": f"{len(study):,}",
+        "study_extra": f"{len(study) - int(published.sum()):,}",
+        "held": f"{len(held):,}",
+        "anchors": f"{len(examples):,}",
         "nr_proteins": ", ".join(highlighted.loc[skipped, "protein_group_label"]),
+        "headline": headline,
         "sources": table(
-            ["Inventory role", "Versioned files"], sorted(inventory.role.value_counts().items())
+            ["Inventory role", "Versioned files"],
+            [[role, f"{count:,}"] for role, count in sorted(inventory.role.value_counts().items())],
         ),
         "partition": table(
             ["Exclusive category", "Protein records", "Member loci"],
@@ -438,6 +514,11 @@ def build():
             [[r.step, f"{r.removed:,}", f"{r.remaining:,}"] for r in funnel.itertuples()],
         ),
         "peaks": "\n\n".join(peak_sections),
+        "union_ge_100": f"{int(candidates.tumor_max_tpm.ge(100).sum()):,}",
+        "union_ge_1000": f"{int(candidates.tumor_max_tpm.ge(1000).sum()):,}",
+        "union_patients_ge_10": f"{int(candidates.independent_patients_at_tenfold.ge(10).sum()):,}",
+        "cta_median_tpm": number(data.loc[ca & ra, "tumor_max_tpm"].median()),
+        "ca_only_median_tpm": number(data.loc[ca & ~ra, "tumor_max_tpm"].median()),
         "range_observations": f"{len(in_range):,}",
         "range_samples": f"{len(in_range[['source_id', 'sample_id']].drop_duplicates()):,}",
         "midrange": int(candidates.tumor_max_tpm.between(136, 1300, inclusive="neither").sum()),
@@ -465,7 +546,12 @@ def build():
             ],
         ),
         "excluded": table(
-            ["Studied protein", "Category", "Recorded evidence", "Matched assay where available"],
+            [
+                "Studied protein",
+                "Category",
+                "Excluding or holding gate",
+                "Strongest measured normal signal",
+            ],
             highlighted_holds.loc[
                 highlighted_holds.protein_group_label.isin(
                     [
@@ -482,7 +568,7 @@ def build():
                         "POTEC",
                     ]
                 ),
-                ["protein_group_label", "classification", "short_reason", "matched_normal_assay"],
+                ["protein_group_label", "classification", "concise_gate", "strongest_signal"],
             ].itertuples(index=False, name=None),
         ),
     }
