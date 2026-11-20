@@ -953,215 +953,233 @@ def _save_both(fig, stem_path: Path, dpi: int = 170):
 
 
 def source_to_tiers_architecture(data, everything, stem_path):
-    """Minimal visual architecture diagram: proteome -> safety screen -> CA/RA/CTA -> patient filter."""
-    ca = data.is_cancer_antigen.astype(bool)
-    ra = data.is_reproductive_antigen.astype(bool)
+    """Arithmetically exact flow diagram with uniform category semantics."""
     n_total = len(data)
-    n_unsafe = int(data.category.eq("Unsafe").sum())
-    n_other = int(data.category.eq("Other").sum())
-    n_cta = int((ca & ra).sum())
-    n_ca_only = int((ca & ~ra).sum())
-    n_ra_only = int((~ca & ra).sum())
-    n_union = int((ca | ra).sum())
-    n_eligible = int(
-        (data[list(target_selection.SHARED_CHECKS)].all(axis=1) & ~data.category.eq("Unsafe")).sum()
-    )
+    unsafe = data.category.eq("Unsafe")
+    eligible = data[list(target_selection.SHARED_CHECKS)].all(axis=1) & ~unsafe
+    other_pre = data.category.eq("Other") & ~eligible
+    other_post = data.category.eq("Other") & eligible
 
-    fig, ax = plt.subplots(figsize=(10.2, 5.6))
-    ax.set_xlim(0, 10)
-    ax.set_ylim(0, 6.0)
+    n_unsafe = int(unsafe.sum())
+    n_other_pre = int(other_pre.sum())
+    n_eligible = int(eligible.sum())
+    n_cta = int((eligible & data.classification.eq("CTA")).sum())
+    n_ca_only = int((eligible & data.classification.eq("Cancer Antigen only")).sum())
+    n_ra_only = int((eligible & data.classification.eq("Reproductive Antigen only")).sum())
+    n_other_post = int(other_post.sum())
+    n_union = n_cta + n_ca_only + n_ra_only
+
+    if n_unsafe + n_other_pre + n_eligible != n_total:
+        raise ValueError("Stage 1 flow does not reconcile with total protein groups")
+    if n_cta + n_ca_only + n_ra_only + n_other_post != n_eligible:
+        raise ValueError("Stage 2 flow does not reconcile with eligible protein groups")
+
+    fig, ax = plt.subplots(figsize=(10.8, 6.4))
+    ax.set_xlim(0, 10.8)
+    ax.set_ylim(0, 6.7)
     ax.axis("off")
 
-    def node(x, y, w, h, title, count, fc, ec, title_c="#102a43", count_c="#102a43", note=""):
+    def category_box(x, y, w, h, title, count, reason, fc, ec, tc):
         ax.add_patch(
             FancyBboxPatch(
                 (x, y),
                 w,
                 h,
-                boxstyle="round,pad=0.05,rounding_size=0.16",
+                boxstyle="round,pad=0.05,rounding_size=0.14",
                 facecolor=fc,
                 edgecolor=ec,
-                linewidth=1.5,
+                linewidth=1.45,
             )
         )
-        if count and note:
-            ax.text(
-                x + w / 2,
-                y + h - 0.17,
-                title,
-                ha="center",
-                va="top",
-                fontsize=10.2,
-                fontweight="bold",
-                color=title_c,
-            )
-            ax.text(
-                x + w / 2,
-                y + h * 0.48,
-                count,
-                ha="center",
-                va="center",
-                fontsize=14.5,
-                fontweight="bold",
-                color=count_c,
-            )
-            ax.text(
-                x + w / 2, y + 0.14, note, ha="center", va="bottom", fontsize=8.5, color="#486581"
-            )
-        elif count:
-            ax.text(
-                x + w / 2,
-                y + h * 0.68,
-                title,
-                ha="center",
-                va="center",
-                fontsize=10.5,
-                fontweight="bold",
-                color=title_c,
-            )
-            ax.text(
-                x + w / 2,
-                y + h * 0.28,
-                count,
-                ha="center",
-                va="center",
-                fontsize=14.5,
-                fontweight="bold",
-                color=count_c,
-            )
-        else:
-            ax.text(
-                x + w / 2,
-                y + h / 2,
-                title,
-                ha="center",
-                va="center",
-                fontsize=10.2,
-                fontweight="bold",
-                color=title_c,
-            )
+        ax.text(
+            x + w / 2,
+            y + h - 0.14,
+            title,
+            ha="center",
+            va="top",
+            fontsize=9.6,
+            fontweight="bold",
+            color=tc,
+        )
+        ax.text(
+            x + w / 2,
+            y + h * 0.49,
+            count,
+            ha="center",
+            va="center",
+            fontsize=13.5,
+            fontweight="bold",
+            color=tc,
+        )
+        ax.text(
+            x + w / 2, y + 0.11, reason, ha="center", va="bottom", fontsize=7.9, color="#486581"
+        )
 
-    def arrow(x0, y0, x1, y1, color="#627d98"):
+    def gate_box(x, y, w, h, text):
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                w,
+                h,
+                boxstyle="round,pad=0.04,rounding_size=0.14",
+                facecolor="#eef4f8",
+                edgecolor="#5b7c92",
+                linewidth=1.35,
+            )
+        )
+        ax.text(
+            x + w / 2,
+            y + h / 2,
+            text,
+            ha="center",
+            va="center",
+            fontsize=9.5,
+            fontweight="bold",
+            color="#102a43",
+        )
+
+    def arrow(x0, y0, x1, y1, color="#526775"):
         ax.annotate(
             "",
             xy=(x1, y1),
             xytext=(x0, y0),
             arrowprops={
-                "arrowstyle": "-|>,head_width=0.28,head_length=0.40",
+                "arrowstyle": "-|>,head_width=0.25,head_length=0.38",
                 "color": color,
-                "lw": 1.6,
+                "lw": 1.5,
             },
         )
 
-    # Top: Proteome
-    node(3.15, 4.95, 3.70, 0.88, "Coding proteome", f"{n_total:,}", "#f4f7fa", "#9fb3c8")
+    cx = 5.40
 
-    # Middle: Safety & eligibility screen branching to Unsafe (left) and Other (right)
-    arrow(5.0, 4.90, 5.0, 4.35)
-    node(
-        3.15,
-        3.22,
+    # Top: Starting proteome
+    category_box(
+        3.55,
+        5.68,
         3.70,
-        1.06,
-        "Normal safety & eligibility",
-        f"{n_eligible:,}",
-        "#eef4f8",
-        "#5b7c92",
-        note="Bulk · Single-cell · IHC",
+        0.88,
+        "Human coding proteome",
+        f"{n_total:,}",
+        "Identical-sequence protein groups",
+        "#f4f7fa",
+        "#829ab1",
+        "#102a43",
     )
-    arrow(3.10, 3.75, 2.52, 3.75, color=UNSAFE)
-    node(
-        0.20,
-        3.22,
-        2.25,
-        1.06,
+
+    # Gate 1: Safety & eligibility screen (receives all 19,893)
+    arrow(cx, 5.64, cx, 5.14)
+    gate_box(3.45, 4.38, 3.90, 0.72, "1. Normal-tissue safety & eligibility screen")
+
+    # Left exit from Gate 1 -> Unsafe
+    arrow(3.41, 4.74, 2.74, 4.74, color=UNSAFE)
+    category_box(
+        0.18,
+        4.18,
+        2.52,
+        1.12,
         "Unsafe",
         f"{n_unsafe:,}",
+        "Expressed in healthy adult organs",
         "#fbeeed",
         UNSAFE,
-        title_c="#8c2d2a",
-        count_c="#8c2d2a",
-        note="Healthy tissue",
+        "#8c2d2a",
     )
 
-    arrow(6.90, 3.75, 7.48, 3.75, color=REVIEW)
-    node(
-        7.55,
-        3.22,
-        2.25,
-        1.06,
-        "Other",
-        f"{n_other:,}",
+    # Right exit from Gate 1 -> Other (pre-enrichment exclusions)
+    arrow(7.39, 4.74, 8.06, 4.74, color=REVIEW)
+    category_box(
+        8.10,
+        4.18,
+        2.52,
+        1.12,
+        "Other (screen exit)",
+        f"{n_other_pre:,}",
+        "Incomplete, ambiguous, or seq overlap",
         "#fbf5e7",
         REVIEW,
-        title_c="#785416",
-        count_c="#785416",
-        note="Held / low fold",
+        "#785416",
     )
 
-    # Enrichment step: symmetric 10x -> CA only, CTA, RA only
-    arrow(4.10, 3.17, 1.75, 2.40, color=CANCER)
-    arrow(5.00, 3.17, 5.00, 2.40, color=REPRODUCTIVE)
-    arrow(5.90, 3.17, 8.25, 2.40, color="#6aa48b")
+    # Downward flow from Gate 1 -> Gate 2 (exact count on arrow: 842 pass)
+    arrow(cx, 4.34, cx, 3.54)
     ax.text(
-        5.0,
-        2.79,
-        "≥ 10× healthy baseline",
-        ha="center",
+        cx + 0.14,
+        3.94,
+        f"{n_eligible:,} pass safety & eligibility",
+        ha="left",
         va="center",
-        fontsize=9.4,
+        fontsize=8.9,
         fontweight="bold",
         color="#243b53",
-        bbox={"facecolor": "white", "edgecolor": "none", "pad": 2.5},
     )
 
-    node(
-        0.40,
-        1.25,
-        2.70,
-        1.08,
-        "Cancer Antigen only",
-        f"{n_ca_only:,}",
-        "#ebf4fa",
-        CANCER,
-        title_c="#1a567b",
-        count_c="#1a567b",
-        note="Tumor ≥ 10×",
-    )
-    node(
-        3.55,
-        1.25,
-        2.90,
-        1.08,
-        "CTA  (CA ∩ RA)",
-        f"{n_cta:,}",
-        "#ebf5ef",
-        REPRODUCTIVE,
-        title_c="#1d573c",
-        count_c="#1d573c",
-        note="Tumor & reproductive",
-    )
-    node(
-        6.90,
-        1.25,
-        2.70,
-        1.08,
-        "Reproductive only",
-        f"{n_ra_only:,}",
-        "#f0f7f4",
-        "#7db19a",
-        title_c="#266049",
-        count_c="#266049",
-        note="Reproductive ≥ 10×",
+    # Gate 2: Symmetric 10x enrichment (receives 842)
+    gate_box(
+        2.75, 2.86, 5.30, 0.64, "2. Enrichment ≥ 10× healthy baseline  [H₀ = max(N, D, 1 TPM)]"
     )
 
-    # Bottom: Optional patient-specific filtering with 3 clean choice pills
-    arrow(5.0, 1.20, 5.0, 0.78, color="#627d98")
+    # 4 mutually exclusive leaves summing to 842
+    leaves = [
+        (
+            "Cancer Antigen only",
+            f"{n_ca_only:,}",
+            "≥ 10× in tumors only",
+            "#ebf4fa",
+            CANCER,
+            "#1a567b",
+        ),
+        (
+            "CTA  (CA ∩ RA)",
+            f"{n_cta:,}",
+            "≥ 10× in tumor & reproductive",
+            "#ebf5ef",
+            REPRODUCTIVE,
+            "#1d573c",
+        ),
+        (
+            "Reproductive only",
+            f"{n_ra_only:,}",
+            "≥ 10× in reproductive only",
+            "#f0f7f4",
+            "#7db19a",
+            "#266049",
+        ),
+        (
+            "Other (enrichment)",
+            f"{n_other_post:,}",
+            "Below 10× or unmeasured organ",
+            "#fbf5e7",
+            REVIEW,
+            "#785416",
+        ),
+    ]
+    w_leaf, gap = 2.42, 0.24
+    start_x = (10.8 - (len(leaves) * w_leaf + (len(leaves) - 1) * gap)) / 2
+    leaf_y, leaf_h = 1.24, 1.12
+    bus_y = 2.66
+    first_cx = start_x + w_leaf / 2
+    last_cx = start_x + (len(leaves) - 1) * (w_leaf + gap) + w_leaf / 2
+    ax.plot([cx, cx], [2.82, bus_y], color="#526775", lw=1.5)
+    ax.plot([first_cx, last_cx], [bus_y, bus_y], color="#526775", lw=1.5)
+    for i, (lt, lc, lr, lfc, lec, ltc) in enumerate(leaves):
+        bx = start_x + i * (w_leaf + gap)
+        bcx = bx + w_leaf / 2
+        arrow(bcx, bus_y, bcx, leaf_y + leaf_h + 0.04, color=lec)
+        category_box(bx, leaf_y, w_leaf, leaf_h, lt, lc, lr, lfc, lec, ltc)
+
+    # Bracket / arrow from the 3 candidate leaves (70 + 327 + 128 = 525) down to optional patient filter
+    cand_left = start_x + 0.15
+    cand_right = start_x + 3 * w_leaf + 2 * gap - 0.15
+    cand_mid = (cand_left + cand_right) / 2
+    ax.plot([cand_left, cand_right], [1.06, 1.06], color="#627d98", lw=1.3)
+    arrow(cand_mid, 1.06, cand_mid, 0.76, color="#627d98")
+
+    # Bottom bar: Optional patient-specific filtering over the 525 candidates
     ax.add_patch(
         FancyBboxPatch(
-            (0.90, 0.08),
-            8.20,
-            0.64,
+            (0.45, 0.10),
+            9.90,
+            0.62,
             boxstyle="round,pad=0.04,rounding_size=0.14",
             facecolor="#f7f9fb",
             edgecolor="#bcccdc",
@@ -1169,24 +1187,24 @@ def source_to_tiers_architecture(data, everything, stem_path):
         )
     )
     ax.text(
-        1.18,
-        0.40,
-        f"Patient-specific filter  ({n_union:,} candidates)",
+        0.78,
+        0.41,
+        f"3. Optional patient-specific filter  ({n_union:,} candidates: CA ∪ RA)",
         ha="left",
         va="center",
-        fontsize=9.6,
+        fontsize=9.3,
         fontweight="bold",
         color="#243b53",
     )
     for px, lbl, fc, ec, tc in [
-        (5.45, "Protect", "#fdf2f2", "#e4b8b6", "#8c2d2a"),
-        (6.62, "Accept loss", "#fbf6e9", "#e4d1a3", "#785416"),
-        (8.02, "Absent", "#eef5fa", "#b4d2e6", "#1a567b"),
+        (6.45, "Protect", "#fdf2f2", "#e4b8b6", "#8c2d2a"),
+        (7.62, "Accept loss", "#fbf6e9", "#e4d1a3", "#785416"),
+        (9.02, "Absent", "#eef5fa", "#b4d2e6", "#1a567b"),
     ]:
         w_pill = 1.02 if lbl != "Accept loss" else 1.26
         ax.add_patch(
             FancyBboxPatch(
-                (px, 0.21),
+                (px, 0.22),
                 w_pill,
                 0.38,
                 boxstyle="round,pad=0.02,rounding_size=0.10",
@@ -1197,14 +1215,24 @@ def source_to_tiers_architecture(data, everything, stem_path):
         )
         ax.text(
             px + w_pill / 2,
-            0.40,
+            0.41,
             lbl,
             ha="center",
             va="center",
-            fontsize=8.8,
+            fontsize=8.6,
             fontweight="bold",
             color=tc,
         )
+
+    ax.text(
+        10.35,
+        0.92,
+        f"Total Other = {n_other_pre:,} + {n_other_post:,} = {n_other_pre + n_other_post:,}",
+        ha="right",
+        va="center",
+        fontsize=8.0,
+        color="#785416",
+    )
 
     fig.tight_layout()
     _save_both(fig, stem_path, dpi=165)

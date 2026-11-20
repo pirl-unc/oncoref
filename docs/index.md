@@ -24,8 +24,8 @@ classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,1
 1. **Normal-tissue safety screen:** Bulk RNA (GTEx v11, HPA v23), sorted immune subsets (HPA, DICE, Monaco),
    single-cell clusters, donor-resolved rare-cell UMI atlases (CELLxGENE + Siletti), adult cornea scRNA,
    normal protein staining (HPA IHC), and reviewed normal-tissue literature exclude proteins expressed in healthy
-   adult organs as <span class="cat cat-unsafe">Unsafe</span>. Missing coverage, paralog ambiguity, sequence overlap,
-   and low enrichment hold unresolved proteins in <span class="cat cat-other">Other</span>.
+   adult organs as <span class="cat cat-unsafe">Unsafe</span>. Proteins with missing coverage, unresolved paralog signals,
+   or `Unsafe` sequence overlap exit as <span class="cat cat-other">Other</span> rather than being treated as safe.
 2. **Symmetric 10× enrichment:** Against one shared non-thymic healthy baseline
    **H₀ = max(Normal N, Disposable D, 1 TPM)**,
    <span class="cat cat-ca">Cancer Antigens (CA)</span> require **≥ 10 × H₀** in a QC-passing tumor sample and
