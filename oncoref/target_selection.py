@@ -78,6 +78,43 @@ REPRODUCTIVE_COMPARTMENTS = (
 CTA_TIERS = ("core", "core_with_extended_exposure", "extended_only")
 
 
+#: Supported within-tissue normal-reference aggregation methods.
+NORMAL_TISSUE_STATISTICS = ("p95", "mean_plus_2std")
+
+
+def summarize_normal_tissue_tpm(
+    values: pd.DataFrame | pd.Series,
+    *,
+    method: str = "p95",
+    quantile: float = 0.95,
+    n_std: float = 2.0,
+) -> pd.Series | float:
+    """Aggregate donor or biopsy TPM within a normal tissue.
+
+    ``values`` has observations (donors/biopsies) on the index and entities on
+    columns (or is a 1-D Series of observations). Supported ``method`` values:
+
+    - ``"p95"`` (default): linearly interpolated quantile (default 0.95).
+    - ``"mean_plus_2std"``: sample mean plus ``n_std`` sample standard
+      deviations (``ddof=1``; single-observation tissues contribute ``std=0``).
+    """
+    if method == "p95":
+        return values.quantile(quantile, interpolation="linear")
+    if method == "mean_plus_2std":
+        mean = values.mean()
+        if isinstance(values, pd.DataFrame):
+            std = values.std(ddof=1).fillna(0.0).where(values.count().gt(0))
+        else:
+            count = int(values.notna().sum())
+            if count == 0:
+                return np.nan
+            std = float(values.std(ddof=1)) if count > 1 else 0.0
+        return mean + n_std * std
+    raise ValueError(
+        f"Unknown normal tissue statistic {method!r}; choose from {NORMAL_TISSUE_STATISTICS}"
+    )
+
+
 def definition() -> dict:
     """Return the versioned, machine-readable target-selection contract."""
     return {

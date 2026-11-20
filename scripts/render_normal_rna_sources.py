@@ -22,6 +22,10 @@ SOURCES = {
         "GTEx P95",
         "GTEx v11. Linear 95th percentile within each anatomical site across donors.",
     ),
+    "gtex_donor_mean_plus_2std": (
+        "GTEx mean+2SD",
+        "GTEx v11. Sample mean plus two sample standard deviations within each anatomical site across donors.",
+    ),
     "gtex_individual_tissue_tpm": (
         "GTEx samples",
         "GTEx v11. Individual reproductive samples can witness RA.",

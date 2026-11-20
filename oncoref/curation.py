@@ -244,6 +244,12 @@ def main(argv=None):
         help="Use the builder's checksum-verified tumor cache",
     )
     parser.add_argument(
+        "--normal-stat",
+        choices=list(target_selection.NORMAL_TISSUE_STATISTICS),
+        default="p95",
+        help="Within-tissue healthy normal TPM summary (default: p95; optional: mean_plus_2std)",
+    )
+    parser.add_argument(
         "--include-tumors",
         action="store_true",
         help="For fetch: also download and verify all 132 pinned per-sample tumor matrices",
@@ -279,8 +285,11 @@ def main(argv=None):
     env = os.environ | {"PYTHONPATH": str(root)}
     for name in order:
         command = [sys.executable, *spec["steps"][name]["argv"]]
-        if name == "catalog" and args.reuse_tumor_cache:
-            command.append("--reuse-tumor-cache")
+        if name == "catalog":
+            if args.reuse_tumor_cache:
+                command.append("--reuse-tumor-cache")
+            if args.normal_stat != "p95":
+                command.extend(["--normal-stat", args.normal_stat])
         print(f"Curation step: {name}", flush=True)
         subprocess.run(command, cwd=root, env=env, check=True)
     write_receipt(root)

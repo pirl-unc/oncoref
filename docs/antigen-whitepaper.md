@@ -264,6 +264,25 @@ Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</sp
 
 *Figure 11.* Downstream screening outcomes for all **327** biological CTAs under each patient profile. Filtering a candidate out for one patient narrows the target list and expands the peptide-subtraction background without relabeling its biological <span class="cat cat-cta">CTA</span> identity.
 
+### Sex-restricted reproductive antigens and cross-sex CTAs
+
+Because male and female reproductive organs are anatomically distinct, an antigen restricted to one sex's reproductive tract has no normal target organ in non-pregnant patients of the opposite sex. Oncology has no standard shorthand for this cross-sex distinction, so OncoRef partitions Reproductive Antigens (<span class="cat cat-ra">RA</span>) and their cancer intersection (<span class="cat cat-cta">CTA</span>) into four explicit sex-restriction classes under strict protection of all opposite-sex adult organs (including resting and lactating breast):
+
+- **Male-Restricted (`MRA`, `207` RAs · `CTA-M`, `136` CTAs — female-safe):** expressed in male reproductive organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`) and cleanly clearing every female adult reproductive and mammary organ (`XAGE1A/B`, `SPANXA1/2`, `MAGEA4`, `NY-ESO-1`, `VCY/1B`, plus male-accessory/prostate targets such as `PRR23D1/2`, `SPAG11A`, `POTEH`, `EDDM3B`). Relaxing resting-breast protection widens `CTA-M` to **213** CTAs, bringing in high-peak prostate and seminal-vesicle genes (`TGM4`, `SEMG2`) that show resting-breast RNA in GTEx.
+- **Embryo / Placenta-Only (`ERA`, `45` RAs · `CTA-E`, `38` CTAs — adult-absent in both sexes):** cleanly clear both all adult male and all non-pregnant adult female organs (`TBXT`, `MBD3L2`, `SSU72L2`, `TRIM48`, `TRIM43B`).
+- **Female-Restricted (`FRA`, `6` RAs · `CTA-F`, `2` CTAs — male-safe):** confined to female reproductive compartments (`ovary`, tract, `placenta`/`lactating_breast`) while cleanly clearing all male adult organs (`ERVV-1`, `ZP4`).
+- **Shared Male & Female (`SRA`, `197` RAs · `CTA-MF`, `151` CTAs):** expressed in adult reproductive or mammary compartments of both sexes (`PRAME`, `LALBA`, `SCGB1D4`).
+
+The asymmetry is striking: **174** of **327** CTAs (`CTA-M + CTA-E`) clear every adult female organ in non-pregnant women, whereas only **40** (`CTA-F + CTA-E`) clear every adult male organ, because transcriptional scanning in adult testis expresses nearly the entire ovarian, uterine, and mammary repertoire.
+
+![Sex-restricted Reproductive Antigens and cross-sex CTA subsets](audits/target-selection-20261110/rebuild/summary/sex-restricted-ra-cta.png)
+
+*Figure 12.* Partition of all **455** Reproductive Antigens, **327** CTAs, and **128** RA-only proteins into `MRA`/`CTA-M`, `ERA`/`CTA-E`, `FRA`/`CTA-F`, and `SRA`/`CTA-MF`. [Download full sex-restriction table (CSV)](audits/target-selection-20261110/rebuild/summary/sex-restricted-antigens.csv).
+
+![Male versus female reproductive-organ exposure across all CTAs](audits/target-selection-20261110/rebuild/summary/sex-restricted-landscape.png)
+
+*Figure 13.* Maximum male versus female sex-organ RNA across all **327** CTAs. Points in the lower-right (`CTA-M`, blue) are anatomically absent in non-pregnant women; points in the lower-left (`CTA-E`, green) are absent in both adult sexes; points in the upper-left (`CTA-F`, plum) are anatomically absent in men.
+
 ## 5. Methods: protein grouping, sources, and thresholds
 
 ### Protein-group counting unit
@@ -285,11 +304,11 @@ OncoRef pins **323** SHA-256-verified files across **1,221** source/context rows
 
 ![Native-TPM coverage across somatic, immune, disposable, and thymic tissues](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage-somatic.png)
 
-*Figure 12.* Native-TPM tissue coverage and analytical role across somatic organs, immune subsets, disposable tissues, and thymus. Colored cells mark qualifying coverage for at least one assessed protein group; gray marks no qualifying coverage.
+*Figure 14.* Native-TPM tissue coverage and analytical role across somatic organs, immune subsets, disposable tissues, and thymus. Colored cells mark qualifying coverage for at least one assessed protein group; gray marks no qualifying coverage.
 
 ![Native-TPM coverage across neural, ocular, reproductive, and developmental tissues](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage-neural-repro.png)
 
-*Figure 13.* Native-TPM coverage across brain, eye, nerve, reproductive, and embryonic tissues. **RA witness** marks individual reproductive samples or supported embryo-lineage means capable of qualifying `RA`; **Reproductive context** marks summaries kept for context only.
+*Figure 15.* Native-TPM coverage across brain, eye, nerve, reproductive, and embryonic tissues. **RA witness** marks individual reproductive samples or supported embryo-lineage means capable of qualifying `RA`; **Reproductive context** marks summaries kept for context only.
 
 <details markdown="1">
 <summary>Exact quantitative gate thresholds and rare-cell provenance rules</summary>
@@ -364,4 +383,5 @@ Cross-cohort tumor matrices come from distinct studies and processing pipelines;
 | [Studied CTA dispositions (`studied-proteins.csv`)](antigen-whitepaper/studied-proteins.csv) | Full measurements and exclusion reasons for all **2,238** published or clinical anchor proteins |
 | [Candidate tumor rankings (`tumor-ranks.csv`)](antigen-whitepaper/tumor-ranks.csv) | Peak tumor TPM, folds, cohort/sample IDs, and patient counts for all **525** candidates |
 | [Curated literature sources (`literature-sources.csv`)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv) | Disposition counts across all **149** catalog-mapped papers grouped by antigen class |
+| [Sex-restricted antigens (`sex-restricted-antigens.csv`)](audits/target-selection-20261110/rebuild/summary/sex-restricted-antigens.csv) | Male-restricted (`MRA`/`CTA-M`), female-restricted (`FRA`/`CTA-F`), embryo/placenta-only (`ERA`/`CTA-E`), and shared (`SRA`/`CTA-MF`) calls with organ TPMs |
 | [Normal RNA coverage](audits/target-selection-20261110/rebuild/normal-rna/index.md) · [Tumor coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv) · [Literature adjudication](audits/target-selection-20261110/rebuild/literature.md) | Audit ledgers for healthy panels, tumor cohorts, and literature reviews |

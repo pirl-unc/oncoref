@@ -51,16 +51,23 @@ def sample_matrix(path, canonical):
     return pd.DataFrame.from_dict(values, orient="index", columns=samples), donors
 
 
-def donor_percentile(values, donors, quantile=0.95):
-    """Linear quantile across measured donors after combining member loci within each sample."""
+def donor_summary(values, donors, *, method="p95", quantile=0.95, n_std=2.0):
+    """Within-tissue summary across measured donors after combining member loci within each sample."""
     if len(donors) != len(values.columns) or pd.isna(donors).any():
-        raise ValueError("GTEx percentile requires a donor for every sample")
+        raise ValueError("GTEx summary requires a donor for every sample")
     # Give each donor one value if a later release includes replicate libraries.
     donor_values = values.T.groupby(donors, sort=False).median()
-    return donor_values.quantile(quantile, interpolation="linear").dropna()
+    return target_selection.summarize_normal_tissue_tpm(
+        donor_values, method=method, quantile=quantile, n_std=n_std
+    ).dropna()
 
 
-def individual_samples(facts, mapped, tissue_columns, carryover_reference):
+def donor_percentile(values, donors, quantile=0.95):
+    """Linear quantile across measured donors after combining member loci within each sample."""
+    return donor_summary(values, donors, method="p95", quantile=quantile)
+
+
+def individual_samples(facts, mapped, tissue_columns, carryover_reference, *, normal_stat="p95"):
     labels = gene_identity_catalog().set_index("canonical_gene_id").canonical_symbol.fillna("")
     group = {g: r.entity_id for r in facts.itertuples() for g in json.loads(r.member_gene_ids)}
     counts = facts.set_index("entity_id").member_count
@@ -148,15 +155,20 @@ def individual_samples(facts, mapped, tissue_columns, carryover_reference):
             kind = "individual_gtex_sample"
             source = SOURCE_ID
         else:
-            frame = donor_percentile(values, donors).rename("value").to_frame()
+            frame = donor_summary(values, donors, method=normal_stat).rename("value").to_frame()
             frame["n_observations"] = values.T.groupby(donors, sort=False).median().count()
             frame = frame.reset_index()
             frame = frame.assign(
                 sample_id="", participant_id="", library_qc_review="", compartment=tissue
             )
-            statistic = "within-site donor P95, linear interpolation"
-            kind = "donor_percentile"
-            source = PANEL["normal_source_id"]
+            if normal_stat == "mean_plus_2std":
+                statistic = "within-site donor mean + 2 SD"
+                kind = "donor_mean_plus_2std"
+                source = f"gtex_donor_mean_plus_2std:{RELEASE}"
+            else:
+                statistic = "within-site donor P95, linear interpolation"
+                kind = "donor_percentile"
+                source = PANEL["normal_source_id"]
         frame["member_count"] = frame.entity_id.map(counts)
         frame["measured_members"] = frame.member_count.where(frame.value.notna())
         rows.append(

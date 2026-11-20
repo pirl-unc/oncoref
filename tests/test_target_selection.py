@@ -555,3 +555,31 @@ def test_integrated_atlas_and_consortium_collections_do_not_fabricate_replicatio
     assert indep_receipt["status"] == "established"
     assert indep_receipt["findings"][0]["studies_multi_molecule"] == 2
     assert indep_receipt["findings"][0]["donors_multi_molecule"] == 2
+
+
+def test_summarize_normal_tissue_tpm_supports_p95_and_mean_plus_2std():
+    df = pd.DataFrame(
+        {
+            "gene_a": [1.0, 2.0, 3.0, 4.0, 10.0],
+            "gene_single": [5.0, float("nan"), float("nan"), float("nan"), float("nan")],
+            "gene_empty": [float("nan")] * 5,
+        }
+    )
+    p95 = policy.summarize_normal_tissue_tpm(df, method="p95")
+    assert p95["gene_a"] == pytest.approx(df["gene_a"].quantile(0.95, interpolation="linear"))
+    assert p95["gene_single"] == pytest.approx(5.0)
+    assert pd.isna(p95["gene_empty"])
+
+    m2s = policy.summarize_normal_tissue_tpm(df, method="mean_plus_2std")
+    expected_a = df["gene_a"].mean() + 2.0 * df["gene_a"].std(ddof=1)
+    assert m2s["gene_a"] == pytest.approx(expected_a)
+    assert m2s["gene_single"] == pytest.approx(5.0)
+    assert pd.isna(m2s["gene_empty"])
+
+    series_val = policy.summarize_normal_tissue_tpm(df["gene_a"], method="mean_plus_2std")
+    assert series_val == pytest.approx(expected_a)
+    assert policy.summarize_normal_tissue_tpm(df["gene_single"], method="mean_plus_2std") == 5.0
+    assert pd.isna(policy.summarize_normal_tissue_tpm(df["gene_empty"], method="mean_plus_2std"))
+
+    with pytest.raises(ValueError, match="Unknown normal tissue statistic"):
+        policy.summarize_normal_tissue_tpm(df, method="median_plus_3mad")

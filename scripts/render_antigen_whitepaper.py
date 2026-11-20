@@ -428,6 +428,8 @@ def build():
     profiles = target_filters.profile_summary(data).set_index("profile")
     testis_profile = profiles.loc["male-patient (protect testis)"]
     pregnant_profile = profiles.loc["female-patient (pregnant)"]
+    sex_table = pd.read_csv(BUILD / "summary/sex-restricted-antigens.csv")
+    sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
     headline = table(
         ["Stage or set", "Protein groups", "Notes"],
         [
@@ -495,6 +497,17 @@ def build():
         "pregnant_retained": f"{int(pregnant_profile.CTA):,}",
         "pregnant_unresolved": f"{int(pregnant_profile.CTA_unresolved):,}",
         "pregnant_excluded": f"{int(pregnant_profile.CTA_excluded):,}",
+        "mra_n": f"{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}",
+        "fra_n": f"{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}",
+        "era_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "sra_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "cta_m_n": f"{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
+        "cta_f_n": f"{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
+        "cta_e_n": f"{int(sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "cta_mf_n": f"{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "cta_female_safe_n": f"{int(sex_cta.female_all_adult_eligible.sum()):,}",
+        "cta_male_safe_n": f"{int(sex_cta.male_all_adult_eligible.sum()):,}",
+        "cta_m_sex_only_n": f"{int((sex_cta.female_sex_organ_only_eligible & ~sex_cta.male_sex_organ_only_eligible).sum()):,}",
         "fold": f"{target_selection.ENRICHMENT_FOLD:g}",
         "floor": f"{target_selection.DETECTION_FLOOR:g}",
         "cap": f"{target_selection.DISPOSABLE_CAP:g}",

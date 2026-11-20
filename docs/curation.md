@@ -63,6 +63,8 @@ From a complete source checkout:
 ```sh
 python -m oncoref.curation fetch --include-tumors
 python -m oncoref.curation build --reuse-tumor-cache
+# Optional alternative normal-tissue summary (mean + 2 SD per tissue instead of P95):
+python -m oncoref.curation build --reuse-tumor-cache --normal-stat mean_plus_2std
 python -m oncoref.curation check
 # Equivalent verification-only spelling:
 python -m oncoref.curation build --check

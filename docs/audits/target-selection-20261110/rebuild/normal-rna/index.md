@@ -13,6 +13,7 @@ A colored cell indicates measured coverage for at least one assessed group. Repr
 | Source | Measurement and use |
 |---|---|
 | GTEx P95 | GTEx v11. Linear 95th percentile within each anatomical site across donors. |
+| GTEx mean+2SD | GTEx v11. Sample mean plus two sample standard deviations within each anatomical site across donors. |
 | GTEx samples | GTEx v11. Individual reproductive samples can witness RA. |
 | GTEx median | GTEx v11. Published site-level donor medians, with exact member-locus mapping. |
 | HPA biopsies | HPA v23. Within-biopsy transcript TPM summed by locus. Within-tissue P95 sets the healthy biopsy reference and each reproductive biopsy can witness RA. Donor IDs are unavailable. |
@@ -39,6 +40,7 @@ Tissue names follow each panel's anatomical mapping. The downloadable inventory 
 | Source | Tissues represented |
 |---|---|
 | GTEx P95 | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, cerebellum, cerebral cortex, colon, esophagus, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, pancreas, peripheral nerve, pituitary gland, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, thyroid gland, urinary bladder |
+| GTEx mean+2SD |  |
 | GTEx samples | breast, cervix, fallopian tube, ovary, prostate, testis, uterus, vagina |
 | GTEx median | adipose tissue, adrenal gland, amygdala, basal ganglia, blood, blood vessel, breast, cerebellum, cerebral cortex, cervix, colon, esophagus, fallopian tube, heart muscle, hippocampal formation, hypothalamus, kidney, liver, lung, midbrain, ovary, pancreas, peripheral nerve, pituitary gland, prostate, salivary gland, skeletal muscle, skin, small intestine, spinal cord, spleen, stomach, testis, thyroid gland, urinary bladder, uterus, vagina |
 | HPA biopsies | adipose tissue, adrenal gland, appendix, bone marrow, breast, cerebral cortex, cervix, choroid plexus, colon, duodenum, endometrium, epididymis, esophagus, fallopian tube, gallbladder, heart muscle, kidney, liver, lung, lymph node, ovary, pancreas, parathyroid gland, placenta, prostate, rectum, salivary gland, seminal vesicle, skeletal muscle, skin, small intestine, smooth muscle, spleen, stomach, testis, thymus, thyroid gland, tongue, tonsil, urinary bladder |

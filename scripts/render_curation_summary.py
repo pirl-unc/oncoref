@@ -1853,11 +1853,331 @@ def normal_evidence_layers(data, path):
     plt.close(fig)
 
 
+def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
+    """Partition Reproductive Antigens and CTAs by male vs. female adult organ restriction."""
+    female_sex = (
+        "ovary",
+        "fallopian tube",
+        "uterus",
+        "endometrium",
+        "cervix",
+        "vagina",
+        "lactating_breast",
+    )
+    female_all = (*female_sex, "resting_breast")
+    male_sex = ("testis", "epididymis", "prostate", "seminal vesicle")
+    male_all = (*male_sex, "resting_breast")
+
+    ra = data[data.is_reproductive_antigen.astype(bool)].copy()
+    f_all = target_filters.apply(
+        target_filters.TargetFilter(
+            host_profile="female-patient", protect_tissues=female_all, lactating=True
+        ),
+        ra,
+    ).set_index("entity_id")
+    f_sex = target_filters.apply(
+        target_filters.TargetFilter(
+            host_profile="female-patient", protect_tissues=female_sex, lactating=True
+        ),
+        ra,
+    ).set_index("entity_id")
+    m_all = target_filters.apply(
+        target_filters.TargetFilter(host_profile="male-patient", protect_tissues=male_all),
+        ra,
+    ).set_index("entity_id")
+    m_sex = target_filters.apply(
+        target_filters.TargetFilter(host_profile="male-patient", protect_tissues=male_sex),
+        ra,
+    ).set_index("entity_id")
+
+    exposures_df = pd.read_csv(ROOT / "oncoref/data/host-exposure.csv.gz").set_index("entity_id")
+
+    def max_comp_tpm(eid, compartments):
+        if eid not in exposures_df.index:
+            return np.nan
+        rec = json.loads(exposures_df.at[eid, "exposures"])
+        vals = [
+            rec[c]["max_tpm"]
+            for c in compartments
+            if c in rec and rec[c].get("max_tpm") is not None
+        ]
+        return float(max(vals)) if vals else np.nan
+
+    rows = []
+    for r in ra.itertuples():
+        eid = r.entity_id
+        fs_all = f_all.at[eid, "host_status"] == "eligible"
+        ms_all = m_all.at[eid, "host_status"] == "eligible"
+        fs_sex = f_sex.at[eid, "host_status"] == "eligible"
+        ms_sex = m_sex.at[eid, "host_status"] == "eligible"
+        if fs_all and not ms_all:
+            sex_class = "Male-restricted"
+            code = "CTA-M" if r.is_cta else "MRA-only"
+        elif ms_all and not fs_all:
+            sex_class = "Female-restricted"
+            code = "CTA-F" if r.is_cta else "FRA-only"
+        elif fs_all and ms_all:
+            sex_class = "Embryo / placenta-only"
+            code = "CTA-E" if r.is_cta else "ERA-only"
+        else:
+            sex_class = "Shared male & female"
+            code = "CTA-MF" if r.is_cta else "SRA-only"
+        rows.append(
+            {
+                "entity_id": eid,
+                "protein_group_label": r.protein_group_label,
+                "classification": r.classification,
+                "is_cta": bool(r.is_cta),
+                "sex_restriction_class": sex_class,
+                "sex_restriction_code": code,
+                "female_all_adult_eligible": fs_all,
+                "male_all_adult_eligible": ms_all,
+                "female_sex_organ_only_eligible": fs_sex,
+                "male_sex_organ_only_eligible": ms_sex,
+                "male_sex_organ_max_tpm": max_comp_tpm(eid, male_sex),
+                "female_sex_organ_max_tpm": max_comp_tpm(eid, female_sex),
+                "resting_breast_max_tpm": max_comp_tpm(eid, ("resting_breast",)),
+                "tumor_max_tpm": r.tumor_max_tpm,
+                "tumor_top_cancer_code": r.tumor_top_cancer_code,
+                "reproductive_qualifying_compartments": r.reproductive_qualifying_compartments,
+            }
+        )
+    table = pd.DataFrame(rows).sort_values(
+        ["is_cta", "sex_restriction_class", "tumor_max_tpm", "protein_group_label"],
+        ascending=[False, True, False, True],
+    )
+    table.to_csv(csv_path, index=False)
+
+    # Figure 1: Stacked horizontal breakdown across All RA, CTA (CA ∩ RA), and RA only.
+    class_specs = [
+        ("Male-restricted", "Male-restricted (MRA / CTA-M · female-safe)", "#2a729e"),
+        (
+            "Embryo / placenta-only",
+            "Embryo / placenta-only (ERA / CTA-E · adult-absent)",
+            "#3f8f6b",
+        ),
+        ("Female-restricted", "Female-restricted (FRA / CTA-F · male-safe)", "#9a4c7a"),
+        ("Shared male & female", "Shared male & female (SRA / CTA-MF)", "#c4a362"),
+    ]
+    subsets = [
+        ("All Reproductive Antigens\n(RA)", table),
+        ("Cancer–Testis Antigens\n(CTA = CA ∩ RA)", table[table["is_cta"]]),
+        ("Reproductive only\n(RA only)", table[~table["is_cta"]]),
+    ]
+    fig, ax = plt.subplots(figsize=(10.2, 4.4))
+    y = np.arange(len(subsets))[::-1]
+    totals = np.array([len(df) for _, df in subsets], dtype=float)
+    left = np.zeros(len(subsets))
+    for key, label, color in class_specs:
+        vals = np.array(
+            [int(df["sex_restriction_class"].eq(key).sum()) for _, df in subsets], dtype=float
+        )
+        pcts = 100.0 * vals / totals
+        ax.barh(y, pcts, left=left, color=color, label=label, height=0.56)
+        for yi, off, v, p in zip(y, left, vals, pcts, strict=True):
+            if p >= 7.5:
+                ax.text(
+                    off + p / 2,
+                    yi,
+                    f"{int(v):,}",
+                    ha="center",
+                    va="center",
+                    fontsize=9.5,
+                    fontweight="bold",
+                    color="white",
+                )
+        left += pcts
+    for yi, (_, df) in zip(y, subsets, strict=True):
+        f_safe = int(df["female_all_adult_eligible"].sum())
+        m_safe = int(df["male_all_adult_eligible"].sum())
+        f_only = int(df["sex_restriction_class"].eq("Female-restricted").sum())
+        ax.text(
+            102.0,
+            yi,
+            f"n={len(df):,}  |  {f_safe} female-safe · {m_safe} male-safe ({f_only} FRA/CTA-F)",
+            va="center",
+            ha="left",
+            fontsize=8.6,
+            color="#243b53",
+        )
+    ax.set_xlim(0, 158)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
+    ax.set_yticks(y, [lbl for lbl, _ in subsets], fontsize=9.4)
+    ax.set_xlabel(
+        "Share of proteins under strict protection of all opposite-sex adult organs (including breast)"
+    )
+    ax.set_title(
+        "Sex-restricted Reproductive Antigens (MRA / FRA / ERA) and cross-sex CTA subsets",
+        loc="left",
+        fontsize=11.2,
+        fontweight="bold",
+        color="#102a43",
+        pad=10,
+    )
+    ax.grid(axis="x", color="#e3e8eb", linewidth=0.6)
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.legend(
+        loc="upper left",
+        bbox_to_anchor=(0, -0.22),
+        ncol=2,
+        frameon=False,
+        fontsize=8.7,
+    )
+    fig.tight_layout()
+    fig.savefig(fig_counts_path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+    # Figure 2: 2D male vs. female sex-organ exposure scatter across all 327 CTAs.
+    ctas = table[table["is_cta"]].copy()
+    floor = 0.05
+    ctas["_mx"] = ctas["male_sex_organ_max_tpm"].fillna(0).clip(lower=floor)
+    ctas["_fy"] = ctas["female_sex_organ_max_tpm"].fillna(0).clip(lower=floor)
+
+    fig2, ax2 = plt.subplots(figsize=(9.4, 6.4))
+    z_order = {
+        "Shared male & female": 1,
+        "Male-restricted": 2,
+        "Embryo / placenta-only": 3,
+        "Female-restricted": 4,
+    }
+    for key, label, color in class_specs:
+        part = ctas[ctas["sex_restriction_class"].eq(key)]
+        size = 42 if key == "Female-restricted" else 22
+        ax2.scatter(
+            part["_mx"],
+            part["_fy"],
+            s=size,
+            alpha=0.82 if key != "Shared male & female" else 0.58,
+            color=color,
+            edgecolors="white" if key == "Female-restricted" else "none",
+            linewidths=0.6,
+            zorder=z_order[key],
+            label=f"{label.split(' · ')[0]} ({len(part)})",
+        )
+    ax2.axvline(4.0, color="#627d98", ls=":", lw=1.2, zorder=0)
+    ax2.axhline(4.0, color="#627d98", ls=":", lw=1.2, zorder=0)
+    ax2.text(
+        2200.0,
+        0.07,
+        "CTA-M: male-restricted\n(absent from female organs)",
+        fontsize=8.4,
+        color="#1a567b",
+        fontweight="bold",
+        va="bottom",
+    )
+    ax2.text(
+        0.055,
+        3.2,
+        "CTA-E: embryo /\nplacenta-only",
+        fontsize=8.4,
+        color="#1d573c",
+        fontweight="bold",
+        va="top",
+    )
+    ax2.text(
+        0.055,
+        6500,
+        "CTA-F: female-restricted\n(absent from male organs)",
+        fontsize=8.4,
+        color="#7a325d",
+        fontweight="bold",
+        va="top",
+    )
+    callouts = {
+        "XAGE1A/B": (14, 14),
+        "MAGEA4": (14, -22),
+        "NY-ESO-1": (-28, 22),
+        "TGM4": (-48, 14),
+        "SEMG2": (14, -16),
+        "TBXT": (14, 14),
+        "MBD3L2": (16, -10),
+        "ZP4": (16, 10),
+        "ERVV-1": (-56, 16),
+        "LALBA": (14, -8),
+        "PRAME": (14, 10),
+        "SCGB1D4": (-62, 10),
+    }
+    indexed = ctas.set_index("protein_group_label")
+    for gene, (dx, dy) in callouts.items():
+        if gene not in indexed.index:
+            continue
+        row = indexed.loc[gene]
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
+        ax2.scatter(
+            [row._mx],
+            [row._fy],
+            s=40,
+            facecolors="none",
+            edgecolors="#102a43",
+            linewidths=1.0,
+            zorder=5,
+        )
+        ax2.annotate(
+            gene,
+            xy=(row._mx, row._fy),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            fontsize=8.6,
+            fontweight="bold",
+            color="#102a43",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.82, "pad": 0.8},
+            arrowprops={"arrowstyle": "-", "color": "#627d98", "lw": 0.8},
+            zorder=6,
+        )
+    ax2.set_xscale("log")
+    ax2.set_yscale("log")
+    ax2.set_xlim(0.035, 1.5e5)
+    ax2.set_ylim(0.035, 1.5e5)
+    ax2.grid(True, which="major", color="#dce3e7", linewidth=0.6, alpha=0.7)
+    ax2.set_axisbelow(True)
+    ax2.set_xlabel(
+        "Max male sex-organ RNA (TPM: testis, epididymis, prostate, seminal vesicle)", fontsize=9.8
+    )
+    ax2.set_ylabel("Max female sex-organ RNA (TPM: ovary, tract, lactating breast)", fontsize=9.8)
+    ax2.set_title(
+        f"Male vs. female reproductive-organ exposure across all {len(ctas):,} CTAs",
+        loc="left",
+        fontsize=11.3,
+        fontweight="bold",
+        color="#102a43",
+        pad=10,
+    )
+    ax2.legend(
+        fontsize=8.3,
+        frameon=True,
+        facecolor="white",
+        edgecolor="#dce3e7",
+        loc="upper right",
+    )
+    ax2.spines[["top", "right"]].set_visible(False)
+    fig2.text(
+        0.01,
+        -0.02,
+        "Dotted lines mark the 4 TPM protected-organ screening threshold. Points in the bottom-right colored ochre (e.g., TGM4, SEMG2) have <4 TPM in female sex organs but ≥4 TPM in resting breast.",
+        ha="left",
+        fontsize=8.3,
+        color="#486581",
+    )
+    fig2.tight_layout()
+    fig2.savefig(fig_scatter_path, dpi=160, bbox_inches="tight")
+    plt.close(fig2)
+    return table
+
+
 def build():
     data = pd.read_csv(OUT / "protein-decisions.csv.gz", low_memory=False)
     FIG.mkdir(exist_ok=True)
     classification_overview(data, FIG / "classification-overview.png")
     normal_evidence_layers(data, FIG / "normal-evidence-layers.png")
+    sex_restricted_antigens(
+        data,
+        FIG / "sex-restricted-ra-cta.png",
+        FIG / "sex-restricted-landscape.png",
+        FIG / "sex-restricted-antigens.csv",
+    )
     antigen_venn(data, FIG / "antigen-sets.png")
     counts = data.classification.value_counts()
     sets = venn(data, FIG / "venn.png")
