@@ -39,6 +39,12 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,759 of all 2,233 nominations are Unsafe, 67 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
+### Curated literature sources by antigen class
+
+![Curated literature sources and dispositions](summary/literature-sources.png)
+
+[All curated literature sources and disposition counts (CSV)](summary/literature-sources.csv)
+
 ## Funnel by filtering idea
 
 A protein leaves at the first idea that removes it, so later steps show only what each idea adds. The order is chosen so that every step removes something; the layers overlap heavily, as the next section shows.
