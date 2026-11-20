@@ -22,6 +22,10 @@ SOURCES = {
         "GTEx P95",
         "GTEx v11. Linear 95th percentile within each anatomical site across donors.",
     ),
+    "gtex_donor_mean_plus_2std": (
+        "GTEx mean+2SD",
+        "GTEx v11. Sample mean plus two sample standard deviations within each anatomical site across donors.",
+    ),
     "gtex_individual_tissue_tpm": (
         "GTEx samples",
         "GTEx v11. Individual reproductive samples can witness RA.",
@@ -274,7 +278,52 @@ def _grouped_tissue_order(tissues):
     return ordered
 
 
-def plot_grid(data, keys, filename, *, title=""):
+def _draw_coverage_panel(ax, grid, grp_list, keys):
+    row_order = [t for _, members in grp_list for t in members]
+    panel = grid.reindex(index=row_order)
+    ax.imshow(
+        panel,
+        aspect="auto",
+        interpolation="nearest",
+        cmap=ListedColormap(COLORS),
+        norm=BoundaryNorm(np.arange(-0.5, len(COLORS) + 0.5), len(COLORS)),
+    )
+    ax.set_xticks(
+        np.arange(len(keys)),
+        [SOURCES[k][0] for k in keys],
+        rotation=48,
+        ha="left",
+        fontsize=9.0,
+    )
+    ax.xaxis.tick_top()
+    ax.set_yticks(np.arange(len(panel)), panel.index, fontsize=9.0)
+    ax.tick_params(length=0)
+    ax.set_xticks(np.arange(-0.5, len(keys)), minor=True)
+    ax.set_yticks(np.arange(-0.5, len(panel)), minor=True)
+    ax.grid(which="minor", color="white", linewidth=0.95)
+    ax.tick_params(which="minor", length=0)
+    cursor = 0
+    for idx, (group_name, members) in enumerate(grp_list):
+        if idx > 0:
+            ax.axhline(cursor - 0.5, color="#334854", linewidth=1.3)
+        mid = cursor + (len(members) - 1) / 2
+        ax.text(
+            len(keys) - 0.35,
+            mid,
+            f"  {group_name}",
+            va="center",
+            ha="left",
+            fontsize=8.4,
+            fontweight="bold",
+            color="#3b505c",
+            clip_on=False,
+        )
+        cursor += len(members)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+
+
+def plot_grid(data, keys, filename, *, title="", split_stems=None):
     cells = data.assign(
         tissue=data.tissue.replace(TISSUE_ALIASES),
         code=data.role.map({r: i + 1 for i, r in enumerate(ROLES)}),
@@ -285,7 +334,7 @@ def plot_grid(data, keys, filename, *, title=""):
         .fillna(0)
     )
     groups = _grouped_tissue_order(grid.index)
-    # Partition groups cleanly into two balanced side-by-side panels without splitting a group.
+    # Partition groups cleanly into two balanced halves without splitting a group.
     total_rows = sum(len(members) for _, members in groups)
     left_groups, right_groups, left_count = [], [], 0
     for grp in groups:
@@ -298,7 +347,28 @@ def plot_grid(data, keys, filename, *, title=""):
         half = max(1, len(groups) // 2)
         left_groups, right_groups = groups[:half], groups[half:]
 
+    used = sorted(cells.code.unique())
     panel_specs = [left_groups, right_groups]
+
+    if split_stems is not None:
+        for (split_name, split_title), grp_list in zip(split_stems, panel_specs, strict=True):
+            n_rows = sum(len(m) for _, m in grp_list)
+            fig_s, ax_s = plt.subplots(
+                figsize=(max(8.8, len(keys) * 0.68), 2.6 + 0.27 * n_rows),
+                layout="constrained",
+            )
+            _draw_coverage_panel(ax_s, grid, grp_list, keys)
+            ax_s.set_title(split_title, loc="left", fontsize=11.5, fontweight="bold", pad=16)
+            fig_s.legend(
+                handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in used],
+                loc="outside lower center",
+                ncol=len(used),
+                frameon=False,
+                fontsize=9.2,
+            )
+            fig_s.savefig(OUT / split_name, dpi=165, bbox_inches="tight")
+            plt.close(fig_s)
+
     max_rows = max(sum(len(m) for _, m in g) for g in panel_specs)
     fig, axes = plt.subplots(
         1,
@@ -307,52 +377,9 @@ def plot_grid(data, keys, filename, *, title=""):
         layout="constrained",
     )
     for ax, grp_list in zip(axes, panel_specs, strict=True):
-        row_order = [t for _, members in grp_list for t in members]
-        panel = grid.reindex(index=row_order)
-        ax.imshow(
-            panel,
-            aspect="auto",
-            interpolation="nearest",
-            cmap=ListedColormap(COLORS),
-            norm=BoundaryNorm(np.arange(-0.5, len(COLORS) + 0.5), len(COLORS)),
-        )
-        ax.set_xticks(
-            np.arange(len(keys)),
-            [SOURCES[k][0] for k in keys],
-            rotation=52,
-            ha="left",
-            fontsize=8.5,
-        )
-        ax.xaxis.tick_top()
-        ax.set_yticks(np.arange(len(panel)), panel.index, fontsize=8.5)
-        ax.tick_params(length=0)
-        ax.set_xticks(np.arange(-0.5, len(keys)), minor=True)
-        ax.set_yticks(np.arange(-0.5, len(panel)), minor=True)
-        ax.grid(which="minor", color="white", linewidth=0.9)
-        ax.tick_params(which="minor", length=0)
-        # Draw crisp section dividers and subtle group labels on the right margin.
-        cursor = 0
-        for idx, (group_name, members) in enumerate(grp_list):
-            if idx > 0:
-                ax.axhline(cursor - 0.5, color="#334854", linewidth=1.3)
-            mid = cursor + (len(members) - 1) / 2
-            ax.text(
-                len(keys) - 0.35,
-                mid,
-                f"  {group_name}",
-                va="center",
-                ha="left",
-                fontsize=7.8,
-                fontweight="bold",
-                color="#3b505c",
-                clip_on=False,
-            )
-            cursor += len(members)
-        for spine in ax.spines.values():
-            spine.set_visible(False)
+        _draw_coverage_panel(ax, grid, grp_list, keys)
     if title:
         fig.suptitle(title, fontsize=12.5, fontweight="bold", color="#1d2f3a")
-    used = sorted(cells.code.unique())
     fig.legend(
         handles=[Patch(color=COLORS[c], label=ROLES[c - 1]) for c in used],
         loc="outside lower center",
@@ -438,6 +465,16 @@ def build():
         [k for k in SOURCES if k in set(fold.family)],
         "tpm-coverage.png",
         title="Native-TPM tissue coverage and analytical role across sources",
+        split_stems=[
+            (
+                "tpm-coverage-somatic.png",
+                "Native-TPM coverage: somatic, immune, disposable, and thymic tissues",
+            ),
+            (
+                "tpm-coverage-neural-repro.png",
+                "Native-TPM coverage: brain, eye, nerve, and reproductive/developmental tissues",
+            ),
+        ],
     )
     plot_grid(
         shared,

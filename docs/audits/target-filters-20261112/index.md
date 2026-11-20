@@ -3,7 +3,7 @@
 **The catalog assigns five categories and they are not changed here. Filters only
 remove proteins from the 525 Target candidates, through six layers that
 follow the catalog's own shape.** Filter policy `oncoref.target-filters.2026-11-17.5`, applied to
-catalog `oncoref.target-selection.2026-11-19.4`. Every number below is computed by
+catalog `oncoref.target-selection.2026-11-20.1`. Every number below is computed by
 `scripts/build_target_filter_audit.py`. [Rules reference](../../target-filters.md).
 
 These are outputs of screening rules. They are not validated tumor antigens.
@@ -15,8 +15,8 @@ These are outputs of screening rules. They are not validated tumor antigens.
 | CTA | 327 | Passes the shared screen; cancer evidence and reproductive evidence both qualify |
 | Cancer Antigen only | 70 | Passes the shared screen; only cancer evidence qualifies |
 | Reproductive Antigen only | 128 | Passes the shared screen; only reproductive evidence qualifies |
-| Other | 1,118 | Not excluded, but fails coverage, identity, expression bounds, sequence, the home-tissue rule or both evidence routes |
-| Unsafe | 18,250 | An accepted normal-tissue or clinical exclusion |
+| Other | 1,121 | Not excluded, but fails coverage, identity, expression bounds, sequence, the home-tissue rule or both evidence routes |
+| Unsafe | 18,247 | An accepted normal-tissue or clinical exclusion |
 
 Target candidates are the first three rows: 525 proteins. A filter never moves
 a protein into or out of Other or Unsafe.

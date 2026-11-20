@@ -61,12 +61,17 @@ peptide presentation or therapeutic safety.
 From a complete source checkout:
 
 ```sh
+python -m oncoref.curation fetch --include-tumors
 python -m oncoref.curation build --reuse-tumor-cache
+# Optional alternative normal-tissue summary (mean + 2 SD per tissue instead of P95):
+python -m oncoref.curation build --reuse-tumor-cache --normal-stat mean_plus_2std
 python -m oncoref.curation check
 # Equivalent verification-only spelling:
 python -m oncoref.curation build --check
 python -m oncoref.curation diff --against prior-categories.csv.gz
 ```
+
+`fetch` downloads and SHA-256-verifies every external reference dataset declared by the build (HPA v23, GTEx v11 individual tissue matrices, DICE, Monaco, and Petropoulos/Tyser embryo tables); pass `--include-tumors` to also fetch and verify all 132 pinned per-sample tumor matrices through `oncoref.catalog`. No out-of-band downloads or machine-local file paths are required.
 
 The declared dependency graph (`oncoref/data/curation-build.json`) orders the main build as `rare_cell` → `catalog` → `host_exposure` → `plots` → `report` → `filter_audit` →
 `filter_web_report`. The rebuilt catalog also feeds the GTEx witness comparison, literature audit and IHC audit. Failures stop dependent steps. Omitting `--reuse-tumor-cache`

@@ -10,8 +10,8 @@ code{font-size:.9em}a{color:#176689}.note{color:#53636c}</style><main>
 <h1>Cancer and Reproductive Antigens</h1>
 <p><strong>CTA = Cancer Antigens ∩ Reproductive Antigens.</strong><br>
 Candidate antigen proteins = Cancer Antigens ∪ Reproductive Antigens.</p>
-<p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-19.4</code>.
-327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,118 Other, 18,250 Unsafe.
+<p class="status">Rebuilt catalog: <code>oncoref.target-selection.2026-11-20.1</code>.
+327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,121 Other, 18,247 Unsafe.
 <a href="rebuild/report.html">Filterable protein table, measurements and category changes</a>.
 The released 1.36.0 catalog remains a separate snapshot under its earlier policy.</p>
 <figure><svg xmlns:xlink="http://www.w3.org/1999/xlink" width="628.2pt" height="402.48pt" viewBox="0 0 628.2 402.48" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -1966,7 +1966,7 @@ pseudogene or overlapping gene looks like sparse expression. Cells with a single
 therefore never change a category.</p>
 <table><thead><tr><th>Question</th><th>Requirement</th></tr></thead><tbody>
 <tr><td>Is there a signal?</td><td>&gt;= 1% of a donor&#x27;s cells and &gt;= 10 cells carry &gt;= 2 molecules.</td></tr>
-<tr><td>Is it replicated?</td><td>The signal in &gt;= 2 atlas sources of the same organ, which agree on a cell type or include &gt;= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, a signal counts only when &gt;= 5% of a donor&#x27;s cells carry multiple molecules.</td></tr>
+<tr><td>Is it replicated?</td><td>The signal in &gt;= 2 independent study groups of the same organ, which agree on a cell type or include &gt;= 3 distinct biological donors. Cell-type concordance also requires distinct biological donors. Shared consortium collections (Baylor/Chen eye, Sanes eye, Allen reference brain, Michigan kidney, Teichmann heart) and donors embedded in integrated atlases (HLCA, Baylor/Chen eye, SEA-AD) are attributed to their original study and biological donor ID before counting replication. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, a signal counts only when &gt;= 5% of a donor&#x27;s cells carry multiple molecules.</td></tr>
 <tr><td>Could the reads belong elsewhere?</td><td>Shared transcript sequence with another locus, or an exon inside another same-strand gene. Attribution needs read-level review; a flag does not prove artifact.</td></tr>
 <tr><td>Does another assay agree?</td><td>Bulk RNA &gt;= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.</td></tr></tbody></table>
 <table><thead><tr><th>Outcome</th><th>Rule</th></tr></thead>

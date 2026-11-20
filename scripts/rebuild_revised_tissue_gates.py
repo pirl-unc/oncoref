@@ -52,19 +52,32 @@ class GateCollector:
 def main():
     facts = pd.read_csv(OUTPUT / "protein-group-classifications.csv.gz", low_memory=False)
     peaks = pd.read_csv(OUTPUT / "normal-peak-evidence.csv.gz", usecols=["gene_id", "tissue"])
-    revisions = tissue_tiers.assessments().dropna(subset=["previous_tier"])
+    all_rules = tissue_tiers.assessments()
+    revisions = (
+        all_rules.dropna(subset=["previous_tier"])
+        if "previous_tier" in all_rules
+        else all_rules.iloc[:0]
+    )
     if not (
         revisions.level.eq("bulk")
         & revisions.previous_tier.eq("protected")
         & revisions.tier.eq("disposable")
     ).all():
-        raise ValueError("This replay covers whole-organ Protected to Disposable revisions")
-    organs = {t for organs in revisions.tissues for t in organs}
+        raise ValueError("Bulk tier replay covers whole-organ Protected to Disposable revisions")
+    cell_revisions = (
+        all_rules.dropna(subset=["previous_cell_pattern"])
+        if "previous_cell_pattern" in all_rules
+        else all_rules.iloc[:0]
+    )
+    if not cell_revisions.level.eq("cell").all():
+        raise ValueError("Cell-pattern replay requires cell-level revisions")
+    organs = {t for group in revisions.tissues for t in group}
+    cell_organs = {t for group in cell_revisions.tissues for t in group}
     # Separate worst positive/negative peaks are recorded per assay. An unchanged
     # positive peak independently supports the gate. Replay all multi-locus groups
     # as their conservative upper bounds need not coincide with a measured peak.
     candidates = facts.representative_gene_id.isin(
-        peaks.loc[peaks.tissue.isin(organs), "gene_id"]
+        peaks.loc[peaks.tissue.isin(organs | cell_organs), "gene_id"]
     ) | facts.member_count.gt(1)
     selected = facts[candidates].copy()
     with tempfile.TemporaryDirectory() as directory:
@@ -73,10 +86,15 @@ def main():
             shutil.copyfile(path, stage / path.name)
         rna = replay_contexts(selected, stage, collector=GateCollector(selected))
     # Every positive IHC record is retained, including positives outside the
-    # revised organ. Preserve the source's eligibility and reagent adjudications.
+    # revised organs/cell rules. Preserve source eligibility and reagent adjudications.
     ihc = pd.read_csv(OUTPUT / "hpa-protein-evidence.csv.gz", low_memory=False)
-    affected = ihc.tissue.isin(organs)
+    affected = ihc.tissue.isin(organs) | ihc.tissue.map(
+        lambda t: bool(tissue_tiers._anatomy(str(t).casefold())[1].intersection(cell_organs))
+    )
     tier = tissue_tiers.context_tiers(ihc.loc[affected])
+    reclassified_cell_rows = int(
+        (ihc.loc[affected, "selection_tier"].ne(tier) & tier.eq("disposable")).sum()
+    )
     ihc.loc[affected, "candidate_exclusion"] &= tier.isin(policy.TIER_BASES)
     ihc.loc[affected, "unsafe_evidence"] &= tier.isin(["vital", "protected"])
     protein = (
@@ -121,6 +139,7 @@ def main():
         receipt[f"reference:{source}:v23"] = reference_data.provenance(
             source, "v23", verify_content=True
         )["sha256"]
+    receipt["replayed_cell_revision_disposable_rows"] = reclassified_cell_rows
     (OUT / "revised-tissue-gate-inputs.json").write_text(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n"
     )

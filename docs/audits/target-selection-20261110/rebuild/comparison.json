@@ -1,5 +1,5 @@
 {
-  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-19.2",
+  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-20.1",
   "unit": "TPM",
   "purpose": "Source-native gene-abundance screening; not calibrated cross-study differential expression",
   "compatibility_basis": [
@@ -748,5 +748,5 @@
     "tongue",
     "urinary bladder"
   ],
-  "tumor_matrix_cache_sha256": "e74c9127ce291ff151297e3501bda63a2b1d46bb9d6f76a0be515e76f9aec27c"
+  "tumor_matrix_cache_sha256": "5d720a5d964c4a4f03f4b8d1fbace0f267d2f85bf70ee51d2c04aed2f401f18a"
 }

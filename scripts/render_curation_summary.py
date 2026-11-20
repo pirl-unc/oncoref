@@ -617,17 +617,96 @@ def distributions(data, path):
     plt.close(fig)
 
 
+def _draw_enrichment_panel(ax, data, column, membership, title, color, callouts, floor=0.05):
+    """Draw a single enrichment scatter plot against the shared non-thymic baseline."""
+    d = data[data[column].notna()].copy()
+    x = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=floor)
+    y = d[column].clip(lower=floor)
+    held = ~d[membership] & d.classification.isin(["Other:Review", "Other:Unscreened tissue"])
+    below = ~d[membership] & ~held
+    for label, mask, shade, z in [
+        ("Below threshold / non-member", below, "#b4c0c7", 1),
+        ("Held (Review / Unscreened)", held, REVIEW, 2),
+        ("Qualified membership", d[membership], color, 3),
+    ]:
+        ax.scatter(
+            x[mask],
+            y[mask],
+            s=18 if z > 1 else 12,
+            alpha=0.75 if z > 1 else 0.55,
+            color=shade,
+            zorder=z,
+            label=f"{label} ({int(mask.sum())})",
+        )
+    grid = np.logspace(np.log10(floor), np.log10(max(100, x.max())), 100)
+    ax.plot(
+        grid,
+        target_selection.ENRICHMENT_FOLD * np.maximum(grid, 1),
+        "k:",
+        lw=1.5,
+        zorder=4,
+        label="10 × max(N, D, 1 TPM)",
+    )
+    indexed = d.assign(_x=x, _y=y).set_index("protein_group_label")
+    for gene, (dx, dy) in callouts.items():
+        if gene not in indexed.index:
+            continue
+        row = indexed.loc[gene]
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
+        is_held = row.classification in ("Other:Review", "Other:Unscreened tissue")
+        ax.scatter(
+            [row._x],
+            [row._y],
+            s=36,
+            facecolors="none",
+            edgecolors="#1d2f3a",
+            linewidths=1.1,
+            zorder=5,
+        )
+        ax.annotate(
+            gene,
+            xy=(row._x, row._y),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            fontsize=8.8,
+            fontweight="bold",
+            color="#7d5918" if is_held else "#1a2d38",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.82, "pad": 1.0},
+            arrowprops={"arrowstyle": "-", "color": "#5f707a", "lw": 0.85},
+            zorder=6,
+        )
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.grid(True, which="major", color="#dce3e7", linewidth=0.6, alpha=0.7)
+    ax.set_axisbelow(True)
+    ax.set_xlabel("Highest non-thymic, non-reproductive reference max(N, D) (TPM)", fontsize=10)
+    ax.set_ylabel("Highest supported expression (TPM)", fontsize=10)
+    ax.set_title(
+        f"{title}: {len(d):,} measured proteins",
+        loc="left",
+        fontsize=11.5,
+        fontweight="bold",
+        pad=8,
+    )
+    ax.legend(fontsize=8.8, frameon=True, facecolor="white", edgecolor="#e0e5e8", loc="lower right")
+    ax.spines[["top", "right"]].set_visible(False)
+
+
 def tumor_normal(data, path):
-    """Both positive compartments against their identical nonreproductive reference."""
+    """Both positive compartments against their identical nonreproductive reference.
+
+    Writes both standalone full-width figures (`cancer-enrichment.png`,
+    `reproductive-enrichment.png`) and the legacy combined figure (`path`).
+    """
     floor = 0.05
-    fig, axes = plt.subplots(1, 2, figsize=(14.2, 6.5), sharex=True, sharey=True)
     cancer_callouts = {
         "LALBA": (16, -2),
         "TGM4": (16, 4),
         "PRAME": (18, 12),
-        "MAGEA4": (-44, 18),
-        "NY-ESO-1": (-62, 4),
-        "AMELX": (-52, 12),
+        "MAGEA4": (-48, 18),
+        "NY-ESO-1": (-66, 4),
+        "AMELX": (-54, 12),
         "GFY": (26, -14),
         "CTAG2": (24, -14),
     }
@@ -637,90 +716,47 @@ def tumor_normal(data, path):
         "TGM4": (-46, 10),
         "PRAME": (24, 10),
         "CT83": (20, 22),
-        "NY-ESO-1": (-62, -16),
+        "NY-ESO-1": (-64, -16),
         "CTAG2": (24, -12),
     }
-    for ax, column, membership, title, color, callouts in [
-        (axes[0], "tumor_max_tpm", "is_cancer_antigen", "Cancer (CA)", CANCER, cancer_callouts),
+    specs = [
         (
-            axes[1],
+            "tumor_max_tpm",
+            "is_cancer_antigen",
+            "Cancer enrichment (CA)",
+            CANCER,
+            cancer_callouts,
+            path.parent / "cancer-enrichment.png",
+        ),
+        (
             "reproductive_supported_tpm",
             "is_reproductive_antigen",
-            "Reproductive / developmental (RA)",
+            "Reproductive and developmental enrichment (RA)",
             REPRODUCTIVE,
             repro_callouts,
+            path.parent / "reproductive-enrichment.png",
         ),
-    ]:
-        d = data[data[column].notna()].copy()
-        x = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1).clip(lower=floor)
-        y = d[column].clip(lower=floor)
-        held = ~d[membership] & d.classification.isin(["Other:Review", "Other:Unscreened tissue"])
-        below = ~d[membership] & ~held
-        for label, mask, shade, z in [
-            ("Below threshold / non-member", below, "#b4c0c7", 1),
-            ("Held (Review / Unscreened)", held, REVIEW, 2),
-            ("Qualified membership", d[membership], color, 3),
-        ]:
-            ax.scatter(
-                x[mask],
-                y[mask],
-                s=13 if z > 1 else 9,
-                alpha=0.72 if z > 1 else 0.55,
-                color=shade,
-                zorder=z,
-                label=f"{label} ({int(mask.sum())})",
-            )
-        grid = np.logspace(np.log10(floor), np.log10(max(100, x.max())), 100)
-        ax.plot(
-            grid,
-            target_selection.ENRICHMENT_FOLD * np.maximum(grid, 1),
-            "k:",
-            lw=1.4,
-            zorder=4,
-            label="10 × max(N, D, 1 TPM)",
+    ]
+    # Individual full-width figures for crisp readability in the whitepaper.
+    for column, membership, title, color, callouts, out_path in specs:
+        fig, ax = plt.subplots(figsize=(9.2, 6.2))
+        _draw_enrichment_panel(ax, data, column, membership, title, color, callouts, floor=floor)
+        fig.text(
+            0.01,
+            -0.02,
+            "Values below 0.05 TPM are clipped to the axis floor. Gold points above the dotted boundary clear the 10× rule but are held in Other:Review or Other:Unscreened tissue.",
+            ha="left",
+            fontsize=8.5,
+            color="#4e616b",
         )
-        indexed = d.assign(_x=x, _y=y).set_index("protein_group_label")
-        for gene, (dx, dy) in callouts.items():
-            if gene not in indexed.index:
-                continue
-            row = indexed.loc[gene]
-            if isinstance(row, pd.DataFrame):
-                row = row.iloc[0]
-            is_held = row.classification in ("Other:Review", "Other:Unscreened tissue")
-            ax.scatter(
-                [row._x],
-                [row._y],
-                s=28,
-                facecolors="none",
-                edgecolors="#1d2f3a",
-                linewidths=1.0,
-                zorder=5,
-            )
-            ax.annotate(
-                gene,
-                xy=(row._x, row._y),
-                xytext=(dx, dy),
-                textcoords="offset points",
-                fontsize=8.2,
-                fontweight="bold",
-                color="#7d5918" if is_held else "#1a2d38",
-                bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.78, "pad": 0.8},
-                arrowprops={"arrowstyle": "-", "color": "#5f707a", "lw": 0.8},
-                zorder=6,
-            )
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.grid(True, which="major", color="#dce3e7", linewidth=0.6, alpha=0.7)
-        ax.set_axisbelow(True)
-        ax.set_xlabel("Highest non-thymic, non-reproductive reference max(N, D) (TPM)")
-        ax.set_ylabel("Highest supported expression (TPM)")
-        ax.set_title(
-            f"{title}: {len(d):,} measured proteins", loc="left", fontsize=11, fontweight="bold"
-        )
-        ax.legend(
-            fontsize=8.2, frameon=True, facecolor="white", edgecolor="#e0e5e8", loc="lower right"
-        )
-        ax.spines[["top", "right"]].set_visible(False)
+        fig.tight_layout()
+        fig.savefig(out_path, dpi=160, bbox_inches="tight")
+        plt.close(fig)
+
+    # Legacy combined side-by-side figure retained for summary.md.
+    fig, axes = plt.subplots(1, 2, figsize=(14.2, 6.5), sharex=True, sharey=True)
+    for ax, (column, membership, title, color, callouts, _) in zip(axes, specs, strict=True):
+        _draw_enrichment_panel(ax, data, column, membership, title, color, callouts, floor=floor)
     fig.suptitle(
         "Shared 10× enrichment rule across cancer and reproductive compartments",
         fontsize=12.5,
@@ -917,64 +953,354 @@ def _save_both(fig, stem_path: Path, dpi: int = 170):
 
 
 def source_to_tiers_architecture(data, everything, stem_path):
-    """Three separate decisions, with measured counts and explicitly scoped evidence."""
-    ca, ra = data.is_cancer_antigen, data.is_reproductive_antigen
-    eligible = data[list(target_selection.SHARED_CHECKS)].all(axis=1) & ~data.category.eq("Unsafe")
-    boxes = [
-        (
-            "1  SHARED CATALOG SCREEN",
-            f"{len(data):,} protein groups → {int(eligible.sum()):,} shared-eligible",
-            "HPA / GTEx bulk RNA · cell clusters · donor-resolved rare cells\nImmune RNA · normal IHC · reviewed findings · identity / sequence\nAccepted normal exclusions → Unsafe; gaps and technical holds → Other",
-        ),
-        (
-            "2  BIOLOGICAL MEMBERSHIP",
-            f"CA {int(ca.sum())} · RA {int(ra.sum())} · CTA {int((ca & ra).sum())} · union {int((ca | ra).sum())}",
-            "QC-passing tumor samples and reproductive / developmental RNA\nBoth require ≥10 × max(N, D, 1 TPM). N and D exclude thymus.\nCTA = CA ∩ RA; origin compartments describe evidence, not tolerable injury",
-        ),
-        (
-            "3  OPTIONAL HOST SELECTION",
-            "Protect  /  Accept loss  /  Absent",
-            "Separate exposure evidence, including zeros and missing coverage\nProtected TPM and nTPM screened separately; unresolved protein findings held\nHost rejection preserves biological identity and expands peptide background",
-        ),
-    ]
-    fig, ax = plt.subplots(figsize=(13, 8.2))
-    ax.set(xlim=(0, 1), ylim=(0, 1))
+    """Minimal visual architecture diagram: proteome -> safety screen -> CA/RA/CTA -> patient filter."""
+    ca = data.is_cancer_antigen.astype(bool)
+    ra = data.is_reproductive_antigen.astype(bool)
+    n_total = len(data)
+    n_unsafe = int(data.category.eq("Unsafe").sum())
+    n_other = int(data.category.eq("Other").sum())
+    n_cta = int((ca & ra).sum())
+    n_ca_only = int((ca & ~ra).sum())
+    n_ra_only = int((~ca & ra).sum())
+    n_union = int((ca | ra).sum())
+    n_eligible = int(
+        (data[list(target_selection.SHARED_CHECKS)].all(axis=1) & ~data.category.eq("Unsafe")).sum()
+    )
+
+    fig, ax = plt.subplots(figsize=(10.2, 5.6))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 6.0)
     ax.axis("off")
-    for i, (title, count, body) in enumerate(boxes):
-        y = 0.96 - i * 0.31
+
+    def node(x, y, w, h, title, count, fc, ec, title_c="#102a43", count_c="#102a43", note=""):
         ax.add_patch(
             FancyBboxPatch(
-                (0.02, y - 0.265),
-                0.96,
-                0.25,
-                boxstyle="round,pad=.01",
-                facecolor=["#edf1f4", "#e8f1ec", "#f6efe0"][i],
-                edgecolor="#b8c3c8",
+                (x, y),
+                w,
+                h,
+                boxstyle="round,pad=0.05,rounding_size=0.16",
+                facecolor=fc,
+                edgecolor=ec,
+                linewidth=1.5,
             )
         )
-        ax.text(0.045, y - 0.045, title, fontsize=12, weight="bold", va="top")
-        ax.text(0.045, y - 0.09, count, fontsize=16, weight="bold", va="top")
-        ax.text(0.045, y - 0.145, body, fontsize=11, va="top", linespacing=1.5)
-        if i < 2:
-            ax.annotate(
-                "",
-                xy=(0.5, y - 0.31),
-                xytext=(0.5, y - 0.275),
-                arrowprops={"arrowstyle": "->", "color": "#536671", "lw": 2},
+        if count and note:
+            ax.text(
+                x + w / 2,
+                y + h - 0.17,
+                title,
+                ha="center",
+                va="top",
+                fontsize=10.2,
+                fontweight="bold",
+                color=title_c,
             )
-    ax.text(
-        0.02,
-        0.005,
-        "Research screening only. RNA enrichment does not establish protein presentation, recognition or clinical safety.",
-        fontsize=10,
-        color="#536671",
+            ax.text(
+                x + w / 2,
+                y + h * 0.48,
+                count,
+                ha="center",
+                va="center",
+                fontsize=14.5,
+                fontweight="bold",
+                color=count_c,
+            )
+            ax.text(
+                x + w / 2, y + 0.14, note, ha="center", va="bottom", fontsize=8.5, color="#486581"
+            )
+        elif count:
+            ax.text(
+                x + w / 2,
+                y + h * 0.68,
+                title,
+                ha="center",
+                va="center",
+                fontsize=10.5,
+                fontweight="bold",
+                color=title_c,
+            )
+            ax.text(
+                x + w / 2,
+                y + h * 0.28,
+                count,
+                ha="center",
+                va="center",
+                fontsize=14.5,
+                fontweight="bold",
+                color=count_c,
+            )
+        else:
+            ax.text(
+                x + w / 2,
+                y + h / 2,
+                title,
+                ha="center",
+                va="center",
+                fontsize=10.2,
+                fontweight="bold",
+                color=title_c,
+            )
+
+    def arrow(x0, y0, x1, y1, color="#627d98"):
+        ax.annotate(
+            "",
+            xy=(x1, y1),
+            xytext=(x0, y0),
+            arrowprops={
+                "arrowstyle": "-|>,head_width=0.28,head_length=0.40",
+                "color": color,
+                "lw": 1.6,
+            },
+        )
+
+    # Top: Proteome
+    node(3.15, 4.95, 3.70, 0.88, "Coding proteome", f"{n_total:,}", "#f4f7fa", "#9fb3c8")
+
+    # Middle: Safety & eligibility screen branching to Unsafe (left) and Other (right)
+    arrow(5.0, 4.90, 5.0, 4.35)
+    node(
+        3.15,
+        3.22,
+        3.70,
+        1.06,
+        "Normal safety & eligibility",
+        f"{n_eligible:,}",
+        "#eef4f8",
+        "#5b7c92",
+        note="Bulk · Single-cell · IHC",
     )
+    arrow(3.10, 3.75, 2.52, 3.75, color=UNSAFE)
+    node(
+        0.20,
+        3.22,
+        2.25,
+        1.06,
+        "Unsafe",
+        f"{n_unsafe:,}",
+        "#fbeeed",
+        UNSAFE,
+        title_c="#8c2d2a",
+        count_c="#8c2d2a",
+        note="Healthy tissue",
+    )
+
+    arrow(6.90, 3.75, 7.48, 3.75, color=REVIEW)
+    node(
+        7.55,
+        3.22,
+        2.25,
+        1.06,
+        "Other",
+        f"{n_other:,}",
+        "#fbf5e7",
+        REVIEW,
+        title_c="#785416",
+        count_c="#785416",
+        note="Held / low fold",
+    )
+
+    # Enrichment step: symmetric 10x -> CA only, CTA, RA only
+    arrow(4.10, 3.17, 1.75, 2.40, color=CANCER)
+    arrow(5.00, 3.17, 5.00, 2.40, color=REPRODUCTIVE)
+    arrow(5.90, 3.17, 8.25, 2.40, color="#6aa48b")
+    ax.text(
+        5.0,
+        2.79,
+        "≥ 10× healthy baseline",
+        ha="center",
+        va="center",
+        fontsize=9.4,
+        fontweight="bold",
+        color="#243b53",
+        bbox={"facecolor": "white", "edgecolor": "none", "pad": 2.5},
+    )
+
+    node(
+        0.40,
+        1.25,
+        2.70,
+        1.08,
+        "Cancer Antigen only",
+        f"{n_ca_only:,}",
+        "#ebf4fa",
+        CANCER,
+        title_c="#1a567b",
+        count_c="#1a567b",
+        note="Tumor ≥ 10×",
+    )
+    node(
+        3.55,
+        1.25,
+        2.90,
+        1.08,
+        "CTA  (CA ∩ RA)",
+        f"{n_cta:,}",
+        "#ebf5ef",
+        REPRODUCTIVE,
+        title_c="#1d573c",
+        count_c="#1d573c",
+        note="Tumor & reproductive",
+    )
+    node(
+        6.90,
+        1.25,
+        2.70,
+        1.08,
+        "Reproductive only",
+        f"{n_ra_only:,}",
+        "#f0f7f4",
+        "#7db19a",
+        title_c="#266049",
+        count_c="#266049",
+        note="Reproductive ≥ 10×",
+    )
+
+    # Bottom: Optional patient-specific filtering with 3 clean choice pills
+    arrow(5.0, 1.20, 5.0, 0.78, color="#627d98")
+    ax.add_patch(
+        FancyBboxPatch(
+            (0.90, 0.08),
+            8.20,
+            0.64,
+            boxstyle="round,pad=0.04,rounding_size=0.14",
+            facecolor="#f7f9fb",
+            edgecolor="#bcccdc",
+            linewidth=1.2,
+        )
+    )
+    ax.text(
+        1.18,
+        0.40,
+        f"Patient-specific filter  ({n_union:,} candidates)",
+        ha="left",
+        va="center",
+        fontsize=9.6,
+        fontweight="bold",
+        color="#243b53",
+    )
+    for px, lbl, fc, ec, tc in [
+        (5.45, "Protect", "#fdf2f2", "#e4b8b6", "#8c2d2a"),
+        (6.62, "Accept loss", "#fbf6e9", "#e4d1a3", "#785416"),
+        (8.02, "Absent", "#eef5fa", "#b4d2e6", "#1a567b"),
+    ]:
+        w_pill = 1.02 if lbl != "Accept loss" else 1.26
+        ax.add_patch(
+            FancyBboxPatch(
+                (px, 0.21),
+                w_pill,
+                0.38,
+                boxstyle="round,pad=0.02,rounding_size=0.10",
+                facecolor=fc,
+                edgecolor=ec,
+                linewidth=1.1,
+            )
+        )
+        ax.text(
+            px + w_pill / 2,
+            0.40,
+            lbl,
+            ha="center",
+            va="center",
+            fontsize=8.8,
+            fontweight="bold",
+            color=tc,
+        )
+
     fig.tight_layout()
     _save_both(fig, stem_path, dpi=165)
 
 
+def _draw_host_matrix(ax, matrix, compartments, labels, colors, legend_labels):
+    ax.imshow(
+        matrix.T, cmap=matplotlib.colors.ListedColormap(colors), vmin=0, vmax=3, aspect="auto"
+    )
+    ax.set_yticks(
+        range(len(compartments)), [c.replace("_", " ") for c in compartments], fontsize=9.5
+    )
+    ax.set_xticks(range(len(labels)), labels, rotation=32, ha="right", fontsize=9.0)
+    ax.set_xticks(np.arange(-0.5, len(labels)), minor=True)
+    ax.set_yticks(np.arange(-0.5, len(compartments)), minor=True)
+    ax.grid(which="minor", color="white", linewidth=1.1)
+    ax.tick_params(which="minor", length=0)
+    for i in range(len(labels)):
+        for j in range(len(compartments)):
+            ax.text(
+                i,
+                j,
+                ["—", "Protect", "Loss", "Absent"][matrix[i, j]],
+                ha="center",
+                va="center",
+                fontsize=8.4,
+                color="#2c3d47",
+            )
+    ax.set_title("Patient anatomy and organ-loss choices", loc="left", weight="bold", pad=12)
+    ax.tick_params(length=0)
+    used_states = sorted(set(matrix.ravel().tolist()))
+    ax.legend(
+        handles=[Patch(color=colors[idx], label=legend_labels[idx]) for idx in used_states],
+        loc="upper left",
+        bbox_to_anchor=(0, -0.24),
+        ncol=len(used_states),
+        frameon=False,
+        fontsize=9.2,
+    )
+
+
+def _draw_host_outcomes(ax, profiles, labels):
+    y = np.arange(len(profiles))
+    left = np.zeros(len(profiles))
+    total_cta = int(profiles.CTA.max())
+    small_notes = [[] for _ in range(len(profiles))]
+    for column, label, short, color in [
+        ("CTA", "Retained for research screen", "retained", "#438a69"),
+        ("CTA_unresolved", "Unresolved coverage / evidence", "unresolved", "#b88a3c"),
+        ("CTA_excluded", "Excluded by patient-anatomy rule", "excluded", "#ac5552"),
+    ]:
+        values = profiles[column].to_numpy()
+        ax.barh(y, values, left=left, label=label, color=color, height=0.68)
+        for yi, offset, v in zip(y, left, values):
+            if v >= 16:
+                ax.text(
+                    offset + v / 2,
+                    yi,
+                    str(v),
+                    ha="center",
+                    va="center",
+                    fontsize=9.2,
+                    fontweight="bold",
+                    color="white",
+                )
+            elif v > 0:
+                small_notes[yi].append(f"{v} {short}")
+        left += values
+    for yi, notes in enumerate(small_notes):
+        if notes:
+            ax.text(
+                total_cta + 5,
+                yi,
+                " · ".join(notes),
+                va="center",
+                ha="left",
+                fontsize=8.6,
+                color="#4d5f69",
+            )
+    ax.set_xlim(0, total_cta * 1.24)
+    ax.set_yticks(y, [s.replace("\n", " ") for s in labels], fontsize=9.4)
+    ax.invert_yaxis()
+    ax.set_xlabel("Biological CTAs (identity unchanged)", fontsize=10)
+    ax.set_title(
+        "Patient-profile screening outcome for each CTA", loc="left", weight="bold", pad=12
+    )
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.legend(loc="upper left", bbox_to_anchor=(0, -0.15), frameon=False, fontsize=9.2)
+
+
 def cta_tiers_and_profiles(data, stem_path):
-    """Host choices and outcomes; biological origins are not toxicity tiers."""
+    """Host choices and outcomes; biological origins are not toxicity tiers.
+
+    Writes both standalone full-width figures (`host-profiles-matrix`,
+    `host-profiles-outcomes`) and the legacy combined figure (`stem_path`).
+    """
     profiles = target_filters.profile_summary(data)
     states = ["Not protected", "Protect", "Accept loss", "Absent"]
     legend_labels = ["Not protected (—)", "Protect", "Accept loss", "Absent"]
@@ -991,86 +1317,25 @@ def cta_tiers_and_profiles(data, stem_path):
     )
     labels = [r.replace("-patient", " anatomy").replace(" (", "\n(") for r in profiles.profile]
     labels[0] = "Catalog only"
+
+    # Individual Figure A: Host-profile compartment choice matrix.
+    fig_m, ax_m = plt.subplots(figsize=(10.2, 6.4))
+    _draw_host_matrix(ax_m, matrix, compartments, labels, colors, legend_labels)
+    fig_m.tight_layout()
+    _save_both(fig_m, stem_path.parent / "host-profiles-matrix", dpi=165)
+
+    # Individual Figure B: Host-screen outcomes for biological CTAs.
+    fig_b, ax_b = plt.subplots(figsize=(9.8, 5.4))
+    _draw_host_outcomes(ax_b, profiles, labels)
+    fig_b.tight_layout()
+    _save_both(fig_b, stem_path.parent / "host-profiles-outcomes", dpi=165)
+
+    # Legacy combined figure retained for index.md / summary.md / report.html.
     fig, (grid, bars) = plt.subplots(
         1, 2, figsize=(17.2, 7.6), gridspec_kw={"width_ratios": [1.22, 1.05]}
     )
-    grid.imshow(
-        matrix.T, cmap=matplotlib.colors.ListedColormap(colors), vmin=0, vmax=3, aspect="auto"
-    )
-    grid.set_yticks(
-        range(len(compartments)), [c.replace("_", " ") for c in compartments], fontsize=9
-    )
-    grid.set_xticks(range(len(labels)), labels, rotation=32, ha="right", fontsize=8.5)
-    grid.set_xticks(np.arange(-0.5, len(labels)), minor=True)
-    grid.set_yticks(np.arange(-0.5, len(compartments)), minor=True)
-    grid.grid(which="minor", color="white", linewidth=1.0)
-    grid.tick_params(which="minor", length=0)
-    for i in range(len(labels)):
-        for j in range(len(compartments)):
-            grid.text(
-                i,
-                j,
-                ["—", "Protect", "Loss", "Absent"][matrix[i, j]],
-                ha="center",
-                va="center",
-                fontsize=8,
-                color="#2c3d47",
-            )
-    grid.set_title("Declared anatomy and tissue-loss choices", loc="left", weight="bold", pad=12)
-    grid.tick_params(length=0)
-    used_states = sorted(set(matrix.ravel().tolist()))
-    grid.legend(
-        handles=[Patch(color=colors[idx], label=legend_labels[idx]) for idx in used_states],
-        loc="upper left",
-        bbox_to_anchor=(0, -0.24),
-        ncol=len(used_states),
-        frameon=False,
-        fontsize=9,
-    )
-    y = np.arange(len(profiles))
-    left = np.zeros(len(profiles))
-    total_cta = int(profiles.CTA.max())
-    small_notes = [[] for _ in range(len(profiles))]
-    for column, label, short, color in [
-        ("CTA", "Retained for research screen", "retained", "#438a69"),
-        ("CTA_unresolved", "Unresolved coverage / evidence", "unresolved", "#b88a3c"),
-        ("CTA_excluded", "Fails a host requirement", "excluded", "#ac5552"),
-    ]:
-        values = profiles[column].to_numpy()
-        bars.barh(y, values, left=left, label=label, color=color)
-        for yi, offset, v in zip(y, left, values):
-            if v >= 16:
-                bars.text(
-                    offset + v / 2,
-                    yi,
-                    str(v),
-                    ha="center",
-                    va="center",
-                    fontsize=9,
-                    fontweight="bold",
-                    color="white",
-                )
-            elif v > 0:
-                small_notes[yi].append(f"{v} {short}")
-        left += values
-    for yi, notes in enumerate(small_notes):
-        if notes:
-            bars.text(
-                total_cta + 5,
-                yi,
-                " · ".join(notes),
-                va="center",
-                ha="left",
-                fontsize=8.2,
-                color="#4d5f69",
-            )
-    bars.set_xlim(0, total_cta * 1.24)
-    bars.set_yticks(y, [s.replace("\n", " ") for s in labels], fontsize=9)
-    bars.invert_yaxis()
-    bars.set_xlabel("Biological CTAs (identity unchanged)")
-    bars.set_title("Host-screen outcome for each CTA", loc="left", weight="bold", pad=12)
-    bars.spines[["top", "right"]].set_visible(False)
-    bars.legend(loc="upper left", bbox_to_anchor=(0, -0.14), frameon=False, fontsize=9)
+    _draw_host_matrix(grid, matrix, compartments, labels, colors, legend_labels)
+    _draw_host_outcomes(bars, profiles, labels)
     fig.suptitle(
         "Protein origin and tolerated tissue loss are separate questions",
         fontsize=15.5,
@@ -1254,6 +1519,134 @@ def literature_sources(data, fig_path, csv_path):
         ("unsafe", "Unsafe (normal-tissue excluded)", UNSAFE),
     ]
     y = np.arange(len(plot_df))[::-1]
+    totals = plot_df["mapped_proteins"].to_numpy(dtype=float)
+    max_n = totals.max()
+    comma = FuncFormatter(lambda val, _: f"{int(val):,}")
+
+    def _draw_class_dividers(ax, x_badge):
+        prev_class = None
+        for idx, cls in enumerate(plot_df["antigen_class"]):
+            if prev_class is not None and cls != prev_class:
+                ax.axhline(y[idx] + 0.5, color="#495f6b", lw=1.0, ls="--", alpha=0.65)
+            prev_class = cls
+        for cls in LITERATURE_CLASS_ORDER:
+            idxs = plot_df.index[plot_df["antigen_class"].eq(cls)].tolist()
+            if not idxs:
+                continue
+            mid_y = (y[idxs[0]] + y[idxs[-1]]) / 2.0
+            ax.text(
+                x_badge,
+                mid_y,
+                cls,
+                va="center",
+                ha="left",
+                fontsize=8.6,
+                fontweight="bold",
+                color="#2c414d",
+                clip_on=False,
+            )
+
+    # Individual Figure A: Mapped protein counts per curated literature source.
+    fig_c, ax_c = plt.subplots(figsize=(10.8, 0.45 * len(plot_df) + 2.3))
+    left_c = np.zeros(len(plot_df))
+    for col, label, color in categories:
+        vals = plot_df[col].to_numpy(dtype=float)
+        ax_c.barh(y, vals, left=left_c, color=color, label=label, height=0.70)
+        left_c += vals
+    for yi, row in zip(y, plot_df.itertuples()):
+        ax_c.text(
+            row.mapped_proteins + max_n * 0.015,
+            yi,
+            f"{int(row.mapped_proteins):,}",
+            va="center",
+            fontsize=8.8,
+            color="#20323c",
+        )
+    _draw_class_dividers(ax_c, max_n * 1.15)
+    ax_c.set_xlim(0, max_n * 1.13)
+    ax_c.xaxis.set_major_formatter(comma)
+    ax_c.set_xlabel("Mapped protein groups in source")
+    ax_c.set_yticks(y, plot_df["display_label"], fontsize=9.2)
+    ax_c.set_title(
+        f"Curated literature sources: mapped protein count ({len(full)} sources)",
+        loc="left",
+        fontsize=11.5,
+        fontweight="bold",
+        pad=10,
+    )
+    ax_c.grid(axis="x", color="#e3e8eb", linewidth=0.6)
+    ax_c.set_axisbelow(True)
+    ax_c.spines[["top", "right"]].set_visible(False)
+    handles, labels = ax_c.get_legend_handles_labels()
+    fig_c.legend(
+        handles,
+        labels,
+        loc="lower center",
+        bbox_to_anchor=(0.48, -0.02),
+        ncol=3,
+        frameon=False,
+        fontsize=8.8,
+    )
+    fig_c.subplots_adjust(left=0.32, right=0.78, top=0.90, bottom=0.15)
+    fig_c.savefig(fig_path.parent / "literature-sources-counts.png", dpi=160, bbox_inches="tight")
+    plt.close(fig_c)
+
+    # Individual Figure B: Share of mapped proteins retained vs excluded.
+    fig_r, ax_r = plt.subplots(figsize=(10.8, 0.45 * len(plot_df) + 2.3))
+    left_r = np.zeros(len(plot_df))
+    for col, label, color in categories:
+        vals = plot_df[col].to_numpy(dtype=float)
+        pcts = np.where(totals > 0, 100.0 * vals / totals, 0.0)
+        ax_r.barh(y, pcts, left=left_r, color=color, label=label, height=0.70)
+        left_r += pcts
+    for yi, row in zip(y, plot_df.itertuples()):
+        cta_pct = 100.0 * row.cta / row.mapped_proteins if row.mapped_proteins else 0.0
+        cand_pct = (
+            100.0 * (row.cta + row.ca_only + row.ra_only) / row.mapped_proteins
+            if row.mapped_proteins
+            else 0.0
+        )
+        ax_r.text(
+            101.8,
+            yi,
+            f"{cta_pct:.0f}% CTA ({cand_pct:.0f}% CA∪RA)",
+            va="center",
+            fontsize=8.7,
+            fontweight="bold" if cta_pct >= 30 else "normal",
+            color="#1f5e41" if cta_pct >= 30 else "#3e515c",
+        )
+    _draw_class_dividers(ax_r, 146.0)
+    ax_r.set_xlim(0, 142)
+    ax_r.set_xticks([0, 25, 50, 75, 100])
+    ax_r.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
+    ax_r.set_xlabel("Share of mapped proteins by OncoRef disposition")
+    ax_r.set_yticks(y, plot_df["display_label"], fontsize=9.2)
+    ax_r.set_title(
+        f"Curated literature sources: retention vs. normal-tissue exclusion ({len(full)} sources)",
+        loc="left",
+        fontsize=11.5,
+        fontweight="bold",
+        pad=10,
+    )
+    ax_r.grid(axis="x", color="#e3e8eb", linewidth=0.6)
+    ax_r.set_axisbelow(True)
+    ax_r.spines[["top", "right"]].set_visible(False)
+    fig_r.legend(
+        handles,
+        labels,
+        loc="lower center",
+        bbox_to_anchor=(0.48, -0.02),
+        ncol=3,
+        frameon=False,
+        fontsize=8.8,
+    )
+    fig_r.subplots_adjust(left=0.32, right=0.78, top=0.90, bottom=0.15)
+    fig_r.savefig(
+        fig_path.parent / "literature-sources-retention.png", dpi=160, bbox_inches="tight"
+    )
+    plt.close(fig_r)
+
+    # Legacy combined side-by-side figure retained for summary.md.
     fig, (ax_n, ax_p) = plt.subplots(
         1,
         2,
@@ -1263,7 +1656,6 @@ def literature_sources(data, fig_path, csv_path):
     )
     left_n = np.zeros(len(plot_df))
     left_p = np.zeros(len(plot_df))
-    totals = plot_df["mapped_proteins"].to_numpy(dtype=float)
     for col, label, color in categories:
         vals = plot_df[col].to_numpy(dtype=float)
         pcts = np.where(totals > 0, 100.0 * vals / totals, 0.0)
@@ -1272,7 +1664,6 @@ def literature_sources(data, fig_path, csv_path):
         left_n += vals
         left_p += pcts
 
-    max_n = totals.max()
     for yi, row in zip(y, plot_df.itertuples()):
         ax_n.text(
             row.mapped_proteins + max_n * 0.016,
@@ -1299,7 +1690,6 @@ def literature_sources(data, fig_path, csv_path):
             color="#1f5e41" if cta_pct >= 30 else "#3e515c",
         )
 
-    # Draw subtle horizontal dividers and class headers between antigen classes.
     prev_class = None
     for idx, cls in enumerate(plot_df["antigen_class"]):
         if prev_class is not None and cls != prev_class:
@@ -1308,7 +1698,6 @@ def literature_sources(data, fig_path, csv_path):
             ax_p.axhline(sep_y, color="#495f6b", lw=1.0, ls="--", alpha=0.65)
         prev_class = cls
 
-    # Annotate antigen-class group labels cleanly in the right margin of ax_p.
     for cls in LITERATURE_CLASS_ORDER:
         idxs = plot_df.index[plot_df["antigen_class"].eq(cls)].tolist()
         if not idxs:
@@ -1327,7 +1716,6 @@ def literature_sources(data, fig_path, csv_path):
             clip_on=False,
         )
 
-    comma = FuncFormatter(lambda val, _: f"{int(val):,}")
     ax_n.set_xlim(0, max_n * 1.16)
     ax_n.xaxis.set_major_formatter(comma)
     ax_n.set_xlabel("Mapped protein groups in source")
@@ -1374,9 +1762,654 @@ def literature_sources(data, fig_path, csv_path):
     return full
 
 
+def classification_overview(data, path):
+    """Write the minimal visual proteome-partition diagram to `path`."""
+    source_to_tiers_architecture(data, None, path.with_suffix(""))
+
+
+def normal_evidence_layers(data, path):
+    """Single-panel visual showing what each non-bulk safety lens catches beyond bulk RNA."""
+    flagged = reasons(data)
+    bulk_mask = flagged.map(lambda s: "Normal bulk" in s)
+    modalities = [
+        ("Bulk tissue RNA\n(GTEx v11 + HPA v23)", {"Normal bulk"}),
+        ("Single-cell clusters\n(HPA scRNA)", {"HPA tissue clusters"}),
+        (
+            "Sorted immune subsets\n(HPA / DICE / Monaco)",
+            {"HPA immune", "Monaco immune", "DICE immune"},
+        ),
+        (
+            "Normal protein staining\n(HPA IHC + curated)",
+            {"HPA normal protein", "Accepted normal-protein evidence"},
+        ),
+        ("Donor rare-cell UMI\n(CELLxGENE + Siletti)", {"Established rare normal-cell RNA"}),
+        (
+            "Curated normal literature\n(912-protein rubric)",
+            {"Reviewed normal-cell knowledge", "Published normal-tissue expression"},
+        ),
+        ("Adult cornea scRNA\n(Collin CP10K)", {"Adult cornea"}),
+    ]
+    rows = []
+    # Sequential marginal additions beyond bulk RNA
+    seen = pd.Series(False, index=data.index)
+    for idx, (label, layer_set) in enumerate(modalities):
+        hit = flagged.map(lambda s, ls=layer_set: bool(s & ls))
+        added = hit & ~seen
+        seen |= hit
+        rows.append(
+            {
+                "label": label,
+                "total": int(hit.sum()),
+                "added": int(added.sum()),
+                "beyond_bulk": int((hit & ~bulk_mask).sum()) if idx > 0 else 0,
+            }
+        )
+    df = pd.DataFrame(rows)
+    # Show the non-bulk modalities and how many Unsafe proteins each catches that bulk RNA missed!
+    non_bulk = df.iloc[1:].copy().sort_values("beyond_bulk", ascending=True)
+    y = np.arange(len(non_bulk))
+
+    fig, ax = plt.subplots(figsize=(9.4, 4.8))
+    bars = ax.barh(y, non_bulk["beyond_bulk"], color=UNSAFE, height=0.62, alpha=0.88)
+    max_v = max(non_bulk["beyond_bulk"].max(), 1)
+    for bar, row in zip(bars, non_bulk.itertuples(), strict=True):
+        w = bar.get_width()
+        ax.text(
+            w + max_v * 0.02,
+            bar.get_y() + bar.get_height() / 2,
+            f"+{row.beyond_bulk:,} missed by bulk RNA   ({row.total:,} flagged overall)",
+            va="center",
+            ha="left",
+            fontsize=8.8,
+            color="#1f2933",
+        )
+    ax.set_yticks(y, non_bulk["label"], fontsize=9.2)
+    ax.set_xlim(0, max_v * 1.92)
+    ax.set_xlabel(
+        "Unsafe proteins flagged despite passing bulk normal-tissue RNA ceilings", fontsize=9.8
+    )
+    ax.set_title(
+        "Why bulk RNA alone is insufficient: Unsafe proteins caught by complementary assays",
+        loc="left",
+        fontsize=11.2,
+        fontweight="bold",
+        color="#102a43",
+        pad=10,
+    )
+    ax.text(
+        0.0,
+        -0.19,
+        f"Bulk tissue RNA alone flags {df.iloc[0]['total']:,} Unsafe proteins; the six complementary modalities above catch an additional "
+        f"{int((seen & ~bulk_mask).sum()):,} Unsafe proteins (bars overlap where multiple non-bulk assays agree).",
+        transform=ax.transAxes,
+        fontsize=8.4,
+        color="#486581",
+    )
+    ax.grid(axis="x", color="#e3e8eb", linewidth=0.6)
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+    fig.savefig(path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+
+def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
+    """Partition Reproductive Antigens and CTAs by male vs. female adult organ restriction."""
+    female_sex = (
+        "ovary",
+        "fallopian tube",
+        "uterus",
+        "endometrium",
+        "cervix",
+        "vagina",
+        "lactating_breast",
+    )
+    female_all = (*female_sex, "resting_breast")
+    male_sex = ("testis", "epididymis", "prostate", "seminal vesicle")
+    male_all = (*male_sex, "resting_breast")
+
+    ra = data[data.is_reproductive_antigen.astype(bool)].copy()
+    f_all = target_filters.apply(
+        target_filters.TargetFilter(
+            host_profile="female-patient", protect_tissues=female_all, lactating=True
+        ),
+        ra,
+    ).set_index("entity_id")
+    f_sex = target_filters.apply(
+        target_filters.TargetFilter(
+            host_profile="female-patient", protect_tissues=female_sex, lactating=True
+        ),
+        ra,
+    ).set_index("entity_id")
+    m_all = target_filters.apply(
+        target_filters.TargetFilter(host_profile="male-patient", protect_tissues=male_all),
+        ra,
+    ).set_index("entity_id")
+    m_sex = target_filters.apply(
+        target_filters.TargetFilter(host_profile="male-patient", protect_tissues=male_sex),
+        ra,
+    ).set_index("entity_id")
+
+    exposures_df = pd.read_csv(ROOT / "oncoref/data/host-exposure.csv.gz").set_index("entity_id")
+
+    def max_comp_tpm(eid, compartments):
+        if eid not in exposures_df.index:
+            return np.nan
+        rec = json.loads(exposures_df.at[eid, "exposures"])
+        vals = [
+            rec[c]["max_tpm"]
+            for c in compartments
+            if c in rec and rec[c].get("max_tpm") is not None
+        ]
+        return float(max(vals)) if vals else np.nan
+
+    rows = []
+    for r in ra.itertuples():
+        eid = r.entity_id
+        fs_all = f_all.at[eid, "host_status"] == "eligible"
+        ms_all = m_all.at[eid, "host_status"] == "eligible"
+        fs_sex = f_sex.at[eid, "host_status"] == "eligible"
+        ms_sex = m_sex.at[eid, "host_status"] == "eligible"
+        if fs_all and not ms_all:
+            sex_class = "Male-restricted"
+            code = "CTA-M" if r.is_cta else "MRA-only"
+        elif ms_all and not fs_all:
+            sex_class = "Female-restricted"
+            code = "CTA-F" if r.is_cta else "FRA-only"
+        elif fs_all and ms_all:
+            sex_class = "Embryo / placenta-only"
+            code = "CTA-E" if r.is_cta else "ERA-only"
+        else:
+            sex_class = "Shared male & female"
+            code = "CTA-MF" if r.is_cta else "SRA-only"
+        rows.append(
+            {
+                "entity_id": eid,
+                "protein_group_label": r.protein_group_label,
+                "classification": r.classification,
+                "is_cta": bool(r.is_cta),
+                "sex_restriction_class": sex_class,
+                "sex_restriction_code": code,
+                "female_all_adult_eligible": fs_all,
+                "male_all_adult_eligible": ms_all,
+                "female_sex_organ_only_eligible": fs_sex,
+                "male_sex_organ_only_eligible": ms_sex,
+                "male_sex_organ_max_tpm": max_comp_tpm(eid, male_sex),
+                "female_sex_organ_max_tpm": max_comp_tpm(eid, female_sex),
+                "resting_breast_max_tpm": max_comp_tpm(eid, ("resting_breast",)),
+                "tumor_max_tpm": r.tumor_max_tpm,
+                "tumor_top_cancer_code": r.tumor_top_cancer_code,
+                "reproductive_qualifying_compartments": r.reproductive_qualifying_compartments,
+            }
+        )
+    table = pd.DataFrame(rows).sort_values(
+        ["is_cta", "sex_restriction_class", "tumor_max_tpm", "protein_group_label"],
+        ascending=[False, True, False, True],
+    )
+    table.to_csv(csv_path, index=False)
+
+    # Figure 1: Stacked horizontal breakdown across All RA, CTA (CA ∩ RA), and RA only.
+    class_specs = [
+        ("Male-restricted", "Male-restricted (MRA / CTA-M · female-safe)", "#2a729e"),
+        (
+            "Embryo / placenta-only",
+            "Embryo / placenta-only (ERA / CTA-E · adult-absent)",
+            "#3f8f6b",
+        ),
+        ("Female-restricted", "Female-restricted (FRA / CTA-F · male-safe)", "#9a4c7a"),
+        ("Shared male & female", "Shared male & female (SRA / CTA-MF)", "#c4a362"),
+    ]
+    subsets = [
+        ("All Reproductive Antigens\n(RA)", table),
+        ("Cancer–Testis Antigens\n(CTA = CA ∩ RA)", table[table["is_cta"]]),
+        ("Reproductive only\n(RA only)", table[~table["is_cta"]]),
+    ]
+    fig, ax = plt.subplots(figsize=(10.2, 4.4))
+    y = np.arange(len(subsets))[::-1]
+    totals = np.array([len(df) for _, df in subsets], dtype=float)
+    left = np.zeros(len(subsets))
+    for key, label, color in class_specs:
+        vals = np.array(
+            [int(df["sex_restriction_class"].eq(key).sum()) for _, df in subsets], dtype=float
+        )
+        pcts = 100.0 * vals / totals
+        ax.barh(y, pcts, left=left, color=color, label=label, height=0.56)
+        for yi, off, v, p in zip(y, left, vals, pcts, strict=True):
+            if p >= 7.5:
+                ax.text(
+                    off + p / 2,
+                    yi,
+                    f"{int(v):,}",
+                    ha="center",
+                    va="center",
+                    fontsize=9.5,
+                    fontweight="bold",
+                    color="white",
+                )
+        left += pcts
+    for yi, (_, df) in zip(y, subsets, strict=True):
+        f_safe = int(df["female_all_adult_eligible"].sum())
+        m_safe = int(df["male_all_adult_eligible"].sum())
+        f_only = int(df["sex_restriction_class"].eq("Female-restricted").sum())
+        ax.text(
+            102.0,
+            yi,
+            f"n={len(df):,}  |  {f_safe} female-safe · {m_safe} male-safe ({f_only} FRA/CTA-F)",
+            va="center",
+            ha="left",
+            fontsize=8.6,
+            color="#243b53",
+        )
+    ax.set_xlim(0, 158)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
+    ax.set_yticks(y, [lbl for lbl, _ in subsets], fontsize=9.4)
+    ax.set_xlabel(
+        "Share of proteins under strict protection of all opposite-sex adult organs (including breast)"
+    )
+    ax.set_title(
+        "Sex-restricted Reproductive Antigens (MRA / FRA / ERA) and cross-sex CTA subsets",
+        loc="left",
+        fontsize=11.2,
+        fontweight="bold",
+        color="#102a43",
+        pad=10,
+    )
+    ax.grid(axis="x", color="#e3e8eb", linewidth=0.6)
+    ax.set_axisbelow(True)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.legend(
+        loc="upper left",
+        bbox_to_anchor=(0, -0.22),
+        ncol=2,
+        frameon=False,
+        fontsize=8.7,
+    )
+    fig.tight_layout()
+    fig.savefig(fig_counts_path, dpi=160, bbox_inches="tight")
+    plt.close(fig)
+
+    # Figure 2: 2D male vs. female sex-organ exposure scatter across all 327 CTAs.
+    ctas = table[table["is_cta"]].copy()
+    floor = 0.05
+    ctas["_mx"] = ctas["male_sex_organ_max_tpm"].fillna(0).clip(lower=floor)
+    ctas["_fy"] = ctas["female_sex_organ_max_tpm"].fillna(0).clip(lower=floor)
+
+    fig2, ax2 = plt.subplots(figsize=(9.4, 6.4))
+    z_order = {
+        "Shared male & female": 1,
+        "Male-restricted": 2,
+        "Embryo / placenta-only": 3,
+        "Female-restricted": 4,
+    }
+    for key, label, color in class_specs:
+        part = ctas[ctas["sex_restriction_class"].eq(key)]
+        size = 42 if key == "Female-restricted" else 22
+        ax2.scatter(
+            part["_mx"],
+            part["_fy"],
+            s=size,
+            alpha=0.82 if key != "Shared male & female" else 0.58,
+            color=color,
+            edgecolors="white" if key == "Female-restricted" else "none",
+            linewidths=0.6,
+            zorder=z_order[key],
+            label=f"{label.split(' · ')[0]} ({len(part)})",
+        )
+    ax2.axvline(4.0, color="#627d98", ls=":", lw=1.2, zorder=0)
+    ax2.axhline(4.0, color="#627d98", ls=":", lw=1.2, zorder=0)
+    ax2.text(
+        2200.0,
+        0.07,
+        "CTA-M: male-restricted\n(absent from female organs)",
+        fontsize=8.4,
+        color="#1a567b",
+        fontweight="bold",
+        va="bottom",
+    )
+    ax2.text(
+        0.055,
+        3.2,
+        "CTA-E: embryo /\nplacenta-only",
+        fontsize=8.4,
+        color="#1d573c",
+        fontweight="bold",
+        va="top",
+    )
+    ax2.text(
+        0.055,
+        6500,
+        "CTA-F: female-restricted\n(absent from male organs)",
+        fontsize=8.4,
+        color="#7a325d",
+        fontweight="bold",
+        va="top",
+    )
+    callouts = {
+        "XAGE1A/B": (14, 14),
+        "MAGEA4": (14, -22),
+        "NY-ESO-1": (-28, 22),
+        "TGM4": (-48, 14),
+        "SEMG2": (14, -16),
+        "TBXT": (14, 14),
+        "MBD3L2": (16, -10),
+        "ZP4": (16, 10),
+        "ERVV-1": (-56, 16),
+        "LALBA": (14, -8),
+        "PRAME": (14, 10),
+        "SCGB1D4": (-62, 10),
+    }
+    indexed = ctas.set_index("protein_group_label")
+    for gene, (dx, dy) in callouts.items():
+        if gene not in indexed.index:
+            continue
+        row = indexed.loc[gene]
+        if isinstance(row, pd.DataFrame):
+            row = row.iloc[0]
+        ax2.scatter(
+            [row._mx],
+            [row._fy],
+            s=40,
+            facecolors="none",
+            edgecolors="#102a43",
+            linewidths=1.0,
+            zorder=5,
+        )
+        ax2.annotate(
+            gene,
+            xy=(row._mx, row._fy),
+            xytext=(dx, dy),
+            textcoords="offset points",
+            fontsize=8.6,
+            fontweight="bold",
+            color="#102a43",
+            bbox={"facecolor": "white", "edgecolor": "none", "alpha": 0.82, "pad": 0.8},
+            arrowprops={"arrowstyle": "-", "color": "#627d98", "lw": 0.8},
+            zorder=6,
+        )
+    ax2.set_xscale("log")
+    ax2.set_yscale("log")
+    ax2.set_xlim(0.035, 1.5e5)
+    ax2.set_ylim(0.035, 1.5e5)
+    ax2.grid(True, which="major", color="#dce3e7", linewidth=0.6, alpha=0.7)
+    ax2.set_axisbelow(True)
+    ax2.set_xlabel(
+        "Max male sex-organ RNA (TPM: testis, epididymis, prostate, seminal vesicle)", fontsize=9.8
+    )
+    ax2.set_ylabel("Max female sex-organ RNA (TPM: ovary, tract, lactating breast)", fontsize=9.8)
+    ax2.set_title(
+        f"Male vs. female reproductive-organ exposure across all {len(ctas):,} CTAs",
+        loc="left",
+        fontsize=11.3,
+        fontweight="bold",
+        color="#102a43",
+        pad=10,
+    )
+    ax2.legend(
+        fontsize=8.3,
+        frameon=True,
+        facecolor="white",
+        edgecolor="#dce3e7",
+        loc="upper right",
+    )
+    ax2.spines[["top", "right"]].set_visible(False)
+    fig2.text(
+        0.01,
+        -0.02,
+        "Dotted lines mark the 4 TPM protected-organ screening threshold. Points in the bottom-right colored ochre (e.g., TGM4, SEMG2) have <4 TPM in female sex organs but ≥4 TPM in resting breast.",
+        ha="left",
+        fontsize=8.3,
+        color="#486581",
+    )
+    fig2.tight_layout()
+    fig2.savefig(fig_scatter_path, dpi=160, bbox_inches="tight")
+    plt.close(fig2)
+    return table
+
+
+def decision_tree(data, stem_path):
+    """Exact binary decision tree from 19,893 protein groups to every terminal leaf."""
+    n0 = len(data)
+    unsafe = data.category.eq("Unsafe")
+    d1 = data[~unsafe]
+    rev = d1.classification.eq("Other:Review")
+    d2 = d1[~rev]
+    seq = d2.classification.eq("Other:Sequence")
+    d3 = d2[~seq]
+    bounds_fail = ~d3.expression_bounds_pass.astype(bool)
+    d4 = d3[~bounds_fail]
+
+    n_unsafe = int(unsafe.sum())
+    n_rev = int(rev.sum())
+    n_seq = int(seq.sum())
+    n_b_fail = int(bounds_fail.sum())
+    n_elig = len(d4)
+    n_cta = int(d4.classification.eq("CTA").sum())
+    n_ca_only = int(d4.classification.eq("Cancer Antigen only").sum())
+    n_ra_only = int(d4.classification.eq("Reproductive Antigen only").sum())
+    n_unscr = int(d4.classification.eq("Other:Unscreened tissue").sum())
+    n_low = int(d4.classification.eq("Other:Expression").sum())
+    if n_unsafe + n_rev + n_seq + n_b_fail + n_cta + n_ca_only + n_ra_only + n_unscr + n_low != n0:
+        raise ValueError("Decision tree leaves do not sum to total protein groups")
+
+    fig, ax = plt.subplots(figsize=(11.2, 7.6))
+    ax.set_xlim(0, 11.2)
+    ax.set_ylim(0, 8.2)
+    ax.axis("off")
+
+    def box(
+        x, y, w, h, title, count="", fc="#f4f7fa", ec="#7d95a8", tc="#102a43", cc="#102a43", fs=9.2
+    ):
+        ax.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                w,
+                h,
+                boxstyle="round,pad=0.04,rounding_size=0.14",
+                facecolor=fc,
+                edgecolor=ec,
+                linewidth=1.4,
+            )
+        )
+        if count:
+            ax.text(
+                x + w / 2,
+                y + h * 0.68,
+                title,
+                ha="center",
+                va="center",
+                fontsize=fs,
+                fontweight="bold",
+                color=tc,
+            )
+            ax.text(
+                x + w / 2,
+                y + h * 0.28,
+                count,
+                ha="center",
+                va="center",
+                fontsize=10.8,
+                fontweight="bold",
+                color=cc,
+            )
+        else:
+            ax.text(
+                x + w / 2,
+                y + h / 2,
+                title,
+                ha="center",
+                va="center",
+                fontsize=fs,
+                fontweight="bold",
+                color=tc,
+            )
+
+    def arrow(x0, y0, x1, y1, color="#526775"):
+        ax.annotate(
+            "",
+            xy=(x1, y1),
+            xytext=(x0, y0),
+            arrowprops={
+                "arrowstyle": "-|>,head_width=0.22,head_length=0.34",
+                "color": color,
+                "lw": 1.4,
+            },
+        )
+
+    # Spine coordinates (x centered at 3.25)
+    sx, sw = 0.55, 5.40
+    scx = sx + sw / 2
+    lx, lw = 7.45, 3.35
+
+    # Root
+    box(
+        sx + 0.85,
+        7.35,
+        sw - 1.70,
+        0.66,
+        f"Coding protein groups  ({n0:,})",
+        fc="#edf2f7",
+        ec="#627d98",
+        fs=10.2,
+    )
+
+    # 4 sequential binary decision nodes on spine -> right-side terminal leaves
+    steps = [
+        (
+            6.15,
+            "1. Normal-tissue RNA, rare-cell, IHC, or curated exclusion?",
+            "Yes",
+            "No",
+            len(d1),
+            ("Unsafe", f"{n_unsafe:,}", "#fbeeed", UNSAFE, "#8c2d2a"),
+        ),
+        (
+            4.95,
+            "2. Coverage gap, translation gap, or unresolved rare-cell?",
+            "Yes",
+            "No",
+            len(d2),
+            ("Other:Review", f"{n_rev:,}", "#fbf5e7", REVIEW, "#785416"),
+        ),
+        (
+            3.75,
+            "3. ≥95% Unsafe 9-mer overlap, nested, or read-through?",
+            "Yes",
+            "No",
+            len(d3),
+            ("Other:Sequence", f"{n_seq:,}", "#f3eff7", SEQUENCE, "#5b4975"),
+        ),
+        (
+            2.55,
+            "4. Target peak > healthy max & Disposable ≤ 32 TPM/nTPM?",
+            "No",
+            "Yes",
+            n_elig,
+            ("Other:Expression (bounds)", f"{n_b_fail:,}", "#f2f5f7", EXPRESSION, "#486581"),
+        ),
+    ]
+
+    prev_y = 7.33
+    for y, question, right_lbl, down_lbl, rem_n, (leaf_t, leaf_c, lfc, lec, ltc) in steps:
+        arrow(scx, prev_y, scx, y + 0.78)
+        box(sx, y, sw, 0.74, question, fc="#f8fafc", ec="#829ab1", fs=8.8)
+        # Right branch -> terminal leaf
+        arrow(sx + sw + 0.04, y + 0.37, lx - 0.04, y + 0.37, color=lec)
+        ax.text(
+            (sx + sw + lx) / 2,
+            y + 0.50,
+            right_lbl,
+            ha="center",
+            va="bottom",
+            fontsize=8.6,
+            fontweight="bold",
+            color=ltc,
+        )
+        box(lx, y, lw, 0.74, leaf_t, leaf_c, fc=lfc, ec=lec, tc=ltc, cc=ltc, fs=9.2)
+        # Downward label on spine
+        ax.text(
+            scx + 0.14,
+            y - 0.21,
+            f"{down_lbl}  ({rem_n:,})",
+            ha="left",
+            va="center",
+            fontsize=8.4,
+            fontweight="bold",
+            color="#334e68",
+        )
+        prev_y = y - 0.02
+
+    # Step 5: Symmetric 10x enrichment junction box -> 5 terminal leaves across bottom
+    j_y = 1.48
+    arrow(scx, prev_y, scx, j_y + 0.66)
+    box(
+        1.15,
+        j_y,
+        8.90,
+        0.62,
+        f"5. Shared-eligible ({n_elig:,}):  Tumor ≥ 10× H₀  and/or  Reproductive/embryo ≥ 10× H₀   [H₀ = max(N, D, 1 TPM)]",
+        fc="#edf4f7",
+        ec="#486581",
+        fs=8.9,
+    )
+
+    leaves = [
+        ("CTA\n(CA ∩ RA)", f"{n_cta:,}", "#ebf5ef", REPRODUCTIVE, "#1d573c", "Both ≥10×"),
+        ("CA only", f"{n_ca_only:,}", "#ebf4fa", CANCER, "#1a567b", "Tumor ≥10×"),
+        ("RA only", f"{n_ra_only:,}", "#f0f7f4", "#7db19a", "#266049", "Repro ≥10×"),
+        (
+            "Other:\nUnscreened",
+            f"{n_unscr:,}",
+            "#f5f7f9",
+            EXPRESSION,
+            "#486581",
+            "Unmeasured\nhome",
+        ),
+        ("Other:\nExpression", f"{n_low:,}", "#f5f7f9", EXPRESSION, "#486581", "Neither ≥10×"),
+    ]
+    w_leaf = 1.94
+    gap = 0.22
+    start_x = (11.2 - (len(leaves) * w_leaf + (len(leaves) - 1) * gap)) / 2
+    for i, (lt, lc, lfc, lec, ltc, branch_lbl) in enumerate(leaves):
+        bx = start_x + i * (w_leaf + gap)
+        bcx = bx + w_leaf / 2
+        arrow(bcx, j_y - 0.02, bcx, 0.94, color=lec)
+        ax.text(
+            bcx,
+            1.18,
+            branch_lbl,
+            ha="center",
+            va="center",
+            fontsize=7.7,
+            color="#334e68",
+            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.0},
+        )
+        box(bx, 0.08, w_leaf, 0.82, lt, lc, fc=lfc, ec=lec, tc=ltc, cc=ltc, fs=8.7)
+
+    ax.set_title(
+        "OncoRef classification decision tree (every protein group lands in exactly one leaf)",
+        loc="left",
+        fontsize=11.5,
+        fontweight="bold",
+        color="#102a43",
+        pad=8,
+    )
+    fig.tight_layout()
+    _save_both(fig, stem_path, dpi=165)
+
+
 def build():
     data = pd.read_csv(OUT / "protein-decisions.csv.gz", low_memory=False)
     FIG.mkdir(exist_ok=True)
+    classification_overview(data, FIG / "classification-overview.png")
+    decision_tree(data, FIG / "decision-tree")
+    normal_evidence_layers(data, FIG / "normal-evidence-layers.png")
+    sex_restricted_antigens(
+        data,
+        FIG / "sex-restricted-ra-cta.png",
+        FIG / "sex-restricted-landscape.png",
+        FIG / "sex-restricted-antigens.csv",
+    )
     antigen_venn(data, FIG / "antigen-sets.png")
     counts = data.classification.value_counts()
     sets = venn(data, FIG / "venn.png")

@@ -1147,7 +1147,7 @@ rna_tissue_gtex,rna_tissue_gtex:v23,endometrium,endometrium,bulk,Reproductive co
 rna_tissue_gtex,rna_tissue_gtex:v23,esophagus,esophagus,bulk,Normal
 rna_tissue_gtex,rna_tissue_gtex:v23,fallopian tube,fallopian tube,bulk,Reproductive context
 rna_tissue_gtex,rna_tissue_gtex:v23,heart muscle,heart muscle,bulk,Normal
-rna_tissue_gtex,rna_tissue_gtex:v23,hippocampus,hippocampus,bulk,Normal
+rna_tissue_gtex,rna_tissue_gtex:v23,hippocampal formation,hippocampus,bulk,Normal
 rna_tissue_gtex,rna_tissue_gtex:v23,hypothalamus,hypothalamus,bulk,Normal
 rna_tissue_gtex,rna_tissue_gtex:v23,kidney,kidney,bulk,Normal
 rna_tissue_gtex,rna_tissue_gtex:v23,liver,liver,bulk,Normal

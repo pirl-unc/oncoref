@@ -388,13 +388,20 @@ def _update_document():
 def _current_base_rules():
     rules = {r["id"]: r.copy() for r in _load()["assessments"]}
     for key, change in _update_document().get("revisions", {}).items():
-        if (
-            key not in rules
-            or set(change) != {"previous_tier", "tier", "rationale", "inference"}
-            or rules[key]["tier"] != change["previous_tier"]
-            or change["tier"] not in TIERS
-            or not all(change.values())
-        ):
+        if key not in rules or not all(change.values()):
+            raise ValueError(f"Invalid tissue-tier revision for {key}")
+        keys = set(change)
+        if keys == {"previous_tier", "tier", "rationale", "inference"}:
+            if rules[key]["tier"] != change["previous_tier"] or change["tier"] not in TIERS:
+                raise ValueError(f"Invalid tissue-tier revision for {key}")
+        elif keys == {"previous_cell_pattern", "cell_pattern", "rationale"}:
+            if (
+                rules[key]["level"] != "cell"
+                or rules[key]["cell_pattern"] != change["previous_cell_pattern"]
+            ):
+                raise ValueError(f"Invalid cell-pattern revision for {key}")
+            re.compile(change["cell_pattern"])
+        else:
             raise ValueError(f"Invalid tissue-tier revision for {key}")
         rules[key].update(change)
     return list(rules.values())

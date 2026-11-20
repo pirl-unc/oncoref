@@ -56,7 +56,7 @@ BASE = ROOT / "docs/audits/cta-selection-20261028"
 FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-19.2"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -341,7 +341,7 @@ def write_hpa_context_inventory():
     write_csv(pd.concat(rows, ignore_index=True), OUT / "hpa-normal-source-contexts.csv")
 
 
-def normal_panel(facts, write=True, *, include_individual_samples=True):
+def normal_panel(facts, write=True, *, include_individual_samples=True, normal_stat="p95"):
     rows = []
     hpa_ids = read(BASE / "hpa_rna_consensus-accepted-identities.csv.gz")
     lookup = hpa_ids.set_index("source_gene_id").canonical_gene_id
@@ -352,7 +352,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     ]:
         raw = read_reference(name, "v23", sep="\t")
         raw["gene_id"] = raw.Gene.map(lookup)
-        raw["tissue"] = raw[context]
+        raw["tissue"] = raw[context].replace({"hippocampus": "hippocampal formation"})
         raw["source_context"] = raw[context]
         raw["value"] = raw.TPM
         rows.append(
@@ -410,7 +410,9 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
         genes = tissue_sample_genes(archive)
         carryover_reference = normal_library_qc.carryover_reference(mapped)
         audit = tissue_library_qc(genes, hpa_ids, carryover_reference)
-        gtex, gtex_audit = individual_samples(facts, mapped, gtex_columns, carryover_reference)
+        gtex, gtex_audit = individual_samples(
+            facts, mapped, gtex_columns, carryover_reference, normal_stat=normal_stat
+        )
         if write:
             write_csv(audit, OUT / "normal-library-qc.csv")
             write_csv(gtex_audit, OUT / "gtex-library-qc.csv.gz")
@@ -456,9 +458,12 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
 
     from bulk_normal_percentiles import dice_percentiles, hpa_immune_percentiles, tissue_percentiles
 
-    normal = tissue_percentiles(normal)
+    normal = tissue_percentiles(normal, method=normal_stat)
     immune = pd.concat(
-        [dice_percentiles(facts, INPUTS), hpa_immune_percentiles(facts, hpa_ids, INPUTS)]
+        [
+            dice_percentiles(facts, INPUTS, method=normal_stat),
+            hpa_immune_percentiles(facts, hpa_ids, INPUTS, method=normal_stat),
+        ]
     )
     monaco = read_reference("hpa_immune_monaco", "v23", sep="\t")
     monaco_ids = read(BASE / "hpa_immune_monaco-accepted-identities.csv.gz")
@@ -629,12 +634,13 @@ def annotate_papers(decisions):
 def pinned_tumor_matrix(path, digest):
     from oncoref import catalog
 
-    path = Path(path)
-    if not path.is_file():
-        path = catalog.ensure("per-sample:" + path.stem, version=path.parent.name)
-    if sha256(path) != digest:
-        raise ValueError(f"Changed tumor matrix: {path}")
-    return path
+    entry = Path(path)
+    resolved = catalog.ensure(
+        "per-sample:" + entry.stem, version=entry.parent.name.removeprefix("v")
+    )
+    if sha256(resolved) != digest:
+        raise ValueError(f"Changed tumor matrix: {resolved}")
+    return resolved
 
 
 def tumors(facts):
@@ -833,12 +839,12 @@ def cached_tumors(facts):
     )
 
 
-def build(*, reuse_tumor_cache=False):
+def build(*, reuse_tumor_cache=False, normal_stat="p95"):
     OUT.mkdir(parents=True, exist_ok=True)
     facts = shared_facts()
     selected = facts[facts.comparison_eligible].copy()
     print(f"Common eligibility: {len(selected)} / {len(facts)}", flush=True)
-    normal, required = normal_panel(selected)
+    normal, required = normal_panel(selected, normal_stat=normal_stat)
     write_hpa_context_inventory()
     development, development_provenance = developmental_samples(selected)
     development["comparison_id"] = COMPARISON_ID
@@ -1453,4 +1459,11 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reuse-tumor-cache", action="store_true")
-    build(reuse_tumor_cache=parser.parse_args().reuse_tumor_cache)
+    parser.add_argument(
+        "--normal-stat",
+        choices=list(target_selection.NORMAL_TISSUE_STATISTICS),
+        default="p95",
+        help="Within-tissue healthy normal TPM summary (default: p95; optional: mean_plus_2std)",
+    )
+    args = parser.parse_args()
+    build(reuse_tumor_cache=args.reuse_tumor_cache, normal_stat=args.normal_stat)

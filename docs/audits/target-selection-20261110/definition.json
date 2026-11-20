@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-19.4",
+  "policy_id": "oncoref.target-selection.2026-11-20.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -63,7 +63,7 @@
   "rare_cell_rna": {
     "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
     "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
-    "replication": "The signal in >= 2 atlas sources of the same organ, which agree on a cell type or include >= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
+    "replication": "The signal in >= 2 independent study groups of the same organ, which agree on a cell type or include >= 3 distinct biological donors. Cell-type concordance also requires distinct biological donors. Shared consortium collections (Baylor/Chen eye, Sanes eye, Allen reference brain, Michigan kidney, Teichmann heart) and donors embedded in integrated atlases (HLCA, Baylor/Chen eye, SEA-AD) are attributed to their original study and biological donor ID before counting replication. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
     "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules.",
     "protected": "Protected populations need 2 times these frequencies.",
     "single_molecules": "Single-molecule detection alone does not establish expression. Ambient RNA and read assignment are possible confounders, not demonstrated explanations.",

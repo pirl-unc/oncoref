@@ -155,7 +155,7 @@ def ctag2_evidence(data):
             [
                 "Organ",
                 "Strongest population",
-                "Atlas collections",
+                "Independent studies",
                 "Donor IDs with signal (linked where known)",
                 "Cells with ≥2 molecules in top donor",
                 "Grading",
@@ -421,6 +421,15 @@ def build():
     source_coverage = pd.read_csv(context_path)
     lit_sources = pd.read_csv(BUILD / "summary/literature-sources.csv")
     published = data.published_nomination.fillna(False).astype(bool)
+    other_counts = {
+        key: int(data.classification.eq(f"Other:{key}").sum())
+        for key in ("Review", "Sequence", "Expression", "Unscreened tissue")
+    }
+    profiles = target_filters.profile_summary(data).set_index("profile")
+    testis_profile = profiles.loc["male-patient (protect testis)"]
+    pregnant_profile = profiles.loc["female-patient (pregnant)"]
+    sex_table = pd.read_csv(BUILD / "summary/sex-restricted-antigens.csv")
+    sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
     headline = table(
         ["Stage or set", "Protein groups", "Notes"],
         [
@@ -437,7 +446,12 @@ def build():
             [
                 "Held or non-qualifying (`Other`)",
                 f"{int(data.category.eq('Other').sum()):,}",
-                "Coverage/translation/rare-cell review (734), sequence containment (48), expression bounds (248), unscreened home tissue (88)",
+                (
+                    f"Coverage/translation/rare-cell review ({other_counts['Review']:,}), "
+                    f"sequence containment ({other_counts['Sequence']:,}), "
+                    f"expression bounds ({other_counts['Expression']:,}), "
+                    f"unscreened home tissue ({other_counts['Unscreened tissue']:,})"
+                ),
             ],
             [
                 "Shared-eligible before enrichment",
@@ -474,10 +488,26 @@ def build():
         "cta_published": f"{int((ca & ra & published).sum()):,}",
         "cta_new": f"{int((ca & ra & ~published).sum()):,}",
         "published_noms": f"{int(published.sum()):,}",
+        "published_surviving": f"{int(((ca | ra) & published).sum()):,}",
         "published_outside": f"{int((~ca & ~ra & published).sum()):,}",
         "union": f"{int((ca | ra).sum()):,}",
         "unsafe_n": f"{int(data.category.eq('Unsafe').sum()):,}",
         "other_n": f"{int(data.category.eq('Other').sum()):,}",
+        "testis_protected_cta": f"{int(testis_profile.CTA):,}",
+        "pregnant_retained": f"{int(pregnant_profile.CTA):,}",
+        "pregnant_unresolved": f"{int(pregnant_profile.CTA_unresolved):,}",
+        "pregnant_excluded": f"{int(pregnant_profile.CTA_excluded):,}",
+        "mra_n": f"{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}",
+        "fra_n": f"{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}",
+        "era_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "sra_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "cta_m_n": f"{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
+        "cta_f_n": f"{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
+        "cta_e_n": f"{int(sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "cta_mf_n": f"{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "cta_female_safe_n": f"{int(sex_cta.female_all_adult_eligible.sum()):,}",
+        "cta_male_safe_n": f"{int(sex_cta.male_all_adult_eligible.sum()):,}",
+        "cta_m_sex_only_n": f"{int((sex_cta.female_sex_organ_only_eligible & ~sex_cta.male_sex_organ_only_eligible).sum()):,}",
         "fold": f"{target_selection.ENRICHMENT_FOLD:g}",
         "floor": f"{target_selection.DETECTION_FLOOR:g}",
         "cap": f"{target_selection.DISPOSABLE_CAP:g}",

@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-19.4`, 19,893 human protein records. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-20.1`, 19,893 human protein records. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 
@@ -37,7 +37,7 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 ![Set overlap](summary/venn.png)
 
-Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,759 of all 2,233 nominations are Unsafe, 67 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,758 of all 2,233 nominations are Unsafe, 68 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ### Curated literature sources by antigen class
 
@@ -57,13 +57,13 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA above the tissue ceiling | 17,507 | 2,386 |
 | Cell-type cluster RNA (HPA single cell) | 436 | 1,950 |
 | Sorted immune-cell RNA | 96 | 1,854 |
-| Rare-cell RNA established by donor | 107 | 1,747 |
-| Normal-tissue protein (IHC) | 50 | 1,697 |
-| Curated or published normal expression | 49 | 1,648 |
-| Adult cornea RNA | 5 | 1,643 |
-| Coverage, identity, translation or unresolved evidence | 734 | 909 |
-| Nested, Unsafe-contained or read-through sequence | 48 | 861 |
-| No qualifying expression or bounds fail | 248 | 613 |
+| Rare-cell RNA established by donor | 104 | 1,750 |
+| Normal-tissue protein (IHC) | 50 | 1,700 |
+| Curated or published normal expression | 49 | 1,651 |
+| Adult cornea RNA | 5 | 1,646 |
+| Coverage, identity, translation or unresolved evidence | 736 | 910 |
+| Nested, Unsafe-contained or read-through sequence | 48 | 862 |
+| No qualifying expression or bounds fail | 249 | 613 |
 | Home tissue no panel resolves | 88 | 525 |
 
 ![Published nominations](summary/funnel-published.png)
@@ -74,11 +74,11 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA above the tissue ceiling | 1,454 | 779 |
 | Cell-type cluster RNA (HPA single cell) | 182 | 597 |
 | Sorted immune-cell RNA | 25 | 572 |
-| Rare-cell RNA established by donor | 68 | 504 |
-| Normal-tissue protein (IHC) | 19 | 485 |
-| Curated or published normal expression | 10 | 475 |
-| Adult cornea RNA | 1 | 474 |
-| Coverage, identity, translation or unresolved evidence | 67 | 407 |
+| Rare-cell RNA established by donor | 67 | 505 |
+| Normal-tissue protein (IHC) | 19 | 486 |
+| Curated or published normal expression | 10 | 476 |
+| Adult cornea RNA | 1 | 475 |
+| Coverage, identity, translation or unresolved evidence | 68 | 407 |
 | Nested, Unsafe-contained or read-through sequence | 7 | 400 |
 | No qualifying expression or bounds fail | 27 | 373 |
 | Home tissue no panel resolves | 17 | 356 |
@@ -98,7 +98,7 @@ Steps that remove no published nomination are omitted from the second funnel. [A
 | Monaco immune | 11,264 | 19 |
 | HPA normal protein | 10,152 | 47 |
 | HPA immune | 7,973 | 14 |
-| Established rare normal-cell RNA | 129 | 106 |
+| Established rare normal-cell RNA | 126 | 103 |
 | Reviewed normal-cell knowledge | 32 | 31 |
 | Published normal-tissue expression | 19 | 18 |
 | Accepted normal-protein evidence | 8 | 2 |
@@ -136,8 +136,8 @@ Both CA and RA independently require 10× max(N, D, 1 TPM). Both normal compartm
 ![Stage detail](summary/stages.png)
 
 - Required normal coverage incomplete: 400
-- Identity or translation unresolved: 102
-- Normal signal blocks admission (not Unsafe): 232
+- Identity or translation unresolved: 103
+- Normal signal blocks admission (not Unsafe): 233
 - Other unresolved evidence or comparison: 0
 
 A protein can use several routes, so route counts exceed set sizes.
