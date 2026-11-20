@@ -132,7 +132,8 @@ def test_expanded_permission_and_screening_tiers_are_species_aware(species):
         "parotid gland",
     ):
         assert tier(tissue) == "protected"
-    for tissue in ("skin", "nail bed", "thymus", "spleen"):
+    assert tier("thymus") == ("permitted" if species == "human" else "manageable")
+    for tissue in ("skin", "nail bed", "spleen"):
         assert tier(tissue) == ("protected" if species == "human" else "manageable")
     for tissue in ("thyroid gland", "adipose tissue"):
         assert tier(tissue) == "manageable"

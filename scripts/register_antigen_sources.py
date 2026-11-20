@@ -102,6 +102,7 @@ def register(revision):
         ref(spec["source"], spec["version"], "expression or sample design")
     receipts = [
         json.loads((ROOT / BUILD / "inputs.json").read_text()),
+        json.loads((ROOT / BUILD / "revised-tissue-gate-inputs.json").read_text()),
         json.loads((ROOT / ATLAS / "rare-cell/regrade-inputs.json").read_text())["inputs"],
         json.loads((DATA / "host-exposure.json").read_text())["inputs"],
     ]

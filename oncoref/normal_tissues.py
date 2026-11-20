@@ -44,6 +44,32 @@ def _registry():
             raise ValueError("Screening policy must name the central tissue-tier registry")
         for tier in SCREENED_NORMAL_TISSUE_TIERS:
             policy[tier]["roots"] = screening_roots()[tier]
+    doc["scopes"]["permitted_normal"]["human_roots"] = screening_roots()["disposable"]
+    updates = (_DATA / "normal-tissue-tier-updates.yaml").read_bytes()
+    overlay = yaml.safe_load(updates)
+    notes = overlay["screening_notes"]
+    for key, added in overlay["tissues"].items():
+        if key in doc["concepts"]:
+            raise ValueError(f"Duplicate anatomy concept {key}")
+        reference = "anatomy_" + key
+        doc["references"][reference] = dict(
+            added["anatomy_reference"], kind="anatomy", scope=added["note"]
+        )
+        doc["concepts"][key] = {
+            "label": added["label"],
+            "parents": [],
+            "aliases": added["aliases"],
+            "taxon_ids": [9606],
+            "references": [reference],
+            "notes": added["note"],
+        }
+    doc["scopes"]["permitted_normal"]["description"] = notes["permitted_normal"]
+    for policy in doc["screening_policies"].values():
+        reviews = policy.get("context_reviews", {})
+        for name in reviews.keys() & notes.keys():
+            reviews[name]["rationale"] = notes[name]
+        if "lymphoid_organ_review" in reviews:
+            reviews["lymphoid_organ_review"]["allowance_basis"] = "adult_human_organ_policy"
     rows = list(csv.DictReader(mappings.decode().splitlines()))
     concepts, scopes = doc["concepts"], doc["scopes"]
     aliases = {}
@@ -180,7 +206,9 @@ def _registry():
         index[key] = row
     doc["taxonomy_id"] = (
         "oncoref:normal-tissues:v1:sha256:"
-        + hashlib.sha256(taxonomy + b"\0" + mappings + b"\0" + tier_bytes).hexdigest()
+        + hashlib.sha256(
+            taxonomy + b"\0" + mappings + b"\0" + tier_bytes + b"\0" + updates
+        ).hexdigest()
     )
     return doc, aliases, scope_aliases, index
 
@@ -225,13 +253,15 @@ def _ancestors(cid, path=()):
     return result
 
 
-def _scope_roots(scope, path=()):
+def _scope_roots(scope, taxon_id, path=()):
     if scope in path:
         raise ValueError("Cyclic normal-tissue scope union")
     record = _registry()[0]["scopes"][scope]
     roots = set(record["roots"])
+    if taxon_id == 9606:
+        roots.update(record.get("human_roots", []))
     for child in record["union"]:
-        roots.update(_scope_roots(child, (*path, scope)))
+        roots.update(_scope_roots(child, taxon_id, (*path, scope)))
     return roots
 
 
@@ -244,7 +274,7 @@ def _scope_name(scope):
 
 @cache
 def _members(scope, taxon_id):
-    roots = _scope_roots(scope)
+    roots = _scope_roots(scope, taxon_id)
     doc = _registry()[0]
     return frozenset(
         cid
@@ -408,6 +438,13 @@ def resolve_normal_tissue(
         for name in doc["scopes"]:
             members = _members(name, selected.taxon_id)
             developmental = {"embryonic": "embryo", "fetal": "fetus"}.get(stage_name)
+            if (
+                cid in doc["scopes"]["permitted_normal"]["human_roots"]
+                and native_stage in {"neonatal", "juvenile", "postnatal"}
+                and cid not in doc["scopes"]["permitted_normal"]["roots"]
+                and name in {"permitted_normal", "reproductive_or_permitted_normal"}
+            ):
+                continue
             if cid in members or developmental in members:
                 memberships.append(name)
         if status != "mapped":
@@ -503,8 +540,14 @@ def normal_tissue_screening_details(annotation, policy="tiered_cta") -> dict:
 
     functional = assess(
         annotation.concept_id or "",
+        annotation.source_cell_type,
+        resolution="cell"
+        if annotation.source_cell_type and annotation.source_cell_type != "bulk"
+        else "bulk",
         taxon_id=annotation.taxon_id,
-        stage=annotation.stage,
+        stage="adult"
+        if _key(annotation.source_stage) in {"adult", "prime adult stage"}
+        else annotation.stage,
     )
     return {
         "functional_tier": functional,

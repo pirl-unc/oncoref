@@ -1,15 +1,25 @@
 schema: oncoref.normal-tissue-tier-updates
 schema_version: 1
-policy_version: 2026-11-15.1
-review_date: '2026-11-15'
+policy_version: 2026-11-19.1
+review_date: '2026-11-19'
 base_registry:
   file: normal-tissue-tiers.yaml
   policy_version: 2026-11-03.1
   sha256: e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd
-scope: Adult human tissues that published normal-expression findings point to and the base registry does
-  not name. Each record adds a tissue; none changes a base assessment.
-reason: The base registry is bound by hash into released screening receipts, so additions are replayed
-  over it instead of editing it. Fold these records into the base file at the next full data rebuild.
+scope: Adult human organ and cell injury tiers for antigen curation.
+reason: Dated revisions preserve the original evidence and identify explicit policy choices.
+revisions:
+  thymus:
+    previous_tier: protected
+    tier: disposable
+    rationale: The adult antigen-screening policy accepts loss of the whole thymus. Adult thymectomy
+      was associated with higher mortality and cancer incidence in a matched observational study.
+      The tier expresses a loss allowance. Long-term immune consequences and age remain relevant.
+    inference: project_loss_allowance
+screening_notes:
+  permitted_normal: Adult human allowances include whole thymus, appendix, tonsil and gallbladder, cutaneous melanocytes and hair follicles. Cell-specific injury evidence is assessed independently.
+  lymphoid_organ_review: Identify the expressing population and its distribution outside the sampled organ. Spleen is Protected. Adult human whole thymus and tonsil have a conditional loss allowance.
+  thymus_long_term_function: Adult thymectomy was associated with higher mortality and cancer incidence. The adult loss allowance is a project policy. Pediatric injury requires a separate assessment.
 tissues:
   olfactory_epithelium:
     label: olfactory epithelium

@@ -139,3 +139,9 @@ A dash means the source lacks an exact-name feature or assay in the table used. 
 ### What downstream users can retrieve
 
 `catalog.datasets()`, `catalog.versions(name)`, `catalog.ensure(name)` and `catalog.provenance(name)` cover registered assets. The data format and level of processing depend on the source. HPA normal-tissue IHC has scored observations, and the antibody XML adapter exposes antibody and reliability information. A paper’s curated gene list is also queryable evidence. For example, the da Silva tumor-proteomics list records nominations; its registry entry supplies no underlying raw mass spectra or peptide-level quantification. The HPA-distributed GTEx tissue TPM table is available as `catalog.read_table("rna_tissue_gtex", version="v23")`. The source inventory connects native assays, imported lists, exact cohort releases and the observations used in classification. [Download antigen evidence](antigen-data.md).
+
+## Tissue and gene-list lookup
+
+`antigen_data.tiers()` lists injury-tier definitions. `antigen_data.tissues(tier="protected")` lists organs, parent IDs and assessment IDs. `antigen_data.tissue("thymus", "T cell")` returns the matching cell rule, the expected loss and its sources. `antigen_data.gene_lists()` lists stable IDs for publication claims, benchmarks and marker sets. Pass one ID to `antigen_data.gene_list(list_id)` for its members and assay scope.
+
+[Organ and cell injury hierarchy](tissue-hierarchy.md)

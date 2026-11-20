@@ -2,10 +2,35 @@
 
 import pandas as pd
 
-from . import catalog, cta_literature, cta_sources, reference_data
+from . import catalog, cta_literature, cta_sources, reference_data, tissue_tiers
 from .gene_matching import gene_identity_catalog
 
 COLUMNS = ("list_id", "gene_id", "gene_name", "reported_name", "evidence", "source_url", "scope")
+
+
+def tissues(*, tier: str | None = None) -> pd.DataFrame:
+    """Human anatomical concepts with parent IDs, selection scope and adult injury tier."""
+    data = tissue_tiers.anatomy_inventory()
+    if tier is None:
+        return data
+    if tier not in {*tissue_tiers.TIERS, "unresolved"}:
+        raise ValueError(f"Unknown injury tier {tier!r}")
+    return data.loc[data.tier.eq(tier)].reset_index(drop=True)
+
+
+def tissue(name: str, cell_type: str | None = None, *, stage: str = "adult") -> dict:
+    """Loss consequences and linked evidence for an organ or a named cell population."""
+    return tissue_tiers.consequences(
+        name, cell_type, resolution="cell" if cell_type else "bulk", stage=stage
+    )
+
+
+def tiers() -> pd.DataFrame:
+    """Ordered injury tier IDs and their definitions."""
+    definitions = tissue_tiers.registry()["tier_definitions"]
+    return pd.DataFrame(
+        [(key, definitions[key]) for key in tissue_tiers.TIERS], columns=["tier", "definition"]
+    )
 
 
 def gene_lists() -> pd.DataFrame:

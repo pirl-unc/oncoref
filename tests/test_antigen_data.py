@@ -179,3 +179,33 @@ def test_each_locus_in_a_publication_claim_has_its_own_symbol(monkeypatch):
     data = antigen_data.gene_list("paper/test")
     assert data.gene_name.tolist() == ["A", "B"]
     assert data.reported_protein.eq("ABC group").all()
+
+
+def test_tissue_lookup_agrees_with_hierarchy_and_preserves_cell_and_stage_scope():
+    from oncoref import normal_tissues
+
+    inventory = antigen_data.tissues()
+    assert inventory.concept_id.is_unique
+    assert list(antigen_data.tiers().tier) == ["vital", "protected", "manageable", "disposable"]
+    protected = antigen_data.tissues(tier="protected")
+    assert "taste_bud" in set(protected.concept_id)
+    assert "thymus" not in set(protected.concept_id)
+    for name, tier in [("thymus", "disposable"), ("taste buds", "protected")]:
+        annotation = normal_tissues.resolve_normal_tissue(name, species="human", stage="adult")
+        assert normal_tissues.normal_tissue_category(annotation) == tier
+        assert antigen_data.tissue(name)["tier"] == tier
+        assert (
+            normal_tissues.normal_tissue_screening_details(annotation)["functional_tier"]["tier"]
+            == tier
+        )
+    cell = normal_tissues.resolve_normal_tissue(
+        "thymus", cell_type="T cell", species="human", stage="adult"
+    )
+    assert (
+        normal_tissues.normal_tissue_screening_details(cell)["functional_tier"]["tier"]
+        == "protected"
+    )
+    assert antigen_data.tissue("thymus", "T cell")["tier"] == "protected"
+    assert antigen_data.tissue("thymus")["evidence"]
+    juvenile = normal_tissues.resolve_normal_tissue("thymus", species="human", stage="juvenile")
+    assert normal_tissues.normal_tissue_category(juvenile) == "unresolved"

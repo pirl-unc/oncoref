@@ -15,7 +15,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-19.3"
+POLICY_ID = "oncoref.target-selection.2026-11-19.4"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -154,9 +154,9 @@ def definition() -> dict:
                 f"cells carry >= {RARE_CELL_MULTI_MOLECULES} molecules."
             ),
             "replication": (
-                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} independent studies of the same "
+                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} atlas sources of the same "
                 f"organ, which agree on a cell type or include >= {RARE_CELL_REPLICATE_DONORS} "
-                "donors. Donors of one study share its libraries and reference; one donor in "
+                "distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in "
                 "each of two studies, in different cell types, agrees on nothing but the organ."
             ),
             "single_study": (
@@ -215,12 +215,12 @@ def definition() -> dict:
             "rule": (
                 "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable "
                 "TPM cohort. N is the highest non-thymic, non-reproductive normal value, D the highest "
-                "Disposable value. This is the only cancer route."
+                "non-thymic Disposable value. This is the only cancer route."
             ),
             "normal_reference": (
                 "N: maximum QC-passing, identity-resolved measurement in the declared compatible "
                 "peripheral panel, excluding thymus, Disposable and reproductive compartments. D is taken "
-                "separately; reproductive, placental and fetal compartments are never compared."
+                "from the non-thymic Disposable tissues. Reproductive and developmental observations only supply the positive route."
             ),
             "descriptive": (
                 "Counts at the actual tenfold threshold distinguish samples, known patients, "
@@ -755,14 +755,25 @@ def assess_rare_cell_rna(
     d["multi_molecule"] = enough & d.multi_molecule_pct.ge(RARE_CELL_DETECTION_PCT * factor)
     d["frequent"] = enough & d.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT * factor)
     d["donor"] = d.source_id + ":" + d.donor_id
+    # These Allen collections reuse institute donor IDs. Other studies can both
+    # call an unrelated participant "D1", so preserve their source namespace.
+    allen = d.source_id.isin(
+        {
+            "1ca90a2d-2943-483d-b678-b809bf464c30",
+            "283d65eb-dd53-496d-adb7-7570c7caa443",
+            "d17249d2-0e6e-4500-abb8-e6c93fa1ac6f",
+        }
+    ) & d.donor_id.str.fullmatch(r"H[0-9]{2}\.[0-9]{2}\.[0-9]{3}")
+    d.loc[allen, "donor"] = "Allen:" + d.loc[allen, "donor_id"]
     findings = []
     for (tier, tissue), group in d.groupby(["tier", "tissue"], sort=True):
         multi = group[group.multi_molecule]
         two_studies = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
         # Two lone donors in different cell types share only the organ label.
+        concordance = multi.groupby("cell_type")[["source_id", "donor"]].nunique()
+        same_cell = concordance.source_id.ge(RARE_CELL_REPLICATE_STUDIES) & concordance.donor.ge(2)
         replicated = two_studies and (
-            multi.donor.nunique() >= RARE_CELL_REPLICATE_DONORS
-            or multi.groupby("cell_type").source_id.nunique().max() >= RARE_CELL_REPLICATE_STUDIES
+            multi.donor.nunique() >= RARE_CELL_REPLICATE_DONORS or same_cell.any()
         )
         published = tissue in literature_tissues and group.detected.any()
         if not two_studies and not group.frequent.any() and not published:
@@ -791,7 +802,10 @@ def assess_rare_cell_rna(
                 "insufficient concordant signal; locus attribution uncertain",
             )
         elif two_studies:
-            status, basis = "dismissed", "two donors in different cell types; no bulk RNA"
+            status, basis = (
+                "dismissed",
+                "insufficient independent donor and cell-type concordance; no bulk RNA",
+            )
         else:
             status, basis = "dismissed", "one study only; no bulk RNA"
         ranked = multi if len(multi) else group[group.detected]

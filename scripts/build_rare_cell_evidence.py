@@ -26,6 +26,7 @@ from build_cta_rare_cell_screen import EXCLUDED_CELLS, GENERIC  # noqa: E402
 
 from oncoref import target_selection  # noqa: E402
 from oncoref.cta_cell_tiers import cell_tiers  # noqa: E402
+from oncoref.curation import digest  # noqa: E402
 from oncoref.tissue_tiers import policy_id as tier_policy_id  # noqa: E402
 from oncoref.tissue_tiers import registry as tier_registry  # noqa: E402
 
@@ -60,11 +61,6 @@ EXCLUDED_BODY_CELLS = re.compile(
 REPRODUCTIVE_TISSUES = frozenset(
     {"testis", "ovary", "uterus", "fallopian tube", "prostate gland", "placenta", "breast"}
 )
-
-
-def digest(path):
-    with Path(path).open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
 
 
 def write_csv(frame, path):
@@ -490,6 +486,7 @@ def regrade_pinned():
     provenance.update(
         {
             "policy_id": target_selection.POLICY_ID,
+            "tier_policy_id": tier_policy_id(),
             "rules": target_selection.definition()["rare_cell_rna"],
             "status_counts": evidence.rare_cell_status.value_counts().to_dict(),
             "action_counts": evidence.rare_cell_action.value_counts().to_dict(),

@@ -51,7 +51,8 @@
     },
     "catalog": {
       "needs": [
-        "rare_cell"
+        "rare_cell",
+        "tissue_gates"
       ],
       "argv": [
         "scripts/rebuild_target_catalog.py"
@@ -138,6 +139,12 @@
       "argv": [
         "scripts/render_antigen_whitepaper.py"
       ]
+    },
+    "tissue_gates": {
+      "needs": [],
+      "argv": [
+        "scripts/rebuild_revised_tissue_gates.py"
+      ]
     }
   },
   "output_roots": [
@@ -159,6 +166,7 @@
     "docs/target-filters.md",
     "oncoref/data/host-exposure.csv.gz",
     "oncoref/data/host-exposure.json",
-    "docs/antigen-whitepaper.md"
+    "docs/antigen-whitepaper.md",
+    "docs/tissue-hierarchy.md"
   ]
 }

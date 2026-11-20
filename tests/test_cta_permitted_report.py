@@ -149,7 +149,6 @@ def test_all_positive_ihc_levels_remain_exclusions(level):
     [
         ("skin 1", "keratinocytes"),
         ("salivary gland", "glandular cells"),
-        ("thymus", "cortical cells"),
         ("spleen", "cells in white pulp"),
     ],
 )

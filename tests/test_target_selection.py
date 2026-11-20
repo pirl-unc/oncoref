@@ -396,7 +396,9 @@ def test_rare_cell_outcomes_distinguish_exclusion_review_and_weak_evidence():
     kwargs = {"mapping_risk": False, "confirmed_tissues": set()}
     lone = policy.assess_rare_cell_rna(apart, **kwargs)
     assert (lone["status"], lone["action"]) == ("dismissed", "none")
-    assert "different cell types" in lone["findings"][0]["basis"]
+    assert (
+        "insufficient independent donor and cell-type concordance" in lone["findings"][0]["basis"]
+    )
     assert not lone["findings"][0]["replicated"]
     confirmed = policy.assess_rare_cell_rna(apart, mapping_risk=False, confirmed_tissues={"brain"})
     assert confirmed["status"] == "established"
@@ -491,3 +493,13 @@ def test_report_embeds_both_figures_without_conflicting_svg_ids():
     parser.feed(path.read_text())
     assert parser.figures == 2
     assert len(parser.ids) == len(set(parser.ids))
+
+
+def test_shared_allen_donor_across_atlases_cannot_replicate_itself():
+    sources = ["1ca90a2d-2943-483d-b678-b809bf464c30", "d17249d2-0e6e-4500-abb8-e6c93fa1ac6f"]
+    rows = rare(TWO_STUDIES).assign(source_id=sources, donor_id="H18.30.002")
+    kwargs = {"mapping_risk": False, "confirmed_tissues": set()}
+    finding = policy.assess_rare_cell_rna(rows, **kwargs)["findings"][0]
+    assert finding["donors_multi_molecule"] == 1 and not finding["replicated"]
+    rows.loc[1, "donor_id"] = "H20.33.014"
+    assert policy.assess_rare_cell_rna(rows, **kwargs)["status"] == "established"

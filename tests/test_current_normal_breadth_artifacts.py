@@ -23,7 +23,9 @@ def test_current_breadth_receipt_and_policy():
         data_file_renames.as_released("normal-tissue-hazards.yaml")
     ).hexdigest()
     assert recorded.pop("hazard_registry_id").endswith(released)
-    assert current.pop("tier_registry_id") == tissue_tiers.registry()["registry_id"]
+    assert current.pop("tier_registry_id") == tissue_tiers.policy_id()
+    assert recorded.pop("policy_id") == "oncoref.normal-expression-breadth.2026-11-04.1"
+    assert current.pop("policy_id") == normal_expression_breadth.POLICY_ID
     assert recorded == current
     for kind, base in [("inputs", ROOT), ("outputs", REPORT)]:
         for name, expected in receipt[kind].items():

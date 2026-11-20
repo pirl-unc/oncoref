@@ -147,7 +147,7 @@ def ctag2_evidence(data):
                 "Organ",
                 "Strongest population",
                 "Atlas collections",
-                "Collection/donor records with signal",
+                "Donor IDs with signal (linked where known)",
                 "Cells with ≥2 molecules in top donor",
                 "Grading",
             ],
@@ -173,6 +173,38 @@ def ctag2_evidence(data):
         "ctag2_tumor": number(row.tumor_max_tpm),
         "ctag2_patients": int(row.independent_patients_at_tenfold),
     }
+
+
+def tissue_hierarchy():
+    from oncoref import tissue_tiers
+
+    sections = [
+        "# Human tissue injury tiers",
+        "The adult human rules describe loss of an organ or a named population. Expression, antigen presentation and exposure are assessed separately. Each cell rule applies to the organs listed in its assessment.",
+    ]
+    rules = tissue_tiers.assessments()
+    references = tissue_tiers.references().set_index("reference_id")
+    for tier in antigen_data.tiers().itertuples():
+        sections.extend([f"## {tier.tier.title()}", tier.definition])
+        records = []
+        for rule in rules[rules.tier.eq(tier.tier)].sort_values(["level", "label"]).itertuples():
+            links = ", ".join(f"[{key}]({references.at[key, 'url']})" for key in rule.references)
+            records.append(
+                [rule.label, rule.level, ", ".join(rule.tissues), rule.persistent_loss, links]
+            )
+        sections.append(
+            table(
+                [
+                    "Structure or population",
+                    "Resolution",
+                    "Organ IDs",
+                    "Persistent loss",
+                    "Evidence",
+                ],
+                records,
+            )
+        )
+    return "\n\n".join(sections) + "\n"
 
 
 def build():
@@ -314,6 +346,7 @@ def build():
         "matched_normal_assay",
     ]
     outputs = {
+        "tissue-hierarchy.md": tissue_hierarchy(),
         f"{ASSETS}/sources.csv": inventory.to_csv(index=False, lineterminator="\n"),
         f"{ASSETS}/tumor-ranks.csv": candidates[
             fields + [c for c in candidates if c.startswith("rank_")]

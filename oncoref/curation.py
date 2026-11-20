@@ -87,6 +87,8 @@ def write_receipt(root):
         "oncoref/data/normal-cell-sources.json",
         "oncoref/data/cta-literature-followup.json",
         "oncoref/tissue_tiers.py",
+        "oncoref/normal_tissues.py",
+        "scripts/replay_cta_selection.py",
     }
     implementation.update(step["argv"][0] for step in spec["steps"].values())
     implementation.update(report["implementation_sha256"])

@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 HISTORICAL_POLICY_ID = "oncoref.normal-expression-breadth.2026-10-26.1"
-POLICY_ID = "oncoref.normal-expression-breadth.2026-11-04.1"
+POLICY_ID = "oncoref.normal-expression-breadth.2026-11-19.1"
 GROUP = ["gene_id", "source", "version", "taxonomy_id", "unit", "cohort", "summary"]
 TIERS = {"vital", "protected", "manageable"}
 
@@ -113,14 +113,15 @@ def anatomical_panel(*, brain_weight: float = 1.0) -> pd.DataFrame:
     panel["anatomy"] = panel.compartment.replace({"non-retinal eye": "eye"})
     resolved = [tissue_tiers.assess(tissue, resolution="bulk") for tissue in panel.anatomy]
     panel["category"] = [row["tier"] for row in resolved]
+    panel["tier_assessment_id"] = [row["assessment_id"] for row in resolved]
+    panel = panel.loc[panel.category.ne("disposable")].copy()
     if not panel.category.isin(TIERS).all():
         raise ValueError("Unresolved or unsupported current breadth anatomy")
-    panel["tier_assessment_id"] = [row["assessment_id"] for row in resolved]
     organ_weight = panel.organ.map(lambda x: brain_weight if x == "brain" else 1.0)
     panel["weight"] = organ_weight / panel.groupby("organ").compartment.transform("size")
     panel["weight"] /= panel.groupby("category").weight.transform("sum")
     panel["policy_id"] = POLICY_ID
-    panel["registry_id"] = tissue_tiers.registry()["registry_id"]
+    panel["registry_id"] = tissue_tiers.policy_id()
     return panel
 
 
@@ -135,7 +136,7 @@ def policy() -> dict:
 
     return {
         "policy_id": POLICY_ID,
-        "tier_registry_id": tissue_tiers.registry()["registry_id"],
+        "tier_registry_id": tissue_tiers.policy_id(),
         "source": "hpa_rna_consensus",
         "version": "v23",
         "unit": "nTPM",

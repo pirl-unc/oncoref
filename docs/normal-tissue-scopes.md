@@ -149,9 +149,9 @@ measurement never establishes the narrower compartment's restriction.
 | Category | Complete root list |
 |---|---|
 | **Reproductive** | Testis and male reproductive organs; ovary/oocytes and female reproductive tract; mammary; placenta; other extraembryonic; explicitly embryonic/fetal contexts, as defined above. |
-| **Disposable** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder. |
+| **Disposable** | Cutaneous melanocytes; hair follicles; tonsil; human appendix; gallbladder; adult human thymus. |
 | **Manageable** | Thyroid gland; adipose tissue. Mammary tissue retains Reproductive membership while its independent functional tier is Manageable. Narrow cell rules are recorded separately in the central ontology. |
-| **Protected** | Skin; spleen; thymus; salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
+| **Protected** | Skin; spleen; salivary gland (including parotid); parathyroid gland; lymph node; esophagus; stomach; colon; rectum; urinary bladder; ureter; cartilage; oral mucosa; nasopharynx; tongue. |
 | **Vital** | Heart; lung; bronchus; brain; spinal cord; liver; kidney; bone marrow; blood; adrenal gland; pituitary gland; pancreas; small intestine; skeletal muscle; smooth muscle; peripheral nerve; vascular endothelium; retina; eye; inner ear. |
 | **Unresolved** | Head; foot; generic soft tissue; unrecognized, conflicting or unsited anatomy. |
 
@@ -207,7 +207,7 @@ previous memberships. Cached annotations must be resolved against the new taxono
 |---|---|
 | Tonsil | Conditional allowance, with palatine tonsillectomy as the human rationale. Native `tonsil` labels retain their source resolution; adenoids, all mucosal lymphoid tissue and mouse NALT are not inferred. Review age, immune reserve and expressing-cell distribution. |
 | Appendix / gallbladder | Conditional allowance based on removal tolerance. In-situ inflammation, leakage or obstruction still requires review. Adjacent bowel, liver and bile ducts are not included. |
-| Spleen / thymus | Protected, with positive-IHC veto and RNA ceilings. Review immune-cell distribution, age and immune reserve; spleen also carries infection-risk review. |
+| Spleen / thymus | Spleen is Protected. The adult whole-thymus loss allowance is Disposable. Cell identity, age and immune reserve affect interpretation in both organs. |
 | Lymph nodes | Protected. Regional removal does not justify systemic depletion or injury to lymphatic stroma. |
 | Blood / marrow | Vital. No general immune-lineage exception; unsited B/T-cell labels remain unresolved. |
 
@@ -493,8 +493,7 @@ The [current selection guide](cta-selection.md) documents the active tissue/IHC 
 
 The [diffuseness policy](audits/cta-unassigned-20261029/diffuseness-impact.md) assigns
 adult thymus a **Permissive** role: exclude it from both the normal comparator and
-the Reproductive reference. Its RNA remains visible and it is not Disposable.
-This is orthogonal to its adult human Protected safety tier. Resolved thymic anatomy
+the Reproductive reference. The evidence ledger retains its RNA. Its adult human whole-organ injury tier is Disposable. Resolved thymic anatomy
 and descendants use this identity role across human, dog and mouse; the quantitative
 score is currently implemented for human HPA v23. Explicit embryonic/fetal stage
 retains the Reproductive umbrella. This profile role is distinct from the historical

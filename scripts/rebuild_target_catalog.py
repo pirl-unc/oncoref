@@ -104,6 +104,18 @@ def shared_facts():
     layers = [c[7:] for c in f if c.startswith("unsafe:")]
     if not f.category.eq("Unsafe").eq(f[["unsafe:" + n for n in layers]].any(axis=1)).all():
         raise ValueError("Unsafe calls do not decompose into their evidence layers")
+    gate_receipt = OUT / "revised-tissue-gate-inputs.json"
+    INPUTS[str(gate_receipt.relative_to(ROOT))] = sha256(gate_receipt)
+    revised = read(OUT / "revised-tissue-gates.csv")
+    for assay, group in revised.groupby("assay"):
+        if (
+            group.gene_id.duplicated().any()
+            or not group.gene_id.isin(f.representative_gene_id).all()
+        ):
+            raise ValueError(f"Invalid tissue gate identities for {assay}")
+        for prefix, field in [("hold:", "candidate_exclusion"), ("unsafe:", "unsafe_evidence")]:
+            values = f.representative_gene_id.map(group.set_index("gene_id")[field])
+            f.loc[values.notna(), prefix + assay] = values.dropna().astype(bool)
     for name in ["rare-cell-evidence.csv.gz", "rare-cell-evidence.json"]:
         INPUTS[f"oncoref/data/{name}"] = sha256(ROOT / "oncoref/data" / name)
     provenance = json.loads((ROOT / "oncoref/data/rare-cell-evidence.json").read_text())
@@ -114,12 +126,14 @@ def shared_facts():
     rare = pd.read_csv(ROOT / "oncoref/data/rare-cell-evidence.csv.gz").set_index("entity_id")
     kept = [n for n in layers if n not in LEGACY_RARE]
     other_unsafe = f[["unsafe:" + n for n in kept]].any(axis=1)
-    if not other_unsafe[~f.entity_id.isin(rare.index)].all():
+    missing_rare = ~other_unsafe & ~f.entity_id.isin(rare.index)
+    if not f.loc[missing_rare, "representative_gene_id"].isin(revised.gene_id).all():
         raise ValueError("A protein without another exclusion lacks rare-cell evidence")
     rare_columns = [c for c in rare if c not in {"protein_group_label", "member_gene_ids"}]
     f = f.drop(columns=[c for c in rare_columns if c in f]).join(rare[rare_columns], on="entity_id")
     f["rare_cell_status"] = f.rare_cell_status.fillna("not_extracted")
     f["rare_cell_action"] = f.rare_cell_action.fillna("none")
+    f.loc[missing_rare, "rare_cell_action"] = "review"
     # A pooled flag that the donor build could not measure stays unresolved.
     f["rare_cell_legacy_only"] = (
         f["hold:Rare vital-tissue cell expression"]
@@ -1211,7 +1225,7 @@ def build(*, reuse_tumor_cache=False):
             "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
             "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
             "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
-            f"Complete {len(required)}-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Thymus is retained separately as protected-tissue evidence.",
+            f"Complete {len(required)}-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Adult whole thymus is Disposable and retained in the separate thymic scope.",
         ],
         "expression_bounds": target_selection.definition()["expression_bounds"],
         "disposable_ntpm_tissues": DISPOSABLE_NTPM_TISSUES,

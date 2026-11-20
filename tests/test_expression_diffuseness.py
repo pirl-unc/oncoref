@@ -93,7 +93,7 @@ def test_completely_absent_protein_remains_in_coverage_report():
     assert pd.isna(summary.diffuseness.item())
 
 
-def test_thymus_is_permissive_not_disposable_or_a_reproductive_reference():
+def test_thymus_injury_tier_and_expression_role_are_independent():
     from oncoref.expression_diffuseness import hpa_bulk_roles, profile_role
     from oncoref.normal_tissues import normal_tissue_category, resolve_normal_tissue
 
@@ -101,7 +101,7 @@ def test_thymus_is_permissive_not_disposable_or_a_reproductive_reference():
         thymus = resolve_normal_tissue("thymus", species=species)
         assert profile_role(thymus) == "permissive"
         assert normal_tissue_category(thymus) == (
-            "protected" if species == "human" else "manageable"
+            "disposable" if species == "human" else "manageable"
         )
         assert (
             profile_role(resolve_normal_tissue("thymus", species=species, stage="fetal"))
