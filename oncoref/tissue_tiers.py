@@ -333,6 +333,7 @@ def anatomy_inventory() -> pd.DataFrame:
                 "concept_id": cid,
                 "label": concept["label"],
                 "parents": list(concept["parents"]),
+                "aliases": list(concept["aliases"]),
                 **r,
                 "anatomical_membership": list(annotation.scopes),
                 "selection_category": "Reproductive"

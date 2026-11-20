@@ -1,6 +1,9 @@
 # How OncoRef classifies human antigen candidates
 
-**Research catalog · `oncoref.target-selection.2026-11-19.3` · default biological sets**
+[Organ and cell injury hierarchy with supporting sources](tissue-hierarchy.md)
+
+
+**Research catalog · `oncoref.target-selection.2026-11-19.4` · default biological sets**
 
 Of **20,099 human coding loci**, OncoRef tracks **19,893 protein-group records**. **397** qualify as Cancer Antigens (CA) and **455** as Reproductive Antigens (RA). The **327** that qualify independently on both sides are Cancer–Testis Antigens (CTA) in this catalog's broad reproductive/developmental sense. The union contains **525** candidates. A catalog call describes expression and screening evidence. Antigen presentation, isoform production, tumor-cell localization and tolerance of an intervention each require evidence of their own.
 
@@ -25,7 +28,7 @@ Bulk measurements inherit the organ assessment. A more permissive cell rule requ
 
 ## Evidence sources and what each contributes
 
-The [download inventory](antigen-whitepaper/sources.csv) gives the selector, version, description, source URL, local or upstream asset name, and SHA-256 for **312 registered files**. Several files can come from the same study, and some are derived observations from upstream files. The [source-by-tissue table](audits/target-selection-20261110/rebuild/normal-rna/source-tissues.csv) lists **1221 source/context rows**, including tissue, finer anatomical site or cell type, and analytical role.
+The [download inventory](antigen-whitepaper/sources.csv) gives the selector, version, description, source URL, local or upstream asset name, and SHA-256 for **323 registered files**. Several files can come from the same study, and some are derived observations from upstream files. The [source-by-tissue table](audits/target-selection-20261110/rebuild/normal-rna/source-tissues.csv) lists **1221 source/context rows**, including tissue, finer anatomical site or cell type, and analytical role.
 
 | Source family | Available evidence | Use in classification |
 |---|---|---|
@@ -47,7 +50,7 @@ The [download inventory](antigen-whitepaper/sources.csv) gives the selector, ver
 | cell atlas | 4 |
 | comparison or sample metadata | 9 |
 | curated data | 8 |
-| curation input | 113 |
+| curation input | 124 |
 | native assay or supplement | 42 |
 | tumor expression | 132 |
 
@@ -63,11 +66,11 @@ The [download inventory](antigen-whitepaper/sources.csv) gives the selector, ver
 
 GFY, also called *Goofy*, is a Golgi-associated regulator of olfactory signaling. In mice, loss of Gfy altered the localization of adenylyl cyclase III (ADCY3), shortened olfactory cilia and reduced odor sensitivity. Adult human biopsy data detected GFY RNA in 94.1% of sampled mature and 70.3% of immature olfactory neurons. A separate HEK293T-cell study found that coexpressing Gfy with other trafficking factors increased surface expression of tested odorant receptors. The human biopsy establishes the cell lineage, while the mouse knockout directly tests the effect of gene loss on smell. [Mouse knockout study](https://pmc.ncbi.nlm.nih.gov/articles/PMC6619734/) · [Receptor trafficking experiments](https://pmc.ncbi.nlm.nih.gov/articles/PMC12677133/) · [Adult human olfactory atlas](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/)
 
-The thymus remains Protected. Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
+The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. Independent normal-expression and protein screens still apply. If removing a former Unsafe call exposes a gap in the donor-resolved cell panel, the group stays in `Other:Review`. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 
-**3. Evaluate cancer and reproductive expression independently.** Let **N** be the highest applicable non-thymic, non-reproductive normal reference and **D** the Disposable maximum in native TPM. Each route requires **≥10 × max(N, D, 1 TPM)**. One passing tumor sample can qualify CA. One measured reproductive sample or supported developmental observation can qualify RA. A well-sampled embryo lineage needs ≥20 cells, ≥5 cells at ≥1 TPM and ≥10% positive cells. A smaller lineage needs ≥5 cells, ≥50% positive cells and qualifying observations in two independent embryos of the same age and lineage. P95 reduces the influence of isolated healthy extremes. It cannot diagnose contamination or establish absence from a rare population.
+**3. Evaluate cancer and reproductive expression independently.** Let **N** be the highest applicable non-thymic, non-reproductive normal reference and **D** the non-thymic Disposable maximum in native TPM. Each route requires **≥10 × max(N, D, 1 TPM)**. One passing tumor sample can qualify CA. One measured reproductive sample or supported developmental observation can qualify RA. A well-sampled embryo lineage needs ≥20 cells, ≥5 cells at ≥1 TPM and ≥10% positive cells. A smaller lineage needs ≥5 cells, ≥50% positive cells and qualifying observations in two independent embryos of the same age and lineage. P95 reduces the influence of isolated healthy extremes. It cannot diagnose contamination or establish absence from a rare population.
 
-The following waterfall assigns each excluded record once. Other’s labels express the primary disposition and additional failures remain on the record. The pipeline compared native expression for **918 groups**, including counterfactual measurements for held proteins. **841** passed the shared eligibility checks. These two populations answer different questions.
+The following waterfall assigns each excluded record once. Other’s labels express the primary disposition and additional failures remain on the record. The pipeline compared native expression for **921 groups**, including counterfactual measurements for held proteins. **841** passed the shared eligibility checks. These two populations answer different questions.
 
 ![Attrition across the entire protein catalog](audits/target-selection-20261110/rebuild/summary/funnel-all.png)
 
@@ -78,14 +81,14 @@ The second figure starts with the published nomination subset. Each figure attri
 | First attributed exclusion | Removed | Remaining |
 | --- | --- | --- |
 | All assessed proteins | 0 | 19,893 |
-| Bulk tissue RNA above the tissue ceiling | 17,522 | 2,371 |
-| Cell-type cluster RNA (HPA single cell) | 424 | 1,947 |
-| Sorted immune-cell RNA | 96 | 1,851 |
-| Rare-cell RNA established by donor | 107 | 1,744 |
-| Normal-tissue protein (IHC) | 50 | 1,694 |
-| Curated or published normal expression | 49 | 1,645 |
-| Adult cornea RNA | 5 | 1,640 |
-| Coverage, identity, translation or unresolved evidence | 731 | 909 |
+| Bulk tissue RNA above the tissue ceiling | 17,507 | 2,386 |
+| Cell-type cluster RNA (HPA single cell) | 436 | 1,950 |
+| Sorted immune-cell RNA | 96 | 1,854 |
+| Rare-cell RNA established by donor | 107 | 1,747 |
+| Normal-tissue protein (IHC) | 50 | 1,697 |
+| Curated or published normal expression | 49 | 1,648 |
+| Adult cornea RNA | 5 | 1,643 |
+| Coverage, identity, translation or unresolved evidence | 734 | 909 |
 | Nested, Unsafe-contained or read-through sequence | 48 | 861 |
 | No qualifying expression or bounds fail | 248 | 613 |
 | Home tissue no panel resolves | 88 | 525 |
@@ -95,11 +98,11 @@ The second figure starts with the published nomination subset. Each figure attri
 | CTA | 327 | 358 |
 | Cancer Antigen only | 70 | 74 |
 | Other:Expression | 248 | 257 |
-| Other:Review | 731 | 732 |
+| Other:Review | 734 | 735 |
 | Other:Sequence | 48 | 50 |
 | Other:Unscreened tissue | 88 | 88 |
 | Reproductive Antigen only | 128 | 130 |
-| Unsafe | 18,253 | 18,410 |
+| Unsafe | 18,250 | 18,407 |
 
 ![Overlap of the CA and RA memberships](audits/target-selection-20261110/rebuild/summary/venn.png)
 
@@ -148,12 +151,12 @@ Selected examples below include additional paper-nominated proteins with consequ
 
 ### Why CTAG2 (LAGE-1) is unresolved
 
-Two adult organs meet the donor-replication rule. The table shows each organ’s strongest qualifying donor/population. Counts refer to atlas collections and their donor identifiers. Both lung collections integrate primary datasets. Cross-collection independence requires a donor and specimen crosswalk. [Human Lung Cell Atlas](https://www.nature.com/articles/s41591-023-02327-2) · [LungMAP CellRef](https://doi.org/10.1038/s41467-023-40173-5) In lung, the counted signals agree on alveolar type 2 cells. In brain, H18.30.002 occurs in both collections. The three source/donor records resolve to two named donors. The strongest layer 5 observation occurs in H18.30.002 alone. The broader intratelencephalic glutamatergic population crosses the screen in both H18.30.002 and H20.33.014. [Per-donor counts](audits/normal-cell-atlas-20261110/rare-cell/donor-populations.csv.gz) The eye observations did not meet the replication or frequency criteria.
+Two adult organs meet the donor-replication rule. The table shows each organ’s strongest qualifying donor/population. Counts refer to atlas collections and donor identifiers. The grader links shared Allen donor IDs across collections. Both lung collections integrate primary datasets. Cross-collection independence requires a donor and specimen crosswalk. [Human Lung Cell Atlas](https://www.nature.com/articles/s41591-023-02327-2) · [LungMAP CellRef](https://doi.org/10.1038/s41467-023-40173-5) In lung, the counted signals agree on alveolar type 2 cells. In brain, H18.30.002 occurs in both collections. The three source/donor records resolve to two named donors. The strongest layer 5 observation occurs in H18.30.002 alone. The broader intratelencephalic glutamatergic population crosses the screen in both H18.30.002 and H20.33.014. [Per-donor counts](audits/normal-cell-atlas-20261110/rare-cell/donor-populations.csv.gz) The eye observations did not meet the replication or frequency criteria.
 
-| Organ | Strongest population | Atlas collections | Collection/donor records with signal | Cells with ≥2 molecules in top donor | Grading |
+| Organ | Strongest population | Atlas collections | Donor IDs with signal (linked where known) | Cells with ≥2 molecules in top donor | Grading |
 | --- | --- | --- | --- | --- | --- |
 | lung | pulmonary alveolar type 2 cell | 2 | 3 | 166/3,865 (4.29%) | unresolved |
-| brain | L5 extratelencephalic projecting glutamatergic cortical neuron | 2 | 3 | 70/2,201 (3.18%) | unresolved |
+| brain | L5 extratelencephalic projecting glutamatergic cortical neuron | 2 | 2 | 70/2,201 (3.18%) | unresolved |
 | eye | ciliary muscle cell | 2 | 2 | 21/1,049 (2.00%) | dismissed |
 
 **The open question is which locus produced the RNA.** 50.9% of the distinct CTAG2 transcript 31-mers also occur at other loci, with CTAG1A and CTAG1B identified as sequence partners. That fraction describes the reference sequences. It does not estimate how many observed reads were misassigned. The matched bulk check supplied no independent confirmation in lung or brain. A locus-specific observation in the implicated normal cell populations would distinguish genuine sparse CTAG2 expression from counts attributable to a paralog. [Donor findings](audits/normal-cell-atlas-20261110/rare-cell/findings.csv) · [Mapping audit](audits/normal-cell-atlas-20261110/rare-cell/gene-mapping-risk.csv.gz)
@@ -221,24 +224,24 @@ Tumor comparison available for 128 of 128 groups.
 
 ### Other
 
-Tumor comparison available for 393 of 1,115 groups.
+Tumor comparison available for 396 of 1,118 groups.
 
 | Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | DSPP | HEPB | 1,695.58 | 0.6 | 0.21 | 1,695.58 | 1 |
-| 2 | GFY | RT | 1,575.56 | 2.65 | 14.05 | 594.83 | 41 |
-| 3 | PANX3 | SARC_OS | 1,387.97 | 2 | 2.32 | 692.34 | 155 |
-| 4 | CTAG2 | OV | 604.33 | 6.92 | 101.92 | 87.27 | 375 |
-| 5 | GLYATL3 | NET_MIDGUT | 479.55 | 1.58 | 0.32 | 302.67 | 29 |
-| 6 | RIPPLY3 | RT | 450.15 | 2.36 | 10.02 | 190.41 | 29 |
-| 7 | VCX3B | BRCA | 420.74 | 1.33 | 181.54 | 316.01 | 87 |
-| 8 | PSG3 | LUAD | 326.38 | 17.41 | 1,155.62 | 18.74 | 1 |
-| 9 | GSX2 | LAML_ELNint | 287.56 | 5.09 | 8.6 | 56.48 | 8 |
-| 10 | RGPD3 | T_ALL | 284.71 | 1.91 | 20.78 | 149.32 | 44 |
+| 1 | TBATA | THYM | 2,250.3 | 6.26 | 116.44 | 359.45 | 101 |
+| 2 | KRT9 | PCPG | 1,865.83 | 8.65 | 7.03 | 215.65 | 16 |
+| 3 | DSPP | HEPB | 1,695.58 | 0.6 | 0.21 | 1,695.58 | 1 |
+| 4 | GFY | RT | 1,575.56 | 2.65 | 14.05 | 594.83 | 41 |
+| 5 | PANX3 | SARC_OS | 1,387.97 | 2 | 2.32 | 692.34 | 155 |
+| 6 | CTAG2 | OV | 604.33 | 6.92 | 101.92 | 87.27 | 375 |
+| 7 | GLYATL3 | NET_MIDGUT | 479.55 | 1.58 | 0.32 | 302.67 | 29 |
+| 8 | RIPPLY3 | RT | 450.15 | 2.36 | 10.02 | 190.41 | 29 |
+| 9 | VCX3B | BRCA | 420.74 | 1.33 | 181.54 | 316.01 | 87 |
+| 10 | PSG3 | LUAD | 326.38 | 17.41 | 1,155.62 | 18.74 | 1 |
 
 ### Unsafe
 
-Tumor comparison available for 0 of 18,253 groups.
+Tumor comparison available for 0 of 18,250 groups.
 
 [All candidates, inclusive CA/RA/CTA ranks, sample and cohort identifiers, folds and patient support](antigen-whitepaper/tumor-ranks.csv). A peak measures abundance in a single library. The witness counts describe how often enrichment was observed in the available cohorts. Neither quantity measures the fraction of malignant cells expressing the protein.
 

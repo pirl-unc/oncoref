@@ -17,17 +17,17 @@ Cancer and Reproductive Antigen (`CA`, `RA`, `CTA`) classification.
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
 [rebuilt catalog](audits/target-selection-20261110/rebuild/index.md)
-classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,115 Other and
-18,253 Unsafe**:
+classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,118 Other and
+18,250 Unsafe**:
 
 1. **Shared normal-expression screen:** Seven normal-expression layers
    (HPA v23 individual biopsies & bulk, individual GTEx v11 tissue samples, HPA single-cell clusters, DICE/Monaco/HPA
    sorted immune subsets, donor-resolved CELLxGENE + Siletti single-cell UMI, HPA IHC,
-   912-protein literature rubric, and adult cornea scRNA) mark **18,253** proteins `Unsafe`,
+   912-protein literature rubric, and adult cornea scRNA) identify proteins with `Unsafe` evidence,
    while coverage, translation, sequence-containment, and expression-bound checks hold
    additional proteins in `Other`.
 2. **Symmetric 10× compartment enrichment:** Against the shared
-   somatic baseline **H₀ = max(Normal N, Disposable D, 1 TPM)**, Cancer Antigens (CA)
+   non-thymic somatic baseline **H₀ = max(Normal N, Disposable D, 1 TPM)**, Cancer Antigens (CA)
    and Reproductive Antigens (RA) independently require **≥ 10 × H₀** in QC-passing
    tumors or reproductive/embryonic samples. Their intersection is the default broad **CTA** set.
 3. **Host selection:** Protect / Accept loss / Absent are explicit choices. Anatomy
@@ -41,7 +41,7 @@ classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,1
 [Curation figures & funnels](audits/target-selection-20261110/rebuild/summary.md) ·
 [Filter & host-profile report](audits/target-filters-20261112/report.html) ·
 [Donor-level rare-cell RNA](audits/normal-cell-atlas-20261110/rare-cell/index.md) ·
-[Release 1.42.0 notes](cta-release-1.42.0.md)
+[Release 1.43.0 notes](cta-release-1.43.0.md)
 
 ## Install & Quick Start
 

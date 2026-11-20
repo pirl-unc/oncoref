@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from . import catalog, cta_literature, cta_sources, reference_data, tissue_tiers
+from . import catalog, cta_literature, cta_sources, normal_tissues, reference_data, tissue_tiers
 from .gene_matching import gene_identity_catalog
 
 COLUMNS = ("list_id", "gene_id", "gene_name", "reported_name", "evidence", "source_url", "scope")
@@ -20,9 +20,11 @@ def tissues(*, tier: str | None = None) -> pd.DataFrame:
 
 def tissue(name: str, cell_type: str | None = None, *, stage: str = "adult") -> dict:
     """Loss consequences and linked evidence for an organ or a named cell population."""
-    return tissue_tiers.consequences(
+    organ = normal_tissues.resolve_normal_tissue(name, species="human", stage=stage)
+    result = tissue_tiers.consequences(
         name, cell_type, resolution="cell" if cell_type else "bulk", stage=stage
     )
+    return {"concept_id": organ.concept_id, **result}
 
 
 def tiers() -> pd.DataFrame:

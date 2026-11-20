@@ -1,6 +1,6 @@
 # Target filters and host selection
 
-Catalog `oncoref.target-selection.2026-11-19.3`; selection policy `oncoref.target-filters.2026-11-17.5`.
+Catalog `oncoref.target-selection.2026-11-19.4`; selection policy `oncoref.target-filters.2026-11-17.5`.
 Filters narrow biological candidates. Optional host constraints are a separate axis
 with their own versioned exposure evidence. [Full audit](audits/target-filters-20261112/index.md).
 

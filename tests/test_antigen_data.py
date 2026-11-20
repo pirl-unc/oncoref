@@ -193,7 +193,8 @@ def test_tissue_lookup_agrees_with_hierarchy_and_preserves_cell_and_stage_scope(
     for name, tier in [("thymus", "disposable"), ("taste buds", "protected")]:
         annotation = normal_tissues.resolve_normal_tissue(name, species="human", stage="adult")
         assert normal_tissues.normal_tissue_category(annotation) == tier
-        assert antigen_data.tissue(name)["tier"] == tier
+        record = antigen_data.tissue(name)
+        assert record["concept_id"] == annotation.concept_id and record["tier"] == tier
         assert (
             normal_tissues.normal_tissue_screening_details(annotation)["functional_tier"]["tier"]
             == tier

@@ -1,6 +1,6 @@
 # OncoRef 1.43.0
 
-OncoRef 1.43.0 publishes the revised human antigen catalog and its regeneratable evidence whitepaper.
+OncoRef 1.43.0 classifies 327 protein groups as CTA, up from 290 in 1.42.0. Another 70 qualify for cancer enrichment alone and 128 for reproductive enrichment alone. The union contains 525 groups.
 
 - Use the within-tissue P95 for healthy bulk panels with individual measurements, with donor aggregation where identities are available. Sample warnings and sparse cell measurements remain visible.
 - Classify the adult whole thymus as Disposable and report thymic RNA separately from both enrichment denominators. Resolved thymic cell populations retain their own injury tiers.

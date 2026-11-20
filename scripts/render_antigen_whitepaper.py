@@ -107,13 +107,21 @@ def study_table(proteins):
             "unit",
             "value",
             "candidate_ceiling",
+            "selection_tier",
+            "category",
+            "taxonomy_id",
+            "stage",
+            "mapping_status",
             "unsafe_evidence",
             "assay",
         ],
     )
     flags = data.loc[data.category.eq("Unsafe"), ["entity_id", "Unsafe_reasons"]]
     measured = (
-        measurements.loc[measurements.unsafe_evidence]
+        measurements.loc[
+            measurements.unsafe_evidence
+            & measurements.selection_tier.eq(cta_selection_policy.compartment_tiers(measurements))
+        ]
         .merge(by_gene.rename("gene_id").reset_index(), on="gene_id", validate="many_to_one")
         .merge(flags, on="entity_id", validate="many_to_one")
     )

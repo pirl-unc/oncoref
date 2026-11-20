@@ -14,7 +14,7 @@ confirmation become Other:Review. A reference mapping flag cannot establish arti
 | Question | Requirement |
 |---|---|
 | Is there a signal? | >= 1% of a donor's cells and >= 10 cells carry >= 2 molecules. Protected populations need 2 times these frequencies. |
-| Is it replicated? | The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. |
+| Is it replicated? | The signal in >= 2 atlas sources of the same organ, which agree on a cell type or include >= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. |
 | Could the reads belong elsewhere? | Shared transcript sequence with another locus, or an exon inside another same-strand gene. Attribution needs read-level review; a flag does not prove artifact. |
 | Does another assay agree? | Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment. |
 | Is it published? | Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts. |
@@ -75,42 +75,42 @@ not graded.
 | Protein | Organ: strongest population | Studies / donors with multi-molecule cells | Strongest donor: cells with ≥2 molecules | Bulk TPM reached in both HPA and GTEx | Basis |
 |---|---|---:|---:|---:|---|
 | SPAG9 | small intestine: enterocyte of epithelium proper of ileum | 8 / 27 | 2,255/2,263 (99.6%) | 23 | replicated signal at a locus without mapping risk |
-| TSGA10 | brain: dopaminergic neuron | 23 / 432 | 1,757/1,912 (91.9%) | 1.9 | replicated signal at a locus without mapping risk |
-| REDIC1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 19 / 209 | 1,722/1,938 (88.9%) | 0 | replicated signal at a locus without mapping risk |
-| SPAG1 | brain: choroid plexus epithelial cell | 22 / 265 | 4,740/6,146 (77.1%) | 7.9 | replicated signal at a locus without mapping risk |
+| TSGA10 | brain: dopaminergic neuron | 23 / 424 | 1,757/1,912 (91.9%) | 1.9 | replicated signal at a locus without mapping risk |
+| REDIC1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 19 / 206 | 1,722/1,938 (88.9%) | 0 | replicated signal at a locus without mapping risk |
+| SPAG1 | brain: choroid plexus epithelial cell | 22 / 258 | 4,740/6,146 (77.1%) | 7.9 | replicated signal at a locus without mapping risk |
 | SPA17 | lung: multiciliated columnar cell of tracheobronchial tree | 2 / 5 | 1,762/2,359 (74.7%) | 5.2 | replicated signal at a locus without mapping risk |
 | ROPN1L | lung: ciliated cell | 2 / 5 | 946/1,287 (73.5%) | 4.9 | signal confirmed by bulk RNA (exon inside another same-strand gene) |
 | UBE2U | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 4 / 9 | 745/1,021 (73.0%) | 0.1 | replicated signal at a locus without mapping risk |
-| SYCP2 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 20 / 393 | 944/1,362 (69.3%) | 4.3 | replicated signal at a locus without mapping risk |
+| SYCP2 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 20 / 386 | 944/1,362 (69.3%) | 4.3 | replicated signal at a locus without mapping risk |
 | CSNK2A2IP | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 11 / 152 | 10,449/15,320 (68.2%) | 0.088 | replicated signal at a locus without mapping risk |
 | GRXCR2 | heart: regular atrial cardiac myocyte | 5 / 30 | 3,539/5,328 (66.4%) | 0.2 | replicated signal at a locus without mapping risk |
-| MTCP1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 13 / 309 | 823/1,362 (60.4%) | 1.9 | signal confirmed by bulk RNA (exon inside another same-strand gene) |
-| LIPI | brain: glutamatergic neuron | 12 / 143 | 3,975/6,853 (58.0%) | 0.43 | replicated signal at a locus without mapping risk |
+| MTCP1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 13 / 306 | 823/1,362 (60.4%) | 1.9 | signal confirmed by bulk RNA (exon inside another same-strand gene) |
+| LIPI | brain: glutamatergic neuron | 12 / 140 | 3,975/6,853 (58.0%) | 0.43 | replicated signal at a locus without mapping risk |
 | OOEP | lung: pulmonary alveolar type 2 cell | 5 / 19 | 587/1,181 (49.7%) | 0.2 | replicated signal at a locus without mapping risk |
 | C7orf33 | eye: retinal cone cell | 2 / 41 | 1,079/2,436 (44.3%) | — | replicated signal at a locus without mapping risk |
 | ADAM7 | eye: OFF midget ganglion cell | 2 / 46 | 606/1,440 (42.1%) | — | replicated signal at a locus without mapping risk |
 | MORC1 | brain: hippocampal pyramidal neuron | 2 / 6 | 585/1,451 (40.3%) | 0.1 | replicated signal at a locus without mapping risk |
 | MMP26 | eye: non-pigmented ciliary epithelial cell | 3 / 51 | 443/1,110 (39.9%) | — | replicated signal at a locus without mapping risk |
-| MAGEC3 | brain: dopaminergic neuron | 19 / 366 | 731/1,912 (38.2%) | 1.5 | replicated signal at a locus without mapping risk |
+| MAGEC3 | brain: dopaminergic neuron | 19 / 360 | 731/1,912 (38.2%) | 1.5 | replicated signal at a locus without mapping risk |
 | GDPD4 | liver: hepatocyte | 2 / 3 | 1,989/5,256 (37.8%) | 0.1 | replicated signal at a locus without mapping risk |
-| PIWIL4 | brain: L6b glutamatergic cortical neuron | 17 / 364 | 503/1,471 (34.2%) | 5.6 | signal confirmed by bulk RNA (exon inside another same-strand gene) |
+| PIWIL4 | brain: L6b glutamatergic cortical neuron | 17 / 358 | 503/1,471 (34.2%) | 5.6 | signal confirmed by bulk RNA (exon inside another same-strand gene) |
 | HORMAD1 | eye: basal cell | 3 / 7 | 966/2,848 (33.9%) | — | replicated signal at a locus without mapping risk |
 | LDHC | eye: endothelial cell of venule | 9 / 36 | 367/1,148 (32.0%) | — | replicated signal at a locus without mapping risk |
-| SYCP3 | brain: astrocyte | 17 / 179 | 617/1,951 (31.6%) | 1.6 | replicated signal at a locus without mapping risk |
+| SYCP3 | brain: astrocyte | 17 / 172 | 617/1,951 (31.6%) | 1.6 | replicated signal at a locus without mapping risk |
 | LINC03040 | eye: retinal pigment epithelial cell | 2 / 12 | 573/1,818 (31.5%) | — | replicated signal at a locus without mapping risk |
 | RGS21 | eye: Mueller cell | 5 / 50 | 345/1,104 (31.2%) | — | replicated signal at a locus without mapping risk |
 | PIWIL1 | eye: retinal cone cell | 13 / 120 | 430/1,398 (30.8%) | — | replicated signal at a locus without mapping risk |
 | METTL21EP | brain: L5 extratelencephalic projecting glutamatergic cortical neuron | 5 / 74 | 631/2,201 (28.7%) | — | replicated signal at a locus without mapping risk |
 | SH2D4B | brain: glutamatergic neuron | 9 / 105 | 740/2,606 (28.4%) | 0.1 | replicated signal at a locus without mapping risk |
-| TDRD1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 9 / 91 | 527/1,938 (27.2%) | 0.17 | replicated signal at a locus without mapping risk |
+| TDRD1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 9 / 89 | 527/1,938 (27.2%) | 0.17 | replicated signal at a locus without mapping risk |
 | RBM46 | eye: retinal pigment epithelial cell | 3 / 22 | 485/1,818 (26.7%) | — | replicated signal at a locus without mapping risk |
 | ZYG11A | kidney: epithelial cell of proximal tubule | 5 / 26 | 656/2,606 (25.2%) | 0.7 | replicated signal at a locus without mapping risk |
 | EFCAB8 | eye: keratocyte | 6 / 19 | 1,569/6,549 (24.0%) | — | replicated signal at a locus without mapping risk |
 | TEX101 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 4 / 43 | 272/1,209 (22.5%) | 0.31 | replicated signal at a locus without mapping risk |
 | C5orf47 | eye: retinal pigment epithelial cell | 3 / 23 | 364/1,818 (20.0%) | — | replicated signal at a locus without mapping risk |
-| PKD1L3 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 10 / 145 | 196/1,047 (18.7%) | 0.16 | replicated signal at a locus without mapping risk |
+| PKD1L3 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 10 / 141 | 196/1,047 (18.7%) | 0.16 | replicated signal at a locus without mapping risk |
 | ADAM29 | brain: dopaminergic neuron | 11 / 152 | 354/1,912 (18.5%) | 0.1 | replicated signal at a locus without mapping risk |
-| FAM217A | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 6 / 181 | 247/1,362 (18.1%) | 0.062 | replicated signal at a locus without mapping risk |
+| FAM217A | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 6 / 180 | 247/1,362 (18.1%) | 0.062 | replicated signal at a locus without mapping risk |
 | HORMAD2 | liver: hepatocyte | 2 / 4 | 871/5,256 (16.6%) | 0.61 | replicated signal at a locus without mapping risk |
 | WFDC6 | lung: multiciliated columnar cell of tracheobronchial tree | 1 / 2 | 386/2,359 (16.4%) | 1.3 | signal confirmed by bulk RNA (exon inside another same-strand gene) |
 | ARL5C | eye: diffuse bipolar 2 cell | 4 / 60 | 461/2,849 (16.2%) | — | replicated signal at a locus without mapping risk |
@@ -118,15 +118,15 @@ not graded.
 | TMPRSS12 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 18 | 192/1,258 (15.3%) | 0.026 | replicated signal at a locus without mapping risk |
 | LY6K | eye: conjunctival epithelial cell | 3 / 9 | 184/1,246 (14.8%) | — | replicated signal at a locus without mapping risk |
 | MROH2A | liver: hepatocyte | 2 / 4 | 761/5,256 (14.5%) | 0.3 | replicated signal at a locus without mapping risk |
-| PLCZ1 | brain: L6b glutamatergic cortical neuron | 4 / 18 | 356/2,487 (14.3%) | 0 | replicated signal at a locus without mapping risk |
+| PLCZ1 | brain: L6b glutamatergic cortical neuron | 4 / 17 | 356/2,487 (14.3%) | 0 | replicated signal at a locus without mapping risk |
 | CCDC172 | eye: retinal rod cell | 4 / 34 | 3,777/27,262 (13.9%) | — | replicated signal at a locus without mapping risk |
 | XAGE2 | lung: pulmonary alveolar type 1 cell | 8 / 42 | 1,254/10,205 (12.3%) | 2.2 | replicated signal at a locus without mapping risk |
 | SMIM23 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 24 | 145/1,190 (12.2%) | 0 | replicated signal at a locus without mapping risk |
 | DDX43 | eye: endothelial cell of venule | 7 / 19 | 133/1,148 (11.6%) | — | replicated signal at a locus without mapping risk |
 | MMP20 | eye: OFF midget ganglion cell | 4 / 30 | 622/5,400 (11.5%) | — | replicated signal at a locus without mapping risk |
 | SPACA3 | pancreas: pancreatic acinar cell | 2 / 2 | 540/4,757 (11.4%) | 3.1 | replicated signal at a locus without mapping risk |
-| SAXO1 | brain: choroid plexus epithelial cell | 16 / 194 | 697/6,146 (11.3%) | 0.05 | replicated signal at a locus without mapping risk |
-| PIWIL2 | brain: dopaminergic neuron | 15 / 146 | 649/5,945 (10.9%) | 1.7 | replicated signal at a locus without mapping risk |
+| SAXO1 | brain: choroid plexus epithelial cell | 16 / 190 | 697/6,146 (11.3%) | 0.05 | replicated signal at a locus without mapping risk |
+| PIWIL2 | brain: dopaminergic neuron | 15 / 142 | 649/5,945 (10.9%) | 1.7 | replicated signal at a locus without mapping risk |
 | TDRD15 | liver: hepatocyte | 2 / 4 | 539/5,256 (10.3%) | 0.1 | replicated signal at a locus without mapping risk |
 | OR51D1 | brain: pvalb GABAergic cortical interneuron | 2 / 25 | 217/2,146 (10.1%) | 0 | replicated signal at a locus without mapping risk |
 | MDFIC2 | brain: oligodendrocyte | 5 / 118 | 157/1,559 (10.1%) | 0.6 | replicated signal at a locus without mapping risk |
@@ -135,11 +135,11 @@ not graded.
 | PLAC1 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 4 / 54 | 1,134/12,360 (9.2%) | 0.0051 | replicated signal at a locus without mapping risk |
 | OOSP3 | brain: glutamatergic neuron | 4 / 57 | 238/2,606 (9.1%) | 0.21 | replicated signal at a locus without mapping risk |
 | MYO1H | eye: S cone cell | 6 / 35 | 100/1,109 (9.0%) | — | replicated signal at a locus without mapping risk |
-| ERICH6 | brain: glutamatergic neuron | 10 / 103 | 583/6,853 (8.5%) | 0.13 | replicated signal at a locus without mapping risk |
+| ERICH6 | brain: glutamatergic neuron | 10 / 100 | 583/6,853 (8.5%) | 0.13 | replicated signal at a locus without mapping risk |
 | SCGB1D1 | eye: acinar cell | 1 / 3 | 100/1,178 (8.5%) | — | detection confirmed by a published gene-specific assay |
 | TOPAZ1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 8 / 44 | 105/1,258 (8.3%) | 0.046 | replicated signal at a locus without mapping risk |
-| OIP5 | brain: lamp5 GABAergic cortical interneuron | 7 / 158 | 128/1,548 (8.3%) | 0.3 | replicated signal at a locus without mapping risk |
-| SMC1B | brain: glutamatergic neuron | 9 / 81 | 548/6,853 (8.0%) | 0.12 | replicated signal at a locus without mapping risk |
+| OIP5 | brain: lamp5 GABAergic cortical interneuron | 7 / 154 | 128/1,548 (8.3%) | 0.3 | replicated signal at a locus without mapping risk |
+| SMC1B | brain: glutamatergic neuron | 9 / 80 | 548/6,853 (8.0%) | 0.12 | replicated signal at a locus without mapping risk |
 | DUXB | brain: glutamatergic neuron | 3 / 23 | 510/6,853 (7.4%) | 0.056 | replicated signal at a locus without mapping risk |
 | SLCO6A1 | eye: Mueller cell | 5 / 39 | 99/1,579 (6.3%) | — | replicated signal at a locus without mapping risk |
 | COX7B2 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 6 / 16 | 941/15,320 (6.1%) | 0.043 | replicated signal at a locus without mapping risk |
@@ -148,7 +148,7 @@ not graded.
 | CCDC83 | eye: endothelial cell of venule | 2 / 10 | 62/1,148 (5.4%) | — | replicated signal at a locus without mapping risk |
 | GRXCR1 | eye: OFF midget ganglion cell | 2 / 14 | 578/10,959 (5.3%) | — | replicated signal at a locus without mapping risk |
 | CEP55 | lung: pulmonary alveolar type 2 cell | 3 / 5 | 221/4,263 (5.2%) | 1.2 | replicated signal at a locus without mapping risk |
-| WNT8A | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 5 / 70 | 783/15,132 (5.2%) | 0.75 | replicated signal at a locus without mapping risk |
+| WNT8A | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 5 / 69 | 783/15,132 (5.2%) | 0.75 | replicated signal at a locus without mapping risk |
 | SPATA45 | brain: lamp5 GABAergic cortical interneuron | 2 / 5 | 80/1,548 (5.2%) | 0.33 | replicated signal at a locus without mapping risk |
 | BOLL | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 18 | 70/1,362 (5.1%) | 0.017 | replicated signal at a locus without mapping risk |
 | SPMIP11 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 4 | 65/1,362 (4.8%) | 0 | replicated signal at a locus without mapping risk |
@@ -170,7 +170,7 @@ not graded.
 | KLHL10 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 24 | 41/1,362 (3.0%) | 0.72 | replicated signal at a locus without mapping risk |
 | MROH5 | eye: pigmented epithelial cell | 2 / 4 | 42/1,544 (2.7%) | — | replicated signal at a locus without mapping risk |
 | PXT1 | brain: astrocyte | 2 / 3 | 27/1,029 (2.6%) | 0.4 | replicated signal at a locus without mapping risk |
-| CBY3 | brain: dopaminergic neuron | 5 / 17 | 50/1,912 (2.6%) | 1.4 | replicated signal at a locus without mapping risk |
+| CBY3 | brain: dopaminergic neuron | 5 / 15 | 50/1,912 (2.6%) | 1.4 | replicated signal at a locus without mapping risk |
 | SPMAP2 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 6 | 27/1,034 (2.6%) | 0.41 | replicated signal at a locus without mapping risk |
 | C1orf185 | brain: astrocyte | 5 / 9 | 39/1,508 (2.6%) | 0 | replicated signal at a locus without mapping risk |
 | OR2T6 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 3 / 12 | 396/15,320 (2.6%) | 0.14 | replicated signal at a locus without mapping risk |
@@ -208,19 +208,19 @@ not graded.
 
 | Protein | Organ: strongest population | Studies / donors with multi-molecule cells | Strongest donor: cells with ≥2 molecules | Bulk TPM reached in both HPA and GTEx | Basis |
 |---|---|---:|---:|---:|---|
-| LRRIQ4 | brain: astrocyte | 2 / 2 | 65/1,508 (4.3%) | 0.052 | two donors in different cell types; no bulk RNA |
+| LRRIQ4 | brain: astrocyte | 2 / 2 | 65/1,508 (4.3%) | 0.052 | insufficient independent donor and cell-type concordance; no bulk RNA |
 | ENSG00000284695 | eye: basal cell | 2 / 2 | 41/2,439 (1.7%) | — | insufficient concordant signal; locus attribution uncertain (exon inside another same-strand gene) |
 | C12orf50 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 2 / 2 | 17/1,093 (1.6%) | 0 | insufficient concordant signal; locus attribution uncertain (sequence shared with another locus) |
 | ENSG00000285446 | eye: conjunctival epithelial cell | 2 / 2 | 27/1,740 (1.6%) | — | insufficient concordant signal; locus attribution uncertain (sequence shared with another locus | exon inside another same-strand gene) |
-| PRAME | eye: melanocyte | 2 / 2 | 15/1,026 (1.5%) | — | two donors in different cell types; no bulk RNA |
-| EXD1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 2 | 16/1,285 (1.2%) | 0.16 | two donors in different cell types; no bulk RNA |
+| PRAME | eye: melanocyte | 2 / 2 | 15/1,026 (1.5%) | — | insufficient independent donor and cell-type concordance; no bulk RNA |
+| EXD1 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 2 | 16/1,285 (1.2%) | 0.16 | insufficient independent donor and cell-type concordance; no bulk RNA |
 | ENSG00000272647 | brain: astrocyte | 2 / 2 | 16/1,508 (1.1%) | — | insufficient concordant signal; locus attribution uncertain (exon inside another same-strand gene) |
 
 ## Unresolved — Other:Review
 
 | Protein | Organ: strongest population | Studies / donors with multi-molecule cells | Strongest donor: cells with ≥2 molecules | Bulk TPM reached in both HPA and GTEx | Basis |
 |---|---|---:|---:|---:|---|
-| LINC03051 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 16 / 375 | 1,041/1,045 (99.6%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
+| LINC03051 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 16 / 371 | 1,041/1,045 (99.6%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000214265 | brain: indirect pathway medium spiny neuron | 5 / 27 | 1,970/1,979 (99.5%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000272162 | eye: retinal rod cell | 3 / 19 | 15,411/16,080 (95.8%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000260729 | brain: dopaminergic neuron | 8 / 308 | 1,782/1,912 (93.2%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
@@ -264,7 +264,7 @@ not graded.
 | PLD5P1 | brain: GABAergic neuron | 8 / 186 | 707/2,086 (33.9%) | — | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
 | ENSG00000255330 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 9 / 122 | 394/1,176 (33.5%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000267168 | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 4 / 136 | 362/1,093 (33.1%) | 0 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
-| ENSG00000285329 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 13 / 369 | 440/1,362 (32.3%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
+| ENSG00000285329 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 13 / 365 | 440/1,362 (32.3%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000239920 | eye: Mueller cell | 10 / 228 | 812/2,556 (31.8%) | — | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
 | ENSG00000270149 | brain: glutamatergic neuron | 8 / 80 | 510/1,621 (31.5%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ARMH2 | lung: multiciliated columnar cell of tracheobronchial tree | 2 / 4 | 329/1,068 (30.8%) | 0.4 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
@@ -294,7 +294,7 @@ not graded.
 | ENSG00000254732 | eye: Mueller cell | 1 / 4 | 339/1,427 (23.8%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000285117 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 132 | 323/1,362 (23.7%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000285404 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 5 / 86 | 346/1,468 (23.6%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
-| SATL1 | brain: L6b glutamatergic cortical neuron | 13 / 150 | 344/1,471 (23.4%) | 0.42 | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus) |
+| SATL1 | brain: L6b glutamatergic cortical neuron | 13 / 149 | 344/1,471 (23.4%) | 0.42 | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus) |
 | ENSG00000251357 | eye: retinal rod cell | 2 / 7 | 5,418/23,420 (23.1%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | CIMIP3 | eye: retinal cone cell | 3 / 26 | 231/1,028 (22.5%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000205236 | brain: glutamatergic neuron | 5 / 20 | 687/3,063 (22.4%) | — | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |

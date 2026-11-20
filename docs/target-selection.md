@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-19.3`: **327 CTA** · **70 Cancer Antigen only** · **128 Reproductive Antigen only** · **1,115 Other** · **18,253 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-19.4`: **327 CTA** · **70 Cancer Antigen only** · **128 Reproductive Antigen only** · **1,118 Other** · **18,250 Unsafe**.
 
 [Catalog whitepaper and study tables](antigen-whitepaper.md) ·
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
@@ -38,7 +38,7 @@ Both CA and RA independently require **≥10 × H₀**, where
 | CTA | Both routes | 327 |
 | CA∪RA | Either route | 525 |
 
-The thymus remains Protected. Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
+The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 
 GTEx v11 contributes the **linearly interpolated donor P95 within each non-reproductive tissue site**. Complete member-locus TPMs are summed within a library first. Reproductive sites, including breast and prostate, retain individual samples as RA witnesses. HPA v23 contributes the within-tissue biopsy P95 and the within-population sorted immune donor P95. DICE contributes a P95 for single loci. Its ranks lack specimen IDs, so identical-protein groups with multiple loci use the sum of measured member maxima as an upper bound. GTEx medians, HPA tissue and brain means, and Monaco cell means retain their published statistics. The highest applicable value across these sources sets N or D. Single-cell and single-nucleus counts, nTPM and protein staining have separate normal-expression gates.
 
@@ -81,7 +81,7 @@ RNA. Donor-resolved UMI evidence is graded independently of cluster nTPM and bul
 | Check | Rule |
 |---|---|
 | Signal | >= 1% of a donor's cells and >= 10 cells carry >= 2 molecules. |
-| Replication | The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. |
+| Replication | The signal in >= 2 atlas sources of the same organ, which agree on a cell type or include >= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. |
 | Single study | Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. |
 | Protected | Protected populations need 2 times these frequencies. |
 | Confirmation | Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment. |

@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-19.3",
+  "policy_id": "oncoref.target-selection.2026-11-19.4",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -63,7 +63,7 @@
   "rare_cell_rna": {
     "unit": "One adult donor x one named Vital or Protected cell population, UMI counts",
     "signal": ">= 1% of a donor's cells and >= 10 cells carry >= 2 molecules.",
-    "replication": "The signal in >= 2 independent studies of the same organ, which agree on a cell type or include >= 3 donors. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
+    "replication": "The signal in >= 2 atlas sources of the same organ, which agree on a cell type or include >= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ.",
     "single_study": "Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules.",
     "protected": "Protected populations need 2 times these frequencies.",
     "single_molecules": "Single-molecule detection alone does not establish expression. Ambient RNA and read assignment are possible confounders, not demonstrated explanations.",
@@ -90,8 +90,8 @@
   "cancer_rna": {
     "detection_floor": 1.0,
     "tumor_fold": 10.0,
-    "rule": "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable TPM cohort. N is the highest non-thymic, non-reproductive normal value, D the highest Disposable value. This is the only cancer route.",
-    "normal_reference": "N: maximum QC-passing, identity-resolved measurement in the declared compatible peripheral panel, excluding thymus, Disposable and reproductive compartments. D is taken separately; reproductive, placental and fetal compartments are never compared.",
+    "rule": "T >= 10 * max(N, D, 1) in at least one qualified tumor sample of any comparable TPM cohort. N is the highest non-thymic, non-reproductive normal value, D the highest non-thymic Disposable value. This is the only cancer route.",
+    "normal_reference": "N: maximum QC-passing, identity-resolved measurement in the declared compatible peripheral panel, excluding thymus, Disposable and reproductive compartments. D is taken from the non-thymic Disposable tissues. Reproductive and developmental observations only supply the positive route.",
     "descriptive": "Counts at the actual tenfold threshold distinguish samples, known patients, anonymous samples and cancer types. Above-normal counts are legacy descriptors.",
     "excluded_tumors": {
       "codes": [],

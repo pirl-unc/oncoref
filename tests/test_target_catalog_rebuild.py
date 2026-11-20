@@ -28,8 +28,8 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     genes = [g for ids in catalog.member_gene_ids for g in json.loads(ids)]
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
-        "Unsafe": 18253,
-        "Other": 1115,
+        "Unsafe": 18250,
+        "Other": 1118,
         "CTA": 327,
         "Cancer Antigen only": 70,
         "Reproductive Antigen only": 128,
@@ -39,10 +39,15 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
         catalog.is_cancer_antigen | catalog.is_reproductive_antigen
     )
     assert catalog.loc[catalog.is_target_candidate, list(policy.SHARED_CHECKS)].all().all()
-    # Only the rare-cell regrade and the literature review change Unsafe membership.
+    # Separately account for the historical rare-cell exclusions and revised thymus gates.
     unsafe, released = catalog.category.eq("Unsafe"), catalog.released_category.eq("Unsafe")
-    assert (released & ~unsafe).sum() == 86
-    assert catalog.loc[released & ~unsafe, "legacy_exclusion_reasons"].str.contains("Rare").all()
+    removed = catalog[released & ~unsafe]
+    rare = removed.legacy_exclusion_reasons.str.contains("Rare")
+    assert rare.sum() == 86
+    tissue_changes = removed[~rare]
+    assert set(tissue_changes.protein_group_label) == {"KRT9", "TBATA", "PSMB11"}
+    assert tissue_changes.classification.eq("Other:Review").all()
+    assert tissue_changes.rare_cell_status.eq("not_extracted").all()
     assert catalog.loc[unsafe & ~released, "Unsafe_reasons"].value_counts().to_dict() == {
         "Established rare normal-cell RNA": 67,
         "Published normal-tissue expression": 13,
@@ -52,7 +57,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 463
+    assert len(policy.results(changed_only=True)) == 466
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -125,7 +130,10 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     for name in ["PRAME", "EXD1", "LRRIQ4"]:
         assert by_name.loc[name, "is_reproductive_antigen"]
         assert by_name.loc[name, "rare_cell_status"] == "dismissed"
-        assert "different cell types" in by_name.loc[name, "rare_cell_basis"]
+        assert (
+            "insufficient independent donor and cell-type concordance"
+            in by_name.loc[name, "rare_cell_basis"]
+        )
         assert by_name.loc[name, "finding_donors_multi_molecule"] == 2
     assert by_name.loc["PRAME", "finding_tissue"] == "eye"
     # Replicated multi-molecule RNA at a locus without mapping risk.
@@ -196,7 +204,7 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
-    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 918
+    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 921
     assert summary["shared_eligible"] == 841
     assert summary["expression_bounds"]["fail"] == 22
     failed = catalog[catalog.expression_bounds_status.eq("fail")]

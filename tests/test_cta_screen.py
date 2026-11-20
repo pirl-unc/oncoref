@@ -101,9 +101,9 @@ def test_default_donor_registry_can_screen_a_different_gene():
 
 
 def test_independent_tissue_inventory_matches_pinned_manifest():
-    from cta_continuous_report import panels
-
-    assert set(panels()[0]) == cta_screen.NORMAL_PANEL
+    observed = pd.read_csv(BASE / "tissue-evidence.csv.gz", usecols=["screening_tier", "tissue"])
+    screened = observed.screening_tier.isin(["vital", "protected", "manageable"])
+    assert set(observed.loc[screened, "tissue"]) == cta_screen.NORMAL_PANEL
 
 
 @pytest.mark.parametrize("bad", [float("nan"), -1, float("inf")])

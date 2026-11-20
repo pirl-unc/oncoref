@@ -272,16 +272,24 @@ def applied(path):
             "assay",
             "unit",
             "selection_tier",
+            "source",
+            "tissue",
+            "cell_type",
+            "taxonomy_id",
+            "stage",
+            "category",
+            "mapping_status",
             "negative_ihc_grade",
             "unsafe_evidence",
             "value",
         ],
         low_memory=False,
     )
-    peaks = peaks[
-        peaks.assay.eq("Normal bulk")
-        & peaks.selection_tier.isin(["vital", "protected", "manageable"])
-    ]
+    peaks = peaks.loc[peaks.assay.eq("Normal bulk")]
+    current_tier = cta_selection_policy.compartment_tiers(peaks)
+    peaks = peaks.loc[
+        peaks.selection_tier.eq(current_tier) & current_tier.isin(cta_selection_policy.TIER_BASES)
+    ].copy()
     peaks["grade"] = peaks.negative_ihc_grade.replace({"Missing": "Missing/uncertain"})
     tiers, grades = (
         ["vital", "protected", "manageable"],
@@ -313,7 +321,7 @@ def applied(path):
             ax.text(j, i, text, ha="center", va="center", fontsize=10)
     ax.tick_params(length=0)
     ax.set_title(
-        "Bulk-RNA peak observations counted as Unsafe evidence / recorded, by ceiling cell",
+        "Recorded bulk RNA peaks with current tiers: Unsafe evidence / observations",
         loc="left",
         fontsize=10.5,
     )
@@ -664,7 +672,7 @@ def source_to_tiers_architecture(data, everything, stem_path):
         (
             "2  BIOLOGICAL MEMBERSHIP",
             f"CA {int(ca.sum())} · RA {int(ra.sum())} · CTA {int((ca & ra).sum())} · union {int((ca | ra).sum())}",
-            "QC-passing tumor samples and reproductive / developmental RNA\nEach independently requires ≥10 × max(N, Disposable, 1 TPM)\nCTA = CA ∩ RA; origin compartments describe evidence, not tolerable injury",
+            "QC-passing tumor samples and reproductive / developmental RNA\nBoth require ≥10 × max(N, D, 1 TPM). N and D exclude thymus.\nCTA = CA ∩ RA; origin compartments describe evidence, not tolerable injury",
         ),
         (
             "3  OPTIONAL HOST SELECTION",
@@ -889,7 +897,7 @@ def build():
         "![Distributions](summary/distributions.png)\n\n"
         "One value per protein on each source's own scale; scales are never pooled. Counts use a "
         "compressed axis so the small candidate group stays visible.\n\n"
-        "## Shared enrichment rule\n\nBoth CA and RA independently require 10× max(N, Disposable, 1). The cancer panel below shows the tumor side.\n\n![Tumor against normal](summary/tumor-normal.png)\n\n"
+        "## Shared enrichment rule\n\nBoth CA and RA independently require 10× max(N, D, 1 TPM). Both normal compartments exclude thymus. The cancer panel below shows the tumor side.\n\n![Tumor against normal](summary/tumor-normal.png)\n\n"
         "## Rare-cell RNA\n\n![Rare-cell grading](summary/rare-cell.png)\n\n"
         "[Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md)\n\n"
         "## Inside the later stages\n\n![Stage detail](summary/stages.png)\n\n"

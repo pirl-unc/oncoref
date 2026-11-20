@@ -6,7 +6,7 @@
     "Linear transcript-per-million gene abundance; reject microarray proxies, CP10K, CPM proxies, nTPM, pTPM and gene-feature-count TPM",
     "Current exact locus mapping; ambiguous duplicate vectors quarantined; protein-identical loci summed only in the same sample/context with all members measured",
     "Pinned tumor matrices and per-sample quality selection from the existing source-scale registry",
-    "Complete 35-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Thymus is retained separately as protected-tissue evidence."
+    "Complete 35-context non-thymic, non-reproductive panel, plus native-TPM peripheral immune and brain measurements. Adult whole thymus is Disposable and retained in the separate thymic scope."
   ],
   "expression_bounds": {
     "target_maximum": "max(tumor, adult reproductive, developmental) >= 1 and above every measured nonreproductive normal and Disposable value on the comparison scale.",
@@ -748,5 +748,5 @@
     "tongue",
     "urinary bladder"
   ],
-  "tumor_matrix_cache_sha256": "c93028b8344e3790550b5420546eaa751bd20eef0c380201c53ef45e1fd2b5e3"
+  "tumor_matrix_cache_sha256": "e74c9127ce291ff151297e3501bda63a2b1d46bb9d6f76a0be515e76f9aec27c"
 }
