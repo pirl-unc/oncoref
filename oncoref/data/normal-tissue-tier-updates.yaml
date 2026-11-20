@@ -1,7 +1,7 @@
 schema: oncoref.normal-tissue-tier-updates
 schema_version: 1
-policy_version: 2026-11-19.1
-review_date: '2026-11-19'
+policy_version: 2026-11-20.1
+review_date: '2026-11-20'
 base_registry:
   file: normal-tissue-tiers.yaml
   policy_version: 2026-11-03.1
@@ -16,6 +16,12 @@ revisions:
       was associated with higher mortality and cancer incidence in a matched observational study.
       The tier expresses a loss allowance. Long-term immune consequences and age remain relevant.
     inference: project_loss_allowance
+  skin_follicular:
+    previous_cell_pattern: '\b(hair follic|hair matrix|hair shaft|hair root)\b'
+    cell_pattern: '\b(hair follicles?(?: cells?)?|hair matrix|hair shaft|hair root|cells? in (?:cortex/medulla|cuticle|(?:external|internal) root sheath))\b'
+    rationale: Repair the truncated word-boundary pattern so HPA hair-follicle labels ("hair follicles",
+      "hair follicle cells", and explicit follicular shaft/root-sheath compartments) resolve to Disposable
+      skin_follicular while keeping bulk skin, basal epidermis, glands, and mixed cell labels Protected.
 screening_notes:
   permitted_normal: Adult human allowances include whole thymus, appendix, tonsil and gallbladder, cutaneous melanocytes and hair follicles. Cell-specific injury evidence is assessed independently.
   lymphoid_organ_review: Identify the expressing population and its distribution outside the sampled organ. Spleen is Protected. Adult human whole thymus and tonsil have a conditional loss allowance.

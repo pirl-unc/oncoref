@@ -56,7 +56,7 @@ BASE = ROOT / "docs/audits/cta-selection-20261028"
 FROZEN = ROOT / "docs/audits/cta-transcript-selection-20261108/inputs/frozen"
 OUT = ROOT / "docs/audits/target-selection-20261110/rebuild"
 CACHE = ROOT / "tmp/target-catalog-cache"
-COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-19.2"
+COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
 INPUTS = {}
 #: Pooled 1% detection layers, replaced by donor-resolved rare-cell evidence.
 LEGACY_RARE = {"Rare vital-tissue cell expression", "Rare Protected-cell expression review"}
@@ -352,7 +352,7 @@ def normal_panel(facts, write=True, *, include_individual_samples=True):
     ]:
         raw = read_reference(name, "v23", sep="\t")
         raw["gene_id"] = raw.Gene.map(lookup)
-        raw["tissue"] = raw[context]
+        raw["tissue"] = raw[context].replace({"hippocampus": "hippocampal formation"})
         raw["source_context"] = raw[context]
         raw["value"] = raw.TPM
         rows.append(
@@ -629,12 +629,13 @@ def annotate_papers(decisions):
 def pinned_tumor_matrix(path, digest):
     from oncoref import catalog
 
-    path = Path(path)
-    if not path.is_file():
-        path = catalog.ensure("per-sample:" + path.stem, version=path.parent.name)
-    if sha256(path) != digest:
-        raise ValueError(f"Changed tumor matrix: {path}")
-    return path
+    entry = Path(path)
+    resolved = catalog.ensure(
+        "per-sample:" + entry.stem, version=entry.parent.name.removeprefix("v")
+    )
+    if sha256(resolved) != digest:
+        raise ValueError(f"Changed tumor matrix: {resolved}")
+    return resolved
 
 
 def tumors(facts):

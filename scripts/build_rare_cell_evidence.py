@@ -496,6 +496,14 @@ def regrade_pinned():
                 "sha256": digest(receipt_path),
                 "scope": "All released donor populations with >=10 positive cells; complete for the unchanged >=10-cell decision rule. Descriptive maxima and donors_assessed refer to retained populations.",
             },
+            "limitations": [
+                "A gene-count matrix cannot check alignment, strand or exonic support; the "
+                "mapping-risk flags are reference properties, not read-level checks",
+                "No empty-droplet or ambient-RNA correction is applied to the pinned counts",
+                "Known consortium collections and integrated-atlas donor overlaps are deduplicated, "
+                "but undocumented donor re-use across unrelated public studies cannot be ruled out",
+                "Proteins that were Unsafe for another reason were not extracted",
+            ],
         }
     )
     (DATA / "rare-cell-evidence.json").write_text(json.dumps(provenance, indent=2) + "\n")

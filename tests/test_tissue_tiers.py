@@ -75,7 +75,7 @@ def test_base_assessments_pass_through_unchanged():
 
 def test_public_tables_cover_the_base_registry_and_its_updates():
     rules = tissue_tiers.assessments()
-    assert rules.source.value_counts().to_dict() == {"registry": 106, "revision": 1, "update": 7}
+    assert rules.source.value_counts().to_dict() == {"registry": 105, "revision": 2, "update": 7}
     assert rules.id.is_unique
     ledger = tissue_tiers.references()
     assert ledger.reference_id.is_unique
@@ -83,6 +83,51 @@ def test_public_tables_cover_the_base_registry_and_its_updates():
         tissue_tiers.update_references()
     )
     assert tissue_tiers.TIERS == ("vital", "protected", "manageable", "disposable")
+
+
+@pytest.mark.parametrize(
+    ("tissue", "cell_type"),
+    [
+        ("skin", "hair follicle"),
+        ("skin", "hair follicles"),
+        ("skin 1", "hair follicles"),
+        ("skin 2", "hair follicles"),
+        ("skin", "hair follicle cells"),
+        ("hair follicle", "cells in cortex/medulla"),
+        ("skin", "cells in cuticle"),
+        ("skin", "cells in external root sheath"),
+        ("skin", "cells in internal root sheath"),
+    ],
+)
+def test_hair_follicle_cell_pattern_revision_matches_hpa_labels(tissue, cell_type):
+    result = tissue_tiers.assess(tissue, cell_type, resolution="cell")
+    assert result["tier"] == "disposable"
+    if tissue == "hair follicle":
+        assert result["assessment_id"] == "hair"
+    else:
+        assert result["assessment_id"] == "skin_follicular"
+        assert result["reason"] == "cell_rule"
+
+
+@pytest.mark.parametrize(
+    ("tissue", "cell_type", "resolution", "expected_tier"),
+    [
+        ("skin", None, "bulk", "protected"),
+        ("skin", "hair follicles", "bulk", "protected"),
+        ("skin", "cells in basal layer", "cell", "protected"),
+        ("skin", "sebaceous glands", "cell", "protected"),
+        ("skin", "eccrine glands", "cell", "protected"),
+        ("skin", "keratinocytes; hair follicles", "cell", "protected"),
+        ("skin", "epidermal stem cells", "cell", "protected"),
+        ("ovary", "follicle cells", "cell", "protected"),
+    ],
+)
+def test_hair_follicle_revision_preserves_protected_skin_and_nonfollicular_labels(
+    tissue, cell_type, resolution, expected_tier
+):
+    result = tissue_tiers.assess(tissue, cell_type, resolution=resolution)
+    assert result["tier"] == expected_tier
+    assert result["assessment_id"] != "skin_follicular"
 
 
 def test_loss_consequences_preserve_scope_and_link_reviewed_evidence():

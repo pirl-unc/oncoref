@@ -503,3 +503,55 @@ def test_shared_allen_donor_across_atlases_cannot_replicate_itself():
     assert finding["donors_multi_molecule"] == 1 and not finding["replicated"]
     rows.loc[1, "donor_id"] = "H20.33.014"
     assert policy.assess_rare_cell_rna(rows, **kwargs)["status"] == "established"
+
+
+def test_integrated_atlas_and_consortium_collections_do_not_fabricate_replication():
+    kwargs = {"mapping_risk": False, "confirmed_tissues": set()}
+    # Same Sanes donor in primary study (7855daa4) and integrated retina atlas (4c6eaf5c)
+    sanes_overlap = rare(
+        [
+            ("7855daa4-3f34-4aae-b65a-87720c02e7cd", "Hu0218", "vital", 1000, 30, 20),
+            ("4c6eaf5c-6d57-4c76-b1e9-60df8c655f1e", "Hu0218", "vital", 1000, 30, 20),
+        ]
+    ).assign(tissue="eye", cell_type="rod bipolar cell")
+    assert policy.assess_rare_cell_rna(sanes_overlap, **kwargs)["status"] == "below_screen"
+
+    # Strong (>=5%) signal in two Baylor Eye Atlas collections is one consortium -> Review, not Unsafe
+    baylor_only = rare(
+        [
+            ("0cbf8ef8-87bd-4b51-8521-ec3f68183e11", "BCM_22_0047", "vital", 1000, 90, 70),
+            ("4c6eaf5c-6d57-4c76-b1e9-60df8c655f1e", "BCM_22_0183", "vital", 1000, 80, 60),
+        ]
+    ).assign(tissue="eye", cell_type="retinal pigment epithelial cell")
+    baylor_receipt = policy.assess_rare_cell_rna(baylor_only, **kwargs)
+    assert baylor_receipt["status"] == "unresolved"
+    assert baylor_receipt["findings"][0]["studies_multi_molecule"] == 1
+    assert baylor_receipt["findings"][0]["collections_multi_molecule"] == 2
+
+    # Same ILD lung donor embedded in integrated HLCA cannot replicate itself
+    hlca_ild = rare(
+        [
+            ("07e12576-b41b-4350-adfc-059bfc4328ea", "THD0007", "vital", 1000, 40, 25),
+            (
+                "6f6d381a-7701-4781-935c-db10d30de293",
+                "homosapiens_None_2023_None_sikkemalisa_002_d10_1101_2022_03_10_483747THD0007",
+                "vital",
+                1000,
+                40,
+                25,
+            ),
+        ]
+    ).assign(tissue="lung", cell_type="pulmonary alveolar type 2 cell")
+    assert policy.assess_rare_cell_rna(hlca_ild, **kwargs)["status"] == "below_screen"
+
+    # Independent Baylor (BCM_*) + Sanes (Hu*) eye donors DO replicate cleanly
+    independent_eye = rare(
+        [
+            ("0cbf8ef8-87bd-4b51-8521-ec3f68183e11", "BCM_22_0047", "vital", 1000, 40, 25),
+            ("7855daa4-3f34-4aae-b65a-87720c02e7cd", "Hu0218", "vital", 1000, 40, 25),
+        ]
+    ).assign(tissue="eye", cell_type="retinal pigment epithelial cell")
+    indep_receipt = policy.assess_rare_cell_rna(independent_eye, **kwargs)
+    assert indep_receipt["status"] == "established"
+    assert indep_receipt["findings"][0]["studies_multi_molecule"] == 2
+    assert indep_receipt["findings"][0]["donors_multi_molecule"] == 2

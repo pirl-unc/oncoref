@@ -63,3 +63,38 @@ def test_content_addressed_import_validates_and_repairs_bytes(tmp_path, monkeypa
     source.write_bytes(b"changed reference")
     with pytest.raises(reference_data.ReferenceDataError, match="does not match"):
         reference_data.pinned_path("test", "v1", import_path=source)
+
+
+def test_required_curation_inputs_are_all_registered_and_portable():
+    from pathlib import Path
+
+    from oncoref import catalog
+
+    refs = curation.required_reference_inputs()
+    ref_sources = {source for source, _ in refs}
+    assert {
+        "hpa_individual_tissue_tpm",
+        "hpa_rna_consensus",
+        "hpa_single_cell_tissue",
+        "hpa_normal_tissue",
+        "rna_tissue_hpa",
+        "rna_tissue_gtex",
+        "rna_brain_gtex",
+        "rna_brain_hpa",
+        "gtex_tissue_rna",
+        "gtex_individual_tissue_tpm",
+        "hpa_immune_cell_samples",
+        "hpa_immune_monaco",
+        "petropoulos_embryonic_tpm",
+        "tyser_embryonic_tpm",
+    } <= ref_sources
+    for source, version in refs:
+        assert source in reference_data.REFERENCE_SOURCES
+        assert version in reference_data.REFERENCE_SOURCES[source]["urls"]
+
+    root = Path(__file__).resolve().parents[1]
+    tumors = curation.required_tumor_matrices(root)
+    assert len(tumors) == 132
+    for code, version, sha256 in tumors:
+        assert "/" not in code and not version.startswith("v") and len(sha256) == 64
+        assert catalog.resolve_version(f"per-sample:{code}", version) == version

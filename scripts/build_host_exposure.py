@@ -96,7 +96,7 @@ def build():
     references = curation.manifest()["reference_inputs"]
     for role in ("host_cell_rna", "host_protein"):
         source, version = references[role]["source"], references[role]["version"]
-        path = reference_data.local_path(source, version)
+        path = curation.reference_input(role)
         pin = reference_data.REFERENCE_SOURCES[source]["pins"][version]
         data = read(path, sep="\t", source_key=f"reference:{source}:{version}", pin=pin)
         data["entity_id"] = data.Gene.map(lookup).map(gene_entity)

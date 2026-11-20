@@ -11,9 +11,21 @@ import sys
 from importlib.resources import files
 from pathlib import Path
 
-from . import reference_data, target_selection
+from . import catalog, reference_data, target_selection
 
 RECEIPT = "oncoref/data/curation-build-receipt.json"
+TUMOR_MANIFEST = "docs/audits/cta-selection-20261028/tumor-identity-repair/manifest.json"
+#: Summary bulk/brain/immune references read by the curation build outside reference_inputs.
+SUMMARY_REFERENCE_INPUTS = (
+    ("hpa_rna_consensus", "v23"),
+    ("rna_tissue_hpa", "v23"),
+    ("rna_tissue_gtex", "v23"),
+    ("rna_brain_gtex", "v23"),
+    ("rna_brain_hpa", "v23"),
+    ("gtex_tissue_rna", "v11"),
+    ("hpa_immune_cell_samples", "v23"),
+    ("hpa_immune_monaco", "v23"),
+)
 
 
 def manifest():
@@ -24,6 +36,59 @@ def reference_input(role, *, import_path=None):
     """Resolve a declared source/version to checksum-verified, content-addressed bytes."""
     source = manifest()["reference_inputs"][role]
     return reference_data.pinned_path(source["source"], source["version"], import_path=import_path)
+
+
+def required_reference_inputs() -> list[tuple[str, str]]:
+    """Every external reference (source, version) required by the curation build."""
+    spec = manifest()
+    items: list[tuple[str, str]] = [
+        (info["source"], info["version"]) for info in spec["reference_inputs"].values()
+    ]
+    items.extend(SUMMARY_REFERENCE_INPUTS)
+    for name in sorted(reference_data.REFERENCE_SOURCES):
+        if name.startswith("dice_"):
+            items.append((name, reference_data.resolve_version(name)))
+    for panel in spec.get("reference_panels", {}).values():
+        source = panel["source"]
+        prefix = panel["release"] + "-"
+        pins = reference_data.REFERENCE_SOURCES[source].get("pins", {})
+        for version in sorted(v for v in pins if v.startswith(prefix)):
+            items.append((source, version))
+    return list(dict.fromkeys(items))
+
+
+def required_tumor_matrices(root: Path) -> list[tuple[str, str, str]]:
+    """Pinned per-sample tumor cohorts as (cancer_code, version, sha256) tuples."""
+    raw = json.loads((Path(root) / TUMOR_MANIFEST).read_text())
+    out = []
+    for entry, expected_sha256 in sorted(raw["matrices"].items()):
+        path = Path(entry)
+        out.append((path.stem, path.parent.name.removeprefix("v"), expected_sha256))
+    return out
+
+
+def fetch_inputs(root: Path | None = None, *, include_tumors: bool = False) -> dict:
+    """Materialize and verify every external dataset required to rebuild the catalog."""
+    fetched_refs = 0
+    for source, version in required_reference_inputs():
+        pins = reference_data.REFERENCE_SOURCES[source].get("pins", {})
+        if version in pins and "sha256" in pins[version]:
+            reference_data.pinned_path(source, version)
+        else:
+            reference_data.ensure(source, version)
+        fetched_refs += 1
+    fetched_tumors = 0
+    if include_tumors:
+        root = Path(__file__).resolve().parents[1] if root is None else Path(root)
+        for code, version, expected_sha256 in required_tumor_matrices(root):
+            path = catalog.ensure(f"per-sample:{code}", version=version)
+            if digest(path) != expected_sha256:
+                raise ValueError(f"Checksum mismatch for tumor matrix {code}@{version}: {path}")
+            fetched_tumors += 1
+    return {
+        "reference_inputs_verified": fetched_refs,
+        "tumor_matrices_verified": fetched_tumors,
+    }
 
 
 def ordered_steps(steps):
@@ -168,7 +233,7 @@ def category_diff(previous, current=None):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["build", "check", "diff"])
+    parser.add_argument("command", choices=["build", "check", "diff", "fetch"])
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument(
         "--check", action="store_true", help="Verify the existing build without rebuilding"
@@ -179,6 +244,11 @@ def main(argv=None):
         help="Use the builder's checksum-verified tumor cache",
     )
     parser.add_argument(
+        "--include-tumors",
+        action="store_true",
+        help="For fetch: also download and verify all 132 pinned per-sample tumor matrices",
+    )
+    parser.add_argument(
         "--against",
         type=Path,
         help="Prior catalog CSV, optionally gzipped; no frozen Python code required",
@@ -186,6 +256,9 @@ def main(argv=None):
     parser.add_argument("--format", choices=["table", "csv", "json"], default="table")
     args = parser.parse_args(argv)
     root = args.root.resolve()
+    if args.command == "fetch":
+        print(json.dumps(fetch_inputs(root, include_tumors=args.include_tumors)))
+        return
     if args.command == "diff":
         import pandas as pd
 

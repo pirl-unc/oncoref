@@ -1,183 +1,111 @@
-# How OncoRef classifies human antigen candidates
+# Cancer-selective and cancer–testis antigens in OncoRef
 
-**Research catalog · Policy `oncoref.target-selection.2026-11-19.4` · Default biological sets (unfiltered)**
-[Searchable protein catalog](audits/target-selection-20261110/rebuild/report.html) · [Organ & cell injury hierarchy](tissue-hierarchy.md) · [Data & downloads](antigen-data.md)
+*Policy `oncoref.target-selection.2026-11-20.1` · [Searchable catalog](audits/target-selection-20261110/rebuild/report.html) · [Tissue injury hierarchy](tissue-hierarchy.md) · [Data & downloads](antigen-data.md)*
 
-## Executive summary
+Targeted cancer immunotherapies need proteins that are active in tumors and absent from healthy adult organs. Published cancer–testis antigen (CTA) lists often mix historical microarray nominations, incompatible expression scales, and patient-specific clinical assumptions into one table.
 
-OncoRef screens the human coding proteome—**20,099 coding loci** collapsed into **19,893 protein-group records**—to separate proteins with selective cancer or reproductive/developmental expression from proteins expressed across healthy adult organs. Against one shared non-thymic, non-reproductive healthy baseline, **397** protein groups qualify as **Cancer Antigens (CA)** and **455** qualify as **Reproductive Antigens (RA)**. The **327** proteins that clear both routes independently form the **Cancer–Testis Antigen (CTA)** intersection (in this catalog's broad reproductive/developmental sense); the candidate union contains **525** proteins.
+OncoRef screens the human coding proteome—**20,099** Ensembl 115 coding loci collapsed into **19,893** identical-sequence protein groups—with one rule set that separates normal-tissue safety, biological enrichment, and patient-specific organ protection.
+
+## Categories
+
+Every protein group lands in one of five mutually exclusive categories:
+
+- <span class="cat cat-unsafe">Unsafe</span> (`18,247`): confirmed expression in vital, protected, or high-expression manageable adult somatic tissues. Normal-tissue expression always takes precedence over tumor expression.
+- <span class="cat cat-other">Other</span> (`1,121`): held out of the candidate sets because required normal coverage is incomplete, a strong single-cell signal has unresolved paralog attribution (`Other:Review`), the sequence overlaps <span class="cat cat-unsafe">Unsafe</span> proteins (`Other:Sequence`), an adult normal home tissue lacks bulk panel coverage (`Other:Unscreened tissue`), or tumor and reproductive expression fall below the enrichment bar (`Other:Expression`).
+- <span class="cat cat-ca">Cancer Antigens (CA)</span> (`397`): passes the shared safety and eligibility screens and reaches **≥10×** the non-thymic healthy adult baseline in at least one QC-passing tumor sample.
+- <span class="cat cat-ra">Reproductive Antigens (RA)</span> (`455`): passes the same shared screen and reaches **≥10×** the identical healthy baseline in an adult reproductive tissue sample or supported early-embryo lineage.
+- <span class="cat cat-cta">Cancer–Testis Antigens (CTA)</span> (`327`): the intersection `CA ∩ RA`, clearing both cancer and reproductive/developmental enrichment while staying silent across healthy somatic organs. The union `CA ∪ RA` contains **525** candidate targets (`327` <span class="cat cat-cta">CTA</span>, `70` <span class="cat cat-ca">CA only</span>, `128` <span class="cat cat-ra">RA only</span>).
+
+![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/classification-overview.png)
+
+*Figure 1.* Proteome partition across the five categories. Biological membership (<span class="cat cat-ca">CA</span>, <span class="cat cat-ra">RA</span>, <span class="cat cat-cta">CTA</span>) is independent of patient anatomy; patient-specific organ protection applies downstream without relabeling biological categories.
 
 | Stage or set | Protein groups | Notes |
 | --- | --- | --- |
 | Human coding loci tracked | 20,099 | Collapsed by identical representative amino-acid sequence into 19,893 protein groups |
-| Excluded by normal-tissue screens (`Unsafe`) | 18,250 | Bulk RNA, single-cell clusters, immune, cornea, rare-cell RNA, normal IHC, or curated normal findings |
-| Held or non-qualifying (`Other`) | 1,118 | Coverage/translation/rare-cell review (734), sequence containment (48), expression bounds (248), unscreened home tissue (88) |
-| Shared-eligible before enrichment | 841 | Native TPM compared for 921 groups (including counterfactuals for held proteins) |
+| Excluded by normal-tissue screens (`Unsafe`) | 18,247 | Bulk RNA, single-cell clusters, immune, cornea, rare-cell RNA, normal IHC, or curated normal findings |
+| Held or non-qualifying (`Other`) | 1,121 | Coverage/translation/rare-cell review (736), sequence containment (48), expression bounds (249), unscreened home tissue (88) |
+| Shared-eligible before enrichment | 842 | Native TPM compared for 923 groups (including counterfactuals for held proteins) |
 | Cancer Antigens (`CA`) | 397 | 327 CTA + 70 CA only (≥10× non-thymic healthy reference) |
 | Reproductive Antigens (`RA`) | 455 | 327 CTA + 128 RA only (≥10× on the same reference) |
 | Candidate antigen union (`CA ∪ RA`) | 525 | 356 previously nominated in curated CTA papers + 169 newly identified |
 
-> **What a catalog call means—and does not mean.** Every OncoRef membership is a reproducible expression-screening decision, not a clinical target certification. Antigen processing and MHC presentation, tumor-specific isoform production, subcellular localization, and in vivo tolerability of a specific therapeutic modality each require direct experimental evidence.
+> These classifications are expression-screening calls, not clinical target certifications. Translation, antigen processing, peptide–MHC presentation, localization, and modality-specific safety require direct experimental validation.
 
-**Contents:** [1. Counting unit](#1-defining-the-counting-unit-proteins-not-transcripts) · [2. Tissues & host choices](#2-tissue-framework-scope-injury-tiers-and-host-protection) · [3. Evidence sources](#3-evidence-sources-and-anatomical-coverage) · [4. Classification rules & funnel](#4-the-three-stage-classification-funnel) · [5. Published literature & studied CTAs](#5-how-published-cta-oncofetal-and-placental-lists-compare) · [6. Worked edge cases](#6-worked-case-studies-why-edge-cases-are-held-instead-of-forced) · [7. Highest tumor peaks](#7-highest-tumor-expression-by-category) · [8. Reproduction & reference index](#8-reproduction-open-limits-and-reference-index)
+## Why multiple normal atlases, single-cell RNA, and protein staining
 
-## 1. Defining the counting unit: proteins, not transcripts
+No single assay catches every normal-tissue risk. Each modality in OncoRef covers a blind spot left by the others:
 
-Source gene identifiers across RNA, single-cell, and protein atlases are mapped to human **Ensembl 115** loci. Each locus receives one qualified reference translation—preferring **MANE Select** on the primary assembly, then **Ensembl canonical**—checked for coding biotype, complete start and stop codons, uninterrupted open reading frame, and absence of unresolved translation conflicts.
+**Multiple bulk RNA atlases and sorted immune panels.** Bulk RNA removes most ubiquitously expressed proteins, but individual atlases differ in organ coverage and donor sampling. Pairing GTEx v11 donor distributions with HPA v23 biopsies and brain subregions prevents single-atlas gaps from reading as silence. Sorted blood subsets (HPA, DICE, Monaco) catch immune-lineage transcripts diluted in whole blood or spleen.
 
-Because paralogous loci can encode identical proteins (such as `SPANXA1/2`, `XAGE1A/B`, or `VCY/1B`), loci sharing an identical representative **amino-acid sequence** are grouped into one protein record even when their cDNA sequences differ. Wherever sample identities are available, member-locus expression is summed **within the same sample** before comparing samples across cohorts. **563** records lack a qualified representative sequence hash; they stay visible in the catalog, and missing translation can block admission even when RNA is measured.
+**Single-cell clusters and rare-cell UMI atlases.** Bulk RNA averages across millions of cells, so a gene expressed strongly in 1–5% of a vital population—such as alveolar type 2 cells, cardiomyocytes, or cortical neurons—can sit below bulk cutoffs. Single-cell atlases (HPA clusters, Collin cornea, donor-resolved CELLxGENE Census and Siletti brain) catch these localized risks. Requiring ≥2 UMI per cell replicated across independent studies and donors avoids discarding real targets over ambient RNA, while holding paralog-ambiguous genes for review instead of auto-excluding them.
 
-*Supporting detail:* [Reference selection and transcript-level evidence](audits/cta-transcript-selection-20261108/index.md) · [Sequence API, alternative translations, and peptide subtraction](antigen-sequences.md)
+**Normal-tissue protein staining (IHC).** Steady-state mRNA does not always track protein abundance: stable proteins can persist at modest RNA, while low-level transcript noise does not always yield detectable protein. Reliable positive HPA immunohistochemistry in a vital or protected organ independently excludes a target; consistent negative IHC across routine contexts of a tissue gives calibrated headroom above low bulk RNA.
 
-## 2. Tissue framework: scope, injury tiers, and host protection
+**Curated normal literature and specialized anatomy.** Standard bulk panels omit small adult organs such as olfactory epithelium and taste buds. Reviewed normal-expression literature and targeted anatomical studies either exclude vital/protected homes or hold unmeasured adult homes as `Other:Unscreened tissue`.
 
-Target-selection lists frequently conflate three separate questions. OncoRef keeps them orthogonal:
+![Unsafe proteins caught by complementary assays beyond bulk tissue RNA](audits/target-selection-20261110/rebuild/summary/normal-evidence-layers.png)
 
-1. **Anatomical scope** — whether a tissue enters the healthy adult reference, supplies a reproductive/developmental RA witness, or is tracked separately (`thymic`).
-2. **Adult injury tier** — the expected consequence of sustained organ or cell-type loss. A compartment can supply an RA witness while still carrying a protective rating (e.g., adult testis supplies RA witnesses while retaining a `Protected` tier; breast biopsies are partitioned into lactating vs. resting mammary using a coordinated milk-program signature: `LALBA`, `CSN1S1`, `CSN2`, `CSN3`).
-3. **Host protection** — user-declared patient anatomy and tissue-loss tolerance (`Protect`, `Accept loss`, `Absent`), which filters downstream candidates and expands the peptide-subtraction background without altering biological CA/RA/CTA membership.
+*Figure 2.* `Unsafe` proteins passing bulk tissue RNA ceilings that are caught by single-cell clusters, sorted immune panels, normal IHC, donor-resolved rare-cell UMI counts, curated literature, or adult cornea scRNA.
 
-| Adult injury tier | Policy interpretation | Examples |
-|---|---|---|
-| **Vital** | Loss threatens life, essential repair, or major sensory/neurological function | Heart, neurons, corneal endothelium |
-| **Protected** | Persistent loss is consequential and clinical compensation is poorly established | Salivary gland, whole skin, adult testis |
-| **Manageable** | Defined loss has an established precedent for clinical compensation or replacement | Thyroid, mature B cells |
-| **Disposable** | A narrow compartment carries a specific loss allowance | Cutaneous melanocytes, gallbladder, adult whole thymus |
+## 1. Screening attrition and the 10× enrichment rule
 
-Bulk measurements inherit the organ tier; permissive cell-type exceptions require resolved cell identity, and mixed populations retain the more protective tier.
+Applying the normal-tissue safety layers, eligibility checks, and enrichment rules narrows **19,893** protein groups to **842** shared-eligible proteins (**923** with native-TPM comparisons, including counterfactuals for held proteins) and **525** retained candidates (`CA ∪ RA`).
 
-### Adult thymus policy
+![Proteome-wide attrition across screening gates](audits/target-selection-20261110/rebuild/summary/funnel-all.png)
 
-Adult whole thymus is rated **Disposable** under the organ-loss policy while defined immune-cell populations retain their own injury tiers. Because medullary thymic epithelial cells (mTECs) express tissue-restricted antigens during central tolerance, bulk thymus is tracked under the `thymic` scope and excluded from both enrichment denominators (**N** and **D**). Independent normal-expression and protein screens still apply, and OncoRef records the observational association between adult thymectomy and increased mortality/cancer incidence so users can weigh thymic exposure explicitly.
+*Figure 3.* Sequential attrition from **19,893** protein groups to **525** retained candidates, assigning each excluded protein once at its first failing gate. The broken x-axis above 3,000 keeps post-bulk filters readable. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-all.csv).
 
-### Biological membership vs. host protection
+Both enrichment routes apply the same threshold—**≥10×** above **H₀ = max(N, D, 1 TPM)**—where `N` is the highest non-thymic, non-reproductive healthy adult reference and `D` is the non-thymic Disposable maximum. Gold points above the dotted line clear the fold rule numerically but remain held in `Other:Review` or `Other:Unscreened tissue` (such as `CTAG2` and `GFY`).
 
-Default biological sets apply **no reproductive protection**. Host profiles (`female-patient`, `male-patient`, lactation, pregnancy, or custom compartment overrides) apply downstream: protecting testis reduces 327 biological CTAs to 54 retained candidates; pregnancy leaves 0 retained (123 unresolved due to incomplete developmental coverage, 204 failing a host requirement).
+![Cancer enrichment relative to the healthy adult reference](audits/target-selection-20261110/rebuild/summary/cancer-enrichment.png)
 
-![Host choices and CTA screening outcomes](audits/target-selection-20261110/rebuild/summary/cta-tiers-and-profiles.png)
+*Figure 4.* Cancer enrichment (<span class="cat cat-ca">CA</span>) across all **923** protein groups with native-TPM comparisons.
 
-*Figure 1.* Biological CTA membership (327 proteins) is host-agnostic. Explicit host anatomy and protection choices filter the downstream research set and expand the subtraction background without changing biological identity.
+![Reproductive and developmental enrichment relative to the healthy adult reference](audits/target-selection-20261110/rebuild/summary/reproductive-enrichment.png)
 
-*Supporting detail:* [Organ and cell injury hierarchy](tissue-hierarchy.md) · [Tissue calls and cell exceptions](tissue-tiers.md) · [Host protection and evidence gaps](host-selection.md) · [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) · [Human mTEC central-tolerance study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
+*Figure 5.* Reproductive and developmental enrichment (<span class="cat cat-ra">RA</span>) against the identical non-thymic healthy adult baseline.
 
-## 3. Evidence sources and anatomical coverage
-
-OncoRef pins **323 SHA-256-verified files** across **1,221 source/context rows** and **130 assessed tumor cohorts**. Incompatible assay scales are never pooled; every source stays in its native units and enters only the screening layer it can support:
-
-| Evidence pillar | Primary resources | Native statistic & role |
-|---|---|---|
-| **Healthy-tissue baseline (`N`, `D`)** | GTEx v11, HPA v23 biopsies & brain, HPA/DICE/Monaco sorted immune | Within-site donor or biopsy P95 in native TPM sets the non-thymic healthy reference (`N`) and Disposable max (`D`). |
-| **Normal-tissue safety screens** | HPA consensus & scRNA clusters, HPA normal IHC, CELLxGENE Census + Siletti, Collin cornea, specialized anatomy | Tiered RNA ceilings (TPM/nTPM/CP10K), reliable positive IHC, matched negative-IHC credit, and donor-replicated rare-cell UMI screens. |
-| **Tumor & reproductive/embryo expression** | 130 QC-passing tumor cohorts, GTEx/HPA reproductive biopsies, Petropoulos/Tyser/Molè embryos | Individual QC-passing tumor libraries qualify CA; individual reproductive samples or supported embryo lineages qualify RA. |
-| **Curated literature & clinical controls** | 149 catalog-mapped papers (CTA, oncofetal/DUX4, placental, clinical trials, normal counterevidence) | Provenance metadata and curated normal-expression exclusions; a positive nomination alone never confers admission. |
-
-![Native-TPM tissue coverage and analytical role across sources](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage.png)
-
-*Figure 2.* Native-TPM tissue coverage grouped by anatomical scope. Colored cells mark qualifying coverage for at least one assessed protein group; gray marks no qualifying coverage in that source. **RA witness** indicates individual reproductive samples or supported embryo-lineage means capable of qualifying RA; **Reproductive context** indicates tissue summaries kept for context only.
-
-<details markdown="1">
-<summary>Detailed source-family rules and versioned file inventory (323 files across 1,221 contexts)</summary>
-
-| Source family | Evidence provided | Role in classification |
-|---|---|---|
-| **Ensembl 115, MANE & sequence registry** | Locus IDs, transcript flags, CDS qualification, sequence digests, read-through maps | Define protein-group counting units and test translation, nesting, and Unsafe 9-mer containment. |
-| **GTEx v11** | Individual site TPM, donor/library IDs, site medians, QC annotations | Non-reproductive sites contribute the within-site linear donor P95 (after within-donor replicate median). Individual reproductive samples can independently witness RA. |
-| **HPA bulk tissue & brain** (incl. GTEx via HPA) | Individual tissue biopsies, tissue/brain-region means, consensus nTPM, anatomical mappings | Native TPM enters the healthy reference (within-tissue biopsy P95 where available) or reproductive RA witnesses. Consensus nTPM runs its own normal gate. Redistributed GTEx overlaps GTEx v11. |
-| **HPA sorted blood, DICE & Monaco** | Sorted immune populations, donor TPM, ranked values, published means, immune nTPM | HPA donor P95 and DICE single-locus P95 enter native comparison; DICE multi-locus groups use the conservative sum of member maxima when donor pairing is unavailable; Monaco retains the published mean. Also evaluated in the immune screen. |
-| **HPA single-cell clusters & normal IHC** | Cell-type nTPM, staining grades, antibody IDs, reliability scores | Screen normal cell clusters and reliable positive protein findings; matched negative IHC can raise RNA ceilings. Reproductive staining/nTPM aids interpretation but never supplies a native-TPM 10× witness. |
-| **CELLxGENE Census & Siletti brain** | Versioned H5AD studies, donor IDs, cell types, molecule counts | Grade sparse normal-cell expression by donor penetration, study replication, locus mapping risk, and independent confirmation. |
-| **Collin cornea & conjunctiva** | Adult, developmental, and disease ocular cell counts with donor metadata | Dedicated adult corneal normal gate in counts per 10,000 (CP10K); non-adult/disease material stays scoped separately. |
-| **Specialized anatomy studies** | Olfactory epithelium (Durante, Olender, Verbeurgt, MSSM), fetal dental epithelium, developmental skeletal atlas, adult osteoblast markers | Document localized expression in tissues underrepresented in bulk atlases; age, scale, and marker-list scope constrain what each study can establish (marker lists never prove tissue-wide absence). |
-| **Petropoulos, Tyser & Molè embryos** | Per-embryo lineage TPM (preimplantation, Carnegie stage 7) plus day-9/day-11 hypoblast UMI/staining | Supported native TPM can qualify RA; hypoblast UMI counts and staining document developmental expression on their native scales. |
-| **Tumor cohorts** | Per-sample matrices, sample/patient IDs, cross-cohort sharing, scale and QC checks | **130 assessed cohorts** in the [tumor coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv). Comparable QC-passing libraries supply CA witnesses (germ-cell tumors eligible; coordinated reproductive RNA advisory). |
-| **Curated papers, proteomics & trials** | Nominated gene lists, normal counterevidence, supersession history, clinical/epitope records, CT83 RNAscope | Separate positive nominations from normal counterevidence and literature benchmarks. Curated normal findings can exclude a protein; a positive nomination alone never grants admission. |
-
-| Inventory role | Versioned files |
-| --- | --- |
-| assay observations | 4 |
-| cell atlas | 4 |
-| comparison or sample metadata | 9 |
-| curated data | 8 |
-| curation input | 124 |
-| native assay or supplement | 42 |
-| tumor expression | 132 |
-
-</details>
-
-*Supporting detail:* [Registered file inventory (CSV)](antigen-whitepaper/sources.csv) · [Source-by-tissue table (CSV)](audits/target-selection-20261110/rebuild/normal-rna/source-tissues.csv) · [Native RNA panels, QC & denominators](audits/target-selection-20261110/rebuild/normal-rna/index.md) · [Download API & atlas inventory](antigen-data.md)
-
-## 4. The three-stage classification funnel
-
-Every protein group moves through three sequential stages—first excluding normal-tissue expression, next verifying technical eligibility and sequence uniqueness, and finally testing tumor and reproductive enrichment against the same healthy baseline:
-
-| Stage | Core question | Decision rule | Outcomes |
-|---|---|---|---|
-| **1. Healthy-tissue screen** | Is the protein expressed in vital, protected, or manageable adult tissues? | Tiered bulk/cluster/immune RNA ceilings (with negative-IHC credit), adult cornea CP10K, reliable normal IHC, curated normal literature, and donor-replicated rare-cell RNA. | Confirmed normal expression → **`Unsafe`**; strong rare-cell signal with unresolved paralog attribution → **`Other:Review`** |
-| **2. Eligibility & coverage** | Can we make a fair, sequence-specific like-for-like comparison? | Complete coverage across **35** healthy contexts, qualified translation, <95% 9-mer containment in `Unsafe`, target peak > healthy max, Disposable ≤ **32** TPM/nTPM, and measured adult normal home. | Gaps/holds → **`Other:Review`**, **`Other:Sequence`**, **`Other:Expression`**, or **`Other:Unscreened tissue`** |
-| **3. Symmetric 10× enrichment** | Does tumor or reproductive/embryo RNA exceed the healthy baseline by ≥10×? | Evaluated independently against **H₀ = max(N, D, 1 TPM)** (both non-thymic, non-reproductive). | Tumor passes → **`CA`**; reproductive/embryo passes → **`RA`**; both pass → **`CTA`** |
-
-> **Qualifying expression ≥ 10 × max(N, D, 1 TPM)**
-
-<details markdown="1">
-<summary>Exact quantitative gate thresholds (RNA ceilings, IHC credit, rare-cell replication, and embryo support)</summary>
-
-* **Bulk, cluster, and immune RNA ceilings:** Base limits in TPM and nTPM are **4 for Vital, 8 for Protected, 16 for Manageable**. Matched negative IHC across routine contexts of the tissue raises the ceiling by 2× (Approved), 4× (Supported), or 8× (Enhanced), alongside limited registry clinical adjustments. Exceeding a `Vital` or `Protected` ceiling establishes `Unsafe`; `Manageable` establishes `Unsafe` only above **128**.
-* **Donor-resolved rare-cell RNA:** Evaluated in native UMI units. In a `Vital` population, a donor signal requires **≥10 cells** and **≥1%** of cells with ≥2 molecules (replicated across studies), or **≥5%** in a single study; `Protected` populations double those frequency cutoffs. Replicated signals without locus mapping risk (or with independent bulk/gene-specific confirmation) establish `Unsafe`; unresolved locus attribution holds the protein in `Other:Review`.
-* **Structural & home-tissue gates:** Unsupported nested sequences, read-through loci, or ≥95% 9-mer containment in `Unsafe` proteins produce `Other:Sequence`. A curated adult normal home outside the native-TPM panels (e.g., `GFY` in olfactory neurons; see Section 6.2) blocks CA as `Other:Unscreened tissue` while still allowing independent RA qualification; fetal-only homes (such as `AMELX` in developing tooth epithelium) keep their developmental scope.
-* **Embryo lineage support for RA:** Well-sampled lineages require ≥20 cells, ≥5 cells at ≥1 TPM, and ≥10% positive cells; smaller lineages require ≥5 cells, ≥50% positive cells, and replication in two independent embryos of the same stage and lineage. Within-site donor/biopsy **P95** dampens isolated healthy outliers but cannot diagnose carryover or prove absence from an unmeasured rare cell type.
-
-</details>
-
-### Proteome-wide attrition and enrichment boundary
-
-Of **19,893** protein groups, **18,250** are excluded as `Unsafe` in Stage 1 (most at the bulk RNA ceiling) and **1,118** land in `Other`, leaving **525** retained candidate antigens (**841** pass all shared eligibility checks; **921** have native-TPM comparisons including counterfactuals for held proteins).
-
-![Attrition across the entire protein catalog](audits/target-selection-20261110/rebuild/summary/funnel-all.png)
-
-*Figure 3.* Sequential proteome-wide attrition from **19,893** protein groups to **525** retained candidates (`CA ∪ RA`), assigning each excluded protein once at its first failing gate. The broken x-axis above 3,000 keeps every post-bulk filter proportional and legible. [Download exact step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-all.csv).
-
-![Shared 10x enrichment rule across cancer and reproductive compartments](audits/target-selection-20261110/rebuild/summary/tumor-normal.png)
-
-*Figure 4.* All **921** protein groups with native-TPM comparisons plotted against the shared `10 × max(N, D, 1 TPM)` boundary. Gold points above the dotted line clear the fold rule but remain held in `Other:Review` or `Other:Unscreened tissue`.
+Exclusive category counts across the entire proteome:
 
 | Exclusive category | Protein records | Member loci |
 | --- | --- | --- |
 | CTA | 327 | 358 |
 | Cancer Antigen only | 70 | 74 |
-| Other:Expression | 248 | 257 |
-| Other:Review | 734 | 735 |
+| Other:Expression | 249 | 258 |
+| Other:Review | 736 | 737 |
 | Other:Sequence | 48 | 50 |
 | Other:Unscreened tissue | 88 | 88 |
 | Reproductive Antigen only | 128 | 130 |
-| Unsafe | 18,250 | 18,407 |
+| Unsafe | 18,247 | 18,404 |
 
-*Supporting detail:* [Thresholds and assay rules](target-selection.md) · [All curation figures & distributions](audits/target-selection-20261110/rebuild/summary.md)
+## 2. Published CTA, oncofetal, and placental lists
 
-## 5. How published CTA, oncofetal, and placental lists compare
+OncoRef maps **149** curated papers across four antigen families: classical CTA / cancer–germline catalogs, oncofetal / DUX4 / early-embryo programs, placental and reproductive catalogs, and focused single-gene or tumor-vasculature studies. Literature citations are provenance metadata; a published nomination never overrides normal-tissue expression.
 
-OncoRef tracks curated literature across four distinct antigen families—**CTA / cancer-germline catalogs**, **oncofetal / DUX4 / early-embryo programs**, **placental / cancer-placenta and reproductive catalogs**, and **tumor-vasculature or focused single-gene reviews**. A published nomination is provenance metadata and never overrides a normal-tissue exclusion.
+Retention tracks how strictly each paper screened healthy tissues. Focused modern CTA and DUX4 studies (`Seager et al. 2024`, `Chew et al. 2019`, `Carter et al. 2023`, `Loriot et al. 2025`) retain **34%–67% CTAs**, whereas broad germ-cell, microarray, ZGA, and cancer–placenta lists (`Bruggeman et al. 2018`, `Smith et al. 2023`, `Jamin et al. 2021`, `Bradley et al. 2020`) are **92%–100% `Unsafe`** under modern adult somatic screening.
 
-Retention varies sharply with how strictly each paper screened normal tissues: focused modern CTA and DUX4 studies (`Seager et al. 2024`, `Chew et al. 2019`, `Carter et al. 2023`, `Loriot et al. 2025`) retain **34%–67% CTAs**, whereas broad germ-cell, microarray, ZGA, and cancer-placenta lists (`Bruggeman et al. 2018`, `Smith et al. 2023`, `Jamin et al. 2021`, `Bradley et al. 2020`) are **92%–100% `Unsafe`** under adult healthy-tissue screening.
+![Mapped protein counts across curated literature sources](audits/target-selection-20261110/rebuild/summary/literature-sources-counts.png)
 
-![Curated CTA, oncofetal, and placental literature sources in OncoRef](audits/target-selection-20261110/rebuild/summary/literature-sources.png)
+*Figure 6.* Mapped protein-group counts per curated source, grouped by antigen family and colored by OncoRef disposition. [Full table (CSV)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv).
 
-*Figure 5.* Curated literature sources grouped by antigen class, showing mapped protein-group counts (left) and disposition share (right). [Download full source-by-source table (CSV)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv).
+![Retention versus normal-tissue exclusion across curated literature sources](audits/target-selection-20261110/rebuild/summary/literature-sources-retention.png)
 
-### Overlap with rule-derived sets and published-nomination attrition
+*Figure 7.* Share of mapped proteins retained as <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA only</span>, or <span class="cat cat-ra">RA only</span> versus held or excluded as <span class="cat cat-unsafe">Unsafe</span>.
 
-Across **2,233** published CTA/oncofetal nominations, **356** survive into the candidate union—including **252** of our **327** CTAs—while **75** CTAs are newly identified by the expression rules and **1,877** published nominations fail normal-tissue, eligibility, or enrichment screens.
+Of **2,233** published CTA or oncofetal nominations, **356** survive into the candidate union—including **252** of our **327** CTAs—while **75** CTAs are newly identified by the expression rules and **1,877** nominations fail normal-tissue, eligibility, or enrichment screens.
 
-![Overlap of rule-derived CA and RA sets with published nominations](audits/target-selection-20261110/rebuild/summary/venn.png)
+![Overlap between rule-derived sets and published nominations](audits/target-selection-20261110/rebuild/summary/venn.png)
 
-*Figure 6.* Overlap between rule-derived Cancer Antigens (**397**), Reproductive Antigens (**455**), and published CTA/oncofetal nominations (**2,233**).
+*Figure 8.* Overlap between rule-derived Cancer Antigens (**397**), Reproductive Antigens (**455**), and published CTA/oncofetal nominations (**2,233**).
 
-![Attrition among published CTA or oncofetal nominations](audits/target-selection-20261110/rebuild/summary/funnel-published.png)
+![Attrition of published CTA and oncofetal nominations](audits/target-selection-20261110/rebuild/summary/funnel-published.png)
 
-*Figure 7.* Sequential attrition of the **2,233** published CTA/oncofetal nominations through the same screening gates, leaving **356** retained candidates. [Download step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-published.csv).
+*Figure 9.* Sequential attrition of **2,233** published CTA/oncofetal nominations through the same gates, leaving **356** candidates. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-published.csv).
 
-### Where the most-nominated individual proteins land
+### Most-nominated individual proteins
 
-Ranking by **distinct curated papers nominating the protein as a CTA** (ties ordered by protein label and entity ID) gives a reproducible registry benchmark across **2,238** protein groups (**2,233** with a CTA nomination paper plus **5** additional familiar or clinical reference entries). Below are the top ten by nomination count plus five familiar anchors (`NY-ESO-1`, `PRAME`, `CT83`, `CTAG2`, `CAGE1`):
+Across **2,238** studied protein groups (**2,233** with a CTA nomination paper plus **5** clinical or familiar reference entries), below are the top ten by distinct curated CTA papers plus five familiar clinical anchors (`NY-ESO-1`, `PRAME`, `CT83`, `CTAG2`, `CAGE1`):
 
 | Protein | CTA papers | Catalog | N TPM · site | RA peak TPM · context | Tumor TPM · cohort |
 | --- | --- | --- | --- | --- | --- |
@@ -196,11 +124,11 @@ Ranking by **distinct curated papers nominating the protein as a CTA** (ties ord
 | CAGE1 | 3 | Other:Review | 0.94 · CD4_STIM | 32.98 · testis.349 | 17.4 · T_ALL |
 | CTAG2 | 3 | Other:Review | 6.92 · Bladder | 101.92 · Testis | 604.33 · OV |
 
-*Reading this table:* **N** and the reproductive peak can originate from different assays or donors ([full context table](antigen-whitepaper/studied-proteins.csv)). **NR** ("not run") marks proteins excluded as `Unsafe` in Stage 1 before native-TPM comparison (MAGEA3, MAGEA12, MAGEB2, CTCFL); tumor or testis libraries may still contain those transcripts. **—** indicates an unavailable value.
+`N` and the reproductive peak may come from different assays or donors ([full context table](antigen-whitepaper/studied-proteins.csv)). `NR` ("not run") marks proteins excluded as `Unsafe` in Stage 1 before native-TPM comparison (MAGEA3, MAGEA12, MAGEB2, CTCFL); tumor or testis libraries may still contain those transcripts. A dash (`—`) marks an unavailable value.
 
 ### Studied proteins held or excluded
 
-Of **58** distinct protein groups in the familiar or clinical reference panels, **30** are `Other` or `Unsafe`. Neither label predicts the clinical toxicity of a specific therapeutic product; each records the strongest normal-tissue or rare-cell finding observed under policy `oncoref.target-selection.2026-11-19.4`:
+Of **58** protein groups in the familiar or clinical reference panels, **30** are held in `Other` or excluded as `Unsafe`. Neither label predicts clinical toxicity for a specific therapeutic product; each records the strongest normal-tissue or rare-cell finding observed under policy `oncoref.target-selection.2026-11-20.1`:
 
 | Studied protein | Category | Excluding or holding gate | Strongest measured normal signal |
 | --- | --- | --- | --- |
@@ -216,39 +144,11 @@ Of **58** distinct protein groups in the familiar or clinical reference panels, 
 | POTEC | Other:Review | Unresolved rare-cell RNA (replicated normal-cell signal with unresolved locus attribution) | eye, corneal endothelial cell · 12.07% of cells (≥2 molecules) |
 | CAGE1 | Other:Review | Unresolved rare-cell RNA (replicated normal-cell signal with unresolved locus attribution) | brain, dopaminergic neuron · 3.29% of cells (≥2 molecules) |
 
-*Supporting detail:* [Full studied-protein table (CSV)](antigen-whitepaper/studied-proteins.csv) · [Literature adjudication](audits/target-selection-20261110/rebuild/literature.md)
+## 3. Peak tumor expression and held edge cases
 
-## 6. Worked case studies: why edge cases are held instead of forced
+Across the **525** candidate union, **162** protein groups reach **≥100 TPM** in at least one QC-passing tumor sample, **30** reach **≥1,000 TPM**, and **132** have **≥10 known independent patients** crossing the 10× cutoff. Median peak tumor expression is **73.45 TPM** for `CTA` and **54.07 TPM** for `CA only`.
 
-Two concrete examples show why OncoRef separates unresolved evidence or missing assay coverage from confirmed normal-tissue exclusion.
-
-### 6.1 Paralog ambiguity in single-cell RNA: `CTAG2` (LAGE-1) → `Other:Review`
-
-In peripheral bulk native TPM, `CTAG2` clears both enrichment rules: its highest peripheral reference is **urinary bladder** at **6.92 TPM** (10× cutoff **69.25 TPM**), testis reaches **101.92 TPM** (**14.72×**), and ovarian cancer reaches **604.33 TPM** across **375** known patients at 10×.
-
-However, two adult organs—**lung** (alveolar type 2 cells) and **brain** (cortical glutamatergic neurons; shared Allen donor `H18.30.002` deduplicated across collections, with intratelencephalic neurons replicated in `H18.30.002` and `H20.33.014`)—meet the donor-replication rare-cell rule:
-
-| Organ | Strongest population | Atlas collections | Donor IDs with signal (linked where known) | Cells with ≥2 molecules in top donor | Grading |
-| --- | --- | --- | --- | --- | --- |
-| lung | pulmonary alveolar type 2 cell | 2 | 3 | 166/3,865 (4.29%) | unresolved |
-| brain | L5 extratelencephalic projecting glutamatergic cortical neuron | 2 | 2 | 70/2,201 (3.18%) | unresolved |
-| eye | ciliary muscle cell | 2 | 2 | 21/1,049 (2.00%) | dismissed |
-
-**Why it is held rather than excluded:** **50.9%** of distinct `CTAG2` transcript 31-mers are shared with paralogs (`CTAG1A`, `CTAG1B`). Neither matched bulk RNA nor a 15-sample normal-cell qPCR panel (which assayed fibroblasts and astrocytes rather than alveolar type 2 or cortical neurons) resolves whether those counts come from `CTAG2` or a paralog. Meanwhile, a 25-patient myeloma trial of a shared NY-ESO-1/LAGE-1 receptor reported no fatal serious adverse events (evidence specific to that receptor and population), and a separate heart review found discordant RNA and cardiomyocyte staining. OncoRef therefore holds `CTAG2` in **`Other:Review`** until locus-specific data resolve the implicated cell types.
-
-*Case sources:* [Donor findings](audits/normal-cell-atlas-20261110/rare-cell/findings.csv) · [Per-donor counts](audits/normal-cell-atlas-20261110/rare-cell/donor-populations.csv.gz) · [Mapping audit](audits/normal-cell-atlas-20261110/rare-cell/gene-mapping-risk.csv.gz) · [Heart assay review](audits/ctag2-heart-evidence.md) · [HLCA](https://www.nature.com/articles/s41591-023-02327-2) · [LungMAP CellRef](https://doi.org/10.1038/s41467-023-40173-5) · [Normal-cell qPCR panel](https://pmc.ncbi.nlm.nih.gov/articles/PMC3624013/) · [Myeloma trial follow-up](https://pubmed.ncbi.nlm.nih.gov/31289029/)
-
-### 6.2 Unmeasured adult normal home: `GFY` (*Goofy*) → `Other:Unscreened tissue`
-
-`GFY` (*Goofy*) regulates olfactory cilia signaling and reaches **1,575.56 TPM** in rhabdoid tumor (`RT`) over a 2.65 TPM bulk peripheral reference. Yet adult human olfactory-biopsy single-cell data detect `GFY` RNA in **94.1%** of mature and **70.3%** of immature olfactory neurons—an organ missing from the native-TPM comparison panels—and mouse *Gfy* knockout disrupts `ADCY3` localization, olfactory cilia length, and odor sensitivity (with HEK293T coexpression enhancing odorant-receptor trafficking). Because no like-for-like native-TPM olfactory denominator exists, OncoRef retains the tumor peak on the record and classifies `GFY` as **`Other:Unscreened tissue`**.
-
-*Case sources:* [Adult human olfactory atlas](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/) · [Mouse knockout study](https://pmc.ncbi.nlm.nih.gov/articles/PMC6619734/) · [Receptor trafficking study](https://pmc.ncbi.nlm.nih.gov/articles/PMC12677133/) · [Cell and isoform findings](curation.md#cell-and-isoform-evidence)
-
-## 7. Highest tumor expression by category
-
-Across the **525** candidate union, **162** proteins reach **≥100 TPM**, **30** reach **≥1,000 TPM**, and **132** have **≥10 known independent patients** crossing the 10× cutoff (median peak tumor expression: **73.45 TPM** for CTA; **54.07 TPM** for CA only).
-
-*Reading these tables:* Each table ranks up to ten protein groups in its exclusive category by **maximum QC-passing tumor TPM**. Because `Tumor fold` divides by `max(N, D, 1 TPM)`, fold equals `Tumor TPM` whenever both `N` and `D` are below 1 TPM (`LALBA`, `SCGB1D4`, `VCY/1B`). `Other` covers only groups that reached the quantitative comparison (high peaks such as `TBATA`, `GFY`, and `CTAG2` reflect review or unscreened-home holds). Peaks measure single-library abundance, not the fraction of malignant cells expressing the protein.
+Each table ranks up to ten protein groups in its exclusive category by maximum QC-passing tumor TPM ([all 525 candidates](antigen-whitepaper/tumor-ranks.csv)). Because `Tumor fold` divides by `max(N, D, 1 TPM)`, fold equals `Tumor TPM` whenever both `N` and `D` are below 1 TPM (`LALBA`, `SCGB1D4`, `VCY/1B`). `Other` covers only groups reaching quantitative comparison; high peaks such as `TBATA`, `GFY`, and `CTAG2` reflect review or unscreened-home holds. Peak TPM measures single-library abundance, not the fraction of malignant cells expressing the protein.
 
 ### CTA
 
@@ -303,7 +203,7 @@ Tumor comparison available for 128 of 128 groups.
 
 ### Other
 
-Tumor comparison available for 396 of 1,118 groups.
+Tumor comparison available for 398 of 1,121 groups.
 
 | Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -320,37 +220,148 @@ Tumor comparison available for 396 of 1,118 groups.
 
 ### Unsafe
 
-Tumor comparison available for 0 of 18,250 groups.
+Tumor comparison available for 0 of 18,247 groups.
 
-*Full rankings:* [All 525 candidates with inclusive CA/RA/CTA ranks, sample/cohort IDs, folds, and patient support (CSV)](antigen-whitepaper/tumor-ranks.csv) · [Retained tumor witnesses (CSV.gz)](audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz)
+### Worked edge cases
 
-## 8. Reproduction, open limits, and reference index
+**`CTAG2` (LAGE-1) → `Other:Review`.** In peripheral bulk TPM, `CTAG2` clears both enrichment rules: its highest peripheral reference is **urinary bladder** at **6.92 TPM** (10× cutoff **69.25 TPM**), testis reaches **101.92 TPM** (**14.72×**), and ovarian cancer reaches **604.33 TPM** across **375** known patients at 10×. In donor-resolved single-cell atlases, however, **lung** (alveolar type 2 cells) and **brain** (cortical glutamatergic neurons) both pass the multi-study donor-replication rule even after consortium and integrated-atlas donor deduplication:
 
-### Reproducing this whitepaper and catalog
+| Organ | Strongest population | Independent studies | Donor IDs with signal (linked where known) | Cells with ≥2 molecules in top donor | Grading |
+| --- | --- | --- | --- | --- | --- |
+| lung | pulmonary alveolar type 2 cell | 2 | 3 | 166/3,865 (4.29%) | unresolved |
+| brain | L5 extratelencephalic projecting glutamatergic cortical neuron | 2 | 2 | 70/2,201 (3.18%) | unresolved |
+
+Because **50.9%** of distinct `CTAG2` transcript 31-mers are shared with paralogs (`CTAG1A`, `CTAG1B`), neither matched bulk RNA nor a 15-sample normal-cell qPCR panel (which assayed fibroblasts and astrocytes rather than alveolar type 2 or cortical neurons) resolves locus attribution. A 25-patient myeloma trial of a shared NY-ESO-1/LAGE-1 receptor reported no fatal serious adverse events (specific to that receptor and cohort), and a separate heart review found discordant RNA and cardiomyocyte staining. OncoRef holds `CTAG2` in **`Other:Review`** pending locus-specific resolution ([donor findings](audits/normal-cell-atlas-20261110/rare-cell/findings.csv), [mapping audit](audits/normal-cell-atlas-20261110/rare-cell/gene-mapping-risk.csv.gz), [heart review](audits/ctag2-heart-evidence.md), [HLCA](https://www.nature.com/articles/s41591-023-02327-2), [LungMAP CellRef](https://doi.org/10.1038/s41467-023-40173-5), [qPCR panel](https://pmc.ncbi.nlm.nih.gov/articles/PMC3624013/), [myeloma follow-up](https://pubmed.ncbi.nlm.nih.gov/31289029/)).
+
+**`GFY` (*Goofy*) → `Other:Unscreened tissue`.** `GFY` regulates olfactory cilia signaling and reaches **1,575.56 TPM** in rhabdoid tumor (`RT`) over a 2.65 TPM bulk peripheral reference. Yet adult human olfactory-biopsy single-cell data detect `GFY` in **94.1%** of mature and **70.3%** of immature olfactory neurons ([adult olfactory atlas](https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/))—an organ absent from bulk native-TPM panels—and mouse *Gfy* knockout impairs `ADCY3` localization, olfactory cilia length, and odor sensitivity ([knockout study](https://pmc.ncbi.nlm.nih.gov/articles/PMC6619734/), [trafficking study](https://pmc.ncbi.nlm.nih.gov/articles/PMC12677133/)). Without a comparable olfactory TPM denominator, OncoRef keeps the tumor measurement visible and holds `GFY` in **`Other:Unscreened tissue`**.
+
+## 4. Tissue injury tiers, thymus, and patient-specific filtering
+
+OncoRef separates three tissue-policy questions: **anatomical scope** (healthy baseline vs. <span class="cat cat-ra">RA</span> witness vs. `thymic`), **adult injury tier** (clinical consequence of sustained organ or cell-type loss), and **patient-specific organ protection** (downstream anatomy and tolerance via `HostContext` / `--profile`). A tissue can witness <span class="cat cat-ra">RA</span> while retaining a protective rating—adult testis witnesses <span class="cat cat-ra">RA</span> while carrying a `Protected` tier, and breast biopsies are split into lactating versus resting mammary via a coordinated milk-program signature (`LALBA`, `CSN1S1`, `CSN2`, `CSN3`).
+
+| Adult injury tier | Policy interpretation | Examples |
+|---|---|---|
+| **Vital** | Loss threatens life, essential repair, or major sensory/neurological function | Heart, neurons, corneal endothelium |
+| **Protected** | Persistent loss is consequential and clinical compensation is poorly established | Salivary gland, whole skin, adult testis |
+| **Manageable** | Defined loss has an established precedent for clinical compensation or replacement | Thyroid, mature B cells |
+| **Disposable** | A narrow compartment carries a specific loss allowance | Cutaneous melanocytes, hair follicles, gallbladder, adult whole thymus |
+
+Bulk measurements inherit the organ tier; permissive cell-type exceptions require resolved cell identity, and mixed populations keep the more protective tier ([organ and cell hierarchy](tissue-hierarchy.md), [tissue tier policy](tissue-tiers.md)).
+
+### Adult thymus
+
+Adult whole thymus is rated `Disposable` under the organ-loss hierarchy, while defined immune subsets retain their own injury tiers. Because medullary thymic epithelial cells (mTECs) express tissue-restricted antigens during central tolerance ([human mTEC study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)), bulk thymus sits in the `thymic` scope and is excluded from both enrichment denominators (`N` and `D`). Independent normal-expression and protein screens still apply, alongside the observational association between adult thymectomy and higher mortality and cancer incidence ([thymectomy cohort](https://pubmed.ncbi.nlm.nih.gov/37530823/)).
+
+### Biological membership versus patient-specific filtering
+
+Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</span>, and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can safely lose. Default biological sets leave reproductive tissues unprotected until you opt in. Downstream patient profiles (`female-patient`, `male-patient`, lactation, pregnancy, or custom overrides) mark each compartment as <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or <span class="cat cat-absent">Absent</span> ([rules and limits](host-selection.md)). Protecting testis narrows the **327** biological CTAs to **54** retained candidates; pregnancy leaves **0** retained (**123** unresolved due to incomplete developmental coverage, **204** excluded by a patient-anatomy rule).
+
+![Patient anatomy and organ-loss choices across profiles](audits/target-selection-20261110/rebuild/summary/host-profiles-matrix.png)
+
+*Figure 10.* Compartment choices (<span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, <span class="cat cat-absent">Absent</span>, or unprotected) across standard patient profiles.
+
+![Patient-profile screening outcomes for biological CTAs](audits/target-selection-20261110/rebuild/summary/host-profiles-outcomes.png)
+
+*Figure 11.* Downstream screening outcomes for all **327** biological CTAs under each patient profile. Filtering a candidate out for one patient narrows the target list and expands the peptide-subtraction background without relabeling its biological <span class="cat cat-cta">CTA</span> identity.
+
+## 5. Methods: protein grouping, sources, and thresholds
+
+### Protein-group counting unit
+
+Source gene identifiers across RNA, single-cell, and protein atlases map to human **Ensembl 115** loci. Each locus gets one qualified reference translation—preferring **MANE Select** on the primary assembly, then **Ensembl canonical**—checked for coding biotype, complete start/stop codons, uninterrupted ORF, and absence of translation conflicts ([transcript selection audit](audits/cta-transcript-selection-20261108/index.md)).
+
+Paralogous loci encoding identical proteins (`SPANXA1/2`, `XAGE1A/B`, `VCY/1B`) collapse into one protein group by representative amino-acid sequence even when cDNAs differ. Wherever sample identities exist, member-locus expression is summed within each sample before comparing across cohorts. The **563** records lacking a qualified representative sequence stay visible; missing translation can block admission even when RNA is measured ([sequence and peptide-subtraction API](antigen-sequences.md)).
+
+### Evidence sources and native-TPM coverage
+
+OncoRef pins **323** SHA-256-verified files across **1,221** source/context rows and **130** assessed tumor cohorts. Incompatible assay units are never pooled; every dataset stays in its native scale and enters only the layer it supports:
+
+| Evidence pillar | Primary resources | Native statistic and role |
+|---|---|---|
+| **Healthy baseline (`N`, `D`)** | GTEx v11, HPA v23 biopsies and brain, HPA/DICE/Monaco sorted immune | Within-site donor or biopsy P95 in native TPM sets the non-thymic healthy reference (`N`) and Disposable maximum (`D`). |
+| **Normal-tissue safety screens** | HPA consensus and scRNA clusters, HPA normal IHC, CELLxGENE Census + Siletti, Collin cornea, specialized anatomy | Tiered RNA ceilings (TPM/nTPM/CP10K), reliable positive IHC, matched negative-IHC credit, and consortium-deduplicated rare-cell UMI screens. |
+| **Tumor and reproductive/embryo RNA** | 130 QC-passing tumor cohorts, GTEx/HPA reproductive biopsies, Petropoulos/Tyser/Molè embryos | Individual QC-passing tumor libraries qualify `CA`; individual reproductive samples or supported embryo lineages qualify `RA`. |
+| **Curated literature and clinical controls** | 149 catalog-mapped papers (CTA, oncofetal/DUX4, placental, clinical trials, normal counterevidence) | Provenance metadata and curated normal-expression exclusions; positive nominations alone never grant admission. |
+
+![Native-TPM coverage across somatic, immune, disposable, and thymic tissues](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage-somatic.png)
+
+*Figure 12.* Native-TPM tissue coverage and analytical role across somatic organs, immune subsets, disposable tissues, and thymus. Colored cells mark qualifying coverage for at least one assessed protein group; gray marks no qualifying coverage.
+
+![Native-TPM coverage across neural, ocular, reproductive, and developmental tissues](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage-neural-repro.png)
+
+*Figure 13.* Native-TPM coverage across brain, eye, nerve, reproductive, and embryonic tissues. **RA witness** marks individual reproductive samples or supported embryo-lineage means capable of qualifying `RA`; **Reproductive context** marks summaries kept for context only.
+
+<details markdown="1">
+<summary>Exact quantitative gate thresholds and rare-cell provenance rules</summary>
+
+* **Bulk, cluster, and immune RNA ceilings:** Base limits in TPM and nTPM are **4 for Vital, 8 for Protected, 16 for Manageable**. Matched negative IHC across routine contexts of the tissue raises the ceiling by 2× (Approved), 4× (Supported), or 8× (Enhanced), alongside limited registry clinical adjustments. Exceeding a `Vital` or `Protected` ceiling establishes `Unsafe`; `Manageable` establishes `Unsafe` only above **128**.
+* **Donor-resolved rare-cell RNA and consortium provenance:** Evaluated in native UMI counts per adult donor and named cell type. In a `Vital` population, a donor signal requires **≥10 cells** and **≥1%** of cells with ≥2 molecules (replicated across independent study groups), or **≥5%** in a single study; `Protected` populations double those frequency cutoffs. Shared consortium collections (Baylor/Chen eye, Sanes eye, Allen reference brain, Michigan kidney, Teichmann heart) and donors embedded in integrated atlases (HLCA, Baylor/Chen eye, SEA-AD) are resolved to their original study group and biological donor ID before counting replication. Replicated signals without locus mapping risk (or with independent bulk or gene-specific confirmation) establish `Unsafe`; unresolved locus attribution or single-study signals remain held in `Other:Review`.
+* **Structural and home-tissue gates:** Unsupported nested sequences, read-through loci, or ≥95% 9-mer containment in `Unsafe` proteins produce `Other:Sequence`. A curated adult normal home outside the native-TPM panels (`GFY` in olfactory neurons) blocks `CA` as `Other:Unscreened tissue` while still allowing independent `RA` qualification; fetal-only homes (`AMELX` in developing tooth epithelium) keep their developmental scope.
+* **Eligibility and Disposable cap:** Shared eligibility requires complete coverage across **35** healthy contexts, target peak above every measured non-reproductive and Disposable value, and Disposable expression ≤ **32** TPM and ≤ **32** nTPM.
+* **Embryo lineage support for RA:** Well-sampled lineages require ≥20 cells, ≥5 cells at ≥1 TPM, and ≥10% positive cells; smaller lineages require ≥5 cells, ≥50% positive cells, and replication in two independent embryos of the same stage and lineage. Within-site donor/biopsy **P95** dampens isolated healthy outliers but cannot diagnose carryover or prove absence from an unmeasured rare cell type.
+
+</details>
+
+<details markdown="1">
+<summary>Source-family rules and versioned file inventory (323 files across 1,221 contexts)</summary>
+
+| Source family | Evidence provided | Role in classification |
+|---|---|---|
+| **Ensembl 115, MANE and sequence registry** | Locus IDs, transcript flags, CDS qualification, sequence digests, read-through maps | Define protein-group counting units and test translation, nesting, and `Unsafe` 9-mer containment. |
+| **GTEx v11** | Individual site TPM, donor/library IDs, site medians, QC annotations | Non-reproductive sites contribute the within-site linear donor P95 (after within-donor replicate median). Individual reproductive samples can independently witness `RA`. |
+| **HPA bulk tissue and brain** (incl. GTEx via HPA) | Individual tissue biopsies, tissue/brain-region means, consensus nTPM, anatomical mappings | Native TPM enters the healthy reference (within-tissue biopsy P95 where available) or reproductive `RA` witnesses. Consensus nTPM runs its own normal gate. Redistributed GTEx overlaps GTEx v11. |
+| **HPA sorted blood, DICE and Monaco** | Sorted immune populations, donor TPM, ranked values, published means, immune nTPM | HPA donor P95 and DICE single-locus P95 enter native comparison; DICE multi-locus groups use the conservative sum of member maxima when donor pairing is unavailable; Monaco retains the published mean. Also evaluated in the immune screen. |
+| **HPA single-cell clusters and normal IHC** | Cell-type nTPM, staining grades, antibody IDs, reliability scores | Screen normal cell clusters and reliable positive protein findings (including hair-follicle cell-pattern rules); matched negative IHC can raise RNA ceilings. Reproductive staining/nTPM aids interpretation but never supplies a native-TPM 10× witness. |
+| **CELLxGENE Census and Siletti brain** | Versioned H5AD studies, donor IDs, cell types, molecule counts | Grade sparse normal-cell expression by donor penetration, independent study replication, locus mapping risk, and independent confirmation. |
+| **Collin cornea and conjunctiva** | Adult, developmental, and disease ocular cell counts with donor metadata | Dedicated adult corneal normal gate in counts per 10,000 (CP10K); non-adult and disease material stays scoped separately. |
+| **Specialized anatomy studies** | Olfactory epithelium (Durante, Olender, Verbeurgt, MSSM), fetal dental epithelium, developmental skeletal atlas, adult osteoblast markers | Document localized expression in tissues underrepresented in bulk atlases; age, scale, and marker-list scope constrain what each study can establish (marker lists never prove tissue-wide absence). |
+| **Petropoulos, Tyser and Molè embryos** | Per-embryo lineage TPM (preimplantation, Carnegie stage 7) plus day-9/day-11 hypoblast UMI/staining | Supported native TPM can qualify `RA`; hypoblast UMI counts and staining document developmental expression on their native scales. |
+| **Tumor cohorts** | Per-sample matrices, sample/patient IDs, cross-cohort sharing, scale and QC checks | **130 assessed cohorts** in the [tumor coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv). Comparable QC-passing libraries supply `CA` witnesses (germ-cell tumors eligible; coordinated reproductive RNA advisory). |
+| **Curated papers, proteomics and trials** | Nominated gene lists, normal counterevidence, supersession history, clinical/epitope records, CT83 RNAscope | Separate positive nominations from normal counterevidence and literature benchmarks. Curated normal findings can exclude a protein; a positive nomination alone never grants admission. |
+
+| Inventory role | Versioned files |
+| --- | --- |
+| assay observations | 4 |
+| cell atlas | 4 |
+| comparison or sample metadata | 9 |
+| curated data | 8 |
+| curation input | 124 |
+| native assay or supplement | 42 |
+| tumor expression | 132 |
+
+</details>
+
+## 6. Reproducing the catalog and limitations
+
+Every external reference file and per-sample tumor matrix required for a clean rebuild is SHA-256-pinned and fetched through OncoRef's uniform CLI (no out-of-band downloads or machine-local paths):
 
 ```sh
-# Regenerate the whitepaper, tissue hierarchy, and whitepaper CSVs
-python scripts/render_antigen_whitepaper.py
+# 1. Fetch and verify all pinned reference datasets (add --include-tumors for all 132 tumor cohorts)
+python -m oncoref.curation fetch --include-tumors
 
-# Verify all generated whitepaper artifacts byte-for-byte
-python scripts/render_antigen_whitepaper.py --check
+# 2. Rebuild the full curation graph (catalog, host exposure, figures, reports, whitepaper)
+python -m oncoref.curation build
 
-# Verify the full curation receipt and all tracked outputs
+# 3. Verify every tracked implementation file, catalog table, and whitepaper artifact byte-for-byte
 python -m oncoref.curation check
+python scripts/render_antigen_whitepaper.py --check
 ```
 
-The whitepaper generator reads only the versioned catalog, evidence registries, and committed audit tables. Rebuilding the **underlying catalog** from scratch additionally requires the pinned upstream reference and tumor matrices documented in [Build instructions](curation.md).
+### Limitations
 
-### Open scientific limitations
+Cross-cohort tumor matrices come from distinct studies and processing pipelines; OncoRef enforces nonnegative comparable TPM and library QC rather than cross-study batch correction. In rare-cell atlases, count matrices cannot separate paralog cross-mapping from genuine sparse transcription without read-level realignment or locus-specific assays (as in `CTAG2`), and while known consortium collections and integrated-atlas donor overlaps are deduplicated, undocumented donor reuse across unrelated public studies cannot be ruled out. Single-sample RNA peaks do not measure intratumoral heterogeneity, translated protein abundance, peptide–MHC presentation, or modality-specific clinical tolerability.
 
-* **Cross-cohort tumor comparability:** Tumor cohorts come from distinct studies and processing pipelines; OncoRef enforces nonnegative comparable TPM and library QC rather than cross-study batch correction.
-* **Read-level attribution in rare-cell atlases:** Single-cell count matrices cannot separate paralog cross-mapping from genuine sparse transcription without read-level realignment or locus-specific assays (e.g., `CTAG2`).
-* **Normal-protein replay gaps:** Hair-follicle normal-protein evidence replay remains an open curation item.
-* **Bulk peaks vs. clinical targetability:** Single-sample RNA peaks do not measure intratumoral heterogeneity, translated protein abundance, peptide-MHC presentation, or modality-specific safety.
+### Reference and download index
 
-### Source and documentation index
-
-* **Core catalog & explorer:** [Searchable protein catalog](audits/target-selection-20261110/rebuild/report.html) · [Curation summary & all figures](audits/target-selection-20261110/rebuild/summary.md) · [Classification rules & thresholds](target-selection.md) · [Build & reproduction guide](curation.md)
-* **Tissue & host policy:** [Organ & cell injury hierarchy](tissue-hierarchy.md) · [Tissue calls & cell exceptions](tissue-tiers.md) · [Host protection & evidence gaps](host-selection.md) · [Sequence API & peptide subtraction](antigen-sequences.md)
-* **Downloadable tables:** [Registered file inventory (`sources.csv`)](antigen-whitepaper/sources.csv) · [Studied CTA dispositions (`studied-proteins.csv`)](antigen-whitepaper/studied-proteins.csv) · [Candidate tumor rankings (`tumor-ranks.csv`)](antigen-whitepaper/tumor-ranks.csv) · [Curated literature sources by class (`literature-sources.csv`)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv)
-* **Audit ledgers:** [Normal RNA source coverage & QC](audits/target-selection-20261110/rebuild/normal-rna/index.md) · [Tumor cohort coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv) · [Literature adjudication](audits/target-selection-20261110/rebuild/literature.md) · [Transcript reference selection](audits/cta-transcript-selection-20261108/index.md) · [Data download API & atlas inventory](antigen-data.md)
+| Resource | Contents |
+|---|---|
+| [Searchable protein catalog](audits/target-selection-20261110/rebuild/report.html) | Interactive browser for all **19,893** protein groups, per-gate reasons, witnesses, and literature links |
+| [Summary figures and distributions](audits/target-selection-20261110/rebuild/summary.md) | Threshold heatmaps, scale distributions, rare-cell plots, and stage breakdowns |
+| [Classification rules](target-selection.md) · [Build guide](curation.md) | Machine-readable policy contract, CLI commands, and build instructions |
+| [Tissue injury hierarchy](tissue-hierarchy.md) · [Tissue tiers](tissue-tiers.md) · [Patient-specific filtering](host-selection.md) | Cited adult organ/cell tiers, hair-follicle and thymus revisions, and patient-profile filtering |
+| [Sequence API and peptide subtraction](antigen-sequences.md) · [Data download API](antigen-data.md) | Ensembl 115 reference translations, k-mer subtraction, and programmatic dataset retrieval |
+| [Registered file inventory (`sources.csv`)](antigen-whitepaper/sources.csv) | All **323** pinned source files, catalog selectors, and SHA-256 digests |
+| [Studied CTA dispositions (`studied-proteins.csv`)](antigen-whitepaper/studied-proteins.csv) | Full measurements and exclusion reasons for all **2,238** published or clinical anchor proteins |
+| [Candidate tumor rankings (`tumor-ranks.csv`)](antigen-whitepaper/tumor-ranks.csv) | Peak tumor TPM, folds, cohort/sample IDs, and patient counts for all **525** candidates |
+| [Curated literature sources (`literature-sources.csv`)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv) | Disposition counts across all **149** catalog-mapped papers grouped by antigen class |
+| [Normal RNA coverage](audits/target-selection-20261110/rebuild/normal-rna/index.md) · [Tumor coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv) · [Literature adjudication](audits/target-selection-20261110/rebuild/literature.md) | Audit ledgers for healthy panels, tumor cohorts, and literature reviews |

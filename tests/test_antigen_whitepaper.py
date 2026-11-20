@@ -60,14 +60,21 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
         ).head(10)
         assert [row[1] for row in rows] == expected.protein_group_label.tolist()
     assert "| MAGEA3 | 8 | Unsafe | NR | NR | NR |" in paper
+    assert "human antigen" not in paper.lower()
     for figure in [
+        "summary/classification-overview.png",
+        "summary/normal-evidence-layers.png",
         "summary/funnel-all.png",
         "summary/funnel-published.png",
-        "summary/tumor-normal.png",
-        "summary/cta-tiers-and-profiles.png",
+        "summary/cancer-enrichment.png",
+        "summary/reproductive-enrichment.png",
+        "summary/host-profiles-matrix.png",
+        "summary/host-profiles-outcomes.png",
         "summary/venn.png",
-        "summary/literature-sources.png",
-        "normal-rna/tpm-coverage.png",
+        "summary/literature-sources-counts.png",
+        "summary/literature-sources-retention.png",
+        "normal-rna/tpm-coverage-somatic.png",
+        "normal-rna/tpm-coverage-neural-repro.png",
     ]:
         path = f"audits/target-selection-20261110/rebuild/{figure}"
         assert f"]({path})" in paper and (DOCS / path).is_file()

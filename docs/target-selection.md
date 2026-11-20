@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-19.4`: **327 CTA** · **70 Cancer Antigen only** · **128 Reproductive Antigen only** · **1,118 Other** · **18,250 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-20.1`: **327 CTA** · **70 Cancer Antigen only** · **128 Reproductive Antigen only** · **1,121 Other** · **18,247 Unsafe**.
 
 [Catalog whitepaper and study tables](antigen-whitepaper.md) ·
 [Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
@@ -81,7 +81,7 @@ RNA. Donor-resolved UMI evidence is graded independently of cluster nTPM and bul
 | Check | Rule |
 |---|---|
 | Signal | >= 1% of a donor's cells and >= 10 cells carry >= 2 molecules. |
-| Replication | The signal in >= 2 atlas sources of the same organ, which agree on a cell type or include >= 3 distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. |
+| Replication | The signal in >= 2 independent study groups of the same organ, which agree on a cell type or include >= 3 distinct biological donors. Cell-type concordance also requires distinct biological donors. Shared consortium collections (Baylor/Chen eye, Sanes eye, Allen reference brain, Michigan kidney, Teichmann heart) and donors embedded in integrated atlases (HLCA, Baylor/Chen eye, SEA-AD) are attributed to their original study and biological donor ID before counting replication. Donors of one study share its libraries and reference; one donor in each of two studies, in different cell types, agrees on nothing but the organ. |
 | Single study | Without replication, a signal counts only when >= 5% of a donor's cells carry multiple molecules. |
 | Protected | Protected populations need 2 times these frequencies. |
 | Confirmation | Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment. |

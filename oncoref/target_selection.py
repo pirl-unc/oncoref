@@ -9,13 +9,14 @@ reproductive flags are not substitutes for the new evidence checks.
 from __future__ import annotations
 
 import json
+import re
 from copy import deepcopy
 from importlib.resources import files
 
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-19.4"
+POLICY_ID = "oncoref.target-selection.2026-11-20.1"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -154,10 +155,14 @@ def definition() -> dict:
                 f"cells carry >= {RARE_CELL_MULTI_MOLECULES} molecules."
             ),
             "replication": (
-                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} atlas sources of the same "
+                f"The signal in >= {RARE_CELL_REPLICATE_STUDIES} independent study groups of the same "
                 f"organ, which agree on a cell type or include >= {RARE_CELL_REPLICATE_DONORS} "
-                "distinct donors. Cell-type concordance also requires distinct donors. Linked Allen identifiers count once across collections. Donors of one study share its libraries and reference; one donor in "
-                "each of two studies, in different cell types, agrees on nothing but the organ."
+                "distinct biological donors. Cell-type concordance also requires distinct biological donors. "
+                "Shared consortium collections (Baylor/Chen eye, Sanes eye, Allen reference brain, Michigan kidney, "
+                "Teichmann heart) and donors embedded in integrated atlases (HLCA, Baylor/Chen eye, SEA-AD) are "
+                "attributed to their original study and biological donor ID before counting replication. "
+                "Donors of one study share its libraries and reference; one donor in each of two studies, "
+                "in different cell types, agrees on nothing but the organ."
             ),
             "single_study": (
                 f"Without replication, a signal counts only when >= {RARE_CELL_SINGLE_STUDY_PCT:g}% "
@@ -663,6 +668,93 @@ def assess_reproductive_rna(
     return receipt
 
 
+#: Verified consortium groupings and integrated-atlas donor provenance rules for
+#: CELLxGENE Census rare-cell replication (#715). Separate collections from the
+#: same consortium or integrated atlases embedding primary-study donors cannot
+#: fabricate independent multi-study replication.
+_BAYLOR_EYE_COLLECTIONS = frozenset(
+    {
+        "05e3d0fc-c9dd-4f14-9163-2b242b3bb5c2",
+        "0cbf8ef8-87bd-4b51-8521-ec3f68183e11",
+        "0f7d022a-46c7-4e64-be4c-e34adbb78089",
+        "48c15b0c-6039-4e0f-9668-b6b3c0b830ad",
+        "4c6eaf5c-6d57-4c76-b1e9-60df8c655f1e",
+    }
+)
+_SANES_EYE_COLLECTIONS = frozenset(
+    {
+        "63d03351-06be-478e-a0db-f7a653b6b19b",
+        "7855daa4-3f34-4aae-b65a-87720c02e7cd",
+    }
+)
+_ALLEN_REFERENCE_COLLECTIONS = frozenset(
+    {
+        "283d65eb-dd53-496d-adb7-7570c7caa443",
+        "d17249d2-0e6e-4500-abb8-e6c93fa1ac6f",
+    }
+)
+_ALLEN_LINKED_DONOR_COLLECTIONS = _ALLEN_REFERENCE_COLLECTIONS | {
+    "1ca90a2d-2943-483d-b678-b809bf464c30"
+}
+_MICHIGAN_KIDNEY_COLLECTIONS = frozenset(
+    {
+        "4cbb929b-b03b-4aa8-a943-00f61dc22641",
+        "a98b828a-622a-483a-80e0-15703678befd",
+    }
+)
+_TEICHMANN_HEART_COLLECTIONS = frozenset(
+    {
+        "3116d060-0a8e-4767-99bb-e866badea1ed",
+        "b52eb423-5d0d-4645-b217-e1c6d38b2e72",
+    }
+)
+_HLCA_COLLECTION = "6f6d381a-7701-4781-935c-db10d30de293"
+_ILD_LUNG_COLLECTION = "07e12576-b41b-4350-adfc-059bfc4328ea"
+_MADISSOON_LUNG_COLLECTION = "4d74781b-8186-4c9a-b659-ff4dc4601d91"
+_MADISSOON_DONORS = frozenset(
+    {"296C", "325C", "328C", "343B", "356C", "362C", "367C", "368C", "390C"}
+)
+_SANES_DONOR_RE = re.compile(r"^(?:Hu\d{1,4}|Pt\d+)$")
+_ALLEN_DONOR_RE = re.compile(r"^(?:H\d{2}\.\d{2}\.\d{3}|H200\.\d{4})$")
+_ILD_DONOR_RE = re.compile(r"^(?:THD|VUHD)\d+")
+
+
+def resolve_rare_cell_provenance(source_id: str, donor_id: str) -> tuple[str, str]:
+    """Map a Census (collection_id, donor_id) pair to (study_group, linked_donor).
+
+    Collections from the same consortium share one ``study_group``. Donors embedded
+    in integrated atlases (such as Sanes eye donors in Chen's retinal atlas or ILD
+    and Madissoon donors in HLCA) are attributed back to their original study group
+    and biological donor identity so they cannot count as independent replication.
+    """
+    stripped_sanes = re.sub(r"^sanes(?:2022)?_", "", donor_id)
+    if source_id in _SANES_EYE_COLLECTIONS or (
+        source_id in _BAYLOR_EYE_COLLECTIONS and _SANES_DONOR_RE.fullmatch(stripped_sanes)
+    ):
+        return "sanes_eye_atlas", f"sanes_eye_atlas:{stripped_sanes}"
+    if source_id in _BAYLOR_EYE_COLLECTIONS:
+        norm = (
+            "Atlanta_" + donor_id[: -len("_Atlanta")] if donor_id.endswith("_Atlanta") else donor_id
+        )
+        return "baylor_eye_atlas", f"baylor_eye_atlas:{norm}"
+    if source_id in _ALLEN_LINKED_DONOR_COLLECTIONS:
+        group = "allen_reference_brain" if source_id in _ALLEN_REFERENCE_COLLECTIONS else source_id
+        if _ALLEN_DONOR_RE.fullmatch(donor_id):
+            return group, f"Allen:{donor_id}"
+        return group, f"{group}:{donor_id}"
+    if source_id == _HLCA_COLLECTION and "483747" in donor_id:
+        suffix = donor_id.split("483747", 1)[1]
+        if _ILD_DONOR_RE.match(suffix):
+            return _ILD_LUNG_COLLECTION, f"{_ILD_LUNG_COLLECTION}:{suffix}"
+        if suffix in _MADISSOON_DONORS:
+            return _MADISSOON_LUNG_COLLECTION, f"{_MADISSOON_LUNG_COLLECTION}:{suffix}"
+    if source_id in _MICHIGAN_KIDNEY_COLLECTIONS:
+        return "michigan_kidney", f"michigan_kidney:{donor_id}"
+    if source_id in _TEICHMANN_HEART_COLLECTIONS:
+        return "teichmann_heart", f"teichmann_heart:{donor_id}"
+    return source_id, f"{source_id}:{donor_id}"
+
+
 def assess_rare_cell_rna(
     observations: pd.DataFrame,
     *,
@@ -754,24 +846,18 @@ def assess_rare_cell_rna(
     enough = d.n_multi.ge(RARE_CELL_MIN_CELLS)
     d["multi_molecule"] = enough & d.multi_molecule_pct.ge(RARE_CELL_DETECTION_PCT * factor)
     d["frequent"] = enough & d.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT * factor)
-    d["donor"] = d.source_id + ":" + d.donor_id
-    # These Allen collections reuse institute donor IDs. Other studies can both
-    # call an unrelated participant "D1", so preserve their source namespace.
-    allen = d.source_id.isin(
-        {
-            "1ca90a2d-2943-483d-b678-b809bf464c30",
-            "283d65eb-dd53-496d-adb7-7570c7caa443",
-            "d17249d2-0e6e-4500-abb8-e6c93fa1ac6f",
-        }
-    ) & d.donor_id.str.fullmatch(r"H[0-9]{2}\.[0-9]{2}\.[0-9]{3}")
-    d.loc[allen, "donor"] = "Allen:" + d.loc[allen, "donor_id"]
+    resolved = [resolve_rare_cell_provenance(s, did) for s, did in zip(d.source_id, d.donor_id)]
+    d["study_group"] = [r[0] for r in resolved]
+    d["donor"] = [r[1] for r in resolved]
     findings = []
     for (tier, tissue), group in d.groupby(["tier", "tissue"], sort=True):
         multi = group[group.multi_molecule]
-        two_studies = multi.source_id.nunique() >= RARE_CELL_REPLICATE_STUDIES
+        two_studies = multi.study_group.nunique() >= RARE_CELL_REPLICATE_STUDIES
         # Two lone donors in different cell types share only the organ label.
-        concordance = multi.groupby("cell_type")[["source_id", "donor"]].nunique()
-        same_cell = concordance.source_id.ge(RARE_CELL_REPLICATE_STUDIES) & concordance.donor.ge(2)
+        concordance = multi.groupby("cell_type")[["study_group", "donor"]].nunique()
+        same_cell = concordance.study_group.ge(RARE_CELL_REPLICATE_STUDIES) & concordance.donor.ge(
+            2
+        )
         replicated = two_studies and (
             multi.donor.nunique() >= RARE_CELL_REPLICATE_DONORS or same_cell.any()
         )
@@ -819,9 +905,10 @@ def assess_rare_cell_rna(
                 "replicated": replicated,
                 "orthogonal_confirmation": confirmed,
                 "published_confirmation": published,
-                "studies_multi_molecule": int(multi.source_id.nunique()),
+                "studies_multi_molecule": int(multi.study_group.nunique()),
+                "collections_multi_molecule": int(multi.source_id.nunique()),
                 "donors_multi_molecule": int(multi.donor.nunique()),
-                "studies_detected": int(group.loc[group.detected, "source_id"].nunique()),
+                "studies_detected": int(group.loc[group.detected, "study_group"].nunique()),
                 "donors_detected": int(group.loc[group.detected, "donor"].nunique()),
                 "donors_assessed": int(group.donor.nunique()),
                 "cell_types_multi_molecule": int(multi.cell_type.nunique()),

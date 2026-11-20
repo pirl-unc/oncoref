@@ -1,6 +1,6 @@
 {
-  "catalog_policy": "oncoref.target-selection.2026-11-19.4",
-  "catalog_sha256": "5c9246deddaf0f4588fb07c17046dc1388ebdea8e69a2422be12ef0f90d31f5b",
+  "catalog_policy": "oncoref.target-selection.2026-11-20.1",
+  "catalog_sha256": "971059a78eae7621eff3c5944213e4ccde257633ac8e133a4f5d1413d0908759",
   "source": "hpa_normal_tissue:v23",
   "source_sha256": "1fa9111070f23290d29a32eaa30695689599b5231e7d0bc935b60a777ad3a1cc",
   "identity_mapping_sha256": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
