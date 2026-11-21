@@ -99,6 +99,37 @@ def audit(*, species: Species | str | int = "human") -> SelectionAudit:
         for column in ("gene_ids", "source_ids", "covered_by"):
             if column in frame:
                 frame[column] = frame[column].map(tuple)
+    if selected.taxon_id == 10090:
+        from .species_antigens import cta_snapshot
+
+        live_by_entity = {
+            f"nomination:{selected.taxon_id}:{cand['id']}": (
+                cand["label"],
+                tuple(cand["gene_ids"]),
+            )
+            for cand in cta_snapshot(selected).candidates()
+        }
+        for key in ("memberships", "explanations"):
+            frame = tables[key]
+            if not frame.empty and "entity_id" in frame:
+                frame["label"] = [
+                    live_by_entity.get(eid, (lbl, ()))[0]
+                    for eid, lbl in zip(frame["entity_id"], frame["label"])
+                ]
+                frame["gene_ids"] = [
+                    live_by_entity.get(eid, ("", gids))[1]
+                    for eid, gids in zip(frame["entity_id"], frame["gene_ids"])
+                ]
+        note = (
+            "Complete Ensembl 115 GRCm39 annotated host reference; "
+            "historical BALB/c and DBA/2 assays do not establish C57BL/6J expression"
+        )
+        tables["funnel"].loc[
+            tables["funnel"]["stage"].eq("Reference and assay identity"), "note"
+        ] = note
+        tables["criteria"].loc[
+            tables["criteria"]["stage"].eq("Reference and assay identity"), "rule"
+        ] = note
     return SelectionAudit(
         species=selected.name,
         status=data["status"],

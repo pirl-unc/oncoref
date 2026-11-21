@@ -439,12 +439,21 @@ def sequence_dispositions(*, species: SpeciesLike = "human") -> pd.DataFrame:
     return sequence_roles(results(species=species))
 
 
+def _species_policy(selected: Species) -> dict:
+    policy = dict(_metadata()["species"][selected.name])
+    if selected.taxon_id != 9606:
+        from .species_antigens import cta_snapshot
+
+        policy["reference"] = cta_snapshot(selected).as_dict()["references"][0]["identity"]
+    return policy
+
+
 def contract(*, species: SpeciesLike = "human") -> dict:
     """Describe decisions and consumer roles with explicit policy/reference identity."""
     from .cta_contract import contract as definitions
 
     selected = resolve_species(species)
-    policy = _metadata()["species"][selected.name]
+    policy = _species_policy(selected)
     return definitions() | {
         "taxon_id": selected.taxon_id,
         "species": selected.name,
@@ -479,8 +488,7 @@ def coverage(*, species: SpeciesLike = "human") -> dict:
     counts deduplicate source IDs within each evidence category, not donors.
     """
     selected = resolve_species(species)
-    metadata = _metadata()
-    policy = metadata["species"][selected.name]
+    policy = _species_policy(selected)
     frame = results(species=selected)
     inventory = sources(species=selected)
     categories = {}
