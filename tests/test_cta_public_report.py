@@ -7,11 +7,17 @@ from pathlib import Path
 
 import pandas as pd
 
-from oncoref import cta_selection, sequence_bundle
+from oncoref import cta_selection
 from tests import released_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
 REPORT = ROOT / "docs/audits/cta-definition-20261104"
+
+
+def _historical_bundle_descriptor() -> dict:
+    receipt = json.loads((REPORT / "release-receipt.json").read_text())
+    expected = receipt["inputs"]["oncoref/data/sequence-bundle.json"]
+    return json.loads(released_inputs.read("oncoref/data/sequence-bundle.json", expected))
 
 
 def test_public_counts_statuses_and_worked_cases_match_the_current_api():
@@ -24,7 +30,7 @@ def test_public_counts_statuses_and_worked_cases_match_the_current_api():
     assert Counter(row["shared_sequence"] for row in report["rows"]) == Counter(
         roles.shared_sequence
     )
-    assert report["bundle"] == sequence_bundle.descriptor()
+    assert report["bundle"] == _historical_bundle_descriptor()
     current = roles.set_index("label")
     for case in report["worked"]:
         row = current.loc[case["label"]]
@@ -41,7 +47,7 @@ def test_final_receipt_binds_source_audits_figures_and_public_documentation():
 
     receipt = json.loads((REPORT / "release-receipt.json").read_text())
     assert receipt["release"] == cta_selection._metadata()["release"]
-    assert receipt["bundle_id"] == sequence_bundle.descriptor()["bundle_id"]
+    assert receipt["bundle_id"] == _historical_bundle_descriptor()["bundle_id"]
     assert receipt["selection_policy_id"] == cta_selection.coverage()["policy_id"]
     for key, base in [("inputs", ROOT), ("outputs", REPORT), ("generated_documentation", ROOT)]:
         for name, expected in receipt[key].items():

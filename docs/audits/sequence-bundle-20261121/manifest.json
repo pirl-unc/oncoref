@@ -1,0 +1,78 @@
+{
+  "schema": "oncoref.sequence-bundle",
+  "schema_version": 1,
+  "release": "1.46.0",
+  "reference": {
+    "schema": "openvax.reference",
+    "schema_version": 1,
+    "taxon_id": 9606,
+    "assembly_accession": "GCA_000001405.29",
+    "annotation_source": "Ensembl",
+    "annotation_release": "115",
+    "source_version": "Ensembl-115",
+    "identifier_namespaces": {
+      "gene": "Ensembl gene",
+      "protein": "Ensembl protein",
+      "transcript": "Ensembl transcript"
+    },
+    "content_provenance": {
+      "gtf": "02df5a2a8c7a41e513209e0780c56cf197941b6b35ef8bab3e9a6317eecd17ef",
+      "ncrna": "7825db09257902df82172928537c1da16cfe79edcca56425556f74f1507437a0",
+      "protein": "7991ab37d09986eefdb5c77032b15370ab0e99918b78f235f3230c0302851c96",
+      "rna": "93af088ed22a46daa9645fc6292fb120c1e4ffe791d24abbcbd35062666c03f1"
+    },
+    "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
+  },
+  "selection_policy_id": "oncoref.target-selection.2026-11-20.2",
+  "role_policy_id": "oncoref.target-selection-sequence-roles.2026-11-21.1",
+  "translation_policy_id": "oncoref.translation-qualification.2026-11-04.1",
+  "representative_selection_policy_id": "oncoref.transcript-selection.2026-11-08.1",
+  "orfdata_identity": "dbd1dd752e24ea08f4d787e48fe04e3464ebce248190572782d6e356e010822f",
+  "record_count": 245535,
+  "occurrence_count": 245535,
+  "record_roles": {
+    "exclude": 230584,
+    "allow": 1087,
+    "review": 13864
+  },
+  "direct_target_records": 570,
+  "cancer_antigen_records": 650,
+  "reproductive_antigen_records": 731,
+  "package_dependencies": {
+    "target-selection.json": "825035d15d693ff92f28dc06389854d8f733937161d770780c4bb9b8a080a7fc",
+    "target-selection.csv.gz": "bae22e175b9c7df90c4842f90cca25dc368009f8c70e38046f8bd2d68231ad8b",
+    "gene-knowledge.json": "b230ceda243bc77c5ca926abe394d3aa9400b1e174561bcd5dee744fac95305f",
+    "gene-knowledge-updates.json": "738869ee4c179eaa8fec5c3ba11c9d7d3ae8fa82f94d2a701f81fb1eebf584e3",
+    "rare-cell-attribution-reviews.json": "bc0e0d5dd53d03866f02656d3c64a5aa84d4b3ef8f3c1f1a391645d037bdab75",
+    "normal-expression-literature.json": "84aca72d34897bc01783a55fe66cb5e8e11871ca1e3708f056694c420b355f00",
+    "readthrough-loci.csv": "666ea7eeafa962d39018d39be77ff148da58bffb3f7267d3505cd36069ba3a65",
+    "normal-tissue-tiers.yaml": "e037686787707fa1c9e8f5379e66198acde168fce7d5cb9f234a302c7edad6cd",
+    "normal-tissue-tier-updates.yaml": "adc1bd3a65ba605cd0937363682c1dfcb7eeabc7979b4388efcf1f1be4ce49b1",
+    "normal-tissue-taxonomy.yaml": "c2a9d7d161fef7ec34b6eb6afc5411090c35cbbbd854954c6d4486c9600aa553",
+    "translation-qualification.json": "33ccea9c5e419a1aeff8f0262f6312c693efa16afd86fa5c2ee95b2657d7d108",
+    "translation-qualification.csv.gz": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
+    "transcript-selection.json": "0d1b542093eb6677b8faa34df33f6041861d21ab3aad1757e136b40920c92264",
+    "transcript-selection.csv.gz": "0793ccb17a4f6b54865a397491f7a2a1d499f0f69a19b90e6406e931c00d1bb2",
+    "transcript-evidence.json": "de9efbe6cbacec4bed04bf18cd8c96341d9c83f8f8b250670b90686f7a00f1bc"
+  },
+  "builder_sha256": "953f866bb9b57b1ac4f3eeb9c271188bf7ef8ee2a2d572447163aff86739d722",
+  "payloads": {
+    "coverage.json": {
+      "bytes": 249705,
+      "sha256": "48a77587626c4e39915b2c28c1ab4418f8d17531735cb83e47af51503770dc9e"
+    },
+    "decisions.csv.gz": {
+      "bytes": 3691861,
+      "sha256": "bae22e175b9c7df90c4842f90cca25dc368009f8c70e38046f8bd2d68231ad8b"
+    },
+    "orfdata-proteome.json.gz": {
+      "bytes": 44691817,
+      "sha256": "efdc40cd73c1af9c8aad5f15901d143a3a117a595555d6b008b640370296dad9"
+    },
+    "records.jsonl.gz": {
+      "bytes": 82132670,
+      "sha256": "02602d1edb4b1cc1d6f22ba2f7476c34d934c9947d813e18065c714f545628b0"
+    }
+  },
+  "bundle_id": "oncoref:sequence-bundle:v1:sha256:938da7bdfa3903f582e086797288199d42d6f449b561fad7fc4780eab4badb9e"
+}
