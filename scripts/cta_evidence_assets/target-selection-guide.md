@@ -6,23 +6,19 @@ presentation or clinical safety.
 
 Catalog `$policy_id`: $categories.
 
-[Catalog whitepaper and study tables](antigen-whitepaper.md) ·
-[Every protein and its evidence](audits/target-selection-20261110/rebuild/report.html) ·
-[Funnel and Venn plots](audits/target-selection-20261110/rebuild/summary.md) ·
-[Host choices](host-selection.md) · [Optional filters](target-filters.md)
-
-[Pre-GTEx comparison for 78 CA-only proteins and 31 normal-cell holds](audits/antigen-evidence-review-20261118/index.md).
-
-[Individual GTEx samples and symmetric reassessment of the ten testis leads](audits/gtex-reproductive-witnesses/index.md).
+[Antigen whitepaper](antigen-whitepaper.md) ·
+[Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) ·
+[Summary figures](audits/target-selection-20261110/rebuild/summary.md) ·
+[Patient-anatomy rules](host-selection.md) · [Patient profiles & filters](target-filters.md)
 
 ## Three separate questions
 
-1. **Shared evidence:** Does the protein pass the normal-expression, coverage,
-   identity, translation, sequence and expression-bounds checks?
-2. **Biological membership:** Does cancer evidence qualify (CA), reproductive or
-   developmental evidence qualify (RA), or both (CTA)?
-3. **Host eligibility:** Which additional compartments must be protected for this
-   research scenario, and is the evidence sufficient to assess them?
+1. **Safety & eligibility:** Does the protein pass the normal-expression, coverage,
+   identity, translation, sequence, and expression-bounds checks?
+2. **Biological enrichment:** Does tumor expression qualify (`CA`), reproductive or
+   developmental expression qualify (`RA`), or both (`CTA`)?
+3. **Patient-specific filtering:** Which reproductive or physiological compartments must be
+   protected for a given patient scenario, and is coverage sufficient to assess them?
 
 ![Catalog and host selection](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
 
@@ -118,17 +114,10 @@ Catalog rows expose samples, independent patients, anonymous samples and cancer 
 at tenfold. `independent_patient_tumor_folds` holds descending patient maxima; multiple
 samples from one known patient count once. Unknown donors do not count as known patients.
 
-## Biological origin and host protection
+## Biological origin and patient-specific protection
 
-`reproductive_qualifying_compartments` names the observed origins. The legacy
-`cta_tier` column mixes origin with an exposure convention and is retained only for
-compatibility; it is **not a toxicity ranking**. `profile="core"` is rejected: choosing
-an origin does not authorize gonadal injury.
-
-Protect / Accept loss / Absent are separate host choices. Anatomy presets protect no
-reproductive tissues by default; protection is explicit. Host rejection leaves biological membership
-unchanged and adds the rejected candidate to the selection's subtraction background.
-[Exact contract, evidence scope and migration](host-selection.md).
+`reproductive_qualifying_compartments` records the reproductive or embryonic compartments reaching ≥10×. Protect, Accept loss, and Absent are independent downstream choices: anatomy presets protect no reproductive tissues by default, and filtering a candidate out for a patient scenario leaves its biological `CA` / `RA` / `CTA` membership unchanged while adding it to that selection's peptide-subtraction background.
+[Patient-anatomy rules and limits](host-selection.md).
 
 ![Host choices and outcomes](audits/target-selection-20261110/rebuild/summary/cta-tiers-and-profiles.png)
 

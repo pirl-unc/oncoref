@@ -1,9 +1,8 @@
-# Normal-tissue tiers
+# Normal-tissue injury tiers
 
-[Organ and cell injury hierarchy with supporting sources](tissue-hierarchy.md)
+[Organ and cell injury hierarchy with supporting sources](tissue-hierarchy.md) · [Antigen whitepaper](antigen-whitepaper.md)
 
-
-OncoRef 1.29.0 centralizes **Vital / Protected / Manageable / Disposable** calls for adult human organs and resolved cell populations. The [complete report](audits/tissue-hazards-1.29.0/index.md) includes 107 assessments, 50 linked references, four generated figures, every canonical human anatomy concept and the native source mappings. A [searchable HTML report](audits/tissue-hazards-1.29.0/report.html), [PDF](audits/tissue-hazards-1.29.0/tissue-hazard-ontology.pdf) and CSV/JSON exports accompany it.
+OncoRef classifies adult human organs and resolved cell populations into four injury tiers: **Vital, Protected, Manageable, and Disposable**. The [full ontology report](audits/tissue-hazards-1.29.0/index.md) ([interactive HTML](audits/tissue-hazards-1.29.0/report.html) · [PDF](audits/tissue-hazards-1.29.0/tissue-hazard-ontology.pdf)) covers 107 organ and cell-type assessments with linked clinical, surgical, and physiological citations.
 
 The tiers describe **consequences of sustained injury**, including loss of repair capacity. They are policy judgments, not measured fatality probabilities. The evidence ledger distinguishes clinical cell-therapy injury, selective animal depletion, regeneration experiments, functional disease analogies, surgical cohorts and anatomical references. An anatomy-only citation supports identity, not tolerability. This is a curated evidence review, not an exhaustive systematic review.
 
@@ -75,15 +74,9 @@ require localization; they do not receive a permissive tier. The
 [current inventory and coverage audit](audits/target-selection-20261109/expression-maxima/index.md)
 separates these broad labels from specific compartments needing new curation.
 
-## Registry updates
+## Specialized sensory, skeletal, and mucosal tissues
 
-**Seven tissues were added on 2026-11-13 as dated updates; no base call changed.
-Olfactory epithelium moved from Protected to Manageable on 2026-11-15, on the oncology
-precedent above.**
-The base registry is `oncoref/data/normal-tissue-tiers.yaml`. Additions live in
-`oncoref/data/normal-tissue-tier-updates.yaml` and are replayed over it, as
-gene-knowledge updates are. `tissue_tiers.assess()` resolves both;
-`tissue_tiers.registry_assess()` answers from the base registry alone. Additions introduce new anatomy. A revision records its previous tier and the basis for the new assignment. The adult whole-thymus revision takes effect in 1.43.0.
+The base registry (`oncoref/data/normal-tissue-tiers.yaml`) and structured rule extensions (`oncoref/data/normal-tissue-tier-updates.yaml`) are evaluated together by `tissue_tiers.assess()` (`tissue_tiers.registry_assess()` queries the base file alone). Specialized adult compartments referenced by curated normal-expression studies carry explicit tiers:
 
 | Tissue | Tier | Confidence |
 |---|---|---|
@@ -95,25 +88,16 @@ gene-knowledge updates are. `tissue_tiers.assess()` resolves both;
 | Nasal respiratory mucosa | Protected | low |
 | Tooth and dental pulp | Manageable | medium |
 
-They were written from abstracts of clinical and ablation analogues; full texts were
-not read. They tier the tissues that published normal-expression findings point to
-([literature rule](target-selection.md#published-normal-expression)). Fold them into
-the base file at the next full data rebuild.
-
 ```python
 from oncoref import tissue_tiers
 
-tissue_tiers.assess("olfactory epithelium")  # tier "manageable", reason "registry_update"
-tissue_tiers.assess("lung")                  # unchanged base call
-tissue_tiers.updates()                       # the added rules, with rationale and references
-tissue_tiers.update_references()             # their evidence ledger
-tissue_tiers.policy_id()                     # base registry hash + updates hash
+tissue_tiers.assess("olfactory epithelium")  # tier "manageable"
+tissue_tiers.assess("lung")                  # tier "vital"
+tissue_tiers.updates()                       # extension rules, rationale, and references
+tissue_tiers.update_references()             # supporting evidence ledger
+tissue_tiers.policy_id()                     # combined registry digest
 ```
 
-RNA and IHC use the same registry, with cellular resolution for HPA clusters/staining, sorted immune panels, DICE and the adult cornea panel. Bulk RNA cannot borrow a cell exception. Existing numeric thresholds remain research parameters; this review does not recalibrate them. Dog and mouse screening roots retain their previous compatibility assignments; the human tier API returns unresolved for nonhuman species.
+RNA and IHC screens use the same registry, applying cellular resolution to HPA single-cell clusters, HPA staining (including hair-follicle cell patterns), sorted immune panels, DICE, and the adult cornea atlas. Bulk RNA always inherits the organ-level tier. Donor-resolved CELLxGENE and Siletti rare-cell screens evaluate each adult donor and cell population independently ([rare-cell rules](target-selection.md#rare-normal-cell-rna)).
 
-The existing CELLxGENE screen still covers brain, spinal cord, heart and selected lung populations. Qualifying Vital expression supplies the existing Unsafe screen; qualifying Protected expression creates `rare_cell_hold`, which blocks CTA admission without itself establishing Unsafe. Other organs' ontology entries do not imply a new expression panel. Excluded lineages and unresolved donor ages remain coverage limitations. Detection frequency is distinct from abundance, receptor recognition and tissue injury. The [2026-11-10 target policy](target-selection.md#rare-normal-cell-rna) regrades this panel per adult donor, ignores single-molecule cells and ends every signal as established or dismissed; the released 1.36.0 catalog keeps the pooled rule described here.
-
-Edit `oncoref/data/normal-tissue-tiers.yaml` to change a call. Each record requires organ scope, tier, mechanism, acute/persistent consequences, repair, compensation, rationale and references. The reference ledger requires a biological model, evidence design, supported finding and limitation. Keep receptor-specific evidence separate from source-gene RNA. Conflicting rules must be resolved explicitly; registry order cannot choose the more permissive rule.
-
-Regenerate the ontology artifacts with `python scripts/build_tissue_tier_report.py` (Matplotlib and ReportLab). After a policy change, rebuild the rare-cell screen from its recorded raw cache and run `python scripts/regenerate_cta_walkthrough.py --verify-replay`, then rebuild the ontology report. The [manifest](audits/tissue-hazards-1.29.0/manifest.json) fingerprints inputs and outputs; [classification changes](audits/tissue-hazards-1.29.0/classification-changes.csv) compare against the recorded 1.28.0 baseline. Historical reports retain their original rules.
+Each registry record specifies organ scope, tier, mechanism, acute and persistent loss consequences, repair capacity, clinical compensation, rationale, and cited evidence (`oncoref/data/normal-tissue-tiers.yaml`). Conflicting cell or tissue rules must be resolved explicitly; registry order never selects a more permissive tier.

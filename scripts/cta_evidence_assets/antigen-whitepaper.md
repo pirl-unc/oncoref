@@ -1,6 +1,6 @@
 # Cancer-selective and cancer–testis antigens in OncoRef
 
-*Policy `$policy` · [Interactive catalog](audits/target-selection-20261110/rebuild/report.html) · [Tissue injury hierarchy](tissue-hierarchy.md) · [Data & downloads](antigen-data.md)*
+*[Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) · [Tissue injury hierarchy](tissue-hierarchy.md) · [Data & downloads](antigen-data.md)*
 
 <p class="section-nav"><strong>Jump to:</strong> <a href="#categories">Categories</a> · <a href="#why-bulk-rna-alone-is-insufficient">Why multi-assay safety</a> · <a href="#decision-tree-attrition-and-the-10-enrichment-rule">Decision tree &amp; 10× rule</a> · <a href="#published-cta-oncofetal-and-placental-lists">Published lists</a> · <a href="#peak-tumor-expression-and-edge-cases">Top tumor targets</a> · <a href="#tissue-injury-tiers-patient-profiles-and-sex-restricted-ctas">Tissue tiers &amp; sex-restricted CTAs</a> · <a href="#methods-protein-grouping-sources-and-thresholds">Methods</a> · <a href="#reproducing-the-catalog-and-downloads">Reproducibility &amp; downloads</a></p>
 
@@ -72,23 +72,19 @@ OncoRef maps **$lit_sources** curated papers across four antigen families: class
 
 Retention tracks how strictly each paper screened healthy tissues. Focused modern CTA and DUX4 studies (`Seager et al. 2024`, `Chew et al. 2019`, `Carter et al. 2023`, `Loriot et al. 2025`) retain **34%–67% CTAs**, whereas broad germ-cell, microarray, ZGA, and cancer–placenta lists (`Bruggeman et al. 2018`, `Smith et al. 2023`, `Jamin et al. 2021`, `Bradley et al. 2020`) are **92%–100% `Unsafe`** under modern adult somatic screening.
 
-![Mapped protein counts across curated literature sources](audits/target-selection-20261110/rebuild/summary/literature-sources-counts.png)
+![Published CTA, oncofetal, and placental lists under OncoRef screening](audits/target-selection-20261110/rebuild/summary/literature-sources-retention.png)
 
-*Figure 7.* Mapped protein-group counts per curated source, grouped by antigen family and colored by OncoRef disposition. [Full table (CSV)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv).
-
-![Retention versus normal-tissue exclusion across curated literature sources](audits/target-selection-20261110/rebuild/summary/literature-sources-retention.png)
-
-*Figure 8.* Share of mapped proteins retained as <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA only</span>, or <span class="cat cat-ra">RA only</span> versus assigned to <span class="cat cat-other">Other</span> or <span class="cat cat-unsafe">Unsafe</span>.
+*Figure 7.* Share of mapped protein groups (`n` shown per study) retained as <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA only</span>, or <span class="cat cat-ra">RA only</span> versus assigned to <span class="cat cat-other">Other</span> or <span class="cat cat-unsafe">Unsafe</span>. [Full 149-source table (CSV)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv).
 
 Of **$published_noms** published CTA or oncofetal nominations, **$published_surviving** survive into the candidate union (`CA ∪ RA`)—including **$cta_published** of our **$cta** CTAs—while **$cta_new** CTAs are newly identified by the expression rules and **$published_outside** nominations fail normal-tissue, eligibility, or enrichment screens.
 
 ![Overlap between rule-derived sets and published nominations](audits/target-selection-20261110/rebuild/summary/venn.png)
 
-*Figure 9.* Overlap between rule-derived Cancer Antigens (**$ca**), Reproductive Antigens (**$ra**), and published CTA/oncofetal nominations (**$published_noms**).
+*Figure 8.* Overlap between rule-derived Cancer Antigens (**$ca**), Reproductive Antigens (**$ra**), and published CTA/oncofetal nominations (**$published_noms**).
 
 ![Attrition of published CTA and oncofetal nominations](audits/target-selection-20261110/rebuild/summary/funnel-published.png)
 
-*Figure 10.* Sequential attrition of **$published_noms** published CTA/oncofetal nominations through the same gates, leaving **$published_surviving** candidates. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-published.csv).
+*Figure 9.* Sequential attrition of **$published_noms** published CTA/oncofetal nominations through the same gates, leaving **$published_surviving** candidates. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-published.csv).
 
 ### Most-nominated individual proteins
 
@@ -100,7 +96,7 @@ $publications
 
 ### Studied proteins in Other or Unsafe
 
-Of **$anchors** protein groups in the familiar or clinical reference panels, **$held** land in `Other` or `Unsafe`. Neither label predicts clinical toxicity for a specific therapeutic product; each records the strongest normal-tissue or rare-cell finding observed under policy `$policy`:
+Of **$anchors** protein groups in the familiar or clinical reference panels, **$held** land in `Other` or `Unsafe`. Neither label predicts clinical toxicity for a specific therapeutic product; each records the strongest normal-tissue or rare-cell finding observed across the healthy adult panels:
 
 $excluded
 
@@ -145,11 +141,11 @@ Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</sp
 
 ![Patient anatomy and organ-loss choices across profiles](audits/target-selection-20261110/rebuild/summary/host-profiles-matrix.png)
 
-*Figure 11.* Compartment choices (<span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, <span class="cat cat-absent">Absent</span>, or unprotected) across standard patient profiles.
+*Figure 10.* Compartment choices (<span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, <span class="cat cat-absent">Absent</span>, or unprotected) across standard patient profiles.
 
 ![Patient-profile screening outcomes for biological CTAs](audits/target-selection-20261110/rebuild/summary/host-profiles-outcomes.png)
 
-*Figure 12.* Downstream screening outcomes across all **$cta** biological CTAs under each patient profile. Filtering a candidate out for one patient narrows the target list and expands the peptide-subtraction background without relabeling its biological <span class="cat cat-cta">CTA</span> identity.
+*Figure 11.* Downstream screening outcomes across all **$cta** biological CTAs under each patient profile. Filtering a candidate out for one patient narrows the target list and expands the peptide-subtraction background without relabeling its biological <span class="cat cat-cta">CTA</span> identity.
 
 ### Sex-restricted reproductive antigens and cross-sex CTAs
 
@@ -164,11 +160,11 @@ The asymmetry is striking: **$cta_female_safe_n** of **$cta** CTAs (`CTA-M + CTA
 
 ![Sex-restricted Reproductive Antigens and cross-sex CTA subsets](audits/target-selection-20261110/rebuild/summary/sex-restricted-ra-cta.png)
 
-*Figure 13.* Partition of all **$ra** Reproductive Antigens, **$cta** CTAs, and **$ra_only** RA-only proteins into `MRA`/`CTA-M`, `ERA`/`CTA-E`, `FRA`/`CTA-F`, and `SRA`/`CTA-MF`. [Full sex-restriction table (CSV)](audits/target-selection-20261110/rebuild/summary/sex-restricted-antigens.csv).
+*Figure 12.* Partition of all **$ra** Reproductive Antigens, **$cta** CTAs, and **$ra_only** RA-only proteins into `MRA`/`CTA-M`, `ERA`/`CTA-E`, `FRA`/`CTA-F`, and `SRA`/`CTA-MF`. [Full sex-restriction table (CSV)](audits/target-selection-20261110/rebuild/summary/sex-restricted-antigens.csv).
 
 ![Male versus female reproductive-organ exposure across all CTAs](audits/target-selection-20261110/rebuild/summary/sex-restricted-landscape.png)
 
-*Figure 14.* Maximum male versus female sex-organ RNA across all **$cta** CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). Points in the lower-right (`CTA-M`, blue) are anatomically absent in non-pregnant women; ochre points in the lower-right (`TGM4`, `SEMG2`) have <4 TPM in female sex organs but ≥4 TPM in resting breast; points in the lower-left (`CTA-E`, green) are absent in both adult sexes; points in the upper-left (`CTA-F`, plum) are anatomically absent in men.
+*Figure 13.* Maximum male versus female sex-organ RNA across all **$cta** CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). Points in the lower-right (`CTA-M`, blue) are anatomically absent in non-pregnant women; ochre points in the lower-right (`TGM4`, `SEMG2`) have <4 TPM in female sex organs but ≥4 TPM in resting breast; points in the lower-left (`CTA-E`, green) are absent in both adult sexes; points in the upper-left (`CTA-F`, plum) are anatomically absent in men.
 
 ## Methods: protein grouping, sources, and thresholds
 
@@ -191,11 +187,11 @@ OncoRef pins **$files** SHA-256-verified files across **$tissue_rows** source/co
 
 ![Native-TPM coverage across somatic, immune, disposable, and thymic tissues](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage-somatic.png)
 
-*Figure 15.* Native-TPM tissue coverage across somatic organs, immune subsets, disposable tissues, and thymus (empty out-of-panel columns omitted). Colored cells mark qualifying coverage for at least one assessed protein group; gray marks no qualifying coverage.
+*Figure 14.* Native-TPM tissue coverage across somatic organs, immune subsets, disposable tissues, and thymus (empty out-of-panel columns omitted). Colored cells mark qualifying coverage for at least one assessed protein group; gray marks no qualifying coverage.
 
 ![Native-TPM coverage across neural, ocular, reproductive, and developmental tissues](audits/target-selection-20261110/rebuild/normal-rna/tpm-coverage-neural-repro.png)
 
-*Figure 16.* Native-TPM coverage across brain, eye, nerve, reproductive, and embryonic tissues. **Qualifies RA** marks individual reproductive samples or supported embryo-lineage means capable of qualifying `RA`; **Context only** marks tissue summaries retained for display.
+*Figure 15.* Native-TPM coverage across brain, eye, nerve, reproductive, and embryonic tissues. **Qualifies RA** marks individual reproductive samples or supported embryo-lineage means capable of qualifying `RA`; **Context only** marks tissue summaries retained for display.
 
 <details markdown="1">
 <summary>Exact quantitative gate thresholds and rare-cell provenance rules</summary>
@@ -217,13 +213,13 @@ OncoRef pins **$files** SHA-256-verified files across **$tissue_rows** source/co
 | **GTEx v11** | Individual site TPM, donor/library IDs, site medians, QC annotations | Non-reproductive sites contribute the within-site linear donor P95 (after within-donor replicate median). Individual reproductive samples can independently qualify `RA`. |
 | **HPA bulk tissue and brain** (incl. GTEx via HPA) | Individual tissue biopsies, tissue/brain-region means, consensus nTPM, anatomical mappings | Native TPM enters the healthy reference (within-tissue biopsy P95 where available) or `RA`-qualifying reproductive samples. Consensus nTPM runs its own normal gate. Redistributed GTEx overlaps GTEx v11. |
 | **HPA sorted blood, DICE and Monaco** | Sorted immune populations, donor TPM, ranked values, published means, immune nTPM | HPA donor P95 and DICE single-locus P95 enter native comparison; DICE multi-locus groups use the conservative sum of member maxima when donor pairing is unavailable; Monaco retains the published mean. Also evaluated in the immune screen. |
-| **HPA single-cell clusters and normal IHC** | Cell-type nTPM, staining grades, antibody IDs, reliability scores | Screen normal cell clusters and reliable positive protein findings (including hair-follicle cell-pattern rules); matched negative IHC can raise RNA ceilings. Reproductive staining/nTPM aids interpretation but never qualifies $fold× `RA` on its own. |
+| **HPA single-cell clusters and normal IHC** | Cell-type nTPM, staining grades, antibody IDs, reliability scores | Screen normal cell clusters and reliable positive protein findings (including resolved cell-pattern rules); matched negative IHC can raise RNA ceilings. Reproductive staining/nTPM aids interpretation but never qualifies $fold× `RA` on its own. |
 | **CELLxGENE Census and Siletti brain** | Versioned H5AD studies, donor IDs, cell types, molecule counts | Grade sparse normal-cell expression by donor penetration, independent study replication, locus mapping risk, and independent confirmation. |
 | **Collin cornea and conjunctiva** | Adult, developmental, and disease ocular cell counts with donor metadata | Dedicated adult corneal normal gate in counts per 10,000 (CP10K); non-adult and disease material stays scoped separately. |
 | **Specialized anatomy studies** | Olfactory epithelium (Durante, Olender, Verbeurgt, MSSM), fetal dental epithelium, developmental skeletal atlas, adult osteoblast markers | Document localized expression in tissues underrepresented in bulk atlases; age, scale, and marker-list scope constrain what each study can establish (marker lists never prove tissue-wide absence). |
 | **Petropoulos, Tyser and Molè embryos** | Per-embryo lineage TPM (preimplantation, Carnegie stage 7) plus day-9/day-11 hypoblast UMI/staining | Supported native TPM can qualify `RA`; hypoblast UMI counts and staining document developmental expression on their native scales. |
 | **Tumor cohorts** | Per-sample matrices, sample/patient IDs, cross-cohort sharing, scale and QC checks | **$cohorts assessed cohorts** in the [tumor coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv). Comparable QC-passing libraries qualify `CA` (germ-cell tumors eligible; coordinated reproductive RNA advisory). |
-| **Curated papers, proteomics and trials** | Nominated gene lists, normal counterevidence, supersession history, clinical/epitope records, CT83 RNAscope | Separate positive nominations from normal counterevidence and literature benchmarks. Curated normal findings can exclude a protein; a positive nomination alone never grants admission. |
+| **Curated papers, proteomics and trials** | Nominated gene lists, normal counterevidence, clinical/epitope records, CT83 RNAscope | Separate positive nominations from reviewed normal counterevidence and literature benchmarks. Curated normal findings can exclude a protein; a positive nomination alone never grants admission. |
 
 $sources
 
@@ -231,7 +227,7 @@ $sources
 
 ## Reproducing the catalog and downloads
 
-Every external reference file and per-sample tumor matrix required for a clean rebuild is SHA-256-pinned and fetched through OncoRef's uniform CLI (no out-of-band downloads or machine-local paths):
+Every external reference file and per-sample tumor matrix required for a clean rebuild (policy `$policy`) is SHA-256-pinned and fetched through OncoRef's uniform CLI (no out-of-band downloads or machine-local paths):
 
 ```sh
 # 1. Fetch and verify all pinned reference datasets (add --include-tumors for all 132 tumor cohorts)
@@ -257,7 +253,7 @@ Cross-cohort tumor matrices come from distinct studies and processing pipelines;
 | [Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) | Searchable browser for all **$n** protein groups, per-gate reasons, top samples, and literature links |
 | [Summary figures and distributions](audits/target-selection-20261110/rebuild/summary.md) | Threshold heatmaps, scale distributions, rare-cell plots, and stage breakdowns |
 | [Classification rules](target-selection.md) · [Build guide](curation.md) | Policy contract, CLI commands, and reproducible build instructions |
-| [Tissue injury hierarchy](tissue-hierarchy.md) · [Tissue tiers](tissue-tiers.md) · [Patient-specific filtering](host-selection.md) | Cited adult organ/cell tiers, hair-follicle and thymus revisions, and patient-profile filtering |
+| [Tissue injury hierarchy](tissue-hierarchy.md) · [Tissue tiers](tissue-tiers.md) · [Patient-specific filtering](host-selection.md) | Cited adult organ and cell-type injury assessments and patient-profile filtering |
 | [Sequence API and peptide subtraction](antigen-sequences.md) · [Data download API](antigen-data.md) | Ensembl 115 reference translations, k-mer subtraction, and programmatic dataset retrieval |
 | [Registered file inventory (`sources.csv`)](antigen-whitepaper/sources.csv) | All **$files** pinned source files, catalog selectors, and SHA-256 digests |
 | [Studied CTA dispositions (`studied-proteins.csv`)](antigen-whitepaper/studied-proteins.csv) | Full measurements and exclusion reasons for all **$studied** published or clinical anchor proteins |

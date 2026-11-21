@@ -74,7 +74,6 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
         "summary/sex-restricted-ra-cta.png",
         "summary/sex-restricted-landscape.png",
         "summary/venn.png",
-        "summary/literature-sources-counts.png",
         "summary/literature-sources-retention.png",
         "normal-rna/tpm-coverage-somatic.png",
         "normal-rna/tpm-coverage-neural-repro.png",

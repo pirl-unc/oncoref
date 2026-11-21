@@ -3,68 +3,34 @@
 [![Tests](https://github.com/pirl-unc/oncoref/actions/workflows/tests.yml/badge.svg)](https://github.com/pirl-unc/oncoref/actions/workflows/tests.yml)
 [![PyPI](https://img.shields.io/pypi/v/oncoref.svg)](https://pypi.org/project/oncoref/)
 
-Curated cancer reference data — cancer-type ontology, tumor mutational burden
-(TMB), incidence/mortality, checkpoint-inhibitor (ICI) response, per-cohort
-RNA-seq expression, Human Protein Atlas (HPA) normal-tissue and cancer expression, and
-HPA-derived cancer-testis antigen references, plus matched CPTAC RNA/protein
-calibration sources — behind one small Python API, a data fetch/cache CLI, and a
-set of reference plots.
+Curated cancer genomics and antigen discovery reference data — cancer-type
+ontology, tumor mutational burden (TMB), incidence/mortality, checkpoint-inhibitor
+(ICI) response, per-cohort RNA-seq expression, normal-tissue injury tiers,
+matched CPTAC RNA/protein calibration, and proteome-wide Cancer Antigen (`CA`),
+Reproductive Antigen (`RA`), and Cancer–Testis Antigen (`CTA`) classification —
+behind a Python API and CLI.
 
-The [rebuilt target catalog](docs/audits/target-selection-20261110/rebuild/index.md) contains **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,121 Other and
-18,247 Unsafe**. [Normal RNA sources and tissue coverage](docs/audits/target-selection-20261110/rebuild/normal-rna/index.md). [Cancer Antigens and Reproductive Antigens](docs/target-selection.md) share one eligibility screen and independently require ≥10 × max(non-reproductive normal, Disposable, 1 TPM), excluding thymus from both terms, in their respective compartments. CTA is their intersection; candidate antigen proteins is their union. [Patient-specific filtering](docs/host-selection.md) (`HostContext` / `--profile`) applies downstream, letting you mark reproductive compartments as `Protect`, `Accept loss`, or `Absent` without altering biological CA/RA/CTA membership. Accepted normal exclusions remain `Unsafe`; strong unresolved signals require review (`Other:Review`). [Interactive catalog](docs/audits/target-selection-20261110/rebuild/report.html) · [Figures & funnels](docs/audits/target-selection-20261110/rebuild/summary.md) · [Antigen sets and Unsafe|Other peptide subtraction](docs/antigen-sequences.md) · [CLI & curation build](docs/curation.md).
+Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
+[antigen catalog](docs/antigen-whitepaper.md) classifies **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1,121 Other and
+18,247 Unsafe**. `CA` and `RA` share one multi-assay normal-tissue safety and eligibility screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in tumor or reproductive/embryonic samples; `CTA = CA ∩ RA`, and the candidate union `CA ∪ RA` contains **525** protein groups. [Patient-specific filtering](docs/host-selection.md) (`--profile` / `target_filters`) applies downstream, marking reproductive compartments as `Protect`, `Accept loss`, or `Absent` without altering biological categories.
+
+[Antigen whitepaper](docs/antigen-whitepaper.md) ·
+[Interactive protein catalog](docs/audits/target-selection-20261110/rebuild/report.html) ·
+[Classification rules](docs/target-selection.md) ·
+[Patient profiles & filters](docs/target-filters.md) ·
+[Sequences & peptide subtraction](docs/antigen-sequences.md) ·
+[CLI & curation builds](docs/curation.md)
 
 ```python
-from oncoref import antigen_sets, target_filters, target_selection
+from oncoref import antigen_sets, target_selection
 
 all_ctas = antigen_sets.proteins("CTA")
 selection = antigen_sets.select("CTA", mode="standard")
 proteins = selection.proteins()
 decisions = selection.decisions()
 background = antigen_sets.proteins("Unsafe|Other")
-all_decisions = target_selection.results()
+catalog_df = target_selection.results()
 ```
-
-### Historical snapshots and species compatibility
-
-The [released 1.36.0 CTA/oncofetal selection](docs/audits/cta-definition-20261104/index.md) (`cta_selection`, **607 CTA / 18,259 Unsafe / 1,027 Other**) and earlier snapshots remain pinned separately for historical comparison, alongside explicit multi-species interfaces:
-
-```python
-from oncoref import human, canine, mouse, cta_selection
-
-selected = human.cta_selection(category="CTA")
-all_decisions = human.cta_selection()
-other = human.cta_selection(category="Other")
-profiles = cta_selection.profiles()
-labels = all_decisions[["label", "classification"]]
-canine.cta_selection()           # 14 native nominations, unassigned/unassessed
-mouse.cta_selection_coverage()   # Explicitly unavailable selection
-human.cta_sources()              # Biological role, native unit, integration status
-```
-
-The same API retains native species identities, source provenance and missing
-coverage. Dog PCR percentages, TMM-CPM and protein iBAQ never become human TPM.
-Mouse atlas entries identify resources for integration; no mouse classification
-is inferred from human orthology. See the [API and species guide](docs/cta-selection.md).
-
-The [verified sequence bundle](docs/sequence-bundle.md) retains original records,
-all occurrences, ambiguity segments, coverage gaps and current policy roles.
-Earlier 215-, 447- and 1,416-gene accessors are frozen comparisons. The historical
-protein background remains separately pinned to the
-[v1.20.0 sequence assets](https://github.com/pirl-unc/oncoref/releases/tag/v1.20.0)
-and their explicit exclusion recipe. Candidate proteins count identical selected
-reference sequences together and retain every member locus; the count does not
-enumerate every splice isoform or modified proteoform.
-[Normal-expression breadth](docs/audits/normal-breadth-20261104/index.md)
-remains a descriptive measure with missing-coverage bounds.
-
-The [genome-wide expression groups](https://pirl-unc.github.io/oncoref/audits/normal-expression-categories-20261021-r2/)
-classify Reproductive, Normal and Other independently of CTA nomination.
-Other contains Disposable and Silent; incomplete evidence remains Unassessed.
-Observed normal expression is preserved separately for subsequence comparisons.
-[Disjoint gene and exact-protein sets](https://pirl-unc.github.io/oncoref/audits/normal-sequence-sets-20261021/)
-include all complete Ensembl 115 isoforms, source records and FASTA downloads.
-Shared sequences use Normal → Unassessed → Reproductive → Other precedence;
-k-mers still require explicit sequence subtraction.
 
 ## Role in the stack
 
@@ -202,7 +168,8 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 | How is expression normalized or filtered? | `oncoref.normalization`, `oncoref.gene_families` |
 | What is the canonical gene identity? | `oncoref.gene_ids`, `oncoref.genome`, `oncoref.proteoforms` |
 | What is the TMB, burden, or ICI response evidence? | `oncoref.tmb`, `oncoref.incidence`, `oncoref.ici_response` |
-| Which genes meet the HPA-derived CTA definition? | `oncoref.cta`, `oncoref.cta_coverage`, `oncoref.cta_peptides` |
+| Which proteins are classified as `CA`, `RA`, `CTA`, `Other`, or `Unsafe`? | `oncoref.antigen_sets`, `oncoref.target_selection`, `oncoref.target_filters`, `oncoref.peptide_subtraction` |
+| What are the organ and cell-type injury tiers? | `oncoref.tissue_tiers`, `oncoref.antigen_data` |
 | Where is a dataset cached or downloaded? | `oncoref.catalog`, `oncoref.data_bundle`, `oncoref.hpa` |
 
 The [API guide](https://pirl-unc.github.io/oncoref/api/) explains each domain,

@@ -289,55 +289,86 @@ def build():
     )
     page = """<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rebuilt antigen catalog — OncoRef</title>
-<style>body{font:16px/1.5 system-ui,sans-serif;color:#20333d;margin:0}main{max-width:1550px;margin:auto;padding:28px}
-h1{font-size:34px}h2{margin-top:2em}a{color:#126487}.summary{max-width:850px}.note{padding:14px;background:#f4f6f7;border-left:4px solid #b17a31}
-table{border-collapse:collapse;width:100%}th,td{padding:9px;text-align:left;border-bottom:1px solid #dbe1e4;vertical-align:top}th{background:#eef3f5;position:sticky;top:0}
-.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:20px 0}input,select,button{font:inherit;padding:7px}input[type=search]{min-width:330px}
-.scroll{overflow:auto;max-height:78vh}.catalog{min-width:1250px;font-size:14px}small{color:#576771}details{max-width:480px}details ul{padding-left:18px}
-.badge{font-weight:600;white-space:nowrap}.Unsafe{color:#a33532}.CTA{color:#20613c}#count{font-weight:bold}.pager{margin-top:12px;display:flex;gap:16px}
-</style><main><h1>Rebuilt antigen catalog</h1>
-<p>__TOTAL__ proteins assessed under <code>__POLICY__</code>. Identical selected reference proteins are counted together; every member locus remains listed.</p>
-<p class="note"><strong>These counts are outputs of screening rules, not validated tumor antigens.</strong> Rare normal-cell RNA is graded per adult donor; established findings exclude, strong unresolved signals require review, and weak or inconsistent findings retain their reasons. <a href="literature/">Literature review of the dismissed and released proteins</a>. <a href="../../normal-cell-atlas-20261110/rare-cell/">Donor-level evidence</a> · <a href="changes-from-draft.csv">Every change from the 2026-11-09 draft</a> · <a href="../../target-selection-20261109/scrutiny/">Earlier 250-protein audit</a>.</p>
-<div class="summary"><table><thead><tr><th>Exclusive category</th><th>Proteins</th><th>With a curated target nomination</th></tr></thead><tbody>__COUNTS__</tbody></table>
-<p><strong>Cancer Antigens: __CA__ · Reproductive Antigens: __RA__ · CTA intersection: __CTA__ · Candidate antigen proteins union: __UNION__.</strong></p></div>
-<figure><img src="summary/source-to-tiers-architecture.png" alt="End-to-end curation architecture from data sources to CTA tiers" style="width:100%;max-width:1350px"></figure>
-<figure><img src="summary/cta-tiers-and-profiles.png" alt="CTA compartment tiers and host toxicity profiles" style="width:100%;max-width:1300px"></figure>
-<figure><img src="summary/antigen-sets.png" alt="Cancer and reproductive antigen membership" style="width:100%;max-width:900px"></figure>
-<figure><img src="summary/funnel-all.png" alt="Sequential curation funnel with removed and retained counts" style="width:100%;max-width:1300px"></figure>
-<p><a href="summary/">All curation figures and count tables</a> · <a href="library-qc.csv.gz">Library QC measurements</a> · <a href="../../../antigen-sequences/">Set and peptide subtraction APIs</a></p>
-<p>Other: __OTHER_COUNTS__. The __RA_ONLY__ Reproductive Antigens only have no qualifying cancer evidence under this screen.</p>
-<p>The shared eligibility screen leaves __ELIGIBLE__ proteins. Cancer RNA needs one tumor sample, from any comparable TPM cohort, at ≥10 × max(N, D, 1), where N is the highest non-thymic, non-reproductive normal value and D the highest Disposable value. All qualifying 10× samples, known patients, anonymous samples and cancer types are counted separately. The highest tumor, reproductive or developmental value must exceed every measured nonreproductive and Disposable value, with Disposable expression at most 32 TPM and 32 nTPM. RA independently requires ≥10 × max(N, D, 1) in a reproductive tissue sample or supported embryo-specific lineage mean. Protein staining and incompatible RNA scales remain independent evidence layers; they cannot bypass the RNA fold.</p>
-<p class="note">The comparison uses native gene TPM with resolved identities and source quality checks. N includes within-site GTEx v11 linear donor P95, HPA v23 within-tissue biopsy P95 and supported tissue/cell summaries; it does not cover every healthy donor. Cross-study batch effects are not corrected. Other assay scales retain their independent normal-exclusion rules. <a href="normal-rna/">Normal RNA source coverage</a> · <a href="comparison.json">Exact comparison scope</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5903355/">Cross-study methods</a>.</p>
-<p><strong>NUTM coverage:</strong> the stored UNC three-sample matrix fails the nonnegative-TPM check and contributes no qualifying samples. Its failed source remains in the <a href="tumor-source-coverage.csv">coverage ledger</a>; <a href="https://github.com/pirl-unc/oncoref/issues/604">#604</a> and <a href="https://github.com/pirl-unc/oncoref/issues/665">#665</a> track the repair. No raw reads were re-quantified for this rebuild.</p>
-<h2>Changes from the released 1.39.0 catalog</h2><div class="summary"><table><thead><tr><th>Released category</th><th>New category</th><th>Proteins</th></tr></thead><tbody>__MIGRATIONS__</tbody></table></div>
-<p><a href="changes-from-1.39.csv">All changes since 1.39 and their evidence</a> · <a href="summary.json">Counts</a> · <a href="gene-decisions.csv.gz">All member genes</a> · <a href="protein-decisions.csv.gz">Full protein decisions</a></p>
-<p>Category downloads: __DOWNLOADS__.</p>
-<h2>Find a protein</h2><p>“Only” describes qualified set membership. Missing evidence is shown as —, never zero. Measured cancer and reproductive counterfactuals remain visible for newly held rare-cell records. A review hold still blocks membership.</p>
-<div class="controls"><input id="search" type="search" placeholder="Protein, Ensembl ID, reason, paper or program" aria-label="Search proteins">
-<select id="category" aria-label="Category"><option value="">All categories</option>__OPTIONS__</select>
-<label><input type="checkbox" id="changed"> Changed category</label><label><input type="checkbox" id="published"> Published target nomination</label>
-<span id="count"></span></div>
-<div class="scroll"><table class="catalog"><thead><tr><th>Protein and source links</th><th>New category</th><th>1.39 category</th><th>Normal N / Disposable D<br>TPM</th><th>Tumor maximum<br>TPM</th><th>Tumor 10× samples /<br>known patients</th><th>Reproductive fold</th><th>Reproductive maximum<br>TPM</th><th>Reproductive context</th><th>Evidence and papers</th></tr></thead><tbody id="body"></tbody></table></div>
+<title>Antigen Catalog — OncoRef</title>
+<style>
+body{font:15px/1.55 system-ui,-apple-system,sans-serif;color:#1f2933;margin:0;background:#fff}
+main{max-width:1520px;margin:auto;padding:24px 28px}
+.top-links{font-size:13.5px;color:#486581;margin-bottom:6px}
+.top-links a{color:#1a567b;text-decoration:none}
+.top-links a:hover{text-decoration:underline}
+h1{font-size:28px;font-weight:650;color:#102a43;margin:4px 0 6px 0;letter-spacing:-0.015em}
+.subtitle{color:#334e68;margin:0 0 14px 0;max-width:980px;font-size:14.5px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0 16px 0;font-size:13.5px}
+.pill{padding:3px 9px;border-radius:4px;font-weight:600;border:1px solid transparent}
+.p-cta{color:#1d573c;background:#ebf5ef;border-color:#b7d9c6}
+.p-ca{color:#1a567b;background:#ebf4fa;border-color:#b4d2e6}
+.p-ra{color:#266049;background:#f0f7f4;border-color:#c2dfd3}
+.p-other{color:#785416;background:#fbf5e7;border-color:#e4d1a3}
+.p-unsafe{color:#8c2d2a;background:#fbeeed;border-color:#e4b8b6}
+a{color:#1a567b}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:14px 0;padding:10px 12px;background:#f7f9fb;border:1px solid #d9e2ec;border-radius:6px}
+input,select,button{font:inherit;font-size:14px;padding:6px 10px;border:1px solid #bcccdc;border-radius:4px;background:#fff;color:#102a43}
+input[type=search]{min-width:340px}
+.scroll{overflow:auto;max-height:76vh;border-top:1.5px solid #486581;border-bottom:1.5px solid #486581}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #e4ebf1;vertical-align:top}
+th{background:#f8fafc;color:#102a43;font-weight:600;border-bottom:1px solid #829ab1;position:sticky;top:0;z-index:2;font-size:13px}
+.catalog{min-width:1200px;font-size:13.5px}
+small{color:#52606d}
+details{max-width:490px}
+details summary{cursor:pointer;color:#243b53;font-weight:500}
+details ul{padding-left:18px;margin:6px 0}
+.badge{display:inline-block;padding:2px 7px;border-radius:3px;font-size:12.5px;font-weight:600;white-space:nowrap;border:1px solid transparent}
+.b-CTA{color:#1d573c;background:#ebf5ef;border-color:#b7d9c6}
+.b-CA{color:#1a567b;background:#ebf4fa;border-color:#b4d2e6}
+.b-RA{color:#266049;background:#f0f7f4;border-color:#c2dfd3}
+.b-Other{color:#785416;background:#fbf5e7;border-color:#e4d1a3}
+.b-Unsafe{color:#8c2d2a;background:#fbeeed;border-color:#e4b8b6}
+#count{font-weight:600;color:#243b53;margin-left:auto}
+.pager{margin-top:12px;display:flex;gap:14px;align-items:center;font-size:13.5px}
+.downloads{margin-top:18px;padding-top:12px;border-top:1px solid #e4ebf1;font-size:13px;color:#486581}
+</style><main>
+<div class="top-links"><a href="../../../">oncoref</a> · <a href="../../../antigen-whitepaper/">Antigen whitepaper</a> · <a href="../../../target-selection/">Classification rules</a> · <a href="../../../target-filters/">Patient profiles &amp; filters</a> · <a href="../../../antigen-data/">Data &amp; downloads</a></div>
+<h1>OncoRef Antigen Catalog</h1>
+<p class="subtitle">Search and filter all <strong>__TOTAL__</strong> human coding protein groups screened across normal bulk RNA, sorted immune subsets, single-cell clusters, donor-replicated rare-cell UMI atlases, normal IHC, 130 tumor cohorts, and reproductive/embryonic datasets. Screening calls are expression evidence, not clinical target certifications.</p>
+<div class="pills">
+  <span class="pill p-cta">CTA: __CTA__</span>
+  <span class="pill p-ca">Cancer Antigen (CA): __CA__</span>
+  <span class="pill p-ra">Reproductive Antigen (RA): __RA__</span>
+  <span class="pill p-other">Other: __OTHER_TOTAL__ (__OTHER_COUNTS__)</span>
+  <span class="pill p-unsafe">Unsafe: __UNSAFE_TOTAL__</span>
+</div>
+<div class="controls">
+  <input id="search" type="search" placeholder="Search gene symbol, Ensembl ID, cancer code, tissue, or paper..." aria-label="Search proteins">
+  <select id="category" aria-label="Category"><option value="">All categories (__TOTAL__)</option>__OPTIONS__</select>
+  <label><input type="checkbox" id="candidate"> Candidates only (CA ∪ RA: __UNION__)</label>
+  <label><input type="checkbox" id="published"> Published nomination</label>
+  <span id="count"></span>
+</div>
+<div class="scroll"><table class="catalog"><thead><tr><th>Protein &amp; links</th><th>Category</th><th>Healthy N / D<br>(TPM)</th><th>Peak tumor<br>(TPM · cohort)</th><th>Tumor 10×<br>samples / patients</th><th>Reproductive<br>fold</th><th>Reproductive peak<br>(TPM)</th><th>Qualifying context</th><th>Gate details &amp; citations</th></tr></thead><tbody id="body"></tbody></table></div>
 <div class="pager"><button id="previous">Previous</button><span id="page"></span><button id="next">Next</button></div>
-<p><a href="normal-comparison.csv.gz">All comparison normal measurements</a> · <a href="tumor-witnesses.csv.gz">Tumor witnesses</a> · <a href="paper-attestations.json.gz">Every retained protein–paper claim</a> · <a href="inputs.json">Input hashes</a> · <a href="../report.html">Ontology figures and rules</a></p>
+<div class="downloads">
+  <strong>Downloads:</strong> __DOWNLOADS__ · <a href="protein-decisions.csv.gz">Full protein table (CSV.GZ)</a> · <a href="gene-decisions.csv.gz">Member loci (CSV.GZ)</a> · <a href="tumor-witnesses.csv.gz">Qualifying tumor samples</a> · <a href="normal-comparison.csv.gz">Healthy baseline measurements</a> · <a href="summary/sex-restricted-antigens.csv">Sex-restricted RAs &amp; CTAs</a> · Policy <code>__POLICY__</code>
+</div>
 <script id="records" type="application/json">__DATA__</script><script id="sources" type="application/json">__SOURCES__</script>
 <script>
 const records=JSON.parse(document.getElementById('records').textContent),sources=JSON.parse(document.getElementById('sources').textContent);
 const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=x=>x===null?'—':Number(x).toLocaleString(undefined,{maximumFractionDigits:3});
 const link=(url,label)=>`<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a>`;
+const badgeClass=cat=>cat==='CTA'?'b-CTA':cat==='Cancer Antigen only'?'b-CA':cat==='Reproductive Antigen only'?'b-RA':cat==='Unsafe'?'b-Unsafe':'b-Other';
+const isCand=cat=>cat==='CTA'||cat==='Cancer Antigen only'||cat==='Reproductive Antigen only';
 let page=0,selected=[];const size=100;
 function papers(ids){return ids.map(id=>{let s=sources[id];return s?link(s.source_url,s.citation)+(s.title?' — '+esc(s.title):''):esc(id)}).join('<br>')}
 function render(reset=true){if(reset)page=0;let q=document.getElementById('search').value.toLowerCase(),cat=document.getElementById('category').value;
-selected=records.filter(r=>(!cat||r.category===cat)&&(!document.getElementById('changed').checked||r.classification!==r.previous_classification)&&(!document.getElementById('published').checked||r.published_nomination)&&(!q||JSON.stringify(r).toLowerCase().includes(q)||r.paper_source_ids.some(id=>JSON.stringify(sources[id]||{}).toLowerCase().includes(q))));
+selected=records.filter(r=>(!cat||r.category===cat)&&(!document.getElementById('candidate').checked||isCand(r.category))&&(!document.getElementById('published').checked||r.published_nomination)&&(!q||JSON.stringify(r).toLowerCase().includes(q)||r.paper_source_ids.some(id=>JSON.stringify(sources[id]||{}).toLowerCase().includes(q))));
 const pages=Math.max(1,Math.ceil(selected.length/size));page=Math.min(page,pages-1);
-document.getElementById('count').textContent=selected.length.toLocaleString()+' proteins';
+document.getElementById('count').textContent=selected.length.toLocaleString()+' protein groups';
 document.getElementById('body').innerHTML=selected.slice(page*size,(page+1)*size).map(r=>`<tr><td><strong>${esc(r.protein_group_label)}</strong><br><small>${r.member_gene_ids.map(g=>link('https://www.ensembl.org/Homo_sapiens/Gene/Summary?g='+g,g)).join('<br>')}<br>${link('https://www.proteinatlas.org/'+r.representative_gene_id,'HPA')}</small></td>
-<td class="badge ${r.category==='Unsafe'?'Unsafe':r.category==='CTA'?'CTA':''}">${esc(r.classification)}</td><td>${esc(r.previous_classification)}</td><td>${fmt(r.normal_reference_tpm)} / ${fmt(r.disposable_max_tpm)}</td><td>${fmt(r.tumor_max_tpm)}<br><small>${esc(r.tumor_top_cancer_code)}</small></td><td>${fmt(r.samples_at_tenfold)} / ${fmt(r.independent_patients_at_tenfold)}</td><td>${fmt(r.reproductive_fold)}</td><td>${fmt(r.reproductive_supported_tpm)}</td><td>${esc(r.reproductive_supported_context)}</td>
-<td><details><summary>${r.published_nomination?'Published nomination':'No catalog nomination'} · ${r.paper_source_ids.length} paper sources</summary><p>${esc(r.decision_reason)}</p><p>Cancer assessment: ${esc(r.cancer_evidence)}<br>${esc(r.cancer_routes)}<br>Tenfold witnesses: ${fmt(r.samples_at_tenfold)} samples, ${fmt(r.independent_patients_at_tenfold)} known patients, ${fmt(r.anonymous_samples_at_tenfold)} anonymous samples, ${fmt(r.cancer_types_at_tenfold)} cancer types</p><p>Rare normal-cell RNA: ${esc(r.rare_cell_status)}${r.rare_cell_basis?' — '+esc(r.rare_cell_basis):''}${r.rare_cell_mapping_notes?' ('+esc(r.rare_cell_mapping_notes)+')':''}${r.literature_effect&&r.literature_effect!=='not_reviewed'?'<br>Literature: '+esc(r.literature_effect)+' — '+esc(r.literature_decision_reason):''}${r.finding_tissue?'<br>'+esc(r.finding_tissue)+': '+esc(r.finding_top_cell_type)+', '+fmt(r.finding_studies_multi_molecule)+' studies, '+fmt(r.finding_top_multi_molecule_pct)+'% of the strongest donor’s cells with ≥2 molecules':''}<br>Highest single-donor detection ${fmt(r.max_detection_pct)}%; with ≥2 molecules ${fmt(r.max_multi_molecule_pct)}%</p><p>Reproductive/developmental routes: ${esc(r.reproductive_routes)}${r.reproductive_qualifying_compartments?'<br>Qualifying compartments: '+esc(r.reproductive_qualifying_compartments):''}<br>Highest cell-supported observation: ${fmt(r.reproductive_max_sample_tpm)} TPM; replication-supported ceiling: ${fmt(r.reproductive_supported_tpm)} TPM / ${fmt(r.reproductive_fold)}× in ${esc(r.reproductive_supported_context)}; ${esc(r.reproductive_top_sample)}<br>Context: ${esc(r.reproductive_top_context)}; ${fmt(r.reproductive_samples_at_tenfold)} observations at 10×</p><p><strong>Consequences of tissue loss</strong> · <a href="../../../tissue-tiers/">Reviewed tissue policy</a><br>Observed reproductive RNA ≥1 TPM; not restricted to tenfold RA witnesses. These observed maxima can include unsupported cell means; QC indicates whether any observation in that context passes the cell-support screen. Organ fallbacks remain explicit.</p>${r.loss_consequences.map(c=>`<p>${esc(c.compartment&&c.compartment!==c.tissue?c.tissue+' ('+c.compartment+')':c.tissue)} / ${esc(c.cell_type)}: ${fmt(c.native_tpm_max)} TPM${c.qc_supported?"":" (no observation passes cell-support screen)"}<br>${esc(c.tier)} (${esc(c.matched_level||"unresolved scope")}) — ${esc(c.persistent_loss)}<br>${esc(c.management)}</p>`).join('')}<p><strong>Reviewed gene findings</strong></p>${r.reviewed_findings.map(f=>`<p><a href="${esc(f.source_url)}">${esc(f.id)}</a>${f.superseded?" (superseded)":""}<br>${esc(f.finding)}<br>${esc(f.reason)}<br><em>${esc(f.limitations)}</em></p>`).join('')}<p>Peak tumor sample: ${esc(r.tumor_top_sample)}</p><p>Selected transcript(s): ${esc(r.representative_transcripts)}</p><p>Normal maximum witnesses (up to 10):</p><ul>${r.normal_reference_contexts.map(x=>`<li>${esc(x.tissue)} / ${esc(x.cell_type)}: ${fmt(x.value)} TPM · ${esc(x.source_id)} · ${esc(x.statistic)} · ${esc(x.sample_id||x.source_context)}</li>`).join('')}</ul><p><strong>Target nominations</strong><br>${papers(r.nomination_source_ids)||'None recorded'}</p><p><strong>All paper roles, including counterevidence</strong><br>${papers(r.paper_source_ids)||'None recorded'}</p></details></td></tr>`).join('');
+<td><span class="badge ${badgeClass(r.category)}">${esc(r.classification)}</span></td><td>${fmt(r.normal_reference_tpm)} / ${fmt(r.disposable_max_tpm)}</td><td>${fmt(r.tumor_max_tpm)}<br><small>${esc(r.tumor_top_cancer_code)}</small></td><td>${fmt(r.samples_at_tenfold)} / ${fmt(r.independent_patients_at_tenfold)}</td><td>${fmt(r.reproductive_fold)}</td><td>${fmt(r.reproductive_supported_tpm)}</td><td>${esc(r.reproductive_supported_context)}</td>
+<td><details><summary>${r.published_nomination?'Published nomination':'No catalog nomination'} · ${r.paper_source_ids.length} paper sources</summary><p>${esc(r.decision_reason)}</p><p>Cancer assessment: ${esc(r.cancer_evidence)}<br>${esc(r.cancer_routes)}<br>10× tumor support: ${fmt(r.samples_at_tenfold)} samples, ${fmt(r.independent_patients_at_tenfold)} known patients, ${fmt(r.anonymous_samples_at_tenfold)} anonymous samples, ${fmt(r.cancer_types_at_tenfold)} cancer types</p><p>Rare normal-cell RNA: ${esc(r.rare_cell_status)}${r.rare_cell_basis?' — '+esc(r.rare_cell_basis):''}${r.rare_cell_mapping_notes?' ('+esc(r.rare_cell_mapping_notes)+')':''}${r.literature_effect&&r.literature_effect!=='not_reviewed'?'<br>Literature: '+esc(r.literature_effect)+' — '+esc(r.literature_decision_reason):''}${r.finding_tissue?'<br>'+esc(r.finding_tissue)+': '+esc(r.finding_top_cell_type)+', '+fmt(r.finding_studies_multi_molecule)+' studies, '+fmt(r.finding_top_multi_molecule_pct)+'% of top donor cells with ≥2 molecules':''}<br>Highest single-donor detection ${fmt(r.max_detection_pct)}%; with ≥2 molecules ${fmt(r.max_multi_molecule_pct)}%</p><p>Reproductive/developmental routes: ${esc(r.reproductive_routes)}${r.reproductive_qualifying_compartments?'<br>Qualifying compartments: '+esc(r.reproductive_qualifying_compartments):''}<br>Peak observation: ${fmt(r.reproductive_max_sample_tpm)} TPM; supported peak: ${fmt(r.reproductive_supported_tpm)} TPM (${fmt(r.reproductive_fold)}×) in ${esc(r.reproductive_supported_context)} (${esc(r.reproductive_top_sample)})<br>Context: ${esc(r.reproductive_top_context)}; ${fmt(r.reproductive_samples_at_tenfold)} observations at 10×</p><p><strong>Organ &amp; cell-loss tiers</strong> · <a href="../../../tissue-tiers/">Tissue tier policy</a></p>${r.loss_consequences.map(c=>`<p>${esc(c.compartment&&c.compartment!==c.tissue?c.tissue+' ('+c.compartment+')':c.tissue)} / ${esc(c.cell_type)}: ${fmt(c.native_tpm_max)} TPM${c.qc_supported?"":" (below cell-support rule)"}<br>${esc(c.tier)} (${esc(c.matched_level||"unresolved scope")}) — ${esc(c.persistent_loss)}<br>${esc(c.management)}</p>`).join('')}<p><strong>Reviewed gene findings</strong></p>${r.reviewed_findings.map(f=>`<p><a href="${esc(f.source_url)}">${esc(f.id)}</a>${f.superseded?" (superseded)":""}<br>${esc(f.finding)}<br>${esc(f.reason)}<br><em>${esc(f.limitations)}</em></p>`).join('')}<p>Peak tumor sample: ${esc(r.tumor_top_sample)}</p><p>Selected transcript(s): ${esc(r.representative_transcripts)}</p><p>Healthy baseline maxima (up to 10):</p><ul>${r.normal_reference_contexts.map(x=>`<li>${esc(x.tissue)} / ${esc(x.cell_type)}: ${fmt(x.value)} TPM · ${esc(x.source_id)} · ${esc(x.statistic)} · ${esc(x.sample_id||x.source_context)}</li>`).join('')}</ul><p><strong>Target nominations</strong><br>${papers(r.nomination_source_ids)||'None recorded'}</p><p><strong>All paper roles, including counterevidence</strong><br>${papers(r.paper_source_ids)||'None recorded'}</p></details></td></tr>`).join('');
 document.getElementById('page').textContent=`Page ${page+1} of ${pages}`;document.getElementById('previous').disabled=page===0;document.getElementById('next').disabled=page+1>=pages;}
-for(const id of ['search','category','changed','published'])document.getElementById(id).addEventListener(id==='search'?'input':'change',()=>render());
+for(const id of ['search','category','candidate','published'])document.getElementById(id).addEventListener(id==='search'?'input':'change',()=>render());
 document.getElementById('previous').onclick=()=>{page--;render(false)};document.getElementById('next').onclick=()=>{page++;render(false)};render();
 </script></main></html>"""
     replace = {
@@ -348,6 +379,8 @@ document.getElementById('previous').onclick=()=>{page--;render(false)};document.
         "RA": f"{members['is_reproductive_antigen']:,}",
         "CTA": f"{members['is_cta']:,}",
         "UNION": f"{members['is_target_candidate']:,}",
+        "OTHER_TOTAL": f"{counts['Other']:,}",
+        "UNSAFE_TOTAL": f"{counts['Unsafe']:,}",
         "ELIGIBLE": str(summary["shared_eligible"]),
         "OTHER_COUNTS": other_counts,
         "RA_ONLY": str(len(reproductive_only)),

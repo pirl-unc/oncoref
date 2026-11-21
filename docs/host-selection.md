@@ -1,8 +1,7 @@
-# Host choices and tissue-loss consequences
+# Patient anatomy and organ-loss filtering
 
 **Biological origin, observed exposure, and tolerated tissue loss are separate axes.**
-A CTA can fail a host screen without ceasing to be a CTA. This API supports research
-selection; its expression cutoffs are not clinical injury thresholds.
+A CTA can fail a patient-profile screen without ceasing to be a biological CTA. These expression cutoffs support target screening; they are not clinical injury thresholds.
 
 ## Protection choices
 
@@ -50,11 +49,7 @@ actual organs with `absent_tissues`, `protect_tissues` and `allow_tissues` (the 
 name for accepting loss). Surgery must be represented by verified absence, not by
 an automatic promise that no residual tissue exists. `all` means no host screen.
 
-The old `core` host shortcut is rejected because it conflated origin with accepted
-injury. The catalog's legacy `cta_tier` stays available for compatibility but no
-longer drives selection or reports. Use `reproductive_qualifying_compartments` for
-biological origin and `host_status` for the host decision. New code should use
-`HostContext`, rather than mixing it with legacy profile arguments.
+Use `reproductive_qualifying_compartments` for biological origin and `host_status` for the patient-profile decision.
 
 ## Evidence and requirements
 

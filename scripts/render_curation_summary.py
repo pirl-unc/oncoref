@@ -1671,12 +1671,15 @@ def literature_sources(data, fig_path, csv_path):
     ax_r.set_xlim(0, 116)
     ax_r.set_xticks([0, 25, 50, 75, 100])
     ax_r.set_xticklabels(["0%", "25%", "50%", "75%", "100%"])
+    retention_labels = [
+        f"{r.display_label}  (n = {int(r.mapped_proteins):,})" for r in plot_df.itertuples()
+    ]
     ax_r.set_xlabel("Share of mapped proteins by OncoRef disposition")
-    ax_r.set_yticks(y, plot_df["display_label"], fontsize=9.2)
+    ax_r.set_yticks(y, retention_labels, fontsize=9.0)
     ax_r.set_title(
-        f"Curated literature sources: retention vs. normal-tissue exclusion ({len(full)} sources)",
+        f"Published CTA, oncofetal, and placental lists under OncoRef screening ({len(full)} sources)",
         loc="left",
-        fontsize=11.5,
+        fontsize=11.3,
         fontweight="bold",
         pad=10,
     )
@@ -1692,7 +1695,7 @@ def literature_sources(data, fig_path, csv_path):
         frameon=False,
         fontsize=8.8,
     )
-    fig_r.subplots_adjust(left=0.32, right=0.80, top=0.90, bottom=0.13)
+    fig_r.subplots_adjust(left=0.36, right=0.81, top=0.90, bottom=0.13)
     fig_r.savefig(
         fig_path.parent / "literature-sources-retention.png", dpi=160, bbox_inches="tight"
     )

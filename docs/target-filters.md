@@ -1,16 +1,7 @@
-# Target filters and host selection
+# Patient profiles and candidate filters
 
-Catalog `oncoref.target-selection.2026-11-20.1`; selection policy `oncoref.target-filters.2026-11-17.5`.
-Filters narrow biological candidates. Optional host constraints are a separate axis
-with their own versioned exposure evidence. [Full audit](audits/target-filters-20261112/index.md).
-
-[Why CTA counts changed](audits/cta-count-history-20261117/index.md) distinguishes
-the broad catalog, optional evidence modes and host selections.
-[The 97 standard paper exclusions](audits/cta-count-history-20261117/paper-filter.md)
-lists every affected protein and its counted publications.
-The [subsequent literature review](audits/antigen-evidence-review-20261117/index.md)
-distinguishes broad coverage from tumor-support credit and fixes follow-up joins
-and ineligible fusion/proteoform credits. `antigens explain` exposes both counts.
+Catalog `oncoref.target-selection.2026-11-20.1`; filter policy `oncoref.target-filters.2026-11-17.5`.
+Filters narrow the biological candidate sets (`CA`, `RA`, `CTA`) across six explicit layers, while patient-anatomy constraints evaluate reproductive and mammary exposure independently without relabeling biological categories. [Antigen whitepaper](antigen-whitepaper.md) · [Interactive catalog](audits/target-selection-20261110/rebuild/report.html) · [Filter sweep tables](audits/target-filters-20261112/index.md).
 
 ```python
 from oncoref import antigen_sets, target_filters as tf
@@ -52,11 +43,10 @@ compartments are not protected. Limits for explicitly protected tissues are
 These are research cutoffs, not injury thresholds. A stricter `max_off_target_tpm`
 also applies. Missing coverage or unresolved protein findings prevents eligibility.
 
-Compatibility profiles `male-patient` and `female-patient` assume anatomy and no
-current pregnancy/lactation; neither preset protects reproductive tissue by default. Inspect their recorded
-assumptions and override actual anatomy. `all` means no host screen. The former
-`core` host shortcut is rejected; specify accepted loss explicitly.
-[Host contract and limitations](host-selection.md).
+Profiles `male-patient` and `female-patient` declare assumed anatomy with no current
+pregnancy or lactation; neither preset protects reproductive tissue by default. Inspect recorded
+assumptions and specify protected or absent organs explicitly. `all` applies no patient-anatomy filter.
+[Patient-anatomy rules and limits](host-selection.md).
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
