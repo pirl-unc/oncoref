@@ -29,18 +29,18 @@
       "mappings": [
         {
           "complete": true,
-          "gene_namespace": "NCBI Gene",
-          "method": "Native AAA40475.1 protein exactly matches NP_035765.1; NCBI Gene 22037 product report binds NM_011635.2/NP_035765.1 to GRCm39 NC_000086.8. All products in this pinned single-gene subset retained.",
-          "notes": "Reference assembly is C57BL/6J; RefSeq RNA source strain is C57BL/6. Native P815 source is DBA/2 with unspecified substrain. Proteins match (224 aa), but RNA/CDS differ. This is an annotation association, not measured reference-strain or isoform expression. See cta-curation.json for checked asset scope.",
-          "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d",
+          "gene_namespace": "Ensembl gene",
+          "method": "Native DBA/2 P815 AAA40475.1 protein (224 aa) and NCBI Gene 22037 NP_035765.1 exactly match Ensembl 115 ENSMUSP00000059448.4 on ENSMUSG00000051257.4/ENSMUST00000054534.4; all versioned GTF transcript/protein pairs verified against pinned Ensembl 115 RNA and peptide FASTAs.",
+          "notes": "Reference assembly is GRCm39 C57BL/6J (GCA_000001635.9, Ensembl 115); native P815 source is DBA/2 with unspecified substrain (NCBI Gene 22037 cross-reference retained in cta-curation.json). Proteins match (224 aa), while RNA/CDS sequences differ across strains. Loci are [versioned gene ID, contig, 1-based inclusive start, end, strand]: [[\"ENSMUSG00000051257.4\",\"X\",138234432,138238918,\"+\"]]. This is an annotation association, not measured reference-strain or isoform expression.",
+          "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b",
           "status": "unique",
           "targets": [
             {
-              "id": "22037",
+              "id": "ENSMUSG00000051257",
               "sequences": [
                 {
-                  "protein_id": "NP_035765.1",
-                  "transcript_id": "NM_011635.2"
+                  "protein_id": "ENSMUSP00000059448.4",
+                  "transcript_id": "ENSMUST00000054534.4"
                 }
               ],
               "symbol": "Trap1a"
@@ -55,12 +55,12 @@
   "contracts": [
     {
       "content_provenance": {
-        "curation_receipt": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+        "curation_receipt": "78fb3b8a04a47b90291583793864e63807ecdffa76a95741581ededb3a93e67d",
         "nomination_sequence": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
         "source": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7"
       },
       "context": "normal",
-      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "contract_id": "openvax:expression-contract:v1:sha256:216a8414873fed979ca16bc4c7bf04a762de754b7f6e9dec9c0f3fc7b7315305",
       "feature_namespace": "study assay target P1A",
       "measurement": {
         "feature_level": "gene",
@@ -80,12 +80,12 @@
     },
     {
       "content_provenance": {
-        "curation_receipt": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+        "curation_receipt": "78fb3b8a04a47b90291583793864e63807ecdffa76a95741581ededb3a93e67d",
         "nomination_sequence": "789a832f9dc1e4048ff2d9742926fc1a3419a2e1fccb94c3f2307bce2b405267",
         "source": "fdf4be091ea11072a9bb6a90473abf48554ee9bc1cb03abef9df9f4b5daaadb7"
       },
       "context": "cell_line",
-      "contract_id": "openvax:expression-contract:v1:sha256:8c30fb2e12d6d4ecd0f0ab28f321d5b51d49d2a9303629dae0eb8b5c6c31031f",
+      "contract_id": "openvax:expression-contract:v1:sha256:f2b075adb34c29ae64765fee8362a4860b0158785c8b771947db2a557728ea52",
       "feature_namespace": "study assay target P1A",
       "measurement": {
         "feature_level": "gene",
@@ -111,7 +111,7 @@
       "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
       "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
       "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
-      "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved."
+      "Mapped against the complete Ensembl 115 GRCm39 annotated host inventory (GCA_000001635.9); historical BALB/c and DBA/2 assay-to-reference sequence equivalence remains unresolved, and optional ncORF catalogues remain separate."
     ],
     "status": "partial"
   },
@@ -122,7 +122,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "contract_id": "openvax:expression-contract:v1:sha256:216a8414873fed979ca16bc4c7bf04a762de754b7f6e9dec9c0f3fc7b7315305",
       "donor_count": null,
       "id": "sarma1999:001",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -193,7 +193,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "contract_id": "openvax:expression-contract:v1:sha256:216a8414873fed979ca16bc4c7bf04a762de754b7f6e9dec9c0f3fc7b7315305",
       "donor_count": null,
       "id": "sarma1999:002",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -264,7 +264,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "contract_id": "openvax:expression-contract:v1:sha256:216a8414873fed979ca16bc4c7bf04a762de754b7f6e9dec9c0f3fc7b7315305",
       "donor_count": null,
       "id": "sarma1999:003",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -341,7 +341,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "contract_id": "openvax:expression-contract:v1:sha256:216a8414873fed979ca16bc4c7bf04a762de754b7f6e9dec9c0f3fc7b7315305",
       "donor_count": null,
       "id": "sarma1999:004",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -412,7 +412,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:28890efae439c9e8b89443f20e1fcc83f6332e47ffa66114d104beda3c59e7fa",
+      "contract_id": "openvax:expression-contract:v1:sha256:216a8414873fed979ca16bc4c7bf04a762de754b7f6e9dec9c0f3fc7b7315305",
       "donor_count": null,
       "id": "sarma1999:005",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -486,7 +486,7 @@
       "candidate_ids": [
         "P1A"
       ],
-      "contract_id": "openvax:expression-contract:v1:sha256:8c30fb2e12d6d4ecd0f0ab28f321d5b51d49d2a9303629dae0eb8b5c6c31031f",
+      "contract_id": "openvax:expression-contract:v1:sha256:f2b075adb34c29ae64765fee8362a4860b0158785c8b771947db2a557728ea52",
       "donor_count": null,
       "id": "sarma1999:006",
       "locator": "Figure 1 and Results: Tumor Antigen P1A Is Expressed at Low Levels in Normal Tissue",
@@ -683,34 +683,34 @@
   ],
   "references": [
     {
-      "id": "p1a-refseq-rs2024-02",
+      "id": "ensembl115",
       "identity": {
-        "annotation_release": "RS_2024_02",
-        "annotation_source": "NCBI RefSeq",
-        "assembly_accession": "GCF_000001635.27",
+        "annotation_release": "115",
+        "annotation_source": "Ensembl",
+        "assembly_accession": "GCA_000001635.9",
         "content_provenance": {
-          "gene_record_subset": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
-          "product_report_subset": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
-          "protein": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
-          "rna": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643"
+          "gtf": "fa45f9fed56e85d5c83e5912f88d76e277729da0761f99e33e4c88d4b08a9ec0",
+          "ncrna": "f778c212c11e8a8b059a2412c81f52f7ae0bcf708b717126ea92a19eae8c7127",
+          "protein": "560dddca2516fbc6649df6bc95c28a8d1f9e5019d5ae0cf6071a0360f482aeb0",
+          "rna": "6f394d606bda651bcc37211a02fd9b3c8ef8e82b061a57b863195d4bfa2237ed"
         },
         "identifier_namespaces": {
-          "gene": "NCBI Gene",
-          "protein": "RefSeq",
-          "transcript": "RefSeq"
+          "gene": "Ensembl gene",
+          "protein": "Ensembl protein",
+          "transcript": "Ensembl transcript"
         },
-        "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d",
+        "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b",
         "schema": "openvax.reference",
         "schema_version": 1,
-        "source_version": "NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
+        "source_version": "Ensembl-115",
         "taxon_id": 10090
       }
     }
   ],
   "schema": "oncoref.cta-evidence",
   "schema_version": 2,
-  "snapshot_id": "openvax:cta-evidence:v2:sha256:6b91449358dcbdca68c2858b2eec8a5a8717453faece1138d020add22ccf93b8",
-  "source_version": "2026-10-29.1",
+  "snapshot_id": "openvax:cta-evidence:v2:sha256:cdc3542995c0d690099efab752080f95a65b1b7bfd0562898a706a603a7e7b7f",
+  "source_version": "2026-11-20.1",
   "sources": [
     {
       "doi": "10.1084/jem.173.6.1373",

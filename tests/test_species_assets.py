@@ -151,7 +151,18 @@ def test_real_reference_manifests_are_distinct_and_complete():
     assert a.reference_id != b.reference_id
     assert {a.assembly_accession, b.assembly_accession} == {"GCF_011100685.1", "GCA_000002285.2"}
     assert len(sa.species_assets("dog", group="references")) == 9
-    assert sa.species_assets("mouse") == ()
+    assert len(sa.species_assets("mouse", group="references")) == 4
+    mouse_refs = oncoref.for_species("mouse").references.registered_references()
+    assert [r["id"] for r in mouse_refs] == ["ensembl115"]
+    mouse_identity = ReferenceIdentity.from_dict(mouse_refs[0]["identity"])
+    assert mouse_identity.assembly_accession == "GCA_000001635.9"
+    assert mouse_identity.annotation_source == "Ensembl"
+    assert mouse_identity.annotation_release == "115"
+    for role, name in mouse_refs[0]["assets"].items():
+        assert (
+            sa.species_asset(name, species="mouse").sha256
+            == mouse_identity.content_provenance[role]
+        )
     for row in rows:
         identity = ReferenceIdentity.from_dict(row["identity"])
         for role, name in row["assets"].items():

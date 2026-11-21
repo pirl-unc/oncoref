@@ -30,7 +30,7 @@ For an annotation-bound set of **candidate** gene IDs, choose the reference:
 ```python
 canine.cta_gene_ids(reference="refseq106")
 human.cta_gene_ids(reference="ensembl115")
-mouse.cta_gene_ids(reference="p1a-refseq-rs2024-02")  # {"22037"}
+mouse.cta_gene_ids(reference="ensembl115")  # {"ENSMUSG00000051257"}
 ```
 
 This set contains only complete, unique **gene** mappings. Ambiguous alternatives
@@ -307,8 +307,12 @@ unreported counts and less sensitive Northern results do not become measured zer
 The native P815 protein `AAA40475.1` from `M36387.1` matches the 224-residue
 RefSeq `NP_035765.1` sequence exactly. Their RNA and CDS sequences differ.
 The checked NCBI Gene 22037 product report links `NM_011635.2` / `NP_035765.1`
-to GRCm39 (`GCF_000001635.27`, `NC_000086.8`, annotation `RS_2024_02`). The
-reference identity pins a **single-gene subset**, not the entire annotation.
+to GRCm39 (`GCF_000001635.27`, `NC_000086.8`, annotation `RS_2024_02`), and
+the packaged snapshot maps `P1A` (`Trap1a`) to `ENSMUSG00000051257`
+(`ENSMUST00000054534.4` / `ENSMUSP00000059448.4`, 224 aa) in the complete
+registered Ensembl 115 GRCm39 host reference (`GCA_000001635.9`, 66,668
+annotated proteins across 57,314 distinct sequences;
+`mouse.references.registered_references()`).
 Its assembly is C57BL/6J, while the RefSeq RNA record reports C57BL/6 and the
 original P815 source reports DBA/2 without a substrain. These distinctions are
 preserved in the packaged `data/species/mouse/cta-curation.json` receipt.
