@@ -205,6 +205,42 @@ class SpeciesDataGroup:
         """Unambiguously mapped candidate IDs for an explicit annotation; not admission."""
         return self.cta_snapshot().gene_ids(reference=reference)
 
+    def target_selection(
+        self, gene: str | None = None, *, category: str | None = None
+    ) -> pd.DataFrame:
+        """Evaluated set-based target catalog (CTA / CA / RA / Other / Unsafe) for this species."""
+        if self.name != "antigens":
+            raise ValueError("target_selection() requires the antigens group")
+        from .species_target_selection import packaged_species_results
+
+        return packaged_species_results(self.species, gene, category=category)
+
+    def target_selection_coverage(self) -> dict:
+        """Target-selection readiness, comparative anatomy and category counts."""
+        if self.name != "antigens":
+            raise ValueError("target_selection_coverage() requires the antigens group")
+        from .species_target_selection import packaged_species_coverage
+
+        return packaged_species_coverage(self.species)
+
+    def host_compartments(self) -> tuple[str, ...]:
+        """Reproductive and mammary compartments applicable to this species' HostContext."""
+        if self.name != "antigens":
+            raise ValueError("host_compartments() requires the antigens group")
+        from .species_target_selection import anatomy_for_species
+
+        return anatomy_for_species(self.species).reproductive_compartments
+
+    def evaluate_target_catalog(self, spec, proteins: pd.DataFrame, **inputs):
+        """Run the source-pluggable 3-stage target-selection pipeline for this species."""
+        if self.name != "antigens":
+            raise ValueError("evaluate_target_catalog() requires the antigens group")
+        from .species_target_selection import evaluate_species_catalog
+
+        if spec.species != self.species:
+            raise ValueError("SpeciesScreeningSpec species disagrees with SpeciesDataGroup")
+        return evaluate_species_catalog(spec, proteins, **inputs)
+
     def assets(self):
         from .species_assets import species_assets
 
