@@ -451,7 +451,7 @@ def cancer_type_info(cancer_type):
     """
     # Lazy imports avoid an import cycle: tmb/incidence depend on this module's
     # resolve_cancer_type + cancer_type_registry.
-    from .incidence import burden_category
+    from .incidence import burden_category, burden_scope
     from .tmb import cancer_tmb
 
     code = resolve_cancer_type(cancer_type)
@@ -494,6 +494,9 @@ def cancer_type_info(cancer_type):
     info["classification_reference_code"] = cancer_type_reference_code(code)
     info["is_classification_target"] = is_classification_target(code)
     info["burden_category"] = burden_category(code)
+    bscope = burden_scope(code)
+    info["burden_categories"] = list(bscope["burden_categories"]) if bscope else []
+    info["burden_scope_status"] = bscope["scope_status"] if bscope else None
     tmb = cancer_tmb(code)
     info["tmb"] = float(tmb) if tmb is not None else None
     return info

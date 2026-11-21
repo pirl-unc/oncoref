@@ -93,6 +93,22 @@ _CSV_READ_OPTIONS_BY_DATASET = {
         "keep_default_na": False,
         "na_values": [""],
     },
+    "cancer-incidence-mortality": {
+        "dtype": {
+            "us_incidence_count": "Int64",
+            "us_incidence_total": "Int64",
+            "us_mortality_count": "Int64",
+            "us_mortality_total": "Int64",
+            "world_incidence_count": "Int64",
+            "world_incidence_total": "Int64",
+            "world_mortality_count": "Int64",
+            "world_mortality_total": "Int64",
+        }
+    },
+    "cancer-burden-scope": {
+        "dtype": "string",
+        "keep_default_na": False,
+    },
 }
 
 # Back-compat alias.

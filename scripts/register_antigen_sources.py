@@ -111,7 +111,7 @@ def register(revision):
             if key.startswith("reference:"):
                 _, name, version = key.split(":", 2)
                 ref(name, version, "curation input", digest)
-            elif not key.endswith(".py"):
+            elif isinstance(digest, str) and not key.endswith(".py"):
                 artifact(key, "curation input", digest)
 
     artifact(

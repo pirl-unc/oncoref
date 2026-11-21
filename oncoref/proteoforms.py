@@ -78,7 +78,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import os
 from functools import lru_cache
 
 import pandas as pd
@@ -120,7 +119,13 @@ def _contract_members(members_label: str) -> str:
     parts = list(dict.fromkeys(members_label.split("/")))  # de-dup, order-preserving
     if len(parts) < 2:
         return parts[0] if parts else members_label
-    prefix = os.path.commonprefix(parts)
+    first, last = min(parts), max(parts)
+    prefix_len = 0
+    for ch_a, ch_b in zip(first, last):
+        if ch_a != ch_b:
+            break
+        prefix_len += 1
+    prefix = first[:prefix_len]
     suffixes = [p[len(prefix) :] for p in parts[1:]]
     return parts[0] + "".join("/" + s for s in suffixes if s)
 

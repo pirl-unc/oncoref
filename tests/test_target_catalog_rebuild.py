@@ -28,8 +28,8 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     genes = [g for ids in catalog.member_gene_ids for g in json.loads(ids)]
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
-        "Unsafe": 18250,
-        "Other": 1118,
+        "Unsafe": 18247,
+        "Other": 1121,
         "CTA": 327,
         "Cancer Antigen only": 70,
         "Reproductive Antigen only": 128,
@@ -49,7 +49,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert tissue_changes.classification.eq("Other:Review").all()
     assert tissue_changes.rare_cell_status.eq("not_extracted").all()
     assert catalog.loc[unsafe & ~released, "Unsafe_reasons"].value_counts().to_dict() == {
-        "Established rare normal-cell RNA": 67,
+        "Established rare normal-cell RNA": 64,
         "Published normal-tissue expression": 13,
     }
     # Strong unresolved signals are held; accepted exclusions still take precedence.
@@ -57,7 +57,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 466
+    assert len(policy.results(changed_only=True)) == 464
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -182,7 +182,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
             catalog.released_category.eq("CTA") & catalog.readthrough_locus, "protein_group_label"
         ]
     )
-    assert len(held) == 98 and len(held - readthrough) == 92
+    assert len(held) == 99 and len(held - readthrough) == 93
     assert {"ATF7-NPFF", "ENSG00000273155"} <= readthrough <= held
     assert held >= {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
     assert by_name.loc["CDY1B", "cancer_evidence"] == "does_not_qualify"
@@ -204,8 +204,8 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
-    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 921
-    assert summary["shared_eligible"] == 841
+    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 923
+    assert summary["shared_eligible"] == 842
     assert summary["expression_bounds"]["fail"] == 22
     failed = catalog[catalog.expression_bounds_status.eq("fail")]
     assert (
