@@ -313,11 +313,14 @@ def _save(fig, save):
     """Finalize to the shared publication style, then write ``save`` if given.
 
     Finalizing unconditionally (not just when saving) keeps a returned-but-unsaved
-    figure identical to the one on disk.
+    figure identical to the one on disk. Saving a ``.png`` also writes the matching
+    vector ``.pdf`` via :func:`oncoref.figure_export.save_figure`.
     """
     figure_style.finalize(fig)
     if save is not None:
-        fig.savefig(save, dpi=300, bbox_inches="tight", facecolor="white", transparent=False)
+        from .figure_export import save_figure
+
+        save_figure(fig, save, dpi=300)
     return fig
 
 
@@ -358,23 +361,24 @@ def _label_fontsize():
 
 
 def _repel_labels(ax, texts, xs=None, ys=None):
-    """Nudge point labels apart so they don't overlap, drawing thin leader lines back to
-    the points (uses ``adjustText`` when installed; a no-op fallback otherwise).
+    """Place scatter point labels without collisions and connect displaced labels
+    with thin leader lines.
 
-    Bounded by an **iteration** cap, never a wall-clock one. A ``time_lim`` makes the
-    label layout depend on how busy the machine is, so the same command renders a clean
-    figure on an idle box and a pile of overlapping labels on a loaded one — the figure
-    stops being reproducible. Iterations cost the same everywhere.
-
-    Repulsion stays mild with a stronger pull back to the anchor: a label that cannot
-    find room should sit slightly over its own point rather than fly across the panel
-    trailing a long leader line.
+    Uses ``adjustText`` (bounded by a deterministic iteration cap, never ``time_lim``)
+    when installed; otherwise queues labels for deterministic display-coordinate
+    grid placement in :func:`oncoref.figure_export.save_figure`.
     """
     if not texts:
         return
     try:
         from adjustText import adjust_text
+    except ImportError:
+        if hasattr(ax, "figure"):
+            from .figure_export import queue_scatter_labels
 
+            queue_scatter_labels(texts, ax)
+        return
+    try:
         params = {
             "ax": ax,
             "expand": (1.08, 1.18),
@@ -1799,31 +1803,14 @@ def cta_specific_9mer_load(*, against="tmb", threshold_tpm=50.0, cohorts=None, s
 def _burden_weights(codes):
     """``{cancer code: US incidence share}``, the patient weight for set cover.
 
-    A code inherits its burden category's share, split evenly across whichever of
-    ``codes`` map to that category, so a heavily sub-typed cancer is not counted
-    once per subtype. The split is over the codes actually passed in (the ones with
-    expression data), not over every code in the registry — the category's patients
-    are being distributed among the types the panel can actually be scored on.
-
-    Codes with no mapped category get the smallest non-zero share in the burden
-    table, so a rare cancer still registers rather than dropping out entirely.
+    Delegates to :func:`oncoref.coverage.burden_weights`: each curated burden
+    category's share is split evenly across whichever of ``codes`` map to it, while
+    unmapped codes carry ``0.0`` weight rather than an invented floor.
     """
-    import pandas as pd
+    from .coverage import burden_weights
 
-    from .incidence import burden_category, cancer_burden
-
-    shares = cancer_burden()
-    by_category = {}
-    for code in codes:
-        by_category.setdefault(burden_category(str(code)), []).append(str(code))
-    floor = min((v for v in shares.values() if v > 0), default=0.01)
-    weights = {}
-    for category, members in by_category.items():
-        share = shares.get(category, floor) if category is not None else floor
-        per_code = float(share) / len(members)
-        for code in members:
-            weights[code] = per_code
-    return pd.Series(weights, dtype=float)
+    weights, _unmapped = burden_weights(codes, metric="us_incidence_pct")
+    return weights
 
 
 def _greedy_cover(matrix, threshold, weights):
@@ -1831,7 +1818,8 @@ def _greedy_cover(matrix, threshold, weights):
 
     Returns ``(steps, coverable)`` where each step is
     ``(cta, newly_covered_codes, cumulative_weight, cumulative_codes)``. Ties are
-    broken by gene symbol so the order is deterministic across runs.
+    broken by ``(gain, len(covered))`` across sorted gene columns so zero-weight
+    types can still be picked up once weighted types are covered.
     """
     hits = matrix > threshold
     coverable = list(hits.index[hits.any(axis=1)])
@@ -1844,7 +1832,7 @@ def _greedy_cover(matrix, threshold, weights):
             if not covered:
                 continue
             gain = float(weights.reindex(sorted(covered)).fillna(0.0).sum())
-            if gain > best_gain:
+            if (gain, len(covered)) > (best_gain, len(best_codes)):
                 best_cta, best_codes, best_gain = cta, covered, gain
         if best_cta is None:
             break
@@ -1875,8 +1863,9 @@ def cta_covering_set(
     Answers "how few CTAs cover most patients". A CTA *covers* a cancer type when
     that type's ``stat`` TPM for it clears ``threshold_tpm``; greedy weighted set
     cover then adds, at each step, whichever CTA picks up the most still-uncovered
-    US incidence. Two curves: coverage weighted by cancer TYPE (each type counts
-    once) and by PATIENTS (types weighted by US incidence share).
+    US incidence. Two curves: coverage weighted by cancer TYPE (each type in the
+    input population counts once) and by PATIENTS (types weighted by curated US
+    incidence share; unmapped types carry zero patient weight and are disclosed).
 
     ``stat="q3"`` by default, not ``"median"``: CTAs are subset antigens expressed
     heterogeneously within a tumor type, so the upper quartile ("at least 25% of
@@ -1885,6 +1874,8 @@ def cta_covering_set(
 
     Needs the expression bundle (percentile artifacts); no per-sample matrices.
     """
+    from .coverage import burden_weights
+
     plt = _plt()
     if stat not in _STAT_PERCENTILE_COL:
         raise ValueError(f"stat must be one of {sorted(_STAT_PERCENTILE_COL)}")
@@ -1902,17 +1893,18 @@ def cta_covering_set(
     if matrix.empty or matrix.shape[1] == 0:
         raise ValueError("no CTA expression data for the selected cohorts")
 
-    weights = _burden_weights(matrix.index)
+    weights, unmapped = burden_weights(matrix.index, metric="us_incidence_pct")
     steps, coverable = _greedy_cover(matrix, threshold_tpm, weights)
     if not steps:
         raise ValueError(f"no CTA clears {threshold_tpm:g} TPM in any cancer type at stat={stat!r}")
 
+    total_types = len(matrix.index)
     steps = steps[:n_genes]
     labels = [s[0] for s in steps]
     x = range(1, len(steps) + 1)
-    total_weight = float(weights.reindex(sorted(coverable)).fillna(0.0).sum())
-    by_patients = [100.0 * s[2] / total_weight for s in steps]
-    by_type = [100.0 * s[3] / len(coverable) for s in steps]
+    total_weight = float(weights.sum())
+    by_patients = [100.0 * s[2] / total_weight if total_weight else 0.0 for s in steps]
+    by_type = [100.0 * s[3] / total_types if total_types else 0.0 for s in steps]
 
     width, _ = figure_style.stack_size(len(steps), per_item=0.32, floor=7.0)
     fig, ax = plt.subplots(figsize=(width, 4.4))
@@ -1924,6 +1916,12 @@ def cta_covering_set(
     ax.legend(loc="lower right")
     ax.set_title(
         f"Greedy CTA covering set ({stat} > {threshold_tpm:g} TPM, "
-        f"{len(coverable)} coverable types)"
+        f"{len(coverable)} of {total_types} types coverable)"
     )
+    if unmapped:
+        _add_figure_note(
+            fig,
+            f"{len(unmapped)} cancer type(s) have no curated burden category and carry "
+            f"zero patient weight: {', '.join(sorted(unmapped))}",
+        )
     return _save(fig, save)

@@ -162,9 +162,11 @@ def finalize(fig, *, keep_titles: bool | None = None):
 
 
 def save(fig, path, *, dpi=300, keep_titles: bool | None = None):
-    """Finalize and write ``fig`` to ``path`` on an opaque white ground."""
+    """Finalize and write ``fig`` to ``path`` on an opaque white ground (plus PDF for PNGs)."""
+    from .figure_export import save_figure
+
     finalize(fig, keep_titles=keep_titles)
-    fig.savefig(path, dpi=dpi, bbox_inches="tight", facecolor="white", transparent=False)
+    save_figure(fig, path, dpi=dpi)
     return fig
 
 

@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Iterable
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -42,10 +43,17 @@ import pandas as pd
 from . import antigen_sets
 from .cancer_genes import cancer_key_genes_df, cancer_type_genes_df
 from .cancer_types import format_cancer_code_label, resolve_cancer_type
-from .expression import per_sample_expression
+from .expression import (
+    cancer_reference_expression,
+    cancer_reference_expression_availability,
+    per_sample_expression,
+)
 from .expression_engine import ID_COLUMNS as _ANTIGEN_ID_COLS
+from .figure_export import save_figure
 from .gene_families import gene_families, gene_family_ids, housekeeping_gene_ids
 from .gene_ids import canonical_gene_space, canonical_gene_symbol, resolve_symbol, symbol_synonyms
+from .incidence import burden_category, cancer_burden
+from .normalization import percentile_rank
 
 
 def cta_gene_ids() -> frozenset[str]:
@@ -73,9 +81,97 @@ def cta_gene_id_to_name() -> dict[str, str]:
 #: cut for a confidently-expressed transcript.
 DEFAULT_EXPRESSED_TPM: float = 10.0
 
+DEFAULT_SOURCE: str = "all"
+DEFAULT_TPM_THRESHOLDS: tuple[int, ...] = (25, 50, 100, 200)
+DEFAULT_PERCENTILE_THRESHOLDS: tuple[int, ...] = (90, 95)
+
 # Mirrors pirlygenes' patient-coverage tabulation cutoffs so the generated CSVs
 # are comparable across packages.
-DEFAULT_THRESHOLDS: tuple[float, ...] = (25, 50, 100, 200)
+DEFAULT_THRESHOLDS: tuple[int, ...] = DEFAULT_TPM_THRESHOLDS
+
+ACTIONABLE_TPM: float = 30.0
+COVERING_SET_STATS: dict[str, tuple[str, str]] = {
+    "median": ("expression", "median (≥50% of patients)"),
+    "q3": ("q3", "upper quartile (≥25% of patients)"),
+}
+
+
+@dataclass(frozen=True)
+class Threshold:
+    """One coverage cutoff (``kind`` is ``"tpm"`` or ``"percentile"``).
+
+    ``"pctile"`` is accepted as an alias for ``"percentile"``. Absolute TPM uses
+    strict ``>`` comparison; percentile mode uses ``>=`` because a p95 call means
+    a gene ranks at or above the 95th percentile within that sample.
+    """
+
+    kind: str
+    value: int
+
+    def __post_init__(self) -> None:
+        kind = str(self.kind).strip().lower()
+        if kind == "pctile":
+            kind = "percentile"
+        if kind not in {"tpm", "percentile"}:
+            raise ValueError("threshold kind must be 'tpm' or 'percentile'")
+        numeric = float(self.value)
+        if not np.isfinite(numeric) or not numeric.is_integer():
+            raise ValueError("coverage threshold values must be finite integers")
+        value = int(numeric)
+        if kind == "tpm" and value < 0:
+            raise ValueError("TPM thresholds must be non-negative")
+        if kind == "percentile" and not 0 < value <= 100:
+            raise ValueError("percentile thresholds must be in (0, 100]")
+        object.__setattr__(self, "kind", kind)
+        object.__setattr__(self, "value", value)
+
+    @property
+    def slug(self) -> str:
+        return f"t{self.value}" if self.kind == "tpm" else f"p{self.value}"
+
+    @property
+    def count_suffix(self) -> str:
+        return f"gt{self.value}" if self.kind == "tpm" else f"p{self.value}"
+
+    @property
+    def xlabel(self) -> str:
+        return (
+            f"> {self.value} clean TPM"
+            if self.kind == "tpm"
+            else f"≥ {self.value}th within-sample percentile"
+        )
+
+    @property
+    def label(self) -> str:
+        return self.xlabel
+
+    @property
+    def count_col(self) -> str:
+        return f"n_{self.count_suffix}"
+
+    def cutoff(self, cols, pctile_cutoffs=None):
+        """Scalar TPM or a per-sample percentile cutoff vector."""
+        if self.kind == "tpm":
+            return self.value
+        col = f"p{self.value}"
+        series = pctile_cutoffs[col] if pctile_cutoffs is not None else None
+        return np.array(
+            [series.get(c, np.inf) if series is not None else np.inf for c in cols],
+            dtype=float,
+        )
+
+    def compare(self, values, cutoff=None):
+        """Return the boolean hit mask for ``values``."""
+        threshold = self.value if cutoff is None else cutoff
+        arr = np.asarray(values, dtype=float)
+        if self.kind == "tpm":
+            return (arr > threshold) & np.isfinite(arr) & np.isfinite(threshold)
+        return (arr >= threshold) & np.isfinite(arr) & np.isfinite(threshold)
+
+    def hits(self, values, cols=(), pctile_cutoffs=None):
+        """Compare raw values using this threshold's scalar/vector cutoff."""
+        return self.compare(values, self.cutoff(cols, pctile_cutoffs))
+
 
 # The two within-sample percentile cuts used by the pirlygenes CTA plot catalog.
 # Values are percentile ranks on [0, 1], so 0.95 means the top 5% of biological
@@ -658,69 +754,326 @@ def mean_antigens_per_patient(
     return float(hits.sum(axis=0).mean())
 
 
-def patient_coverage(
-    gene_set: str = "cta",
-    cohorts: Iterable[str] | None = None,
-    thresholds: Iterable[float] = DEFAULT_THRESHOLDS,
+def _selected_coverage_codes(
     *,
-    proteoform: bool = True,
-) -> pd.DataFrame:
-    """Per cohort × gene patient counts for a resolved gene panel.
-
-    This is the oncoref counterpart to pirlygenes' patient-coverage CSV: for each
-    cached/selected cohort and each panel gene, tabulate ``n_gtX`` and ``pct_gtX``
-    for every requested TPM cutoff. ``gene_set`` accepts :func:`resolve_gene_set`
-    tokens; explicit ``cohorts`` are used as-is, while ``None`` means every cached
-    per-sample cohort.
-    """
+    source_id: str = DEFAULT_SOURCE,
+    cohorts: Iterable[str] | None = None,
+    codes: Iterable[str] | None = None,
+) -> list[str]:
+    """Select cohort codes for patient coverage across ``source_id`` and explicit filters."""
     from . import source_matrices
 
-    _label, gene_ids = resolve_gene_set(gene_set)
-    thresholds = tuple(float(t) for t in thresholds)
-    codes = (
-        list(cohorts)
-        if cohorts is not None
-        else [c for c in source_matrices.available_cohorts() if source_matrices.is_cached(c)]
-    )
+    explicit = codes if codes is not None else cohorts
+    if explicit is not None:
+        return [
+            resolve_cancer_type(str(c), strict=False) or str(c)
+            for c in dict.fromkeys(str(x).strip() for x in explicit if str(x).strip())
+        ]
+
+    reg = source_matrices.registry()
+    cached = [c for c in source_matrices.available_cohorts() if source_matrices.is_cached(c)]
+    if source_id in (None, "", "all"):
+        return cached
+    target = str(source_id).strip().lower()
+    allowed: set[str] = set()
+    for _, row in reg.iterrows():
+        code = str(row.get("cancer_code", ""))
+        candidates = {
+            str(row.get("source_id", "")).strip().lower(),
+            str(row.get("source_cohort", "")).strip().lower(),
+            str(row.get("source_cohort", "")).strip().lower().replace("_", "-"),
+        }
+        if any(c and (c == target or c.startswith(target)) for c in candidates):
+            allowed.add(code)
+    return [c for c in cached if c in allowed]
+
+
+def _coverage_source_metadata(
+    codes: Iterable[str],
+    *,
+    source_id: str = DEFAULT_SOURCE,
+    synthetic_default_comparable: bool = False,
+) -> dict[str, dict]:
+    """Owner scale/provenance metadata for selected matrix codes."""
+    from . import source_matrices
+
+    code_list = list(dict.fromkeys(str(c) for c in codes))
+    registry = source_matrices.registry()
+    registry_rows = {str(row["cancer_code"]): row for _, row in registry.iterrows()}
+    known_codes = [code for code in code_list if code in registry_rows]
+    owner = pd.DataFrame()
+    if known_codes:
+        owner = cancer_reference_expression_availability(
+            cancer_types=known_codes,
+            normalize="tpm_clean",
+            sample_qc="all",
+            reference_source="summary_rows_all",
+            all_sources=True,
+        )
+
+    out: dict[str, dict] = {}
+    for code in code_list:
+        registry_row = registry_rows.get(code)
+        source_cohort = (
+            str(registry_row["source_cohort"])
+            if registry_row is not None
+            else str(source_id or "custom")
+        )
+        if owner.empty:
+            match = owner
+        else:
+            match = owner.loc[
+                owner["cancer_code"].astype(str).eq(code)
+                & owner["source_cohort"].astype(str).eq(source_cohort)
+            ]
+        if match.empty and not owner.empty:
+            match = owner.loc[owner["cancer_code"].astype(str).eq(code)]
+        row = match.iloc[0] if not match.empty else None
+        comparable = None
+        if row is not None and not pd.isna(row.get("linear_tpm_comparable")):
+            comparable = bool(row["linear_tpm_comparable"])
+        elif registry_row is None and synthetic_default_comparable:
+            comparable = True
+        out[code] = {
+            "source_cohort": source_cohort,
+            "source_type": str(row.get("source_type", "unknown")) if row is not None else "unknown",
+            "source_scale_class": (
+                str(row.get("source_scale_class", "unknown")) if row is not None else "unknown"
+            ),
+            "linear_tpm_comparable": comparable,
+            "normalization": "tpm_clean",
+        }
+    return out
+
+
+def _resolve_threshold_mode(requested: str, metadata: dict[str, dict]) -> str:
+    mode = str(requested).strip().lower()
+    if mode == "pctile":
+        mode = "percentile"
+    if mode not in {"auto", "tpm", "percentile"}:
+        raise ValueError("threshold_mode must be one of 'auto', 'tpm', or 'percentile'")
+    if mode == "auto":
+        if metadata and all(item["linear_tpm_comparable"] is True for item in metadata.values()):
+            return "tpm"
+        return "percentile"
+    if mode == "tpm":
+        incompatible = sorted(
+            code for code, item in metadata.items() if item["linear_tpm_comparable"] is False
+        )
+        if incompatible:
+            joined = ", ".join(incompatible)
+            raise ValueError(
+                "absolute TPM coverage is invalid for non-comparable source "
+                f"scale(s): {joined}; use threshold_mode='percentile'"
+            )
+    return mode
+
+
+def _threshold_values(mode: str, thresholds: Iterable[float] | None) -> tuple[int, ...]:
+    if thresholds is None:
+        thresholds = DEFAULT_TPM_THRESHOLDS if mode == "tpm" else DEFAULT_PERCENTILE_THRESHOLDS
+    values: list[int] = []
+    for value in thresholds:
+        normalized = Threshold(mode, value).value
+        if normalized not in values:
+            values.append(normalized)
+    return tuple(values)
+
+
+def _panel_coverage_matrix(
+    cancer_type: str,
+    *,
+    gene_ids: Iterable[str],
+    proteoform: bool,
+    percentile_mode: bool,
+) -> tuple[pd.DataFrame, list[str], list[str]]:
+    """Load per-sample clean TPM (or full-transcriptome within-sample percentile ranks),
+    optionally collapse identical-protein paralogs, and restrict to ``gene_ids``."""
+    df = per_sample_expression(cancer_type, normalize="tpm_clean")
+    id_cols_all = [c for c in _ANTIGEN_ID_COLS if c in df.columns]
+    samples = [c for c in df.columns if c not in id_cols_all]
+    panel = _panel_ids(gene_ids)
+
+    if percentile_mode:
+        # Rank the full biological transcriptome BEFORE restricting to the panel so
+        # percentiles reflect whole-sample rank rather than rank within the panel.
+        work = df.copy()
+        if proteoform and len(work):
+            from .proteoforms import collapse_to_proteoforms, gene_to_proteoform_id
+
+            work = collapse_to_proteoforms(work).reset_index(drop=True)
+            work = percentile_rank(work, value_cols=samples)
+            panel_keys = set(gene_to_proteoform_id(sorted(panel), scope="cta").values()) | panel
+            in_panel = work["proteoform_key"].astype(str).isin(panel_keys) | (
+                work["Ensembl_Gene_ID"].astype(str).str.split(".").str[0].isin(panel)
+            )
+            sub = work.loc[in_panel].reset_index(drop=True)
+        else:
+            work = percentile_rank(work, value_cols=samples)
+            unversioned = work["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+            sub = work.loc[unversioned.isin(panel)].copy()
+            sub["Ensembl_Gene_ID"] = unversioned.loc[unversioned.isin(panel)]
+            sub = sub.reset_index(drop=True)
+    else:
+        unversioned = df["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
+        sub = df.loc[unversioned.isin(panel)].copy()
+        sub["Ensembl_Gene_ID"] = unversioned.loc[unversioned.isin(panel)]
+        sub = sub.reset_index(drop=True)
+        if proteoform and len(sub):
+            from .proteoforms import collapse_to_proteoforms
+
+            sub = collapse_to_proteoforms(sub).reset_index(drop=True)
+
+    id_cols = [c for c in _ANTIGEN_ID_COLS if c in sub.columns]
+    samples = [c for c in sub.columns if c not in id_cols]
+    return sub, samples, id_cols
+
+
+def _coverage_frame(
+    gene_ids: Iterable[str],
+    selected_codes: list[str],
+    metadata: dict[str, dict],
+    mode: str,
+    threshold_values: tuple[int, ...],
+    *,
+    proteoform: bool = True,
+    greedy_threshold: Threshold | None = None,
+) -> tuple[pd.DataFrame, list[tuple[str, int, list[float], list[str]]]]:
+    """Compute per-(cohort × gene × threshold) counts and optional greedy curves in one pass."""
+    thresholds = [Threshold(mode, value) for value in threshold_values]
     rows: list[dict] = []
-    for code in codes:
-        sub, samples, _hits, id_cols = _hit_matrix(
-            code, threshold_tpm=0.0, gene_ids=gene_ids, proteoform=proteoform
+    per: list[tuple[str, int, list[float], list[str]]] = []
+
+    for code in selected_codes:
+        sub, samples, id_cols = _panel_coverage_matrix(
+            code,
+            gene_ids=gene_ids,
+            proteoform=proteoform,
+            percentile_mode=(mode == "percentile"),
         )
         n = len(samples)
         if n == 0 or sub.empty:
             continue
+        source = metadata[code]
         values = sub[samples].to_numpy(dtype=float)
         for i, r in sub.iterrows():
-            row = {
+            vals = values[i]
+            n_available = int(np.isfinite(vals).sum())
+            rec = {
                 "cancer_code": str(code),
                 "label": format_cancer_code_label(str(code)),
+                "source_cohort": source["source_cohort"],
+                "source_type": source["source_type"],
+                "source_scale_class": source["source_scale_class"],
+                "linear_tpm_comparable": source["linear_tpm_comparable"],
+                "normalization": source["normalization"],
+                "threshold_mode": mode,
+                "n_samples": n,
+                "n_available": n_available,
                 "n_patients": n,
             }
             for col in id_cols:
-                row[col] = r[col]
+                rec[col] = r[col]
             any_hit = False
-            for t in thresholds:
-                count = int(np.count_nonzero(values[i] > t))
+            for threshold in thresholds:
+                count = int(threshold.compare(vals).sum())
+                rec[f"n_{threshold.count_suffix}"] = count
+                rec[f"pct_{threshold.count_suffix}"] = (
+                    round(100.0 * count / n_available, 2) if n_available else np.nan
+                )
                 any_hit = any_hit or count > 0
-                suffix = f"{t:g}"
-                row[f"n_gt{suffix}"] = count
-                row[f"pct_gt{suffix}"] = 100.0 * count / n if n else 0.0
             if any_hit:
-                rows.append(row)
+                rows.append(rec)
+
+        if greedy_threshold is not None:
+            hits = np.vstack([greedy_threshold.compare(values[i]) for i in range(len(sub))])
+            gc = _greedy_coverage_from_hits(sub, samples, hits, max_genes=None)
+            if not gc.empty:
+                per.append(
+                    (
+                        str(code),
+                        n,
+                        [float(v) for v in gc["cumulative_fraction"]],
+                        [
+                            str(sym) if str(sym) else str(gid)
+                            for sym, gid in zip(gc["Symbol"], gc["Ensembl_Gene_ID"])
+                        ],
+                    )
+                )
+
     columns = (
-        ["cancer_code", "label"]
+        [
+            "cancer_code",
+            "label",
+            "source_cohort",
+            "source_type",
+            "source_scale_class",
+            "linear_tpm_comparable",
+            "normalization",
+            "threshold_mode",
+            "n_samples",
+            "n_available",
+            "n_patients",
+        ]
         + [
             c
             for c in ("Ensembl_Gene_ID", "Symbol", "proteoform_key", "proteoform_members")
-            if any(c in r for r in rows)
+            if any(c in r for r in rows) or c in ("Ensembl_Gene_ID", "Symbol")
         ]
-        + ["n_patients"]
+        + [
+            f"{prefix}_{threshold.count_suffix}"
+            for threshold in thresholds
+            for prefix in ("n", "pct")
+        ]
     )
-    for t in thresholds:
-        suffix = f"{t:g}"
-        columns.extend([f"n_gt{suffix}", f"pct_gt{suffix}"])
-    return pd.DataFrame(rows, columns=columns)
+    out = pd.DataFrame(rows, columns=columns)
+    out.attrs.update(
+        {
+            "threshold_mode": mode,
+            "thresholds": tuple(threshold.value for threshold in thresholds),
+            "source_metadata": metadata,
+        }
+    )
+    return out, per
+
+
+def patient_coverage(
+    gene_set: str = "cta",
+    cohorts: Iterable[str] | None = None,
+    thresholds: Iterable[float] | None = None,
+    *,
+    source_id: str = DEFAULT_SOURCE,
+    codes: Iterable[str] | None = None,
+    threshold_mode: str | None = None,
+    proteoform: bool = True,
+) -> pd.DataFrame:
+    """Per-cohort/per-gene patient coverage under an explicit threshold contract.
+
+    ``threshold_mode="auto"`` (default) uses owner ``linear_tpm_comparable`` metadata:
+    clean TPM for wholly comparable sources, otherwise within-sample percentile rank.
+    Explicit ``"tpm"`` is rejected for sources marked non-comparable; ``"percentile"``
+    is always platform-safe. TPM output uses ``n_gt25``/``pct_gt25`` columns;
+    percentile output uses ``n_p90``/``pct_p90``. Percentages divide by ``n_available``
+    (finite measurements).
+    """
+    _label, gene_ids = resolve_gene_set(gene_set)
+    selected = _selected_coverage_codes(source_id=source_id, cohorts=cohorts, codes=codes)
+    legacy_synthetic = threshold_mode is None and cohorts is not None and codes is None
+    metadata = _coverage_source_metadata(
+        selected,
+        source_id=source_id,
+        synthetic_default_comparable=legacy_synthetic,
+    )
+    mode = _resolve_threshold_mode(threshold_mode or "auto", metadata)
+    threshold_values = _threshold_values(mode, thresholds)
+    return _coverage_frame(
+        gene_ids,
+        selected,
+        metadata,
+        mode,
+        threshold_values,
+        proteoform=proteoform,
+    )[0]
 
 
 def _scalar_by_cohort(
@@ -825,9 +1178,16 @@ def _gene_color_map(genes_ordered):
     return colors
 
 
+def _as_threshold(threshold: Threshold | float | int) -> Threshold:
+    return threshold if isinstance(threshold, Threshold) else Threshold("tpm", int(threshold))
+
+
 def _stacked_bar(per, label, threshold, path, plt):
+    """Horizontal stacked bar: each cohort's greedy plateau split into each
+    gene's marginal new-patient contribution (segments sum to the plateau)."""
     from collections import Counter
 
+    threshold_obj = _as_threshold(threshold)
     totals = Counter()
     for _code, _n, cum, names in per:
         prev = 0.0
@@ -869,21 +1229,25 @@ def _stacked_bar(per, label, threshold, path, plt):
     ax.set_yticklabels(labels, fontsize=7)
     ax.set_xlim(0, 100)
     ax.set_xlabel(
-        f"% of patients with >=1 {label} gene > {threshold:g} TPM "
+        f"% of patients with ≥1 {label} gene {threshold_obj.xlabel} "
         "(stacked by each gene's marginal new-patient share, greedy)"
     )
     ax.grid(axis="x", alpha=0.3)
     ax.set_title(
-        f"{label} coverage by cancer type, split by gene (> {threshold:g} TPM, {len(per)} cohorts)",
+        f"{label} coverage by cancer type, split by gene "
+        f"({threshold_obj.xlabel}, {len(per)} cohorts)",
         fontsize=11,
     )
     fig.tight_layout()
-    fig.savefig(path, dpi=150)
+    save_figure(fig, path, dpi=300)
     plt.close(fig)
     return path
 
 
 def _coverage_curves(per, label, threshold, path, plt):
+    """Small-multiples of each cohort's greedy coverage curve (sorted by
+    plateau, broadest first)."""
+    threshold_obj = _as_threshold(threshold)
     ordered = sorted(per, key=lambda t: t[2][-1], reverse=True)
     ncol = 6
     nrow = (len(ordered) + ncol - 1) // ncol
@@ -920,32 +1284,33 @@ def _coverage_curves(per, label, threshold, path, plt):
     for ax in axes[len(ordered) :]:
         ax.axis("off")
     fig.suptitle(
-        f"{label} panel coverage by cancer type - distinct patients "
-        f"with >=1 gene > {threshold:g} TPM (sorted by plateau)",
+        f"{label} panel coverage by cancer type — distinct patients "
+        f"with ≥1 gene {threshold_obj.xlabel} (sorted by plateau)",
         fontsize=11,
     )
     fig.supxlabel("# genes added (greedy)", fontsize=8)
     fig.supylabel("% patients covered", fontsize=8)
     fig.tight_layout(rect=(0.01, 0.01, 1, 0.97))
-    fig.savefig(path, dpi=150)
+    save_figure(fig, path, dpi=300)
     plt.close(fig)
     return path
 
 
 def render_patient_coverage(
     gene_set: str = "cta",
+    source_id: str = DEFAULT_SOURCE,
+    codes: Iterable[str] | None = None,
+    threshold: float | int | None = None,
+    thresholds: Iterable[float] | None = None,
+    out_dir="coverage_out",
     *,
     cohorts: Iterable[str] | None = None,
-    threshold: float = 25,
-    thresholds: Iterable[float] = DEFAULT_THRESHOLDS,
-    out_dir="coverage_out",
+    threshold_mode: str | None = None,
     proteoform: bool = True,
 ) -> dict:
-    """Write pirlygenes-style patient-coverage artifacts for a gene panel.
-
-    Outputs a counts CSV plus, when at least one cohort has coverage, a greedy
-    stacked bar and coverage-curve small-multiples PNG. Returns a dict with
-    ``paths``, ``counts``, ``label``, and ``n_cohorts``.
+    """Compute patient coverage for ``gene_set`` and write a counts CSV plus
+    300-dpi PNG + vector PDF figures (stacked coverage bar and coverage-curve
+    small-multiples) into ``out_dir``.
     """
     import matplotlib
 
@@ -957,38 +1322,37 @@ def render_patient_coverage(
     out.mkdir(parents=True, exist_ok=True)
     slug = _slug(label)
 
-    counts = patient_coverage(
-        gene_set,
-        cohorts=cohorts,
-        thresholds=thresholds,
+    selected = _selected_coverage_codes(source_id=source_id, cohorts=cohorts, codes=codes)
+    legacy_synthetic = threshold_mode is None and cohorts is not None and codes is None
+    metadata = _coverage_source_metadata(
+        selected,
+        source_id=source_id,
+        synthetic_default_comparable=legacy_synthetic,
+    )
+    mode = _resolve_threshold_mode(threshold_mode or "auto", metadata)
+    requested_plot_value = threshold if threshold is not None else (25 if mode == "tpm" else 95)
+    plot_threshold = Threshold(mode, requested_plot_value)
+    plot_value = plot_threshold.value
+    table_thresholds = list(_threshold_values(mode, thresholds))
+    if plot_value not in table_thresholds:
+        table_thresholds.append(plot_value)
+
+    counts, per = _coverage_frame(
+        gene_ids,
+        selected,
+        metadata,
+        mode,
+        tuple(table_thresholds),
         proteoform=proteoform,
+        greedy_threshold=plot_threshold,
     )
     csv_path = out / f"{slug}_patient_counts.csv"
-    sort_col = f"n_gt{float(threshold):g}"
-    if sort_col in counts.columns:
-        counts = counts.sort_values(["cancer_code", sort_col], ascending=[True, False])
+    if plot_threshold.count_col in counts.columns:
+        counts = counts.sort_values(
+            ["cancer_code", plot_threshold.count_col], ascending=[True, False]
+        )
     counts.to_csv(csv_path, index=False)
 
-    codes = sorted(set(counts["cancer_code"])) if not counts.empty else []
-    per = []
-    for code in codes:
-        gc = greedy_coverage(
-            code,
-            threshold_tpm=threshold,
-            gene_ids=gene_ids,
-            proteoform=proteoform,
-        )
-        if gc.empty:
-            continue
-        n_patients = int(counts.loc[counts["cancer_code"] == code, "n_patients"].max())
-        per.append(
-            (
-                code,
-                n_patients,
-                [float(v) for v in gc["cumulative_fraction"]],
-                [str(v) for v in gc["Symbol"]],
-            )
-        )
     per.sort(key=lambda t: t[2][-1])
 
     paths = {"counts_csv": str(csv_path)}
@@ -997,8 +1361,8 @@ def render_patient_coverage(
             _stacked_bar(
                 per,
                 label,
-                threshold,
-                out / f"{slug}_stacked_coverage_t{float(threshold):g}.png",
+                plot_threshold,
+                out / f"{slug}_stacked_coverage_{plot_threshold.slug}.png",
                 plt,
             )
         )
@@ -1006,9 +1370,350 @@ def render_patient_coverage(
             _coverage_curves(
                 per,
                 label,
-                threshold,
-                out / f"{slug}_coverage_curves_t{float(threshold):g}.png",
+                plot_threshold,
+                out / f"{slug}_coverage_curves_{plot_threshold.slug}.png",
                 plt,
             )
         )
-    return {"paths": paths, "counts": counts, "label": label, "n_cohorts": len(per)}
+    return {
+        "paths": paths,
+        "counts": counts,
+        "label": label,
+        "n_cohorts": len(per),
+        "threshold_mode": mode,
+        "threshold": plot_value,
+        "threshold_label": plot_threshold.xlabel,
+    }
+
+
+#: pirlygenes compatibility alias.
+render = render_patient_coverage
+
+
+# --- covering set: one panel across all cancer types -----------------------
+
+
+def burden_weights(
+    codes: Iterable[str], *, metric: str = "us_incidence_pct"
+) -> tuple[pd.Series, list[str]]:
+    """Patient weight per cancer code, from the curated disease-burden table.
+
+    Returns ``(weights, unmapped)``: a ``code -> weight`` Series and the list of
+    codes with no burden category. Each category's share is split evenly across
+    the codes from ``codes`` that map to it; unmapped codes retain weight ``0.0``
+    and are returned explicitly rather than given a fabricated floor.
+    """
+    unique_codes = list(dict.fromkeys(str(c) for c in codes))
+    shares = cancer_burden(metric=metric)
+    by_category: dict[str, list[str]] = {}
+    unmapped: list[str] = []
+    for code in unique_codes:
+        cat = burden_category(code)
+        pct = shares.get(cat) if cat else None
+        if cat is None or pct is None or pd.isna(pct):
+            unmapped.append(code)
+            continue
+        by_category.setdefault(cat, []).append(code)
+    weights = dict.fromkeys(unique_codes, 0.0)
+    for cat, members in by_category.items():
+        per_member = float(shares[cat]) / len(members)
+        for code in members:
+            weights[code] = per_member
+    return pd.Series(weights, dtype=float), unmapped
+
+
+def representative_sources(
+    df: pd.DataFrame, *, min_samples: int = 10, min_display_samples: int = 5
+) -> pd.DataFrame:
+    """One ``source_cohort`` per ``cancer_code``: the most gene-rich source that
+    still clears the display floor."""
+    meta = df.groupby(["cancer_code", "source_cohort"], as_index=False).agg(
+        n_samples=("n_samples", "first"),
+        n_genes=("Ensembl_Gene_ID", "nunique"),
+    )
+    eligible = set(meta.loc[meta["n_samples"] >= min_samples, "cancer_code"])
+    displayable = meta[
+        meta["cancer_code"].isin(eligible) & (meta["n_samples"] >= min_display_samples)
+    ]
+    return (
+        displayable.sort_values(["cancer_code", "n_genes", "n_samples"])
+        .groupby("cancer_code", as_index=False)
+        .tail(1)
+    )
+
+
+def _fold_to_cdna_canonical_ids(ensgs: Iterable[str]) -> list[str]:
+    """Fold member ENSGs to their cDNA-identical group identity (singletons keep ENSG)."""
+    from .expression import _identical_locus_identity_maps
+
+    member_to_identity, _ = _identical_locus_identity_maps("cdna", "oncoref")
+    out: list[str] = []
+    for gid in ensgs:
+        clean = _clean_id(gid)
+        if not clean:
+            continue
+        ident = member_to_identity.get(clean, clean)
+        if ident not in out:
+            out.append(ident)
+    return out
+
+
+def covering_set_matrix(
+    stat: str = "q3",
+    *,
+    gene_set: str = "cta",
+    codes: Iterable[str] | None = None,
+    df: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    """``cancer_code`` × gene matrix of clean TPM at one statistic, one representative
+    source per code — the input to :func:`greedy_covering_set`."""
+    if stat not in COVERING_SET_STATS:
+        raise ValueError(f"stat must be one of {sorted(COVERING_SET_STATS)}, got {stat!r}")
+    value_col, _ = COVERING_SET_STATS[stat]
+    _label, ensgs = resolve_gene_set(gene_set)
+    panel_ids = set(_fold_to_cdna_canonical_ids(ensgs))
+    if df is None:
+        df = cancer_reference_expression(collapse_cdna_identical=True)
+    rep = representative_sources(df)
+    keep = set(zip(rep["cancer_code"], rep["source_cohort"]))
+    group_ids: dict[str, str] = {}
+    if "Member_Ensembl_Gene_IDs" in df.columns:
+        groups = df.loc[
+            ~df["Ensembl_Gene_ID"].astype(str).str.startswith("ENSG"),
+            ["Ensembl_Gene_ID", "Member_Ensembl_Gene_IDs"],
+        ].drop_duplicates()
+        for group_id, members in groups.itertuples(index=False, name=None):
+            if pd.notna(members):
+                folded = _fold_to_cdna_canonical_ids(str(members).split(";"))
+                if len(folded) == 1:
+                    group_ids[str(group_id)] = folded[0]
+    from .expression import _identical_locus_identity_maps
+
+    member_to_identity, _ = _identical_locus_identity_maps("cdna", "oncoref")
+    frame_ids = (
+        df["Ensembl_Gene_ID"]
+        .astype(str)
+        .map(lambda g: member_to_identity.get(_clean_id(g), str(g)))
+        .replace(group_ids)
+    )
+    selected = frame_ids.isin(panel_ids)
+    sub = df.loc[selected].copy()
+    sub["Ensembl_Gene_ID"] = frame_ids.loc[selected]
+    sub = sub.loc[[(c, s) in keep for c, s in zip(sub["cancer_code"], sub["source_cohort"])]]
+    population = sorted(set(rep["cancer_code"]))
+    if codes is not None:
+        wanted = {resolve_cancer_type(str(c), strict=False) or str(c) for c in codes}
+        sub = sub[sub["cancer_code"].isin(wanted)]
+        population = [code for code in population if code in wanted]
+    matrix = sub.pivot_table(
+        index="cancer_code", columns="Ensembl_Gene_ID", values=value_col, aggfunc="max"
+    ).reindex(population)
+    fallback = (
+        sub[["Ensembl_Gene_ID", "Symbol"]]
+        .dropna()
+        .sort_values(["Ensembl_Gene_ID", "Symbol"])
+        .drop_duplicates("Ensembl_Gene_ID")
+        .set_index("Ensembl_Gene_ID")["Symbol"]
+    )
+    matrix.attrs["symbols"] = {
+        gid: (canonical_gene_symbol(gid) or fallback.get(gid, gid))
+        if str(gid).startswith("ENSG")
+        else str(gid)
+        for gid in matrix.columns
+    }
+    return matrix
+
+
+@dataclass(frozen=True)
+class CoverStep:
+    """One pick of the greedy panel."""
+
+    gene: str
+    new_codes: tuple[str, ...]
+    cum_weight: float
+    cum_codes: int
+
+
+def greedy_covering_set(
+    matrix: pd.DataFrame, threshold: float, weights: pd.Series
+) -> tuple[list[CoverStep], list[str]]:
+    """Greedy weighted set cover over cancer types. Returns ``(steps, coverable)``."""
+    hits = matrix > threshold
+    coverable = list(hits.index[hits.any(axis=1)])
+    w = weights.reindex(matrix.index).fillna(0.0)
+    remaining: set[str] = set(coverable)
+    steps: list[CoverStep] = []
+    while remaining:
+        best_gene, best_codes, best_gain = None, set(), 0.0
+        for gene in hits.columns:
+            covered = {str(c) for c in hits.index[hits[gene]] if str(c) in remaining}
+            if not covered:
+                continue
+            gain = float(w.reindex(sorted(covered)).sum())
+            if (gain, len(covered)) > (best_gain, len(best_codes)):
+                best_gene, best_codes, best_gain = str(gene), covered, gain
+        if best_gene is None:
+            break
+        remaining -= best_codes
+        covered_so_far = sorted(set(coverable) - remaining)
+        steps.append(
+            CoverStep(
+                gene=best_gene,
+                new_codes=tuple(sorted(best_codes)),
+                cum_weight=float(w.reindex(covered_so_far).sum()),
+                cum_codes=len(covered_so_far),
+            )
+        )
+    return steps, coverable
+
+
+def _covering_set_plot(
+    steps,
+    coverable,
+    weights,
+    unmapped,
+    *,
+    total_types: int,
+    label: str,
+    metric: str,
+    stat: str,
+    threshold: float,
+    n_genes: int,
+    path: Path,
+    plt,
+) -> Path:
+    """Cumulative burden and type coverage over the full input population."""
+    from matplotlib.ticker import MaxNLocator, PercentFormatter
+
+    shown = steps[:n_genes] if n_genes else steps
+    total_weight = float(weights.sum())
+    metric_label = {
+        "us_incidence_pct": "US annual incidence",
+        "world_incidence_pct": "world annual incidence",
+        "us_mortality_pct": "US annual mortality",
+        "world_mortality_pct": "world annual mortality",
+    }.get(metric, metric.replace("_", " "))
+    xs = list(range(1, len(shown) + 1))
+    by_patients = [100.0 * s.cum_weight / total_weight if total_weight else 0.0 for s in shown]
+    by_type = [100.0 * s.cum_codes / total_types if total_types else 0.0 for s in shown]
+
+    fig, ax = plt.subplots(figsize=(11, 7))
+    ax.plot(xs, by_patients, "o-", ms=5, lw=2, color="#3a0ca3", label=f"{metric_label} burden")
+    ax.plot(xs, by_type, "s--", ms=5, lw=2, color="#e07a00", label="cancer types")
+    ax.axhline(80, color="0.7", ls=":", lw=1)
+    ax.set_xlabel(f"# genes in panel (> {threshold:g} clean TPM at {stat})")
+    ax.set_ylabel("cumulative coverage")
+    ax.set_ylim(0, 102)
+    ax.set_xlim(left=1)
+    ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.yaxis.set_major_formatter(PercentFormatter(xmax=100, decimals=0))
+    ax.set_title(
+        f"{label} covering set — how few targets reach most of the burden\n"
+        f"{len(coverable)} of {total_types} cancer types coverable; "
+        f"weighted by curated {metric_label}"
+    )
+    ax.legend(title="cumulative % covered")
+    ax.grid(alpha=0.3)
+    if unmapped:
+        fig.text(
+            0.01,
+            -0.01,
+            f"{len(unmapped)} cancer type(s) have no curated burden category and carry zero "
+            f"burden weight (they still count toward cancer types): {', '.join(sorted(unmapped))}",
+            fontsize=7,
+            color="0.35",
+            va="top",
+            wrap=True,
+        )
+    fig.tight_layout()
+    save_figure(fig, path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+    return path
+
+
+def render_covering_set(
+    gene_set: str = "cta",
+    *,
+    stat: str = "q3",
+    threshold: float = ACTIONABLE_TPM,
+    codes: Iterable[str] | None = None,
+    n_genes: int = 25,
+    metric: str = "us_incidence_pct",
+    out_dir="covering_set_out",
+    df: pd.DataFrame | None = None,
+) -> dict:
+    """Write the covering-set figure (PNG + vector PDF) and its step CSV."""
+    import matplotlib
+
+    matplotlib.use("Agg", force=False)
+    import matplotlib.pyplot as plt
+
+    label, _ensgs = resolve_gene_set(gene_set)
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    slug = _slug(label)
+
+    matrix = covering_set_matrix(stat, gene_set=gene_set, codes=codes, df=df)
+    weights, unmapped = burden_weights(matrix.index, metric=metric)
+    steps, coverable = greedy_covering_set(matrix, threshold, weights)
+
+    total_weight = float(weights.sum())
+    rows = pd.DataFrame(
+        [
+            {
+                "rank": i,
+                "gene": matrix.attrs.get("symbols", {}).get(s.gene, s.gene),
+                "Ensembl_Gene_ID": s.gene,
+                "cum_pct_patients": (
+                    100.0 * s.cum_weight / total_weight if total_weight else float("nan")
+                ),
+                "cum_cancer_types": s.cum_codes,
+                "cum_pct_cancer_types": (
+                    100.0 * s.cum_codes / len(matrix.index) if len(matrix.index) else float("nan")
+                ),
+                "newly_covered": ";".join(s.new_codes),
+            }
+            for i, s in enumerate(steps, 1)
+        ],
+        columns=[
+            "rank",
+            "gene",
+            "Ensembl_Gene_ID",
+            "cum_pct_patients",
+            "cum_cancer_types",
+            "cum_pct_cancer_types",
+            "newly_covered",
+        ],
+    )
+    csv_path = out / f"{slug}_covering_set_{stat}.csv"
+    rows.to_csv(csv_path, index=False)
+
+    png = _covering_set_plot(
+        steps,
+        coverable,
+        weights,
+        unmapped,
+        stat=stat,
+        threshold=threshold,
+        total_types=len(matrix.index),
+        label=label,
+        metric=metric,
+        n_genes=n_genes,
+        path=out / f"{slug}_covering_set_{stat}.png",
+        plt=plt,
+    )
+    return {
+        "paths": {
+            "covering_set_csv": str(csv_path),
+            "covering_set_png": str(png),
+            "covering_set_pdf": str(png.with_suffix(".pdf")),
+        },
+        "steps": rows,
+        "label": label,
+        "stat": stat,
+        "threshold": threshold,
+        "metric": metric,
+        "n_cancer_types": len(matrix.index),
+        "n_coverable": len(coverable),
+        "unmapped_codes": unmapped,
+    }

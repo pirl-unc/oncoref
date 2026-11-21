@@ -731,6 +731,7 @@ __all__ = [
     "cta_clinical_target_gene_names",
     "cta_clinical_target_references",
     "cta_coverage",
+    "cta_curation_plots",
     "cta_df",
     # cancer-testis antigens
     "cta_evidence",
@@ -801,6 +802,7 @@ __all__ = [
     "expression_sources",
     "expression_sources_df",
     "family_display_name",
+    "figure_export",
     "figure_style",
     "filter_technical_rna",
     "find_gene_id_by_name",
@@ -896,6 +898,7 @@ __all__ = [
     "percentile_rank",
     "pfizer_canine_protein",
     "pfizer_canine_rna",
+    "plots",
     "pmmr_cancer_codes",
     "pooled_cohort_stats",
     "pooled_ici_response",
@@ -985,7 +988,7 @@ __all__ = [
     "within_sample_top_fraction",
 ]
 
-_LAZY_SUBMODULES = frozenset({"curation"})
+_LAZY_SUBMODULES = frozenset({"cta_curation_plots", "curation", "figure_export", "plots"})
 
 
 def __getattr__(name: str):
