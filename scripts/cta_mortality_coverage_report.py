@@ -50,7 +50,7 @@ EXTERNAL_2024_DEATHS = {
     "prostate": 419849,
     "cervix": 279583,
     "leukemia": 292234,
-    "head_and_neck": 194108 + 51823 + 49748 + 62060 + 96619,
+    "head_and_neck": 194108 + 20707 + 51823 + 49748 + 62060 + 96619,
 }
 EXTERNAL_TOTAL = 9762507
 

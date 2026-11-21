@@ -4253,7 +4253,13 @@ def _pirlygenes_identity_label(symbols: Iterable[object], *, fallback: str) -> s
         return fallback
     if len(parts) == 1:
         return parts[0]
-    prefix = os.path.commonprefix(parts)
+    first, last = min(parts), max(parts)
+    prefix_len = 0
+    for ch_a, ch_b in zip(first, last):
+        if ch_a != ch_b:
+            break
+        prefix_len += 1
+    prefix = first[:prefix_len]
     if (
         prefix
         and prefix[-1].isdigit()

@@ -386,10 +386,13 @@ from .ici import (
     resolve_ici_response_source,
 )
 from .incidence import (
+    burden_categories,
     burden_category,
+    burden_scope,
     cancer_burden,
     cancer_burden_df,
     cancer_code_burden_map,
+    cohorts_for_burden_category,
 )
 from .legacy import legacy_dataset_disposition, legacy_dataset_dispositions
 from .normalization import (
@@ -608,7 +611,9 @@ __all__ = [
     "barkbase",
     "bgee_srp009687",
     "bgee_srp181218",
+    "burden_categories",
     "burden_category",
+    "burden_scope",
     # anti-PD-1 response
     "cancer_apd1_response",
     "cancer_apd1_response_df",
@@ -701,6 +706,7 @@ __all__ = [
     "cohort_source_version",
     "cohort_stats",
     "cohorts",
+    "cohorts_for_burden_category",
     "collapse_reference_expression",
     "collapse_to_proteoforms",
     "computed_union_codes",
