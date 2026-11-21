@@ -562,7 +562,9 @@ def _cmd_proteoforms(args: argparse.Namespace) -> int:
 
 
 #: Plot families that write several figures into a directory rather than one PNG.
-_DIRECTORY_PLOTS = frozenset({"patient-coverage", "cta-curation", "expression-provenance"})
+_DIRECTORY_PLOTS = frozenset(
+    {"patient-coverage", "covering-set", "cta-curation", "expression-provenance"}
+)
 
 # Plot commands whose marks correspond one-to-one with registry cancer codes.
 # Other commands use burden categories, genes, or multi-figure renderers and cannot
@@ -634,21 +636,33 @@ def _cmd_plot(args: argparse.Namespace) -> int:
     # default (50 TPM for the TPM-based plots, within-sample p95 for the patient heatmap)
     # rather than being forced onto a single CLI-wide value.
     tpm = {} if args.threshold_tpm is None else {"threshold_tpm": args.threshold_tpm}
+    merged_codes: list[str] = []
+    if args.codes:
+        merged_codes.extend(c.strip() for c in args.codes.split(",") if c.strip())
+    if getattr(args, "cohort", None):
+        merged_codes.extend(c.strip() for c in args.cohort if c and c.strip())
+    selected_codes = list(dict.fromkeys(merged_codes)) if merged_codes else None
+
     try:
         if args.which == "patient-coverage":
             from . import coverage
 
-            threshold = (
-                args.threshold
-                if args.threshold is not None
-                else (args.threshold_tpm if args.threshold_tpm is not None else 25)
+            explicit_threshold = (
+                args.threshold if args.threshold is not None else args.threshold_tpm
             )
-            result = coverage.render_patient_coverage(
-                args.gene_set,
-                cohorts=[c.strip() for c in args.codes.split(",")] if args.codes else None,
-                threshold=threshold,
-                out_dir=args.out,
-            )
+            pc_kwargs: dict = {
+                "cohorts": selected_codes,
+                "out_dir": args.out,
+            }
+            if args.threshold_mode is not None:
+                pc_kwargs["threshold_mode"] = args.threshold_mode
+                if explicit_threshold is not None:
+                    pc_kwargs["threshold"] = explicit_threshold
+            else:
+                pc_kwargs["threshold"] = (
+                    explicit_threshold if explicit_threshold is not None else 25
+                )
+            result = coverage.render_patient_coverage(args.gene_set, **pc_kwargs)
             if result["n_cohorts"] == 0:
                 print(
                     f"Error: no cohorts with cached per-sample data and coverage for "
@@ -656,7 +670,39 @@ def _cmd_plot(args: argparse.Namespace) -> int:
                     file=sys.stderr,
                 )
                 return 1
-            print(f"{result['label']}: {result['n_cohorts']} cohorts (> {threshold:g} TPM)")
+            thr_desc = result.get(
+                "threshold_label",
+                f"> {pc_kwargs.get('threshold', 25):g} TPM",
+            )
+            print(f"{result['label']}: {result['n_cohorts']} cohorts ({thr_desc})")
+            for kind, path in result["paths"].items():
+                print(f"  {kind}: {path}")
+            return 0
+        if args.which == "covering-set":
+            from . import coverage
+
+            cs_threshold = (
+                args.threshold
+                if args.threshold is not None
+                else (
+                    args.threshold_tpm
+                    if args.threshold_tpm is not None
+                    else coverage.ACTIONABLE_TPM
+                )
+            )
+            result = coverage.render_covering_set(
+                args.gene_set,
+                stat=args.stat or "q3",
+                threshold=cs_threshold,
+                codes=selected_codes,
+                n_genes=args.n_genes if args.n_genes is not None else 25,
+                metric=args.metric,
+                out_dir=args.out,
+            )
+            print(
+                f"{result['label']}: {result['n_coverable']}/{result['n_cancer_types']} "
+                f"cancer types coverable (> {cs_threshold:g} clean TPM at {result['stat']})"
+            )
             for kind, path in result["paths"].items():
                 print(f"  {kind}: {path}")
             return 0
@@ -703,6 +749,8 @@ def _cmd_plot(args: argparse.Namespace) -> int:
             kwargs = dict(tpm)
             if args.stat is not None:
                 kwargs["stat"] = args.stat
+            if args.n_genes is not None:
+                kwargs["n_genes"] = args.n_genes
         elif args.which == "cta-addressable-burden":
             kwargs = {"source": args.source, **tpm}
         elif args.which == "cta-patient-heatmap":
@@ -710,11 +758,11 @@ def _cmd_plot(args: argparse.Namespace) -> int:
         elif args.which in ("cta-burden-vs-response", "cta-specific-9mer-load"):
             kwargs = {"against": args.against, **tpm}
         elif args.which in ("cta-coverage-curves", "cta-coverage-stacked"):
-            if not args.codes:
+            if not selected_codes:
                 print(f"Error: {args.which} needs --codes", file=sys.stderr)
                 return 1
             kwargs = {
-                "cancer_types": [c.strip() for c in args.codes.split(",")],
+                "cancer_types": selected_codes,
                 **tpm,
             }
         else:
@@ -899,6 +947,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "cta-burden-vs-response",
             "cta-specific-9mer-load",
             "cta-covering-set",
+            "covering-set",
             "burden-category-bars",
             "apd1-response-signature",
             "patient-coverage",
@@ -986,20 +1035,48 @@ def _build_parser() -> argparse.ArgumentParser:
         "--threshold",
         type=float,
         default=None,
-        help="Patient-coverage TPM cutoff (alias-style option matching pirlygenes).",
+        help="Coverage cutoff for patient-coverage or covering-set (matches pirlygenes).",
+    )
+    p_plot.add_argument(
+        "--threshold-mode",
+        choices=["auto", "tpm", "percentile"],
+        default=None,
+        help=(
+            "Threshold contract for patient-coverage (auto uses clean TPM only when "
+            "every selected source is linearly TPM-comparable, otherwise percentile)."
+        ),
+    )
+    p_plot.add_argument(
+        "--n-genes",
+        type=int,
+        default=None,
+        help="Panel size to plot for covering-set / cta-covering-set (default: 25; 0 = full).",
+    )
+    p_plot.add_argument(
+        "--metric",
+        default="us_incidence_pct",
+        choices=list(incidence._BURDEN_METRICS),
+        help="Burden share column for covering-set patient weighting (default: us_incidence_pct).",
     )
     p_plot.add_argument(
         "--gene-set",
         default="cta",
         help=(
-            "Gene set for patient-coverage: cta, mito, housekeeping, family:<name>, "
-            "therapy:<agent_class>, lineage:<code>, or a CSV/TSV/TXT path"
+            "Gene set for patient-coverage or covering-set: cta, ca, ra, ca|ra, mito, "
+            "housekeeping, family:<name>, therapy:<agent_class>, lineage:<code>, or CSV/TXT path"
         ),
     )
     p_plot.add_argument(
         "--codes",
         default=None,
-        help="Comma-separated cancer codes (for cta coverage plots or patient-coverage)",
+        help="Comma-separated cancer codes (for cta coverage plots, covering-set, or patient-coverage)",
+    )
+    p_plot.add_argument(
+        "--cohort",
+        action="append",
+        default=None,
+        metavar="CODE",
+        help="Restrict to specific cancer-type code(s); repeatable (matches pirlygenes).",
     )
     p_plot.set_defaults(func=_cmd_plot)
 

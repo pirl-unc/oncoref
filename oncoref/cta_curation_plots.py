@@ -192,12 +192,300 @@ def _per_source_counts(df):
 
 STAGES = {
     "nominated": "source union",
-    "mapped": "canonical ID mapped",
-    "protein_coding": "protein-coding candidates",
-    "family_eligible": "non-CTA removed",
-    "hpa_restriction": "HPA restriction",
-    "default_panel": "specificity + expression",
+    "mapped": "Canonical Ensembl ID mapped",
+    "protein_coding": "Protein-coding biotype",
+    "family_eligible": "Histone / alpha-tubulin exclusion",
+    "hpa_restriction": "Adaptive reproductive RNA + IHC restriction",
+    "default_panel": "Reviewed default panel",
 }
+
+
+def stage_definitions(tissue_scope: str = "core") -> list[dict]:
+    """Machine-readable definitions for every stage of the historical HPA curation funnel.
+
+    Separates the RNA numerator tissue scope (``core`` vs ``extended``) from HPA IHC
+    protein restriction (always evaluated across ``ALL_REPRODUCTIVE_TISSUES``) and
+    makes clear that this six-stage funnel describes the frozen HPA v23 curation
+    snapshot (:mod:`oncoref.cta`), whereas active multi-compartment target selection
+    is exposed via :func:`active_policy_gate_matrix`.
+    """
+    from .cta_tissues import ALL_REPRODUCTIVE_TISSUES
+
+    rna_tissues = sorted(reproductive_tissues(tissue_scope))
+    ihc_tissues = sorted(ALL_REPRODUCTIVE_TISSUES)
+    return [
+        {
+            "stage_id": "nominated",
+            "label": STAGES["nominated"],
+            "denominator": "distinct_source_identities",
+            "rule": (
+                "Union of distinct published source identities across the ten minimum-cover "
+                "nomination papers, collapsing mapped aliases while retaining unresolved probes."
+            ),
+            "rna_reproductive_tissues": rna_tissues,
+            "ihc_reproductive_tissues": ihc_tissues,
+            "policy_scope": "legacy_hpa_v23_snapshot",
+        },
+        {
+            "stage_id": "mapped",
+            "label": STAGES["mapped"],
+            "denominator": "canonical_ensembl_genes",
+            "rule": "Source identities resolving to a canonical human Ensembl gene ID.",
+            "rna_reproductive_tissues": rna_tissues,
+            "ihc_reproductive_tissues": ihc_tissues,
+            "policy_scope": "legacy_hpa_v23_snapshot",
+        },
+        {
+            "stage_id": "protein_coding",
+            "label": STAGES["protein_coding"],
+            "denominator": "canonical_protein_coding_genes",
+            "rule": "Mapped candidates annotated with Ensembl biotype == 'protein_coding'.",
+            "rna_reproductive_tissues": rna_tissues,
+            "ihc_reproductive_tissues": ihc_tissues,
+            "policy_scope": "legacy_hpa_v23_snapshot",
+        },
+        {
+            "stage_id": "family_eligible",
+            "label": STAGES["family_eligible"],
+            "denominator": "canonical_protein_coding_genes",
+            "rule": (
+                "Excludes core/replication-dependent histone clusters and ubiquitous "
+                "alpha-tubulin (TUBA*) loci."
+            ),
+            "rna_reproductive_tissues": rna_tissues,
+            "ihc_reproductive_tissues": ihc_tissues,
+            "policy_scope": "legacy_hpa_v23_snapshot",
+        },
+        {
+            "stage_id": "hpa_restriction",
+            "label": STAGES["hpa_restriction"],
+            "denominator": "canonical_protein_coding_genes",
+            "rule": (
+                "Clears the HPA v23 antibody-reliability-adaptive deflated reproductive RNA "
+                "fraction threshold (0.80 Enhanced, 0.90 Supported, 0.95 Approved, 0.97 "
+                "Uncertain/no-data) over the selected RNA tissue scope, with IHC protein "
+                "staining evaluated across all reproductive tissues."
+            ),
+            "rna_reproductive_tissues": rna_tissues,
+            "ihc_reproductive_tissues": ihc_tissues,
+            "policy_scope": "legacy_hpa_v23_snapshot",
+        },
+        {
+            "stage_id": "default_panel",
+            "label": STAGES["default_panel"],
+            "denominator": "canonical_protein_coding_genes",
+            "rule": (
+                "Retains genes with specificity_action == 'include_default' after removing "
+                "unrescued low-expression HPA artefacts (< 2 nTPM everywhere without IHC or "
+                "tumor rescue), normal-reproductive-only nominations without tumor support, "
+                "and trace-somatic specificity exclusions."
+            ),
+            "rna_reproductive_tissues": rna_tissues,
+            "ihc_reproductive_tissues": ihc_tissues,
+            "policy_scope": "legacy_hpa_v23_snapshot",
+        },
+    ]
+
+
+def final_stage_attrition(df=None, *, tissue_scope: str = "core") -> pd.DataFrame:
+    """Mutually exclusive disposition breakdown for genes passing ``hpa_restriction``."""
+    raw = _evidence(tissue_scope) if df is None else df.copy()
+    scope = _tissue_scope(raw)
+    membership = stage_membership(raw, tissue_scope=scope)
+    hpa_ids = set(membership.loc[membership["hpa_restriction"], "Ensembl_Gene_ID"])
+    sub = raw[raw["Ensembl_Gene_ID"].isin(hpa_ids)].copy()
+    action = sub["specificity_action"].fillna("").astype(str)
+    status = sub["specificity_status"].fillna("").astype(str)
+
+    retained = action.eq("include_default")
+    low_expr = ~retained & status.eq("canonical_low_expression")
+    normal_only = ~retained & ~low_expr & status.eq("candidate_normal_reproductive_only_nomination")
+    other_review = ~(retained | low_expr | normal_only)
+
+    total = len(sub)
+    buckets = [
+        (
+            "retained_default",
+            "Retained in reviewed default panel",
+            int(retained.sum()),
+        ),
+        (
+            "low_expression",
+            "Dropped: HPA low-expression pseudocount artefact (<2 nTPM, unrescued)",
+            int(low_expr.sum()),
+        ),
+        (
+            "normal_reproductive_only",
+            "Held back: normal-reproductive-only nomination lacking tumor support",
+            int(normal_only.sum()),
+        ),
+        (
+            "other_specificity_review",
+            "Dropped: trace somatic or specificity review exclusion",
+            int(other_review.sum()),
+        ),
+    ]
+    out = pd.DataFrame(
+        [
+            {
+                "tissue_scope": scope,
+                "outcome": key,
+                "description": desc,
+                "genes": count,
+                "fraction_of_hpa_pass": round(count / total, 6) if total else 0.0,
+            }
+            for key, desc, count in buckets
+        ]
+    )
+    if int(out["genes"].sum()) != total:
+        raise AssertionError("final_stage_attrition buckets must partition hpa_restriction")
+    return out
+
+
+def active_policy_gate_matrix() -> pd.DataFrame:
+    """Owner-defined independent gate states for all 19,893 human protein groups under
+    the active :mod:`oncoref.target_selection` policy (never coerced into a single
+    sequential funnel)."""
+    from . import target_selection
+
+    df = target_selection.results().copy()
+    n_groups = len(df)
+    denom = f"{n_groups}_human_protein_groups"
+
+    def _bool_gate(series: pd.Series) -> pd.Series:
+        return pd.Series(
+            np.where(series.astype(bool), "pass", "fail"),
+            index=df.index,
+        )
+
+    rare_map = {
+        "below_screen": "pass",
+        "dismissed": "pass",
+        "established": "fail_unsafe",
+        "unresolved": "fail_review",
+        "unassessed": "unassessed",
+        "not_extracted": "not_applied",
+    }
+    lit_map = {
+        "none": "pass",
+        "exclude": "fail_unsafe",
+        "confirm_detection": "fail_unsafe",
+        "not_reviewed": "not_applied",
+    }
+    ev_map = {
+        "qualifies": "pass",
+        "does_not_qualify": "fail",
+        "unassessed": "unassessed",
+    }
+
+    disp_tpm = pd.to_numeric(df["disposable_max_tpm"], errors="coerce")
+    disp_ntpm = pd.to_numeric(df["disposable_max_ntpm"], errors="coerce")
+    disp_measured = disp_tpm.notna() | disp_ntpm.notna()
+    disp_exceeded = disp_tpm.gt(target_selection.DISPOSABLE_CAP) | disp_ntpm.gt(
+        target_selection.DISPOSABLE_CAP
+    )
+    gate_disposable = np.where(
+        ~disp_measured,
+        "unassessed",
+        np.where(disp_exceeded, "fail", "pass"),
+    )
+
+    gate_home = np.where(
+        df["classification"].eq("Other:Unscreened tissue"),
+        "fail",
+        np.where(df["cancer_evidence"].eq("unassessed"), "unassessed", "pass"),
+    )
+
+    return pd.DataFrame(
+        {
+            "entity_id": df["entity_id"],
+            "protein_group_label": df["protein_group_label"],
+            "representative_gene_id": df["representative_gene_id"],
+            "member_gene_ids": df["member_gene_ids"],
+            "policy_id": df["policy"],
+            "denominator": denom,
+            "category": df["category"],
+            "subtype": df["subtype"].fillna(""),
+            "classification": df["classification"],
+            "is_cta": df["is_cta"].astype(bool),
+            "cta_tier": df["cta_tier"].fillna(""),
+            "is_cancer_antigen": df["is_cancer_antigen"].astype(bool),
+            "is_reproductive_antigen": df["is_reproductive_antigen"].astype(bool),
+            "gate_normal_screen": _bool_gate(df["normal_screen_pass"]),
+            "gate_rare_cell_rna": df["rare_cell_status"].map(rare_map).fillna("unassessed"),
+            "gate_published_literature": df["literature_effect"].map(lit_map).fillna("not_applied"),
+            "gate_required_coverage": _bool_gate(df["required_coverage_complete"]),
+            "gate_identity_translation": _bool_gate(df["identity_translation_pass"]),
+            "gate_sequence": _bool_gate(df["sequence_pass"]),
+            "gate_disposable_cap_32": gate_disposable,
+            "gate_expression_bounds": df["expression_bounds_status"].fillna("unassessed"),
+            "gate_home_tissue_coverage": gate_home,
+            "gate_cancer_enrichment_10x": df["cancer_evidence"].map(ev_map).fillna("unassessed"),
+            "gate_reproductive_enrichment_10x": (
+                df["reproductive_evidence"].map(ev_map).fillna("unassessed")
+            ),
+        }
+    )
+
+
+def active_policy_transitions() -> pd.DataFrame:
+    """Policy-to-policy membership transitions into the active ``target_selection`` catalog."""
+    from . import cta, cta_selection, target_selection
+
+    df = target_selection.results().copy()
+    active_policy = target_selection.POLICY_ID
+    prior_policy = cta_selection._metadata()["species"]["human"]["policy_id"]
+
+    rows: list[dict] = []
+    grouped_prior = (
+        df.groupby(
+            ["released_category", "released_classification", "category", "classification"],
+            dropna=False,
+        )
+        .size()
+        .reset_index(name="protein_groups")
+    )
+    for r in grouped_prior.itertuples(index=False):
+        rows.append(
+            {
+                "from_policy": prior_policy,
+                "from_state": str(r.released_classification or r.released_category),
+                "to_policy": active_policy,
+                "to_category": str(r.category),
+                "to_classification": str(r.classification),
+                "protein_groups": int(r.protein_groups),
+            }
+        )
+
+    legacy_core = set(cta.cta_gene_ids())
+    in_legacy_core = df["member_gene_ids"].map(lambda raw: bool(set(json.loads(raw)) & legacy_core))
+    df_legacy = df.assign(
+        legacy_state=np.where(in_legacy_core, "legacy_core_default", "outside_legacy_core")
+    )
+    grouped_legacy = (
+        df_legacy.groupby(["legacy_state", "category", "classification"], dropna=False)
+        .size()
+        .reset_index(name="protein_groups")
+    )
+    for r in grouped_legacy.itertuples(index=False):
+        rows.append(
+            {
+                "from_policy": "oncoref.cta-hpa-v23-core",
+                "from_state": str(r.legacy_state),
+                "to_policy": active_policy,
+                "to_category": str(r.category),
+                "to_classification": str(r.classification),
+                "protein_groups": int(r.protein_groups),
+            }
+        )
+    return (
+        pd.DataFrame(rows)
+        .sort_values(
+            ["from_policy", "from_state", "protein_groups", "to_classification"],
+            ascending=[True, True, False, True],
+        )
+        .reset_index(drop=True)
+    )
 
 
 def stage_membership(df=None, *, tissue_scope="core"):
@@ -294,7 +582,7 @@ def _save(fig, path, plt, tissue_scope=None):
         fig.text(
             0,
             1.02,
-            f"{label} · HPA v23 · RNA tissue scope: {tissue_scope}",
+            f"{label} · HPA v23 · RNA scope: {tissue_scope} (IHC check: all reproductive tissues)",
             ha="left",
             va="bottom",
             fontsize=10,
@@ -302,7 +590,6 @@ def _save(fig, path, plt, tissue_scope=None):
     for text in fig.findobj(Text):
         text.set_fontsize(text.get_fontsize() * _FONT_SCALE)
     figure_style.save(fig, path, keep_titles=True)
-    figure_style.save(fig, Path(path).with_suffix(".pdf"), keep_titles=True)
     plt.close(fig)
 
 
@@ -673,11 +960,11 @@ def _fig_publication_funnel(df, path, plt):
         range(6),
         [
             "Unique source\nidentities",
-            "Unique IDs\nmapped",
+            "Canonical ID\nmapped",
             "Protein\ncoding",
-            "Family\nfilter",
-            "HPA\nrestriction",
-            "Default\nrules",
+            "Histone / TUBA\nexclusion",
+            "Adaptive RNA +\nIHC restriction",
+            "Reviewed\ndefault panel",
         ],
     )
     ax.set_title("Ten selected papers: full lists through curation", pad=18)
@@ -844,6 +1131,14 @@ def render(out_dir="cta_curation_out", *, kinds=None, font_scale=1.0, tissue_sco
     pd.DataFrame(stages, columns=["stage", "remaining", "dropped"]).to_csv(
         out / "cta-stage-counts.csv", index=False
     )
+    (out / "cta-stage-definitions.json").write_text(
+        json.dumps(stage_definitions(tissue_scope=tissue_scope), indent=2) + "\n"
+    )
+    final_stage_attrition(df, tissue_scope=tissue_scope).to_csv(
+        out / "cta-final-stage-attrition.csv", index=False
+    )
+    active_policy_gate_matrix().to_csv(out / "active-policy-gate-matrix.csv", index=False)
+    active_policy_transitions().to_csv(out / "active-policy-transitions.csv", index=False)
     stage_membership(df).to_csv(out / "cta-stage-membership.csv", index=False)
     intake_counts(tissue_scope=tissue_scope).to_csv(
         out / "cta-publication-intake-counts.csv", index=False
