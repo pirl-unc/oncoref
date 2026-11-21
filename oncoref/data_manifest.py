@@ -534,6 +534,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "tissue-burden-map": ("ontology", "primary_tissue -> anatomic burden category"),
     "family-burden-map": ("ontology", "registry family -> burden category (fallback)"),
+    "cancer-burden-scope": (
+        "ontology",
+        "multi-bucket and subsite anatomic-burden scope metadata for mixed cohorts",
+    ),
     "cancer-mismatch-repair-statuses": (
         "ontology",
         "cross-cancer MMRd/MSI-H vs pMMR/MSS-like classifier state semantics",

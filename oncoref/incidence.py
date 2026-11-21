@@ -11,7 +11,8 @@
 # limitations under the License.
 
 """Cancer incidence / mortality burden reference data and the registry-driven
-resolution of a cancer type to its anatomic burden category."""
+resolution of a cancer type to its anatomic burden category (and explicit
+multi-bucket / subsite scope metadata for mixed cohorts such as ``CHOL``)."""
 
 from __future__ import annotations
 
@@ -30,25 +31,26 @@ _BURDEN_METRICS = (
 
 def cancer_burden_df():
     """Return the curated ``cancer-incidence-mortality.csv`` reference: each
-    cancer **burden category**'s share (%) of annual cancer incidence and
-    mortality, for the US and worldwide, cited per row (ACS Cancer Facts &
-    Figures 2024 / GLOBOCAN 2022).
+    cancer **burden category**'s share (%) and extracted counts of annual cancer
+    incidence and mortality for the US (ACS Cancer Facts & Figures 2024) and
+    worldwide (GLOBOCAN 2024, Sung et al. 2026 ``PMID:42417444`` /
+    ``DOI:10.3322/caac.70090``; minor sites not in the 34-site Table 1 retain
+    their documented GLOBOCAN 2022 or literature vintage).
 
-    The percentage columns are the current public lookup surface. The companion
-    ``*_count`` / ``*_total`` columns, ``*_source_locator`` fields, source-site
-    fields, ``derivation_basis``, and ``rounding_rule`` are the structured audit
-    contract. ``aggregation`` and ``source_anchor`` preserve the complete legacy
-    pirlygenes site-composition and resolvable citation surface so consumers can
-    delegate without a compatibility table. Rows keep
-    ``*_source_locator_status="not_extracted"`` until exact per-region exports and
-    raw counts are filled in. Rows flagged in ``notes`` as subsets/rollups overlap
-    others — don't sum them blindly."""
+    The percentage columns are the primary lookup surface. Companion ``*_count``
+    and ``*_total`` columns, ``*_source_locator`` fields, ICD-10 site fields
+    (``source_site_codes``, ``included_source_sites``, ``excluded_source_sites``),
+    ``derivation_basis``, and ``rounding_rule`` expose the structured audit
+    contract. ``aggregation`` and ``source_anchor`` preserve the pirlygenes
+    compatibility surface. Rows flagged as ``residual`` or overlapping minor
+    sites (such as ``anus`` ``C21``, folded into ``colorectal`` ``C18-C21`` in
+    GLOBOCAN 2024 Table 1) must not be summed blindly."""
     return get_data("cancer-incidence-mortality")
 
 
 def cancer_code_burden_map():
     """Return ``{cancer_code: burden_category}`` from
-    ``cancer-code-burden-map.csv``. This is now only the small set of
+    ``cancer-code-burden-map.csv``. This holds only the small set of
     **overrides** the registry ontology can't express on its own (e.g.
     ``SARC_KS`` -> Kaposi rather than soft-tissue; ``LAML`` -> AML rather than
     other-leukemia; ``HL`` -> Hodgkin; ``CTCL`` -> non-Hodgkin). Everything else
@@ -71,60 +73,74 @@ def cancer_burden(category=None, *, metric="us_incidence_pct"):
     return mapping.get(category)
 
 
-# Burden categories are anatomic-site shares (how ACS/GLOBOCAN tabulate), so a
-# cohort is resolved to its category straight from the **cancer-type registry
-# ontology** — one source of truth — rather than a parallel hand-map: the
-# sarcoma family splits bone vs soft tissue on primary_tissue, plasma-cell and a
-# handful of leukemia/lymphoma exceptions resolve by family, and primary tissue
-# decides everything else. ``cancer-code-burden-map.csv`` now holds only the few
-# true exceptions the ontology can't express.
-
-# Sarcoma family -> bone_and_joint when its primary_tissue is skeletal, else
-# soft_tissue_sarcoma. This (and heme-plasma -> myeloma) is a genuine family
-# *override*: the histology decides the burden category even when the anatomic
-# site would map elsewhere (e.g. DSRCT in peritoneum, DFSP in skin, endometrial
-# stromal sarcoma) — so it is kept in code, not data. The bulk lookups
-# (primary_tissue -> category, family -> category fallback) live in data files.
 _BONE_SARCOMA_TISSUES = {"bone", "cartilage", "notochord"}
 
 
 @lru_cache(maxsize=1)
 def _tissue_burden_map() -> dict[str, str]:
-    """``{primary_tissue: burden_category}`` from ``tissue-burden-map.csv`` (solid +
-    heme tissues; the scopes don't share a tissue token so one flat map suffices)."""
+    """``{primary_tissue: burden_category}`` from ``tissue-burden-map.csv``."""
     df = get_data("tissue-burden-map")
     return dict(zip(df["primary_tissue"].astype(str), df["burden_category"].astype(str)))
 
 
 @lru_cache(maxsize=1)
 def _family_burden_map() -> dict[str, str]:
-    """``{family: burden_category}`` fallback from ``family-burden-map.csv`` — used
-    only when a code's primary_tissue is blank/unmapped (melanoma at non-skin sites,
-    the cns-* families, carcinoma-skin)."""
+    """``{family: burden_category}`` fallback from ``family-burden-map.csv``."""
     df = get_data("family-burden-map")
     return dict(zip(df["family"].astype(str), df["burden_category"].astype(str)))
 
 
+@lru_cache(maxsize=1)
+def _burden_scope_overrides() -> dict[str, dict]:
+    """Explicit scope records from ``cancer-burden-scope.csv`` keyed by cancer code."""
+    df = get_data("cancer-burden-scope")
+    out: dict[str, dict] = {}
+    for row in df.itertuples(index=False):
+        code = str(row.cancer_code).strip()
+        sec_raw = (
+            ""
+            if row.secondary_burden_categories != row.secondary_burden_categories
+            else str(row.secondary_burden_categories or "")
+        )
+        secondary = tuple(s.strip() for s in sec_raw.split(";") if s.strip())
+        counts_raw = (
+            ""
+            if row.expression_source_site_counts != row.expression_source_site_counts
+            else str(row.expression_source_site_counts or "")
+        )
+        site_counts: dict[str, int] = {}
+        for item in counts_raw.split(";"):
+            item = item.strip()
+            if ":" in item:
+                k, v = item.split(":", 1)
+                site_counts[k.strip()] = int(v.strip())
+        notes = "" if row.scope_notes != row.scope_notes else str(row.scope_notes or "")
+        out[code] = {
+            "scope_status": str(row.scope_status).strip(),
+            "secondary_burden_categories": secondary,
+            "expression_source_site_counts": site_counts,
+            "notes": notes,
+        }
+    return out
+
+
 _register_derived_cache(_tissue_burden_map.cache_clear)
 _register_derived_cache(_family_burden_map.cache_clear)
+_register_derived_cache(_burden_scope_overrides.cache_clear)
 
 
 def burden_category(cancer_type):
-    """Map a cancer type to its **incidence/mortality (cancer-burden) category** —
-    the coarse anatomic bucket under which ACS / GLOBOCAN report population burden
-    (e.g. ``SARC_OS`` → ``"bone_and_joint"``), so a fine cancer code can be joined to
-    :func:`cancer_burden`. This is *not* a severity label; it is the granularity at
-    which burden statistics are tabulated.
+    """Map a cancer type to its primary **incidence/mortality (cancer-burden)
+    category** — the coarse anatomic bucket under which ACS / GLOBOCAN report
+    population burden (e.g. ``SARC_OS`` → ``"bone_and_joint"``).
 
-    Robustly resolves a cancer type (code, alias, or display name) to that category,
-    driven by the cancer-type registry ontology.
-    Order: normalize via :func:`resolve_cancer_type`; the small explicit
-    ``cancer-code-burden-map`` *override* (walking the ``parent_code`` chain);
-    then registry-driven — sarcoma family splits bone vs soft tissue, plasma
-    cell -> myeloma, then ``primary_tissue`` (``tissue-burden-map.csv``), then
-    ``family`` (``family-burden-map.csv``). Returns ``None`` only when nothing
-    matches — callers should **warn**, not silently skip (an unmapped cohort is
-    a coverage gap)."""
+    For cohorts spanning multiple mortality buckets (such as ``CHOL``, which
+    contains both intrahepatic ``liver`` ``C22.1`` and extrahepatic
+    ``gallbladder_biliary`` ``C24`` cases), :func:`burden_category` returns the
+    single primary bucket without duplicating population totals; use
+    :func:`burden_categories`, :func:`burden_scope`, or
+    :func:`cohorts_for_burden_category` when testing whether an expression
+    cohort covers a mortality category."""
     try:
         code = resolve_cancer_type(cancer_type)
     except ValueError:
@@ -163,3 +179,100 @@ def burden_category(cancer_type):
             return family_map[family]
         cur = str(row.get("parent_code", "") or "").strip() or None
     return None
+
+
+def burden_scope(cancer_type) -> dict | None:
+    """Return structured anatomic-burden scope metadata for ``cancer_type``,
+    resolving multi-bucket cohorts (``CHOL``, ``BTC``) and explicit subsite
+    inclusions (salivary gland cohorts ``SGC`` / ``ADCC`` inside
+    ``head_and_neck`` ``C07-C08``).
+
+    Walks ``parent_code`` only while the child retains the same primary
+    ``burden_category`` (so ``ADCC`` inherits ``SGC``'s salivary subsite note,
+    whereas ``GBC`` keeps ``gallbladder`` ``exact`` scope instead of inheriting
+    ``BTC``'s pan-biliary ``mixed_sites`` scope)."""
+    try:
+        code = resolve_cancer_type(cancer_type)
+    except ValueError:
+        return None
+    if code is None:
+        return None
+    primary = burden_category(code)
+    if primary is None:
+        return None
+    overrides = _burden_scope_overrides()
+    reg = cancer_type_registry().set_index("code")
+    matched = None
+    cur, seen = code, set()
+    while cur and cur not in seen:
+        seen.add(cur)
+        if cur in overrides:
+            # Only inherit a parent's scope override if the child shares the
+            # same primary burden category and has not narrowed to a single site
+            # (e.g. GBC has primary_tissue='gallbladder' under parent BTC).
+            if cur == code:
+                matched = overrides[cur]
+                break
+            child_tissue = (
+                str(reg.loc[code].get("primary_tissue", "") or "") if code in reg.index else ""
+            )
+            parent_tissue = (
+                str(reg.loc[cur].get("primary_tissue", "") or "") if cur in reg.index else ""
+            )
+            if child_tissue == parent_tissue and burden_category(cur) == primary:
+                matched = overrides[cur]
+                break
+        if cur not in reg.index:
+            break
+        cur = str(reg.loc[cur].get("parent_code", "") or "").strip() or None
+
+    if matched is None:
+        scope_status = "unassigned_umbrella" if primary == "other_and_unknown_primary" else "exact"
+        return {
+            "code": code,
+            "primary_burden_category": primary,
+            "burden_categories": (primary,),
+            "scope_status": scope_status,
+            "expression_source_site_counts": {},
+            "notes": "",
+        }
+    categories = tuple(dict.fromkeys((primary, *matched["secondary_burden_categories"])))
+    return {
+        "code": code,
+        "primary_burden_category": primary,
+        "burden_categories": categories,
+        "scope_status": matched["scope_status"],
+        "expression_source_site_counts": dict(matched["expression_source_site_counts"])
+        if cur == code
+        else {},
+        "notes": matched["notes"],
+    }
+
+
+def burden_categories(cancer_type) -> tuple[str, ...]:
+    """Return all ``burden_category`` buckets spanned by ``cancer_type``
+    (primary bucket first, followed by any secondary anatomic buckets for
+    mixed-site cohorts such as ``CHOL`` → ``('gallbladder_biliary', 'liver')``).
+    Returns ``()`` if ``cancer_type`` does not resolve."""
+    scope = burden_scope(cancer_type)
+    return () if scope is None else scope["burden_categories"]
+
+
+def cohorts_for_burden_category(category: str, *, include_mixed: bool = True) -> tuple[str, ...]:
+    """Return canonical registry cancer codes that map to ``category``.
+
+    When ``include_mixed=True`` (default for expression-coverage queries),
+    mixed-site codes whose secondary buckets include ``category`` (such as
+    ``CHOL`` and ``BTC`` for ``"liver"``) are included alongside primary-mapped
+    codes. Pass ``include_mixed=False`` when partitioning codes into disjoint
+    buckets so population burden shares are never counted twice."""
+    valid = set(cancer_burden_df()["burden_category"].astype(str))
+    if category not in valid:
+        raise ValueError(f"Unknown burden_category {category!r}")
+    reg = cancer_type_registry()
+    out = []
+    for code in reg["code"].astype(str):
+        cats = burden_categories(code) if include_mixed else (burden_category(code),)
+        if category in cats:
+            out.append(code)
+    return tuple(out)

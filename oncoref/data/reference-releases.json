@@ -1267,9 +1267,16 @@
           "archive_sha256": "d981886da877b455d917db78268279da03db599e5a3589814eac46f71f940a06",
           "bytes": 33643663,
           "taxon_id": 9606
+        },
+        "5d51482e8ac0": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/5d51482e8ac004eb82bb6239187f0a64cc3b58a3/docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz",
+          "sha256": "62bc7f2518a32309e6a1f3546899fde9fd9c964bceb952a357b0ac1083c16c36",
+          "archive_sha256": "62bc7f2518a32309e6a1f3546899fde9fd9c964bceb952a357b0ac1083c16c36",
+          "bytes": 33724411,
+          "taxon_id": 9606
         }
       },
-      "default_version": "4a52f16362d3"
+      "default_version": "5d51482e8ac0"
     },
     "antigen-normal-comparison": {
       "description": "Antigen curation comparison or sample metadata \u2014 normal comparison",
@@ -1297,9 +1304,16 @@
           "archive_sha256": "ee8e0bd87a24dee0ddb5ad0f05128a3186a0747bf6f18bad4e3d2c43aef48355",
           "bytes": 38713038,
           "taxon_id": 9606
+        },
+        "5d51482e8ac0": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/5d51482e8ac004eb82bb6239187f0a64cc3b58a3/docs/audits/target-selection-20261110/rebuild/normal-comparison.csv.gz",
+          "sha256": "ce94d92eb3fefbe0919d9667adfcad3270ed2e4f41923fd066394bac723ace0a",
+          "archive_sha256": "ce94d92eb3fefbe0919d9667adfcad3270ed2e4f41923fd066394bac723ace0a",
+          "bytes": 38803708,
+          "taxon_id": 9606
         }
       },
-      "default_version": "4a52f16362d3"
+      "default_version": "5d51482e8ac0"
     },
     "antigen-tumor-witnesses": {
       "description": "Antigen curation comparison or sample metadata \u2014 tumor witnesses",
@@ -1327,9 +1341,16 @@
           "archive_sha256": "63208c7c19d3341e7c4eedcdf3d6b5fe56157351ea37635fe47760a3db6ca5ff",
           "bytes": 541845,
           "taxon_id": 9606
+        },
+        "5d51482e8ac0": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/5d51482e8ac004eb82bb6239187f0a64cc3b58a3/docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
+          "sha256": "5b1d198451a2d9fe1890bca460760f555dc744273f934f786e27484001c884a1",
+          "archive_sha256": "5b1d198451a2d9fe1890bca460760f555dc744273f934f786e27484001c884a1",
+          "bytes": 542091,
+          "taxon_id": 9606
         }
       },
-      "default_version": "4a52f16362d3"
+      "default_version": "5d51482e8ac0"
     },
     "antigen-tumor-samples": {
       "description": "Antigen curation comparison or sample metadata \u2014 tumor samples",
@@ -1414,9 +1435,16 @@
           "archive_sha256": "9b93bc4cbd9868b30ce5f7df0f3ddc862e03662c1bea69388eb0fd06ab2ecb8f",
           "bytes": 20884,
           "taxon_id": 9606
+        },
+        "5d51482e8ac0": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/5d51482e8ac004eb82bb6239187f0a64cc3b58a3/docs/audits/target-selection-20261110/rebuild/tumor-source-coverage.csv",
+          "sha256": "d189489add219801eb8f8526ba2dee0171333a0d076c4c9cd77c75c1bd117fab",
+          "archive_sha256": "d189489add219801eb8f8526ba2dee0171333a0d076c4c9cd77c75c1bd117fab",
+          "bytes": 20884,
+          "taxon_id": 9606
         }
       },
-      "default_version": "4a52f16362d3"
+      "default_version": "5d51482e8ac0"
     },
     "antigen-source-registry": {
       "description": "Antigen curation cell atlas \u2014 source registry",
@@ -1574,9 +1602,16 @@
           "archive_sha256": "ab9756c252651e353b6c5ea5a3fea3d1966d969518a76499e8287419d78b57c7",
           "bytes": 2059,
           "taxon_id": 9606
+        },
+        "5d51482e8ac0": {
+          "url": "https://raw.githubusercontent.com/pirl-unc/oncoref/5d51482e8ac004eb82bb6239187f0a64cc3b58a3/docs/audits/target-selection-20261110/rebuild/revised-tissue-gate-inputs.json",
+          "sha256": "667e757e7889b1e72c125e66b6f07997f444f436a3e5e122385c17cecc99488c",
+          "archive_sha256": "667e757e7889b1e72c125e66b6f07997f444f436a3e5e122385c17cecc99488c",
+          "bytes": 2108,
+          "taxon_id": 9606
         }
       },
-      "default_version": "4a52f16362d3"
+      "default_version": "5d51482e8ac0"
     },
     "antigen-revised-tissue-gates": {
       "description": "Antigen curation curation input \u2014 revised tissue gates",
