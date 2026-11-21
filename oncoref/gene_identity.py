@@ -220,7 +220,9 @@ def resolve_gene_identity(gene_id: str, *, genome) -> GeneIdentity:
     )
 
 
-def cta_annotation_gene_identities(genome) -> tuple[GeneIdentity, ...]:
+def cta_annotation_gene_identities(
+    genome, *, candidates: set[str] | frozenset[str] | list[str] | tuple[str, ...] | None = None
+) -> tuple[GeneIdentity, ...]:
     """Audit annotated IDs potentially belonging to the full CTA candidate set.
 
     Includes unresolved mappings with a CTA among their candidate IDs, so rejected
@@ -230,10 +232,11 @@ def cta_annotation_gene_identities(genome) -> tuple[GeneIdentity, ...]:
     from .cta import cta_unfiltered_gene_ids
 
     _annotation(genome)
-    candidates = {unversioned(g) for g in cta_unfiltered_gene_ids()}
+    raw_candidates = cta_unfiltered_gene_ids() if candidates is None else candidates
+    candidate_ids = {unversioned(g) for g in raw_candidates}
     aliases = _reference()[0]
-    relevant = candidates | {
-        a for a, mappings in aliases.items() if any(p in candidates for p, _, _ in mappings)
+    relevant = candidate_ids | {
+        a for a, mappings in aliases.items() if any(p in candidate_ids for p, _, _ in mappings)
     }
     return tuple(
         resolve_gene_identity(g, genome=genome)

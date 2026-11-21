@@ -20,10 +20,11 @@ off-target reactivity). This mirrors pirlygenes' definition exactly:
   - protein sequences come from the installed Ensembl release (pyensembl), the
     **longest** protein-coding transcript per gene (stop codon stripped);
   - 9-mers are the distinct sliding-window (stride 1) substrings of a protein;
-  - the **background** is the union of 9-mers over every non-CTA protein (the full
-    CTA *universe* — :func:`oncoref.cta.cta_unfiltered_gene_ids` — and its
-    verified annotation-scoped aliases are excluded so alternate assembly copies
-    don't mask specificity; unresolved mappings remain in the background);
+  - the **background** is the union of 9-mers over every non-candidate protein
+    (:mod:`oncoref.antigen_sets` ``Unsafe|Other`` — the candidate antigen universe
+    ``CA|RA`` and its verified annotation-scoped aliases are excluded so alternate
+    assembly copies or sibling candidate antigens don't mask specificity, while all
+    ``Unsafe`` and ``Other`` proteins remain in the subtracted background);
   - a CTA's ``n_specific_9mers`` is how many of its 9-mers miss that background.
 
 Building the background scans the whole proteome (~20k genes, a minute or two), so
@@ -40,9 +41,22 @@ from pathlib import Path
 
 import pandas as pd
 
-from .cta import cta_gene_id_to_name, cta_gene_ids, cta_unfiltered_gene_ids
+from . import antigen_sets
+from .coverage import cta_gene_id_to_name, cta_gene_ids
 from .gene_identity import GENE_IDENTITY_CONTRACT_VERSION, cta_annotation_gene_identities
 from .genome import find_gene_id_by_name, genomes, strip_version
+
+
+def cta_unfiltered_gene_ids() -> frozenset[str]:
+    """Candidate antigen Ensembl gene universe (``CA|RA``) excluded from self background.
+
+    Unlike the deprecated 1.9.15 ``cta.cta_unfiltered_gene_ids()`` nomination union,
+    this excludes only qualified ``target_selection`` candidates (``CTA``, ``Cancer Antigen
+    only``, ``Reproductive Antigen only``), keeping all ``Unsafe`` and ``Other`` loci in
+    the subtracted background.
+    """
+    return frozenset(strip_version(g) for g in antigen_sets.gene_ids("CA|RA"))
+
 
 #: 9 = the canonical MHC-I epitope length.
 DEFAULT_K: int = 9
@@ -121,6 +135,13 @@ def _cta_set_fingerprint(identities=()) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
 
+def _annotation_identities(genome, universe):
+    try:
+        return cta_annotation_gene_identities(genome, candidates=universe)
+    except TypeError:
+        return cta_annotation_gene_identities(genome)
+
+
 def _build_counts(genome, k: int, *, identities=None) -> pd.DataFrame:
     """Compute the per-CTA specific-9-mer table from one genome (no caching)."""
     longest = _longest_protein_per_gene(genome, k)
@@ -132,10 +153,10 @@ def _build_counts(genome, k: int, *, identities=None) -> pd.DataFrame:
             f"`pyensembl install --release {genome.release} --species homo_sapiens`."
         )
     cta_filtered = {strip_version(g) for g in cta_gene_ids()}
-    cta_universe = {strip_version(g) for g in cta_unfiltered_gene_ids()}
+    cta_universe = {strip_version(g) for g in cta_unfiltered_gene_ids()} | cta_filtered
 
     if identities is None:
-        identities = cta_annotation_gene_identities(genome)
+        identities = _annotation_identities(genome, cta_universe)
     verified = {
         record.source_gene_id: record.canonical_gene_id
         for record in identities
@@ -190,7 +211,10 @@ def cta_specific_9mer_counts(*, k: int = DEFAULT_K, refresh: bool = False) -> pd
             "no usable human Ensembl release with protein sequences installed — run "
             "`pyensembl install --release 111 --species homo_sapiens`"
         )
-    identities = cta_annotation_gene_identities(genome)
+    cta_universe = {strip_version(g) for g in cta_unfiltered_gene_ids()} | {
+        strip_version(g) for g in cta_gene_ids()
+    }
+    identities = _annotation_identities(genome, cta_universe)
     fp = _cta_set_fingerprint(identities)
     key = (k, genome.release, fp)
     cache = _derived_cache_dir() / f"cta_specific_{k}mers_r{genome.release}_{fp}.csv"
