@@ -10,8 +10,9 @@
   "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
   "docs/audits/target-selection-20261110/rebuild/revised-tissue-gate-inputs.json": "667e757e7889b1e72c125e66b6f07997f444f436a3e5e122385c17cecc99488c",
   "docs/audits/target-selection-20261110/rebuild/revised-tissue-gates.csv": "b8314c33881065f2adb764082421f88296fab51a22e0229cf4118263f327e0a9",
-  "oncoref/data/rare-cell-evidence.csv.gz": "588137481585770a892b3783bcdd6b09281f8f13452ed3e231859aecf80a1a6e",
-  "oncoref/data/rare-cell-evidence.json": "c1701af90eef0570459fee69640d7bffd1ee85022b589c4907f103e14e22bd89",
+  "oncoref/data/rare-cell-evidence.csv.gz": "cdfa7cef0fcf0c40f0ae9257f8a8b8725a09bae2425c463232f0d27a9272b6a3",
+  "oncoref/data/rare-cell-evidence.json": "361411e7d634f9e9ff270516c5a7d3e4fd21881a99c6c805faf64adcd6a48fec",
+  "oncoref/data/rare-cell-attribution-reviews.json": "bc0e0d5dd53d03866f02656d3c64a5aa84d4b3ef8f3c1f1a391645d037bdab75",
   "oncoref/data/normal-expression-literature.json": "84aca72d34897bc01783a55fe66cb5e8e11871ca1e3708f056694c420b355f00",
   "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",
   "reference:rna_tissue_hpa:v23": "52bd4b1771388372187a6edf8c7d58b68b5074772c83b46be7b71ee02e074b4d",
@@ -108,8 +109,8 @@
   "oncoref/samples.py": "d7bbc28bf0c8a9930e788b4a30071e9002a7ca589f0282b9a9d84146350d7cd7",
   "docs/audits/cta-expanded-funnel-20261027/tumor-union/cohort-availability.csv": "dbaf442e5259940403f1cc809514a7808541f103e1436c5543b3d0f1b1d81443",
   "oncoref/data/cta-literature.json.gz": "110c01134ddbef070d1f286fc907e18b24f774df8edd90a0661e0b2cc3eed5f9",
-  "oncoref/data/cta-literature-followup.json": "814e49c83a931c06aecf92c096a464613a80c70cc79889222c2d147f380ce268",
-  "oncoref/data/cta-selection-audit.json": "55c4ce34a07a6e7eb41f1e1f697ccf565c2aedcab2a6782ee0315ffcd0421334",
+  "oncoref/data/cta-literature-followup.json": "8059a34f5cdc211d8f2c6bc64292aa5f68372f7046c38b89bd9c7bc161f872ed",
+  "oncoref/data/cta-selection-audit.json": "eefe28a37ffc5a4ec297006798a06df7d6c506c421a95f8bba01d5e1c6ec7832",
   "oncoref/data/cta-publication-membership.csv": "690adeecfff44d13d40fa7ec6ecfc74193adbf9b9286e54e9c498bae23e9f546",
   "oncoref/data/cta-publication-sources.csv": "f62e6edfadcfe039ac8e05e7cf6f4029a0289fde8b609c3c1b7a2519967c2f04"
 }

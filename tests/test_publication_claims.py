@@ -190,6 +190,11 @@ def test_unscreened_adult_home_requires_a_scoped_human_claim():
     assert "olfactory epithelium" in set(
         literature.paper_gene_claims("GFY").unscreened_adult_home.dropna()
     )
+    sp7_claims = literature.paper_gene_claims("SP7").set_index("source_id")
+    assert sp7_claims.loc["10.18632/aging.203452", "unscreened_adult_home"] == "bone"
+    assert pd.isna(sp7_claims.loc["10.1038/s41467-022-28318-4", "unscreened_adult_home"])
+    assert "functional_context" in sp7_claims.loc["10.1038/s41467-022-28318-4", "allowed_uses"]
+    assert "bone" in target_selection.UNMEASURED_HOME_TISSUES
     claim["unscreened_adult_home"] = "typo"
     with pytest.raises(ValueError, match="canonical unscreened tissue"):
         literature.validate_publications(ledger)

@@ -1,6 +1,6 @@
 {
   "schema": "oncoref.rare-cell-evidence",
-  "policy_id": "oncoref.target-selection.2026-11-20.1",
+  "policy_id": "oncoref.target-selection.2026-11-20.2",
   "census_release": "2025-11-08",
   "filter": "is_primary_data == True and disease == 'normal' and tissue_type == 'tissue'",
   "count_manifest_sha256": "65410b1a69004f446314461bb3d6636959df0530752b13f206a1ca75278803ba",
@@ -187,15 +187,15 @@
   ],
   "status_counts": {
     "below_screen": 1373,
-    "unresolved": 261,
-    "established": 126,
+    "unresolved": 259,
+    "established": 128,
     "unassessed": 36,
     "dismissed": 8
   },
   "action_counts": {
     "none": 1417,
-    "review": 261,
-    "unsafe": 126
+    "review": 259,
+    "unsafe": 128
   },
   "limitations": [
     "A gene-count matrix cannot check alignment, strand or exonic support; the mapping-risk flags are reference properties, not read-level checks",
@@ -203,7 +203,8 @@
     "Known consortium collections and integrated-atlas donor overlaps are deduplicated, but undocumented donor re-use across unrelated public studies cannot be ruled out",
     "Proteins that were Unsafe for another reason were not extracted"
   ],
-  "sha256": "588137481585770a892b3783bcdd6b09281f8f13452ed3e231859aecf80a1a6e",
+  "sha256": "cdfa7cef0fcf0c40f0ae9257f8a8b8725a09bae2425c463232f0d27a9272b6a3",
+  "attribution_reviews_sha256": "bc0e0d5dd53d03866f02656d3c64a5aa84d4b3ef8f3c1f1a391645d037bdab75",
   "regrade": {
     "inputs_receipt": "docs/audits/normal-cell-atlas-20261110/rare-cell/regrade-inputs.json",
     "sha256": "16f22723456a7f9ffa537c44b7c368188c57b25a69287f228fec389ceeb7d7ac",

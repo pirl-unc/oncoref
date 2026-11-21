@@ -1,7 +1,7 @@
 step,result,removed,remaining
 "Bulk, cluster, immune, protein or reviewed normal exclusion",Unsafe,18125,1768
-Established rare-cell RNA or published normal expression only,Unsafe,122,1646
-"Incomplete coverage, translation, or paralog review",Other:Review,736,910
+Established rare-cell RNA or published normal expression only,Unsafe,124,1644
+"Incomplete coverage, translation, or paralog review",Other:Review,734,910
 Sequence overlap with Unsafe proteins,Other:Sequence,48,862
 "No qualifying expression, target maximum or Disposable cap",Other:Expression,249,613
-Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness,Other:Unscreened tissue,88,525
+Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness,Other:Unscreened tissue,89,524

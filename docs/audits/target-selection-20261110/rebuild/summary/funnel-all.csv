@@ -3,11 +3,11 @@ All coding protein groups,0,19893,
 Bulk tissue RNA,17507,2386,17507.0
 Single-cell clusters (HPA scRNA),436,1950,17053.0
 Sorted immune subsets,96,1854,12880.0
-Donor-replicated rare-cell RNA,104,1750,126.0
-Normal-tissue protein (IHC),50,1700,10160.0
-Curated normal-tissue literature,49,1651,51.0
-Adult cornea scRNA,5,1646,12095.0
-"Incomplete coverage, translation, or paralog review",736,910,
+Donor-replicated rare-cell RNA,106,1748,128.0
+Normal-tissue protein (IHC),50,1698,10160.0
+Curated normal-tissue literature,49,1649,51.0
+Adult cornea scRNA,5,1644,12095.0
+"Incomplete coverage, translation, or paralog review",734,910,
 Sequence overlap with Unsafe proteins,48,862,
 Below 10× threshold or Disposable > 32,249,613,
-Unscreened adult normal organ,88,525,
+Unscreened adult normal organ,89,524,

@@ -119,6 +119,7 @@ oncoref = [
     "data/cta-literature.json.gz",
     "data/cta-literature-followup.json",
     "data/normal-expression-literature.json",
+    "data/rare-cell-attribution-reviews.json",
     "data/data-file-renames.json",
     "data/nose-skin-reference.json",
     "data/rna-ihc-calibration.json",

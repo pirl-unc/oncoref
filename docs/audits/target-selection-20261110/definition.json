@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-20.1",
+  "policy_id": "oncoref.target-selection.2026-11-20.2",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -42,7 +42,8 @@
       "nasal mucosa",
       "taste bud",
       "hair follicle",
-      "dental pulp"
+      "dental pulp",
+      "bone"
     ],
     "recorded_by": "A family rule, a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference.",
     "effect": "Insufficient home-tissue coverage blocks cancer admission. Reproductive enrichment can independently qualify RA."

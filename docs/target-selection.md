@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-20.1`: **327 CTA** · **70 Cancer Antigen only** · **128 Reproductive Antigen only** · **1,121 Other** · **18,247 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-20.2`: **327 CTA** · **69 Cancer Antigen only** · **128 Reproductive Antigen only** · **1,120 Other** · **18,249 Unsafe**.
 
 [Antigen whitepaper](antigen-whitepaper.md) ·
 [Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) ·
@@ -29,10 +29,10 @@ Both CA and RA independently require **≥10 × H₀**, where
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
-| CA | At least one QC-passing tumor sample ≥10 × H₀ | 397 |
+| CA | At least one QC-passing tumor sample ≥10 × H₀ | 396 |
 | RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 455 |
 | CTA | Both routes | 327 |
-| CA∪RA | Either route | 525 |
+| CA∪RA | Either route | 524 |
 
 The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 
@@ -103,8 +103,8 @@ retains sources, adjudication and supersession history.
 
 ## Home tissue the panels do not resolve
 
-Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp are not
-resolved by the native-TPM comparison panel. A protein with a documented home in one of these tissues can qualify as RA. CA and CTA require coverage of that home. A protein that reaches the cancer threshold alone is classified Other:Unscreened tissue.
+Olfactory epithelium, nasal mucosa, taste buds, hair follicle, dental pulp and mineralized
+bone are not resolved by the native-TPM comparison panel. A protein with a documented home in one of these tissues can qualify as RA. CA and CTA require coverage of that home. A protein that reaches the cancer threshold alone is classified Other:Unscreened tissue.
 
 ## Tumor quality and replication
 

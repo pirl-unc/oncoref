@@ -809,6 +809,7 @@
           "scope": "SP7 RNA was enriched in the O2 mature osteoblast cluster.",
           "taxonomy_id": 9606,
           "context": "Primary femoral-head osteoblasts from one 31-year-old man with osteoarthritis and osteopenia",
+          "unscreened_adult_home": "bone",
           "assay": "Single-cell RNA sequencing of freshly isolated cells",
           "source_location": "Supplementary Table 3, row 528, O2 versus other osteoblast clusters",
           "evidence_types": [
@@ -818,8 +819,8 @@
             "normal_tissue_review"
           ],
           "eligible_for_coverage": true,
-          "limitations": "One surgical donor with bone disease. The within-study differential expression statistic cannot set a healthy bulk TPM ceiling.",
-          "reviewed_on": "2026-11-18",
+          "limitations": "One surgical donor with bone disease. The within-study differential expression statistic cannot set a healthy bulk TPM ceiling, while mineralized bone and adult osteoblasts are absent from GTEx, HPA bulk/scRNA, HPA 37-tissue normal IHC (bone marrow is hematopoietic aspirate; HPA073422 reports uncertain Low skin staining without mineralized-bone coverage) and CELLxGENE normal panels, leaving osteosarcoma (SARC_OS) tumor peaks unscreened against SP7's adult normal home.",
+          "reviewed_on": "2026-11-20",
           "provenance": {
             "accession": "GSE147390",
             "dataset_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE147390",
@@ -827,6 +828,46 @@
               "human_primary_osteoblast_markers"
             ],
             "sample": "GSM4429895"
+          }
+        }
+      ]
+    },
+    {
+      "source_id": "10.1038/s41467-022-28318-4",
+      "citation": "Lui et al., 2022",
+      "title": "A neomorphic variant in SP7 alters sequence specificity and causes a high-turnover bone disorder",
+      "url": "https://doi.org/10.1038/s41467-022-28318-4",
+      "roles": [
+        "function",
+        "normal_tissue"
+      ],
+      "gene_list_scope": "Human genetic and functional osteoblast specificity analysis of SP7.",
+      "gene_claims": [
+        {
+          "gene_ids": [
+            "ENSG00000170374"
+          ],
+          "protein": "SP7",
+          "reported_name": "SP7",
+          "reported_as": "Germline SP7 p.S309W alters DNA-binding specificity in osteoblastic lineage cells and causes a human high-turnover sclerosing bone disorder, complementing recessive SP7 osteogenesis imperfecta phenotypes.",
+          "scope": "Human genetic bone-remodeling phenotype and osteoblast regulatory function.",
+          "taxonomy_id": 9606,
+          "context": "Pediatric/germline human high-turnover bone disorder and osteoblast regulatory assays",
+          "assay": "Clinical genetics, ChIP-seq and osteoblast transcriptional reporter assays",
+          "source_location": "Results and PMC8816926 clinical/mechanistic characterization",
+          "evidence_types": [
+            "regulatory_assay"
+          ],
+          "allowed_uses": [
+            "functional_context",
+            "normal_tissue_review"
+          ],
+          "eligible_for_coverage": true,
+          "limitations": "Germline developmental and bone-turnover phenotypes establish lineage function rather than measured adult human normal-tissue RNA or protein abundance.",
+          "reviewed_on": "2026-11-20",
+          "provenance": {
+            "pmc": "PMC8816926",
+            "pmid": "35027730"
           }
         }
       ]

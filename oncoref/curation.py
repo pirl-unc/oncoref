@@ -151,6 +151,7 @@ def write_receipt(root):
         "oncoref/data/reference-releases.json",
         "oncoref/data/normal-cell-sources.json",
         "oncoref/data/cta-literature-followup.json",
+        "oncoref/data/rare-cell-attribution-reviews.json",
         "oncoref/tissue_tiers.py",
         "oncoref/normal_tissues.py",
         "scripts/replay_cta_selection.py",

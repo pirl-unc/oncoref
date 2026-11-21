@@ -52,7 +52,7 @@ Every protein group follows a deterministic decision tree with strict precedence
 
 *Figure 4.* Sequential attrition from **$n** protein groups to **$union** retained candidates, assigning each excluded protein once at its first failing gate. The broken x-axis above 3,000 keeps post-bulk filters readable. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-all.csv).
 
-Both enrichment routes apply the same threshold—**≥$fold×** above **H₀ = max(Normal N, Disposable D, $floor TPM)**—across **$assessed** protein groups with complete healthy-panel TPM (**$shared** eligible groups plus **81** `Other:Review` groups with complete bulk panels). Gold points above the dotted line clear the fold cutoff numerically but stay in `Other:Review` or `Other:Unscreened tissue` (`CTAG2`, `GFY`).
+Both enrichment routes apply the same threshold—**≥$fold×** above **H₀ = max(Normal N, Disposable D, $floor TPM)**—across **$assessed** protein groups with complete healthy-panel TPM (**$shared** eligible groups plus **79** `Other:Review` groups with complete bulk panels). Gold points above the dotted line clear the fold cutoff numerically but stay in `Other:Review` or `Other:Unscreened tissue` (`CTAG2`, `GFY`, `SP7`).
 
 ![Cancer enrichment relative to the healthy adult baseline](audits/target-selection-20261110/rebuild/summary/cancer-enrichment.png)
 
