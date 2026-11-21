@@ -34,7 +34,7 @@ from .cancer_types import (
     format_cancer_code_label,
     resolve_cancer_type,
 )
-from .cta import cta_gene_id_to_name, cta_gene_ids
+from .coverage import cta_gene_id_to_name, cta_gene_ids
 from .expression import (
     available_percentile_cohorts,
     cohort_gene_percentiles,

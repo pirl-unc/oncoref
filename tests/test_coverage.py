@@ -85,6 +85,39 @@ def test_resolve_gene_set_from_file(tmp_path):
     assert label == "panel"
     assert ids == {"ENSG_A", "ENSG_B"}
 
+    # Bare headerless one-gene-per-line CSV/TXT must NOT drop its first row!
+    bare = tmp_path / "bare.csv"
+    bare.write_text("TP53\nENSG00000146648.16\n")
+    bare_label, bare_ids = coverage.resolve_gene_set(str(bare))
+    assert bare_label == "bare"
+    assert bare_ids == {"ENSG00000141510", "ENSG00000146648"}
+
+
+def test_default_cta_wiring_uses_canonical_target_selection_and_resolves_antigen_sets():
+    from oncoref import antigen_sets, peptides, plots, target_selection
+
+    ts = target_selection.results()
+    unsafe_ids = {
+        g
+        for raw in ts.loc[ts.category.eq("Unsafe"), "member_gene_ids"]
+        for g in __import__("json").loads(raw)
+    }
+    expected_cta = set(antigen_sets.gene_ids("CTA"))
+    assert coverage.cta_gene_ids() == expected_cta
+    assert plots.cta_gene_ids() == expected_cta
+    assert peptides.cta_gene_ids() == expected_cta
+    assert expected_cta.isdisjoint(unsafe_ids)
+    assert peptides.cta_unfiltered_gene_ids() == set(antigen_sets.gene_ids("CA|RA"))
+    assert peptides.cta_unfiltered_gene_ids().isdisjoint(unsafe_ids)
+
+    for token in ("cta", "CA", "RA", "CA|RA", "CTA-M", "CTA-F", "ERA"):
+        label, resolved = coverage.resolve_gene_set(token)
+        assert label.upper() == token.upper()
+        assert resolved == set(antigen_sets.gene_ids(label))
+
+    legacy_label, legacy_ids = coverage.resolve_gene_set("legacy-cta")
+    assert legacy_label == "legacy-cta" and len(legacy_ids) > len(expected_cta)
+
 
 def test_patient_coverage_counts_gene_set_file(patched, tmp_path):
     panel = tmp_path / "panel.csv"

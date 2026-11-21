@@ -26,24 +26,48 @@ prevalence:
 
 All operate on :func:`oncoref.expression.per_sample_expression` (clean TPM), so
 they need the cohort's per-sample matrix fetched (see :mod:`oncoref.source_matrices`).
-The default gene panel is the expressed CTA set (:func:`oncoref.cta.cta_gene_ids`).
+The default gene panel is the current ``target_selection`` CTA set
+(:func:`oncoref.antigen_sets.gene_ids`).
 """
 
 from __future__ import annotations
 
+import json
 from collections.abc import Iterable
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from . import antigen_sets
 from .cancer_genes import cancer_key_genes_df, cancer_type_genes_df
 from .cancer_types import format_cancer_code_label, resolve_cancer_type
-from .cta import cta_gene_id_to_name, cta_gene_ids
 from .expression import per_sample_expression
 from .expression_engine import ID_COLUMNS as _ANTIGEN_ID_COLS
 from .gene_families import gene_families, gene_family_ids, housekeeping_gene_ids
-from .gene_ids import canonical_gene_space, resolve_symbol, symbol_synonyms
+from .gene_ids import canonical_gene_space, canonical_gene_symbol, resolve_symbol, symbol_synonyms
+
+
+def cta_gene_ids() -> frozenset[str]:
+    """Canonical member Ensembl gene IDs for current ``target_selection`` CTAs."""
+    return frozenset(_clean_id(g) for g in antigen_sets.gene_ids("CTA"))
+
+
+def cta_gene_id_to_name() -> dict[str, str]:
+    """``{unversioned CTA gene id -> canonical display symbol}`` for current CTAs."""
+    from . import target_selection
+
+    group_labels: dict[str, str] = {}
+    ctas = target_selection.results(category="CTA")
+    for row in ctas[["protein_group_label", "member_gene_ids"]].itertuples(index=False):
+        for gid in json.loads(row.member_gene_ids):
+            group_labels[_clean_id(gid)] = str(row.protein_group_label)
+    out: dict[str, str] = {}
+    for gid in sorted(cta_gene_ids()):
+        clean = _clean_id(gid)
+        out[clean] = canonical_gene_symbol(clean) or group_labels.get(clean, clean)
+    return out
+
 
 #: Default clean-TPM threshold for "expressed in a patient". 10 TPM is a common
 #: cut for a confidently-expressed transcript.
@@ -88,9 +112,9 @@ def _symbol_to_id_map() -> dict[str, str]:
     """Case-insensitive symbol/synonym -> canonical ENSG, using bundled data only."""
     df = canonical_gene_space()
     out = {
-        str(sym).upper(): _clean_id(gid)
+        str(sym).strip().upper(): _clean_id(gid)
         for gid, sym in zip(df["ensembl_gene_id"], df["symbol"])
-        if str(gid).strip() and str(sym).strip()
+        if not pd.isna(gid) and not pd.isna(sym) and str(gid).strip() and str(sym).strip()
     }
     # Keep canonical symbols authoritative, then add NCBI synonym aliases when the
     # official symbol exists in the canonical space.
@@ -136,35 +160,69 @@ def _ids_from_frame(df: pd.DataFrame, *, symbol_col: str = "Symbol") -> set[str]
 
 
 def _gene_set_from_file(path: Path) -> tuple[str, set[str]]:
+    # Read row 0 as data unless it matches a recognized header column name; bare
+    # one-gene-per-line TXT/CSV/TSV panels otherwise silently drop their first gene.
     suffix = path.suffix.lower()
     sep = "\t" if suffix in {".tsv", ".tab"} else ","
-    if suffix == ".txt":
-        df = pd.read_csv(path, header=None, names=["Symbol"])
-    else:
+    try:
+        raw = pd.read_csv(path, header=None, dtype=str, keep_default_na=False, sep=sep)
+    except (pd.errors.EmptyDataError, pd.errors.ParserError):
         try:
-            df = pd.read_csv(path, sep=sep)
-        except pd.errors.ParserError:
-            df = pd.read_csv(path, header=None, names=["Symbol"])
-    if len(df.columns) == 1 and df.columns[0] not in {"Symbol", "Ensembl_Gene_ID"}:
-        df = df.rename(columns={df.columns[0]: "Symbol"})
-    ids = _ids_from_frame(df)
+            raw = pd.read_csv(path, header=None, dtype=str, keep_default_na=False)
+        except pd.errors.EmptyDataError as exc:
+            raise ValueError(
+                f"gene-set file {path} did not contain resolvable Ensembl IDs/symbols"
+            ) from exc
+    if raw.empty:
+        raise ValueError(f"gene-set file {path} did not contain resolvable Ensembl IDs/symbols")
+    headers = [str(v).strip() for v in raw.iloc[0].tolist()]
+    lower_headers = [h.lower() for h in headers]
+    recognized = {"ensembl_gene_id", "symbol", "gene", "gene_id", "gene_symbol"}
+    if any(value in recognized for value in lower_headers):
+        df = raw.iloc[1:].copy()
+        df.columns = headers
+        col_map = {}
+        for col in df.columns:
+            cl = col.lower()
+            if cl in {"ensembl_gene_id", "gene_id"} and "Ensembl_Gene_ID" not in col_map.values():
+                col_map[col] = "Ensembl_Gene_ID"
+            elif cl in {"symbol", "gene", "gene_symbol"} and "Symbol" not in col_map.values():
+                col_map[col] = "Symbol"
+        df = df.rename(columns=col_map)
+        ids = _ids_from_frame(df)
+    else:
+        tokens = [str(v).strip() for v in raw.iloc[:, 0].tolist() if str(v).strip()]
+        ids = _symbols_to_ids(tokens)
     if not ids:
         raise ValueError(f"gene-set file {path} did not contain resolvable Ensembl IDs/symbols")
     return path.stem, ids
+
+
+_ANTIGEN_SET_LOOKUP = {s.lower(): s for s in antigen_sets.CANDIDATE_SETS}
 
 
 def resolve_gene_set(name: str) -> tuple[str, set[str]]:
     """Resolve a plot gene-set token to ``(label, unversioned Ensembl IDs)``.
 
     Supported tokens mirror pirlygenes where oncoref owns the data:
-    ``cta``, ``mito``/``mitochondrial``, ``housekeeping``, ``family:<name>``,
+    any current :data:`oncoref.antigen_sets.CANDIDATE_SETS` token (``cta``, ``ca``,
+    ``ra``, ``ca|ra``, ``mra``, ``fra``, ``era``, ``sra``, ``cta-m``, ``cta-f``,
+    ``cta-e``, ``cta-mf``), ``legacy-cta`` (historical 1.9.15 HPA snapshot),
+    ``mito``/``mitochondrial``, ``housekeeping``, ``family:<name>``,
     ``therapy:<agent_class>``, ``lineage:<cancer_code>``, or a CSV/TSV/TXT file
-    with ``Ensembl_Gene_ID`` and/or ``Symbol``.
+    with ``Ensembl_Gene_ID`` and/or ``Symbol`` (or bare one-gene-per-line tokens).
     """
     token = str(name).strip()
     low = token.lower()
     if low == "cta":
         return "CTA", {_clean_id(g) for g in cta_gene_ids()}
+    if low in _ANTIGEN_SET_LOOKUP:
+        canonical = _ANTIGEN_SET_LOOKUP[low]
+        return canonical, {_clean_id(g) for g in antigen_sets.gene_ids(canonical)}
+    if low == "legacy-cta":
+        from . import cta as legacy_cta
+
+        return "legacy-cta", {_clean_id(g) for g in legacy_cta.cta_gene_ids()}
     if low in {"mito", "mitochondrial"}:
         return "mitochondrial", set(gene_family_ids("mitochondrial"))
     if low == "housekeeping":
