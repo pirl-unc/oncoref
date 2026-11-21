@@ -12,7 +12,6 @@ See docs/species-cta-evidence.md for source acquisition and identity scope.
 from __future__ import annotations
 
 import argparse
-import gzip
 import hashlib
 import json
 from pathlib import Path
@@ -326,76 +325,6 @@ def build(
     return normalize_cta_snapshot(CTAEvidenceSnapshot.create(payload))
 
 
-def refresh_tables():
-    """Refresh packaged native views without replaying historical human decisions."""
-    from build_cta_selection_audit import TABLE_COLUMNS, membership_tables, native_assessment
-    from build_cta_selection_release import mouse_selection_metadata, source_inventory
-
-    package = DATA.parent.parent
-    inventory = package / "cta-selection-sources.csv"
-    source_inventory().to_csv(inventory, index=False)
-    path = package / "cta-selection.json"
-    selection = json.loads(path.read_text())
-    selection["data_sha256"][inventory.name] = hashlib.sha256(inventory.read_bytes()).hexdigest()
-    selection["species"]["mouse"] = mouse_selection_metadata()
-    selection["inputs"]["oncoref/data/species/mouse/cta-evidence.json"] = hashlib.sha256(
-        (DATA / "cta-evidence.json").read_bytes()
-    ).hexdigest()
-    selection["inputs"]["oncoref/data/species/mouse/cta-curation.json"] = hashlib.sha256(
-        (DATA / "cta-curation.json").read_bytes()
-    ).hexdigest()
-    selection["inputs"]["oncoref/data/species/mouse/assets.json"] = hashlib.sha256(
-        (DATA / "assets.json").read_bytes()
-    ).hexdigest()
-    path.write_text(json.dumps(selection, indent=2) + "\n")
-    audit = {
-        "taxon_id": 10090,
-        "status": "unassessed",
-        "policy_id": None,
-        **membership_tables("mouse"),
-        **native_assessment("mouse"),
-    }
-    for row in audit["funnel"]:
-        if row["stage"] == "Reference and assay identity":
-            row["note"] = (
-                "Complete Ensembl 115 GRCm39 annotated host reference; "
-                "historical BALB/c and DBA/2 assays do not establish C57BL/6J expression"
-            )
-    audit["criteria"] = [
-        {
-            "gate_id": None,
-            "stage": row["stage"],
-            "status": row["status"],
-            "rule": row["note"],
-            "source_ids": [],
-        }
-        for row in audit["funnel"]
-    ]
-    assert all(
-        set(row) == set(columns) for key, columns in TABLE_COLUMNS.items() for row in audit[key]
-    )
-    name = "cta-selection-audit-mouse.json.gz"
-    content = gzip.compress(
-        json.dumps(audit, allow_nan=False, separators=(",", ":")).encode(), mtime=0
-    )
-    (package / name).write_bytes(content)
-    path = package / "cta-selection-audit.json"
-    receipt = json.loads(path.read_text())
-    receipt["files"][name] = hashlib.sha256(content).hexdigest()
-    receipt["native_updates"] = {
-        "mouse": {
-            str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in (
-                Path(__file__),
-                DATA / "assets.json",
-                DATA / "cta-evidence.json",
-                DATA / "cta-curation.json",
-            )
-        }
-    }
-    path.write_text(json.dumps(receipt, indent=2) + "\n")
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -412,21 +341,12 @@ def main():
         help="Use pinned source SHA-256s from cta-curation.json when raw primary XMLs are not staged locally",
     )
     parser.add_argument("--output", type=Path, default=DATA / "cta-evidence.json")
-    parser.add_argument(
-        "--refresh-tables",
-        action="store_true",
-        help="Refresh packaged selection inventory and mouse audit",
-    )
     args = parser.parse_args()
     if args.source_dir is None and not args.from_curation_receipt:
         parser.error("Provide --source-dir or --from-curation-receipt")
-    if args.refresh_tables and args.output.resolve() != (DATA / "cta-evidence.json").resolve():
-        parser.error("--refresh-tables requires the packaged snapshot output")
     snapshot = build(args.source_dir, ensembl_dir=args.ensembl_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(snapshot.as_dict(), indent=2, sort_keys=True) + "\n")
-    if args.refresh_tables:
-        refresh_tables()
     print(snapshot.snapshot_id)
 
 

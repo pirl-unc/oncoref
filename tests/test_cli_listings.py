@@ -107,11 +107,20 @@ def test_empty_species_and_invalid_species_have_distinct_results(command, capsys
 
 def test_mouse_lists_packaged_evidence_without_claiming_expression_matrices(capsys):
     assert cli.main(["data", "list", "--species", "mouse", "--json"]) == 0
-    (row,) = json.loads(capsys.readouterr().out)
-    assert row["name"] == "cta-evidence" and row["group"] == "antigens"
+    rows = json.loads(capsys.readouterr().out)
+    assert {r["group"] for r in rows} == {"antigens", "references"}
+    assert {r["name"] for r in rows} == {
+        "cta-evidence",
+        "ensembl115-gtf",
+        "ensembl115-protein",
+        "ensembl115-rna",
+        "ensembl115-ncrna",
+    }
+    row = next(r for r in rows if r["name"] == "cta-evidence")
+    assert row["group"] == "antigens"
     assert row["held"] == "wheel" and row["available"] is True
     assert row["taxon_id"] == 10090
-    assert row["source_version"] == "2026-10-29.1"
+    assert row["source_version"] == "2026-11-20.1"
 
 
 def test_filters_and_empty_selection(capsys):

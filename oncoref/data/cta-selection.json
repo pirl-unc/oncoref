@@ -105,22 +105,22 @@
         "schema": "openvax.reference",
         "schema_version": 1,
         "taxon_id": 10090,
-        "assembly_accession": "GCA_000001635.9",
-        "annotation_source": "Ensembl",
-        "annotation_release": "115",
-        "source_version": "Ensembl-115",
+        "assembly_accession": "GCF_000001635.27",
+        "annotation_source": "NCBI RefSeq",
+        "annotation_release": "RS_2024_02",
+        "source_version": "NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
         "identifier_namespaces": {
-          "gene": "Ensembl gene",
-          "protein": "Ensembl protein",
-          "transcript": "Ensembl transcript"
+          "gene": "NCBI Gene",
+          "protein": "RefSeq",
+          "transcript": "RefSeq"
         },
         "content_provenance": {
-          "gtf": "fa45f9fed56e85d5c83e5912f88d76e277729da0761f99e33e4c88d4b08a9ec0",
-          "ncrna": "f778c212c11e8a8b059a2412c81f52f7ae0bcf708b717126ea92a19eae8c7127",
-          "protein": "560dddca2516fbc6649df6bc95c28a8d1f9e5019d5ae0cf6071a0360f482aeb0",
-          "rna": "6f394d606bda651bcc37211a02fd9b3c8ef8e82b061a57b863195d4bfa2237ed"
+          "gene_record_subset": "a2ee9d2660cf52f3ea63c22ff0071ce120efd27ff1f0ba58ee5b2ad5bfda532c",
+          "product_report_subset": "6cd41d87b9b4bb7e33de0d0821dc3f697288b2b2b79313a3dc62e7a4b9616801",
+          "protein": "7f7c4754ccdf856de3499a0561ca959fedcaa658dea06583d0c095707e20f64d",
+          "rna": "0300f700336da1950718ab2905b875a805eb1fa48eec5c6957ab4726eab2d643"
         },
-        "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b"
+        "reference_id": "openvax:reference:v1:sha256:967f97513d2e7dc3619cdf77afc936d6ae9e2e1a5d2b2a3c228b3e757998b76d"
       },
       "limitations": [
         "One P1A nomination; not a mouse CTA panel, genome-wide screen or quantitative admission policy.",
@@ -128,7 +128,7 @@
         "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
         "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
         "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
-        "Mapped against the complete Ensembl 115 GRCm39 annotated host inventory (GCA_000001635.9); historical BALB/c and DBA/2 assay-to-reference sequence equivalence remains unresolved, and optional ncORF catalogues remain separate.",
+        "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved.",
         "No quantitative mouse selection policy; unassessed nominations have null categories.",
         "Literature-identified atlases remain unintegrated; no complete normal panel or strain equivalence is inferred."
       ]
@@ -138,8 +138,7 @@
     "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz": "b4fd7001e6e302133b439b3e21c65277bf6b2b53e2826724350866b624c400aa",
     "report_manifest": "6ad02f6feeadffe87769776d11c83b7b2dad440d4faf9fe7a939ec2296c94fd9",
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
-    "oncoref/data/species/mouse/cta-curation.json": "78fb3b8a04a47b90291583793864e63807ecdffa76a95741581ededb3a93e67d",
-    "oncoref/data/species/mouse/cta-evidence.json": "7933bb71c1e094fe9c8b54c58b7bc4ee184deb127641af36b29a4d2533ae8e34",
-    "oncoref/data/species/mouse/assets.json": "ff32335dd1b021ad9358ef09a0201a18a22f10de52f31b188a5eedbd14dd840f"
+    "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
+    "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
   }
 }
