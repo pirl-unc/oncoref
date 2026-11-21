@@ -37,8 +37,12 @@ cta_evidence = antigens.cta_evidence
 cta_gene_ids = antigens.cta_gene_ids
 cta_snapshot = antigens.cta_snapshot
 cta_tissue_annotations = antigens.cta_tissue_annotations
+evaluate_target_catalog = antigens.evaluate_target_catalog
+host_compartments = antigens.host_compartments
 normal_tissue_scopes = antigens.normal_tissue_scopes
 resolve_normal_tissue = antigens.resolve_normal_tissue
+target_selection = antigens.target_selection
+target_selection_coverage = antigens.target_selection_coverage
 
 datasets = (
     bgee_srp009687,
@@ -67,10 +71,12 @@ __all__ = [
     "cta_tissue_annotations",
     "datasets",
     "doga",
+    "evaluate_target_catalog",
     "expression",
     "governance",
     "groups",
     "gse304066",
+    "host_compartments",
     "inventory",
     "legacy",
     "normal_tissue_scopes",
@@ -80,4 +86,6 @@ __all__ = [
     "references",
     "resolve_normal_tissue",
     "species",
+    "target_selection",
+    "target_selection_coverage",
 ]

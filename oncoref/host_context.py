@@ -21,7 +21,25 @@ POLICY_ID = "oncoref.host-selection.2026-11-18.2"
 COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
 
 
-def normalize(values) -> tuple[str, ...]:
+def _compartments_for_species(species="human") -> tuple[str, ...]:
+    from .species import resolve_species
+
+    resolved = resolve_species(species)
+    if resolved.taxon_id == 9606:
+        return COMPARTMENTS
+    from .species_target_selection import anatomy_for_species
+
+    return anatomy_for_species(resolved).reproductive_compartments
+
+
+def normalize(values, *, species="human") -> tuple[str, ...]:
+    from .species import resolve_species
+
+    resolved = resolve_species(species)
+    if resolved.taxon_id != 9606:
+        from .species_target_selection import anatomy_for_species
+
+        return anatomy_for_species(resolved).normalize_compartments(values)
     if not isinstance(values, tuple):
         raise ValueError("Tissue choices must be tuples of names")
     found = set()
@@ -53,10 +71,17 @@ class HostContext:
     max_ntpm: float = 4.0
     assumptions: tuple[str, ...] = ()
     protect: tuple[str, ...] = ()
+    species: str = "human"
 
     def __post_init__(self):
+        from .species import resolve_species
+
+        resolved_species = resolve_species(self.species)
+        object.__setattr__(self, "species", resolved_species.name)
         for field in ("absent", "accept_loss", "protect"):
-            object.__setattr__(self, field, normalize(getattr(self, field)))
+            object.__setattr__(
+                self, field, normalize(getattr(self, field), species=resolved_species)
+            )
         if set(self.absent) & set(self.accept_loss):
             raise ValueError("A compartment cannot be both absent and accepted for loss")
         if set(self.protect) & (set(self.absent) | set(self.accept_loss)):
@@ -91,7 +116,7 @@ class HostContext:
             else "Protect"
             if c in self.protect
             else "Not protected"
-            for c in COMPARTMENTS
+            for c in _compartments_for_species(self.species)
         }
 
 
@@ -103,10 +128,15 @@ def from_legacy(
     allow_tissues=(),
     protect_tissues=(),
     absent_tissues=(),
+    species="human",
 ):
     """Translate compatibility arguments; retain every anatomy/state assumption."""
-    allow, protect, absent_override = map(
-        normalize, (allow_tissues, protect_tissues, absent_tissues)
+    from .species import resolve_species
+
+    resolved_species = resolve_species(species)
+    allow, protect, absent_override = (
+        normalize(values, species=resolved_species)
+        for values in (allow_tissues, protect_tissues, absent_tissues)
     )
     if (set(allow) & set(protect)) or (set(absent_override) & (set(allow) | set(protect))):
         raise ValueError("Compartment choices conflict")
@@ -118,12 +148,21 @@ def from_legacy(
         raise ValueError("Unknown host profile")
     if not any((profile != "all", pregnant, lactating, allow, protect, absent_override)):
         return None
+    if resolved_species.taxon_id == 9606:
+        female_tract = catalog.FEMALE_TRACT_COMPARTMENTS
+        male_accessory = catalog.MALE_ACCESSORY_COMPARTMENTS
+        lactating_comp = "lactating_breast"
+    else:
+        from .species_target_selection import anatomy_for_species
+
+        anat = anatomy_for_species(resolved_species)
+        female_tract = anat.female_tract_compartments
+        male_accessory = anat.male_accessory_compartments
+        lactating_comp = anat.mammary_compartments[0]
     absent, accepted, protected, notes = set(), set(), set(protect), []
     if profile in {"male-patient", "female-patient"}:
         opposite = (
-            (*catalog.FEMALE_TRACT_COMPARTMENTS, "ovary")
-            if profile == "male-patient"
-            else (*catalog.MALE_ACCESSORY_COMPARTMENTS, "testis")
+            (*female_tract, "ovary") if profile == "male-patient" else (*male_accessory, "testis")
         )
         absent.update(opposite)
         notes.append(
@@ -135,7 +174,7 @@ def from_legacy(
                 "Assumes no current pregnancy; does not assess future pregnancy during persistent treatment"
             )
         if not lactating and not pregnant:
-            absent.add("lactating_breast")
+            absent.add(lactating_comp)
             notes.append(
                 "Assumes inactive milk-secretory state, not an absent breast; state inference has limited sampling"
             )
@@ -143,12 +182,12 @@ def from_legacy(
         notes.append("Custom context: only explicitly requested compartments protected")
     notes.append("Unspecified reproductive compartments are not protected by this screen")
     if pregnant:
-        absent.difference_update(("embryo", "placenta", "lactating_breast"))
-        protected.update(("embryo", "placenta", "lactating_breast"))
+        absent.difference_update(("embryo", "placenta", lactating_comp))
+        protected.update(("embryo", "placenta", lactating_comp))
     if lactating:
-        absent.discard("lactating_breast")
-        protected.add("lactating_breast")
-        accepted.discard("lactating_breast")
+        absent.discard(lactating_comp)
+        protected.add(lactating_comp)
+        accepted.discard(lactating_comp)
     absent.difference_update((*allow, *protect))
     accepted.difference_update((*protect, *absent_override))
     absent.update(absent_override)
@@ -159,6 +198,7 @@ def from_legacy(
         accept_loss=tuple(accepted),
         protect=tuple(protected),
         assumptions=tuple(notes),
+        species=resolved_species.name,
     )
 
 
