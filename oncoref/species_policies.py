@@ -1,0 +1,598 @@
+# Licensed under the Apache License, Version 2.0.
+"""Declarative per-species parameterization of the OncoRef antigen-selection framework.
+
+Human (9606), dog (9615) and mouse (10090) share one mathematical and anatomical
+definition of Cancer Antigens (CA), Reproductive Antigens (RA), Cancer-Testis
+Antigens (CTA = CA & RA), and sex-restricted subsets (MRA/CTA-M, FRA/CTA-F,
+ERA/CTA-E, SRA/CTA-MF). Each species parameterizes that invariant framework with:
+
+1. Its own verified genome/proteome ReferenceIdentity registrations.
+2. Its own comparative mammalian anatomy from ``normal-tissue-taxonomy.yaml``.
+3. Explicit per-unit quantitative thresholds (never converting or pooling scales).
+4. Species-native datasets bound to eight canonical evidence roles, with honest
+   integration status where analogous atlases are incomplete or pending crosswalks.
+"""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from functools import cache
+
+import pandas as pd
+
+from . import cta_selection_policy, target_selection
+from .reference_identity import ReferenceIdentity
+from .species import Species, available_species, resolve_species
+from .species_assets import registered_references
+from .species_target_selection import (
+    SpeciesAnatomyProfile,
+    SpeciesScreeningSpec,
+    anatomy_for_species,
+)
+
+POLICY_SCHEMA_ID = "oncoref.species-screening-policy.2026-11-21.1"
+
+EVIDENCE_ROLES: tuple[tuple[str, str], ...] = (
+    (
+        "reference_proteome",
+        "Reference proteome & identical-sequence protein-equivalence groups (PEG)",
+    ),
+    (
+        "healthy_baseline_rna",
+        "Healthy non-thymic, non-reproductive baseline (N) & Disposable maximum (D)",
+    ),
+    (
+        "normal_bulk_and_immune_safety",
+        "Normal somatic bulk & sorted immune RNA safety ceilings",
+    ),
+    (
+        "normal_cell_and_rare_umi",
+        "Single-cell cluster & donor-resolved rare-cell UMI safety screens",
+    ),
+    (
+        "normal_protein",
+        "Normal-tissue protein staining (IHC) or mass-spectrometry proteomics",
+    ),
+    (
+        "reproductive_and_developmental_rna",
+        "Adult reproductive & embryonic/placental enrichment (RA) and host exposure",
+    ),
+    (
+        "tumor_rna",
+        "QC-passing tumor cohorts for cancer enrichment (CA)",
+    ),
+    (
+        "curated_literature_and_clinical",
+        "Curated normal counterevidence, unscreened adult homes & published nominations",
+    ),
+)
+ROLE_IDS = tuple(role_id for role_id, _ in EVIDENCE_ROLES)
+ROLE_LABELS = dict(EVIDENCE_ROLES)
+
+DATASET_STATUSES = (
+    "active_in_catalog",
+    "ingested_pending_crosswalk",
+    "native_seed_only",
+    "metadata_or_blocked",
+    "identified_analog",
+)
+
+
+@dataclass(frozen=True)
+class SpeciesThresholdConfig:
+    """Explicit quantitative parameters in a species' native measurement units."""
+
+    comparison_units: tuple[str, ...]
+    normal_summary_statistic: str = "p95"
+    enrichment_fold: float = target_selection.ENRICHMENT_FOLD
+    detection_floor: float = target_selection.DETECTION_FLOOR
+    disposable_cap: float = target_selection.DISPOSABLE_CAP
+    normal_rna_tier_ceilings: dict[str, float] | None = None
+    negative_ihc_multipliers: dict[str, float] | None = None
+    cornea_cp10k_scale: float | None = None
+    rare_cell_min_cells: int = target_selection.RARE_CELL_MIN_CELLS
+    rare_cell_multi_molecules: int = target_selection.RARE_CELL_MULTI_MOLECULES
+    rare_cell_vital_replicated_pct: float = target_selection.RARE_CELL_DETECTION_PCT
+    rare_cell_vital_single_study_pct: float = target_selection.RARE_CELL_SINGLE_STUDY_PCT
+    rare_cell_protected_factor: float = target_selection.RARE_CELL_PROTECTED_FACTOR
+    rare_cell_replicate_studies: int = target_selection.RARE_CELL_REPLICATE_STUDIES
+    rare_cell_replicate_donors: int = target_selection.RARE_CELL_REPLICATE_DONORS
+    unsafe_ninemer_containment_pct: float = 95.0
+    host_protected_max_tpm: float = 4.0
+    host_protected_max_ntpm: float = 4.0
+
+    def __post_init__(self):
+        if self.normal_rna_tier_ceilings is None:
+            object.__setattr__(
+                self,
+                "normal_rna_tier_ceilings",
+                {
+                    "vital": cta_selection_policy.TIER_BASES["vital"],
+                    "protected": cta_selection_policy.TIER_BASES["protected"],
+                    "manageable_hold": cta_selection_policy.TIER_BASES["manageable"],
+                    "manageable_unsafe": cta_selection_policy.MANAGEABLE_UNSAFE_FLOOR,
+                },
+            )
+        if self.negative_ihc_multipliers is None:
+            object.__setattr__(self, "negative_ihc_multipliers", {})
+
+
+@dataclass(frozen=True)
+class SpeciesDatasetBinding:
+    """One species-native dataset bound to one canonical screening role."""
+
+    role: str
+    source_id: str
+    label: str
+    native_unit: str
+    status: str
+    threshold_or_use: str
+    limitations: str
+
+    def __post_init__(self):
+        if self.role not in ROLE_LABELS:
+            raise ValueError(f"Unknown evidence role {self.role!r}; expected one of {ROLE_IDS}")
+        if self.status not in DATASET_STATUSES:
+            raise ValueError(
+                f"Unknown dataset status {self.status!r}; expected one of {DATASET_STATUSES}"
+            )
+
+
+@dataclass(frozen=True)
+class SpeciesPolicy:
+    """Complete per-species parameterization of the OncoRef antigen-selection rules."""
+
+    species: Species
+    policy_id: str
+    primary_reference_alias: str
+    registered_reference_aliases: tuple[str, ...]
+    anatomy: SpeciesAnatomyProfile
+    thresholds: SpeciesThresholdConfig
+    datasets: tuple[SpeciesDatasetBinding, ...]
+    overview: str
+
+    @property
+    def primary_reference(self) -> ReferenceIdentity:
+        from .species_antigens import cta_snapshot
+
+        if self.species.taxon_id == 9606:
+            return ReferenceIdentity.from_dict(
+                cta_snapshot("human").as_dict()["references"][0]["identity"]
+            )
+        reg = next(
+            r
+            for r in registered_references(self.species)
+            if r["id"] == self.primary_reference_alias
+        )
+        return ReferenceIdentity.from_dict(reg["identity"])
+
+    def sex_subset_compartments(self) -> dict[str, dict[str, tuple[str, ...]]]:
+        """Exact species-applicable compartment sets defining MRA/FRA/ERA/SRA and CTA-*."""
+        a = self.anatomy
+        dev = tuple(c for c in ("embryo", "placenta") if c in a.core_reproductive_compartments)
+        return {
+            "MRA / CTA-M": {
+                "expressed_in": a.male_sex_compartments,
+                "must_clear_protected": a.female_adult_protected_compartments,
+            },
+            "FRA / CTA-F": {
+                "expressed_in": (*a.female_sex_compartments, *dev),
+                "must_clear_protected": a.male_adult_protected_compartments,
+            },
+            "ERA / CTA-E": {
+                "expressed_in": dev,
+                "must_clear_protected": tuple(
+                    dict.fromkeys(
+                        (
+                            *a.female_adult_protected_compartments,
+                            *a.male_adult_protected_compartments,
+                        )
+                    )
+                ),
+            },
+            "SRA / CTA-MF": {
+                "expressed_in": a.reproductive_compartments,
+                "must_clear_protected": (),
+            },
+        }
+
+    def dataset_table(self, *, role: str | None = None, status: str | None = None) -> pd.DataFrame:
+        if role is not None and role not in ROLE_LABELS:
+            raise ValueError(f"Unknown role {role!r}; expected one of {ROLE_IDS}")
+        if status is not None and status not in DATASET_STATUSES:
+            raise ValueError(f"Unknown status {status!r}; expected one of {DATASET_STATUSES}")
+        rows = [
+            {
+                "taxon_id": self.species.taxon_id,
+                "species": self.species.name,
+                "role": b.role,
+                "role_label": ROLE_LABELS[b.role],
+                "source_id": b.source_id,
+                "label": b.label,
+                "native_unit": b.native_unit,
+                "status": b.status,
+                "threshold_or_use": b.threshold_or_use,
+                "limitations": b.limitations,
+            }
+            for b in self.datasets
+            if (role is None or b.role == role) and (status is None or b.status == status)
+        ]
+        return pd.DataFrame(
+            rows,
+            columns=[
+                "taxon_id",
+                "species",
+                "role",
+                "role_label",
+                "source_id",
+                "label",
+                "native_unit",
+                "status",
+                "threshold_or_use",
+                "limitations",
+            ],
+        )
+
+    def to_screening_spec(
+        self,
+        *,
+        comparison_id: str = "",
+        comparability_reference: str = "",
+        comparison_unit: str | None = None,
+        required_normal_contexts: frozenset[str] = frozenset(),
+        reference: ReferenceIdentity | None = None,
+    ) -> SpeciesScreeningSpec:
+        chosen_unit = comparison_unit or self.thresholds.comparison_units[0]
+        if chosen_unit not in self.thresholds.comparison_units:
+            raise ValueError(
+                f"Unit {chosen_unit!r} is not declared in {self.species.name} policy comparison_units "
+                f"{self.thresholds.comparison_units}"
+            )
+        return SpeciesScreeningSpec(
+            species=self.species,
+            reference=reference or self.primary_reference,
+            policy_id=self.policy_id,
+            comparison_id=comparison_id,
+            comparability_reference=comparability_reference,
+            comparison_unit=chosen_unit,
+            required_normal_contexts=frozenset(required_normal_contexts),
+            anatomy=self.anatomy,
+            disposable_cap=self.thresholds.disposable_cap,
+            enrichment_fold=self.thresholds.enrichment_fold,
+            detection_floor=self.thresholds.detection_floor,
+        )
+
+    def as_dict(self) -> dict:
+        return {
+            "schema": POLICY_SCHEMA_ID,
+            "taxon_id": self.species.taxon_id,
+            "species": self.species.name,
+            "scientific_name": self.species.scientific_name,
+            "policy_id": self.policy_id,
+            "primary_reference_alias": self.primary_reference_alias,
+            "registered_reference_aliases": list(self.registered_reference_aliases),
+            "overview": self.overview,
+            "anatomy": self.anatomy.as_dict(),
+            "sex_subset_compartments": {
+                k: {field_k: list(field_v) for field_k, field_v in v.items()}
+                for k, v in self.sex_subset_compartments().items()
+            },
+            "thresholds": asdict(self.thresholds),
+            "datasets": [asdict(d) for d in self.datasets],
+        }
+
+
+@cache
+def _policies() -> dict[int, SpeciesPolicy]:
+    human_sp = resolve_species("human")
+    dog_sp = resolve_species("dog")
+    mouse_sp = resolve_species("mouse")
+
+    human_policy = SpeciesPolicy(
+        species=human_sp,
+        policy_id=target_selection.POLICY_ID,
+        primary_reference_alias="ensembl115",
+        registered_reference_aliases=("ensembl115",),
+        anatomy=anatomy_for_species(human_sp),
+        thresholds=SpeciesThresholdConfig(
+            comparison_units=("TPM",),
+            negative_ihc_multipliers={"Approved": 2.0, "Supported": 4.0, "Enhanced": 8.0},
+            cornea_cp10k_scale=0.01,
+        ),
+        overview=(
+            "Complete proteome-wide evaluation across 20,099 Ensembl 115 coding loci "
+            "(19,893 protein-equivalence groups) with all eight evidence pillars populated."
+        ),
+        datasets=(
+            SpeciesDatasetBinding(
+                "reference_proteome",
+                "ensembl115",
+                "Human Ensembl 115 GRCh38 + MANE Select",
+                "amino-acid sequence",
+                "active_in_catalog",
+                "Prefer MANE Select then Ensembl canonical; collapse identical translations into PEG; >=95% 9-mer Unsafe containment -> Other:Sequence",
+                "Representative-protein equivalence does not assert equal abundance of alternative isoforms.",
+            ),
+            SpeciesDatasetBinding(
+                "healthy_baseline_rna",
+                "gtex_v11 + hpa_v23_biopsies + sorted_immune",
+                "GTEx v11, HPA v23 tissues/brain & HPA/DICE/Monaco immune",
+                "TPM",
+                "active_in_catalog",
+                "Within-site linear donor P95 sets non-thymic somatic N and Disposable D (<=32 TPM); H0 = max(N, D, 1 TPM)",
+                "56 required healthy contexts; bulk thymus stays in thymic scope outside N and D.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_bulk_and_immune_safety",
+                "hpa_rna_consensus + gtex_tissue_rna + hpa_brain + dice + monaco",
+                "HPA v23 consensus/brain/immune, GTEx v11 medians & DICE/Monaco",
+                "TPM; nTPM",
+                "active_in_catalog",
+                "Base ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) in native unit; matched negative IHC raises ceiling 2x/4x/8x",
+                "TPM and nTPM run separate native gates without cross-unit conversion.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_cell_and_rare_umi",
+                "cellxgene_census + siletti_brain + hpa_single_cell + collin_cornea",
+                "CELLxGENE Census, Siletti brain, HPA v23 scRNA clusters & Collin cornea",
+                "UMI counts; nTPM; CP10K",
+                "active_in_catalog",
+                "UMI: >=10 cells and >=1% >=2-UMI cells across >=2 consortium-deduplicated study groups (or >=5% in 1 study; 2x in Protected); cornea CP10K /100 nominal ceiling",
+                "Paralog/3'-host mapping ambiguity without bulk or qPCR confirmation stays Other:Review.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_protein",
+                "hpa_normal_tissue + external_ihc",
+                "HPA v23 normal immunohistochemistry & curated external staining",
+                "categorical IHC grade + reliability",
+                "active_in_catalog",
+                "Approved/Supported/Enhanced positive staining in Vital/Protected tissues -> Unsafe; routine-context negative IHC grants RNA headroom",
+                "Antibody reliability is categorical support, not a calibrated false-negative rate.",
+            ),
+            SpeciesDatasetBinding(
+                "reproductive_and_developmental_rna",
+                "gtex_repro + hpa_repro + petropoulos + tyser + mole",
+                "GTEx/HPA adult reproductive samples & Petropoulos/Tyser/Molè embryos",
+                "TPM; UMI/staining context",
+                "active_in_catalog",
+                "RA qualifies at >=10 x H0 in adult reproductive samples or cell-supported embryo lineages; per-compartment maxima feed HostContext (<4 TPM / <4 nTPM)",
+                "Early embryo atlases do not cover mid/late fetal stages; pregnancy protection remains conservative.",
+            ),
+            SpeciesDatasetBinding(
+                "tumor_rna",
+                "oncoref_tumor_union_132_cohorts",
+                "132 QC-passing per-sample human tumor cohorts (TCGA, TARGET, BEAT-AML, Treehouse, GEO)",
+                "TPM",
+                "active_in_catalog",
+                "CA qualifies when >=1 QC-passing library reaches >=10 x H0; known-patient counts deduplicate samples per donor",
+                "Cross-study cohorts use library QC and nonnegative linear TPM checks rather than batch correction.",
+            ),
+            SpeciesDatasetBinding(
+                "curated_literature_and_clinical",
+                "normal_expression_literature + rare_cell_attribution_reviews + cta_literature_149",
+                "Reviewed normal-tissue literature, #711 Ensembl 115 attribution ledger & 149 CTA/oncofetal papers",
+                "curated verdicts & citations",
+                "active_in_catalog",
+                "Verified adult Vital/Protected expression -> Unsafe; unscreened adult home (olfactory, taste bud, bone, dental pulp, hair follicle) -> Other:Unscreened tissue",
+                "Published CTA nominations are provenance only and never override normal-tissue counterevidence.",
+            ),
+        ),
+    )
+
+    dog_policy = SpeciesPolicy(
+        species=dog_sp,
+        policy_id=POLICY_SCHEMA_ID,
+        primary_reference_alias="refseq106",
+        registered_reference_aliases=("refseq106", "ensembl98"),
+        anatomy=anatomy_for_species(dog_sp),
+        thresholds=SpeciesThresholdConfig(
+            comparison_units=("TPM", "TMM-CPM"),
+            negative_ihc_multipliers={},
+            cornea_cp10k_scale=None,
+        ),
+        overview=(
+            "Comparative canine oncology parameterization with two SHA-256-pinned genome "
+            "references, three ingested normal/developmental RNA matrices, pooled 38-tissue "
+            "TMT-iBAQ proteomics, and 14 curated native nominations awaiting reference/tumor reconciliation."
+        ),
+        datasets=(
+            SpeciesDatasetBinding(
+                "reference_proteome",
+                "refseq106 + ensembl98",
+                "Canine NCBI RefSeq 106 (UU_Cfam_GSD_1.0) & Ensembl 98 (CanFam3.1)",
+                "amino-acid sequence",
+                "active_in_catalog",
+                "Complete GTF/FASTA/feature_table pins; identical translations collapse into canine PEG:<sha256>; >=95% canine 9-mer Unsafe containment",
+                "RefSeq 106 and CanFam3.1 Ensembl 98 are distinct assemblies requiring an explicit ReferenceCrosswalk.",
+            ),
+            SpeciesDatasetBinding(
+                "healthy_baseline_rna",
+                "bgee-srp009687 + bgee-srp181218 | barkbase",
+                "Bgee 15.2 canine normal RNA-seq (13 + 75 libraries, TPM) & BarkBase (150 libraries, TMM-CPM)",
+                "TPM or TMM-CPM (single-scale panel)",
+                "ingested_pending_crosswalk",
+                "Within-organ donor P95 sets somatic N and canine Disposable D (gallbladder, tonsil, hair follicle, cutaneous melanocyte; no appendix); never pool TPM with TMM-CPM",
+                "Exact source quantification GTFs are unresolved, and BarkBase shares 46 SRA runs with global Bgee.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_bulk_and_immune_safety",
+                "bgee-srp009687 + bgee-srp181218 + barkbase + doga + pfizer-dog-rna",
+                "Bgee TPM, BarkBase TMM-CPM & DoGA / Pfizer canine RNA metadata",
+                "TPM; TMM-CPM; STRT2 ERCC (metadata)",
+                "ingested_pending_crosswalk",
+                "Tiered somatic ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) in declared panel unit without negative-IHC inflation",
+                "DoGA (5'-end ERCC) and Pfizer Ensembl-110 Salmon RNA are currently metadata-only.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_cell_and_rare_umi",
+                "canine_normal_scrna_gap",
+                "Donor-resolved canine normal single-cell UMI atlases",
+                "UMI counts",
+                "identified_analog",
+                "Same assess_rare_cell_rna contract (>=10 cells, >=1% >=2-UMI across >=2 canine studies, 2x in Protected) when single-cell atlases are ingested",
+                "No multi-organ adult canine normal single-cell UMI atlas is currently bundled; rare-cell status stays unassessed.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_protein",
+                "pfizer-dog-protein + pfizer-dog-peptide-evidence",
+                "Pfizer 38-tissue canine quantitative proteomics (MSV000099744, 9,929 groups)",
+                "pooled iBAQ + peptide assignments",
+                "ingested_pending_crosswalk",
+                "Affirmative Vital/Protected tissue-pool protein detection supplies Unsafe/hold review once searched-FASTA groups reconcile to canine genes; never grants negative-IHC RNA credit",
+                "All 38 tissue samples are pooled TMT channels without individual-donor counts or cell-type resolution.",
+            ),
+            SpeciesDatasetBinding(
+                "reproductive_and_developmental_rna",
+                "bgee_repro + barkbase_repro_embryo",
+                "Bgee & BarkBase canine testis, ovary, oviduct, uterine horn, prostate, mammary & embryonic libraries",
+                "TPM or TMM-CPM",
+                "ingested_pending_crosswalk",
+                "RA qualifies at >=10 x H0 across canine compartments (includes uterine_horn; omits absent seminal vesicle and bulbourethral gland); feeds canine HostContext",
+                "BarkBase embryonic donor IDs and column-to-run provenance remain unresolved.",
+            ),
+            SpeciesDatasetBinding(
+                "tumor_rna",
+                "gse304066-osteosarcoma + hindriks2025 + nemec2019",
+                "GSE304066 canine osteosarcoma & published canine tumor RT-qPCR/RNA observations",
+                "blocked raw/FPKM; qualitative study observations",
+                "metadata_or_blocked",
+                "CA requires >=1 QC-passing tumor library at >=10 x H0 on the same reconciled reference and linear unit as the canine normal panel",
+                "GSE304066 raw-count filename conflicts with FPKM metadata; Hindriks 2025 and Nemec 2019 lack genome-wide linear TPM.",
+            ),
+            SpeciesDatasetBinding(
+                "curated_literature_and_clinical",
+                "hindriks2025 + nemec2019",
+                "Curated canine CTA nominations and normal/tumor study observations (14 candidates)",
+                "source-native qualitative/semi-quantitative",
+                "native_seed_only",
+                "Retains native canine gene mappings, paralog assay ambiguity, and positive normal somatic observations; packaged rows remain Other:Review until panels reconcile",
+                "Human CTA labels are never transferred to canine orthologs.",
+            ),
+        ),
+    )
+
+    mouse_policy = SpeciesPolicy(
+        species=mouse_sp,
+        policy_id=POLICY_SCHEMA_ID,
+        primary_reference_alias="ensembl115",
+        registered_reference_aliases=("ensembl115",),
+        anatomy=anatomy_for_species(mouse_sp),
+        thresholds=SpeciesThresholdConfig(
+            comparison_units=("TPM",),
+            negative_ihc_multipliers={},
+            cornea_cp10k_scale=None,
+        ),
+        overview=(
+            "Preclinical murine parameterization anchored on the complete SHA-256-pinned "
+            "Ensembl 115 GRCm39 host proteome (66,668 proteins), strain-explicit provenance "
+            "rules, P1A (Trap1a) reference qualification, and declared murine atlas slots."
+        ),
+        datasets=(
+            SpeciesDatasetBinding(
+                "reference_proteome",
+                "ensembl115",
+                "Mouse Ensembl 115 GRCm39 (GCA_000001635.9, C57BL/6J, 66,668 proteins)",
+                "amino-acid sequence",
+                "active_in_catalog",
+                "Complete GTF/cDNA/ncRNA/peptide FASTA pins; identical translations collapse into murine PEG:<sha256>; >=95% murine 9-mer Unsafe containment",
+                "Reference coordinates are C57BL/6J; historical DBA/2 and BALB/c Polymorphisms require explicit sequence verification.",
+            ),
+            SpeciesDatasetBinding(
+                "healthy_baseline_rna",
+                "bgee_mouse_normal_tpm",
+                "Mouse adult normal multi-organ bulk RNA-seq (Bgee / ENCODE GRCm39 analogs)",
+                "TPM",
+                "identified_analog",
+                "Within-organ donor P95 sets somatic N and murine Disposable D (gallbladder, hair follicle, cutaneous melanocyte; mouse lacks appendix and palatine tonsil)",
+                "Not yet ingested into the wheel; strain, sex and age must remain explicit per library.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_bulk_and_immune_safety",
+                "sarma1999 + immgen_bgee_analogs",
+                "Sarma 1999 BALB/c somatic RT-PCR/Southern seed & murine bulk/ImmGen immune analogs",
+                "qualitative RT-PCR/Southern; TPM",
+                "native_seed_only",
+                "Quantitative panels apply Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM; qualitative somatic RT-PCR counterevidence blocks admission",
+                "Sarma 1999 covers 5 BALB/c organs without absolute TPM or reported animal counts.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_cell_and_rare_umi",
+                "tabula_muris",
+                "Tabula Muris / Tabula Muris Senis (10x droplet UMI & FACS Smart-seq2)",
+                "UMI counts; read counts",
+                "identified_analog",
+                "10x droplet UMI enters assess_rare_cell_rna (>=10 cells, >=1% >=2-UMI across >=2 studies, 2x in Protected) with mouse study/animal provenance",
+                "Identified in cta-selection-sources.csv; raw H5AD ingestion and Ensembl 115 reconciliation pending.",
+            ),
+            SpeciesDatasetBinding(
+                "normal_protein",
+                "gxd",
+                "MGI Gene Expression Database (GXD) adult normal protein/IHC assays",
+                "assay-specific qualitative staining",
+                "identified_analog",
+                "Verified Vital/Protected adult normal protein detection -> Unsafe; unanalyzed tissues never count as negative-IHC credit",
+                "Literature-identified; requires distinguishing measured not-detected from unassayed organs.",
+            ),
+            SpeciesDatasetBinding(
+                "reproductive_and_developmental_rna",
+                "moca + mouse_gastrulation + gxd + sarma1999_testis",
+                "MOCA (E9.5-E13.5 UMI), Mouse Gastrulation scRNA, GXD & adult reproductive panels",
+                "TPM (comparison); UMI (developmental cell support)",
+                "identified_analog",
+                "RA qualifies at >=10 x H0 across murine compartments (includes coagulating_gland, seminal vesicle, uterine_horn); UMI atlases retain separate unit contracts",
+                "UMI counts in MOCA cannot use nominal TPM cutoffs without a reconciled TPM developmental panel.",
+            ),
+            SpeciesDatasetBinding(
+                "tumor_rna",
+                "sarma1999_j558 + syngeneic_cohorts",
+                "J558 plasmacytoma seed & syngeneic/GEMM mouse tumor RNA-seq (P815, B16-F10, MC38, CT26, 4T1)",
+                "qualitative seed; TPM",
+                "native_seed_only",
+                "CA requires >=1 QC-passing murine tumor sample at >=10 x H0 on Ensembl 115 TPM; cell lines vs primary GEMM/syngeneic grafts tracked explicitly",
+                "Strain match between tumor host (e.g. DBA/2 P815, BALB/c CT26, C57BL/6 MC38/B16) and normal reference must be recorded.",
+            ),
+            SpeciesDatasetBinding(
+                "curated_literature_and_clinical",
+                "vandeneynde1991 + sarma1999",
+                "Van den Eynde 1991 (P1A DBA/2 P815 clone 211) & Sarma 1999 endogenous normal-tissue follow-up",
+                "curated primary-source XMLs & GenBank records",
+                "active_in_catalog",
+                "Preserves exact 224-aa AAA40475.1 / ENSMUSP00000059448.4 protein equivalence alongside BALB/c lung/spleen/liver/thymus counterevidence -> Other:Review",
+                "Transgenic tolerance experiments are excluded from endogenous normal-expression claims.",
+            ),
+        ),
+    )
+
+    return {
+        human_sp.taxon_id: human_policy,
+        dog_sp.taxon_id: dog_policy,
+        mouse_sp.taxon_id: mouse_policy,
+    }
+
+
+def species_policy(species: Species | str | int = "human") -> SpeciesPolicy:
+    """Return the declarative screening policy and dataset bindings for ``species``."""
+    resolved = resolve_species(species)
+    return _policies()[resolved.taxon_id]
+
+
+def all_species_policies() -> tuple[SpeciesPolicy, ...]:
+    """Policies for all registered species (human, dog, mouse) in canonical order."""
+    return tuple(species_policy(sp) for sp in available_species())
+
+
+def role_comparison_table() -> pd.DataFrame:
+    """Side-by-side comparison of datasets, units and status across human, dog and mouse."""
+    policies = {sp.species.name: sp for sp in all_species_policies()}
+    rows = []
+    for role_id, role_label in EVIDENCE_ROLES:
+        entry: dict[str, str] = {"role": role_id, "role_label": role_label}
+        for name in ("human", "dog", "mouse"):
+            bindings = [b for b in policies[name].datasets if b.role == role_id]
+            entry[f"{name}_sources"] = "; ".join(
+                f"{b.source_id} ({b.native_unit})" for b in bindings
+            )
+            entry[f"{name}_status"] = ", ".join(dict.fromkeys(b.status for b in bindings))
+            entry[f"{name}_rule"] = "; ".join(b.threshold_or_use for b in bindings)
+        rows.append(entry)
+    return pd.DataFrame(rows)

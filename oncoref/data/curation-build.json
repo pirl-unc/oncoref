@@ -167,6 +167,7 @@
     "oncoref/data/host-exposure.csv.gz",
     "oncoref/data/host-exposure.json",
     "docs/antigen-whitepaper.md",
+    "docs/species-antigen-whitepaper.md",
     "docs/tissue-hierarchy.md"
   ]
 }

@@ -384,3 +384,53 @@ The Pfizer publication specifies Ensembl v110/Salmon, but its exact quantificati
 assets still need verification. DoGA's ERCC-normalized gene/promoter signals must
 remain distinct from transcript TPM. The osteosarcoma pseudo-TPM scenarios remain
 sensitivity analyses, outside admitted normalized expression cohorts.
+
+## Cross-species target selection and comparative host contexts
+
+See the [multi-species antigen whitepaper](species-antigen-whitepaper.md) for the
+complete per-species parameterization of human (`9606`), canine (`9615`), and
+murine (`10090`) datasets, comparative anatomy, sex-restricted subsets
+(`MRA`/`CTA-M`, `FRA`/`CTA-F`, `ERA`/`CTA-E`, `SRA`/`CTA-MF`), and native
+nomination ledgers.
+
+`oncoref.species_policies` and `oncoref.species_target_selection` harmonize the
+three-stage target-selection process across **human (`9606`)**, **dog (`9615`)**
+and **mouse (`10090`)** without transferring human expression, safety verdicts or
+threshold calibrations by orthology:
+
+1. **Reference proteome & protein-equivalence grouping (`group_reference_proteins`, `group_proteome`):**
+   Collapses identical qualified amino-acid translations within one verified
+   `ReferenceIdentity` into `PEG:<sha256[:20]>` protein-equivalence groups while
+   preserving every annotated isoform sequence for 9-mer `Unsafe` containment
+   (`>=95%`) and `PeptideIndex` subtraction.
+2. **Pluggable normal-tissue safety & symmetric enrichment (`SpeciesScreeningSpec`, `observations_from_expression_dataset`, `evaluate_species_catalog`):**
+   Projects native `ExpressionDataset` matrices onto protein-equivalence groups
+   (summing complete member-locus values per library before donor summarization,
+   mapping tissues via `resolve_normal_tissue`, and keeping pooled libraries out
+   of independent-patient counts), grades optional donor-resolved rare-cell UMI
+   counts via `assess_rare_cell_rna`, and evaluates symmetric `10 x max(N, D, floor)`
+   cancer (`CA`) and reproductive/developmental (`RA`) enrichment on one declared
+   expression scale (`TPM`, `nTPM`, `pTPM`, or `TMM-CPM`).
+3. **Comparative-anatomy host protection (`anatomy_for_species`, `HostContext`, `TargetFilter`, `AntigenSelection`):**
+   Derives species-applicable reproductive, mammary, thymic and disposable
+   compartments from `normal-tissue-taxonomy.yaml` (for example, canine lacks
+   seminal vesicles and appendix and includes `uterine_horn`; mouse includes
+   `coagulating_gland` and `uterine_horn` and lacks appendix and palatine tonsil).
+
+```python
+from oncoref import canine, host_context, human, mouse
+
+human.target_selection_coverage()
+canine.target_selection_coverage()  # pending_reconciled_panels + missing_inputs
+mouse.target_selection_coverage()
+
+dog_host = host_context.HostContext(protect=("testis", "uterus"), species="dog")
+# Evaluate a species catalog when reconciled normal/tumor panels are supplied:
+# result = canine.evaluate_target_catalog(spec, proteins, sequences=seqs, ...)
+# index = result.select("CTA", host=dog_host).background_index("Unsafe|Other")
+```
+
+On the CLI, `oncoref antigens list`, `explain`, and `funnel` accept `--species`
+(`human`, `dog`/`canine`, or `mouse`). Where canine or murine expression panels
+lack reference/unit reconciliation in the packaged wheel, packaged nominations
+remain explicitly `Other:Review` rather than silently inheriting human calls.

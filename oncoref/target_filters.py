@@ -154,7 +154,7 @@ class TargetFilter:
         return {k: v for k, v in asdict(self).items() if v != base[k]}
 
 
-def context(f):
+def context(f, *, species=None):
     if isinstance(f, str):
         f = FILTER_MODES[f]
     if f.host is not None:
@@ -171,6 +171,14 @@ def context(f):
             )
         ):
             raise ValueError("Use host or legacy profile/tissue arguments, not both")
+        if species is not None:
+            from .species import resolve_species
+
+            expected = resolve_species(species).name
+            if f.host.species != expected:
+                raise ValueError(
+                    f"HostContext species {f.host.species!r} disagrees with catalog species {expected!r}"
+                )
         return f.host
     return host_context.from_legacy(
         f.host_profile,
@@ -179,6 +187,7 @@ def context(f):
         allow_tissues=f.allow_tissues,
         protect_tissues=f.protect_tissues,
         absent_tissues=f.absent_tissues,
+        species="human" if species is None else species,
     )
 
 
@@ -284,8 +293,13 @@ def measures(table: pd.DataFrame | None = None) -> pd.DataFrame:
                           native TPM only. It no longer mixes assay scales.
     """
     d = _frame(table)
+    saved_attrs = dict(d.attrs)
+    taxon_id = saved_attrs.get(
+        "taxon_id", int(d["taxon_id"].iloc[0]) if "taxon_id" in d and len(d) else 9606
+    )
     derived = [f"papers_{family}" for family in PAPER_FAMILIES]
-    d = d.drop(columns=[*derived, "papers_counted"], errors="ignore")
+    if taxon_id == 9606:
+        d = d.drop(columns=[*derived, "papers_counted"], errors="ignore")
     for column in ("is_cancer_antigen", "is_reproductive_antigen", "is_cta", "is_target_candidate"):
         d[column] = d[column].astype(bool)
     d["off_target_tpm"] = d[["normal_reference_tpm", "disposable_max_tpm"]].max(
@@ -299,10 +313,18 @@ def measures(table: pd.DataFrame | None = None) -> pd.DataFrame:
 
     d = d.drop(columns=[c for c in d if c.startswith("curated_")])
     d = d.join(target_curation.table(d))
-    counts = paper_counts()
-    d = d.join(counts, on="entity_id")
-    for column in counts.columns:
-        d[column] = d[column].fillna(0).astype(int)
+    if taxon_id == 9606:
+        counts = paper_counts()
+        d = d.join(counts, on="entity_id")
+        for column in counts.columns:
+            d[column] = d[column].fillna(0).astype(int)
+    else:
+        for column in (*derived, "papers_counted"):
+            if column not in d:
+                d[column] = 0
+            else:
+                d[column] = d[column].fillna(0).astype(int)
+    d.attrs.update(saved_attrs)
     return d
 
 
@@ -316,8 +338,12 @@ def apply(
     ``filtered_category`` (the category after tightening compartment evidence).
     """
     d = measures(table)
-    host = context(f)
-    assessment = host_context.assess(d, host, evidence=host_evidence)
+    species_name = d.attrs.get(
+        "species", str(d["species"].iloc[0]) if "species" in d and len(d) else "human"
+    )
+    host = context(f, species=species_name)
+    effective_evidence = {} if species_name != "human" and host_evidence is None else host_evidence
+    assessment = host_context.assess(d, host, evidence=effective_evidence)
     for name in assessment:
         d[name] = assessment[name]
     h0 = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1, skipna=False).clip(lower=1.0)

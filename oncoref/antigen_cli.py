@@ -39,7 +39,10 @@ def _host_overrides(args) -> dict:
 
 
 def list_antigens(args):
-    rows = antigen_sets.proteins(args.set)
+    from .species import resolve_species
+    from .species_target_selection import packaged_species_results
+
+    resolved = resolve_species(getattr(args, "species", "human"))
     overrides = {
         name: getattr(args, name)
         for name in ("min_tumor_fold", "min_reproductive_fold", "min_tumor_patients")
@@ -49,8 +52,19 @@ def list_antigens(args):
     if args.set in antigen_sets.EXCLUSION_CATEGORIES:
         if args.mode != "all" or overrides:
             raise ValueError("Candidate filters do not apply to Unsafe/Other backgrounds")
+        if resolved.taxon_id == 9606:
+            rows = antigen_sets.proteins(args.set)
+        else:
+            all_rows = packaged_species_results(resolved)
+            rows = all_rows[
+                all_rows.category.isin(antigen_sets.EXCLUSION_CATEGORIES[args.set])
+            ].reset_index(drop=True)
     else:
-        selection = antigen_sets.select(args.set, mode=args.mode, **overrides)
+        selection = (
+            antigen_sets.select(args.set, mode=args.mode, **overrides)
+            if resolved.taxon_id == 9606
+            else antigen_sets.select(args.set, mode=args.mode, species=resolved, **overrides)
+        )
         rows = selection.proteins()
         print(json.dumps(selection.metadata), file=sys.stderr)
     if args.ids:
@@ -83,8 +97,16 @@ def list_antigens(args):
 
 
 def explain(args):
-    rows = target_selection.results(args.gene)
-    if rows.empty:
+    from .species import resolve_species
+    from .species_target_selection import packaged_species_results
+
+    resolved = resolve_species(getattr(args, "species", "human"))
+    rows = (
+        target_selection.results(args.gene)
+        if resolved.taxon_id == 9606
+        else packaged_species_results(resolved, args.gene)
+    )
+    if rows.empty and resolved.taxon_id == 9606:
         # Resolve exact member symbols as well as grouped display labels.
         from .gene_matching import gene_identity_catalog
 
@@ -95,44 +117,51 @@ def explain(args):
     if rows.empty:
         raise ValueError(f"No current antigen catalog record for {args.gene!r}")
     fields = [
-        "protein_group_label",
-        "entity_id",
-        "classification",
-        "decision_reason",
-        "normal_reference_tpm",
-        "normal_reference_contexts",
-        "disposable_max_tpm",
-        "tumor_fold",
-        "samples_at_tenfold",
-        "independent_patients_at_tenfold",
-        "cancer_types_at_tenfold",
-        "reproductive_fold",
-        "reproductive_qualifying_compartments",
-        "reproductive_supported_tpm",
-        "reproductive_supported_context",
-        "reproductive_top_context",
-        "rare_cell_status",
-        "rare_cell_basis",
-        "rare_cell_mapping_notes",
-        "literature_recorded_tier",
-        "paper_source_count",
-        "paper_source_ids",
+        f
+        for f in (
+            "protein_group_label",
+            "entity_id",
+            "classification",
+            "decision_reason",
+            "normal_reference_tpm",
+            "normal_reference_contexts",
+            "disposable_max_tpm",
+            "tumor_fold",
+            "samples_at_tenfold",
+            "independent_patients_at_tenfold",
+            "cancer_types_at_tenfold",
+            "reproductive_fold",
+            "reproductive_qualifying_compartments",
+            "reproductive_supported_tpm",
+            "reproductive_supported_context",
+            "reproductive_top_context",
+            "rare_cell_status",
+            "rare_cell_basis",
+            "rare_cell_mapping_notes",
+            "literature_recorded_tier",
+            "paper_source_count",
+            "paper_source_ids",
+        )
+        if f in rows
     ]
     output = rows[fields].copy()
-    counts = target_filters.paper_counts()
-    for column in counts:
-        output[column] = rows.entity_id.map(counts[column]).fillna(0).astype(int)
-    if args.papers:
-        from .cta_literature import paper_gene_claims
+    if resolved.taxon_id == 9606:
+        counts = target_filters.paper_counts()
+        for column in counts:
+            output[column] = rows.entity_id.map(counts[column]).fillna(0).astype(int)
+        if args.papers:
+            from .cta_literature import paper_gene_claims
 
-        output["paper_claims"] = [
-            json.loads(paper_gene_claims(label).to_json(orient="records"))
-            for label in rows.protein_group_label
-        ]
-    if args.loss:
-        output["loss_consequences"] = [
-            antigen_sets.loss_consequences(label) for label in rows.protein_group_label
-        ]
+            output["paper_claims"] = [
+                json.loads(paper_gene_claims(label).to_json(orient="records"))
+                for label in rows.protein_group_label
+            ]
+        if args.loss:
+            output["loss_consequences"] = [
+                antigen_sets.loss_consequences(label) for label in rows.protein_group_label
+            ]
+    elif args.papers or args.loss:
+        raise ValueError("--papers and --loss are currently human-only curation views")
     for mode in target_filters.FILTER_MODES:
         evaluated = target_filters.apply(target_filters.FILTER_MODES[mode], rows)
         output[mode] = [
@@ -181,7 +210,15 @@ def explain(args):
 
 
 def funnel(args):
-    table = target_selection.results()
+    from .species import resolve_species
+    from .species_target_selection import packaged_species_results
+
+    resolved = resolve_species(getattr(args, "species", "human"))
+    table = (
+        target_selection.results()
+        if resolved.taxon_id == 9606
+        else packaged_species_results(resolved)
+    )
     if args.published_only:
         table = table[table.published_nomination]
     categories = table.category.value_counts().rename_axis("stage").reset_index(name="remaining")
@@ -341,7 +378,7 @@ def register(subparsers):
     listing = commands.add_parser(
         "list", help="List current catalog members after optional filtering"
     )
-    listing.add_argument("--set", choices=list(antigen_sets.SETS), default="CTA")
+    listing.add_argument("--set", choices=list(antigen_sets.ALL_SETS), default="CTA")
     listing.add_argument("--mode", choices=list(target_filters.FILTER_MODES), default="all")
     _add_host_options(listing)
     listing.add_argument("--min-tumor-fold", type=float)
@@ -396,5 +433,11 @@ def register(subparsers):
     peptides.add_argument("--min-length", type=int, default=8)
     peptides.add_argument("--max-length", type=int, default=15)
     peptides.set_defaults(func=subtract)
+    for command in (listing, explanation, counts):
+        command.add_argument(
+            "--species",
+            default="human",
+            help="Species name or taxonomy ID (human/9606, dog/canine/9615, mouse/10090)",
+        )
     for command in (listing, explanation, counts, peptides):
         command.add_argument("--format", choices=["table", "csv", "json"], default="table")

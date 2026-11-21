@@ -32,8 +32,15 @@ cta_evidence = antigens.cta_evidence
 cta_gene_ids = antigens.cta_gene_ids
 cta_snapshot = antigens.cta_snapshot
 cta_tissue_annotations = antigens.cta_tissue_annotations
+evaluate_target_catalog = antigens.evaluate_target_catalog
+host_compartments = antigens.host_compartments
 normal_tissue_scopes = antigens.normal_tissue_scopes
 resolve_normal_tissue = antigens.resolve_normal_tissue
+screening_datasets = antigens.screening_datasets
+screening_policy = antigens.screening_policy
+sex_restricted_antigens = antigens.sex_restricted_antigens
+target_selection = antigens.target_selection
+target_selection_coverage = antigens.target_selection_coverage
 
 __all__ = [
     "antigens",
@@ -48,9 +55,11 @@ __all__ = [
     "cta_sources",
     "cta_tissue_annotations",
     "datasets",
+    "evaluate_target_catalog",
     "expression",
     "governance",
     "groups",
+    "host_compartments",
     "human_protein_atlas",
     "inventory",
     "legacy",
@@ -59,5 +68,10 @@ __all__ = [
     "normalization",
     "references",
     "resolve_normal_tissue",
+    "screening_datasets",
+    "screening_policy",
+    "sex_restricted_antigens",
     "species",
+    "target_selection",
+    "target_selection_coverage",
 ]
