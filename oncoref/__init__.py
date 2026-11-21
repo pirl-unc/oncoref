@@ -36,7 +36,9 @@ from . import (
     doga,
     expression_builders,
     expression_engine,
+    figure_style,
     gse304066,
+    host_context,
     human,
     human_protein_atlas,
     ici_response,
@@ -47,7 +49,11 @@ from . import (
     pfizer_canine_protein,
     pfizer_canine_rna,
     rna_protein,
+    sequence_bundle,
     source_matrices,
+    species_policies,
+    species_target_selection,
+    target_filters,
     target_selection,
     tcr_trials,
     therapy_evidence,
@@ -605,6 +611,7 @@ __all__ = [
     "aggregate_transcripts_to_genes",
     # organized API modules
     "antigen_coverage",
+    "antigen_sets",
     "attach_gene_identities",
     "available_percentile_cohorts",
     "available_representative_cohorts",
@@ -764,6 +771,7 @@ __all__ = [
     "cta_warning_gene_ids",
     "cta_warning_gene_names",
     "cta_warning_references",
+    "curation",
     "display_gene_name",
     "doga",
     "driver_gene_evidence",
@@ -793,6 +801,7 @@ __all__ = [
     "expression_sources",
     "expression_sources_df",
     "family_display_name",
+    "figure_style",
     "filter_technical_rna",
     "find_gene_id_by_name",
     "find_gene_name_from_ensembl_gene_id",
@@ -822,6 +831,7 @@ __all__ = [
     "greedy_coverage",
     "gse304066",
     "harmonize_reference_expression",
+    "host_context",
     "housekeeping_cancer_expression_coverage",
     "housekeeping_cancer_expression_coverage_from_matrix",
     "housekeeping_cancer_expression_coverage_summary",
@@ -881,6 +891,7 @@ __all__ = [
     "normalize_to_housekeeping",
     "observed_driver_events",
     "pan_cancer_expression",
+    "peptide_subtraction",
     "per_sample_expression",
     "percentile_rank",
     "pfizer_canine_protein",
@@ -945,15 +956,20 @@ __all__ = [
     "samples_for_cancer_code",
     "samples_for_cohort",
     "sarcoma_lineage_codes",
+    "sequence_bundle",
     "short_gene_name",
     "signature_score",
     "source_matrices",
     "source_matrix_sample_qc_manifest",
     "sources_for_cancer_code",
+    "species_policies",
+    "species_target_selection",
     "subtype_deconvolved_expression",
     "subtype_tumor_reference_expression",
+    "target_filters",
     "target_selection",
     "tcga_deconvolved_expression",
+    "tcr_trials",
     "therapy_benefit_toxicity_evidence",
     "therapy_evidence",
     "tissue_of_origin",
@@ -968,3 +984,15 @@ __all__ = [
     "within_sample_percentile_coverage_sweep",
     "within_sample_top_fraction",
 ]
+
+_LAZY_SUBMODULES = frozenset({"curation"})
+
+
+def __getattr__(name: str):
+    if name in _LAZY_SUBMODULES:
+        import importlib
+
+        mod = importlib.import_module(f".{name}", __name__)
+        globals()[name] = mod
+        return mod
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

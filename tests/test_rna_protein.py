@@ -504,3 +504,19 @@ def test_hpa_prior_gzip_writer_is_byte_deterministic(tmp_path):
 def test_hpa_prior_api_is_exported():
     assert oncoref.rna_protein_hpa_prior_sources is rna_protein.rna_protein_hpa_prior_sources
     assert oncoref.rna_protein_hpa_priors is rna_protein.rna_protein_hpa_priors
+
+
+def test_hpa_prior_raw_csv_never_encodes_missing_symbols_as_literal_nan(monkeypatch):
+    import gzip
+
+    raw_path = Path(__file__).resolve().parents[1] / "oncoref/data/rna-protein-hpa-priors.csv.gz"
+    with gzip.open(raw_path, "rt") as handle:
+        raw = pd.read_csv(handle, keep_default_na=False)
+    assert not raw["gene_symbol"].astype(str).str.strip().eq("nan").any()
+    assert raw.loc[raw["canonical_gene_id"].eq("ENSG00000111780"), "gene_symbol"].tolist() == [""]
+
+    corrupted = rna_protein.rna_protein_hpa_priors()
+    corrupted.loc[0, "gene_symbol"] = "nan"
+    monkeypatch.setattr(rna_protein, "get_data", lambda _: corrupted)
+    with pytest.raises(ValueError, match="missing symbols as 'nan'"):
+        rna_protein.rna_protein_hpa_priors()

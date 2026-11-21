@@ -64,28 +64,7 @@ def test_wheel_tables_actually_ship():
 #: (name, category, description) entry written for it; they are NOT classified
 #: blindly here. A newly added bundled dataset must be registered in the
 #: manifest, never appended to this list.
-_UNREGISTERED_BUNDLED_DATASETS = frozenset(
-    {
-        # per-fusion citation audit behind cancer-fusions (oncoref.fusions)
-        "cancer-fusion-citation-audit",
-        # curated ICI response long table + its wider evidence base and source
-        # locator audit (oncoref.ici)
-        "cancer-ici-response",
-        "cancer-ici-response-estimates",
-        "cancer-ici-source-locator-audit",
-        # per-gene citation audit behind cancer-key-genes (oncoref.cancer_genes)
-        "cancer-key-gene-citation-audit",
-        # cancer type -> normal tissue of origin map (oncoref.cancer_types)
-        "cancer-normal-tissue-map",
-        # per-type TMB source audit behind cancer-tmb (oncoref.tmb)
-        "cancer-tmb-source-audit",
-        # the canonical Ensembl gene universe (oncoref.gene_ids)
-        "canonical-gene-space",
-        # per-sample diagnosis mapping for one expression source, referenced by
-        # expression_sources.yaml rather than by a typed accessor
-        "gse294016-sample-diagnoses",
-    }
-)
+_UNREGISTERED_BUNDLED_DATASETS: frozenset[str] = frozenset()
 
 
 def _bundled_dataset_names() -> set[str]:

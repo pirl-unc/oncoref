@@ -233,11 +233,14 @@ def canonical_gene_space() -> pd.DataFrame:
 
 
 @lru_cache(maxsize=1)
-def _canonical_gene_index() -> dict[str, tuple[str, str]]:
+def _canonical_gene_index() -> dict[str, tuple[str | None, str]]:
     """``{ensembl_gene_id (unversioned): (symbol, biotype)}`` over the canonical space."""
     df = get_data("canonical-gene-space", copy=False)
     return {
-        _unversioned(str(g)): (str(s), str(b))
+        _unversioned(str(g)): (
+            None if pd.isna(s) or not str(s).strip() else str(s).strip(),
+            str(b),
+        )
         for g, s, b in zip(df["ensembl_gene_id"], df["symbol"], df["biotype"])
     }
 
@@ -248,6 +251,8 @@ def _canonical_symbol_index() -> dict[str, str | None]:
     df = get_data("canonical-gene-space", copy=False)
     out: dict[str, str | None] = {}
     for gid, symbol in zip(df["ensembl_gene_id"], df["symbol"]):
+        if pd.isna(symbol):
+            continue
         sym = str(symbol).strip()
         if sym:
             key, value = sym.upper(), _unversioned(str(gid))
@@ -319,6 +324,11 @@ def _symbol_synonym_indexes() -> tuple[dict[str, str], dict[str, str]]:
     return exact, case_insensitive
 
 
+_register_derived_cache(ensembl_id_aliases.cache_clear)
+_register_derived_cache(_entrez_gene_index.cache_clear)
+_register_derived_cache(_canonical_gene_index.cache_clear)
+_register_derived_cache(_canonical_symbol_index.cache_clear)
+_register_derived_cache(ensembl_id_alias_symbols.cache_clear)
 _register_derived_cache(_symbol_synonym_indexes.cache_clear)
 
 
