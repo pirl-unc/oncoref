@@ -72,7 +72,7 @@
     "scripts/replay_cta_selection.py": "1268bd2880e86738602cb65a18ce22d95e6022963066277fecf7350560b9ee67"
   },
   "outputs": {
-    "docs/antigen-whitepaper/sources.csv": "178e3d6b434ee9228088624a99de090b51bc41f42e62b8b72e4b1e51c160f625",
+    "docs/antigen-whitepaper/sources.csv": "8937aa344e8268c6718f5b2191e52caac709de7e09bc9a339f8eaf556f3e5794",
     "docs/antigen-whitepaper/studied-proteins.csv": "7a41778211cffe88fdd5f2d8df469c5efb2802854c2f1fc2f4fa8525b1a1a07b",
     "docs/antigen-whitepaper/tumor-ranks.csv": "884879089e5a2634f7cdfc00221ed3e4358c41b1dafecf7fcb0033edd4c0fbf3",
     "docs/antigen-whitepaper.md": "e08292c3b484a08381662342f06b753f76c06887d5ece9cf891e0f56959dcbb7",
