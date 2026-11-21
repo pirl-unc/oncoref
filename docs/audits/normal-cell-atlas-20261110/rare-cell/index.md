@@ -2,8 +2,8 @@
 
 **1,804 proteins were graded from 13,581,391 adult cells and nuclei of
 1,779 donors in 93 collections, plus the directly analysed
-Siletti cerebellar granule nuclei. 126 have established normal-cell RNA and are
-Unsafe; 261 require review; 8 have a weak or inconsistent signal dismissed with its reason.** Category
+Siletti cerebellar granule nuclei. 128 have established normal-cell RNA and are
+Unsafe; 259 require review; 8 have a weak or inconsistent signal dismissed with its reason.** Category
 consequences are in the [catalog rebuild](../../target-selection-20261110/rebuild/index.md).
 
 A count matrix cannot show where a read aligned. One mis-assigned read per cell, from a
@@ -39,10 +39,10 @@ genes stay unassessed.
 | below_screen | — | none | 1,373 |
 | dismissed | vital | none | 8 |
 | established | protected | unsafe | 5 |
-| established | vital | unsafe | 121 |
+| established | vital | unsafe | 123 |
 | unassessed | — | none | 36 |
 | unresolved | protected | review | 7 |
-| unresolved | vital | review | 254 |
+| unresolved | vital | review | 252 |
 
 ## Mapping risk
 
@@ -149,6 +149,7 @@ not graded.
 | WNT8A | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 5 / 69 | 783/15,132 (5.2%) | 0.75 | replicated signal at a locus without mapping risk |
 | SPATA45 | brain: lamp5 GABAergic cortical interneuron | 2 / 5 | 80/1,548 (5.2%) | 0.33 | replicated signal at a locus without mapping risk |
 | BOLL | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 18 | 70/1,362 (5.1%) | 0.017 | replicated signal at a locus without mapping risk |
+| RGSL1 | brain: lamp5 GABAergic cortical interneuron | 4 / 26 | 102/2,004 (5.1%) | 0.012 | replicated signal at a locus without mapping risk (upstream non-coding host superseded by locus review) |
 | SPMIP11 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 2 / 4 | 65/1,362 (4.8%) | 0 | replicated signal at a locus without mapping risk |
 | C9orf57 | brain: oligodendrocyte | 3 / 21 | 74/1,608 (4.6%) | 0 | replicated signal at a locus without mapping risk |
 | ASZ1 | brain: oligodendrocyte | 2 / 53 | 50/1,141 (4.4%) | 0 | replicated signal at a locus without mapping risk |
@@ -162,6 +163,7 @@ not graded.
 | MARCOL | brain: astrocyte | 2 / 39 | 64/1,951 (3.3%) | 0.089 | replicated signal at a locus without mapping risk |
 | MSLNL | eye: anterior lens cell | 2 / 8 | 40/1,239 (3.2%) | — | replicated signal at a locus without mapping risk |
 | ERICH6B | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 4 / 14 | 41/1,285 (3.2%) | 0.1 | replicated signal at a locus without mapping risk |
+| OOSP4B | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 2 / 4 | 471/15,132 (3.1%) | 0 | replicated signal at a locus without mapping risk (upstream non-coding host superseded by locus review) |
 | OTOG | eye: Mueller cell | 3 / 20 | 71/2,328 (3.0%) | — | replicated signal at a locus without mapping risk |
 | KLHL10 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 24 | 41/1,362 (3.0%) | 0.72 | replicated signal at a locus without mapping risk |
 | MROH5 | eye: pigmented epithelial cell | 2 / 4 | 42/1,544 (2.7%) | — | replicated signal at a locus without mapping risk |
@@ -407,7 +409,7 @@ not graded.
 | ENSG00000288520 | eye: non-pigmented ciliary epithelial cell | 2 / 6 | 66/1,110 (5.9%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | MINDY4B | eye: non-pigmented ciliary epithelial cell | 1 / 33 | 191/3,229 (5.9%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | SELENOV | eye: trabecular meshwork cell | 1 / 5 | 255/4,340 (5.9%) | — | frequent single-study normal-cell signal needs independent confirmation |
-| DAZL | eye: astrocyte | 1 / 4 | 163/2,782 (5.9%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
+| DAZL | eye: astrocyte | 1 / 4 | 163/2,782 (5.9%) | — | frequent single-study normal-cell signal needs independent confirmation (upstream non-coding host superseded by locus review) |
 | ENSG00000272741 | eye: amacrine cell | 1 / 4 | 88/1,529 (5.8%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | TRIM77 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 1 / 12 | 68/1,190 (5.7%) | 0 | frequent single-study normal-cell signal with unresolved locus attribution (sequence shared with another locus) |
 | ENSG00000256349 | eye: retinal rod cell | 1 / 4 | 703/12,412 (5.7%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
@@ -418,16 +420,15 @@ not graded.
 | ENSG00000286070 | brain: L5 extratelencephalic projecting glutamatergic cortical neuron | 4 / 26 | 85/1,525 (5.6%) | — | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
 | ENSG00000259066 | brain: dopaminergic neuron | 5 / 45 | 106/1,912 (5.5%) | 0 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000198211 | eye: amacrine cell | 1 / 4 | 82/1,529 (5.4%) | — | frequent single-study normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
-| ENSG00000254553 | brain: dopaminergic neuron | 6 / 78 | 100/1,912 (5.2%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | POM121L2 | brain: dopaminergic neuron | 1 / 5 | 100/1,912 (5.2%) | 0.048 | frequent single-study normal-cell signal needs independent confirmation |
+| ENSG00000254553 | brain: dopaminergic neuron | 6 / 78 | 100/1,912 (5.2%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000267477 | eye: amacrine cell | 1 / 3 | 94/1,805 (5.2%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000269179 | eye: conjunctival epithelial cell | 2 / 3 | 64/1,249 (5.1%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
-| RGSL1 | brain: lamp5 GABAergic cortical interneuron | 4 / 26 | 102/2,004 (5.1%) | 0.012 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000258830 | eye: retinal bipolar neuron | 1 / 4 | 272/5,348 (5.1%) | — | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000267881 | colon: intestinal crypt stem cell of colon | 1 / 1 | 66/1,305 (5.1%) | 0 | frequent single-study normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000286022 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 65 | 68/1,362 (5.0%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
-| ENSG00000249773 | brain: glutamatergic neuron | 4 / 35 | 79/1,621 (4.9%) | 0.5 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000267179 | brain: glutamatergic neuron | 3 / 19 | 79/1,621 (4.9%) | 0 | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
+| ENSG00000249773 | brain: glutamatergic neuron | 4 / 35 | 79/1,621 (4.9%) | 0.5 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | DUX4 | brain: L2/3 intratelencephalic projecting glutamatergic neuron | 3 / 14 | 63/1,326 (4.8%) | 0 | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus) |
 | ZNF99 | kidney: kidney loop of Henle thick ascending limb epithelial cell | 4 / 8 | 54/1,165 (4.6%) | 0.1 | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus) |
 | ENSG00000273259 | liver: hepatocyte | 3 / 4 | 242/5,256 (4.6%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
@@ -450,7 +451,6 @@ not graded.
 | PRR5-ARHGAP8 | brain: astrocyte | 4 / 16 | 69/2,129 (3.2%) | 0.1 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000262560 | brain: dopaminergic neuron | 4 / 8 | 60/1,912 (3.1%) | — | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | ENSG00000261732 | eye: Mueller cell | 3 / 7 | 63/2,017 (3.1%) | — | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
-| OOSP4B | brain: L2/3-6 intratelencephalic projecting glutamatergic neuron | 2 / 4 | 471/15,132 (3.1%) | 0 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |
 | OR2T2 | kidney: epithelial cell of proximal tubule | 3 / 4 | 94/3,189 (2.9%) | 0.033 | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus) |
 | ZNF286A-TBC1D26 | brain: glutamatergic neuron | 3 / 22 | 32/1,168 (2.7%) | — | replicated normal-cell signal with unresolved locus attribution (sequence shared with another locus | exon inside another same-strand gene) |
 | TAS2R1 | brain: direct pathway medium spiny neuron | 3 / 7 | 59/2,186 (2.7%) | 0.37 | replicated normal-cell signal with unresolved locus attribution (exon inside another same-strand gene) |

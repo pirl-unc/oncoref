@@ -1,6 +1,6 @@
 # Curation summary
 
-Policy `oncoref.target-selection.2026-11-20.1`, 19,893 human protein records. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
+Policy `oncoref.target-selection.2026-11-20.2`, 19,893 human protein records. **327 CTA, 69 Cancer Antigen only, 128 Reproductive Antigen only.** These are outputs of screening rules, not validated tumor antigens. Every figure is drawn from the [rebuilt catalog](index.md); thresholds are read from the policy constants.
 
 ## Catalog evidence, biological sets and host selection
 
@@ -16,12 +16,12 @@ Reproductive protection is opt-in for every anatomy preset. Not protected, prote
 
 | Host profile | Protected compartments | CTA | CA only | RA only | CA ∪ RA |
 |---|---|---|---|---|---|
-| all | none | 327 | 70 | 128 | 525 |
-| female-patient | none | 327 | 70 | 128 | 525 |
-| female-patient (protect ovary) | ovary | 277 | 67 | 113 | 457 |
-| female-patient (lactating) | lactating_breast | 320 | 67 | 124 | 511 |
+| all | none | 327 | 69 | 128 | 524 |
+| female-patient | none | 327 | 69 | 128 | 524 |
+| female-patient (protect ovary) | ovary | 277 | 66 | 113 | 456 |
+| female-patient (lactating) | lactating_breast | 320 | 66 | 124 | 510 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
-| male-patient | none | 327 | 70 | 128 | 525 |
+| male-patient | none | 327 | 69 | 128 | 524 |
 | male-patient (protect testis) | testis | 54 | 29 | 24 | 107 |
 | male-patient (protect adult tissues) | testis, epididymis, prostate, seminal vesicle, resting_breast | 40 | 23 | 11 | 74 |
 
@@ -37,7 +37,7 @@ CTA is the intersection. Reproductive-only proteins have no qualifying cancer ev
 
 ![Set overlap](summary/venn.png)
 
-Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,758 of all 2,233 nominations are Unsafe, 68 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
+Of 327 CTA, 252 are published nominations and 75 are not. 1,877 published nominations are in neither set: 1,759 of all 2,233 nominations are Unsafe, 67 Other:Review and 7 Other:Sequence. A published nomination is an annotation; it never overrides an exclusion.
 
 ### Curated literature sources by antigen class
 
@@ -57,14 +57,14 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA | 17,507 | 2,386 |
 | Single-cell clusters (HPA scRNA) | 436 | 1,950 |
 | Sorted immune subsets | 96 | 1,854 |
-| Donor-replicated rare-cell RNA | 104 | 1,750 |
-| Normal-tissue protein (IHC) | 50 | 1,700 |
-| Curated normal-tissue literature | 49 | 1,651 |
-| Adult cornea scRNA | 5 | 1,646 |
-| Incomplete coverage, translation, or paralog review | 736 | 910 |
+| Donor-replicated rare-cell RNA | 106 | 1,748 |
+| Normal-tissue protein (IHC) | 50 | 1,698 |
+| Curated normal-tissue literature | 49 | 1,649 |
+| Adult cornea scRNA | 5 | 1,644 |
+| Incomplete coverage, translation, or paralog review | 734 | 910 |
 | Sequence overlap with Unsafe proteins | 48 | 862 |
 | Below 10× threshold or Disposable > 32 | 249 | 613 |
-| Unscreened adult normal organ | 88 | 525 |
+| Unscreened adult normal organ | 89 | 524 |
 
 ![Published nominations](summary/funnel-published.png)
 
@@ -74,11 +74,11 @@ A protein leaves at the first idea that removes it, so later steps show only wha
 | Bulk tissue RNA | 1,454 | 779 |
 | Single-cell clusters (HPA scRNA) | 182 | 597 |
 | Sorted immune subsets | 25 | 572 |
-| Donor-replicated rare-cell RNA | 67 | 505 |
-| Normal-tissue protein (IHC) | 19 | 486 |
-| Curated normal-tissue literature | 10 | 476 |
-| Adult cornea scRNA | 1 | 475 |
-| Incomplete coverage, translation, or paralog review | 68 | 407 |
+| Donor-replicated rare-cell RNA | 68 | 504 |
+| Normal-tissue protein (IHC) | 19 | 485 |
+| Curated normal-tissue literature | 10 | 475 |
+| Adult cornea scRNA | 1 | 474 |
+| Incomplete coverage, translation, or paralog review | 67 | 407 |
 | Sequence overlap with Unsafe proteins | 7 | 400 |
 | Below 10× threshold or Disposable > 32 | 27 | 373 |
 | Unscreened adult normal organ | 17 | 356 |
@@ -98,7 +98,7 @@ Steps that remove no published nomination are omitted from the second funnel. [A
 | Monaco immune | 11,264 | 19 |
 | HPA normal protein | 10,152 | 47 |
 | HPA immune | 7,973 | 14 |
-| Established rare normal-cell RNA | 126 | 103 |
+| Established rare normal-cell RNA | 128 | 105 |
 | Reviewed normal-cell knowledge | 32 | 31 |
 | Published normal-tissue expression | 19 | 18 |
 | Accepted normal-protein evidence | 8 | 2 |
@@ -137,7 +137,7 @@ Both CA and RA independently require 10× max(N, D, 1 TPM). Both normal compartm
 
 - Required normal coverage incomplete: 400
 - Identity or translation unresolved: 103
-- Normal signal blocks admission (not Unsafe): 233
+- Normal signal blocks admission (not Unsafe): 231
 - Other unresolved evidence or comparison: 0
 
 A protein can use several routes, so route counts exceed set sizes.

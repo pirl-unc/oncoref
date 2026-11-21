@@ -116,11 +116,20 @@ def shared_facts():
         for prefix, field in [("hold:", "candidate_exclusion"), ("unsafe:", "unsafe_evidence")]:
             values = f.representative_gene_id.map(group.set_index("gene_id")[field])
             f.loc[values.notna(), prefix + assay] = values.dropna().astype(bool)
-    for name in ["rare-cell-evidence.csv.gz", "rare-cell-evidence.json"]:
+    for name in [
+        "rare-cell-evidence.csv.gz",
+        "rare-cell-evidence.json",
+        "rare-cell-attribution-reviews.json",
+    ]:
         INPUTS[f"oncoref/data/{name}"] = sha256(ROOT / "oncoref/data" / name)
     provenance = json.loads((ROOT / "oncoref/data/rare-cell-evidence.json").read_text())
     if provenance["sha256"] != INPUTS["oncoref/data/rare-cell-evidence.csv.gz"]:
         raise ValueError("Rare-cell evidence does not match its provenance")
+    if (
+        provenance.get("attribution_reviews_sha256")
+        != INPUTS["oncoref/data/rare-cell-attribution-reviews.json"]
+    ):
+        raise ValueError("Rare-cell evidence was graded with another attribution review ledger")
     if provenance["policy_id"] != target_selection.POLICY_ID:
         raise ValueError("Rare-cell evidence was graded under another policy")
     rare = pd.read_csv(ROOT / "oncoref/data/rare-cell-evidence.csv.gz").set_index("entity_id")
@@ -1355,6 +1364,9 @@ def build(*, reuse_tumor_cache=False, normal_stat="p95"):
         "finding_bulk_context",
         "paralog_ambiguous",
         "host_overlapped",
+        "raw_host_overlapped",
+        "attribution_review_id",
+        "attribution_review_status",
         "sequence_partners",
         "same_strand_hosts",
         "max_detection_pct",

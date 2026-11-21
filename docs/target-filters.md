@@ -1,6 +1,6 @@
 # Patient profiles and candidate filters
 
-Catalog `oncoref.target-selection.2026-11-20.1`; filter policy `oncoref.target-filters.2026-11-17.5`.
+Catalog `oncoref.target-selection.2026-11-20.2`; filter policy `oncoref.target-filters.2026-11-17.5`.
 Filters narrow the biological candidate sets (`CA`, `RA`, `CTA`) across six explicit layers, while patient-anatomy constraints evaluate reproductive and mammary exposure independently without relabeling biological categories. [Antigen whitepaper](antigen-whitepaper.md) · [Interactive catalog](audits/target-selection-20261110/rebuild/report.html) · [Filter sweep tables](audits/target-filters-20261112/index.md).
 
 ```python
@@ -50,12 +50,12 @@ assumptions and specify protected or absent organs explicitly. `all` applies no 
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
-| `all` | none | **327** | 70 | 128 | 525 |
-| `female-patient` | none | **327** | 70 | 128 | 525 |
-| `female-patient (protect ovary)` | ovary | **277** | 67 | 113 | 457 |
-| `female-patient (lactating)` | lactating_breast | **320** | 67 | 124 | 511 |
+| `all` | none | **327** | 69 | 128 | 524 |
+| `female-patient` | none | **327** | 69 | 128 | 524 |
+| `female-patient (protect ovary)` | ovary | **277** | 66 | 113 | 456 |
+| `female-patient (lactating)` | lactating_breast | **320** | 66 | 124 | 510 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
-| `male-patient` | none | **327** | 70 | 128 | 525 |
+| `male-patient` | none | **327** | 69 | 128 | 524 |
 | `male-patient (protect testis)` | testis | **54** | 29 | 24 | 107 |
 | `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **40** | 23 | 11 | 74 |
 
@@ -67,7 +67,7 @@ state labels are inferred and do not prove expression absence in other hosts.
 
 | Mode | Retained proteins without a host context | Changes |
 |---|---:|---|
-| `all` | 525 | `{}` |
+| `all` | 524 | `{}` |
 | `loose` | 385 | `{'min_papers': 1}` |
 | `standard` | 248 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
 | `strict` | 115 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |

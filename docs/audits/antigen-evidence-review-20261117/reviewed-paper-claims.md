@@ -201,7 +201,17 @@ A systematic dissection of human primary osteoblasts in vivo at single-cell reso
 |---|---|---|---|---|
 | SP7 | SP7 | SP7 RNA was enriched in the O2 mature osteoblast cluster. | Primary femoral-head osteoblasts from one 31-year-old man with osteoarthritis and osteopenia | normal_tissue_review |
 
-**SP7** (`ENSG00000170374`): Single-cell RNA sequencing of freshly isolated cells. Source: Supplementary Table 3, row 528, O2 versus other osteoblast clusters. Limitations: One surgical donor with bone disease. The within-study differential expression statistic cannot set a healthy bulk TPM ceiling.
+**SP7** (`ENSG00000170374`): Single-cell RNA sequencing of freshly isolated cells. Source: Supplementary Table 3, row 528, O2 versus other osteoblast clusters. Limitations: One surgical donor with bone disease. The within-study differential expression statistic cannot set a healthy bulk TPM ceiling, while mineralized bone and adult osteoblasts are absent from GTEx, HPA bulk/scRNA, HPA 37-tissue normal IHC (bone marrow is hematopoietic aspirate; HPA073422 reports uncertain Low skin staining without mineralized-bone coverage) and CELLxGENE normal panels, leaving osteosarcoma (SARC_OS) tumor peaks unscreened against SP7's adult normal home.
+
+## [Lui et al., 2022](https://doi.org/10.1038/s41467-022-28318-4)
+
+A neomorphic variant in SP7 alters sequence specificity and causes a high-turnover bone disorder
+
+| Gene | Original name | Reported as | Context | Allowed uses |
+|---|---|---|---|---|
+| SP7 | SP7 | Germline SP7 p.S309W alters DNA-binding specificity in osteoblastic lineage cells and causes a human high-turnover sclerosing bone disorder, complementing recessive SP7 osteogenesis imperfecta phenotypes. | Pediatric/germline human high-turnover bone disorder and osteoblast regulatory assays | functional_context, normal_tissue_review |
+
+**SP7** (`ENSG00000170374`): Clinical genetics, ChIP-seq and osteoblast transcriptional reporter assays. Source: Results and PMC8816926 clinical/mechanistic characterization. Limitations: Germline developmental and bone-turnover phenotypes establish lineage function rather than measured adult human normal-tissue RNA or protein abundance.
 
 ## [Molè et al., 2021](https://doi.org/10.1038/s41467-021-23758-w)
 

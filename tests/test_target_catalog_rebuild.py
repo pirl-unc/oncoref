@@ -28,10 +28,10 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     genes = [g for ids in catalog.member_gene_ids for g in json.loads(ids)]
     assert len(genes) == len(set(genes)) == 20099
     assert catalog.category.value_counts().to_dict() == {
-        "Unsafe": 18247,
-        "Other": 1121,
+        "Unsafe": 18249,
+        "Other": 1120,
         "CTA": 327,
-        "Cancer Antigen only": 70,
+        "Cancer Antigen only": 69,
         "Reproductive Antigen only": 128,
     }
     assert catalog.is_cta.equals(catalog.is_cancer_antigen & catalog.is_reproductive_antigen)
@@ -49,7 +49,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert tissue_changes.classification.eq("Other:Review").all()
     assert tissue_changes.rare_cell_status.eq("not_extracted").all()
     assert catalog.loc[unsafe & ~released, "Unsafe_reasons"].value_counts().to_dict() == {
-        "Established rare normal-cell RNA": 64,
+        "Established rare normal-cell RNA": 66,
         "Published normal-tissue expression": 13,
     }
     # Strong unresolved signals are held; accepted exclusions still take precedence.
@@ -74,6 +74,11 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     assert gfy.classification == "Other:Unscreened tissue"
     assert gfy.published_home_tissue == gfy.home_tissue == "olfactory epithelium"
     assert gfy.cancer_evidence == "qualifies" and not gfy.is_cancer_antigen
+    sp7 = by_name.loc["SP7"]
+    assert sp7.classification == "Other:Unscreened tissue"
+    assert sp7.published_home_tissue == sp7.home_tissue == "bone"
+    assert sp7.cancer_evidence == "qualifies" and not sp7.is_cancer_antigen
+    assert sp7.tumor_top_cancer_code == "SARC_OS"
     assert by_name.loc["CALHM3", "published_home_tissue"] == "taste bud"
     assert pd.isna(by_name.loc["AMELX", "published_home_tissue"])
     # Reproductive coexpression is advisory, not evidence against tumor origin.
@@ -137,9 +142,12 @@ def test_named_assignments_and_accepted_review_holds(catalog):
         assert by_name.loc[name, "finding_donors_multi_molecule"] == 2
     assert by_name.loc["PRAME", "finding_tissue"] == "eye"
     # Replicated multi-molecule RNA at a locus without mapping risk.
-    for name in ["PLAC1", "ADAM7", "CBY3"]:
+    for name in ["PLAC1", "ADAM7", "CBY3", "RGSL1", "OOSP4B"]:
         assert by_name.loc[name, "category"] == "Unsafe"
         assert by_name.loc[name, "rare_cell_status"] == "established"
+    assert by_name.loc["RGSL1", "attribution_review_status"] == "confounder_rejected"
+    assert by_name.loc["OOSP4B", "attribution_review_status"] == "confounder_rejected"
+    assert by_name.loc["DAZL", "attribution_review_status"] == "confounder_rejected"
     # A mapping-risk flag alone cannot dismiss strong normal-cell RNA.
     for name, note in [("TAS2R1", "same-strand gene"), ("TMEM269", "same-strand gene")]:
         assert by_name.loc[name, "rare_cell_status"] == "unresolved"
@@ -182,7 +190,7 @@ def test_named_assignments_and_accepted_review_holds(catalog):
             catalog.released_category.eq("CTA") & catalog.readthrough_locus, "protein_group_label"
         ]
     )
-    assert len(held) == 99 and len(held - readthrough) == 93
+    assert len(held) == 98 and len(held - readthrough) == 92
     assert {"ATF7-NPFF", "ENSG00000273155"} <= readthrough <= held
     assert held >= {"CALHM3", "PRAMEF18", "TRIM75", "TAF11L11", "TAF11L12", "TAF11L13", "TAF11L14"}
     assert by_name.loc["CDY1B", "cancer_evidence"] == "does_not_qualify"
@@ -204,7 +212,7 @@ def test_comparison_has_required_contexts_and_witnesses(catalog):
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
     required = set(summary["comparison_required_contexts"])
     maxima = normal.groupby("entity_id").value.max()
-    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 923
+    assert len(maxima) == summary["assessed_for_cancer_evidence"] == 921
     assert summary["shared_eligible"] == 842
     assert summary["expression_bounds"]["fail"] == 22
     failed = catalog[catalog.expression_bounds_status.eq("fail")]
