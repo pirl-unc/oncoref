@@ -1,0 +1,24 @@
+{
+  "catalog_release": "1.42.0",
+  "catalog_commit": "d3f58e94f5b18d195085af3f8e54071b1a65ccf3",
+  "implementation_sha256": "2b230c480c2bd125997b2acfd5132abc8cf1478248749458ff5b5e949e0eb6dd",
+  "inputs": {
+    "oncoref/data/target-selection.csv.gz": "7fc9182bc4ed89535c4fc051bbd2980301ed958dfc14444556a2c4f6a31465d3",
+    "docs/audits/cta-count-history-20261117/cta-transitions.csv": "ed2d016fbd1bc945053e653b403d016e9ee22f79c8ba5e28f4718b8936392303",
+    "docs/audits/target-selection-20261110/rebuild/normal-comparison.csv.gz": "b3d754bda1d75fa25310dff02a257f5563b9d2733700b5e216888fa027ffce54",
+    "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "5efae1d1119be64e18a6a32f48c99fa46ef5d15b6333952fa895ee2d745c3a87",
+    "docs/audits/target-selection-20261110/rebuild/library-qc.csv.gz": "32cf1253c9f2b2312a7a99027ee6ad7a80adf1f1adc30d0897beb17d3d29a1a4",
+    "docs/audits/target-selection-20261110/rebuild/tumor-identities/TGCT.csv.gz": "c40fcebe1709799a43559ec8360b28c412bc6d837eaf602a2499b092cd98696a",
+    "docs/audits/cta-selection-20261028/tumor-identity-repair/manifest.json": "3de0d32c466bca3d851963d65595bdc4c5be84f653061515f0710973b100ff89",
+    "docs/audits/antigen-evidence-review-20261117/ihc-counterfactual.csv.gz": "c675ae304cd3e2af723ff11976c6384ebceb1eb47689f28d2a2962486b54a67d"
+  },
+  "TGCT_matrix_sha256": "21e60e377b26ea0b3c54910897424b3ed3ab051f671677c9123c1171520cbc41",
+  "outputs": {
+    "candidate-evidence.csv.gz": "b0a62f8cc09b946d1c54c8d2a812bfc2c2ec0b48a78eec3b4ff45ab4390c47e4",
+    "early-embryo-counterfactual.csv.gz": "d70898506f936ba8d6395250dd79ac56d76cca9e970ee625144441db698c40ea",
+    "index.md": "183e97e5510b99a8b68d051dd34e83fb4f4275149436f8cfc03b81a5cddd08b7",
+    "reproductive-tissue-scope.csv": "fc85785d89d69beb7c7814e22a2d95da621e033f6f8ceb2520d5460b5c525423",
+    "summary.json": "38bafd20c9b4db46009ea875ca9a2ff326d2243e0ffeef6a121719a1e63dea6f",
+    "tgct-qc-counterfactual.csv.gz": "7b2693014e9d9df35192bc021a01b45b2b00cc431ce847037710ef00c6b70556"
+  }
+}
