@@ -212,19 +212,27 @@ oncoref plot expression-provenance --region world
 | `expr-family-coverage.png` | Cancer types with and without a source, by family |
 | `expr-burden-coverage.png` | Coverage weighted by incidence share |
 
-### CTA panel design
+### CTA panel design & patient coverage
 
 ```bash
-oncoref plot cta-covering-set                      # q3 > 30 TPM
-oncoref plot cta-covering-set --stat median --threshold-tpm 10
+oncoref plot covering-set                          # cDNA-collapsed reference expression (q3 > 30 TPM, CSV + PNG + PDF)
+oncoref plot covering-set --gene-set ca --stat median --threshold 10 --n-genes 20
+oncoref plot cta-covering-set                      # percentile-shard CTA panel figure (q3 > 30 TPM)
+oncoref plot patient-coverage --gene-set cta --threshold-mode auto
 ```
 
-Greedy weighted set cover: at each step, the CTA adding the most still-uncovered
-US incidence. Two curves — coverage by cancer type and by patients. Defaults to
-`q3` rather than `median` because CTAs are subset antigens, so "at least 25% of
-patients" is the meaningful bar; a median cut hides real targets.
+Greedy weighted set cover: at each step, the antigen adding the most still-uncovered
+curated disease burden (`us_incidence_pct` by default; unmapped cancer codes carry
+zero burden weight and are disclosed on the figure). Two curves — cumulative coverage
+by cancer type (over all eligible cancer types) and by patients. Defaults to `q3`
+rather than `median` because CTAs are subset antigens, so "at least 25% of patients"
+is the meaningful bar; a median cut hides real targets.
 
-Needs the expression bundle (percentile artifacts).
+Every `.png` saved through `oncoref.figure_export.save_figure` (including `plots`,
+`coverage`, `cta_curation_plots`, and `expression_provenance_plots`) automatically
+writes a matching vector `.pdf` with Type-42 fonts at `>=300` dpi. `cta-curation`
+additionally exports `cta-stage-definitions.json`, `cta-final-stage-attrition.csv`,
+`active-policy-gate-matrix.csv`, and `active-policy-transitions.csv`.
 
 ### Everything else
 
