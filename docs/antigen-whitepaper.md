@@ -281,7 +281,7 @@ Paralogous loci encoding identical proteins (`SPANXA1/2`, `XAGE1A/B`, `VCY/1B`) 
 
 ### Evidence sources and native-TPM coverage
 
-OncoRef pins **323** SHA-256-verified files across **1,221** source/context rows and **130** assessed tumor cohorts. Incompatible assay units are never pooled; every dataset stays in its native scale and enters only the layer it supports:
+OncoRef pins **324** SHA-256-verified files across **1,221** source/context rows and **130** assessed tumor cohorts. Incompatible assay units are never pooled; every dataset stays in its native scale and enters only the layer it supports:
 
 | Evidence pillar | Primary resources | Native statistic and role |
 |---|---|---|
@@ -310,7 +310,7 @@ OncoRef pins **323** SHA-256-verified files across **1,221** source/context rows
 </details>
 
 <details markdown="1">
-<summary>Source-family rules and versioned file inventory (323 files across 1,221 contexts)</summary>
+<summary>Source-family rules and versioned file inventory (324 files across 1,221 contexts)</summary>
 
 | Source family | Evidence provided | Role in classification |
 |---|---|---|
@@ -332,7 +332,7 @@ OncoRef pins **323** SHA-256-verified files across **1,221** source/context rows
 | cell atlas | 4 |
 | comparison or sample metadata | 9 |
 | curated data | 8 |
-| curation input | 124 |
+| curation input | 125 |
 | native assay or supplement | 42 |
 | tumor expression | 132 |
 
@@ -368,7 +368,7 @@ Cross-cohort tumor matrices come from distinct studies and processing pipelines;
 | [Classification rules](target-selection.md) · [Build guide](curation.md) | Policy contract, CLI commands, and reproducible build instructions |
 | [Tissue injury hierarchy](tissue-hierarchy.md) · [Tissue tiers](tissue-tiers.md) · [Patient-specific filtering](host-selection.md) | Cited adult organ and cell-type injury assessments and patient-profile filtering |
 | [Sequence API and peptide subtraction](antigen-sequences.md) · [Data download API](antigen-data.md) | Ensembl 115 reference translations, k-mer subtraction, and programmatic dataset retrieval |
-| [Registered file inventory (`sources.csv`)](antigen-whitepaper/sources.csv) | All **323** pinned source files, catalog selectors, and SHA-256 digests |
+| [Registered file inventory (`sources.csv`)](antigen-whitepaper/sources.csv) | All **324** pinned source files, catalog selectors, and SHA-256 digests |
 | [Studied CTA dispositions (`studied-proteins.csv`)](antigen-whitepaper/studied-proteins.csv) | Full measurements and exclusion reasons for all **2,238** published or clinical anchor proteins |
 | [Candidate tumor rankings (`tumor-ranks.csv`)](antigen-whitepaper/tumor-ranks.csv) | Peak tumor TPM, folds, cohort/sample IDs, and patient counts for all **524** candidates |
 | [Curated literature sources (`literature-sources.csv`)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv) | Disposition counts across all **149** catalog-mapped papers grouped by antigen class |
