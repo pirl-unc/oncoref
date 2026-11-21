@@ -297,11 +297,18 @@ def subtract(args):
         if not sequence or not set(sequence) <= set("ABCDEFGHIJKLMNOPQRSTUVWXYZ*"):
             raise ValueError(f"Invalid protein sequence for {label}")
     host_overrides = _host_overrides(args)
-    records = (
-        antigen_sets.select("CA|RA", **host_overrides).background_sequences(args.background)
-        if host_overrides
-        else antigen_sets.sequences(args.background)
-    )
+    species = getattr(args, "species", "human")
+    if host_overrides:
+        selection_kwargs = dict(host_overrides)
+        if species != "human":
+            selection_kwargs["species"] = species
+        records = antigen_sets.select("CA|RA", **selection_kwargs).background_sequences(
+            args.background
+        )
+    elif species != "human":
+        records = antigen_sets.sequences(args.background, species=species)
+    else:
+        records = antigen_sets.sequences(args.background)
     if records.attrs.get("missing_gene_ids"):
         raise ValueError(
             "Background has missing gene translations; subtraction cannot claim complete coverage"
@@ -433,11 +440,10 @@ def register(subparsers):
     peptides.add_argument("--min-length", type=int, default=8)
     peptides.add_argument("--max-length", type=int, default=15)
     peptides.set_defaults(func=subtract)
-    for command in (listing, explanation, counts):
+    for command in (listing, explanation, counts, peptides):
         command.add_argument(
             "--species",
             default="human",
             help="Species name or taxonomy ID (human/9606, dog/canine/9615, mouse/10090)",
         )
-    for command in (listing, explanation, counts, peptides):
         command.add_argument("--format", choices=["table", "csv", "json"], default="table")

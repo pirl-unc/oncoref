@@ -559,6 +559,42 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "legacy-compat",
         "transitional response-signature surface; new/extended therapy panels belong in pirlygenes",
     ),
+    "cancer-fusion-citation-audit": (
+        "ontology",
+        "per-fusion primary-literature citation audit behind cancer-fusions",
+    ),
+    "cancer-ici-response": (
+        "response",
+        "curated ICI objective response rates by cancer code and regimen",
+    ),
+    "cancer-ici-response-estimates": (
+        "response",
+        "trial-level ICI response estimates, denominators and confidence intervals",
+    ),
+    "cancer-ici-source-locator-audit": (
+        "response",
+        "primary-source table/figure locator audit for curated ICI response rows",
+    ),
+    "cancer-key-gene-citation-audit": (
+        "governance",
+        "per-gene primary-literature citation audit behind legacy cancer-key-genes",
+    ),
+    "cancer-normal-tissue-map": (
+        "ontology",
+        "cancer type -> matched normal tissue of origin map",
+    ),
+    "cancer-tmb-source-audit": (
+        "genomics",
+        "per-cancer-type primary-source audit behind cancer-tmb",
+    ),
+    "canonical-gene-space": (
+        "gene-id",
+        "authoritative primary-assembly Ensembl canonical gene-ID universe",
+    ),
+    "gse294016-sample-diagnoses": (
+        "expression",
+        "curated per-sample diagnosis mapping for GSE294016 cohorts",
+    ),
 }
 
 #: pirlygenes/trufflepig data that is NOT oncoref's domain — target selection /

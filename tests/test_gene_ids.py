@@ -88,6 +88,19 @@ def test_canonical_gene_symbol_display_and_short_names():
     assert g.display_gene_name("ENSG99999999999") is None
     assert g.short_gene_name("ENSG00000005955") == "GGNBP2"
 
+    # Unnamed canonical Ensembl genes must return None, never literal 'nan'.
+    assert g.canonical_gene_symbol("ENSG00000111780") is None
+    assert g.display_gene_name("ENSG00000111780") is None
+    assert g.short_gene_name("ENSG00000111780") is None
+    unnamed = g.canonical_gene_space().loc[lambda df: df["symbol"].isna(), "ensembl_gene_id"]
+    assert not unnamed.empty
+    assert all(g.canonical_gene_symbol(gid) is None for gid in unnamed.head(25))
+
+    # Meanwhile the real NCBI synonym 'NaN' (Nav1.9 / SCN11A) must resolve cleanly
+    # rather than colliding with missing symbols in _canonical_symbol_index.
+    assert g.canonical_gene_id("NaN") == "ENSG00000168356"
+    assert g.canonical_gene_symbol("NaN") == "SCN11A"
+
 
 def test_gene_display_helpers_are_top_level_exports():
     for name in (

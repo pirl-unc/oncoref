@@ -205,10 +205,14 @@ def proteins(
     absent_tissues=_UNSET,
     host=None,
     mode="all",
+    species="human",
 ):
     """Compatibility convenience view; prefer select() when using sequences/backgrounds."""
+    from .species import resolve_species
+
     if group not in ALL_SETS:
         raise ValueError(f"Unknown antigen set {group!r}; choose from {ALL_SETS}")
+    resolved = resolve_species(species)
     # Omitted convenience arguments must preserve a caller's TargetFilter.
     # Explicit False/()/"all" remain valid overrides of that filter.
     overrides = {
@@ -236,12 +240,20 @@ def proteins(
             raise ValueError(
                 "Host profiles and candidate filters require select(...).background_proteins()"
             )
-        rows = target_selection.results()
-        return rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
-    if not active and group in SETS:
-        rows = target_selection.results()
-        return rows[rows[SETS[group]]].reset_index(drop=True)
-    return select(group, mode=mode, host=host, **overrides).proteins()
+        if resolved.taxon_id == 9606:
+            rows = target_selection.results()
+        else:
+            from .species_target_selection import packaged_species_results
+
+            rows = packaged_species_results(resolved)
+        result = rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
+        result.attrs.update(
+            catalog_policy_id=target_selection.POLICY_ID,
+            set=group,
+            species=resolved.name,
+        )
+        return result
+    return select(group, mode=mode, host=host, species=resolved, **overrides).proteins()
 
 
 def gene_ids(group="CTA", **kwargs):
@@ -283,9 +295,14 @@ def loss_consequences(gene: str) -> list[dict]:
     return result
 
 
-def sequences(group="CTA", *, genome=None, **selection) -> pd.DataFrame:
+def sequences(group="CTA", *, genome=None, species="human", **selection) -> pd.DataFrame:
     """Translations from selected loci, with an exact catalog sequence match flag."""
-    return _sequences(proteins(group, **selection), group, genome=genome)
+    protein_rows = (
+        proteins(group)
+        if species == "human" and not selection
+        else proteins(group, species=species, **selection)
+    )
+    return _sequences(protein_rows, group, genome=genome, species=species)
 
 
 def _sequences(

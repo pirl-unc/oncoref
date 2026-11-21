@@ -90,3 +90,35 @@ def test_proteins_and_gene_ids_accept_host_profiles_and_reject_backgrounds():
     assert rows.is_cta.all() and rows.category.eq("CTA").all()
     with pytest.raises(ValueError, match="Host profiles"):
         antigen_sets.proteins("Unsafe", profile="female-patient")
+
+
+def test_proteins_uniform_schema_and_cross_species_wiring():
+    import oncoref
+
+    cta = antigen_sets.proteins("CTA")
+    cta_male = antigen_sets.proteins("CTA-M")
+    assert list(cta.columns) == list(cta_male.columns)
+    assert "catalog_category" in cta.columns
+    assert cta.attrs["set"] == "CTA"
+
+    dog_ras = antigen_sets.proteins("RA", species="canine")
+    assert dog_ras.empty and "catalog_category" in dog_ras.columns
+    assert antigen_sets.proteins("Unsafe", species="canine").attrs["species"] == "dog"
+    assert not antigen_sets.proteins("Other", species="canine").empty
+    assert antigen_sets.gene_ids("Other", species="canine")
+    assert not antigen_sets.proteins("Other", species="mouse").empty
+
+    for mod_name in (
+        "antigen_sets",
+        "curation",
+        "figure_style",
+        "host_context",
+        "peptide_subtraction",
+        "sequence_bundle",
+        "species_policies",
+        "species_target_selection",
+        "target_filters",
+        "tcr_trials",
+    ):
+        assert mod_name in oncoref.__all__
+        assert hasattr(oncoref, mod_name)

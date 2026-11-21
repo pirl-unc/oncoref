@@ -476,6 +476,8 @@ def rna_protein_hpa_priors(
             raise ValueError(f"HPA RNA/protein prior rows have an invalid {column}")
     if not frame["canonical_gene_id"].astype(str).str.fullmatch(r"ENSG[0-9]{11}").all():
         raise ValueError("HPA RNA/protein prior rows require canonical Ensembl gene IDs")
+    if frame["gene_symbol"].dropna().astype(str).str.strip().eq("nan").any():
+        raise ValueError("HPA RNA/protein prior rows must not encode missing symbols as 'nan'")
     if (
         frame["canonical_proteoform_id"].isna().any()
         or frame["proteoform_member_count"].lt(1).any()
