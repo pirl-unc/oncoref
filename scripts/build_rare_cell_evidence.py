@@ -38,6 +38,8 @@ SILETTI = ROOT / "docs/audits/normal-cell-atlas-20261110/siletti-granule-gene-de
 SILETTI_SOURCE = "283d65eb-dd53-496d-adb7-7570c7caa443"
 RISK = DATA / "gene-mapping-risk.csv.gz"
 LITERATURE = DATA / "normal-expression-literature.json"
+ATTRIBUTION_REVIEWS = DATA / "rare-cell-attribution-reviews.json"
+ATTRIBUTION_STATUSES = frozenset({"confounder_rejected", "unresolved", "single_study_unconfirmed"})
 BRAIN_BULK = {
     "amygdala", "basal ganglia", "caudate", "cerebellum", "cerebral cortex", "choroid plexus",
     "hippocampal formation", "hippocampus", "hypothalamus", "medulla oblongata", "midbrain",
@@ -174,8 +176,62 @@ def published_organs() -> dict[str, set[str]]:
     }
 
 
+def attribution_reviews(document: dict | None = None) -> dict[str, dict]:
+    """Load and validate Ensembl 115 exon-geometry and paralog attribution reviews."""
+    doc = json.loads(ATTRIBUTION_REVIEWS.read_text()) if document is None else document
+    if doc.get("schema") != "oncoref.rare-cell-attribution-reviews" or doc.get("version") != 1:
+        raise ValueError("Unsupported rare-cell attribution review schema")
+    by_gene: dict[str, dict] = {}
+    seen_ids: set[str] = set()
+    seen_entities: set[str] = set()
+    for row in doc["reviews"]:
+        rid = row["id"]
+        gid = row["gene_id"]
+        eid = row["entity_id"]
+        if (
+            rid in seen_ids
+            or gid in by_gene
+            or eid in seen_entities
+            or not re.fullmatch(r"ENSG\d{11}", gid)
+        ):
+            raise ValueError(f"Invalid or duplicate rare-cell attribution review: {rid}")
+        seen_ids.add(rid)
+        seen_entities.add(eid)
+        status = row.get("attribution_status")
+        supersedes = row.get("supersedes_host_overlap")
+        if (
+            status not in ATTRIBUTION_STATUSES
+            or type(supersedes) is not bool
+            or not row.get("rationale")
+            or not row.get("reviewed_on")
+            or row.get("ensembl_release") != 115
+        ):
+            raise ValueError(f"Incomplete rare-cell attribution review metadata: {rid}")
+        if supersedes:
+            hosts = row.get("host_geometry", [])
+            if (
+                status != "confounder_rejected"
+                or row.get("raw_host_overlapped") is not True
+                or row.get("raw_paralog_ambiguous") is not False
+                or row.get("shared_kmer_fraction", 1.0) >= 0.10
+                or row.get("shared_3prime_kmer_fraction", 1.0) >= 0.10
+                or not hosts
+                or any(
+                    h.get("selected_transcript_exons_in_host_span", 1) != 0
+                    or h.get("bp_upstream_of_selected_3prime_end", 0) < 20_000
+                    for h in hosts
+                )
+            ):
+                raise ValueError(
+                    f"Host-overlap supersession violates Ensembl 115 geometry bounds: {rid}"
+                )
+        by_gene[gid] = row
+    return by_gene
+
+
 def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
     published = published_organs()
+    reviews = attribution_reviews()
     by_gene = dict(iter(rows.groupby("gene_id")))
     floor = target_selection.DETECTION_FLOOR
     confirmed = bulk[bulk.bulk_tpm.ge(floor)].groupby("entity_id").organ.agg(set).to_dict()
@@ -188,9 +244,19 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
             if gene not in measured_genes:
                 continue
             flags = risk.loc[gene]
+            review = reviews.get(gene)
+            if review is not None and (
+                review["entity_id"] != protein.entity_id
+                or review["raw_paralog_ambiguous"] != bool(flags.paralog_ambiguous)
+                or review["raw_host_overlapped"] != bool(flags.host_overlapped)
+            ):
+                raise ValueError(f"Stale mapping-risk pin on attribution review {review['id']}")
+            raw_host = bool(flags.host_overlapped)
+            effective_host = False if (review and review["supersedes_host_overlap"]) else raw_host
+            mapping_risk = bool(flags.paralog_ambiguous) or effective_host
             receipt = target_selection.assess_rare_cell_rna(
                 by_gene.get(gene, rows.iloc[:0]).drop(columns=["count_sum", "count_max"]),
-                mapping_risk=bool(flags.mapping_risk),
+                mapping_risk=mapping_risk,
                 confirmed_tissues=confirmed.get(protein.entity_id, set()),
                 literature_tissues=published.get(protein.entity_id, set()),
             )
@@ -198,19 +264,25 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
                 # Measured in the panel, with no positive donor population to grade.
                 receipt["status"] = "below_screen"
             receipt["gene_id"] = gene
+            receipt["raw_host_overlapped"] = raw_host
+            receipt["host_overlapped"] = effective_host
+            receipt["review"] = review
             receipts.append(receipt)
         rank = {"established": 0, "unresolved": 1, "dismissed": 2, "below_screen": 3}
         receipts.sort(key=lambda r: (rank[r["status"]], -(r["max_multi_molecule_pct"] or 0)))
         top = receipts[0] if receipts else None
         finding = top["findings"][0] if top and top["findings"] else {}
         flags = risk.loc[top["gene_id"]] if top else None
+        top_review = top["review"] if top else None
         key = (protein.entity_id, finding.get("tissue"))
         support = bulk_by.loc[key] if key in bulk_by.index else None
         notes = []
         if finding and flags.paralog_ambiguous:
             notes.append("sequence shared with another locus")
-        if finding and flags.host_overlapped:
+        if finding and top["host_overlapped"]:
             notes.append("exon inside another same-strand gene")
+        elif finding and top["raw_host_overlapped"] and top_review:
+            notes.append("upstream non-coding host superseded by locus review")
         records.append(
             {
                 "entity_id": protein.entity_id,
@@ -227,7 +299,10 @@ def assess_proteins(proteins, rows, measured_genes, assessable, risk, bulk):
                 "max_detection_pct": top["max_detection_pct"] if top else None,
                 "max_multi_molecule_pct": top["max_multi_molecule_pct"] if top else None,
                 "paralog_ambiguous": bool(flags.paralog_ambiguous) if top else None,
-                "host_overlapped": bool(flags.host_overlapped) if top else None,
+                "host_overlapped": top["host_overlapped"] if top else None,
+                "raw_host_overlapped": top["raw_host_overlapped"] if top else None,
+                "attribution_review_id": top_review["id"] if top_review else "",
+                "attribution_review_status": top_review["attribution_status"] if top_review else "",
                 "shared_kmer_fraction": flags.shared_kmer_fraction if top else None,
                 "sequence_partners": flags.sequence_partners if top else None,
                 "same_strand_hosts": flags.same_strand_hosts if top else None,
@@ -488,6 +563,8 @@ def regrade_pinned():
             "policy_id": target_selection.POLICY_ID,
             "tier_policy_id": tier_policy_id(),
             "rules": target_selection.definition()["rare_cell_rna"],
+            "literature_sha256": digest(LITERATURE),
+            "attribution_reviews_sha256": digest(ATTRIBUTION_REVIEWS),
             "status_counts": evidence.rare_cell_status.value_counts().to_dict(),
             "action_counts": evidence.rare_cell_action.value_counts().to_dict(),
             "sha256": digest(DATA / "rare-cell-evidence.csv.gz"),
@@ -623,6 +700,7 @@ def main():
         "mapping_risk": risk_provenance,
         "confirmation_sources": sorted(bulk.bulk_source.unique()),
         "literature_sha256": digest(LITERATURE),
+        "attribution_reviews_sha256": digest(ATTRIBUTION_REVIEWS),
         "panel": {
             "scope": "adult, known donor, UMI protocol, primary normal tissue",
             "tissues": sorted(scoped.tissue.unique()),

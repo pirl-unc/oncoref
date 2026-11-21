@@ -16,7 +16,7 @@ from importlib.resources import files
 import numpy as np
 import pandas as pd
 
-POLICY_ID = "oncoref.target-selection.2026-11-20.1"
+POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -51,7 +51,8 @@ SHARED_CHECKS = (
 #: Failing one of these is Other:Review; bounds and sequence have their own subtypes.
 REVIEW_CHECKS = SHARED_CHECKS[:4]
 #: Normal tissues that no expression panel resolves. Bulk skin and tongue dilute hair
-#: follicle and taste buds; nose and tooth are absent. A tumor value was never compared
+#: follicle and taste buds; nose, tooth and mineralized bone (adult osteoblasts/osteocytes;
+#: bone marrow aspirate is hematopoietic) are absent. A tumor value was never compared
 #: with them, so it cannot on its own admit a protein whose recorded home is one of them.
 UNMEASURED_HOME_TISSUES = (
     "olfactory epithelium",
@@ -59,6 +60,7 @@ UNMEASURED_HOME_TISSUES = (
     "taste bud",
     "hair follicle",
     "dental pulp",
+    "bone",
 )
 #: Germline, gonadal, placental and embryonic compartments defining Core CTAs.
 CORE_REPRODUCTIVE_COMPARTMENTS = ("embryo", "placenta", "testis", "ovary")

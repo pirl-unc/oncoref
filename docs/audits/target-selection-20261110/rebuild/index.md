@@ -1,6 +1,6 @@
 # Rebuilt antigen catalog
 
-Policy `oncoref.target-selection.2026-11-20.1`. **327 CTA, 70 Cancer Antigen only, 128 Reproductive Antigen only, 1121 Other and 18,247 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
+Policy `oncoref.target-selection.2026-11-20.2`. **327 CTA, 69 Cancer Antigen only, 128 Reproductive Antigen only, 1120 Other and 18,249 Unsafe.** These are outputs of screening rules, not validated tumor antigens.
 
 [Filterable protein table](report.html) · [Changes from 1.39.0](changes-from-1.39.csv) · [Transition counts](changes-from-1.39-summary.csv) · [Changes from release 1.36.0](category-changes.csv) · [Exact comparison scope](comparison.json)
 
@@ -17,13 +17,13 @@ Policy `oncoref.target-selection.2026-11-20.1`. **327 CTA, 70 Cancer Antigen onl
 | Filter | Result | Proteins removed | Remaining |
 |---|---|---:|---:|
 | Bulk, cluster, immune, protein or reviewed normal exclusion | Unsafe | 18,125 | 1,768 |
-| Established rare-cell RNA or published normal expression only | Unsafe | 122 | 1,646 |
-| Incomplete coverage, translation, or paralog review | Other:Review | 736 | 910 |
+| Established rare-cell RNA or published normal expression only | Unsafe | 124 | 1,644 |
+| Incomplete coverage, translation, or paralog review | Other:Review | 734 | 910 |
 | Sequence overlap with Unsafe proteins | Other:Sequence | 48 | 862 |
 | No qualifying expression, target maximum or Disposable cap | Other:Expression | 249 | 613 |
-| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 88 | 525 |
+| Cancer enrichment with insufficient home-tissue coverage and no qualifying RA witness | Other:Unscreened tissue | 89 | 524 |
 
-The 525 remaining Candidate antigen proteins are 327 CTA, 70 Cancer Antigen only and 128 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
+The 524 remaining Candidate antigen proteins are 327 CTA, 69 Cancer Antigen only and 128 Reproductive Antigen only. [Funnel table](funnel.csv) · [Curation summary with figures](summary.md).
 
 ![Rebuilt counts](counts.png)
 
@@ -51,7 +51,7 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 - **Bulk confirmation:** Bulk RNA >= 1 native TPM in the same organ in both the HPA and GTEx sample sets, a different assay with its own read assignment.
 - **Literature:** Where a reviewed publication reports the gene in the same organ by a gene-specific assay, 1% detection in one donor is established, single molecules included: two assay types then agree. Published protein in a Vital or Protected tissue excludes through the knowledge layer without any counts.
 
-77 draft non-Unsafe proteins become Unsafe, among them ADAM7, C5orf47, SPINT4, MROH2A, CCDC172, SMIM23, MMP20, SPACA3, OR51D1, DGAT2L6, C5orf52, OOSP3, ERICH6, SCGB1D1. 4 candidates carry a dismissed signal, among them LRRIQ4, C12orf50, PRAME, EXD1.
+79 draft non-Unsafe proteins become Unsafe, among them ADAM7, C5orf47, SPINT4, MROH2A, CCDC172, SMIM23, MMP20, SPACA3, OR51D1, DGAT2L6, C5orf52, OOSP3, ERICH6, SCGB1D1. 4 candidates carry a dismissed signal, among them LRRIQ4, C12orf50, PRAME, EXD1.
 
 **17 proteins that were Unsafe only through the pooled 1% detection flag are candidates again**: ADAD1, ADAM18, C12orf50, CHCT1, CSAG1, DPPA2, EXD1, NLRP8, PABPC3, PPP1R2B, RSPH6A, SPAG11A, SPAG11B, SPATA3, TPTE, TRIM60, VRTN. Each was taken through the literature review below and none has a gene-specific report of expression in vital normal tissue. That is a search result, not proof of absence. [Donor-level evidence](../../normal-cell-atlas-20261110/rare-cell/index.md).
 
@@ -63,13 +63,13 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 | Draft | Now | Proteins |
 |---|---|---:|
-| CTA | Cancer Antigen only | 47 |
+| CTA | Cancer Antigen only | 46 |
 | CTA | Other:Expression | 59 |
-| CTA | Other:Review | 38 |
+| CTA | Other:Review | 36 |
 | CTA | Other:Sequence | 7 |
-| CTA | Other:Unscreened tissue | 11 |
+| CTA | Other:Unscreened tissue | 12 |
 | CTA | Reproductive Antigen only | 111 |
-| CTA | Unsafe | 53 |
+| CTA | Unsafe | 55 |
 | Cancer Antigen only | CTA | 1 |
 | Cancer Antigen only | Other:Expression | 142 |
 | Cancer Antigen only | Other:Review | 7 |
@@ -93,19 +93,19 @@ A count matrix cannot show where a read aligned, and one mis-assigned read per c
 
 The tenfold single-tumor rule accounts for the moves to Reproductive Antigen only and for Cancer Antigens only whose reproductive compartment does not reach the shared threshold. Known patient identity is a replication descriptor, not a single-sample admission gate.
 
-Cancer Antigens include 397 proteins; Reproductive Antigens include 455. Their intersection is CTA and their union contains 525 Candidate antigen proteins.
+Cancer Antigens include 396 proteins; Reproductive Antigens include 455. Their intersection is CTA and their union contains 524 Candidate antigen proteins.
 
-Other contains 736 review, 48 sequence, 249 expression, 88 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 27 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
+Other contains 734 review, 48 sequence, 249 expression, 89 unscreened tissue. A curated published target nomination is retained for 252 CTAs and 27 Cancer Antigens only. Broader paper coverage also includes biology, normal-expression findings and other evidence.
 
 ## Changes from release 1.36.0
 
 | Released category | Rebuilt category | Proteins |
 |---|---|---:|
 | CTA | CTA | 309 |
-| CTA | Cancer Antigen only | 33 |
-| CTA | Other | 99 |
+| CTA | Cancer Antigen only | 32 |
+| CTA | Other | 98 |
 | CTA | Reproductive Antigen only | 118 |
-| CTA | Unsafe | 48 |
+| CTA | Unsafe | 50 |
 | Other | CTA | 6 |
 | Other | Cancer Antigen only | 37 |
 | Other | Other | 950 |
@@ -118,7 +118,7 @@ Other contains 736 review, 48 sequence, 249 expression, 88 unscreened tissue. A 
 
 New CTAs: MAGEC2, ANKRD60, VRTN, TTLL8, CHCT1, DPPA2, ADAD1, SPAG11B, C12orf50, ADAM18, TRIM60, SPAG11A, SPATA31A6, CSAG1, TXNDC8, PPP1R2B, MAGEB6B, TPTE.
 
-Former CTAs now requiring review: BPY2/B/C, CDY2A/B, DEFB130A/B, DAZL, EVX1, RGSL1, TBX22, CSTL1, CTAG2, CDX4, HHLA1, USP26, RBM46, POM121L2, WFDC8, IZUMO2, DCST1, CAGE1, WFDC13, OR10G3, OR6F1, ZNF280A, TAS2R1, C8orf74, CDY1, CDY1B, TENT5D, ARL13A, TSGA10IP, OR4N2, OR4M1, MAGEB10, GOLGA8J, OR1R1P, CALHM3, RIPPLY3, POTEC, OR56A3, OR51M1, PRR23B, DEFB132, KRTAP21-2, PPP3R2, KRTAP24-1, DCAF8L2, SPATA31D4, RGPD4, OR8G1, RTP2, OR11A1, OR2J3, FBXO47, VCX3B, SMIM21, PRR23A, ZNF99, MINDY4B, TRIM77, C12orf71, GOLGA6B, GAGE10, ZNF705G, PSG3, GOLGA6L25, OR5H1, AK4P3, FAM237A, OR7E24, ENSG00000241690, PSG11, RBMY1D, EPPIN-WFDC6, TAF11L12, TRIM75, TAF11L14, EXOC1L, OOSP4B, ENSG00000258417, GOLGA8T, DPEP2NB, KLF14, ATF7-NPFF, ENSG00000273155, TMEM269, ENSG00000274944, GSTT4, POTEB3, PRAMEF18, CCDC201, LITAFD, TAF11L11, CPHXL, PMIS2, TAF11L13, OR8B3, OR8B2, CIMIP3, ENSG00000289809, ETDA/B.
+Former CTAs now requiring review: BPY2/B/C, CDY2A/B, DEFB130A/B, DAZL, EVX1, TBX22, CSTL1, CTAG2, CDX4, HHLA1, USP26, RBM46, POM121L2, WFDC8, IZUMO2, DCST1, CAGE1, WFDC13, OR10G3, OR6F1, ZNF280A, TAS2R1, SP7, C8orf74, CDY1, CDY1B, TENT5D, ARL13A, TSGA10IP, OR4N2, OR4M1, MAGEB10, GOLGA8J, OR1R1P, CALHM3, RIPPLY3, POTEC, OR56A3, OR51M1, PRR23B, DEFB132, KRTAP21-2, PPP3R2, KRTAP24-1, DCAF8L2, SPATA31D4, RGPD4, OR8G1, RTP2, OR11A1, OR2J3, FBXO47, VCX3B, SMIM21, PRR23A, ZNF99, MINDY4B, TRIM77, C12orf71, GOLGA6B, GAGE10, ZNF705G, PSG3, GOLGA6L25, OR5H1, AK4P3, FAM237A, OR7E24, ENSG00000241690, PSG11, RBMY1D, EPPIN-WFDC6, TAF11L12, TRIM75, TAF11L14, EXOC1L, ENSG00000258417, GOLGA8T, DPEP2NB, KLF14, ATF7-NPFF, ENSG00000273155, TMEM269, ENSG00000274944, GSTT4, POTEB3, PRAMEF18, CCDC201, LITAFD, TAF11L11, CPHXL, PMIS2, TAF11L13, OR8B3, OR8B2, CIMIP3, ENSG00000289809, ETDA/B.
 
 ## Reproductive Antigens only
 

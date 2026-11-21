@@ -94,8 +94,8 @@ retains sources, adjudication and supersession history.
 
 ## Home tissue the panels do not resolve
 
-Olfactory epithelium, nasal mucosa, taste buds, hair follicle and dental pulp are not
-resolved by the native-TPM comparison panel. A protein with a documented home in one of these tissues can qualify as RA. CA and CTA require coverage of that home. A protein that reaches the cancer threshold alone is classified Other:Unscreened tissue.
+Olfactory epithelium, nasal mucosa, taste buds, hair follicle, dental pulp and mineralized
+bone are not resolved by the native-TPM comparison panel. A protein with a documented home in one of these tissues can qualify as RA. CA and CTA require coverage of that home. A protein that reaches the cancer threshold alone is classified Other:Unscreened tissue.
 
 ## Tumor quality and replication
 

@@ -15,7 +15,7 @@ DATA = ROOT / "oncoref/data"
 AUDIT = ROOT / "docs/audits/normal-cell-atlas-20261110/rare-cell"
 sys.path.insert(0, str(ROOT / "scripts"))
 from build_gene_mapping_risk import K, kmers  # noqa: E402
-from build_rare_cell_evidence import panel  # noqa: E402
+from build_rare_cell_evidence import attribution_reviews, panel  # noqa: E402
 
 
 def sha(path):
@@ -35,6 +35,9 @@ def test_evidence_and_flags_match_their_provenance(evidence):
     assert provenance["mapping_risk"]["sha256"] == sha(DATA / "gene-mapping-risk.csv.gz")
     assert provenance["fractional_count_cells"] == 0
     assert provenance["status_counts"] == evidence.rare_cell_status.value_counts().to_dict()
+    assert provenance["attribution_reviews_sha256"] == sha(
+        DATA / "rare-cell-attribution-reviews.json"
+    )
     assert sha(AUDIT / "gene-mapping-risk.csv.gz") == sha(DATA / "gene-mapping-risk.csv.gz")
 
 
@@ -152,6 +155,41 @@ def test_known_mapping_confounders_are_flagged(evidence):
         assert not any(p.startswith(name + " (") for p in partners), name
     assert kmers("A" * (K + 1)) == {"A" * K}
     assert kmers("A" * (K - 1)) == set()
+
+
+def test_attribution_reviews_enforce_ensembl115_geometry_and_supersession(evidence):
+    from copy import deepcopy
+
+    doc = json.loads((DATA / "rare-cell-attribution-reviews.json").read_text())
+    reviews = attribution_reviews(doc)
+    assert len(reviews) == 15
+    for name in ("RGSL1", "OOSP4B"):
+        row = evidence.loc[name]
+        assert row.raw_host_overlapped and not row.host_overlapped
+        assert row.attribution_review_status == "confounder_rejected"
+        assert row.rare_cell_status == "established" and row.rare_cell_action == "unsafe"
+    dazl = evidence.loc["DAZL"]
+    assert dazl.raw_host_overlapped and not dazl.host_overlapped
+    assert dazl.attribution_review_status == "confounder_rejected"
+    assert dazl.rare_cell_status == "unresolved" and dazl.rare_cell_action == "review"
+    assert "single-study" in dazl.rare_cell_basis
+    for name in ("CAGE1", "RAD21L1", "PPP3R2", "TAS2R1"):
+        row = evidence.loc[name]
+        assert row.raw_host_overlapped and row.host_overlapped
+        assert row.rare_cell_status == "unresolved"
+
+    # Supersession must fail if a host spans coding exons, sits near the 3' end, or shares >=10% 31-mers.
+    for mutate in (
+        lambda r: r["host_geometry"][0].update(selected_transcript_exons_in_host_span=1),
+        lambda r: r["host_geometry"][0].update(bp_upstream_of_selected_3prime_end=19_999),
+        lambda r: r.update(shared_kmer_fraction=0.10),
+        lambda r: r.update(raw_paralog_ambiguous=True),
+    ):
+        bad = deepcopy(doc)
+        target = next(r for r in bad["reviews"] if r["supersedes_host_overlap"])
+        mutate(target)
+        with pytest.raises(ValueError, match="Ensembl 115 geometry bounds"):
+            attribution_reviews(bad)
 
 
 def test_panel_keeps_adult_donor_resolved_named_populations():

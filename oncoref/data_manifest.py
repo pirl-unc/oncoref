@@ -462,6 +462,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "per-gene shared transcript sequence and same-strand host overlap that can mis-assign sparse single-cell reads",
     ),
+    "rare-cell-attribution-reviews": (
+        "cta-evidence",
+        "central Ensembl 115 exon-geometry and paralog 31-mer attribution adjudications for rare normal-cell RNA review candidates",
+    ),
     "cta-ihc-compartments": (
         "cta-evidence",
         "source-specific RNA/IHC compartment correspondences with citations and coverage limits",
