@@ -17,42 +17,66 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from oncoref import cta_selection, transcript_selection, translation_qualification  # noqa: E402
-from oncoref.sequence_bundle import ROLE_ORDER, SCHEMA, content_id, digest, load  # noqa: E402
+from oncoref import target_selection, transcript_selection, translation_qualification  # noqa: E402
+from oncoref.sequence_bundle import (  # noqa: E402
+    ROLE_ORDER,
+    ROLE_POLICY_ID,
+    SCHEMA,
+    content_id,
+    digest,
+    load,
+    target_selection_dispositions,
+)
+
+AUDIT_DIR = ROOT / "docs/audits/sequence-bundle-20261121"
 
 
-def build(source, output, release):
+def _resolve_source_inputs(source: Path) -> tuple[dict, str, Path]:
+    if (source / "reference.json").is_file():
+        meta = json.loads((source / "reference.json").read_text())
+        proteome_path = source / "proteome.json.gz"
+    elif (source / "manifest.json").is_file():
+        meta = json.loads((source / "manifest.json").read_text())
+        proteome_path = source / "orfdata-proteome.json.gz"
+    else:
+        raise FileNotFoundError(
+            f"{source} must contain reference.json+proteome.json.gz or manifest.json+orfdata-proteome.json.gz"
+        )
+    return meta["reference"], meta["orfdata_identity"], proteome_path
+
+
+def build(source: Path, output: Path, release: str, *, asset_tag: str | None = None):
     from orfdata import Proteome
 
     output.mkdir(parents=True, exist_ok=True)
-    meta = json.loads((source / "reference.json").read_text())
-    reference = meta["reference"]
-    if reference != cta_selection.coverage()["reference"]:
-        raise ValueError("Selection and sequence references differ")
-    proteome = Proteome.load(source / "proteome.json.gz")
-    if proteome.identity != meta["orfdata_identity"]:
+    reference, expected_orfdata_identity, proteome_path = _resolve_source_inputs(source)
+    qual_meta = json.loads((ROOT / "oncoref/data/translation-qualification.json").read_text())
+    if reference != qual_meta["reference"]:
+        raise ValueError("Translation qualification and sequence references differ")
+    proteome = Proteome.load(proteome_path)
+    if proteome.identity != expected_orfdata_identity or (
+        proteome.identity != qual_meta["orfdata_identity"]
+    ):
         raise ValueError("Source ORFdata identity mismatch")
     qualification = translation_qualification.records().set_index("protein_id")
     if set(qualification.index) != set(proteome.by_accession()):
         raise ValueError("Qualification does not cover exactly the source protein inventory")
-    decisions = cta_selection.sequence_dispositions()
-    facts = pd.read_csv(
-        ROOT / "docs/audits/cta-selection-20261028/protein-group-classifications.csv.gz",
-        keep_default_na=False,
-        low_memory=False,
-    ).set_index("protein_equivalence_group_id")
+
+    decisions = target_selection_dispositions()
     per_gene = defaultdict(list)
     for row in decisions.to_dict("records"):
-        row["representative_sequence_sha256s"] = json.loads(
-            facts.loc[row["entity_id"], "representative_sequence_sha256s"]
-        )
+        row["representative_sequence_sha256s"] = set(row["representative_sequence_sha256s"])
         for gene in row["gene_ids"]:
             per_gene[gene].append(row)
+
     roles = Counter()
     seen_genes = set()
     no_segments = []
     occurrence_count = 0
     target_records = 0
+    cancer_antigen_records = 0
+    reproductive_antigen_records = 0
+
     with (
         (output / "records.jsonl.gz").open("wb") as raw,
         gzip.GzipFile(filename="", fileobj=raw, mode="wb", mtime=0) as zipped,
@@ -73,6 +97,8 @@ def build(source, output, release):
                 reasons = []
                 role = "review"
                 candidate = False
+                cancer_candidate = False
+                reproductive_candidate = False
                 if any(m["category"] == "Unsafe" for m in matches):
                     role = "exclude"
                     reasons.append("applicable_gene_level_exclusion")
@@ -87,17 +113,27 @@ def build(source, output, release):
                 ):
                     role = "allow"
                     reasons.append("qualified_assessed_representative")
-                    candidate = any(m["category"] == "CTA" for m in matches)
+                    candidate = any(bool(m["direct_target_candidate"]) for m in matches)
+                    cancer_candidate = any(bool(m["cancer_antigen_candidate"]) for m in matches)
+                    reproductive_candidate = any(
+                        bool(m["reproductive_antigen_candidate"]) for m in matches
+                    )
                 else:
-                    reasons.append("unassessed_isoform_or_decision_requires_review")
+                    if any(m["classification"] == "Other:Unscreened tissue" for m in matches):
+                        reasons.append("unscreened_home_tissue_requires_review")
+                    else:
+                        reasons.append("unassessed_isoform_or_decision_requires_review")
                 occurrences.append(
                     {
                         **occ,
                         "occurrence_id": f"{accession}:{i}",
                         "shared_sequence": role,
                         "direct_target_candidate": candidate,
+                        "cancer_antigen_candidate": cancer_candidate,
+                        "reproductive_antigen_candidate": reproductive_candidate,
                         "role_reasons": reasons,
                         "decision_ids": [m["entity_id"] for m in matches],
+                        "categories": [m["category"] for m in matches],
                         "classifications": [m["classification"] for m in matches],
                     }
                 )
@@ -106,6 +142,12 @@ def build(source, output, release):
             if not segments:
                 no_segments.append(accession)
             direct = role == "allow" and any(o["direct_target_candidate"] for o in occurrences)
+            cancer_direct = role == "allow" and any(
+                o["cancer_antigen_candidate"] for o in occurrences
+            )
+            reproductive_direct = role == "allow" and any(
+                o["reproductive_antigen_candidate"] for o in occurrences
+            )
             record = {
                 "record_id": accession,
                 "reference_id": reference["reference_id"],
@@ -117,6 +159,8 @@ def build(source, output, release):
                 "valid_segments": segments,
                 "shared_sequence": role,
                 "direct_target_candidate": direct,
+                "cancer_antigen_candidate": cancer_direct,
+                "reproductive_antigen_candidate": reproductive_direct,
             }
             zipped.write(
                 (
@@ -127,6 +171,9 @@ def build(source, output, release):
             roles[role] += 1
             occurrence_count += len(occurrences)
             target_records += direct
+            cancer_antigen_records += cancer_direct
+            reproductive_antigen_records += reproductive_direct
+
     universe = pd.read_csv(ROOT / "oncoref/data/cta-protein-universe.csv", keep_default_na=False)
     out = pd.read_csv(
         ROOT / "docs/audits/cta-selection-20261028/out-of-universe.csv.gz", keep_default_na=False
@@ -144,22 +191,27 @@ def build(source, output, release):
         "limitations": [
             "No empirical ncORF peptide inventory is supplied by this Ensembl peptide bundle; gene-level ncORF evidence cannot validate an unrelated reference peptide.",
             "Nonrepresentative isoforms require review unless applicable gene-level evidence excludes them.",
+            "Proteins with unscreened recorded home tissues (olfactory epithelium, nasal mucosa, taste bud, hair follicle, dental pulp, bone) remain review.",
             "Alternate loci receive no primary-locus allowance through aliases.",
             "Gene-level normal evidence is conservatively applied to its annotated isoforms; it does not measure isoform-specific production.",
             "No patient-HLA presentation, approximate similarity threshold or clinical safety is established.",
         ],
     }
     (output / "coverage.json").write_text(json.dumps(coverage, indent=2) + "\n")
-    shutil.copyfile(ROOT / "oncoref/data/cta-selection-human.csv.gz", output / "decisions.csv.gz")
-    shutil.copyfile(source / "proteome.json.gz", output / "orfdata-proteome.json.gz")
+    shutil.copyfile(ROOT / "oncoref/data/target-selection.csv.gz", output / "decisions.csv.gz")
+    if proteome_path.resolve() != (output / "orfdata-proteome.json.gz").resolve():
+        shutil.copyfile(proteome_path, output / "orfdata-proteome.json.gz")
+
     dependencies = [
-        "cta-selection.json",
-        "cta-selection-human.csv.gz",
-        "cta-selection-audit.json",
+        "target-selection.json",
+        "target-selection.csv.gz",
         "gene-knowledge.json",
-        "cta-finding-migrations.json",
-        "tcr-trial-evidence.json",
+        "gene-knowledge-updates.json",
+        "rare-cell-attribution-reviews.json",
+        "normal-expression-literature.json",
+        "readthrough-loci.csv",
         "normal-tissue-tiers.yaml",
+        "normal-tissue-tier-updates.yaml",
         "normal-tissue-taxonomy.yaml",
         "translation-qualification.json",
         "translation-qualification.csv.gz",
@@ -172,8 +224,8 @@ def build(source, output, release):
         "schema_version": 1,
         "release": release,
         "reference": reference,
-        "selection_policy_id": cta_selection.coverage()["policy_id"],
-        "role_policy_id": cta_selection.contract()["role_policy_id"],
+        "selection_policy_id": target_selection.POLICY_ID,
+        "role_policy_id": ROLE_POLICY_ID,
         "translation_policy_id": translation_qualification.POLICY_ID,
         "representative_selection_policy_id": transcript_selection.POLICY_ID,
         "orfdata_identity": proteome.identity,
@@ -181,6 +233,8 @@ def build(source, output, release):
         "occurrence_count": occurrence_count,
         "record_roles": dict(roles),
         "direct_target_records": target_records,
+        "cancer_antigen_records": cancer_antigen_records,
+        "reproductive_antigen_records": reproductive_antigen_records,
         "package_dependencies": {
             n: digest((ROOT / "oncoref/data" / n).read_bytes()) for n in dependencies
         },
@@ -203,11 +257,12 @@ def build(source, output, release):
             if p.name in manifest["payloads"] or p.name == "manifest.json":
                 info = zipfile.ZipInfo(p.name, date_time=(1980, 1, 1, 0, 0, 0))
                 zipped.writestr(info, p.read_bytes())
+    release_tag = asset_tag or f"v{release}"
     pin = {
         "schema": "oncoref.sequence-bundle-asset",
         "schema_version": 1,
         "bundle_id": manifest["bundle_id"],
-        "url": f"https://github.com/pirl-unc/oncoref/releases/download/v{release}/{archive.name}",
+        "url": f"https://github.com/pirl-unc/oncoref/releases/download/{release_tag}/{archive.name}",
         "archive_bytes": archive.stat().st_size,
         "archive_sha256": digest(archive.read_bytes()),
         "unpacked_bytes": sum(
@@ -215,10 +270,9 @@ def build(source, output, release):
         ),
     }
     (ROOT / "oncoref/data/sequence-bundle.json").write_text(json.dumps(pin, indent=2) + "\n")
-    audit = ROOT / "docs/audits/sequence-bundle-20261104"
-    audit.mkdir(parents=True, exist_ok=True)
+    AUDIT_DIR.mkdir(parents=True, exist_ok=True)
     for name in ["manifest.json", "coverage.json"]:
-        shutil.copyfile(output / name, audit / name)
+        shutil.copyfile(output / name, AUDIT_DIR / name)
     print(
         json.dumps(
             {
@@ -227,6 +281,9 @@ def build(source, output, release):
                 "occurrences": occurrence_count,
                 "roles": dict(roles),
                 "direct_target_records": target_records,
+                "cancer_antigen_records": cancer_antigen_records,
+                "reproductive_antigen_records": reproductive_antigen_records,
+                "archive": str(archive),
                 "archive_bytes": archive.stat().st_size,
             }
         )
@@ -238,5 +295,6 @@ if __name__ == "__main__":
     p.add_argument("source", type=Path)
     p.add_argument("output", type=Path)
     p.add_argument("--release", required=True)
+    p.add_argument("--asset-tag", default=None)
     a = p.parse_args()
-    build(a.source, a.output, a.release)
+    build(a.source, a.output, a.release, asset_tag=a.asset_tag)

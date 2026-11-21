@@ -7,10 +7,12 @@ for amino-acid bytes and all source occurrences. The legacy
 `Canonical_Transcript_ID` annotation is not the current selection contract.
 
 The current sequence bundle binds source proteins and every occurrence to the
-selection, translation and consumer-role policies. It preserves original sequence
-bytes, ambiguous residues, incomplete records and explicit coverage gaps. The
-[bundle audit](audits/sequence-bundle-20261104/index.md) gives its exact identity,
-counts and comparison with the historical v1.20.0 forbidden assets.
+`target_selection`, translation and consumer-role policies (`oncoref.target-selection.2026-11-20.2`).
+It preserves original sequence bytes, ambiguous residues, incomplete records and
+explicit coverage gaps. The [2026-11-21 bundle audit](audits/sequence-bundle-20261121/index.md)
+gives its exact identity and counts; the [2026-11-04 bundle audit](audits/sequence-bundle-20261104/index.md)
+retains the earlier `cta_selection` snapshot and its comparison with the historical
+v1.20.0 forbidden assets.
 
 Acquisition is explicit and bounded by the packaged asset hash and size. Reading
 the descriptor or loading an existing bundle performs no network access.

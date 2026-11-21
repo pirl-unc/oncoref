@@ -1,0 +1,10 @@
+{
+  "source_ref": "v1.45.0",
+  "scope": "Data-only historical sequence-bundle pin required by dated cta-definition-20261104 and cta-transcript-selection-20261108 receipts. No Python code snapshot.",
+  "files": {
+    "oncoref/data/sequence-bundle.json": {
+      "sha256": "12187fd6480eecd85f7f2b972c25dbed38cb92dfdb20376e8c120ca1195f3217",
+      "bytes": 364
+    }
+  }
+}

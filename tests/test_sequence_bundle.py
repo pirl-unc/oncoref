@@ -7,24 +7,119 @@ from pathlib import Path
 
 import pytest
 
-from oncoref import data_file_renames
+from oncoref import data_file_renames, target_selection
 from oncoref import sequence_bundle as bundle
+from tests import released_inputs
 
 
 def test_packaged_asset_pin_matches_current_policy_and_complete_inventory():
     root = Path(__file__).resolve().parents[1]
-    audit = root / "docs/audits/sequence-bundle-20261104"
+    audit = root / "docs/audits/sequence-bundle-20261121"
     manifest = json.loads((audit / "manifest.json").read_text())
     pin = bundle.descriptor()
     assert pin["bundle_id"] == manifest["bundle_id"] == bundle.content_id(manifest)
+    assert manifest["selection_policy_id"] == target_selection.POLICY_ID
+    assert manifest["role_policy_id"] == bundle.ROLE_POLICY_ID
     assert manifest["record_count"] == sum(manifest["record_roles"].values())
     assert manifest["record_count"] == 245535
     assert manifest["occurrence_count"] >= manifest["record_count"]
     for name, expected in manifest["package_dependencies"].items():
-        assert bundle.digest(data_file_renames.as_released(name)) == expected
-    transition = json.loads((audit / "historical-transition.json").read_text())
-    assert transition["current_bundle_id"] == pin["bundle_id"]
+        live = root / "oncoref/data" / name
+        actual = (
+            bundle.digest(live.read_bytes())
+            if live.is_file()
+            else bundle.digest(data_file_renames.as_released(name))
+        )
+        assert actual == expected
+
+    historical_audit = root / "docs/audits/sequence-bundle-20261104"
+    historical_manifest = json.loads((historical_audit / "manifest.json").read_text())
+    assert historical_manifest["bundle_id"] == bundle.content_id(historical_manifest)
+    transition = json.loads((historical_audit / "historical-transition.json").read_text())
+    receipt = json.loads(
+        (root / "docs/audits/cta-definition-20261104/release-receipt.json").read_text()
+    )
+    legacy_pin = json.loads(
+        released_inputs.read(
+            "oncoref/data/sequence-bundle.json",
+            receipt["inputs"]["oncoref/data/sequence-bundle.json"],
+        )
+    )
+    assert transition["current_bundle_id"] == legacy_pin["bundle_id"]
     assert transition["historical_policy_id"]
+
+
+def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe():
+    dispositions = bundle.target_selection_dispositions()
+    assert len(dispositions) == len(target_selection.results())
+
+    unsafe = dispositions[dispositions.category.eq("Unsafe")]
+    assert (unsafe.shared_sequence == "exclude").all()
+    assert (~unsafe.direct_target_candidate).all()
+    assert (~unsafe.cancer_antigen_candidate).all()
+
+    ctas = dispositions[dispositions.category.eq("CTA")]
+    assert len(ctas) == 327
+    assert (ctas.shared_sequence == "allow").all()
+    assert ctas.direct_target_candidate.all()
+    assert ctas.cancer_antigen_candidate.all()
+    assert ctas.reproductive_antigen_candidate.all()
+    assert ctas.representative_sequence_sha256s.map(bool).all()
+
+    ca_only = dispositions[dispositions.category.eq("Cancer Antigen only")]
+    assert len(ca_only) == 69
+    assert (ca_only.shared_sequence == "allow").all()
+    assert (~ca_only.direct_target_candidate).all()
+    assert ca_only.cancer_antigen_candidate.all()
+    assert ca_only.representative_sequence_sha256s.map(bool).all()
+
+    ra_only = dispositions[dispositions.category.eq("Reproductive Antigen only")]
+    assert len(ra_only) == 128
+    assert (ra_only.shared_sequence == "allow").all()
+    assert (~ra_only.direct_target_candidate).all()
+    assert ra_only.reproductive_antigen_candidate.all()
+
+    for subtype in ("Other:Review", "Other:Sequence", "Other:Unscreened tissue"):
+        sub = dispositions[dispositions.classification.eq(subtype)]
+        assert not sub.empty
+        assert (sub.shared_sequence == "review").all()
+
+    by_label = dispositions.set_index("protein_group_label")
+    for rescued in ("MAGEC2", "CSAG1"):
+        assert by_label.loc[rescued, "shared_sequence"] == "allow"
+        assert bool(by_label.loc[rescued, "direct_target_candidate"])
+    for newly_unsafe in ("OBP2A", "SLCO6A1", "SPATA45", "COX7B2"):
+        assert by_label.loc[newly_unsafe, "shared_sequence"] == "exclude"
+    for unscreened in ("SP7", "OR56A3"):
+        assert by_label.loc[unscreened, "shared_sequence"] == "review"
+
+
+def test_cached_current_bundle_enforces_target_selection_roles():
+    try:
+        path = bundle.ensure(download=False)
+    except FileNotFoundError:
+        pytest.skip("Current sequence bundle is not staged in local cache")
+    loaded = bundle.load(path)
+    ts = target_selection.results()
+    unsafe_genes = {
+        g
+        for members in ts.loc[ts.category.eq("Unsafe"), "member_gene_ids"]
+        for g in json.loads(members)
+    }
+    cta_entities = set(ts.loc[ts.category.eq("CTA"), "entity_id"])
+    ca_entities = set(ts.loc[ts.category.eq("Cancer Antigen only"), "entity_id"])
+    covered_cta = set()
+    covered_ca = set()
+    for record in loaded.records():
+        if record["shared_sequence"] == "allow":
+            for occ in record["occurrences"]:
+                assert occ["gene_id"] not in unsafe_genes
+                if occ["direct_target_candidate"]:
+                    covered_cta.update(occ["decision_ids"])
+                if occ.get("cancer_antigen_candidate"):
+                    covered_ca.update(occ["decision_ids"])
+    assert cta_entities <= covered_cta
+    assert ca_entities <= covered_ca
 
 
 def make_bundle(folder, *, role="allow", second=False):

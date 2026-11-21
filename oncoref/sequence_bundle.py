@@ -23,10 +23,66 @@ from pathlib import Path
 from . import data_file_renames
 
 SCHEMA = "oncoref.sequence-bundle"
+ROLE_POLICY_ID = "oncoref.target-selection-sequence-roles.2026-11-21.1"
 PAYLOADS = frozenset(
     {"records.jsonl.gz", "coverage.json", "decisions.csv.gz", "orfdata-proteome.json.gz"}
 )
 ROLE_ORDER = {"allow": 0, "review": 1, "exclude": 2}
+
+
+def target_selection_dispositions():
+    """Assign representative-protein sequence roles from ``target_selection.results()``.
+
+    ``Unsafe`` exclusions take precedence across occurrences. Qualified representatives
+    receive ``shared_sequence == "allow"`` only when the protein passes all six
+    ``target_selection.SHARED_CHECKS`` and its recorded normal home is screened
+    (``CTA``, ``Cancer Antigen only``, ``Reproductive Antigen only``, or eligible
+    ``Other:Expression``). ``Other:Review``, ``Other:Sequence``, ``Other:Unscreened tissue``,
+    and ``Other:Expression`` failing expression bounds receive ``"review"``.
+    ``direct_target_candidate`` marks confirmed ``CTA`` proteins, while
+    ``cancer_antigen_candidate`` and ``reproductive_antigen_candidate`` preserve the
+    broader set memberships explicitly.
+    """
+    import pandas as pd
+
+    from . import target_selection
+
+    frame = target_selection.results()
+    shared_ok = frame[list(target_selection.SHARED_CHECKS)].astype(bool).all(axis=1)
+    excluded = frame.category.eq("Unsafe")
+    unscreened_home = frame.classification.eq("Other:Unscreened tissue")
+    allowed = ~excluded & shared_ok & ~unscreened_home
+
+    out = frame[
+        [
+            "entity_id",
+            "protein_group_label",
+            "member_gene_ids",
+            "representative_sequence_sha256s",
+            "category",
+            "subtype",
+            "classification",
+            "is_cta",
+            "is_cancer_antigen",
+            "is_reproductive_antigen",
+            "is_target_candidate",
+            "cta_tier",
+            "decision_reason",
+        ]
+    ].copy()
+    out["gene_ids"] = out.member_gene_ids.map(lambda raw: tuple(json.loads(raw)))
+    out["representative_sequence_sha256s"] = out.representative_sequence_sha256s.map(
+        lambda raw: tuple(json.loads(raw)) if isinstance(raw, str) and raw else ()
+    )
+    out["shared_sequence"] = pd.Series("review", index=out.index, dtype="string")
+    out.loc[allowed, "shared_sequence"] = "allow"
+    out.loc[excluded, "shared_sequence"] = "exclude"
+    out["direct_target_candidate"] = out.is_cta.astype(bool) & allowed
+    out["cancer_antigen_candidate"] = out.is_cancer_antigen.astype(bool) & allowed
+    out["reproductive_antigen_candidate"] = out.is_reproductive_antigen.astype(bool) & allowed
+    out["role_policy_id"] = ROLE_POLICY_ID
+    out["selection_policy_id"] = target_selection.POLICY_ID
+    return out
 
 
 def digest(content: bytes) -> str:
@@ -160,6 +216,9 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
         for name, expected in manifest["package_dependencies"].items():
             if Path(name).name != name:
                 raise ValueError("Invalid package dependency name")
+            live = files("oncoref").joinpath(f"data/{name}")
+            if live.is_file() and digest(live.read_bytes()) == expected:
+                continue
             if digest(data_file_renames.as_released(name)) != expected:
                 raise ValueError(f"Mixed package/bundle policy: {name}")
     payloads = {}
