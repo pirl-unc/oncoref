@@ -387,7 +387,9 @@ from .ici import (
 )
 from .incidence import (
     burden_categories,
+    burden_categories_disjoint,
     burden_category,
+    burden_category_overlaps,
     burden_scope,
     cancer_burden,
     cancer_burden_df,
@@ -612,7 +614,9 @@ __all__ = [
     "bgee_srp009687",
     "bgee_srp181218",
     "burden_categories",
+    "burden_categories_disjoint",
     "burden_category",
+    "burden_category_overlaps",
     "burden_scope",
     # anti-PD-1 response
     "cancer_apd1_response",

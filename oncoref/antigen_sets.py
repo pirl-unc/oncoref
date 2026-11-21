@@ -24,6 +24,9 @@ SETS = {
     "Other": None,
     "Unsafe|Other": None,
 }
+SEX_SETS = ("MRA", "FRA", "ERA", "SRA", "CTA-M", "CTA-F", "CTA-E", "CTA-MF")
+CANDIDATE_SETS = ("CTA", "CA", "RA", "CA|RA", *SEX_SETS)
+ALL_SETS = (*SETS, *SEX_SETS)
 EXCLUSION_CATEGORIES = {
     "Unsafe": ("Unsafe",),
     "Other": ("Other",),
@@ -41,6 +44,7 @@ class AntigenSelection:
     _evaluated: pd.DataFrame
     _sequences_table: pd.DataFrame | None = None
     _species: str = "human"
+    _sex_eligible_ids: frozenset[str] | None = None
 
     @property
     def metadata(self):
@@ -61,7 +65,14 @@ class AntigenSelection:
     def proteins(self):
         d = self._evaluated
         ca, ra = d.filtered_cancer_antigen, d.filtered_reproductive_antigen
-        member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[self.group]
+        if self.group in SEX_SETS:
+            from .species_target_selection import SEX_SETS as _SEX_SPEC
+
+            _sex_class, requires_cta = _SEX_SPEC[self.group]
+            base_member = (ca & ra) if requires_cta else ra
+            member = base_member & d.entity_id.isin(self._sex_eligible_ids or frozenset())
+        else:
+            member = {"CTA": ca & ra, "CA": ca, "RA": ra, "CA|RA": ca | ra}[self.group]
         result = d[d.keep & member].copy()
         for name in (
             "category",
@@ -156,12 +167,20 @@ def select(
     from .species import resolve_species
 
     resolved = resolve_species(species)
-    if group not in SETS or group in EXCLUSION_CATEGORIES:
-        raise ValueError("Select a candidate set: CTA, CA, RA or CA|RA")
+    if group not in CANDIDATE_SETS:
+        raise ValueError(f"Select a candidate set: {', '.join(CANDIDATE_SETS)}")
     if table is None and resolved.taxon_id != 9606:
         from .species_target_selection import packaged_species_results
 
         table = packaged_species_results(resolved)
+    sex_ids: frozenset[str] | None = None
+    if group in SEX_SETS:
+        from .species_target_selection import SEX_SETS as _SEX_SPEC
+        from .species_target_selection import classify_sex_restriction
+
+        sex_class, _ = _SEX_SPEC[group]
+        sex_df = classify_sex_restriction(table, species=resolved, host_evidence=host_evidence)
+        sex_ids = frozenset(sex_df.loc[sex_df.sex_restriction_class.eq(sex_class), "entity_id"])
     base = target_filters.FILTER_MODES[mode] if isinstance(mode, str) else mode
     if host is not None:
         overrides["host"] = host
@@ -171,6 +190,7 @@ def select(
         target_filters.apply(filt, table, host_evidence=host_evidence),
         _sequences_table=sequences_table,
         _species=resolved.name,
+        _sex_eligible_ids=sex_ids,
     )
 
 
@@ -187,8 +207,8 @@ def proteins(
     mode="all",
 ):
     """Compatibility convenience view; prefer select() when using sequences/backgrounds."""
-    if group not in SETS:
-        raise ValueError(f"Unknown antigen set {group!r}; choose from {tuple(SETS)}")
+    if group not in ALL_SETS:
+        raise ValueError(f"Unknown antigen set {group!r}; choose from {ALL_SETS}")
     # Omitted convenience arguments must preserve a caller's TargetFilter.
     # Explicit False/()/"all" remain valid overrides of that filter.
     overrides = {
@@ -218,7 +238,7 @@ def proteins(
             )
         rows = target_selection.results()
         return rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
-    if not active:
+    if not active and group in SETS:
         rows = target_selection.results()
         return rows[rows[SETS[group]]].reset_index(drop=True)
     return select(group, mode=mode, host=host, **overrides).proteins()

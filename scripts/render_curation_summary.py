@@ -1901,97 +1901,9 @@ def normal_evidence_layers(data, path):
 
 def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
     """Partition Reproductive Antigens and CTAs by male vs. female adult organ restriction."""
-    female_sex = (
-        "ovary",
-        "fallopian tube",
-        "uterus",
-        "endometrium",
-        "cervix",
-        "vagina",
-        "lactating_breast",
-    )
-    female_all = (*female_sex, "resting_breast")
-    male_sex = ("testis", "epididymis", "prostate", "seminal vesicle")
-    male_all = (*male_sex, "resting_breast")
+    from oncoref.species_target_selection import classify_sex_restriction
 
-    ra = data[data.is_reproductive_antigen.astype(bool)].copy()
-    f_all = target_filters.apply(
-        target_filters.TargetFilter(
-            host_profile="female-patient", protect_tissues=female_all, lactating=True
-        ),
-        ra,
-    ).set_index("entity_id")
-    f_sex = target_filters.apply(
-        target_filters.TargetFilter(
-            host_profile="female-patient", protect_tissues=female_sex, lactating=True
-        ),
-        ra,
-    ).set_index("entity_id")
-    m_all = target_filters.apply(
-        target_filters.TargetFilter(host_profile="male-patient", protect_tissues=male_all),
-        ra,
-    ).set_index("entity_id")
-    m_sex = target_filters.apply(
-        target_filters.TargetFilter(host_profile="male-patient", protect_tissues=male_sex),
-        ra,
-    ).set_index("entity_id")
-
-    exposures_df = pd.read_csv(ROOT / "oncoref/data/host-exposure.csv.gz").set_index("entity_id")
-
-    def max_comp_tpm(eid, compartments):
-        if eid not in exposures_df.index:
-            return np.nan
-        rec = json.loads(exposures_df.at[eid, "exposures"])
-        vals = [
-            rec[c]["max_tpm"]
-            for c in compartments
-            if c in rec and rec[c].get("max_tpm") is not None
-        ]
-        return float(max(vals)) if vals else np.nan
-
-    rows = []
-    for r in ra.itertuples():
-        eid = r.entity_id
-        fs_all = f_all.at[eid, "host_status"] == "eligible"
-        ms_all = m_all.at[eid, "host_status"] == "eligible"
-        fs_sex = f_sex.at[eid, "host_status"] == "eligible"
-        ms_sex = m_sex.at[eid, "host_status"] == "eligible"
-        if fs_all and not ms_all:
-            sex_class = "Male-restricted"
-            code = "CTA-M" if r.is_cta else "MRA-only"
-        elif ms_all and not fs_all:
-            sex_class = "Female-restricted"
-            code = "CTA-F" if r.is_cta else "FRA-only"
-        elif fs_all and ms_all:
-            sex_class = "Embryo / placenta-only"
-            code = "CTA-E" if r.is_cta else "ERA-only"
-        else:
-            sex_class = "Shared male & female"
-            code = "CTA-MF" if r.is_cta else "SRA-only"
-        rows.append(
-            {
-                "entity_id": eid,
-                "protein_group_label": r.protein_group_label,
-                "classification": r.classification,
-                "is_cta": bool(r.is_cta),
-                "sex_restriction_class": sex_class,
-                "sex_restriction_code": code,
-                "female_all_adult_eligible": fs_all,
-                "male_all_adult_eligible": ms_all,
-                "female_sex_organ_only_eligible": fs_sex,
-                "male_sex_organ_only_eligible": ms_sex,
-                "male_sex_organ_max_tpm": max_comp_tpm(eid, male_sex),
-                "female_sex_organ_max_tpm": max_comp_tpm(eid, female_sex),
-                "resting_breast_max_tpm": max_comp_tpm(eid, ("resting_breast",)),
-                "tumor_max_tpm": r.tumor_max_tpm,
-                "tumor_top_cancer_code": r.tumor_top_cancer_code,
-                "reproductive_qualifying_compartments": r.reproductive_qualifying_compartments,
-            }
-        )
-    table = pd.DataFrame(rows).sort_values(
-        ["is_cta", "sex_restriction_class", "tumor_max_tpm", "protein_group_label"],
-        ascending=[False, True, False, True],
-    )
+    table = classify_sex_restriction(data, species="human")
     table.to_csv(csv_path, index=False)
 
     # Figure 1: Stacked horizontal breakdown across All RA, CTA (CA ∩ RA), and RA only.

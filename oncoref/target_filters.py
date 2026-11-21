@@ -154,7 +154,7 @@ class TargetFilter:
         return {k: v for k, v in asdict(self).items() if v != base[k]}
 
 
-def context(f, *, species="human"):
+def context(f, *, species=None):
     if isinstance(f, str):
         f = FILTER_MODES[f]
     if f.host is not None:
@@ -171,12 +171,14 @@ def context(f, *, species="human"):
             )
         ):
             raise ValueError("Use host or legacy profile/tissue arguments, not both")
-        from .species import resolve_species
+        if species is not None:
+            from .species import resolve_species
 
-        if species != "human" and f.host.species != resolve_species(species).name:
-            raise ValueError(
-                f"HostContext species {f.host.species!r} disagrees with catalog species {species!r}"
-            )
+            expected = resolve_species(species).name
+            if f.host.species != expected:
+                raise ValueError(
+                    f"HostContext species {f.host.species!r} disagrees with catalog species {expected!r}"
+                )
         return f.host
     return host_context.from_legacy(
         f.host_profile,
@@ -185,7 +187,7 @@ def context(f, *, species="human"):
         allow_tissues=f.allow_tissues,
         protect_tissues=f.protect_tissues,
         absent_tissues=f.absent_tissues,
-        species=species,
+        species="human" if species is None else species,
     )
 
 

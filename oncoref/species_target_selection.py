@@ -13,7 +13,8 @@ scales strictly separate:
    symmetric 10 x max(N, D, floor) cancer (CA) and reproductive/developmental (RA)
    enrichment on one declared, reference-compatible expression scale.
 3. Downstream host-anatomy protection (HostContext parameterized by comparative
-   mammalian anatomy from normal-tissue-taxonomy.yaml) and peptide subtraction.
+   mammalian anatomy from normal-tissue-taxonomy.yaml), sex-restricted antigen
+   subsets (MRA/CTA-M, FRA/CTA-F, ERA/CTA-E, SRA/CTA-MF), and peptide subtraction.
 
 No human expression, safety call or threshold calibration is transferred across
 species by orthology. Where a species lacks a reference-reconciled normal or
@@ -33,7 +34,7 @@ from typing import TYPE_CHECKING
 import numpy as np
 import pandas as pd
 
-from . import cta_sequence_overlap, normal_tissues, target_selection
+from . import cta_selection_policy, cta_sequence_overlap, normal_tissues, target_selection
 from .expression_contract import ExpressionContract
 from .reference_identity import ReferenceIdentity
 from .species import Species, resolve_species
@@ -42,6 +43,23 @@ if TYPE_CHECKING:
     from .species_expression import ExpressionDataset
 
 COMPARATIVE_COMPARISON_UNITS = ("TPM", "nTPM", "pTPM", "TMM-CPM")
+
+SEX_RESTRICTION_CLASSES = (
+    "Male-restricted",
+    "Female-restricted",
+    "Embryo / placenta-only",
+    "Shared male & female",
+)
+SEX_SETS: dict[str, tuple[str, bool]] = {
+    "MRA": ("Male-restricted", False),
+    "FRA": ("Female-restricted", False),
+    "ERA": ("Embryo / placenta-only", False),
+    "SRA": ("Shared male & female", False),
+    "CTA-M": ("Male-restricted", True),
+    "CTA-F": ("Female-restricted", True),
+    "CTA-E": ("Embryo / placenta-only", True),
+    "CTA-MF": ("Shared male & female", True),
+}
 
 
 def _default_nonhuman_rare_cell_provenance(source_id: str, donor_id: str) -> tuple[str, str]:
@@ -73,6 +91,32 @@ class SpeciesAnatomyProfile:
     @property
     def reproductive_compartments(self) -> tuple[str, ...]:
         return (*self.core_reproductive_compartments, *self.extended_reproductive_compartments)
+
+    @property
+    def lactating_mammary_compartment(self) -> str:
+        return self.mammary_compartments[0]
+
+    @property
+    def resting_mammary_compartment(self) -> str:
+        return self.mammary_compartments[-1]
+
+    @property
+    def male_sex_compartments(self) -> tuple[str, ...]:
+        gonad = ("testis",) if "testis" in self.core_reproductive_compartments else ()
+        return (*gonad, *self.male_accessory_compartments)
+
+    @property
+    def female_sex_compartments(self) -> tuple[str, ...]:
+        gonad = ("ovary",) if "ovary" in self.core_reproductive_compartments else ()
+        return (*gonad, *self.female_tract_compartments, self.lactating_mammary_compartment)
+
+    @property
+    def male_adult_protected_compartments(self) -> tuple[str, ...]:
+        return (*self.male_sex_compartments, self.resting_mammary_compartment)
+
+    @property
+    def female_adult_protected_compartments(self) -> tuple[str, ...]:
+        return (*self.female_sex_compartments, self.resting_mammary_compartment)
 
     def normalize_compartments(self, values: tuple[str, ...]) -> tuple[str, ...]:
         if not isinstance(values, tuple):
@@ -118,6 +162,10 @@ class SpeciesAnatomyProfile:
             **asdict(self),
             "extended_reproductive_compartments": list(self.extended_reproductive_compartments),
             "reproductive_compartments": list(self.reproductive_compartments),
+            "male_sex_compartments": list(self.male_sex_compartments),
+            "female_sex_compartments": list(self.female_sex_compartments),
+            "male_adult_protected_compartments": list(self.male_adult_protected_compartments),
+            "female_adult_protected_compartments": list(self.female_adult_protected_compartments),
         }
 
 
@@ -188,16 +236,7 @@ def group_reference_proteins(
     species: Species | str | int,
     reference: ReferenceIdentity,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Collapse identical qualified translations into protein-equivalence groups.
-
-    ``records`` supplies one row per transcript translation (or untranslated locus)
-    with ``gene_id`` and optional ``symbol``, ``transcript_id``, ``protein_id``,
-    ``transcript_biotype``, ``sequence``, and ``is_qualified`` (defaults to
-    nonempty ``sequence``).
-
-    Returns ``(protein_groups, sequence_records)`` where ``sequence_records`` is
-    ready for 9-mer containment and ``PeptideIndex`` subtraction.
-    """
+    """Collapse identical qualified translations into protein-equivalence groups."""
     resolved = resolve_species(species)
     if reference.taxon_id != resolved.taxon_id:
         raise ValueError("ReferenceIdentity taxon_id does not match requested species")
@@ -338,36 +377,16 @@ def group_proteome(
     return group_reference_proteins(rows, species=species, reference=reference)
 
 
-def observations_from_expression_dataset(
+def _project_complete_group_matrix(
     dataset: ExpressionDataset,
     proteins: pd.DataFrame,
     *,
-    comparison_id: str,
     feature_to_gene: dict[str, str] | None = None,
-    normal_stat: str = "p95",
     allow_unresolved_reference: bool = False,
-) -> dict[str, pd.DataFrame]:
-    """Project a native ``ExpressionDataset`` onto protein-group comparison tables.
-
-    Enforces species and reference boundaries, sums complete member-locus values
-    within each library before summarizing across donors, maps tissues via
-    ``resolve_normal_tissue``, and separates ``normals`` (``normal``, ``disposable``,
-    ``thymic``), ``reproductive`` (individual adult reproductive or developmental
-    samples) and ``tumors`` (individual tumor samples; pooled samples carry empty
-    ``participant_id`` so they never count as multiple independent patients).
-    """
+) -> pd.DataFrame:
     contract: ExpressionContract = dataset.contract
-    species_vals = set(proteins["taxon_id"].unique())
-    if species_vals != {contract.taxon_id}:
+    if set(proteins["taxon_id"].unique()) != {contract.taxon_id}:
         raise ValueError("ExpressionDataset taxon_id disagrees with protein inventory")
-    if contract.measurement.feature_level != "gene":
-        raise ValueError(
-            f"Gene-level comparison requires gene measurements, got {contract.measurement.feature_level!r}"
-        )
-    if contract.measurement.unit not in COMPARATIVE_COMPARISON_UNITS:
-        raise ValueError(
-            f"ExpressionDataset unit {contract.measurement.unit!r} is not in {COMPARATIVE_COMPARISON_UNITS}"
-        )
     ref_ids = set(proteins["reference_id"].unique())
     if contract.reference is not None:
         if ref_ids != {contract.reference.reference_id} and feature_to_gene is None:
@@ -379,9 +398,6 @@ def observations_from_expression_dataset(
             f"ExpressionDataset {contract.source_id!r} has unresolved quantification reference; "
             "reconcile reference identity or pass an explicit feature_to_gene mapping"
         )
-
-    species_obj = resolve_species(contract.taxon_id)
-    anatomy = anatomy_for_species(species_obj)
     values = dataset.values
     if feature_to_gene is not None:
         mapped_index = values.index.map(feature_to_gene)
@@ -390,8 +406,6 @@ def observations_from_expression_dataset(
         values.index = mapped_index[keep]
         if values.index.duplicated().any():
             raise ValueError("feature_to_gene maps multiple source features to the same gene_id")
-
-    samples = dataset.samples
     sample_cols = list(values.columns)
     gene_to_entity = {
         g: r.entity_id for r in proteins.itertuples() for g in json.loads(r.member_gene_ids)
@@ -402,7 +416,38 @@ def observations_from_expression_dataset(
     summed = sub.groupby("entity_id")[sample_cols].sum(min_count=1)
     present_counts = sub.groupby("entity_id")[sample_cols].count()
     complete = summed.where(present_counts.eq(expected_members.reindex(summed.index), axis=0))
-    complete = complete.reindex(proteins.entity_id)
+    return complete.reindex(proteins.entity_id)
+
+
+def observations_from_expression_dataset(
+    dataset: ExpressionDataset,
+    proteins: pd.DataFrame,
+    *,
+    comparison_id: str,
+    feature_to_gene: dict[str, str] | None = None,
+    normal_stat: str = "p95",
+    allow_unresolved_reference: bool = False,
+) -> dict[str, pd.DataFrame]:
+    """Project a native ``ExpressionDataset`` onto protein-group comparison tables."""
+    contract: ExpressionContract = dataset.contract
+    if contract.measurement.feature_level != "gene":
+        raise ValueError(
+            f"Gene-level comparison requires gene measurements, got {contract.measurement.feature_level!r}"
+        )
+    if contract.measurement.unit not in COMPARATIVE_COMPARISON_UNITS:
+        raise ValueError(
+            f"ExpressionDataset unit {contract.measurement.unit!r} is not in {COMPARATIVE_COMPARISON_UNITS}"
+        )
+    complete = _project_complete_group_matrix(
+        dataset,
+        proteins,
+        feature_to_gene=feature_to_gene,
+        allow_unresolved_reference=allow_unresolved_reference,
+    )
+    species_obj = resolve_species(contract.taxon_id)
+    anatomy = anatomy_for_species(species_obj)
+    samples = dataset.samples
+    sample_cols = list(complete.columns)
 
     normal_rows, repro_rows, tumor_rows = [], [], []
     if contract.context == "tumor":
@@ -436,14 +481,28 @@ def observations_from_expression_dataset(
         for lib_id in sample_cols:
             s = samples.loc[lib_id]
             stage_raw = s.get("stage") if "stage" in s else None
+            raw_tissue = str(s["tissue"]).strip()
+            phys_state = (
+                str(s["physiological_state"]).strip().lower()
+                if "physiological_state" in s and pd.notna(s["physiological_state"])
+                else None
+            )
+            lookup_tissue = raw_tissue
+            raw_lower = " ".join(raw_tissue.lower().replace("_", " ").split())
+            if raw_lower in {"lactating mammary", "lactating mammary gland", "lactating breast"}:
+                lookup_tissue = "breast" if species_obj.taxon_id == 9606 else "mammary gland"
+                phys_state = phys_state or "lactating"
+            elif raw_lower in {"resting mammary", "resting mammary gland", "resting breast"}:
+                lookup_tissue = "breast" if species_obj.taxon_id == 9606 else "mammary gland"
+                phys_state = phys_state or "resting"
             ann = normal_tissues.resolve_normal_tissue(
-                s["tissue"],
+                lookup_tissue,
                 species=species_obj,
                 stage=stage_raw,
                 source_id="anatomy",
                 context="normal",
             )
-            cid = ann.concept_id or str(s["tissue"]).strip().lower()
+            cid = ann.concept_id or raw_tissue.lower()
             label = cid.replace("_", " ")
             if ann.stage in {"embryonic", "fetal"} or "embryonic_or_fetal" in ann.scopes:
                 donor = (
@@ -463,7 +522,7 @@ def observations_from_expression_dataset(
                             "scope": "developmental",
                             "compartment": "embryo",
                             "developmental_stage": str(stage_raw or ann.stage),
-                            "source_context": str(s["tissue"]),
+                            "source_context": raw_tissue,
                             "cells": int(s.get("cells", 20)),
                             "positive_cells": int(s.get("positive_cells", 20)),
                             "value": val,
@@ -475,8 +534,10 @@ def observations_from_expression_dataset(
                     )
             elif "reproductive" in ann.scopes:
                 comp = (
-                    anatomy.mammary_compartments[-1]
-                    if cid in {"mammary_tissue", "mammary_glandular"}
+                    anatomy.lactating_mammary_compartment
+                    if phys_state == "lactating" or ann.physiological_state == "lactating"
+                    else anatomy.resting_mammary_compartment
+                    if cid in {"mammary_tissue", "mammary_glandular", "breast"}
                     else cid
                     if cid in anatomy.reproductive_compartments
                     else label
@@ -549,6 +610,340 @@ def observations_from_expression_dataset(
     }
 
 
+def assess_normal_rna_dataset_gates(
+    dataset: ExpressionDataset,
+    proteins: pd.DataFrame,
+    *,
+    tier_ceilings: dict[str, float] | None = None,
+    feature_to_gene: dict[str, str] | None = None,
+    normal_stat: str = "p95",
+    allow_unresolved_reference: bool = False,
+) -> pd.DataFrame:
+    """Evaluate tiered normal somatic RNA ceilings directly from a species ``ExpressionDataset``."""
+    from . import tissue_tiers
+
+    contract = dataset.contract
+    if contract.context != "normal":
+        raise ValueError("Normal RNA safety gates require a normal ExpressionDataset")
+    if contract.measurement.unit not in COMPARATIVE_COMPARISON_UNITS:
+        raise ValueError(
+            f"Unsupported unit {contract.measurement.unit!r} for normal RNA safety gate"
+        )
+    ceilings = tier_ceilings or {
+        "vital": cta_selection_policy.TIER_BASES["vital"],
+        "protected": cta_selection_policy.TIER_BASES["protected"],
+        "manageable_hold": cta_selection_policy.TIER_BASES["manageable"],
+        "manageable_unsafe": cta_selection_policy.MANAGEABLE_UNSAFE_FLOOR,
+    }
+    complete = _project_complete_group_matrix(
+        dataset,
+        proteins,
+        feature_to_gene=feature_to_gene,
+        allow_unresolved_reference=allow_unresolved_reference,
+    )
+    species_obj = resolve_species(contract.taxon_id)
+    anatomy = anatomy_for_species(species_obj)
+    samples = dataset.samples
+
+    organ_libs: dict[tuple[str, str], list[str]] = {}
+    for lib_id in complete.columns:
+        s = samples.loc[lib_id]
+        stage_raw = s.get("stage") if "stage" in s else None
+        ann = normal_tissues.resolve_normal_tissue(
+            s["tissue"], species=species_obj, stage=stage_raw, source_id="anatomy", context="normal"
+        )
+        if ann.mapping_status != "mapped" or ann.stage in {"embryonic", "fetal"}:
+            continue
+        if "reproductive" in ann.scopes or ann.concept_id == "thymus":
+            continue
+        label = (ann.concept_id or str(s["tissue"]).strip().lower()).replace("_", " ")
+        if (
+            label in anatomy.disposable_compartments
+            or ann.concept_id in anatomy.disposable_compartments
+        ):
+            continue
+        tier = tissue_tiers.consequences(label, None, stage="adult", resolution="bulk")["tier"]
+        if tier in {"vital", "protected", "manageable"}:
+            organ_libs.setdefault((label, tier), []).append(lib_id)
+
+    rows = []
+    unit = contract.measurement.unit
+    for (organ, tier), libs in sorted(organ_libs.items()):
+        mat = complete[libs].T
+        donor_keys = [
+            str(samples.loc[lib, "donor_id"])
+            if samples.loc[lib, "pooling"] == "single"
+            and isinstance(samples.loc[lib].get("donor_id"), str)
+            and samples.loc[lib, "donor_id"].strip()
+            else f"__lib__:{lib}"
+            for lib in libs
+        ]
+        by_donor = mat.groupby(donor_keys, sort=False).median()
+        summarized = target_selection.summarize_normal_tissue_tpm(by_donor, method=normal_stat)
+        for eid, val in summarized.items():
+            if pd.isna(val):
+                continue
+            v = float(val)
+            if tier in {"vital", "protected"} and v > ceilings[tier]:
+                rows.append(
+                    {
+                        "entity_id": eid,
+                        "layer": f"{contract.source_id} normal bulk RNA",
+                        "unsafe": True,
+                        "hold": False,
+                        "reason": f"{organ} ({tier}): {v:g} {unit} > {ceilings[tier]:g}",
+                    }
+                )
+            elif tier == "manageable" and v > ceilings["manageable_unsafe"]:
+                rows.append(
+                    {
+                        "entity_id": eid,
+                        "layer": f"{contract.source_id} normal bulk RNA",
+                        "unsafe": True,
+                        "hold": False,
+                        "reason": f"{organ} (manageable): {v:g} {unit} > {ceilings['manageable_unsafe']:g}",
+                    }
+                )
+            elif tier == "manageable" and v > ceilings["manageable_hold"]:
+                rows.append(
+                    {
+                        "entity_id": eid,
+                        "layer": f"{contract.source_id} normal bulk RNA",
+                        "unsafe": False,
+                        "hold": True,
+                        "reason": f"{organ} (manageable hold): {v:g} {unit} > {ceilings['manageable_hold']:g}",
+                    }
+                )
+    return pd.DataFrame(rows, columns=["entity_id", "layer", "unsafe", "hold", "reason"])
+
+
+def assess_pooled_protein_gates(
+    dataset: ExpressionDataset,
+    proteins: pd.DataFrame,
+    *,
+    feature_to_gene: dict[str, str],
+    min_abundance: float = 1e5,
+    hold_only: bool = False,
+) -> pd.DataFrame:
+    """Evaluate affirmative normal-protein detections from pooled proteomics (e.g. canine iBAQ).
+
+    Pooled tissue channels lack individual-donor and cell-type resolution: positive
+    Vital/Protected detection supplies an exclusion (or review hold when ``hold_only=True``),
+    while absent/zero values never grant negative-IHC RNA ceiling multipliers.
+    """
+    from . import tissue_tiers
+
+    contract = dataset.contract
+    if contract.context != "normal":
+        raise ValueError("Pooled protein safety gates require a normal ExpressionDataset")
+    complete = _project_complete_group_matrix(
+        dataset, proteins, feature_to_gene=feature_to_gene, allow_unresolved_reference=True
+    )
+    species_obj = resolve_species(contract.taxon_id)
+    anatomy = anatomy_for_species(species_obj)
+    samples = dataset.samples
+    rows = []
+    for lib_id in complete.columns:
+        s = samples.loc[lib_id]
+        ann = normal_tissues.resolve_normal_tissue(
+            s["tissue"], species=species_obj, source_id="anatomy", context="normal"
+        )
+        if (
+            ann.mapping_status != "mapped"
+            or "reproductive" in ann.scopes
+            or ann.concept_id == "thymus"
+        ):
+            continue
+        label = (ann.concept_id or str(s["tissue"]).strip().lower()).replace("_", " ")
+        if (
+            label in anatomy.disposable_compartments
+            or ann.concept_id in anatomy.disposable_compartments
+        ):
+            continue
+        tier = tissue_tiers.consequences(label, None, stage="adult", resolution="bulk")["tier"]
+        if tier not in {"vital", "protected"}:
+            continue
+        for eid, val in complete[lib_id].items():
+            if pd.notna(val) and float(val) >= min_abundance:
+                rows.append(
+                    {
+                        "entity_id": eid,
+                        "layer": f"{contract.source_id} pooled normal protein",
+                        "unsafe": not hold_only,
+                        "hold": hold_only,
+                        "reason": (
+                            f"{label} ({tier} pooled {contract.measurement.unit}): "
+                            f"{float(val):g} >= {min_abundance:g}"
+                        ),
+                    }
+                )
+    return pd.DataFrame(rows, columns=["entity_id", "layer", "unsafe", "hold", "reason"])
+
+
+def classify_sex_restriction(
+    table: pd.DataFrame | None = None,
+    *,
+    species: Species | str | int = "human",
+    host_evidence: dict | None = None,
+    max_tpm: float = 4.0,
+    max_ntpm: float = 4.0,
+) -> pd.DataFrame:
+    """Partition Reproductive Antigens (RA) and CTAs into MRA/FRA/ERA/SRA and CTA-* subsets.
+
+    Uses the species' own comparative reproductive and mammary anatomy from
+    ``anatomy_for_species(species)``. Missing opposite-sex organ coverage fails
+    closed (never assuming an unmeasured female or male organ is silent).
+    """
+    from . import host_context, target_filters
+
+    if table is None:
+        resolved = resolve_species(species)
+        frame = (
+            target_selection.results()
+            if resolved.taxon_id == 9606
+            else packaged_species_results(resolved)
+        )
+    else:
+        frame = table.copy()
+        inferred = frame.attrs.get(
+            "species",
+            str(frame["species"].iloc[0]) if "species" in frame and len(frame) else species,
+        )
+        resolved = resolve_species(inferred)
+
+    anatomy = anatomy_for_species(resolved)
+    cols = [
+        "entity_id",
+        "protein_group_label",
+        "classification",
+        "is_cta",
+        "sex_restriction_class",
+        "sex_restriction_code",
+        "female_all_adult_eligible",
+        "male_all_adult_eligible",
+        "female_sex_organ_only_eligible",
+        "male_sex_organ_only_eligible",
+        "male_sex_organ_max_tpm",
+        "female_sex_organ_max_tpm",
+        "resting_breast_max_tpm",
+        "tumor_max_tpm",
+        "tumor_top_cancer_code",
+        "reproductive_qualifying_compartments",
+    ]
+    ra = frame[frame.is_reproductive_antigen.astype(bool)].copy()
+    if ra.empty:
+        return pd.DataFrame(columns=cols)
+
+    ra.attrs["taxon_id"] = resolved.taxon_id
+    ra.attrs["species"] = resolved.name
+    exposures = (
+        host_context.exposure_evidence()
+        if resolved.taxon_id == 9606 and host_evidence is None
+        else (host_evidence or {})
+    )
+
+    f_all_host = host_context.from_legacy(
+        "female-patient",
+        protect_tissues=anatomy.female_adult_protected_compartments,
+        lactating=True,
+        species=resolved,
+    )
+    f_sex_host = host_context.from_legacy(
+        "female-patient",
+        protect_tissues=anatomy.female_sex_compartments,
+        lactating=True,
+        species=resolved,
+    )
+    m_all_host = host_context.from_legacy(
+        "male-patient",
+        protect_tissues=anatomy.male_adult_protected_compartments,
+        species=resolved,
+    )
+    m_sex_host = host_context.from_legacy(
+        "male-patient",
+        protect_tissues=anatomy.male_sex_compartments,
+        species=resolved,
+    )
+    if (max_tpm, max_ntpm) != (4.0, 4.0):
+        from dataclasses import replace
+
+        f_all_host = replace(f_all_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
+        f_sex_host = replace(f_sex_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
+        m_all_host = replace(m_all_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
+        m_sex_host = replace(m_sex_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
+
+    f_all = target_filters.apply(
+        target_filters.TargetFilter(host=f_all_host), ra, host_evidence=exposures
+    ).set_index("entity_id")
+    f_sex = target_filters.apply(
+        target_filters.TargetFilter(host=f_sex_host), ra, host_evidence=exposures
+    ).set_index("entity_id")
+    m_all = target_filters.apply(
+        target_filters.TargetFilter(host=m_all_host), ra, host_evidence=exposures
+    ).set_index("entity_id")
+    m_sex = target_filters.apply(
+        target_filters.TargetFilter(host=m_sex_host), ra, host_evidence=exposures
+    ).set_index("entity_id")
+
+    def max_comp_tpm(eid: str, compartments: tuple[str, ...]) -> float:
+        rec = exposures.get(eid, {})
+        vals = [
+            rec[c]["max_tpm"]
+            for c in compartments
+            if c in rec and rec[c].get("max_tpm") is not None
+        ]
+        return float(max(vals)) if vals else float("nan")
+
+    rows = []
+    for r in ra.itertuples():
+        eid = r.entity_id
+        fs_all = bool(f_all.at[eid, "host_status"] == "eligible")
+        ms_all = bool(m_all.at[eid, "host_status"] == "eligible")
+        fs_sex = bool(f_sex.at[eid, "host_status"] == "eligible")
+        ms_sex = bool(m_sex.at[eid, "host_status"] == "eligible")
+        if fs_all and not ms_all:
+            sex_class = "Male-restricted"
+            code = "CTA-M" if r.is_cta else "MRA-only"
+        elif ms_all and not fs_all:
+            sex_class = "Female-restricted"
+            code = "CTA-F" if r.is_cta else "FRA-only"
+        elif fs_all and ms_all:
+            sex_class = "Embryo / placenta-only"
+            code = "CTA-E" if r.is_cta else "ERA-only"
+        else:
+            sex_class = "Shared male & female"
+            code = "CTA-MF" if r.is_cta else "SRA-only"
+        rows.append(
+            {
+                "entity_id": eid,
+                "protein_group_label": r.protein_group_label,
+                "classification": r.classification,
+                "is_cta": bool(r.is_cta),
+                "sex_restriction_class": sex_class,
+                "sex_restriction_code": code,
+                "female_all_adult_eligible": fs_all,
+                "male_all_adult_eligible": ms_all,
+                "female_sex_organ_only_eligible": fs_sex,
+                "male_sex_organ_only_eligible": ms_sex,
+                "male_sex_organ_max_tpm": max_comp_tpm(eid, anatomy.male_sex_compartments),
+                "female_sex_organ_max_tpm": max_comp_tpm(eid, anatomy.female_sex_compartments),
+                "resting_breast_max_tpm": max_comp_tpm(eid, (anatomy.resting_mammary_compartment,)),
+                "tumor_max_tpm": getattr(r, "tumor_max_tpm", np.nan),
+                "tumor_top_cancer_code": getattr(r, "tumor_top_cancer_code", ""),
+                "reproductive_qualifying_compartments": getattr(
+                    r, "reproductive_qualifying_compartments", ""
+                ),
+            }
+        )
+    out = pd.DataFrame(rows, columns=cols).sort_values(
+        ["is_cta", "sex_restriction_class", "tumor_max_tpm", "protein_group_label"],
+        ascending=[False, True, False, True],
+    )
+    out.attrs["taxon_id"] = resolved.taxon_id
+    out.attrs["species"] = resolved.name
+    return out.reset_index(drop=True)
+
+
 @dataclass(frozen=True)
 class SpeciesScreeningSpec:
     """Complete, source-pluggable specification for running target selection in a species."""
@@ -595,6 +990,14 @@ class SpeciesScreeningResult:
     host_exposure: dict[str, dict[str, dict]]
     sequences: pd.DataFrame
     summary: dict
+
+    def sex_restricted_antigens(self) -> pd.DataFrame:
+        """Partition this species' evaluated RAs and CTAs into MRA/FRA/ERA/SRA and CTA-*."""
+        return classify_sex_restriction(
+            self.catalog,
+            species=self.spec.species,
+            host_evidence=self.host_exposure,
+        )
 
     def select(self, group: str = "CTA", *, mode: str = "all", host=None, **overrides):
         """Enter the shared AntigenSelection / TargetFilter / PeptideIndex workflow."""
@@ -659,7 +1062,6 @@ def evaluate_species_catalog(
         )
     )
 
-    # 1. Pluggable normal safety gates (bulk RNA ceilings, proteomics/IHC, literature, clinical).
     gate_unsafe = pd.Series(False, index=d.index)
     gate_hold = pd.Series(False, index=d.index)
     unsafe_reasons_by_entity: dict[str, list[str]] = {eid: [] for eid in d.entity_id}
@@ -679,7 +1081,6 @@ def evaluate_species_catalog(
         gate_unsafe = d.entity_id.map(lambda e: bool(unsafe_reasons_by_entity[e]))
         gate_hold = d.entity_id.map(lambda e: bool(hold_reasons_by_entity[e]))
 
-    # 2. Donor-resolved rare normal-cell UMI grading (optional per species).
     rare_status = pd.Series("unassessed", index=d.index)
     rare_action = pd.Series("none", index=d.index)
     rare_basis = pd.Series("", index=d.index)
@@ -741,7 +1142,6 @@ def evaluate_species_catalog(
     )
     d["normal_screen_pass"] = ~d["unsafe"] & ~gate_hold & ~rare_action.eq("review")
 
-    # 3. 9-mer Unsafe sequence containment across the species' own proteome.
     seq_df = (
         sequences.copy()
         if sequences is not None
@@ -781,7 +1181,6 @@ def evaluate_species_catalog(
         ~d["unresolved_evidence"].astype(bool) if "unresolved_evidence" in d else True
     )
 
-    # 4. Symmetric 10 x max(N, D, floor) comparison across normals, tumors & reproductive.
     has_panel = (
         bool(spec.required_normal_contexts)
         and bool(spec.comparison_id.strip())
@@ -823,7 +1222,14 @@ def evaluate_species_catalog(
     ca_status, ra_status = [], []
     norm_ref, disp_max = [], []
     norm_contexts_json = []
-    tum_max, tum_fold, samples_10x, patients_10x, patient_folds_json = [], [], [], [], []
+    tum_max, tum_top_code, tum_fold, samples_10x, patients_10x, patient_folds_json = (
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    )
     rep_max, rep_supp, rep_fold, rep_qual_comps = [], [], [], []
     bounds_pass = []
     host_exposure: dict[str, dict[str, dict]] = {}
@@ -847,6 +1253,7 @@ def evaluate_species_catalog(
             disp_max.append(np.nan)
             norm_contexts_json.append("[]")
             tum_max.append(np.nan)
+            tum_top_code.append("")
             tum_fold.append(np.nan)
             samples_10x.append(0)
             patients_10x.append(0)
@@ -871,6 +1278,7 @@ def evaluate_species_catalog(
             disp_max.append(np.nan)
             norm_contexts_json.append("[]")
             tum_max.append(np.nan)
+            tum_top_code.append("")
             tum_fold.append(np.nan)
             samples_10x.append(0)
             patients_10x.append(0)
@@ -941,6 +1349,11 @@ def evaluate_species_catalog(
         denom = max(n_max, d_max, spec.detection_floor)
         valid_t = t_df[t_df.qc_pass & t_df.identity_resolved & t_df.value.notna()]
         t_peak = float(valid_t.value.max()) if not valid_t.empty else np.nan
+        t_code = (
+            str(valid_t.sort_values("value", ascending=False).iloc[0].get("cancer_code", ""))
+            if not valid_t.empty
+            else ""
+        )
         t_ratio = t_peak / denom if pd.notna(t_peak) else np.nan
 
         valid_r = (
@@ -1006,6 +1419,7 @@ def evaluate_species_catalog(
             )
         )
         tum_max.append(t_peak)
+        tum_top_code.append(t_code)
         tum_fold.append(t_ratio)
         samples_10x.append(ca_rec["samples_at_tenfold"])
         patients_10x.append(ca_rec["independent_participants_at_tenfold"])
@@ -1027,6 +1441,7 @@ def evaluate_species_catalog(
     d["normal_reference_contexts"] = norm_contexts_json
     d["disposable_max_tpm"] = disp_max
     d["tumor_max_tpm"] = tum_max
+    d["tumor_top_cancer_code"] = tum_top_code
     d["tumor_fold"] = tum_fold
     d["samples_at_tenfold"] = samples_10x
     d["independent_patients_at_tenfold"] = patients_10x
@@ -1037,6 +1452,7 @@ def evaluate_species_catalog(
     d["reproductive_qualifying_compartments"] = rep_qual_comps
 
     classified = target_selection.classify(d)
+    classified["policy"] = spec.policy_id
     classified["target_policy_id"] = spec.policy_id
 
     core_set = set(spec.anatomy.core_reproductive_compartments)
@@ -1062,6 +1478,24 @@ def evaluate_species_catalog(
             tiers.append("core")
     classified["cta_tier"] = tiers
 
+    classified.attrs.update(
+        taxon_id=spec.species.taxon_id,
+        species=spec.species.name,
+        reference_id=spec.reference.reference_id,
+        policy_id=spec.policy_id,
+        comparison_id=spec.comparison_id,
+        comparison_unit=spec.comparison_unit,
+    )
+    sex_df = classify_sex_restriction(classified, species=spec.species, host_evidence=host_exposure)
+    sex_class_by_eid = (
+        sex_df.set_index("entity_id")["sex_restriction_class"].to_dict() if not sex_df.empty else {}
+    )
+    sex_code_by_eid = (
+        sex_df.set_index("entity_id")["sex_restriction_code"].to_dict() if not sex_df.empty else {}
+    )
+    classified["sex_restriction_class"] = classified["entity_id"].map(sex_class_by_eid).fillna("")
+    classified["sex_restriction_code"] = classified["entity_id"].map(sex_code_by_eid).fillna("")
+
     if not seq_df.empty:
         cat_by_eid = classified.set_index("entity_id")["category"].to_dict()
         seq_df["catalog_category"] = seq_df["entity_id"].map(cat_by_eid).fillna("")
@@ -1084,14 +1518,6 @@ def evaluate_species_catalog(
         sequence_scope="all annotated protein translations",
     )
 
-    classified.attrs.update(
-        taxon_id=spec.species.taxon_id,
-        species=spec.species.name,
-        reference_id=spec.reference.reference_id,
-        policy_id=spec.policy_id,
-        comparison_id=spec.comparison_id,
-        comparison_unit=spec.comparison_unit,
-    )
     summary = {
         "taxon_id": spec.species.taxon_id,
         "species": spec.species.name,
@@ -1102,6 +1528,11 @@ def evaluate_species_catalog(
         "proteins": len(classified),
         "categories": classified.category.value_counts().to_dict(),
         "classifications": classified.classification.value_counts().to_dict(),
+        "sex_restriction_codes": (
+            classified.loc[classified.sex_restriction_code.ne(""), "sex_restriction_code"]
+            .value_counts()
+            .to_dict()
+        ),
     }
     return SpeciesScreeningResult(
         spec=spec,
@@ -1128,6 +1559,10 @@ def packaged_species_results(
         out = target_selection.results(gene, category=category)
         out.insert(0, "species", "human")
         out.insert(0, "taxon_id", 9606)
+        if "policy" not in out:
+            out["policy"] = target_selection.POLICY_ID
+        if "target_policy_id" not in out:
+            out["target_policy_id"] = target_selection.POLICY_ID
         out.attrs.update(taxon_id=9606, species="human", policy_id=target_selection.POLICY_ID)
         return out
 
@@ -1174,14 +1609,17 @@ def packaged_species_results(
 
 
 def packaged_species_coverage(species: Species | str | int = "human") -> dict:
-    """Structured readiness, anatomy and category counts for human, dog or mouse."""
+    """Structured readiness, policy parameters, anatomy and category counts."""
     from .species_antigens import cta_snapshot
+    from .species_policies import species_policy
 
     resolved = resolve_species(species)
     anatomy = anatomy_for_species(resolved)
+    pol = species_policy(resolved)
     snap = cta_snapshot(resolved)
     if resolved.taxon_id == 9606:
         meta = target_selection.metadata()
+        sex_df = classify_sex_restriction(species="human")
         return {
             "taxon_id": 9606,
             "species": "human",
@@ -1189,16 +1627,12 @@ def packaged_species_coverage(species: Species | str | int = "human") -> dict:
             "policy_id": target_selection.POLICY_ID,
             "reference": snap.as_dict()["references"][0]["identity"],
             "anatomy": anatomy.as_dict(),
+            "thresholds": asdict(pol.thresholds),
             "counts": meta["summary"]["categories"],
-            "populated_inputs": [
-                "reference_proteome",
-                "normal_bulk_rna",
-                "normal_cell_rna",
-                "rare_cell_umi",
-                "normal_protein_ihc",
-                "tumor_cohorts",
-                "reproductive_and_embryo_rna",
-            ],
+            "sex_restricted_counts": (
+                sex_df["sex_restriction_code"].value_counts().to_dict() if not sex_df.empty else {}
+            ),
+            "populated_inputs": [b.role for b in pol.datasets if b.status == "active_in_catalog"],
             "missing_inputs": [],
         }
 
@@ -1210,28 +1644,22 @@ def packaged_species_coverage(species: Species | str | int = "human") -> dict:
     expr = expression_sources(species=resolved)
     ready_expr = [s.id for s in expr if s.acquisition_status == "available"]
     pending_expr = [s.id for s in expr if s.acquisition_status != "available"]
-    missing = (
-        [
-            "quantification_reference_crosswalk_for_normal_rna (bgee-srp009687, bgee-srp181218, barkbase)",
-            "unit_and_reference_reconciled_tumor_cohorts (gse304066-osteosarcoma blocked_provenance)",
-            "cell_resolved_normal_protein_or_umi_atlas (pfizer-dog-protein is pooled iBAQ)",
-        ]
-        if resolved.taxon_id == 9615
-        else [
-            "integrated_normal_tissue_rna_panel_on_ensembl115 (Tabula Muris / Bgee / GXD not yet ingested)",
-            "integrated_mouse_tumor_cohorts_on_ensembl115",
-            "donor_resolved_mouse_rare_cell_umi_panel",
-        ]
-    )
+    missing = [
+        f"{b.role}: {b.source_id} ({b.status})"
+        for b in pol.datasets
+        if b.status != "active_in_catalog"
+    ]
     return {
         "taxon_id": resolved.taxon_id,
         "species": resolved.name,
         "selection_status": "pending_reconciled_panels",
-        "policy_id": target_selection.POLICY_ID,
+        "policy_id": pol.policy_id,
         "registered_references": refs,
         "reference": snap.as_dict()["references"][0]["identity"],
         "anatomy": anatomy.as_dict(),
+        "thresholds": asdict(pol.thresholds),
         "counts": {c: int(cat.category.eq(c).sum()) for c in target_selection.CATEGORIES},
+        "sex_restricted_counts": {},
         "populated_inputs": [
             f"registered_references ({', '.join(refs)})",
             f"curated_cta_nominations ({len(cat)})",

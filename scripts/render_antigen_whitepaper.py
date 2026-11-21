@@ -15,8 +15,12 @@ from scripts.build_target_filter_audit import FAMILIAR, lookup  # noqa: E402
 
 from oncoref import (  # noqa: E402
     antigen_data,
+    canine,
     catalog,
     cta_selection_policy,
+    human,
+    mouse,
+    species_policies,
     target_filters,
     target_selection,
 )
@@ -26,6 +30,7 @@ BUILD = DOCS / "audits/target-selection-20261110/rebuild"
 ASSETS = "antigen-whitepaper"
 NORMAL_PEAKS = DOCS / "audits/cta-selection-20261028/normal-peak-evidence.csv.gz"
 TEMPLATE = ROOT / "scripts/cta_evidence_assets/antigen-whitepaper.md"
+SPECIES_TEMPLATE = ROOT / "scripts/cta_evidence_assets/species-antigen-whitepaper.md"
 PEAK = ["tumor_max_tpm", "protein_group_label", "entity_id"]
 
 
@@ -214,6 +219,183 @@ def tissue_hierarchy():
             )
         )
     return "\n\n".join(sections) + "\n"
+
+
+def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
+    """Build cross-species tables and CSV exports from live species_policies and snapshots."""
+    policies = species_policies.all_species_policies()
+    all_bindings = pd.concat([p.dataset_table() for p in policies], ignore_index=True)
+
+    summary_rows = []
+    anat_rows = []
+    for mod, pol in ((human, policies[0]), (canine, policies[1]), (mouse, policies[2])):
+        cov = mod.target_selection_coverage()
+        a = pol.anatomy
+        active_roles = sum(
+            any(b.role == r and b.status == "active_in_catalog" for b in pol.datasets)
+            for r in species_policies.ROLE_IDS
+        )
+        counts = cov["counts"]
+        if pol.species.taxon_id == 9606:
+            cat_text = (
+                f"{counts['CTA']:,} CTA · {counts['Cancer Antigen only']:,} CA only · "
+                f"{counts['Reproductive Antigen only']:,} RA only · "
+                f"{counts['Other']:,} Other · {counts['Unsafe']:,} Unsafe"
+            )
+        else:
+            cat_text = (
+                f"{counts['Other']:,} native nominations in Other:Review "
+                f"({cov['selection_status']})"
+            )
+        summary_rows.append(
+            [
+                f"{pol.species.scientific_name} (`{pol.species.name}`, {pol.species.taxon_id})",
+                ", ".join(f"`{r}`" for r in pol.registered_reference_aliases),
+                ", ".join(f"`{u}`" for u in pol.thresholds.comparison_units),
+                f"{active_roles}/8 active",
+                cat_text,
+            ]
+        )
+        anat_rows.append(
+            [
+                f"{pol.species.scientific_name} (`{pol.species.taxon_id}`)",
+                ", ".join(a.core_reproductive_compartments),
+                ", ".join(a.male_accessory_compartments),
+                ", ".join(a.female_tract_compartments),
+                ", ".join(a.mammary_compartments),
+                ", ".join(a.disposable_compartments),
+            ]
+        )
+
+    role_comp = species_policies.role_comparison_table()
+    eight_pillar_rows = [
+        [
+            f"**{r.role_label}**",
+            f"{r.human_sources} — *{r.human_status}*",
+            f"{r.dog_sources} — *{r.dog_status}*",
+            f"{r.mouse_sources} — *{r.mouse_status}*",
+        ]
+        for r in role_comp.itertuples(index=False)
+    ]
+
+    def per_species_dataset_md(pol: species_policies.SpeciesPolicy) -> str:
+        df = pol.dataset_table()
+        return table(
+            ["Canonical role", "Dataset(s)", "Native unit", "Status", "Threshold / screening rule"],
+            [
+                [
+                    r.role_label,
+                    f"`{r.source_id}` — {r.label}",
+                    r.native_unit,
+                    f"`{r.status}`",
+                    r.threshold_or_use,
+                ]
+                for r in df.itertuples(index=False)
+            ],
+        )
+
+    nom_csv_rows = []
+    nom_tables: dict[str, str] = {}
+    for mod, key in ((canine, "dog"), (mouse, "mouse")):
+        snap = mod.cta_snapshot()
+        ev_by_cand: dict[str, int] = {}
+        for ev in snap.evidence():
+            for cid in ev["candidate_ids"]:
+                ev_by_cand[cid] = ev_by_cand.get(cid, 0) + 1
+        ts = mod.target_selection().set_index("entity_id")
+        md_rows = []
+        for cand in snap.candidates():
+            eid = f"nomination:{snap.taxon_id}:{cand['id']}"
+            trow = ts.loc[eid]
+            gids = ", ".join(cand["gene_ids"]) or "unresolved"
+            n_obs = ev_by_cand.get(cand["id"], 0)
+            sources = ", ".join(dict.fromkeys(d["source_id"] for d in cand["derivation"]))
+            missing = "; ".join(cand["evidence_coverage"]["missing"])
+            md_rows.append(
+                [
+                    f"`{cand['label']}`",
+                    f"`{gids}`",
+                    cand["mapping"]["status"],
+                    sources,
+                    n_obs,
+                    f"`{trow.classification}`",
+                    missing,
+                ]
+            )
+            nom_csv_rows.append(
+                {
+                    "taxon_id": snap.taxon_id,
+                    "species": key,
+                    "candidate_id": cand["id"],
+                    "label": cand["label"],
+                    "gene_ids": "|".join(cand["gene_ids"]),
+                    "mapping_status": cand["mapping"]["status"],
+                    "mapping_complete": bool(cand["mapping"]["complete"]),
+                    "nomination_sources": "|".join(
+                        dict.fromkeys(d["source_id"] for d in cand["derivation"])
+                    ),
+                    "native_observations": n_obs,
+                    "classification": trow.classification,
+                    "missing_requirements": missing,
+                }
+            )
+        nom_tables[key] = table(
+            [
+                "Candidate",
+                "Reference gene ID(s)",
+                "Mapping",
+                "Source(s)",
+                "Native obs.",
+                "Catalog call",
+                "Missing for quantitative CA/RA",
+            ],
+            md_rows,
+        )
+
+    template_vars = {
+        "species_summary_table": table(
+            [
+                "Species (taxon)",
+                "Pinned references",
+                "Comparison unit(s)",
+                "Evidence pillars",
+                "Packaged catalog status",
+            ],
+            summary_rows,
+        ),
+        "comparative_anatomy_table": table(
+            [
+                "Species",
+                "Core reproductive / embryonic",
+                "Male accessory",
+                "Female tract",
+                "Mammary",
+                "Non-thymic Disposable (D)",
+            ],
+            anat_rows,
+        ),
+        "eight_pillar_matrix": table(
+            [
+                "Screening pillar",
+                "Human (9606)",
+                "Domestic dog (9615)",
+                "Laboratory mouse (10090)",
+            ],
+            eight_pillar_rows,
+        ),
+        "human_datasets_table": per_species_dataset_md(policies[0]),
+        "dog_datasets_table": per_species_dataset_md(policies[1]),
+        "mouse_datasets_table": per_species_dataset_md(policies[2]),
+        "dog_nominations_table": nom_tables["dog"],
+        "mouse_nominations_table": nom_tables["mouse"],
+    }
+    csv_outputs = {
+        f"{ASSETS}/species-datasets.csv": all_bindings.to_csv(index=False, lineterminator="\n"),
+        f"{ASSETS}/species-nominations.csv": pd.DataFrame(nom_csv_rows).to_csv(
+            index=False, lineterminator="\n"
+        ),
+    }
+    return template_vars, csv_outputs
 
 
 def build():
@@ -618,7 +800,13 @@ def build():
         ),
     }
     values.update(ctag2_evidence(data))
+    species_vars, species_csvs = build_species_sections()
+    values.update(species_vars)
+    outputs.update(species_csvs)
     outputs["antigen-whitepaper.md"] = Template(TEMPLATE.read_text()).substitute(values)
+    outputs["species-antigen-whitepaper.md"] = Template(SPECIES_TEMPLATE.read_text()).substitute(
+        values
+    )
     return outputs
 
 

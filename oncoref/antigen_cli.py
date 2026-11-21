@@ -378,7 +378,7 @@ def register(subparsers):
     listing = commands.add_parser(
         "list", help="List current catalog members after optional filtering"
     )
-    listing.add_argument("--set", choices=list(antigen_sets.SETS), default="CTA")
+    listing.add_argument("--set", choices=list(antigen_sets.ALL_SETS), default="CTA")
     listing.add_argument("--mode", choices=list(target_filters.FILTER_MODES), default="all")
     _add_host_options(listing)
     listing.add_argument("--min-tumor-fold", type=float)

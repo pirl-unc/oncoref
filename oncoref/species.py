@@ -231,6 +231,28 @@ class SpeciesDataGroup:
 
         return anatomy_for_species(self.species).reproductive_compartments
 
+    def screening_policy(self):
+        """Declarative multi-species thresholds, anatomy and dataset bindings."""
+        if self.name != "antigens":
+            raise ValueError("screening_policy() requires the antigens group")
+        from .species_policies import species_policy
+
+        return species_policy(self.species)
+
+    def screening_datasets(
+        self, *, role: str | None = None, status: str | None = None
+    ) -> pd.DataFrame:
+        """Species-native datasets bound to the eight canonical screening roles."""
+        return self.screening_policy().dataset_table(role=role, status=status)
+
+    def sex_restricted_antigens(self) -> pd.DataFrame:
+        """Sex-restricted RA and CTA subsets (MRA/FRA/ERA/SRA, CTA-M/F/E/MF) for this species."""
+        if self.name != "antigens":
+            raise ValueError("sex_restricted_antigens() requires the antigens group")
+        from .species_target_selection import classify_sex_restriction
+
+        return classify_sex_restriction(species=self.species)
+
     def evaluate_target_catalog(self, spec, proteins: pd.DataFrame, **inputs):
         """Run the source-pluggable 3-stage target-selection pipeline for this species."""
         if self.name != "antigens":

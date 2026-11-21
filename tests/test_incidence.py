@@ -260,6 +260,22 @@ def test_mixed_chol_and_salivary_burden_scope():
     assert "LIHC" in incidence.cohorts_for_burden_category("liver", include_mixed=False)
     assert "ADCC" in incidence.cohorts_for_burden_category("head_and_neck", include_mixed=False)
 
+    # Disjointness & overlap checks for custom world vs US category sets:
+    assert incidence.burden_categories_disjoint(["colorectal", "anus"], metric="us_mortality_pct")
+    assert not incidence.burden_categories_disjoint(
+        ["colorectal", "anus"], metric="world_mortality_pct"
+    )
+    assert incidence.burden_category_overlaps(
+        ["colorectal", "anus", "lung"], metric="world_mortality_pct"
+    ) == (("anus", "colorectal"),)
+    assert not incidence.burden_categories_disjoint(
+        ["adrenal", "other_and_unknown_primary"], metric="world_incidence_pct"
+    )
+    assert incidence.burden_categories_disjoint(
+        ["lung", "breast", "colorectal", "adrenal", "liver", "head_and_neck"],
+        metric="world_mortality_pct",
+    )
+
 
 def test_proteoform_and_expression_commonprefix_operates_on_symbol_strings():
     # #578: slash-joined gene symbol contraction is string prefixing, not path math.

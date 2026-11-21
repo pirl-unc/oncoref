@@ -12,6 +12,7 @@ nav:
   - Home: index.md
   - Antigens:
       - Antigen whitepaper: antigen-whitepaper.md
+      - Multi-species whitepaper: species-antigen-whitepaper.md
       - Interactive protein catalog: audits/target-selection-20261110/rebuild/report.html
       - Classification rules: target-selection.md
       - Patient profiles & organ filters: target-filters.md

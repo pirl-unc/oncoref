@@ -100,3 +100,23 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
     ]
     assert len(excluded_rows) == 11
     assert all(not row.endswith("| — |") for row in excluded_rows)
+
+
+def test_species_whitepaper_and_exported_ledgers_reconcile_with_policies():
+    from oncoref import canine, mouse, species_policies
+
+    species_paper = (DOCS / "species-antigen-whitepaper.md").read_text()
+    main_paper = (DOCS / "antigen-whitepaper.md").read_text()
+    assert "## Comparative multi-species framework: human, dog, and mouse" in main_paper
+    for heading in (
+        "## *Homo sapiens* (human · taxon 9606)",
+        "## *Canis lupus familiaris* (domestic dog · taxon 9615)",
+        "## *Mus musculus* (laboratory mouse · taxon 10090)",
+    ):
+        assert heading in species_paper
+    ds = pd.read_csv(ASSETS / "species-datasets.csv")
+    assert set(ds.taxon_id) == {9606, 9615, 10090}
+    assert set(ds.role) == set(species_policies.ROLE_IDS)
+    noms = pd.read_csv(ASSETS / "species-nominations.csv")
+    assert len(noms[noms.taxon_id.eq(9615)]) == len(canine.target_selection()) == 14
+    assert len(noms[noms.taxon_id.eq(10090)]) == len(mouse.target_selection()) == 1

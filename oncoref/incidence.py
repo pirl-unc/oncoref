@@ -258,6 +258,53 @@ def burden_categories(cancer_type) -> tuple[str, ...]:
     return () if scope is None else scope["burden_categories"]
 
 
+WORLD_OVERLAPPING_BURDEN_PAIRS: tuple[tuple[str, str], ...] = (
+    ("anus", "colorectal"),
+    ("adrenal", "other_and_unknown_primary"),
+    ("bone_and_joint", "other_and_unknown_primary"),
+    ("eye_ocular", "other_and_unknown_primary"),
+    ("small_intestine", "other_and_unknown_primary"),
+    ("soft_tissue_sarcoma", "other_and_unknown_primary"),
+)
+
+
+def burden_category_overlaps(
+    categories=None, *, metric: str = "world_mortality_pct"
+) -> tuple[tuple[str, str], ...]:
+    """Return overlapping ``(category_a, category_b)`` pairs for ``metric``.
+
+    US ACS-CFF2024 categories are mutually disjoint. In GLOBOCAN 2024 world
+    shares (``world_incidence_pct``, ``world_mortality_pct``), ``anus`` (C21) is
+    folded into ``colorectal`` (C18-C21) and ``other_and_unknown_primary``
+    (C00-C97 minus the 34 Table 1 rows) overlaps the five untabulated minor-site
+    rows (``adrenal``, ``bone_and_joint``, ``eye_ocular``, ``small_intestine``,
+    ``soft_tissue_sarcoma``).
+    """
+    if metric not in _BURDEN_METRICS:
+        raise ValueError(f"metric must be one of {_BURDEN_METRICS}")
+    valid = set(cancer_burden_df()["burden_category"].astype(str))
+    selected = None
+    if categories is not None:
+        selected = {str(c) for c in categories}
+        if unknown := sorted(selected - valid):
+            raise ValueError(f"Unknown burden_category values: {unknown}")
+    if metric.startswith("us_"):
+        return ()
+    return tuple(
+        pair
+        for pair in WORLD_OVERLAPPING_BURDEN_PAIRS
+        if selected is None or (pair[0] in selected and pair[1] in selected)
+    )
+
+
+def burden_categories_disjoint(categories, *, metric: str = "world_mortality_pct") -> bool:
+    """Return ``True`` when ``categories`` have no source-site overlap under ``metric``."""
+    items = [str(c) for c in categories]
+    if len(items) != len(set(items)):
+        return False
+    return len(burden_category_overlaps(items, metric=metric)) == 0
+
+
 def cohorts_for_burden_category(category: str, *, include_mixed: bool = True) -> tuple[str, ...]:
     """Return canonical registry cancer codes that map to ``category``.
 

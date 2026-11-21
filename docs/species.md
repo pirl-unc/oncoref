@@ -387,10 +387,16 @@ sensitivity analyses, outside admitted normalized expression cohorts.
 
 ## Cross-species target selection and comparative host contexts
 
-`oncoref.species_target_selection` harmonizes the three-stage target-selection
-process across **human (`9606`)**, **dog (`9615`)** and **mouse (`10090`)**
-without transferring human expression, safety verdicts or threshold calibrations
-by orthology:
+See the [multi-species antigen whitepaper](species-antigen-whitepaper.md) for the
+complete per-species parameterization of human (`9606`), canine (`9615`), and
+murine (`10090`) datasets, comparative anatomy, sex-restricted subsets
+(`MRA`/`CTA-M`, `FRA`/`CTA-F`, `ERA`/`CTA-E`, `SRA`/`CTA-MF`), and native
+nomination ledgers.
+
+`oncoref.species_policies` and `oncoref.species_target_selection` harmonize the
+three-stage target-selection process across **human (`9606`)**, **dog (`9615`)**
+and **mouse (`10090`)** without transferring human expression, safety verdicts or
+threshold calibrations by orthology:
 
 1. **Reference proteome & protein-equivalence grouping (`group_reference_proteins`, `group_proteome`):**
    Collapses identical qualified amino-acid translations within one verified
