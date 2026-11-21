@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable
 from copy import deepcopy
 from importlib.resources import files
 
@@ -488,9 +489,9 @@ def _assess_enrichment_rna(
     }
     _require_columns(tumors, common | {"sample_id", "participant_id"})
     _require_columns(normals, common | {"context_id", "scope"})
-    if unit not in {"TPM", "nTPM", "pTPM"}:
+    if unit not in {"TPM", "nTPM", "pTPM", "TMM-CPM"}:
         raise ValueError(
-            "This rule requires a declared TPM/nTPM/pTPM comparison, not CP10K or counts"
+            "This rule requires a declared TPM/nTPM/pTPM/TMM-CPM comparison, not CP10K or counts"
         )
     if not comparison_id.strip() or not comparability_reference.strip():
         raise ValueError("A comparison ID and documented comparability reference are required")
@@ -800,6 +801,7 @@ def assess_rare_cell_rna(
     mapping_risk: bool,
     confirmed_tissues: set[str],
     literature_tissues: frozenset[str] | set[str] = frozenset(),
+    provenance_resolver: Callable[[str, str], tuple[str, str]] | None = None,
 ) -> dict:
     """Grade sparse normal-cell RNA for one gene from donor-resolved molecule counts.
 
@@ -885,7 +887,8 @@ def assess_rare_cell_rna(
     enough = d.n_multi.ge(RARE_CELL_MIN_CELLS)
     d["multi_molecule"] = enough & d.multi_molecule_pct.ge(RARE_CELL_DETECTION_PCT * factor)
     d["frequent"] = enough & d.multi_molecule_pct.ge(RARE_CELL_SINGLE_STUDY_PCT * factor)
-    resolved = [resolve_rare_cell_provenance(s, did) for s, did in zip(d.source_id, d.donor_id)]
+    resolver = resolve_rare_cell_provenance if provenance_resolver is None else provenance_resolver
+    resolved = [resolver(s, did) for s, did in zip(d.source_id, d.donor_id)]
     d["study_group"] = [r[0] for r in resolved]
     d["donor"] = [r[1] for r in resolved]
     findings = []

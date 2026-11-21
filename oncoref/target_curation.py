@@ -164,29 +164,32 @@ def table(catalog: pd.DataFrame) -> pd.DataFrame:
     rows = []
     for r in catalog.itertuples():
         hits = []
-        if isinstance(r.literature_recorded_tier, str) and r.literature_recorded_tier:
+        lit_tier = getattr(r, "literature_recorded_tier", "")
+        if isinstance(lit_tier, str) and lit_tier:
             hits.append(
                 (
-                    r.literature_recorded_tier,
-                    r.literature_recorded_tissue,
+                    lit_tier,
+                    getattr(r, "literature_recorded_tissue", ""),
                     "finding",
                     sources.get(r.entity_id, ""),
                 )
             )
-        if isinstance(r.reference_recorded_tier, str) and r.reference_recorded_tier:
+        ref_tier = getattr(r, "reference_recorded_tier", "")
+        if isinstance(ref_tier, str) and ref_tier:
             hits.append(
                 (
-                    r.reference_recorded_tier,
-                    r.reference_recorded_tissue,
+                    ref_tier,
+                    getattr(r, "reference_recorded_tissue", ""),
                     "reference",
                     _REFERENCE_SOURCES,
                 )
             )
-        rule = r.literature_family if isinstance(r.literature_family, str) else ""
+        raw_family = getattr(r, "literature_family", "")
+        rule = raw_family if isinstance(raw_family, str) else ""
         if rule and bool(family.loc[rule, "filter_acts"]):
             hits.append(
                 (
-                    r.literature_family_tier,
+                    getattr(r, "literature_family_tier", ""),
                     family.loc[rule, "tissue"],
                     "family",
                     family.loc[rule, "sources"],
