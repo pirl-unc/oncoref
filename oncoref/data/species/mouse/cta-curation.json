@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.mouse-cta-curation",
   "version": 1,
-  "source_version": "2026-10-29.1",
+  "source_version": "2026-11-20.1",
   "inputs": [
     {
       "name": "sarma1999.xml",
@@ -53,7 +53,7 @@
       "type": "application/json"
     }
   ],
-  "reference_scope": "Only NCBI Gene 22037 and its one reported transcript/protein pair, not a full assembly annotation. GCF_000001635.27 / RS_2024_02; product report binds NM_011635.2 and NP_035765.1 to NC_000086.8, GRCm39 C57BL/6J.",
+  "reference_scope": "Qualified against complete Ensembl 115 mouse GRCm39 (GCA_000001635.9, C57BL/6J; 66,668 annotated proteins) registered in data/species/mouse/assets.json, while retaining the original NCBI Gene 22037 (GCF_000001635.27 / RS_2024_02, NM_011635.2 / NP_035765.1) identity audit.",
   "identity_audit": {
     "source_rna": "M36387.1",
     "source_protein": "AAA40475.1",
@@ -88,6 +88,36 @@
         "X 61.35 cM"
       ]
     }
+  },
+  "host_reference_qualification": {
+    "reference_alias": "ensembl115",
+    "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b",
+    "assembly_accession": "GCA_000001635.9",
+    "annotation_source": "Ensembl",
+    "annotation_release": "115",
+    "gene_id": "ENSMUSG00000051257",
+    "versioned_gene_id": "ENSMUSG00000051257.4",
+    "symbol": "Trap1a",
+    "locus": [
+      "ENSMUSG00000051257.4",
+      "X",
+      138234432,
+      138238918,
+      "+"
+    ],
+    "transcript_id": "ENSMUST00000054534.4",
+    "rna_length": 1178,
+    "rna_sha256": "f7dcc02889a7026db91551aa9bf28342b520317904564207bb903f633bf9e9ee",
+    "protein_id": "ENSMUSP00000059448.4",
+    "protein_length": 224,
+    "protein_sha256": "4ab95201a7545cb6364b102b1e0340ef619959e99c4651ecef94bc3dc86237d9",
+    "matches_native_aaa40475_protein": true,
+    "matches_refseq_np035765_protein": true,
+    "ncbi_gene_cross_reference": "22037",
+    "annotated_protein_count": 66668,
+    "distinct_protein_sequences": 57314,
+    "orfdata_proteome_identity": "586c6bedf547c5a7eb54b56251e2db09c360b10ea543043cb52ce0119f022238",
+    "refseq_rs2024_02_note": "Full GCF_000001635.27 / RS_2024_02 feature_table.txt.gz contains 13 mitochondrial NC_005089.1 CDS rows without related_accession mRNA IDs, which ORFdata Proteome.from_refseq rejects; Ensembl 115 GCA_000001635.9 provides a complete validated host proteome on GRCm39 without genome indexes."
   },
   "curation_scope": "Van den Eynde 1991: nomination/identity only. Sarma 1999: endogenous RNA in five BALB/c normal organs and J558 cells (Figure 1 and corresponding Results). No source paper is redistributed; observations are curated facts and paraphrases.",
   "omissions": [

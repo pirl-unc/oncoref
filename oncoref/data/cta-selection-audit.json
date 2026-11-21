@@ -77,7 +77,7 @@
   "files": {
     "cta-selection-audit-human.json.gz": "e612b9544ecef574bc3d6cc1cd963a913f72d1180998bf5fd2603cba2869d802",
     "cta-selection-audit-dog.json.gz": "4f12cd209e677ebe4dda35501045e4b1bb92398364c7460c675794aece268375",
-    "cta-selection-audit-mouse.json.gz": "0424b0b561be3d7d7e31ad38a5bec5ad334e47f2e59b18f67dafd69f41f5d1fd"
+    "cta-selection-audit-mouse.json.gz": "b7cfea94a79d01f8db05020ab4005937b2c30c3826f2d3d33712f7558d24f5fe"
   },
   "inputs": {
     "docs/audits/cta-selection-20261028/manifest.json": "6ad02f6feeadffe87769776d11c83b7b2dad440d4faf9fe7a939ec2296c94fd9",
@@ -90,5 +90,13 @@
     "oncoref/data/species/dog/cta-evidence.json": "3793d7565427572697c832f4217a33da0ef3af42c87acf55ea00b49a58b1913c",
     "oncoref/data/species/mouse/cta-curation.json": "c19a21bb3a3d93664eb74e61becd4916cf65369ba09f672eebfeaf99c901fcb2",
     "oncoref/data/species/mouse/cta-evidence.json": "881ed25eeba6db3a78f80019b35e66d3d2dd5a3cd43746d729080bc0956b9fcc"
+  },
+  "native_updates": {
+    "mouse": {
+      "scripts/build_mouse_cta_evidence.py": "153cd91f51f853749ab63e1ec892e4e8df2d521b7fed3787c14de2baf8c2cd24",
+      "oncoref/data/species/mouse/assets.json": "ff32335dd1b021ad9358ef09a0201a18a22f10de52f31b188a5eedbd14dd840f",
+      "oncoref/data/species/mouse/cta-evidence.json": "7933bb71c1e094fe9c8b54c58b7bc4ee184deb127641af36b29a4d2533ae8e34",
+      "oncoref/data/species/mouse/cta-curation.json": "78fb3b8a04a47b90291583793864e63807ecdffa76a95741581ededb3a93e67d"
+    }
   }
 }

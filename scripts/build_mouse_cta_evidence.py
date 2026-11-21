@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Rebuild the sparse P1A seed from checked primary-source bytes, offline.
+"""Rebuild the mouse P1A CTA evidence snapshot against the registered Ensembl 115 host reference.
 
 Curated statements refer only to endogenous RNA in Sarma 1999 Figure 1 and
 its accompanying results. Transgenic experiments and presentation are excluded.
+Original DBA/2 P815 (M36387.1 / AAA40475.1) and NCBI Gene 22037 (NM_011635.2 /
+NP_035765.1) identity provenance are preserved alongside the complete Ensembl 115
+GRCm39 (GCA_000001635.9) host-reference mapping.
 See docs/species-cta-evidence.md for source acquisition and identity scope.
 """
 
@@ -16,37 +19,79 @@ from pathlib import Path
 
 from oncoref.cta_evidence_adapters import normalize_cta_snapshot
 from oncoref.expression_contract import ExpressionContract, ExpressionMeasurement
-from oncoref.reference_identity import ReferenceIdentity
+from oncoref.reference_identity import ReferenceIdentity, _canonical_json
 from oncoref.species_antigens import CTAEvidenceSnapshot
+from oncoref.species_assets import registered_references
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "oncoref/data/species/mouse"
-REFERENCE_ALIAS = "p1a-refseq-rs2024-02"
-VERSION = "2026-10-29.1"
+REFERENCE_ALIAS = "ensembl115"
+VERSION = "2026-11-20.1"
 
 
-def build(source_dir: Path) -> CTAEvidenceSnapshot:
-    """Verify every curated input; preserve assay and target reference separately."""
+def _sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def verify_ensembl_assets(
+    ensembl_dir: Path, reference: ReferenceIdentity, registration: dict
+) -> None:
+    """Verify complete Ensembl 115 GTF/FASTA bytes and Trap1a sequence identity."""
+    from build_human_cta_reference import annotation_records, fasta_records
+
+    manifest = json.loads((DATA / "assets.json").read_text())
+    by_id = {row["id"]: row for row in manifest["assets"]}
+    paths = {}
+    for role, asset_id in registration["assets"].items():
+        path = ensembl_dir / by_id[asset_id]["filename"]
+        if _sha256_file(path) != reference.content_provenance[role]:
+            raise ValueError(f"Ensembl reference checksum mismatch for {role}: {path}")
+        paths[role] = path
+
     receipt = json.loads((DATA / "cta-curation.json").read_text())
-    for source in receipt["inputs"]:
-        path = source_dir / source["name"]
-        if hashlib.sha256(path.read_bytes()).hexdigest() != source["sha256"]:
-            raise ValueError(f"Source checksum mismatch: {path}")
+    qual = receipt["host_reference_qualification"]
+    gid = qual["gene_id"]
+    genes = annotation_records(paths["gtf"], {gid})
+    if gid not in genes:
+        raise ValueError(f"Missing {gid} in Ensembl 115 GTF")
+    gene = genes[gid]
+    loci = sorted(gene["loci"])
+    if [list(x) for x in loci] != [qual["locus"]]:
+        raise ValueError(f"Unexpected {gid} locus in Ensembl 115 GTF: {loci}")
+    rna = fasta_records([paths["rna"], paths["ncrna"]], {qual["transcript_id"]})
+    pep = fasta_records([paths["protein"]], {qual["protein_id"]})
+    if (
+        rna[qual["transcript_id"]]["sequence_sha256"] != qual["rna_sha256"]
+        or rna[qual["transcript_id"]]["length"] != qual["rna_length"]
+        or pep[qual["protein_id"]]["sequence_sha256"] != qual["protein_sha256"]
+        or pep[qual["protein_id"]]["length"] != qual["protein_length"]
+    ):
+        raise ValueError("Ensembl 115 Trap1a RNA/protein records disagree with curation receipt")
+
+
+def build(
+    source_dir: Path | None = None, *, ensembl_dir: Path | None = None
+) -> CTAEvidenceSnapshot:
+    """Verify curated inputs and build the mouse CTA snapshot against registered Ensembl 115."""
+    receipt = json.loads((DATA / "cta-curation.json").read_text())
+    if source_dir is not None:
+        for source in receipt["inputs"]:
+            path = source_dir / source["name"]
+            if _sha256_file(path) != source["sha256"]:
+                raise ValueError(f"Source checksum mismatch: {path}")
     pins = {row["name"]: row["sha256"] for row in receipt["inputs"]}
-    reference = ReferenceIdentity(
-        taxon_id=10090,
-        assembly_accession="GCF_000001635.27",
-        annotation_source="NCBI RefSeq",
-        annotation_release="RS_2024_02",
-        source_version="NCBI Gene 22037 single-gene subset retrieved 2026-10-29",
-        identifier_namespaces={"gene": "NCBI Gene", "transcript": "RefSeq", "protein": "RefSeq"},
-        content_provenance={
-            "gene_record_subset": pins["gene-22037.json"],
-            "product_report_subset": pins["gene-22037-products.json"],
-            "rna": pins["NM_011635.2.gb"],
-            "protein": pins["NP_035765.1.gb"],
-        },
-    )
+    registration = next(r for r in registered_references("mouse") if r["id"] == REFERENCE_ALIAS)
+    reference = ReferenceIdentity.from_dict(registration["identity"])
+    if ensembl_dir is not None:
+        verify_ensembl_assets(ensembl_dir, reference, registration)
+    qual = receipt["host_reference_qualification"]
+    if qual["reference_id"] != reference.reference_id:
+        raise ValueError("Curation receipt host_reference_qualification disagrees with assets.json")
+
     sources = [
         {
             "id": "vandeneynde1991",
@@ -71,6 +116,7 @@ def build(source_dir: Path) -> CTAEvidenceSnapshot:
             "lineage": ["PMID:10049945", "P1A:normal-tissue-RNA"],
         },
     ]
+    locus_json = _canonical_json([qual["locus"]])
     payload = {
         "schema": "oncoref.cta-evidence",
         "schema_version": 1,
@@ -102,20 +148,36 @@ def build(source_dir: Path) -> CTAEvidenceSnapshot:
                 "mappings": [
                     {
                         "reference_id": reference.reference_id,
-                        "gene_namespace": "NCBI Gene",
+                        "gene_namespace": "Ensembl gene",
                         "status": "unique",
-                        "method": "Native AAA40475.1 protein exactly matches NP_035765.1; NCBI Gene 22037 product report binds NM_011635.2/NP_035765.1 to GRCm39 NC_000086.8. All products in this pinned single-gene subset retained.",
+                        "method": (
+                            "Native DBA/2 P815 AAA40475.1 protein (224 aa) and NCBI Gene 22037 "
+                            "NP_035765.1 exactly match Ensembl 115 ENSMUSP00000059448.4 on "
+                            "ENSMUSG00000051257.4/ENSMUST00000054534.4; all versioned GTF "
+                            "transcript/protein pairs verified against pinned Ensembl 115 RNA and "
+                            "peptide FASTAs."
+                        ),
                         "complete": True,
                         "targets": [
                             {
-                                "id": "22037",
-                                "symbol": "Trap1a",
+                                "id": qual["gene_id"],
+                                "symbol": qual["symbol"],
                                 "sequences": [
-                                    {"transcript_id": "NM_011635.2", "protein_id": "NP_035765.1"}
+                                    {
+                                        "transcript_id": qual["transcript_id"],
+                                        "protein_id": qual["protein_id"],
+                                    }
                                 ],
                             }
                         ],
-                        "notes": "Reference assembly is C57BL/6J; RefSeq RNA source strain is C57BL/6. Native P815 source is DBA/2 with unspecified substrain. Proteins match (224 aa), but RNA/CDS differ. This is an annotation association, not measured reference-strain or isoform expression. See cta-curation.json for checked asset scope.",
+                        "notes": (
+                            "Reference assembly is GRCm39 C57BL/6J (GCA_000001635.9, Ensembl 115); "
+                            "native P815 source is DBA/2 with unspecified substrain (NCBI Gene 22037 "
+                            "cross-reference retained in cta-curation.json). Proteins match (224 aa), "
+                            "while RNA/CDS sequences differ across strains. Loci are [versioned gene ID, "
+                            f"contig, 1-based inclusive start, end, strand]: {locus_json}. This is an "
+                            "annotation association, not measured reference-strain or isoform expression."
+                        ),
                     }
                 ],
                 "evidence_ids": [],
@@ -131,7 +193,7 @@ def build(source_dir: Path) -> CTAEvidenceSnapshot:
                 "Five normal organs from BALB/c mice do not establish a complete normal panel; strain, stage, cell type and donor coverage remain limited.",
                 "Donor/sample counts, biological independence and technical replicate counts are unreported for these imported observations; no counts are inferred from figure lanes.",
                 "Qualitative assay signals and source-relative comparisons are not TPM, protein abundance or isoform-specific measurements. Less sensitive Northern results do not negate sensitive RT-PCR signals.",
-                "Reference assets are an explicitly scoped NCBI Gene 22037 subset, not a full annotation release. Historical assay-to-reference sequence equivalence remains unresolved.",
+                "Mapped against the complete Ensembl 115 GRCm39 annotated host inventory (GCA_000001635.9); historical BALB/c and DBA/2 assay-to-reference sequence equivalence remains unresolved, and optional ncORF catalogues remain separate.",
             ],
         },
     }
@@ -279,6 +341,12 @@ def refresh_tables():
     selection["inputs"]["oncoref/data/species/mouse/cta-evidence.json"] = hashlib.sha256(
         (DATA / "cta-evidence.json").read_bytes()
     ).hexdigest()
+    selection["inputs"]["oncoref/data/species/mouse/cta-curation.json"] = hashlib.sha256(
+        (DATA / "cta-curation.json").read_bytes()
+    ).hexdigest()
+    selection["inputs"]["oncoref/data/species/mouse/assets.json"] = hashlib.sha256(
+        (DATA / "assets.json").read_bytes()
+    ).hexdigest()
     path.write_text(json.dumps(selection, indent=2) + "\n")
     audit = {
         "taxon_id": 10090,
@@ -287,8 +355,20 @@ def refresh_tables():
         **membership_tables("mouse"),
         **native_assessment("mouse"),
     }
+    for row in audit["funnel"]:
+        if row["stage"] == "Reference and assay identity":
+            row["note"] = (
+                "Complete Ensembl 115 GRCm39 annotated host reference; "
+                "historical BALB/c and DBA/2 assays do not establish C57BL/6J expression"
+            )
     audit["criteria"] = [
-        {"stage": row["stage"], "status": row["status"], "rule": row["note"], "source_ids": []}
+        {
+            "gate_id": None,
+            "stage": row["stage"],
+            "status": row["status"],
+            "rule": row["note"],
+            "source_ids": [],
+        }
         for row in audit["funnel"]
     ]
     assert all(
@@ -305,7 +385,12 @@ def refresh_tables():
     receipt["native_updates"] = {
         "mouse": {
             str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in (Path(__file__), DATA / "cta-evidence.json", DATA / "cta-curation.json")
+            for p in (
+                Path(__file__),
+                DATA / "assets.json",
+                DATA / "cta-evidence.json",
+                DATA / "cta-curation.json",
+            )
         }
     }
     path.write_text(json.dumps(receipt, indent=2) + "\n")
@@ -313,7 +398,19 @@ def refresh_tables():
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--source-dir", type=Path, required=True)
+    parser.add_argument(
+        "--source-dir", type=Path, help="Directory with the 7 pinned primary-source inputs"
+    )
+    parser.add_argument(
+        "--ensembl-dir",
+        type=Path,
+        help="Directory with the 4 pinned Ensembl 115 mouse GRCm39 files",
+    )
+    parser.add_argument(
+        "--from-curation-receipt",
+        action="store_true",
+        help="Use pinned source SHA-256s from cta-curation.json when raw primary XMLs are not staged locally",
+    )
     parser.add_argument("--output", type=Path, default=DATA / "cta-evidence.json")
     parser.add_argument(
         "--refresh-tables",
@@ -321,9 +418,11 @@ def main():
         help="Refresh packaged selection inventory and mouse audit",
     )
     args = parser.parse_args()
+    if args.source_dir is None and not args.from_curation_receipt:
+        parser.error("Provide --source-dir or --from-curation-receipt")
     if args.refresh_tables and args.output.resolve() != (DATA / "cta-evidence.json").resolve():
         parser.error("--refresh-tables requires the packaged snapshot output")
-    snapshot = build(args.source_dir)
+    snapshot = build(args.source_dir, ensembl_dir=args.ensembl_dir)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(snapshot.as_dict(), indent=2, sort_keys=True) + "\n")
     if args.refresh_tables:

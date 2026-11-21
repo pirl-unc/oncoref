@@ -1,0 +1,14 @@
+{
+  "source_ref": "v1.44.0",
+  "scope": "Data-only CTA selection metadata required by historical walkthrough receipts. No Python code snapshot.",
+  "files": {
+    "oncoref/data/cta-selection.json": {
+      "sha256": "6219fd63a59b6a8335c3b2431d68153b823195dea021523693825a1b74708c66",
+      "bytes": 8895
+    },
+    "oncoref/data/cta-selection-audit.json": {
+      "sha256": "55c4ce34a07a6e7eb41f1e1f697ccf565c2aedcab2a6782ee0315ffcd0421334",
+      "bytes": 3018
+    }
+  }
+}
