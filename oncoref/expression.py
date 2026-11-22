@@ -96,6 +96,7 @@ from .gene_ids import (
     cdna_identical_groups,
     ensembl_id_alias_symbols,
     gene_biotype,
+    is_ensembl_gene_id,
     proteoform_collapse_overrides,
     resolve_ensembl_id,
     unversioned,
@@ -345,7 +346,7 @@ def _gene_filter_mask(df: pd.DataFrame, genes: str | Iterable[str] | None) -> pd
     wanted_unversioned = {unversioned(g) for g in wanted}
     for gene in wanted:
         base = unversioned(gene)
-        if base.upper().startswith("ENSG"):
+        if is_ensembl_gene_id(base):
             resolved = resolve_ensembl_id(base)
             wanted_ids.add(resolved)
             wanted_unversioned.add(unversioned(resolved))
@@ -1976,7 +1977,16 @@ def sample_expression_qc_from_matrix(
     from .gene_families import clean_tpm_censored_gene_ids
 
     biological_rows = ~ids.isin(clean_tpm_censored_gene_ids())
-    clean = clean_tpm(raw[samples], gene_table=raw[id_cols])
+    empty_mode = (
+        "record"
+        if str(code or "") in source_matrices.PARTIAL_TECHNICAL_COMPARTMENT_COHORTS
+        else "warn"
+    )
+    clean = clean_tpm(
+        raw[samples],
+        gene_table=raw[id_cols],
+        on_empty_compartment=empty_mode,
+    )
     min_hk = (
         min_housekeeping_detected
         if min_housekeeping_detected is not None
@@ -3145,8 +3155,14 @@ def _load_per_sample_matrix(path: str, mtime: float, normalize: str) -> pd.DataF
     samples = sample_columns(raw)
     if normalize == "tpm_raw":
         return raw
-    clean = clean_tpm(raw[samples], gene_table=raw[base])
+    cohort_stem = Path(path).stem.removesuffix("_per_sample_tpm")
+    empty_mode = (
+        "record" if cohort_stem in source_matrices.PARTIAL_TECHNICAL_COMPARTMENT_COHORTS else "warn"
+    )
+    clean = clean_tpm(raw[samples], gene_table=raw[base], on_empty_compartment=empty_mode)
     out = pd.concat([raw[base].reset_index(drop=True), clean.reset_index(drop=True)], axis=1)
+    if "unfilled_compartments" in clean.attrs:
+        out.attrs["unfilled_compartments"] = dict(clean.attrs["unfilled_compartments"])
     if normalize == "tpm_clean_log1p":
         out[samples] = np.log1p(out[samples].to_numpy(dtype=float))
     elif normalize == "tpm_clean_hk":

@@ -20,11 +20,122 @@ mappings and the cDNA-identical / proteoform-collapse-override grouping refineme
 
 from __future__ import annotations
 
+import re
 from functools import lru_cache
 
 import pandas as pd
 
 from .load_dataset import _register_derived_cache, get_data
+
+ENSEMBL_GENE_PREFIXES_BY_SPECIES: dict[str, tuple[str, ...]] = {
+    "human": ("ENSG",),
+    "dog": ("ENSCAFG",),
+    "mouse": ("ENSMUSG",),
+}
+ENSEMBL_GENE_PREFIXES: tuple[str, ...] = ("ENSG", "ENSCAFG", "ENSMUSG")
+_ENSEMBL_GENE_RE = re.compile(r"^ENS[A-Z]{0,6}G\d+$", re.IGNORECASE)
+
+GENE_ID_COLUMN_ALIASES: tuple[str, ...] = (
+    "Ensembl_Gene_ID",
+    "ensembl_gene_id",
+    "gene_id",
+    "Gene_ID",
+    "canonical_ensembl_gene_id",
+    "canonical_gene_id",
+)
+SYMBOL_COLUMN_ALIASES: tuple[str, ...] = (
+    "Symbol",
+    "symbol",
+    "gene_symbol",
+    "Gene_Symbol",
+    "canonical_symbol",
+)
+CANCER_CODE_COLUMN_ALIASES: tuple[str, ...] = (
+    "cancer_code",
+    "Cancer_Type",
+    "cancer_type",
+    "code",
+)
+
+
+def is_ensembl_gene_id(identifier: str | None, *, species=None) -> bool:
+    """Return ``True`` when ``identifier`` (versioned or bare) is an Ensembl gene ID.
+
+    Supports human (``ENSG…``), canine (``ENSCAFG…``), murine (``ENSMUSG…``), and
+    standard Ensembl species prefixes when ``species=None``. Passing ``species``
+    restricts matching to that species' registered Ensembl gene prefix.
+    """
+    if identifier is None:
+        return False
+    token = unversioned(identifier)
+    if not token or not _ENSEMBL_GENE_RE.match(token):
+        return False
+    if species is None:
+        return True
+    from .species import resolve_species
+
+    resolved = resolve_species(species)
+    prefixes = ENSEMBL_GENE_PREFIXES_BY_SPECIES.get(resolved.name, ())
+    upper = token.upper()
+    return any(upper.startswith(prefix) and upper[len(prefix) :].isdigit() for prefix in prefixes)
+
+
+def gene_id_column(df: pd.DataFrame) -> str | None:
+    """Return the first recognized gene-ID column name in ``df``, or ``None``."""
+    for name in GENE_ID_COLUMN_ALIASES:
+        if name in df.columns:
+            return name
+    return None
+
+
+def symbol_column(df: pd.DataFrame) -> str | None:
+    """Return the first recognized gene-symbol column name in ``df``, or ``None``."""
+    for name in SYMBOL_COLUMN_ALIASES:
+        if name in df.columns:
+            return name
+    return None
+
+
+def cancer_code_column(df: pd.DataFrame) -> str | None:
+    """Return the first recognized cancer-code column name in ``df``, or ``None``."""
+    for name in CANCER_CODE_COLUMN_ALIASES:
+        if name in df.columns:
+            return name
+    return None
+
+
+def canonicalize_gene_columns(
+    df: pd.DataFrame,
+    *,
+    style: str = "expression",
+    include_cancer_code: bool = False,
+    copy: bool = True,
+) -> pd.DataFrame:
+    """Normalize heterogeneous identifier columns onto one canonical naming style.
+
+    ``style="expression"`` maps onto ``("Ensembl_Gene_ID", "Symbol")``; ``style="lower"``
+    maps onto ``("ensembl_gene_id", "symbol")``. When ``include_cancer_code=True``,
+    any recognized cancer-type column is normalized onto ``"cancer_code"``. Existing
+    canonical columns are preserved without overwriting.
+    """
+    if style not in {"expression", "lower"}:
+        raise ValueError("style must be 'expression' or 'lower'")
+    target_id, target_sym = (
+        ("Ensembl_Gene_ID", "Symbol") if style == "expression" else ("ensembl_gene_id", "symbol")
+    )
+    out = df.copy() if copy else df
+    renames: dict[str, str] = {}
+    id_col = gene_id_column(out)
+    if id_col is not None and id_col != target_id and target_id not in out.columns:
+        renames[id_col] = target_id
+    sym_col = symbol_column(out)
+    if sym_col is not None and sym_col != target_sym and target_sym not in out.columns:
+        renames[sym_col] = target_sym
+    if include_cancer_code and "cancer_code" not in out.columns:
+        cc_col = cancer_code_column(out)
+        if cc_col is not None and cc_col != "cancer_code":
+            renames[cc_col] = "cancer_code"
+    return out.rename(columns=renames) if renames else out
 
 
 def unversioned(gene_id: str) -> str:
@@ -55,7 +166,7 @@ def resolve_ensembl_id(gene_id: str) -> str:
     resolving alt-haplotype / patch copies and cross-release ID turnover through the
     shipped ensembl-id-aliases map; returns the id unchanged if it isn't an alias."""
     key = _unversioned(gene_id)
-    if key.upper().startswith("ENSG"):
+    if is_ensembl_gene_id(key):
         key = key.upper()
     return ensembl_id_aliases().get(key, key)
 
@@ -185,7 +296,7 @@ def resolve_entrez_id(entrez_id: str) -> tuple[str, str, str] | None:
 
 
 def _looks_like_ensembl_gene_id(identifier: str) -> bool:
-    return unversioned(identifier).upper().startswith("ENSG")
+    return is_ensembl_gene_id(identifier)
 
 
 def display_gene_name(

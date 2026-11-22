@@ -19,7 +19,7 @@ from functools import lru_cache
 import pandas as pd
 
 from .cancer_types import resolve_cancer_type
-from .gene_ids import canonical_gene_id, canonical_gene_space
+from .gene_ids import canonical_gene_id, canonical_gene_space, is_ensembl_gene_id
 from .load_dataset import _register_derived_cache, get_data
 
 DRIVER_EVIDENCE_SCOPE_KINDS = frozenset({"pan_cancer", "source_cancer_code"})
@@ -241,7 +241,7 @@ def _filter_gene(frame: pd.DataFrame, gene: str | None, *, dataset: str) -> pd.D
     if gene is None:
         return frame
     query = str(gene).strip()
-    if query.upper().startswith("ENSG") or query.isdigit():
+    if is_ensembl_gene_id(query) or query.isdigit():
         ensembl_id = canonical_gene_id(query)
         return frame.loc[frame["ensembl_gene_id"].eq(ensembl_id)]
 
@@ -264,16 +264,45 @@ def _filter_gene(frame: pd.DataFrame, gene: str | None, *, dataset: str) -> pd.D
     return frame.loc[frame["ensembl_gene_id"].eq(ensembl_id)]
 
 
+def _resolved_driver_cancer_codes(frame: pd.DataFrame) -> pd.Series:
+    """Resolve ``source_cancer_code`` rows to canonical ``cancer_code`` (``pd.NA`` for pan-cancer/unmapped)."""
+    values = []
+    for kind, scope in zip(frame["scope_kind"], frame["source_scope"]):
+        if str(kind) != "source_cancer_code":
+            values.append(pd.NA)
+            continue
+        code = resolve_cancer_type(str(scope).strip(), strict=False)
+        values.append(code if code is not None else pd.NA)
+    return pd.Series(values, index=frame.index, dtype="string")
+
+
+def driver_cancer_codes() -> tuple[str, ...]:
+    """Sorted canonical cancer codes represented in ``driver_gene_evidence_df()``."""
+    resolved = _resolved_driver_cancer_codes(_driver_gene_evidence_frame()).dropna()
+    return tuple(sorted(set(resolved.astype(str))))
+
+
 def driver_gene_evidence(
-    gene: str | None = None, *, source_scope: str | None = None
+    gene: str | None = None,
+    *,
+    source_scope: str | None = None,
+    cancer_code: str | None = None,
+    include_cancer_code: bool = False,
 ) -> pd.DataFrame:
-    """Driver-gene evidence filtered by gene and/or source-native cancer scope."""
+    """Driver-gene evidence filtered by gene, source-native scope, and/or canonical ``cancer_code``."""
     frame = _filter_gene(_driver_gene_evidence_frame(), gene, dataset="driver-gene-evidence")
     if source_scope is not None:
         frame = frame.loc[
             frame["source_scope"].astype(str).str.upper().eq(str(source_scope).strip().upper())
         ]
-    return frame.reset_index(drop=True).copy()
+    if cancer_code is not None:
+        target = resolve_cancer_type(cancer_code)
+        resolved = _resolved_driver_cancer_codes(frame)
+        frame = frame.loc[resolved.eq(target)]
+    out = frame.reset_index(drop=True).copy()
+    if include_cancer_code:
+        out["cancer_code"] = _resolved_driver_cancer_codes(out)
+    return out
 
 
 def driver_variant_evidence(
