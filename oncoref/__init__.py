@@ -45,6 +45,7 @@ from . import (
     human_protein_atlas,
     ici_response,
     mouse,
+    normal_adjudications,
     normal_cell_data,
     normal_expression_categories,
     normal_tissues,
@@ -372,6 +373,13 @@ from .legacy import (
 )
 from .legacy import (
     warn_legacy_api_access as _warn_legacy_api_access,
+)
+from .normal_adjudications import (
+    hpa_normal_statistic_sensitivity,
+    normal_library_peak_adjudications,
+    rare_cell_attribution_reviews,
+    rare_cell_candidate_adjudications,
+    unresolved_tenfold_rare_cell_entity_ids,
 )
 from .normalization import (
     BIOLOGICAL_FRACTION,
@@ -833,6 +841,7 @@ __all__ = [
     "hpa_cancer_sources",
     "hpa_cell_type_expression",
     "hpa_housekeeping_candidates",
+    "hpa_normal_statistic_sensitivity",
     "hpa_normal_tissue",
     "hpa_normal_tissue_labels",
     "hpa_rna_consensus",
@@ -873,8 +882,10 @@ __all__ = [
     "molecular_sample_counts",
     "mouse",
     "non_comparable_expression_cohorts",
+    "normal_adjudications",
     "normal_cell_data",
     "normal_expression_categories",
+    "normal_library_peak_adjudications",
     "normal_tissues",
     "normalize_expression",
     "normalize_protein_sequence",
@@ -913,6 +924,8 @@ __all__ = [
     "proteoform_symbol",
     "proteoform_symbol_map",
     "proteoform_within_sample_top_fraction",
+    "rare_cell_attribution_reviews",
+    "rare_cell_candidate_adjudications",
     "recommended_hpa_housekeeping_panel",
     "reference_source_codes",
     "renormalize_to_million",
@@ -980,6 +993,7 @@ __all__ = [
     "tpm_to_housekeeping_normalized",
     "tumor_reference_expression_provenance",
     "umbrella_expression_coverage",
+    "unresolved_tenfold_rare_cell_entity_ids",
     "unversioned",
     "validate_expression_join",
     "viral_status",

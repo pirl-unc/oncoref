@@ -1,0 +1,4 @@
+scenario_id,is_active_policy,total_proteins,unsafe_count,ca_count,ra_count,cta_count,ca_only_count,ra_only_count,delta_cta_vs_active,added_cta_labels,notes
+active_policy_gtex_p95_plus_hpa_biopsy_p95,True,19893,18249,396,455,327,69,128,0,,Active released policy (oncoref.target-selection.2026-11-20.2): within-site donor/biopsy P95 across GTEx v11 and HPA v23.
+counterfactual_omit_single_top_hpa_biopsy_site,False,19893,18249,403,461,334,69,127,7,AK4P3|C4orf17|CCDC87|GOLGA6C|GSTT4|HIGD2B|PSG7,Sensitivity only: drops a protein's single highest HPA v23 biopsy tissue context when HPA sets H0.
+counterfactual_omit_all_hpa_individual_biopsies,False,19893,18249,405,463,335,70,128,8,AK4P3|C4orf17|CCDC87|GOLGA6C|GSTT4|HIGD2B|PSG7|SPATA31A7,Sensitivity only: omits hpa_tissue_samples:v23 from H0 while keeping HPA tissue means (rna_tissue_hpa:v23) and GTEx v11 donor P95.

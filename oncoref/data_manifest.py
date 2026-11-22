@@ -423,6 +423,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "cross-cohort witness sensitivity audit for all 34 catalog proteins peaking in TCGA-2G-AAFL-01 (#713)",
     ),
+    "normal-library-peak-adjudications": (
+        "cta-evidence",
+        "per-protein and per-library tissue-signature, cross-atlas concordance, and paralog-risk adjudications for HPA-limited former CTAs (#712)",
+    ),
+    "hpa-normal-statistic-sensitivity": (
+        "cta-evidence",
+        "genome-wide 19,893-protein sensitivity of CA, RA, and CTA counts across HPA v23 biopsy summary statistics (#712)",
+    ),
+    "rare-cell-candidate-adjudications": (
+        "cta-evidence",
+        "prioritized Ensembl 115 host-geometry, paralog 31-mer, orthogonal bulk RNA, and Unsafe-background propagation ledger for 15 tenfold Other:Review candidates (#711)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
@@ -798,6 +810,9 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "normal-expression-literature",
         "tgct-reproductive-localization-audit",
         "tgct-aafl-protein-support",
+        "normal-library-peak-adjudications",
+        "hpa-normal-statistic-sensitivity",
+        "rare-cell-candidate-adjudications",
     }
 )
 
