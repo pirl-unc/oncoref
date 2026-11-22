@@ -134,19 +134,24 @@ for _name, _source_spec in _release_manifest["sources"].items():
         "pins": {**_previous.get("pins", {}), **_source_spec["versions"]},
     }
 
-#: Env var overriding the reference-data cache root.
+#: Env vars overriding the reference-data cache root (CANCERDATA_DATA_DIR takes precedence).
 CACHE_DIR_ENV_KEY = "CANCERDATA_DATA_DIR"
+ONCOREF_CACHE_DIR_ENV_KEY = "ONCOREF_CACHE_DIR"
 
 
 class ReferenceDataError(RuntimeError):
     """Raised for unknown sources/versions or download failures."""
 
 
+def cache_base_dir() -> Path:
+    """Base reference cache root without creating directories."""
+    override = os.environ.get(CACHE_DIR_ENV_KEY) or os.environ.get(ONCOREF_CACHE_DIR_ENV_KEY)
+    return Path(override).expanduser() if override else Path.home() / ".cache" / "oncoref"
+
+
 def cache_dir() -> Path:
     """Reference-data cache directory (``<root>/sources``), created on demand."""
-    override = os.environ.get(CACHE_DIR_ENV_KEY)
-    base = Path(override).expanduser() if override else Path.home() / ".cache" / "oncoref"
-    sources = base / "sources"
+    sources = cache_base_dir() / "sources"
     sources.mkdir(parents=True, exist_ok=True)
     return sources
 
@@ -467,6 +472,32 @@ def ensure(name: str, version: str | None = None) -> Path:
     if path.exists() and _cached_file_ok(name, version, path):
         return path
     return download(name, version)
+
+
+def bundled_or_managed_path(
+    name: str,
+    version: str | None = None,
+    *,
+    bundled_dir: Path | None = None,
+) -> Path:
+    """Return a verified packaged data file when present locally, else fetch via ``ensure``.
+
+    Source checkouts and sdists retain ``oncoref/data/<filename>`` for offline builds and CI,
+    while slimmed wheels omit externalized archival/calibration tables and materialize them on
+    demand into ``cache_dir()`` with full SHA-256 verification (#738).
+    """
+    resolved_version = resolve_version(name, version)
+    spec = _source(name)
+    pin = spec.get("pins", {}).get(resolved_version)
+    data_root = Path(__file__).parent / "data" if bundled_dir is None else Path(bundled_dir)
+    local_bundled = data_root / spec["filename"]
+    if local_bundled.is_file():
+        if pin and not _matches_pin(local_bundled, pin):
+            raise ReferenceDataError(
+                f"packaged {spec['filename']} checksum/size does not match pinned {name}/{resolved_version}"
+            )
+        return local_bundled
+    return ensure(name, resolved_version)
 
 
 def pinned_path(name: str, version: str, *, import_path: str | Path | None = None) -> Path:

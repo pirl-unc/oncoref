@@ -116,14 +116,20 @@ def test_package_data_size_audit_accounts_for_every_shipped_file():
 
     by_path = audit.set_index("relative_path")
     assert by_path.loc["target-selection.csv.gz", "retention_tier"] == "core_runtime"
+    assert bool(by_path.loc["target-selection.csv.gz", "shipped_in_wheel"]) is True
     assert (
         by_path.loc["translation-qualification.csv.gz", "retention_tier"]
         == "active_calibration_or_audit"
     )
+    assert bool(by_path.loc["translation-qualification.csv.gz", "shipped_in_wheel"]) is False
     assert (
         by_path.loc["cta-selection-audit-human.json.gz", "retention_tier"]
         == "archival_compatibility_snapshot"
     )
+    assert bool(by_path.loc["cta-selection-audit-human.json.gz", "shipped_in_wheel"]) is False
+
+    wheel_only_bytes = int(audit.loc[audit["shipped_in_wheel"], "size_bytes"].sum())
+    assert wheel_only_bytes < 33_000_000
 
     summary = oncoref.package_data_size_summary()
     assert int(summary["n_files"].sum()) == len(disk_files)

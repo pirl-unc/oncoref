@@ -295,8 +295,7 @@ def _collect_source_entries(*, keep_current: bool, keep_set: set[str]) -> list[d
 def _collect_reference_entries(*, keep_current: bool, keep_set: set[str]) -> list[dict]:
     from . import curation, reference_data
 
-    override = os.environ.get(reference_data.CACHE_DIR_ENV_KEY)
-    base = Path(override).expanduser() if override else (Path.home() / ".cache" / "oncoref")
+    base = reference_data.cache_base_dir()
     root = base / "sources"
     if not root.exists() or root.is_symlink():
         return []

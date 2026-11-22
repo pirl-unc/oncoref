@@ -1768,6 +1768,159 @@
         }
       },
       "default_version": "4a52f16362d3"
+    },
+    "translation-qualification": {
+      "description": "Pinned Ensembl peptide records with primary-locus CDS and sequence qualification, source identities and review reasons",
+      "filename": "translation-qualification.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "protein",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/translation-qualification.csv.gz",
+          "sha256": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
+          "archive_sha256": "82c53048bc40e161e8c0f2df1ff5a44e071f4d42035d41bd6646f9bd0dc43303",
+          "bytes": 17934470,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "rna-protein-calibrations": {
+      "description": "cohort-specific matched CPTAC RNA/protein detection and quantitative models",
+      "filename": "rna-protein-calibrations.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "protein-calibration",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/rna-protein-calibrations.csv.gz",
+          "sha256": "04ea64e95cc41432b3c9af421d1069e71e9acd7c283683f4fe2c2b59c8ac0dbf",
+          "archive_sha256": "04ea64e95cc41432b3c9af421d1069e71e9acd7c283683f4fe2c2b59c8ac0dbf",
+          "bytes": 9921079,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "cta-selection-audit-human": {
+      "description": "Frozen 1.36.0 human CTA selection audit explanation, membership, overlap, funnel, and criteria tables",
+      "filename": "cta-selection-audit-human.json.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta-evidence",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/cta-selection-audit-human.json.gz",
+          "sha256": "e612b9544ecef574bc3d6cc1cd963a913f72d1180998bf5fd2603cba2869d802",
+          "archive_sha256": "e612b9544ecef574bc3d6cc1cd963a913f72d1180998bf5fd2603cba2869d802",
+          "bytes": 8800806,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "target-gene-sets": {
+      "description": "disjoint CTA, Unsafe and Neither gene sets; only Unsafe is the forbidden background",
+      "filename": "target-gene-sets.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/target-gene-sets.csv.gz",
+          "sha256": "4710adbd27657d00e643b8d82882724e023e9dee15dd5a2c02c67e75045ffdc3",
+          "archive_sha256": "4710adbd27657d00e643b8d82882724e023e9dee15dd5a2c02c67e75045ffdc3",
+          "bytes": 4734081,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "cta-membership-gene-sets": {
+      "description": "historical literature-inclusive biological CTA/oncofetal catalogue and separate expression-risk flags",
+      "filename": "cta-membership-gene-sets.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/cta-membership-gene-sets.csv.gz",
+          "sha256": "deafb38a3dc89bbdcf43002f80a5fe54c325a2bf7e72ff84d0cc09b424a95d09",
+          "archive_sha256": "deafb38a3dc89bbdcf43002f80a5fe54c325a2bf7e72ff84d0cc09b424a95d09",
+          "bytes": 2521778,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "cta-quantitative-gene-sets": {
+      "description": "experimental uniform quantitative CTA/developmental candidates, measured gates, coverage and retained expression-risk flags",
+      "filename": "cta-quantitative-gene-sets.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/cta-quantitative-gene-sets.csv.gz",
+          "sha256": "79c24371d25b9a4481b50ecd9f3a9a3699819da7c334fe5bb90733e1cdeb8707",
+          "archive_sha256": "79c24371d25b9a4481b50ecd9f3a9a3699819da7c334fe5bb90733e1cdeb8707",
+          "bytes": 2506288,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "cta-selection-profiles-human": {
+      "description": "Current protein evidence attributes: native-unit RNA, tumor support and adult Disposable pattern",
+      "filename": "cta-selection-profiles-human.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "protein",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/cta-selection-profiles-human.csv.gz",
+          "sha256": "d963e53bd6198e009baf094d82f02dad8d004cd7affc6fac4db7e10158921d95",
+          "archive_sha256": "d963e53bd6198e009baf094d82f02dad8d004cd7affc6fac4db7e10158921d95",
+          "bytes": 2505951,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "cta-rare-cell-screen": {
+      "description": "unreviewed single-cell screen of rare normal-cell expression for CTA and Held proteins, with source rules and limits",
+      "filename": "cta-rare-cell-screen.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta-evidence",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/cta-rare-cell-screen.csv.gz",
+          "sha256": "f33ad87ec64ff642658bea506644fc6788305783aecb90ce6eb8d84084fcb6e1",
+          "archive_sha256": "f33ad87ec64ff642658bea506644fc6788305783aecb90ce6eb8d84084fcb6e1",
+          "bytes": 1803429,
+          "taxon_id": 9606
+        }
+      }
+    },
+    "cta-screen-results": {
+      "description": "ordered CTA research decisions; Variable genes are excluded pending reconsideration",
+      "filename": "cta-screen-results.csv",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/cta-screen-results.csv",
+          "sha256": "dbcfee8477f63df9221f3d094ea6c25bdf391fa627b6fa4f9c42748bb4e9ebb1",
+          "archive_sha256": "dbcfee8477f63df9221f3d094ea6c25bdf391fa627b6fa4f9c42748bb4e9ebb1",
+          "bytes": 2229728,
+          "taxon_id": 9606
+        }
+      }
     }
   }
 }

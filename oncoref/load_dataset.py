@@ -33,7 +33,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import data_bundle
+from . import data_bundle, data_manifest, reference_data
 from ._table_io import read_csv
 
 _BUNDLED_DATA_DIR = Path(__file__).parent / "data"
@@ -324,6 +324,15 @@ def get_data(name, _dataframes_dict=None, *, copy=True):
         paths = _dataset_paths()
 
     resolved = paths.get(dataset_name)
+    if (
+        resolved is None
+        and dataset_name in data_manifest.EXTERNALIZED_ORIGINATED
+        and dataset_name != "cta-selection-audit-human"
+    ):
+        resolved = reference_data.bundled_or_managed_path(
+            dataset_name,
+            bundled_dir=_BUNDLED_DATA_DIR,
+        )
     if resolved is None:
         raise ValueError(f"Dataset {name} not found")
     if dataset_name not in _CACHED_DATAFRAMES:

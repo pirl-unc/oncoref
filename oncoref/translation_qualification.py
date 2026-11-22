@@ -77,10 +77,12 @@ def qualify(sequence: str, annotation: dict) -> dict:
 
 
 def records() -> pd.DataFrame:
-    """Offline source-bound transcript/protein quality table; returns a fresh frame."""
+    """Source-bound transcript/protein quality table; returns a fresh frame."""
+    from . import reference_data
+
     data = files("oncoref").joinpath("data")
     meta = json.loads(data.joinpath("translation-qualification.json").read_text())
-    path = data.joinpath("translation-qualification.csv.gz")
+    path = reference_data.bundled_or_managed_path("translation-qualification")
     if hashlib.sha256(path.read_bytes()).hexdigest() != meta["records_sha256"]:
         raise ValueError("Translation qualification checksum mismatch")
     with path.open("rb") as handle:

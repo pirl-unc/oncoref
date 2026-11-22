@@ -699,7 +699,7 @@ def inventory(*, species: Species | str | int = "human", group=None) -> list[dic
             _add(
                 name,
                 spec.get("kind", "hpa"),
-                "expression",
+                spec.get("category", "expression"),
                 spec["description"],
                 reference_data.local_path(name).exists(),
             )

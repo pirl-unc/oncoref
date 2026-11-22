@@ -112,7 +112,15 @@ def _metadata() -> dict:
 
 
 def _checked_table(name: str) -> pd.DataFrame:
-    path = files("oncoref").joinpath("data", name)
+    from pathlib import Path
+
+    from . import data_manifest, reference_data
+
+    stem = data_manifest._stem_for_data_file(name)
+    if stem in data_manifest.EXTERNALIZED_ORIGINATED:
+        path = reference_data.bundled_or_managed_path(stem)
+    else:
+        path = Path(__file__).parent / "data" / name
     expected = _metadata()["data_sha256"][name]
     if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
         raise ValueError(f"CTA selection artifact checksum mismatch: {name}")
