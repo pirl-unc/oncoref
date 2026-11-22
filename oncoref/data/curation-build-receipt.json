@@ -32,7 +32,7 @@
     "oncoref/data/marcinkowski2019-ct83-expression.csv": "cd9df6fbe3eaa6f743b47d0244eefa80cae8dfe82f9904444ddb12194ba7b3cb",
     "oncoref/data/normal-cell-sources.json": "b471f0c37257fed9bf8f68b5f2f8aab748efb052893f8d42e13ff6d04c9f9c76",
     "oncoref/data/rare-cell-attribution-reviews.json": "bc0e0d5dd53d03866f02656d3c64a5aa84d4b3ef8f3c1f1a391645d037bdab75",
-    "oncoref/data/reference-releases.json": "8642d9ec87e7e32811bc3c7bb4a1ad3c28a23867f1efec898b0e89e187d93c87",
+    "oncoref/data/reference-releases.json": "effc37ba5bcf556ef8178fbe322c6dda70b0484a505af87735c84a7f93482648",
     "oncoref/gene_knowledge.py": "57bd6663530a84d9835c8f8a30fc8a19582520dd13f56699b772a1d68e6d498a",
     "oncoref/gene_matching.py": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
     "oncoref/host_context.py": "3d55ad0e2f1e25a5cfec83c969fc295e85d7cb91f35c0f7e1547838d6adab58d",

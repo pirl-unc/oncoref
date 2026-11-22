@@ -24,6 +24,7 @@ nav:
       - Normal RNA tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
       - Donor-level rare-cell RNA: audits/normal-cell-atlas-20261110/rare-cell/index.md
       - "Normal library & cell attribution (#711, #712)": audits/normal-attribution-20261122/index.md
+      - Unmeasured home-tissue panels (#735): audits/unmeasured-home-panels-20261122/index.md
       - TGCT localization audit (#713): audits/tgct-aafl-localization-20261122/index.md
       - CTpedia comparison: ctpedia-filtering.md
   - Tissues & Safety:
