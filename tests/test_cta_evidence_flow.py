@@ -212,12 +212,12 @@ def test_common_fact_shape_preserves_human_and_canine_somatic_signal(human, dog)
 
 def test_every_historical_human_decision_and_source_field_is_preserved(human):
     evidence = human.evidence()
-    original = json.loads(oncoref.cta_evidence().to_json(orient="records", double_precision=15))
+    original = json.loads(oncoref.cta.cta_evidence().to_json(orient="records", double_precision=15))
     assert [e["source_fields"] for e in evidence] == original
     included = {
         e["candidate_ids"][0] for e in evidence if e["curation"][0]["decision"] == "included"
     }
-    assert included == oncoref.cta_gene_ids()
+    assert included == oncoref.cta.cta_gene_ids()
     for row in evidence:
         policy = row["curation"][0]
         assert policy["policy_id"] == "oncoref-human-cta-core"

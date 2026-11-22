@@ -62,8 +62,13 @@ def test_partial_mouse_and_unchanged_human_defaults(snapshot):
     assert len(missing.as_dict()["candidates"]) == 1
     with pytest.raises(ValueError, match="annotation"):
         mouse.cta_candidates(reference="refseq106")
-    # Historical flat human APIs still return their own human gene universe.
-    human_ids = oncoref.cta_gene_ids()
+    # Historical flat human APIs still return their own human gene universe (with deprecation notice).
+    from oncoref import legacy
+
+    legacy._WARNED_LEGACY_APIS.clear()
+    with pytest.warns(DeprecationWarning, match=r"oncoref\.cta_gene_ids"):
+        human_ids = oncoref.cta_gene_ids()
+    legacy._WARNED_LEGACY_APIS.clear()
     assert human_ids and all(g.startswith("ENSG") for g in human_ids)
     assert not set(human_ids) & snapshot.gene_ids(reference="refseq106")
     assert oncoref.human.antigens.datasets()
@@ -301,7 +306,7 @@ def test_simple_species_methods_have_identical_signatures_and_record_shapes():
 
 
 def test_human_adapter_preserves_existing_facts_and_offline_replay(tmp_path):
-    original = json.loads(oncoref.cta_evidence().to_json(orient="records", double_precision=15))
+    original = json.loads(oncoref.cta.cta_evidence().to_json(orient="records", double_precision=15))
     evidence = oncoref.human.cta_evidence()
     assert [e["source_fields"] for e in evidence] == original
     assert all(e["contract"]["reference_status"] == "legacy_human" for e in evidence)
@@ -316,7 +321,7 @@ def test_human_adapter_preserves_existing_facts_and_offline_replay(tmp_path):
     snapshot.write(path)
     assert oncoref.human.cta_snapshot(path=path).as_dict() == snapshot.as_dict()
     # Historical default is a curated subset, not redefined by candidate enumeration.
-    assert oncoref.cta_gene_ids() < oncoref.human.cta_gene_ids(reference="ensembl115")
+    assert oncoref.cta.cta_gene_ids() < oncoref.human.cta_gene_ids(reference="ensembl115")
 
 
 def test_rbmy_corrected_transcripts_propagate_without_merging_genes():
@@ -329,7 +334,7 @@ def test_rbmy_corrected_transcripts_propagate_without_merging_genes():
         row["source_fields"]["Ensembl_Gene_ID"]: row["source_fields"]
         for row in oncoref.human.cta_evidence()
     }
-    assert set(expected) <= oncoref.cta_gene_ids()
+    assert set(expected) <= oncoref.cta.cta_gene_ids()
     for gid, tid in expected.items():
         assert candidates[gid]["gene_ids"] == [gid]
         (target,) = candidates[gid]["mapping"]["targets"]
