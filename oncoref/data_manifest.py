@@ -46,6 +46,11 @@ is the inventory + classification.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import pandas as pd
+
 #: {name: (category, description)} — small curated tables shipped in the wheel.
 WHEEL: dict[str, tuple[str, str]] = {
     "cancer-type-registry": ("ontology", "cancer-type codes, hierarchy, family/tissue"),
@@ -755,3 +760,166 @@ def captured() -> set[str]:
 def in_scope() -> set[str]:
     """Base-layer inventory: captured datasets plus still-planned fact tables."""
     return captured() | set(PLANNED)
+
+
+RETENTION_TIERS: tuple[str, ...] = (
+    "core_runtime",
+    "active_calibration_or_audit",
+    "archival_compatibility_snapshot",
+)
+
+#: Exact file stems under ``oncoref/data/`` belonging to frozen historical CTA
+#: releases (v1.19–v1.45 ``oncoref.cta`` surfaces) or superseded legacy-compat tables.
+_ARCHIVAL_EXACT_STEMS: frozenset[str] = frozenset(
+    {
+        "cancer-testis-antigens",
+        "cancer-testis-antigens-extended",
+        "cta-antibody-adjudications",
+        "cta-candidate-references",
+        "cta-clinical-targets",
+        "cta-donor-ihc",
+        "cta-donor-rna",
+        "cta-external-safety-reviews",
+        "cta-finding-migrations",
+        "cta-followup-notes",
+        "cta-followup-reviews",
+        "cta-gene-publication-evidence",
+        "cta-ihc-compartments",
+        "cta-ihc-unreliable",
+        "cta-intake-identity-reviews",
+        "cta-literature",
+        "cta-membership-controls",
+        "cta-membership-evidence",
+        "cta-membership-gene-sets",
+        "cta-membership-source-roles",
+        "cta-policy-findings",
+        "cta-protein-universe",
+        "cta-publication-context",
+        "cta-publication-membership",
+        "cta-publication-sources",
+        "cta-quantitative-gene-sets",
+        "cta-rare-cell-screen",
+        "cta-research-clinical-evidence",
+        "cta-research-gene-sets",
+        "cta-reviewed-evidence",
+        "cta-screen-results",
+        "cta-screening-review-overrides",
+        "cta-selection",
+        "cta-selection-audit",
+        "cta-selection-audit-human",
+        "cta-selection-human",
+        "cta-selection-profiles-human",
+        "cta-selection-sources",
+        "cta-specificity-audit",
+        "cta-warning-reviews",
+        "target-gene-sets",
+    }
+)
+
+#: Heavy empirical calibration / qualification / audit tables used by build-time
+#: verification or optional calibration APIs rather than default runtime queries.
+_CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
+    {
+        "translation-qualification",
+        "rna-protein-calibrations",
+        "rna-protein-calibration-samples",
+        "rna-protein-calibration-sources",
+        "rna-protein-hpa-priors",
+        "rna-protein-hpa-prior-sources",
+        "curation-build-receipt",
+        "normal-expression-literature",
+        "tgct-reproductive-localization-audit",
+        "tgct-aafl-protein-support",
+    }
+)
+
+
+def _stem_for_data_file(rel_path: str) -> str:
+    name = rel_path.rsplit("/", 1)[-1]
+    for suffix in (".csv.gz", ".json.gz", ".tsv.gz", ".csv", ".json", ".yaml", ".yml"):
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    return name
+
+
+def package_data_size_audit() -> pd.DataFrame:
+    """Classify every packaged ``oncoref/data/`` file by byte size and retention tier (#738).
+
+    Partitions all shipped wheel data files into three explicit tiers:
+
+    - ``core_runtime``: ontology, gene-ID canonicalization, clean-TPM normalization,
+      source registries, and the active ``target-selection`` / multi-species catalogs.
+    - ``active_calibration_or_audit``: heavy translation-qualification, CPTAC/HPA
+      RNA-protein calibration models, and curation audit tables.
+    - ``archival_compatibility_snapshot``: frozen ``legacy-compat`` tables and
+      historical ``v1.19–v1.45`` ``oncoref.cta`` snapshots retained for reproducibility.
+    """
+    from pathlib import Path
+
+    import pandas as pd
+
+    data_root = Path(__file__).resolve().parent / "data"
+    rows = []
+    for path in sorted(p for p in data_root.rglob("*") if p.is_file()):
+        rel = path.relative_to(data_root).as_posix()
+        stem = _stem_for_data_file(rel)
+        size_bytes = path.stat().st_size
+
+        if stem in WHEEL:
+            bucket = "WHEEL"
+            category = WHEEL[stem][0]
+        elif stem in CANCERDATA_ORIGINATED:
+            bucket = "CANCERDATA_ORIGINATED"
+            category = CANCERDATA_ORIGINATED[stem][0]
+        elif rel.startswith("species/"):
+            bucket = "SPECIES_DATA"
+            category = "species"
+        else:
+            bucket = "METADATA_SIDECAR"
+            category = "provenance"
+
+        if (
+            category == "legacy-compat"
+            or stem in _ARCHIVAL_EXACT_STEMS
+            or rel == "species/human/cta-reference-mappings.json.gz"
+        ):
+            tier = "archival_compatibility_snapshot"
+            packaging = "candidate_for_legacy_archive_bundle"
+        elif stem in _CALIBRATION_OR_AUDIT_STEMS or category == "protein-calibration":
+            tier = "active_calibration_or_audit"
+            packaging = "candidate_for_optional_calibration_bundle"
+        else:
+            tier = "core_runtime"
+            packaging = "keep_in_wheel"
+
+        rows.append(
+            {
+                "relative_path": rel,
+                "dataset_stem": stem,
+                "manifest_bucket": bucket,
+                "category": category,
+                "retention_tier": tier,
+                "recommended_packaging": packaging,
+                "size_bytes": int(size_bytes),
+            }
+        )
+    df = pd.DataFrame(rows).sort_values(["size_bytes", "relative_path"], ascending=[False, True])
+    return df.reset_index(drop=True)
+
+
+def package_data_size_summary() -> pd.DataFrame:
+    """Summarize packaged ``oncoref/data/`` file counts and byte totals by retention tier (#738)."""
+    audit = package_data_size_audit()
+    total_bytes = int(audit["size_bytes"].sum()) or 1
+    grouped = (
+        audit.groupby(["retention_tier", "recommended_packaging"], as_index=False)
+        .agg(
+            n_files=("relative_path", "count"),
+            total_bytes=("size_bytes", "sum"),
+        )
+        .sort_values("total_bytes", ascending=False)
+        .reset_index(drop=True)
+    )
+    grouped["total_mb"] = (grouped["total_bytes"] / 1_000_000.0).round(3)
+    grouped["share_of_wheel_data"] = (grouped["total_bytes"] / total_bytes).round(4)
+    return grouped

@@ -34,6 +34,7 @@ from . import (
     cta_peptides,
     cta_review,
     cta_selection,
+    data_manifest,
     doga,
     expression_builders,
     expression_engine,
@@ -149,6 +150,7 @@ from .coverage import (
     within_sample_percentile_addressable_fraction_by_cohort,
     within_sample_percentile_coverage_sweep,
 )
+from .data_manifest import package_data_size_audit, package_data_size_summary
 from .drivers import (
     DRIVER_EVIDENCE_SCOPE_KINDS,
     DRIVER_MIGRATION_STATUSES,
@@ -195,6 +197,7 @@ from .expression import (
     housekeeping_cancer_expression_coverage_summary,
     locally_available_percentile_cohorts,
     locally_available_within_sample_cohorts,
+    non_comparable_expression_cohorts,
     pan_cancer_expression,
     per_sample_expression,
     pooled_cohort_stats,
@@ -211,6 +214,7 @@ from .expression import (
     sample_expression_qc,
     sample_metadata,
     source_matrix_sample_qc_manifest,
+    umbrella_expression_coverage,
     within_sample_top_fraction,
 )
 from .expression_contract import (
@@ -751,6 +755,7 @@ __all__ = [
     "cta_warning_gene_names",
     "cta_warning_references",
     "curation",
+    "data_manifest",
     "display_gene_name",
     "doga",
     "driver_cancer_codes",
@@ -867,6 +872,7 @@ __all__ = [
     "molecular_provenance_for_sample",
     "molecular_sample_counts",
     "mouse",
+    "non_comparable_expression_cohorts",
     "normal_cell_data",
     "normal_expression_categories",
     "normal_tissues",
@@ -876,6 +882,8 @@ __all__ = [
     "normalize_technical_rna_long_table",
     "normalize_to_housekeeping",
     "observed_driver_events",
+    "package_data_size_audit",
+    "package_data_size_summary",
     "pan_cancer_expression",
     "partial_technical_compartment_cohorts",
     "peptide_subtraction",
@@ -971,6 +979,7 @@ __all__ = [
     "tmb_evidence_fields",
     "tpm_to_housekeeping_normalized",
     "tumor_reference_expression_provenance",
+    "umbrella_expression_coverage",
     "unversioned",
     "validate_expression_join",
     "viral_status",
