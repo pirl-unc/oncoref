@@ -690,6 +690,7 @@ __all__ = [
     "collapse_to_proteoforms",
     "computed_union_codes",
     "coverage_for_cancer_type",
+    "cta",
     "cta_annotation_gene_identities",
     "cta_annotation_gene_ids",
     "cta_by_axes",
@@ -964,7 +965,7 @@ __all__ = [
     "within_sample_top_fraction",
 ]
 
-_LAZY_SUBMODULES = frozenset({"cta_curation_plots", "curation", "figure_export", "plots"})
+_LAZY_SUBMODULES = frozenset({"cta", "cta_curation_plots", "curation", "figure_export", "plots"})
 _LEGACY_CTA_EXPORT_SET = frozenset(_LEGACY_CTA_TOP_LEVEL_EXPORTS)
 
 
