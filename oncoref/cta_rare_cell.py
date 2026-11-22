@@ -43,8 +43,10 @@ def provenance() -> dict:
 
 
 def screen_table() -> pd.DataFrame:
-    """The packaged per-gene screen, verified against its provenance checksum."""
-    path = files("oncoref").joinpath("data", TABLE)
+    """The per-gene screen, verified against its provenance checksum."""
+    from . import reference_data
+
+    path = reference_data.bundled_or_managed_path("cta-rare-cell-screen")
     if hashlib.sha256(path.read_bytes()).hexdigest() != provenance()["sha256"]:
         raise ValueError("Rare-cell screen table does not match its provenance")
     with path.open("rb") as handle:

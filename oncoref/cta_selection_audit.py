@@ -86,7 +86,12 @@ def audit(*, species: Species | str | int = "human") -> SelectionAudit:
     if receipt.get("schema") != "oncoref.cta-selection-audit" or receipt.get("version") != 1:
         raise ValueError("Unsupported CTA selection audit schema")
     name = f"cta-selection-audit-{selected.name}.json.gz"
-    content = root.joinpath(name).read_bytes()
+    if selected.name == "human":
+        from . import reference_data
+
+        content = reference_data.bundled_or_managed_path("cta-selection-audit-human").read_bytes()
+    else:
+        content = root.joinpath(name).read_bytes()
     if hashlib.sha256(content).hexdigest() != receipt["files"][name]:
         raise ValueError(f"CTA audit checksum mismatch: {name}")
     data = json.loads(gzip.decompress(content))

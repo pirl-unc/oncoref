@@ -138,6 +138,15 @@ oncoref = [
     "data/tcga-deconvolved-expression.csv.gz",
     "data/subtype-deconvolved-expression.csv.gz",
     "data/tumor-reference-expression-provenance.csv",
+    "data/translation-qualification.csv.gz",
+    "data/rna-protein-calibrations.csv.gz",
+    "data/cta-selection-audit-human.json.gz",
+    "data/target-gene-sets.csv.gz",
+    "data/cta-membership-gene-sets.csv.gz",
+    "data/cta-quantitative-gene-sets.csv.gz",
+    "data/cta-selection-profiles-human.csv.gz",
+    "data/cta-rare-cell-screen.csv.gz",
+    "data/cta-screen-results.csv",
 ]
 
 [tool.ruff]

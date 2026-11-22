@@ -270,7 +270,10 @@ def classify(
 
 def results() -> pd.DataFrame:
     """Genome-wide biological membership and retained normal-expression flags."""
-    d = pd.read_csv(DATA / "cta-membership-gene-sets.csv.gz", keep_default_na=False)
+    from . import reference_data
+
+    path = reference_data.bundled_or_managed_path("cta-membership-gene-sets")
+    d = pd.read_csv(path, keep_default_na=False)
     for col in [
         "Gene",
         "Reproductive RNA (nTPM)",

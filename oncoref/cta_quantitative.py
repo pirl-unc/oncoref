@@ -8,7 +8,6 @@ Thresholds are exploratory and benchmark-informed, not validated safety limits.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -147,7 +146,10 @@ def classify(facts: pd.DataFrame, *, thresholds: Thresholds | None = None) -> pd
 
 def results(*, selected_only: bool = False) -> pd.DataFrame:
     """Frozen quantitative proposal, with earlier risk labels kept as annotations."""
-    d = pd.read_csv(Path(__file__).parent / "data/cta-quantitative-gene-sets.csv.gz")
+    from . import reference_data
+
+    path = reference_data.bundled_or_managed_path("cta-quantitative-gene-sets")
+    d = pd.read_csv(path)
     return d.loc[d.selected].copy() if selected_only else d
 
 

@@ -87,6 +87,7 @@ def _registered_dataset_names() -> set[str]:
     return (
         set(data_manifest.WHEEL)
         | set(data_manifest.CANCERDATA_ORIGINATED)
+        | set(data_manifest.EXTERNALIZED_ORIGINATED)
         | set(data_manifest.BUNDLE)
         | set(data_manifest.SUPERSEDED)
         | set(data_manifest.OUT_OF_SCOPE)

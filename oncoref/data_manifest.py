@@ -256,14 +256,6 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "protein",
         "Pinned MANE/canonical representative decisions, exact versions, evidence holds and support flags",
     ),
-    "translation-qualification": (
-        "protein",
-        "Pinned Ensembl peptide records with primary-locus CDS and sequence qualification, source identities and review reasons",
-    ),
-    "cta-selection-profiles-human": (
-        "protein",
-        "Current protein evidence attributes: native-unit RNA, tumor support and adult Disposable pattern",
-    ),
     "gene-knowledge": (
         "protein",
         "Reviewed gene findings with exact identities, tissue/state, evidence limits and screening consequences",
@@ -293,10 +285,6 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "rna-protein-calibration-samples": (
         "protein-calibration",
         "matched CPTAC patient manifest used by the RNA/protein calibration models",
-    ),
-    "rna-protein-calibrations": (
-        "protein-calibration",
-        "cohort-specific matched CPTAC RNA/protein detection and quantitative models",
     ),
     "rna-protein-calibration-sources": (
         "protein-calibration",
@@ -395,14 +383,6 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "supplementary CTAG2 heart IHC donor metadata recording RNA/specimen mismatch",
     ),
-    "cta-screen-results": (
-        "cta",
-        "ordered CTA research decisions; Variable genes are excluded pending reconsideration",
-    ),
-    "target-gene-sets": (
-        "cta",
-        "disjoint CTA, Unsafe and Neither gene sets; only Unsafe is the forbidden background",
-    ),
     "cta-policy-findings": (
         "cta-evidence",
         "reference-bound reviewed CTA findings, acceptance status, citations and limitations",
@@ -410,14 +390,6 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "cta-research-gene-sets": (
         "cta",
         "historical 215-gene expression/clinical research shortlist; see cta-membership-gene-sets for biological membership",
-    ),
-    "cta-membership-gene-sets": (
-        "cta",
-        "historical literature-inclusive biological CTA/oncofetal catalogue and separate expression-risk flags",
-    ),
-    "cta-quantitative-gene-sets": (
-        "cta",
-        "experimental uniform quantitative CTA/developmental candidates, measured gates, coverage and retained expression-risk flags",
     ),
     "cta-selection-human": (
         "cta",
@@ -430,10 +402,6 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     "cta-protein-universe": (
         "cta-evidence",
         "coding or established-ncORF status per gene, the stage-0 universe for CTA selection, with evidence and exclusion reason",
-    ),
-    "cta-rare-cell-screen": (
-        "cta-evidence",
-        "unreviewed single-cell screen of rare normal-cell expression for CTA and Held proteins, with source rules and limits",
     ),
     "target-selection": (
         "cta",
@@ -834,6 +802,49 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
 )
 
 
+#: Heavy archival compatibility and detailed calibration/qualification tables
+#: excluded from the PyPI wheel (`pyproject.toml` `exclude-package-data`) and
+#: managed via `oncoref.reference_data` (`reference-releases.json`, #738).
+EXTERNALIZED_ORIGINATED: dict[str, tuple[str, str]] = {
+    "translation-qualification": (
+        "protein",
+        "Pinned Ensembl peptide records with primary-locus CDS and sequence qualification, source identities and review reasons",
+    ),
+    "rna-protein-calibrations": (
+        "protein-calibration",
+        "cohort-specific matched CPTAC RNA/protein detection and quantitative models",
+    ),
+    "cta-selection-audit-human": (
+        "cta-evidence",
+        "Frozen 1.36.0 human CTA selection audit explanation, membership, overlap, funnel, and criteria tables",
+    ),
+    "target-gene-sets": (
+        "cta",
+        "disjoint CTA, Unsafe and Neither gene sets; only Unsafe is the forbidden background",
+    ),
+    "cta-membership-gene-sets": (
+        "cta",
+        "historical literature-inclusive biological CTA/oncofetal catalogue and separate expression-risk flags",
+    ),
+    "cta-quantitative-gene-sets": (
+        "cta",
+        "experimental uniform quantitative CTA/developmental candidates, measured gates, coverage and retained expression-risk flags",
+    ),
+    "cta-selection-profiles-human": (
+        "protein",
+        "Current protein evidence attributes: native-unit RNA, tumor support and adult Disposable pattern",
+    ),
+    "cta-rare-cell-screen": (
+        "cta-evidence",
+        "unreviewed single-cell screen of rare normal-cell expression for CTA and Held proteins, with source rules and limits",
+    ),
+    "cta-screen-results": (
+        "cta",
+        "ordered CTA research decisions; Variable genes are excluded pending reconsideration",
+    ),
+}
+
+
 def _stem_for_data_file(rel_path: str) -> str:
     name = rel_path.rsplit("/", 1)[-1]
     for suffix in (".csv.gz", ".json.gz", ".tsv.gz", ".csv", ".json", ".yaml", ".yml"):
@@ -843,9 +854,9 @@ def _stem_for_data_file(rel_path: str) -> str:
 
 
 def package_data_size_audit() -> pd.DataFrame:
-    """Classify every packaged ``oncoref/data/`` file by byte size and retention tier (#738).
+    """Classify every ``oncoref/data/`` file by byte size, wheel status, and retention tier (#738).
 
-    Partitions all shipped wheel data files into three explicit tiers:
+    Partitions all data files into three explicit tiers:
 
     - ``core_runtime``: ontology, gene-ID canonicalization, clean-TPM normalization,
       source registries, and the active ``target-selection`` / multi-species catalogs.
@@ -864,6 +875,7 @@ def package_data_size_audit() -> pd.DataFrame:
         rel = path.relative_to(data_root).as_posix()
         stem = _stem_for_data_file(rel)
         size_bytes = path.stat().st_size
+        shipped_in_wheel = stem not in EXTERNALIZED_ORIGINATED
 
         if stem in WHEEL:
             bucket = "WHEEL"
@@ -871,6 +883,9 @@ def package_data_size_audit() -> pd.DataFrame:
         elif stem in CANCERDATA_ORIGINATED:
             bucket = "CANCERDATA_ORIGINATED"
             category = CANCERDATA_ORIGINATED[stem][0]
+        elif stem in EXTERNALIZED_ORIGINATED:
+            bucket = "EXTERNALIZED_ORIGINATED"
+            category = EXTERNALIZED_ORIGINATED[stem][0]
         elif rel.startswith("species/"):
             bucket = "SPECIES_DATA"
             category = "species"
@@ -884,10 +899,18 @@ def package_data_size_audit() -> pd.DataFrame:
             or rel == "species/human/cta-reference-mappings.json.gz"
         ):
             tier = "archival_compatibility_snapshot"
-            packaging = "candidate_for_legacy_archive_bundle"
+            packaging = (
+                "externalized_reference_release"
+                if not shipped_in_wheel
+                else "candidate_for_legacy_archive_bundle"
+            )
         elif stem in _CALIBRATION_OR_AUDIT_STEMS or category == "protein-calibration":
             tier = "active_calibration_or_audit"
-            packaging = "candidate_for_optional_calibration_bundle"
+            packaging = (
+                "externalized_reference_release"
+                if not shipped_in_wheel
+                else "candidate_for_optional_calibration_bundle"
+            )
         else:
             tier = "core_runtime"
             packaging = "keep_in_wheel"
@@ -900,6 +923,7 @@ def package_data_size_audit() -> pd.DataFrame:
                 "category": category,
                 "retention_tier": tier,
                 "recommended_packaging": packaging,
+                "shipped_in_wheel": bool(shipped_in_wheel),
                 "size_bytes": int(size_bytes),
             }
         )
