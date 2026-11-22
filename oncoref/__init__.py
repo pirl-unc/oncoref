@@ -24,6 +24,7 @@ from . import (
     barkbase,
     bgee_srp009687,
     bgee_srp181218,
+    cache_retention,
     cancer_ontology,
     canine,
     cohorts,
@@ -591,6 +592,7 @@ __all__ = [
     "burden_category",
     "burden_category_overlaps",
     "burden_scope",
+    "cache_retention",
     # anti-PD-1 response
     "cancer_apd1_response",
     "cancer_apd1_response_df",
