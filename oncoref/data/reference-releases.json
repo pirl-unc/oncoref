@@ -1938,6 +1938,57 @@
           "taxon_id": 9606
         }
       }
+    },
+    "mouse-target-selection": {
+      "description": "genome-wide Ensembl 115 GRCm39 Cancer, Reproductive, and Cancer-Testis Antigen catalog for Mus musculus (#734)",
+      "filename": "mouse-target-selection.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-target-selection.csv.gz",
+          "sha256": "46993f810805d35ff8735aed93c59dcda20a1387fb2e089d6d1d6d1c2655574a",
+          "archive_sha256": "46993f810805d35ff8735aed93c59dcda20a1387fb2e089d6d1d6d1c2655574a",
+          "bytes": 3113468,
+          "taxon_id": 10090
+        }
+      }
+    },
+    "mouse-host-exposure": {
+      "description": "per-compartment adult reproductive, accessory-gland, bicornuate-tract, mammary, placental, and embryonic TPM exposures for Mus musculus (#734)",
+      "filename": "mouse-host-exposure.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta-evidence",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-host-exposure.csv.gz",
+          "sha256": "a736fc638868c45bab93efd1e33dcc81a46fcd5e51b8dbf76fba933a2157e8db",
+          "archive_sha256": "a736fc638868c45bab93efd1e33dcc81a46fcd5e51b8dbf76fba933a2157e8db",
+          "bytes": 2517414,
+          "taxon_id": 10090
+        }
+      }
+    },
+    "mouse-proteome-sequences": {
+      "description": "verified Ensembl 115 GRCm39 murine protein occurrence table for PEG grouping and PeptideIndex subtraction (#734)",
+      "filename": "mouse-proteome-sequences.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "protein",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-proteome-sequences.csv.gz",
+          "sha256": "f24c23f55d85ab70259f38936e1ac1fc94c12686b6f34159116250f07b3a344c",
+          "archive_sha256": "f24c23f55d85ab70259f38936e1ac1fc94c12686b6f34159116250f07b3a344c",
+          "bytes": 11560752,
+          "taxon_id": 10090
+        }
+      }
     }
   }
 }

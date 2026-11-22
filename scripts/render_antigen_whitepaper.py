@@ -236,7 +236,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
             for r in species_policies.ROLE_IDS
         )
         counts = cov["counts"]
-        if pol.species.taxon_id == 9606:
+        if cov["selection_status"] == "evaluated":
             cat_text = (
                 f"{counts['CTA']:,} CTA · {counts['Cancer Antigen only']:,} CA only · "
                 f"{counts['Reproductive Antigen only']:,} RA only · "
@@ -306,7 +306,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         md_rows = []
         for cand in snap.candidates():
             eid = f"nomination:{snap.taxon_id}:{cand['id']}"
-            trow = ts.loc[eid]
+            trow = ts.loc[eid] if eid in ts.index else mod.target_selection(cand["id"]).iloc[0]
             gids = ", ".join(cand["gene_ids"]) or "unresolved"
             n_obs = ev_by_cand.get(cand["id"], 0)
             sources = ", ".join(dict.fromkeys(d["source_id"] for d in cand["derivation"]))
@@ -389,6 +389,81 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         "dog_nominations_table": nom_tables["dog"],
         "mouse_nominations_table": nom_tables["mouse"],
     }
+    m_cat = mouse.target_selection()
+    m_sex = mouse.sex_restricted_antigens()
+    m_sex_cta = m_sex[m_sex["is_cta"].astype(bool)] if not m_sex.empty else m_sex
+    m_loci = int(m_cat.member_gene_ids.map(json.loads).map(len).sum())
+    m_ca = m_cat.is_cancer_antigen.astype(bool)
+    m_ra = m_cat.is_reproductive_antigen.astype(bool)
+    m_cohorts = mouse.tumor_cohorts()
+    m_top_cta = (
+        m_cat[m_ca & m_ra]
+        .dropna(subset=["tumor_max_tpm"])
+        .sort_values(PEAK, ascending=[False, True, True])
+        .head(10)
+    )
+    p1a_row = mouse.target_selection("P1A").iloc[0]
+    template_vars.update(
+        {
+            "mouse_n": f"{len(m_cat):,}",
+            "mouse_loci": f"{m_loci:,}",
+            "mouse_cta": f"{int((m_ca & m_ra).sum()):,}",
+            "mouse_ca_only": f"{int((m_ca & ~m_ra).sum()):,}",
+            "mouse_ra": f"{int(m_ra.sum()):,}",
+            "mouse_ra_only": f"{int((m_ra & ~m_ca).sum()):,}",
+            "mouse_union": f"{int((m_ca | m_ra).sum()):,}",
+            "mouse_other_n": f"{int(m_cat.category.eq('Other').sum()):,}",
+            "mouse_unsafe_n": f"{int(m_cat.category.eq('Unsafe').sum()):,}",
+            "mouse_mra_n": f"{int(m_sex.sex_restriction_class.eq('Male-restricted').sum()):,}",
+            "mouse_fra_n": f"{int(m_sex.sex_restriction_class.eq('Female-restricted').sum()):,}",
+            "mouse_era_n": f"{int(m_sex.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+            "mouse_sra_n": f"{int(m_sex.sex_restriction_class.eq('Shared male & female').sum()):,}",
+            "mouse_cta_m_n": f"{int(m_sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
+            "mouse_cta_f_n": f"{int(m_sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
+            "mouse_cta_e_n": f"{int(m_sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+            "mouse_cta_mf_n": f"{int(m_sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
+            "mouse_p1a_call": p1a_row.classification,
+            "mouse_cohorts_table": table(
+                ["Cohort", "Model", "Host strain (MHC)", "Accession", "Samples", "Quantification"],
+                [
+                    [
+                        f"`{r.cancer_code}` — {r.label}",
+                        r.model_kind,
+                        f"{r.strain} (`{r.mhc_haplotype}`)",
+                        f"`{r.source_accession}`",
+                        r.n_samples,
+                        r.quantification,
+                    ]
+                    for r in m_cohorts.itertuples(index=False)
+                ],
+            ),
+            "mouse_top_cta_table": table(
+                [
+                    "Rank",
+                    "Protein",
+                    "Sex subset",
+                    "Peak cohort",
+                    "Tumor TPM",
+                    "N TPM",
+                    "Reproductive peak TPM",
+                    "Qualifying reproductive compartments",
+                ],
+                [
+                    [
+                        i,
+                        f"`{r.protein_group_label}`",
+                        f"`{r.sex_restriction_code}`",
+                        f"`{r.tumor_top_cancer_code}`",
+                        number(r.tumor_max_tpm),
+                        number(r.normal_reference_tpm),
+                        number(r.reproductive_supported_tpm),
+                        r.reproductive_qualifying_compartments,
+                    ]
+                    for i, r in enumerate(m_top_cta.itertuples(index=False), 1)
+                ],
+            ),
+        }
+    )
     csv_outputs = {
         f"{ASSETS}/species-datasets.csv": all_bindings.to_csv(index=False, lineterminator="\n"),
         f"{ASSETS}/species-nominations.csv": pd.DataFrame(nom_csv_rows).to_csv(

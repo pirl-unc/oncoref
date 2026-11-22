@@ -824,6 +824,9 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "unmeasured-home-tissue-panels",
         "unmeasured-home-protein-adjudications",
         "unmeasured-home-gene-expression",
+        "mouse-target-selection",
+        "mouse-host-exposure",
+        "mouse-proteome-sequences",
     }
 )
 
@@ -871,6 +874,18 @@ EXTERNALIZED_ORIGINATED: dict[str, tuple[str, str]] = {
     "unmeasured-home-gene-expression": (
         "cta-evidence",
         "genome-wide Ensembl 115 quantitative bulk TPM and donor-resolved single-cell UMI expression across unmeasured home tissues (#735)",
+    ),
+    "mouse-target-selection": (
+        "cta",
+        "genome-wide Ensembl 115 GRCm39 Cancer, Reproductive, and Cancer-Testis Antigen catalog for Mus musculus (#734)",
+    ),
+    "mouse-host-exposure": (
+        "cta-evidence",
+        "per-compartment adult reproductive, accessory-gland, bicornuate-tract, mammary, placental, and embryonic TPM exposures for Mus musculus (#734)",
+    ),
+    "mouse-proteome-sequences": (
+        "protein",
+        "verified Ensembl 115 GRCm39 murine protein occurrence table for PEG grouping and PeptideIndex subtraction (#734)",
     ),
 }
 

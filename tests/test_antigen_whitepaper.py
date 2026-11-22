@@ -119,4 +119,5 @@ def test_species_whitepaper_and_exported_ledgers_reconcile_with_policies():
     assert set(ds.role) == set(species_policies.ROLE_IDS)
     noms = pd.read_csv(ASSETS / "species-nominations.csv")
     assert len(noms[noms.taxon_id.eq(9615)]) == len(canine.target_selection()) == 14
-    assert len(noms[noms.taxon_id.eq(10090)]) == len(mouse.target_selection()) == 1
+    assert len(noms[noms.taxon_id.eq(10090)]) == len(mouse.cta_candidates()) == 1
+    assert len(mouse.target_selection()) > 20000

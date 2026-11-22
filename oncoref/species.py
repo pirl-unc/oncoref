@@ -253,6 +253,30 @@ class SpeciesDataGroup:
 
         return classify_sex_restriction(species=self.species)
 
+    def host_exposure(self) -> dict:
+        """Per-compartment reproductive and mammary RNA exposure observations for HostContext."""
+        if self.name != "antigens":
+            raise ValueError("host_exposure() requires the antigens group")
+        from .species_target_selection import packaged_species_host_exposure
+
+        return packaged_species_host_exposure(self.species)
+
+    def screening_sources(self) -> pd.DataFrame:
+        """SHA-256-pinned primary input manifest for evaluated non-human target catalogs."""
+        if self.name != "antigens":
+            raise ValueError("screening_sources() requires the antigens group")
+        from .species_target_selection import packaged_species_screening_sources
+
+        return packaged_species_screening_sources(self.species)
+
+    def tumor_cohorts(self) -> pd.DataFrame:
+        """Strain-explicit tumor cohort registry for evaluated non-human target catalogs."""
+        if self.name not in {"antigens", "cancer"}:
+            raise ValueError("tumor_cohorts() requires the antigens or cancer group")
+        from .species_target_selection import packaged_species_tumor_cohorts
+
+        return packaged_species_tumor_cohorts(self.species)
+
     def evaluate_target_catalog(self, spec, proteins: pd.DataFrame, **inputs):
         """Run the source-pluggable 3-stage target-selection pipeline for this species."""
         if self.name != "antigens":

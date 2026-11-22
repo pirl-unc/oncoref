@@ -27,13 +27,16 @@ cta_snapshot = antigens.cta_snapshot
 cta_tissue_annotations = antigens.cta_tissue_annotations
 evaluate_target_catalog = antigens.evaluate_target_catalog
 host_compartments = antigens.host_compartments
+host_exposure = antigens.host_exposure
 normal_tissue_scopes = antigens.normal_tissue_scopes
 resolve_normal_tissue = antigens.resolve_normal_tissue
 screening_datasets = antigens.screening_datasets
 screening_policy = antigens.screening_policy
+screening_sources = antigens.screening_sources
 sex_restricted_antigens = antigens.sex_restricted_antigens
 target_selection = antigens.target_selection
 target_selection_coverage = antigens.target_selection_coverage
+tumor_cohorts = cancer.tumor_cohorts
 
 __all__ = [
     "antigens",
@@ -53,6 +56,7 @@ __all__ = [
     "governance",
     "groups",
     "host_compartments",
+    "host_exposure",
     "inventory",
     "legacy",
     "normal_tissue_scopes",
@@ -61,8 +65,10 @@ __all__ = [
     "resolve_normal_tissue",
     "screening_datasets",
     "screening_policy",
+    "screening_sources",
     "sex_restricted_antigens",
     "species",
     "target_selection",
     "target_selection_coverage",
+    "tumor_cohorts",
 ]

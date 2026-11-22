@@ -836,11 +836,7 @@ def classify_sex_restriction(
 
     ra.attrs["taxon_id"] = resolved.taxon_id
     ra.attrs["species"] = resolved.name
-    exposures = (
-        host_context.exposure_evidence()
-        if resolved.taxon_id == 9606 and host_evidence is None
-        else (host_evidence or {})
-    )
+    exposures = packaged_species_host_exposure(resolved) if host_evidence is None else host_evidence
 
     f_all_host = host_context.from_legacy(
         "female-patient",
@@ -1543,6 +1539,178 @@ def evaluate_species_catalog(
     )
 
 
+def packaged_species_metadata(species: Species | str | int = "human") -> dict | None:
+    """Return packaged target-selection metadata for an evaluated species, or None if unassessed."""
+    from importlib.resources import files
+
+    resolved = resolve_species(species)
+    if resolved.taxon_id == 9606:
+        return target_selection.metadata()
+    meta_path = files("oncoref").joinpath(f"data/species/{resolved.name}/target-selection.json")
+    if not meta_path.is_file():
+        return None
+    return json.loads(meta_path.read_text(encoding="utf-8"))
+
+
+def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
+    from . import reference_data
+
+    resolved = resolve_species(species_name)
+    meta = packaged_species_metadata(resolved)
+    if meta is None:
+        raise FileNotFoundError(f"No packaged target-selection metadata for {resolved.name!r}")
+    path = reference_data.bundled_or_managed_path(f"{resolved.name}-target-selection")
+    if reference_data._sha256(path) != meta["data_sha256"]:
+        raise ValueError(
+            f"{resolved.name} target-selection CSV does not match its metadata SHA-256"
+        )
+    df = pd.read_csv(path, low_memory=False)
+    for str_col in (
+        "home_tissue",
+        "Unsafe_reasons",
+        "decision_reason",
+        "reproductive_qualifying_compartments",
+        "sex_restriction_class",
+        "sex_restriction_code",
+        "cta_tier",
+        "tumor_top_cancer_code",
+        "tumor_top_sample",
+        "rare_cell_basis",
+        "subtype",
+    ):
+        if str_col in df.columns:
+            df[str_col] = df[str_col].fillna("").astype(str)
+    for bool_col in (
+        "identity_translation_pass",
+        "home_tissue_unmeasured",
+        "unsafe",
+        "normal_screen_pass",
+        "sequence_pass",
+        "evidence_resolved",
+        "required_coverage_complete",
+        "expression_bounds_pass",
+        "is_cancer_antigen",
+        "is_reproductive_antigen",
+        "is_cta",
+        "is_target_candidate",
+        "published_nomination",
+    ):
+        if bool_col in df.columns:
+            df[bool_col] = df[bool_col].fillna(False).astype(bool)
+    df.attrs.update(
+        taxon_id=resolved.taxon_id,
+        species=resolved.name,
+        reference_id=meta["reference"]["reference_id"],
+        policy_id=meta["policy_id"],
+        comparison_id=meta["comparison_id"],
+        comparison_unit=meta["comparison_unit"],
+    )
+    return df
+
+
+_SPECIES_CATALOG_CACHE: dict[str, pd.DataFrame] = {}
+_SPECIES_HOST_EXPOSURE_CACHE: dict[str, dict] = {}
+_SPECIES_SEQUENCES_CACHE: dict[str, pd.DataFrame] = {}
+
+
+def packaged_species_host_exposure(species: Species | str | int = "human") -> dict:
+    """Return detached per-compartment host exposure observations for ``species``."""
+    from . import host_context, reference_data
+
+    resolved = resolve_species(species)
+    if resolved.taxon_id == 9606:
+        return host_context.exposure_evidence()
+    meta = packaged_species_metadata(resolved)
+    if meta is None:
+        return {}
+    cached = _SPECIES_HOST_EXPOSURE_CACHE.get(resolved.name)
+    if cached is None:
+        path = reference_data.bundled_or_managed_path(f"{resolved.name}-host-exposure")
+        if reference_data._sha256(path) != meta["host_exposure_sha256"]:
+            raise ValueError(
+                f"{resolved.name} host-exposure table does not match its metadata SHA-256"
+            )
+        cached = (
+            pd.read_csv(path, keep_default_na=False)
+            .set_index("entity_id")
+            .exposures.map(json.loads)
+            .to_dict()
+        )
+        _SPECIES_HOST_EXPOSURE_CACHE[resolved.name] = cached
+    return deepcopy(cached)
+
+
+def packaged_species_sequences(species: Species | str | int = "mouse") -> pd.DataFrame:
+    """Return all verified reference proteome translations for an evaluated non-human species."""
+    from . import reference_data
+
+    resolved = resolve_species(species)
+    if resolved.taxon_id == 9606:
+        raise ValueError("Use antigen_sets.sequences(..., species='human') for human translations")
+    meta = packaged_species_metadata(resolved)
+    if meta is None:
+        raise FileNotFoundError(f"No packaged proteome sequence table for {resolved.name!r}")
+    cached = _SPECIES_SEQUENCES_CACHE.get(resolved.name)
+    if cached is None:
+        path = reference_data.bundled_or_managed_path(f"{resolved.name}-proteome-sequences")
+        if reference_data._sha256(path) != meta["sequences_sha256"]:
+            raise ValueError(
+                f"{resolved.name} proteome sequence table does not match its metadata SHA-256"
+            )
+        seq_df = pd.read_csv(path, low_memory=False)
+        seq_df["matches_representative_sequence"] = seq_df[
+            "matches_representative_sequence"
+        ].astype("boolean")
+        seq_df.attrs.update(
+            taxon_id=resolved.taxon_id,
+            species=resolved.name,
+            reference_id=meta["reference"]["reference_id"],
+            reference=meta["reference"]["reference_id"],
+            sequence_source="packaged_proteome",
+        )
+        _SPECIES_SEQUENCES_CACHE[resolved.name] = seq_df
+        cached = seq_df
+    out = cached.copy()
+    out.attrs.update(cached.attrs)
+    return out
+
+
+def packaged_species_screening_sources(species: Species | str | int = "mouse") -> pd.DataFrame:
+    """Return the SHA-256-pinned primary input manifest for an evaluated non-human species."""
+    from importlib.resources import files
+
+    resolved = resolve_species(species)
+    path = files("oncoref").joinpath(f"data/species/{resolved.name}/screening-sources.csv")
+    if not path.is_file():
+        return pd.DataFrame(
+            columns=["source_id", "pillar", "filename", "unit", "strain", "bytes", "sha256"]
+        )
+    return pd.read_csv(path)
+
+
+def packaged_species_tumor_cohorts(species: Species | str | int = "mouse") -> pd.DataFrame:
+    """Return the strain-explicit tumor cohort registry for an evaluated non-human species."""
+    from importlib.resources import files
+
+    resolved = resolve_species(species)
+    path = files("oncoref").joinpath(f"data/species/{resolved.name}/tumor-cohorts.csv")
+    if not path.is_file():
+        return pd.DataFrame(
+            columns=[
+                "cancer_code",
+                "label",
+                "model_kind",
+                "strain",
+                "mhc_haplotype",
+                "source_accession",
+                "n_samples",
+                "native_feature_space",
+                "quantification",
+            ]
+        )
+    return pd.read_csv(path)
+
+
 def packaged_species_results(
     species: Species | str | int = "human",
     gene: str | None = None,
@@ -1567,6 +1735,39 @@ def packaged_species_results(
         return out
 
     from .species_antigens import cta_snapshot
+
+    if packaged_species_metadata(resolved) is not None:
+        cached = _SPECIES_CATALOG_CACHE.get(resolved.name)
+        if cached is None:
+            cached = _load_packaged_species_catalog_cached(resolved.name)
+            _SPECIES_CATALOG_CACHE[resolved.name] = cached
+        evaluated = cached.copy()
+        evaluated.attrs.update(cached.attrs)
+        if gene is not None:
+            alias_gene_ids: set[str] = set()
+            for cand in cta_snapshot(resolved).candidates():
+                if gene in {
+                    cand["id"],
+                    cand["label"],
+                    f"nomination:{resolved.taxon_id}:{cand['id']}",
+                }:
+                    alias_gene_ids.update(cand["gene_ids"])
+            target_tokens = {gene, *alias_gene_ids}
+            evaluated = evaluated[
+                evaluated.protein_group_label.isin(target_tokens)
+                | evaluated.protein_group_label.str.split("/").map(
+                    lambda parts: bool(set(parts) & target_tokens)
+                )
+                | evaluated.entity_id.isin(target_tokens)
+                | evaluated.member_gene_ids.map(
+                    lambda ids: bool(set(json.loads(ids)) & target_tokens)
+                )
+            ]
+        if category is not None:
+            evaluated = evaluated[evaluated.category.eq(category)]
+        out = evaluated.reset_index(drop=True)
+        out.attrs.update(cached.attrs)
+        return out
 
     snapshot = cta_snapshot(resolved)
     native = snapshot.as_dict()
@@ -1639,8 +1840,31 @@ def packaged_species_coverage(species: Species | str | int = "human") -> dict:
     from .expression_registry import expression_sources
     from .species_assets import registered_references
 
-    cat = packaged_species_results(resolved)
     refs = [r["id"] for r in registered_references(resolved)]
+    pkg_meta = packaged_species_metadata(resolved)
+    if pkg_meta is not None:
+        return {
+            "taxon_id": resolved.taxon_id,
+            "species": resolved.name,
+            "selection_status": pkg_meta["selection_status"],
+            "policy_id": pkg_meta["policy_id"],
+            "comparison_id": pkg_meta["comparison_id"],
+            "comparison_unit": pkg_meta["comparison_unit"],
+            "registered_references": refs,
+            "reference": pkg_meta["reference"],
+            "anatomy": anatomy.as_dict(),
+            "thresholds": asdict(pol.thresholds),
+            "counts": pkg_meta["summary"]["categories"],
+            "sex_restricted_counts": pkg_meta["summary"].get("sex_restriction_codes", {}),
+            "populated_inputs": [b.role for b in pol.datasets if b.status == "active_in_catalog"],
+            "missing_inputs": [
+                f"{b.role}: {b.source_id} ({b.status})"
+                for b in pol.datasets
+                if b.status != "active_in_catalog"
+            ],
+        }
+
+    cat = packaged_species_results(resolved)
     expr = expression_sources(species=resolved)
     ready_expr = [s.id for s in expr if s.acquisition_status == "available"]
     pending_expr = [s.id for s in expr if s.acquisition_status != "available"]
