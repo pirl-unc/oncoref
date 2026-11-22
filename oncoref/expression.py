@@ -3596,6 +3596,7 @@ def cancer_reference_expression_availability(
     source_cohort: str | Iterable[str] | None = None,
     exclude_microarray_proxy: bool = False,
     all_sources: bool = False,
+    include_aggregates: bool = False,
 ) -> pd.DataFrame:
     """Availability/provenance table for :func:`cancer_reference_expression`.
 
@@ -3631,6 +3632,8 @@ def cancer_reference_expression_availability(
             "supported with reference_source='summary_rows_all'"
         )
     if all_sources:
+        if include_aggregates:
+            raise ValueError("include_aggregates=True is not supported with all_sources=True")
         return _reference_source_union_availability(
             cancer_types,
             modes,
@@ -3647,6 +3650,7 @@ def cancer_reference_expression_availability(
         source_cohorts=source_cohorts,
         exclude_microarray_proxy=exclude_microarray_proxy,
         describe_invalid=True,
+        include_aggregates=include_aggregates,
     )
     return _reference_expression_availability_for_requests(
         requests,
@@ -3779,12 +3783,15 @@ def _reference_expression_requests(
     source_cohorts: set[str] | None = None,
     exclude_microarray_proxy: bool = False,
     describe_invalid: bool = False,
+    include_aggregates: bool = False,
 ) -> list[dict[str, str]]:
     """Resolved request rows while preserving aggregate-vs-direct intent.
 
     The default listing omits cohorts whose selected source has an invalid expression
     scale (with a warning); naming one explicitly is rejected when its data is read.
     ``describe_invalid=True`` keeps them so availability tables can report the problem.
+    ``include_aggregates=True`` appends explicit ``aggregate_member`` expansion rows for
+    every ``member_union`` umbrella code when ``cancer_types=None``.
     """
     if cancer_types is None:
         invalid = {} if describe_invalid else _invalid_selected_source_codes()
@@ -3795,7 +3802,7 @@ def _reference_expression_requests(
                 UserWarning,
                 stacklevel=3,
             )
-        return [
+        rows = [
             {"requested_code": code, "cancer_code": code, "request_kind": "default_available"}
             for code in _reference_available_codes_for_modes(
                 modes,
@@ -3807,6 +3814,22 @@ def _reference_expression_requests(
             )
             if code not in invalid
         ]
+        if include_aggregates:
+            aggregates = cohort_aggregates()
+            for umbrella in sorted(aggregates):
+                if cancer_type_reference_source(umbrella) != "member_union":
+                    continue
+                for member in aggregates[umbrella]:
+                    if member in invalid:
+                        continue
+                    rows.append(
+                        {
+                            "requested_code": umbrella,
+                            "cancer_code": member,
+                            "request_kind": "aggregate_member",
+                        }
+                    )
+        return rows
     raw_values = [cancer_types] if isinstance(cancer_types, str) else list(cancer_types)
     aggregates = cohort_aggregates()
     rows: list[dict[str, str]] = []
@@ -3965,6 +3988,179 @@ def _reference_availability_frame(rows: list[dict]) -> pd.DataFrame:
     out.attrs["source_matrix_version"] = SOURCE_MATRIX_VERSION
     out.attrs["issues"] = ["#207"]
     return out
+
+
+_NON_COMPARABLE_REPLACEMENT_PLANS: dict[str, str] = {
+    "BCC": "Replace log2(CPM+1) nCPM proxy (GSE125285) with raw-read or gene-length-normalized bulk RNA-seq (#737).",
+    "cSCC": "Replace log2(CPM+1) nCPM proxy (GSE125285) with raw-read or gene-length-normalized bulk RNA-seq (#737).",
+    "CMN": "Replace GPL96 microarray TPM-proxy (GSE11482) with pediatric renal bulk RNA-seq when publicly available (#737).",
+    "CTCL": "Supplement or replace ECCITE-seq donor pseudobulk nTPM (GSE171811) with sorted malignant T-cell bulk RNA-seq (#737).",
+    "EPN": "Supplement diagnosis malignant-cell scRNA pseudobulk (GSE141460) with OpenPBTA/CBTN primary bulk RNA-seq (#737).",
+    "HCL": "Supplement malignant-cell scRNA pseudobulk nTPM (Zenodo 14917813) with sorted primary HCL bulk RNA-seq (#737).",
+    "MTC": "Replace GPL6480 microarray TPM-proxy (GSE32662) with primary medullary thyroid bulk RNA-seq (#737).",
+    "NUTM": "Rebuild controlled 3-case paired-FASTQ cohort with scripts/build_local_fastq_salmon_source.py (#604, #665).",
+    "SARC_ESS_HG": "Replace GPL22303 microarray TPM-proxy (GSE85383) with fusion-annotated HG-ESS bulk RNA-seq (#737).",
+    "SARC_ESS_LG": "Replace GPL22303 microarray TPM-proxy (GSE85383) with fusion-annotated LG-ESS bulk RNA-seq (#737).",
+    "SARC_MYXLPS": "Replace GPL96 microarray TPM-proxy (GSE30929) with FUS::DDIT3 bulk RNA-seq (#737).",
+}
+
+
+def non_comparable_expression_cohorts(*, include_invalid: bool = True) -> pd.DataFrame:
+    """Structured inventory of selected expression cohorts that are not linear-TPM comparable (#737).
+
+    Separates withheld invalid-scale sources (``NUTM`` / ``invalid_legacy_tpm``) from
+    rank-preserving proxy cohorts (microarray TPM-proxies, scRNA malignant-cell
+    pseudobulk nTPM, and gene-length-unnormalized nCPM proxies) so callers never pool
+    them into absolute-TPM thresholds by accident.
+    """
+    table = _reference_summary_source_table()
+    sub = table.loc[
+        table["selected"] & (~table["linear_tpm_comparable"].fillna(False).astype(bool))
+    ].copy()
+    if not include_invalid:
+        sub = sub.loc[
+            ~sub["source_scale_class"].astype("string").isin(INVALID_SOURCE_SCALE_CLASSES)
+        ].copy()
+
+    def _scale_family(scale_cls: str) -> str:
+        s = str(scale_cls or "").lower()
+        if s in INVALID_SOURCE_SCALE_CLASSES:
+            return "invalid_withheld"
+        if "microarray" in s:
+            return "microarray_tpm_proxy"
+        if "scrna" in s or "pseudobulk" in s:
+            return "scrna_pseudobulk_ntpm"
+        if "cpm" in s:
+            return "bulk_rnaseq_cpm_proxy"
+        return "other_non_comparable"
+
+    rows = []
+    for row in sub.sort_values("cancer_code").itertuples(index=False):
+        code = str(row.cancer_code)
+        scale_cls = str(row.source_scale_class)
+        is_invalid = scale_cls in INVALID_SOURCE_SCALE_CLASSES
+        rows.append(
+            {
+                "cancer_code": code,
+                "source_cohort": str(row.source_cohort),
+                "source_type": str(row.source_type),
+                "source_scale_class": scale_cls,
+                "scale_family": _scale_family(scale_cls),
+                "linear_tpm_comparable": False,
+                "is_invalid_withheld": is_invalid,
+                "n_reference_samples": int(row.n_reference_samples)
+                if pd.notna(row.n_reference_samples)
+                else 0,
+                "allowed_uses": (
+                    "none_withheld" if is_invalid else "within_sample_rank_and_pathway_only"
+                ),
+                "replacement_plan": _NON_COMPARABLE_REPLACEMENT_PLANS.get(
+                    code, "Audit linear bulk RNA-seq replacement (#737)."
+                ),
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def umbrella_expression_coverage() -> pd.DataFrame:
+    """Explicit member-level coverage and subtype-gap audit for umbrella cancer codes (#737).
+
+    Covers all ``member_union`` umbrella codes (including the 14 classification-target
+    umbrellas such as ``THYM_EPITHELIAL``, ``NSCLC``, ``CRC``, ``SARC_ESS``, ``SARC_LPS``,
+    ``NEN``, ``NET``, ``NEC``) and discloses child subtype gaps (such as ``THYMCA``
+    under ``THYM_EPITHELIAL``, where ``TCGA-THYM`` represents thymoma rather than a
+    dedicated thymic carcinoma RNA-seq cohort) as well as member cohorts on proxy scales.
+    """
+    from .cancer_types import expression_reference_coverage
+
+    cov = expression_reference_coverage().set_index("code", drop=False)
+    aggregates = cohort_aggregates()
+    src_tbl = _reference_summary_source_table()
+    selected = src_tbl.loc[src_tbl["selected"]].set_index("cancer_code")
+    avail = cancer_reference_expression_availability(
+        reference_source="summary_rows",
+        sample_qc="all",
+        include_aggregates=True,
+    )
+    avail_by_pair = (
+        avail.loc[avail["request_kind"].eq("aggregate_member")]
+        .set_index(["requested_code", "cancer_code"])["available"]
+        .to_dict()
+    )
+
+    rows = []
+    for code in sorted(cov.index):
+        rec = cov.loc[code]
+        ref_source = str(rec["reference_source"])
+        if ref_source != "member_union" and code != "THYMCA":
+            continue
+        if ref_source == "member_union":
+            members = tuple(str(m) for m in aggregates.get(code, ()))
+            direct_children = tuple(
+                str(c)
+                for c in cov.index[cov["parent_code"].fillna("").astype(str).eq(code)]
+                if str(cov.loc[c, "reference_source"]) in {"parent", "none"}
+            )
+            avail_members = [
+                m for m in members if bool(avail_by_pair.get((code, m), m in selected.index))
+            ]
+            non_comp = [
+                m
+                for m in avail_members
+                if m in selected.index and not bool(selected.loc[m, "linear_tpm_comparable"])
+            ]
+            comp_members = [m for m in avail_members if m not in non_comp]
+            missing_children = sorted((set(direct_children) | set(members)) - set(avail_members))
+            total_n = int(
+                sum(
+                    int(selected.loc[m, "n_reference_samples"])
+                    for m in avail_members
+                    if m in selected.index and pd.notna(selected.loc[m, "n_reference_samples"])
+                )
+            )
+            if missing_children or len(avail_members) < len(members):
+                status = "partial_member_gap"
+            elif non_comp:
+                status = "includes_proxy_scale_members"
+            else:
+                status = "complete_linear_tpm"
+            rows.append(
+                {
+                    "cancer_code": code,
+                    "name": str(rec["name"]),
+                    "reference_source": ref_source,
+                    "is_classification_target": bool(rec["is_classification_target"]),
+                    "member_codes": ";".join(members),
+                    "available_member_codes": ";".join(avail_members),
+                    "unbacked_child_subtypes": ";".join(missing_children),
+                    "non_comparable_member_codes": ";".join(non_comp),
+                    "n_members": len(members),
+                    "n_available_members": len(avail_members),
+                    "n_comparable_members": len(comp_members),
+                    "total_reference_samples": total_n,
+                    "coverage_status": status,
+                }
+            )
+        else:
+            # Explicit disclosure row for THYMCA -> parent THYM_EPITHELIAL fallback (#737).
+            rows.append(
+                {
+                    "cancer_code": code,
+                    "name": str(rec["name"]),
+                    "reference_source": ref_source,
+                    "is_classification_target": bool(rec["is_classification_target"]),
+                    "member_codes": "",
+                    "available_member_codes": "",
+                    "unbacked_child_subtypes": code,
+                    "non_comparable_member_codes": "",
+                    "n_members": 0,
+                    "n_available_members": 0,
+                    "n_comparable_members": 0,
+                    "total_reference_samples": 0,
+                    "coverage_status": "parent_fallback_no_direct_cohort",
+                }
+            )
+    return pd.DataFrame(rows)
 
 
 @lru_cache(maxsize=1)
