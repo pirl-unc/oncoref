@@ -117,6 +117,28 @@ it is not a validated universal equivalence relation. TCR recognition also depen
 on peptide position, HLA and receptor. Neither a retained sequence nor a low
 distance establishes presentation, cross-reactivity or therapeutic safety.
 
+## Germline coding polymorphisms, isoform selectivity and ncORF/TE contracts
+
+Reference proteomes represent a single haplotype. Common germline missense variants (`AF >= 0.001`) can create self-peptides in healthy patients that are absent from the reference FASTA. Augment any background table or `PeptideIndex` with `CodingVariant` records (validated fail-closed against 1-based reference coordinates):
+
+```python
+from oncoref.peptide_subtraction import CodingVariant
+
+variants = [
+    CodingVariant(
+        target_id="ENST00000370225",
+        position=15,
+        ref_aa="A",
+        alt_aa="V",
+        af=0.042,
+        source_id="gnomAD:v4.1",
+    )
+]
+polymorphic_bg = background.with_coding_variants(variants, min_af=0.001)
+```
+
+For tumor-restricted splice isoforms on genes whose canonical isoform is `Unsafe`, gene-level `Unsafe` precedence holds unless healthy normal tissues are quantified at transcript/junction resolution **and** subtracting against the full `Unsafe` proteome leaves unique junction/exon peptides (`antigen_sets.evaluate_isoform_selectivity` / `antigen_sets.isoform_selectivity_contract`). Non-canonical ORFs and transposable-element (`HERV`/`LINE-1`/`LTR`) nominations follow the separate four-gate contract in `sequence_bundle.ncorf_te_screening_contract()`.
+
 ## Reviewed findings
 
 ```python

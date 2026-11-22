@@ -24,6 +24,7 @@ from . import data_file_renames
 
 SCHEMA = "oncoref.sequence-bundle"
 ROLE_POLICY_ID = "oncoref.target-selection-sequence-roles.2026-11-21.1"
+NCORF_TE_CONTRACT_ID = "oncoref.ncorf-te-screening.2026-11-22.1"
 PAYLOADS = frozenset(
     {"records.jsonl.gz", "coverage.json", "decisions.csv.gz", "orfdata-proteome.json.gz"}
 )
@@ -467,3 +468,52 @@ def sequences_table(
         else load(ensure(cache_dir=cache_dir, download=download))
     )
     return loaded.to_sequences_table(roles=roles)
+
+
+def ncorf_te_screening_contract() -> dict:
+    """Return the versioned screening contract for non-canonical ORFs and TE/HERV antigens (#736).
+
+    Keeps canonical Ensembl coding proteins (`target_selection`) cleanly separated from
+    uORF/dORF/lncRNA-sORF and transposable-element (HERV/LINE-1/LTR) nominations, which
+    require empirical translation proof and multicopy-aware normal-atlas screening.
+    """
+    from . import peptide_subtraction, target_selection
+
+    return {
+        "contract_id": NCORF_TE_CONTRACT_ID,
+        "catalog_policy_id": target_selection.POLICY_ID,
+        "near_self_contract_id": peptide_subtraction.NEAR_SELF_CONTRACT_ID,
+        "scope": [
+            "uORF",
+            "dORF",
+            "lncRNA_sORF",
+            "intronic_cryptic_ORF",
+            "transposable_element_HERV_LINE_LTR",
+        ],
+        "mandatory_gates": {
+            "translation_evidence": (
+                "Empirical Ribo-seq triplet periodicity and/or FDR-controlled HLA "
+                "immunopeptidomics MS/MS confirmation; in-silico 3-frame translation "
+                "alone never qualifies."
+            ),
+            "multicopy_mappability": (
+                "Identical k-mer or locus-subfamily multimapper accounting across all "
+                "dispersed TE copies in both tumor and normal RNA-seq; single-copy "
+                "unique-mapper filtering on repetitive elements is rejected."
+            ),
+            "normal_atlas_and_mtec_screen": (
+                "Donor-resolved healthy adult bulk and rare-cell single-cell screening "
+                "under identical multimapper rules, retaining thymic mTEC promiscuous "
+                "transcription caveats separately from peripheral somatic toxicity."
+            ),
+            "self_and_polymorphic_subtraction": (
+                "Exact and bounded near-self subtraction (PeptideIndex + population "
+                "CodingVariant augmentation) against the full Unsafe|Other proteome."
+            ),
+        },
+        "canonical_catalog_separation": (
+            "ncORF and TE candidates never enter canonical Ensembl protein-group "
+            "counts silently; they must carry explicit ORF/repeat coordinates and "
+            "pass all four mandatory_gates."
+        ),
+    }

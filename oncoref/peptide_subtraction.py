@@ -10,6 +10,7 @@ from __future__ import annotations
 import bisect
 import math
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass, field
 from types import MappingProxyType
 
@@ -44,10 +45,166 @@ def near_self_contract() -> dict:
         "downstream_responsibilities": [
             "MHC binding and antigen processing",
             "Position/HLA/TCR-aware cross-reactivity scoring",
-            "Germline variant and sample-specific isoform personalization",
+            "Sample-specific somatic/germline genotype personalization beyond population AF filters",
             "Therapeutic risk-benefit adjudication",
         ],
+        "population_polymorphism_support": {
+            "helper": "PeptideIndex.with_coding_variants / apply_coding_variants",
+            "default_min_af": 0.001,
+            "coordinate_system": "1-based reference amino-acid position, validated fail-closed",
+        },
     }
+
+
+@dataclass(frozen=True)
+class CodingVariant:
+    """One germline missense polymorphism on a reference transcript or protein record (#736).
+
+    ``position`` is 1-based in the reference amino-acid translation and is verified
+    fail-closed against ``ref_aa`` before generating flanking background peptides.
+    """
+
+    target_id: str
+    position: int
+    ref_aa: str
+    alt_aa: str
+    af: float
+    source_id: str
+    variant_id: str = ""
+
+    def __post_init__(self) -> None:
+        tid = str(self.target_id).strip()
+        if not tid:
+            raise ValueError("CodingVariant target_id must be nonempty")
+        if type(self.position) is not int or self.position < 1:
+            raise ValueError("CodingVariant position must be a 1-based positive integer")
+        if len(self.ref_aa) != 1 or self.ref_aa not in AMINO_ACIDS:
+            raise ValueError(f"CodingVariant ref_aa must be a canonical AA; got {self.ref_aa!r}")
+        if len(self.alt_aa) != 1 or self.alt_aa not in AMINO_ACIDS:
+            raise ValueError(f"CodingVariant alt_aa must be a canonical AA; got {self.alt_aa!r}")
+        if self.ref_aa == self.alt_aa:
+            raise ValueError("CodingVariant ref_aa and alt_aa must differ")
+        if not math.isfinite(self.af) or not (0.0 <= self.af <= 1.0):
+            raise ValueError("CodingVariant af must be finite and within [0.0, 1.0]")
+        src = str(self.source_id).strip()
+        if not src:
+            raise ValueError("CodingVariant source_id must be nonempty")
+        vid = str(self.variant_id).strip() or f"{tid}:p.{self.ref_aa}{self.position}{self.alt_aa}"
+        object.__setattr__(self, "target_id", tid)
+        object.__setattr__(self, "source_id", src)
+        object.__setattr__(self, "variant_id", vid)
+
+
+def apply_coding_variants(
+    records: pd.DataFrame,
+    variants: Iterable[CodingVariant],
+    *,
+    min_af: float = 0.001,
+    flank: int = 14,
+    strict_targets: bool = True,
+) -> pd.DataFrame:
+    """Augment a background sequence table with common population missense windows (#736).
+
+    Retains all original reference rows (`is_coding_variant=False`) and appends
+    flanking mutated sequence windows (`[pos - 1 - flank : pos + flank]`) for every
+    variant with ``af >= min_af``. Fails closed if any variant coordinate is out of
+    bounds or disagrees with ``ref_aa``, or (when ``strict_targets=True``) if a
+    qualifying ``target_id`` matches no row in ``records``.
+    """
+    if "sequence" not in records or not records.sequence.map(lambda s: isinstance(s, str)).all():
+        raise ValueError("Every record requires a sequence string")
+    if not math.isfinite(min_af) or not (0.0 <= min_af <= 1.0):
+        raise ValueError("min_af must be finite and within [0.0, 1.0]")
+    if type(flank) is not int or flank < 1:
+        raise ValueError("flank must be a positive integer")
+
+    qualified = [v for v in variants if v.af >= min_af]
+    base = records.copy()
+    if "is_coding_variant" not in base.columns:
+        base["is_coding_variant"] = False
+    for col, default in (
+        ("variant_id", ""),
+        ("variant_af", pd.NA),
+        ("variant_source_id", ""),
+        ("variant_position", pd.NA),
+    ):
+        if col not in base.columns:
+            base[col] = default
+
+    if not qualified:
+        base.attrs.update(
+            records.attrs,
+            coding_variant_min_af=min_af,
+            coding_variants_applied=0,
+        )
+        return base
+
+    key_to_indices: dict[str, list[int]] = {}
+    for idx, row in enumerate(base.to_dict("records")):
+        keys: set[str] = set()
+        for col in ("transcript_id", "transcript_accession", "record_id", "gene_id"):
+            val = row.get(col)
+            if val is not None and pd.notna(val) and str(val).strip():
+                raw = str(val).strip()
+                keys.add(raw)
+                keys.add(raw.split(".", 1)[0])
+        for key in keys:
+            key_to_indices.setdefault(key, []).append(idx)
+
+    base_records = base.to_dict("records")
+    extra_rows: list[dict] = []
+    applied = 0
+    for variant in qualified:
+        matched_indices = key_to_indices.get(variant.target_id) or key_to_indices.get(
+            variant.target_id.split(".", 1)[0]
+        )
+        if not matched_indices:
+            if strict_targets:
+                raise ValueError(
+                    f"CodingVariant {variant.variant_id!r} target_id={variant.target_id!r} "
+                    "matched no background sequence record"
+                )
+            continue
+        applied += 1
+        pos0 = variant.position - 1
+        for row_idx in matched_indices:
+            orig = base_records[row_idx]
+            seq = orig["sequence"]
+            if pos0 >= len(seq):
+                raise ValueError(
+                    f"CodingVariant {variant.variant_id!r} position {variant.position} "
+                    f"exceeds sequence length {len(seq)} on {variant.target_id!r}"
+                )
+            observed_aa = seq[pos0]
+            if observed_aa != variant.ref_aa:
+                raise ValueError(
+                    f"CodingVariant {variant.variant_id!r} reference mismatch at 1-based "
+                    f"position {variant.position} on {variant.target_id!r}: "
+                    f"expected {variant.ref_aa!r}, observed {observed_aa!r}"
+                )
+            mutated = seq[:pos0] + variant.alt_aa + seq[pos0 + 1 :]
+            win_start = max(0, pos0 - flank)
+            win_end = min(len(mutated), pos0 + flank + 1)
+            new_row = dict(orig)
+            new_row["sequence"] = mutated[win_start:win_end]
+            new_row["is_coding_variant"] = True
+            new_row["variant_id"] = variant.variant_id
+            new_row["variant_af"] = float(variant.af)
+            new_row["variant_source_id"] = variant.source_id
+            new_row["variant_position"] = int(variant.position)
+            extra_rows.append(new_row)
+
+    out = (
+        pd.concat([base, pd.DataFrame(extra_rows, columns=base.columns)], ignore_index=True)
+        if extra_rows
+        else base
+    )
+    out.attrs.update(
+        records.attrs,
+        coding_variant_min_af=min_af,
+        coding_variants_applied=applied,
+    )
+    return out
 
 
 @dataclass(frozen=True)
@@ -174,6 +331,7 @@ class PeptideIndex:
             or not records.sequence.map(lambda s: isinstance(s, str)).all()
         ):
             raise ValueError("Every record requires a sequence string")
+        self._records = records.copy()
         self.metadata = dict(records.attrs)
         self._result_columns = list(
             dict.fromkeys(
@@ -334,3 +492,21 @@ class PeptideIndex:
             self.metadata, match_policy=self.policy.as_dict(), background_lengths=self.lengths
         )
         return result
+
+    def with_coding_variants(
+        self,
+        variants: Iterable[CodingVariant],
+        *,
+        min_af: float = 0.001,
+        flank: int = 14,
+        strict_targets: bool = True,
+    ) -> PeptideIndex:
+        """Return a new ``PeptideIndex`` augmented with population missense variants (#736)."""
+        augmented = apply_coding_variants(
+            self._records,
+            variants,
+            min_af=min_af,
+            flank=flank,
+            strict_targets=strict_targets,
+        )
+        return PeptideIndex(augmented, policy=self.policy, lengths=self.lengths)
