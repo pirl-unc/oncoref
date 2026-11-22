@@ -58,6 +58,7 @@ from . import (
     target_filters,
     target_selection,
     tcr_trials,
+    tgct_localization,
     therapy_evidence,
     tissue_tiers,
 )
@@ -460,6 +461,12 @@ from .sequence_groups import (
 )
 from .source_matrices import partial_technical_compartment_cohorts
 from .species import Species, SpeciesData, available_species, for_species, resolve_species
+from .tgct_localization import (
+    tgct_aafl_protein_support,
+    tgct_admixture_restricted_entity_ids,
+    tgct_admixture_sole_witness_entity_ids,
+    tgct_reproductive_localization_audit,
+)
 from .therapy_evidence import therapy_benefit_toxicity_evidence
 from .tmb import (
     cancer_tmb,
@@ -952,6 +959,11 @@ __all__ = [
     "target_selection",
     "tcga_deconvolved_expression",
     "tcr_trials",
+    "tgct_aafl_protein_support",
+    "tgct_admixture_restricted_entity_ids",
+    "tgct_admixture_sole_witness_entity_ids",
+    "tgct_localization",
+    "tgct_reproductive_localization_audit",
     "therapy_benefit_toxicity_evidence",
     "therapy_evidence",
     "tissue_of_origin",

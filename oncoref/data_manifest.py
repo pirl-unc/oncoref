@@ -442,6 +442,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "expression-qc",
         "GTEx v11 protein-coding tissue marker panels and native TPM reference levels for conservative tumor-library QC",
     ),
+    "tgct-reproductive-localization-audit": (
+        "expression-qc",
+        "somatic Leydig/Sertoli niche and spermatid stoichiometry audit across all 154 TCGA-TGCT libraries (#713)",
+    ),
+    "tgct-aafl-protein-support": (
+        "cta-evidence",
+        "cross-cohort witness sensitivity audit for all 34 catalog proteins peaking in TCGA-2G-AAFL-01 (#713)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
