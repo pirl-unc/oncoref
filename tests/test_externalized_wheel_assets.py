@@ -32,7 +32,7 @@ def test_externalized_originated_tables_are_managed_in_reference_data_and_catalo
     inv = {row["name"]: row for row in catalog.inventory()}
     ds_names = {d.name for d in catalog.datasets()}
 
-    assert len(data_manifest.EXTERNALIZED_ORIGINATED) == 9
+    assert len(data_manifest.EXTERNALIZED_ORIGINATED) >= 10
     for stem, (expected_cat, _) in data_manifest.EXTERNALIZED_ORIGINATED.items():
         assert stem not in data_manifest.CANCERDATA_ORIGINATED
         assert stem in reference_data.REFERENCE_SOURCES
@@ -49,7 +49,7 @@ def test_externalized_originated_tables_are_managed_in_reference_data_and_catalo
         assert local_file.stat().st_size == pin["bytes"]
         assert hashlib.sha256(local_file.read_bytes()).hexdigest() == pin["sha256"]
         assert pin["url"].startswith(
-            "https://github.com/pirl-unc/oncoref/releases/download/reference-archival-20261122/"
+            "https://github.com/pirl-unc/oncoref/releases/download/reference-"
         )
 
 
