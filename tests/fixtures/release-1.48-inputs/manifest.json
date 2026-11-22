@@ -1,0 +1,38 @@
+{
+  "source_ref": "v1.48.0",
+  "scope": "Pre-v1.49.0 frozen snapshot of historical CTA/ontology inputs bound by dated audit manifests.",
+  "files": {
+    "oncoref/cta_membership.py": {
+      "sha256": "29e9a99ff94d17caa307cd84e11ba0e906d1df37153808a23ff074bf11e0c119",
+      "bytes": 13218
+    },
+    "oncoref/cta_quantitative.py": {
+      "sha256": "461dab9ef297c5e3f4b4b5fc056f884620e2396fddef0848b776c1aad9bdab73",
+      "bytes": 6422
+    },
+    "oncoref/cta_selection.py": {
+      "sha256": "c109ce626d22b8cd11db2a8f498bd26c3c7524583e48672f86821567bd12b751",
+      "bytes": 23716
+    },
+    "oncoref/translation_qualification.py": {
+      "sha256": "968f579cfc9a0872e61298187b9b435033bc846ae4c072207ca2ccb0bc7ad517",
+      "bytes": 8337
+    },
+    "oncoref/data/cancer-type-registry.csv": {
+      "sha256": "6365e0f51f87cf6d6eeb573fd229b0b4748da4b9b76aa882e4764a1e28ca7a35",
+      "bytes": 62737
+    },
+    "oncoref/data/cancer-reference-expression-availability.csv": {
+      "sha256": "5d9b7d7503773e52010b19e4bc4f79737fc0733f5971e24efb5ef20570bf1f0c",
+      "bytes": 136930
+    },
+    "oncoref/data/source-matrices.csv": {
+      "sha256": "d6aa65cdea8af226a3b697e178ec415fbc2dc446ea6527570e255e9ede4179d5",
+      "bytes": 6779
+    },
+    "oncoref/expression.py": {
+      "sha256": "f61e4fb24355f2857bdbd4f97d02afdc6e28e932331ae5b5a66ea25900e79ca1",
+      "bytes": 290905
+    }
+  }
+}

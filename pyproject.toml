@@ -158,6 +158,7 @@ exclude = [
     "tests/fixtures/release-1.37-inputs",
     "tests/fixtures/release-1.38-inputs",
     "tests/fixtures/release-1.39-inputs",
+    "tests/fixtures/release-1.48-inputs",
     ".venv",
     "__pycache__",
     "build",
