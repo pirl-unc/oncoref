@@ -76,6 +76,11 @@ from .normalization import clean_tpm
 SourceExpressionUnit = Literal["TPM", "FPKM", "RPKM", "log2(TPM+1)", "raw_counts"]
 GDC_SOURCE_TYPE = "gdc"
 GEO_MATRIX_SOURCE_TYPE = "geo-matrix"
+LOCAL_FASTQ_SALMON_SOURCE_TYPE = "local-fastq-salmon"
+UNC_CASE_SERIES_SOURCE_TYPE = "unc-case-series"
+LOCAL_FASTQ_SALMON_SOURCE_TYPES: frozenset[str] = frozenset(
+    {LOCAL_FASTQ_SALMON_SOURCE_TYPE, UNC_CASE_SERIES_SOURCE_TYPE}
+)
 RECOUNT3_SOURCE_TYPE = "recount3"
 SRA_NCBI_COUNTS_SOURCE_TYPE = "sra-ncbi-counts"
 SRA_SALMON_SOURCE_TYPE = "sra-salmon"
@@ -393,6 +398,148 @@ class SraSalmonSource:
 
 
 @dataclass(frozen=True)
+class LocalFastqLane:
+    """One paired-end FASTQ lane belonging to a local/controlled biological sample."""
+
+    lane_id: str
+    read_1: Path
+    read_2: Path
+    sha256: tuple[str, str] | None = None
+    md5: tuple[str, str] | None = None
+
+    def __post_init__(self) -> None:
+        lane = str(self.lane_id).strip()
+        if not lane or re.search(r"[\s/;]", lane):
+            raise ValueError(f"invalid lane_id {self.lane_id!r}")
+        object.__setattr__(self, "lane_id", lane)
+        r1 = Path(self.read_1)
+        r2 = Path(self.read_2)
+        if r1 == r2:
+            raise ValueError(f"lane {lane!r} read_1 and read_2 must be distinct files")
+        object.__setattr__(self, "read_1", r1)
+        object.__setattr__(self, "read_2", r2)
+        if self.sha256 is None and self.md5 is None:
+            raise ValueError(f"lane {lane!r} must declare paired sha256 and/or md5 read checksums")
+        if self.sha256 is not None:
+            if len(self.sha256) != 2:
+                raise ValueError(f"lane {lane!r} sha256 must contain two digests")
+            object.__setattr__(
+                self,
+                "sha256",
+                (
+                    _validated_checksum(
+                        self.sha256[0],
+                        algorithm="sha256",
+                        description=f"lane {lane!r} read_1 sha256",
+                    ),
+                    _validated_checksum(
+                        self.sha256[1],
+                        algorithm="sha256",
+                        description=f"lane {lane!r} read_2 sha256",
+                    ),
+                ),
+            )
+        if self.md5 is not None:
+            if len(self.md5) != 2:
+                raise ValueError(f"lane {lane!r} md5 must contain two digests")
+            object.__setattr__(
+                self,
+                "md5",
+                (
+                    _validated_checksum(
+                        self.md5[0],
+                        algorithm="md5",
+                        description=f"lane {lane!r} read_1 md5",
+                    ),
+                    _validated_checksum(
+                        self.md5[1],
+                        algorithm="md5",
+                        description=f"lane {lane!r} read_2 md5",
+                    ),
+                ),
+            )
+
+
+@dataclass(frozen=True)
+class LocalFastqSample:
+    """One biological sample (with one or more paired-end lanes) and cohort role."""
+
+    sample_id: str
+    case_id: str
+    sample_title: str
+    role: str
+    lanes: tuple[LocalFastqLane, ...]
+    cancer_code: str | None = None
+
+    def __post_init__(self) -> None:
+        sid = str(self.sample_id).strip()
+        if not sid or re.search(r"[\s/\\]", sid):
+            raise ValueError(f"invalid biological sample_id {self.sample_id!r}")
+        cid = str(self.case_id).strip()
+        if not cid:
+            raise ValueError(f"sample {sid!r} lacks a case_id")
+        title = str(self.sample_title).strip()
+        if not title:
+            raise ValueError(f"sample {sid!r} lacks a sample_title")
+        if self.role not in {"tumor", "matched_normal", "normal_control"}:
+            raise ValueError(f"sample {sid!r} has unsupported role {self.role!r}")
+        if self.role == "tumor" and self.cancer_code is None:
+            raise ValueError(f"tumor sample {sid!r} must declare a cancer_code")
+        if self.role != "tumor" and self.cancer_code is not None:
+            raise ValueError(f"{self.role} sample {sid!r} must not declare a cancer_code")
+        lanes_tuple = tuple(self.lanes)
+        if not lanes_tuple:
+            raise ValueError(f"sample {sid!r} must declare at least one paired-end lane")
+        lane_ids = [lane.lane_id for lane in lanes_tuple]
+        if len(set(lane_ids)) != len(lane_ids):
+            raise ValueError(f"sample {sid!r} repeats lane_id values: {lane_ids}")
+        object.__setattr__(self, "sample_id", sid)
+        object.__setattr__(self, "case_id", cid)
+        object.__setattr__(self, "sample_title", title)
+        object.__setattr__(self, "lanes", lanes_tuple)
+
+    @property
+    def included_in_reference(self) -> bool:
+        return self.role == "tumor"
+
+
+@dataclass(frozen=True)
+class LocalFastqSalmonSource:
+    """One local/controlled paired-FASTQ cohort quantified against a pinned Salmon reference.
+
+    Public provenance (cohort identity, expected sample counts, and checksum-pinned
+    reference transcriptome) lives in ``expression_sources.yaml``; private sample
+    read paths and checksums come from a local manifest supplied at build time and
+    are never written into emitted sidecar tables.
+    """
+
+    source_id: str
+    source_cohort: str
+    cancer_code: str | list[str]
+    samples: tuple[LocalFastqSample, ...]
+    reference_fastas: tuple[SalmonReferenceFasta, ...]
+    combined_transcriptome_file: str
+    combined_transcriptome_sha256: str
+    source_project: str | None = None
+    citation: str | None = None
+    notes: str = ""
+    pipeline_stem: str = ""
+    source_version: str | None = None
+    processing_pipeline: str | None = None
+    tumor_origin: str = "primary"
+    metastasis_site: str | None = None
+    source_scale_class: str | None = "salmon_gene_tpm"
+    linear_tpm_comparable: bool | None = True
+    tpm_proxy: bool | None = False
+    expected_n: Mapping[str, int] | None = None
+    salmon_args: tuple[str, ...] = (
+        "--validateMappings",
+        "--gcBias",
+        "--seqBias",
+    )
+
+
+@dataclass(frozen=True)
 class SraNcbiCountRun:
     """One NCBI SRA Gene Feature count table and its cohort role."""
 
@@ -506,6 +653,7 @@ class SourceMatrixBuildResult:
     source: (
         GdcSource
         | GeoMatrixSource
+        | LocalFastqSalmonSource
         | Recount3Source
         | SraNcbiCountSource
         | SraSalmonSource
@@ -1449,36 +1597,9 @@ def _sra_salmon_run_from_entry(
     )
 
 
-def sra_salmon_source_from_entry(entry: Mapping) -> SraSalmonSource:
-    """Convert one registry entry into an executable :class:`SraSalmonSource`."""
-    if entry.get("source_type") != SRA_SALMON_SOURCE_TYPE:
-        raise ValueError(
-            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
-            f"not {SRA_SALMON_SOURCE_TYPE!r}"
-        )
-    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
-    if not cancer_codes:
-        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
-    allowed_codes = set(cancer_codes)
-    runs = tuple(
-        _sra_salmon_run_from_entry(run, allowed_codes=allowed_codes)
-        for run in entry.get("runs", [])
-    )
-    if not runs:
-        raise ValueError(f"source {entry.get('id')!r} has no SRA runs")
-    accessions = [run.accession for run in runs]
-    if len(set(accessions)) != len(accessions):
-        duplicates = sorted({run for run in accessions if accessions.count(run) > 1})
-        raise ValueError(f"source {entry.get('id')!r} repeats SRA runs: {duplicates}")
-
-    expected = _expected_samples_by_code(entry, cancer_codes)
-    routed_counts = {code: sum(run.cancer_code == code for run in runs) for code in cancer_codes}
-    _validate_routed_sample_counts(
-        str(entry.get("source_cohort") or entry.get("id")),
-        {code: [""] * count for code, count in routed_counts.items()},
-        expected,
-    )
-
+def _salmon_reference_from_entry(
+    entry: Mapping,
+) -> tuple[tuple[SalmonReferenceFasta, ...], str, str]:
     reference = dict(entry.get("reference") or {})
     reference_fastas = []
     for reference_entry in reference.get("fastas", []):
@@ -1521,6 +1642,45 @@ def sra_salmon_source_from_entry(entry: Mapping) -> SraSalmonSource:
         raise ValueError(
             f"source {entry.get('id')!r} combined transcriptome must differ from its inputs"
         )
+    combined_sha256 = _validated_checksum(
+        reference.get("combined_sha256"),
+        algorithm="sha256",
+        description=f"source {entry.get('id')!r} combined transcriptome checksum",
+    )
+    return tuple(reference_fastas), combined_file, combined_sha256
+
+
+def sra_salmon_source_from_entry(entry: Mapping) -> SraSalmonSource:
+    """Convert one registry entry into an executable :class:`SraSalmonSource`."""
+    if entry.get("source_type") != SRA_SALMON_SOURCE_TYPE:
+        raise ValueError(
+            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
+            f"not {SRA_SALMON_SOURCE_TYPE!r}"
+        )
+    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
+    if not cancer_codes:
+        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
+    allowed_codes = set(cancer_codes)
+    runs = tuple(
+        _sra_salmon_run_from_entry(run, allowed_codes=allowed_codes)
+        for run in entry.get("runs", [])
+    )
+    if not runs:
+        raise ValueError(f"source {entry.get('id')!r} has no SRA runs")
+    accessions = [run.accession for run in runs]
+    if len(set(accessions)) != len(accessions):
+        duplicates = sorted({run for run in accessions if accessions.count(run) > 1})
+        raise ValueError(f"source {entry.get('id')!r} repeats SRA runs: {duplicates}")
+
+    expected = _expected_samples_by_code(entry, cancer_codes)
+    routed_counts = {code: sum(run.cancer_code == code for run in runs) for code in cancer_codes}
+    _validate_routed_sample_counts(
+        str(entry.get("source_cohort") or entry.get("id")),
+        {code: [""] * count for code, count in routed_counts.items()},
+        expected,
+    )
+
+    reference_fastas, combined_file, combined_sha256 = _salmon_reference_from_entry(entry)
     cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
     return SraSalmonSource(
         source_id=str(entry["id"]),
@@ -1529,13 +1689,9 @@ def sra_salmon_source_from_entry(entry: Mapping) -> SraSalmonSource:
         source_cohort=str(entry["source_cohort"]),
         cancer_code=cancer_code,
         runs=runs,
-        reference_fastas=tuple(reference_fastas),
+        reference_fastas=reference_fastas,
         combined_transcriptome_file=combined_file,
-        combined_transcriptome_sha256=_validated_checksum(
-            reference.get("combined_sha256"),
-            algorithm="sha256",
-            description=f"source {entry.get('id')!r} combined transcriptome checksum",
-        ),
+        combined_transcriptome_sha256=combined_sha256,
         source_project=entry.get("source_project") or "SRA",
         citation=entry.get("citation"),
         expected_n=expected,
@@ -1561,6 +1717,334 @@ def sra_salmon_source_from_registry(
     for entry in _source_entries_from_registry(registry_path):
         if entry.get("id") == source_id:
             return sra_salmon_source_from_entry(entry)
+    raise KeyError(f"source id {source_id!r} not found in expression source registry")
+
+
+def local_fastq_salmon_source_entries(registry_path: str | Path | None = None) -> list[dict]:
+    """Raw local/controlled paired-FASTQ Salmon entries from the source registry."""
+    return [
+        entry
+        for entry in _source_entries_from_registry(registry_path)
+        if entry.get("source_type") in LOCAL_FASTQ_SALMON_SOURCE_TYPES and entry.get("reference")
+    ]
+
+
+def _resolve_manifest_read_path(raw_path, *, base_dir: Path | None, description: str) -> Path:
+    text = str(raw_path or "").strip()
+    if not text:
+        raise ValueError(f"{description} is missing a read path")
+    path = Path(text).expanduser()
+    if not path.is_absolute() and base_dir is not None:
+        path = (base_dir / path).resolve()
+    return path
+
+
+def _lane_from_mapping(
+    raw: Mapping,
+    *,
+    default_lane_id: str,
+    base_dir: Path | None,
+    sample_id: str,
+) -> LocalFastqLane:
+    lane_id = str(raw.get("lane_id") or default_lane_id).strip()
+    read_1 = _resolve_manifest_read_path(
+        raw.get("read_1"),
+        base_dir=base_dir,
+        description=f"sample {sample_id!r} lane {lane_id!r} read_1",
+    )
+    read_2 = _resolve_manifest_read_path(
+        raw.get("read_2"),
+        base_dir=base_dir,
+        description=f"sample {sample_id!r} lane {lane_id!r} read_2",
+    )
+    sha256_pair: tuple[str, str] | None = None
+    raw_sha = raw.get("read_sha256") or raw.get("sha256")
+    if raw_sha is not None:
+        if isinstance(raw_sha, (str, bytes)) or len(raw_sha) != 2:
+            raise ValueError(f"sample {sample_id!r} lane {lane_id!r} sha256 must have 2 digests")
+        sha256_pair = (str(raw_sha[0]), str(raw_sha[1]))
+    elif _coerce_optional_text(raw.get("read_1_sha256")) or _coerce_optional_text(
+        raw.get("read_2_sha256")
+    ):
+        sha256_pair = (
+            str(raw.get("read_1_sha256") or ""),
+            str(raw.get("read_2_sha256") or ""),
+        )
+
+    md5_pair: tuple[str, str] | None = None
+    raw_md5 = raw.get("read_md5") or raw.get("md5")
+    if raw_md5 is not None:
+        if isinstance(raw_md5, (str, bytes)) or len(raw_md5) != 2:
+            raise ValueError(f"sample {sample_id!r} lane {lane_id!r} md5 must have 2 digests")
+        md5_pair = (str(raw_md5[0]), str(raw_md5[1]))
+    elif _coerce_optional_text(raw.get("read_1_md5")) or _coerce_optional_text(
+        raw.get("read_2_md5")
+    ):
+        md5_pair = (
+            str(raw.get("read_1_md5") or ""),
+            str(raw.get("read_2_md5") or ""),
+        )
+
+    return LocalFastqLane(
+        lane_id=lane_id,
+        read_1=read_1,
+        read_2=read_2,
+        sha256=sha256_pair,
+        md5=md5_pair,
+    )
+
+
+def load_local_fastq_manifest(manifest_path: str | Path) -> tuple[list[dict], Path]:
+    """Load sample or lane records from a private YAML, JSON, CSV, or TSV manifest."""
+    path = Path(manifest_path).expanduser().resolve()
+    if not path.is_file():
+        raise FileNotFoundError(f"local FASTQ manifest does not exist: {path}")
+    suffix = path.suffix.lower()
+    if suffix in {".csv", ".tsv"}:
+        sep = "\t" if suffix == ".tsv" else ","
+        frame = pd.read_csv(path, sep=sep, dtype=str, keep_default_na=False)
+        if frame.empty:
+            raise ValueError(f"local FASTQ manifest {path.name} is empty")
+        return frame.to_dict("records"), path.parent
+    if suffix == ".json":
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    elif suffix in {".yaml", ".yml"}:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    else:
+        raise ValueError(
+            f"unsupported local FASTQ manifest extension {suffix!r}; "
+            "use .yaml, .yml, .json, .csv, or .tsv"
+        )
+    if isinstance(payload, list):
+        records = payload
+    elif isinstance(payload, Mapping):
+        records = payload.get("samples") or payload.get("runs") or []
+    else:
+        raise ValueError(f"local FASTQ manifest {path.name} must contain a mapping or list")
+    if not isinstance(records, list) or not records:
+        raise ValueError(f"local FASTQ manifest {path.name} declares no samples")
+    return [dict(item) for item in records], path.parent
+
+
+def _local_fastq_samples_from_records(
+    records: Iterable[Mapping],
+    *,
+    allowed_codes: set[str],
+    base_dir: Path | None = None,
+) -> tuple[LocalFastqSample, ...]:
+    raw_list = [dict(item) for item in records]
+    if not raw_list:
+        raise ValueError("local FASTQ manifest declares no samples")
+
+    has_nested_lanes = any("lanes" in item and item["lanes"] is not None for item in raw_list)
+    samples: list[LocalFastqSample] = []
+    if has_nested_lanes:
+        for item in raw_list:
+            sample_id = str(item.get("sample_id") or "").strip()
+            case_id = str(item.get("case_id") or sample_id).strip()
+            sample_title = str(item.get("sample_title") or sample_id).strip()
+            role = str(item.get("role") or "tumor").strip()
+            cancer_code = _coerce_optional_text(item.get("cancer_code"))
+            if cancer_code is not None and cancer_code not in allowed_codes:
+                raise ValueError(
+                    f"sample {sample_id!r} routes to undeclared cancer code {cancer_code!r}"
+                )
+            raw_lanes = item.get("lanes")
+            if raw_lanes is None:
+                raw_lanes = [item]
+            if not isinstance(raw_lanes, Iterable) or isinstance(raw_lanes, (str, bytes, Mapping)):
+                raise ValueError(f"sample {sample_id!r} lanes must be a list of lane mappings")
+            lanes = tuple(
+                _lane_from_mapping(
+                    lane_map,
+                    default_lane_id=f"L{idx:03d}",
+                    base_dir=base_dir,
+                    sample_id=sample_id,
+                )
+                for idx, lane_map in enumerate(raw_lanes, start=1)
+            )
+            samples.append(
+                LocalFastqSample(
+                    sample_id=sample_id,
+                    case_id=case_id,
+                    sample_title=sample_title,
+                    role=role,
+                    cancer_code=cancer_code,
+                    lanes=lanes,
+                )
+            )
+    else:
+        grouped: dict[str, list[dict]] = defaultdict(list)
+        sample_order: list[str] = []
+        for item in raw_list:
+            sample_id = str(item.get("sample_id") or "").strip()
+            if not sample_id:
+                raise ValueError("local FASTQ manifest row lacks sample_id")
+            if sample_id not in grouped:
+                sample_order.append(sample_id)
+            grouped[sample_id].append(item)
+
+        for sample_id in sample_order:
+            rows = grouped[sample_id]
+            first = rows[0]
+            case_id = str(first.get("case_id") or sample_id).strip()
+            sample_title = str(first.get("sample_title") or sample_id).strip()
+            role = str(first.get("role") or "tumor").strip()
+            cancer_code = _coerce_optional_text(first.get("cancer_code"))
+            if cancer_code is not None and cancer_code not in allowed_codes:
+                raise ValueError(
+                    f"sample {sample_id!r} routes to undeclared cancer code {cancer_code!r}"
+                )
+            lanes_list: list[LocalFastqLane] = []
+            for idx, row in enumerate(rows, start=1):
+                row_case = str(row.get("case_id") or sample_id).strip()
+                row_title = str(row.get("sample_title") or sample_id).strip()
+                row_role = str(row.get("role") or "tumor").strip()
+                row_code = _coerce_optional_text(row.get("cancer_code"))
+                if (row_case, row_title, row_role, row_code) != (
+                    case_id,
+                    sample_title,
+                    role,
+                    cancer_code,
+                ):
+                    raise ValueError(f"sample {sample_id!r} has inconsistent metadata across lanes")
+                lanes_list.append(
+                    _lane_from_mapping(
+                        row,
+                        default_lane_id=f"L{idx:03d}",
+                        base_dir=base_dir,
+                        sample_id=sample_id,
+                    )
+                )
+            samples.append(
+                LocalFastqSample(
+                    sample_id=sample_id,
+                    case_id=case_id,
+                    sample_title=sample_title,
+                    role=role,
+                    cancer_code=cancer_code,
+                    lanes=tuple(lanes_list),
+                )
+            )
+
+    sample_ids = [sample.sample_id for sample in samples]
+    if len(set(sample_ids)) != len(sample_ids):
+        duplicates = sorted({sid for sid in sample_ids if sample_ids.count(sid) > 1})
+        raise ValueError(f"local FASTQ manifest repeats biological sample_ids: {duplicates}")
+
+    seen_paths: set[Path] = set()
+    for sample in samples:
+        for lane in sample.lanes:
+            for read_path in (lane.read_1, lane.read_2):
+                resolved = read_path.resolve() if read_path.is_absolute() else read_path
+                if resolved in seen_paths:
+                    raise ValueError(
+                        f"local FASTQ manifest reuses read file across lanes or samples: "
+                        f"{read_path.name}"
+                    )
+                seen_paths.add(resolved)
+    return tuple(samples)
+
+
+def local_fastq_salmon_source_from_entry(
+    entry: Mapping,
+    *,
+    manifest: str | Path | Iterable[Mapping],
+    manifest_base_dir: str | Path | None = None,
+) -> LocalFastqSalmonSource:
+    """Combine a registry entry with a private local paired-FASTQ manifest."""
+    if entry.get("source_type") not in LOCAL_FASTQ_SALMON_SOURCE_TYPES:
+        raise ValueError(
+            f"source {entry.get('id')!r} has source_type={entry.get('source_type')!r}, "
+            f"not one of {sorted(LOCAL_FASTQ_SALMON_SOURCE_TYPES)}"
+        )
+    cancer_codes = [str(code) for code in entry.get("cancer_codes", [])]
+    if not cancer_codes:
+        raise ValueError(f"source {entry.get('id')!r} has no cancer_codes")
+    if isinstance(manifest, (str, Path)):
+        records, inferred_base = load_local_fastq_manifest(manifest)
+        base_dir = Path(manifest_base_dir) if manifest_base_dir is not None else inferred_base
+    else:
+        records = [dict(item) for item in manifest]
+        base_dir = Path(manifest_base_dir) if manifest_base_dir is not None else None
+
+    samples = _local_fastq_samples_from_records(
+        records,
+        allowed_codes=set(cancer_codes),
+        base_dir=base_dir,
+    )
+    expected = _expected_samples_by_code(entry, cancer_codes)
+    routed_counts = {
+        code: sum(sample.cancer_code == code for sample in samples) for code in cancer_codes
+    }
+    _validate_routed_sample_counts(
+        str(entry.get("source_cohort") or entry.get("id")),
+        {code: [""] * count for code, count in routed_counts.items()},
+        expected,
+    )
+    reference_fastas, combined_file, combined_sha256 = _salmon_reference_from_entry(entry)
+    cancer_code: str | list[str] = cancer_codes[0] if len(cancer_codes) == 1 else cancer_codes
+
+    raw_scale = _coerce_optional_text(entry.get("salmon_scale_class")) or _coerce_optional_text(
+        entry.get("source_scale_class")
+    )
+    if raw_scale in {None, "invalid_legacy_tpm"}:
+        scale_class = "salmon_gene_tpm"
+        comparable = True
+        tpm_proxy = False
+    else:
+        scale_class = raw_scale
+        comparable = bool(entry.get("linear_tpm_comparable", True))
+        tpm_proxy = bool(entry.get("tpm_proxy", False))
+
+    source_version = _coerce_optional_text(
+        entry.get("salmon_source_version")
+    ) or _coerce_optional_text(entry.get("source_version"))
+    processing_pipeline = _coerce_optional_text(entry.get("salmon_processing_pipeline"))
+    if processing_pipeline is None:
+        raw_pipeline = _coerce_optional_text(entry.get("processing_pipeline"))
+        if raw_pipeline and not raw_pipeline.upper().startswith("INVALID"):
+            processing_pipeline = raw_pipeline
+
+    return LocalFastqSalmonSource(
+        source_id=str(entry["id"]),
+        source_cohort=str(entry["source_cohort"]),
+        cancer_code=cancer_code,
+        samples=samples,
+        reference_fastas=reference_fastas,
+        combined_transcriptome_file=combined_file,
+        combined_transcriptome_sha256=combined_sha256,
+        source_project=entry.get("source_project"),
+        citation=entry.get("citation"),
+        expected_n=expected,
+        notes=str(entry.get("salmon_notes") or entry.get("notes") or ""),
+        pipeline_stem=str(entry.get("pipeline_stem") or ""),
+        source_version=source_version,
+        processing_pipeline=processing_pipeline,
+        tumor_origin=_coerce_tumor_origin(entry.get("tumor_origin")),
+        metastasis_site=_coerce_optional_text(entry.get("metastasis_site")),
+        source_scale_class=scale_class,
+        linear_tpm_comparable=comparable,
+        tpm_proxy=tpm_proxy,
+        salmon_args=_sra_salmon_args_from_entry(entry),
+    )
+
+
+def local_fastq_salmon_source_from_registry(
+    source_id: str,
+    *,
+    manifest: str | Path | Iterable[Mapping],
+    registry_path: str | Path | None = None,
+    manifest_base_dir: str | Path | None = None,
+) -> LocalFastqSalmonSource:
+    """Load a local/controlled paired-FASTQ Salmon source from the registry + manifest."""
+    for entry in _source_entries_from_registry(registry_path):
+        if entry.get("id") == source_id:
+            return local_fastq_salmon_source_from_entry(
+                entry,
+                manifest=manifest,
+                manifest_base_dir=manifest_base_dir,
+            )
     raise KeyError(f"source id {source_id!r} not found in expression source registry")
 
 
@@ -3609,7 +4093,7 @@ def _salmon_version(executable: str) -> str:
 
 
 def prepare_salmon_transcriptome(
-    source: SraSalmonSource,
+    source: SraSalmonSource | LocalFastqSalmonSource,
     *,
     cache_dir: str | Path,
     force_download: bool = False,
@@ -3661,7 +4145,7 @@ def prepare_salmon_transcriptome(
 
 
 def _verified_salmon_transcriptome(
-    source: SraSalmonSource,
+    source: SraSalmonSource | LocalFastqSalmonSource,
     transcriptome_path: str | Path,
 ) -> Path:
     """Return a supplied combined transcriptome after enforcing its registry hash."""
@@ -3676,7 +4160,7 @@ def _verified_salmon_transcriptome(
 
 
 def prepare_salmon_index(
-    source: SraSalmonSource,
+    source: SraSalmonSource | LocalFastqSalmonSource,
     *,
     cache_dir: str | Path,
     transcriptome_path: str | Path | None = None,
@@ -4777,7 +5261,7 @@ def _resolve_sra_salmon_quant_paths(
 
 
 def _resolve_sra_salmon_transcript_map(
-    source: SraSalmonSource,
+    source: SraSalmonSource | LocalFastqSalmonSource,
     *,
     cache_dir: Path,
     transcript_to_gene: Mapping[str, str] | None,
@@ -4899,6 +5383,368 @@ def build_sra_salmon_source_matrices(
             ]
         ],
         on="run_accession",
+        how="left",
+        validate="one_to_one",
+    )
+    stem = _artifact_stem(source.source_cohort)
+    manifest_path = out_dir / f"{stem}_run_manifest.csv"
+    quant_audit_path = out_dir / f"{stem}_salmon_quantification_audit.csv"
+    _write_csv_atomic(manifest, manifest_path)
+    _write_csv_atomic(audit, quant_audit_path)
+    sidecar_paths = {
+        **result.sidecar_paths,
+        "run_manifest": manifest_path,
+        "salmon_quantification_audit": quant_audit_path,
+    }
+    return SourceMatrixBuildResult(
+        source=source,
+        matrices=result.matrices,
+        matrix_paths=result.matrix_paths,
+        summary_rows=result.summary_rows,
+        mapping_audit=result.mapping_audit,
+        parse_diagnostics=result.parse_diagnostics,
+        sample_qc=result.sample_qc,
+        sidecar_paths=sidecar_paths,
+    )
+
+
+def local_fastq_salmon_run_manifest(source: LocalFastqSalmonSource) -> pd.DataFrame:
+    """Privacy-safe sample/lane inventory (checksums and roles only; zero file paths)."""
+    rows = []
+    for sample in source.samples:
+        exclusion_reason = ""
+        if not sample.included_in_reference:
+            exclusion_reason = (
+                "matched_normal_excluded_from_tumor_reference"
+                if sample.role == "matched_normal"
+                else "independent_normal_control_excluded_from_tumor_reference"
+            )
+        rows.append(
+            {
+                "cancer_code": sample.cancer_code or "",
+                "source_cohort": source.source_cohort,
+                "source_project": source.source_project or "",
+                "sample_id": sample.sample_id,
+                "case_id": sample.case_id,
+                "sample_title": sample.sample_title,
+                "sample_role": sample.role,
+                "n_lanes": len(sample.lanes),
+                "lane_ids": ";".join(lane.lane_id for lane in sample.lanes),
+                "read_1_sha256": ";".join(
+                    lane.sha256[0] if lane.sha256 is not None else "" for lane in sample.lanes
+                ),
+                "read_2_sha256": ";".join(
+                    lane.sha256[1] if lane.sha256 is not None else "" for lane in sample.lanes
+                ),
+                "read_1_md5": ";".join(
+                    lane.md5[0] if lane.md5 is not None else "" for lane in sample.lanes
+                ),
+                "read_2_md5": ";".join(
+                    lane.md5[1] if lane.md5 is not None else "" for lane in sample.lanes
+                ),
+                "included": sample.included_in_reference,
+                "exclusion_reason": exclusion_reason,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def verify_local_fastq_sample_reads(
+    sample: LocalFastqSample,
+) -> tuple[list[Path], list[Path]]:
+    """Verify every declared paired-end FASTQ file exists and matches its checksums."""
+    mates_1: list[Path] = []
+    mates_2: list[Path] = []
+    for lane in sample.lanes:
+        for mate_index, (path, label) in enumerate(
+            ((lane.read_1, "read_1"), (lane.read_2, "read_2"))
+        ):
+            description = f"sample {sample.sample_id} lane {lane.lane_id} {label}"
+            if lane.sha256 is not None:
+                _verify_local_file(
+                    path,
+                    checksum=lane.sha256[mate_index],
+                    algorithm="sha256",
+                    description=description,
+                )
+            if lane.md5 is not None:
+                _verify_local_file(
+                    path,
+                    checksum=lane.md5[mate_index],
+                    algorithm="md5",
+                    description=description,
+                )
+        mates_1.append(lane.read_1)
+        mates_2.append(lane.read_2)
+    return mates_1, mates_2
+
+
+def _local_fastq_salmon_quantification_inputs(
+    source: LocalFastqSalmonSource,
+    sample: LocalFastqSample,
+    *,
+    salmon_version: str,
+) -> dict:
+    """Privacy-safe inputs whose content or interpretation can change one ``quant.sf``."""
+    return {
+        "schema_version": 1,
+        "transcriptome_sha256": source.combined_transcriptome_sha256,
+        "sample_id": sample.sample_id,
+        "lanes": [
+            {
+                "lane_id": lane.lane_id,
+                "sha256": list(lane.sha256) if lane.sha256 is not None else None,
+                "md5": list(lane.md5) if lane.md5 is not None else None,
+            }
+            for lane in sample.lanes
+        ],
+        "library_type": "A",
+        "salmon_args": list(source.salmon_args),
+        "salmon_version": salmon_version,
+    }
+
+
+def quantify_local_fastq_salmon_sample(
+    source: LocalFastqSalmonSource,
+    sample: LocalFastqSample,
+    *,
+    cache_dir: str | Path,
+    index_dir: str | Path,
+    salmon_executable: str = "salmon",
+    threads: int = 4,
+    force_quant: bool = False,
+) -> Path:
+    """Verify paired-end FASTQ lanes and Salmon-quantify one biological sample."""
+    if sample not in source.samples:
+        raise ValueError(
+            f"sample {sample.sample_id!r} is not declared by source {source.source_id!r}"
+        )
+    if threads < 1:
+        raise ValueError("threads must be at least 1")
+    mates_1, mates_2 = verify_local_fastq_sample_reads(sample)
+    cache = Path(cache_dir)
+    quant_dir = cache / "quant" / _artifact_stem(sample.sample_id)
+    quant_path = quant_dir / "quant.sf"
+    salmon = _salmon_executable(salmon_executable)
+    input_manifest = _local_fastq_salmon_quantification_inputs(
+        source,
+        sample,
+        salmon_version=_salmon_version(salmon),
+    )
+    input_manifest_path = quant_dir / "oncoref_quantification_inputs.json"
+    if (
+        quant_path.exists()
+        and _json_file_matches(input_manifest_path, input_manifest)
+        and not force_quant
+    ):
+        return quant_path
+
+    temp_quant = quant_dir.with_name(quant_dir.name + ".building")
+    if temp_quant.exists():
+        shutil.rmtree(temp_quant)
+    subprocess.run(
+        [
+            salmon,
+            "quant",
+            "--index",
+            str(index_dir),
+            "--libType",
+            "A",
+            "--mates1",
+            *[str(path) for path in mates_1],
+            "--mates2",
+            *[str(path) for path in mates_2],
+            "--threads",
+            str(threads),
+            "--output",
+            str(temp_quant),
+            *source.salmon_args,
+        ],
+        check=True,
+    )
+    if not (temp_quant / "quant.sf").exists():
+        raise RuntimeError(f"Salmon quantification for {sample.sample_id} produced no quant.sf")
+    (temp_quant / "oncoref_quantification_inputs.json").write_text(
+        json.dumps(input_manifest, indent=2, sort_keys=True) + "\n"
+    )
+    if quant_dir.exists():
+        shutil.rmtree(quant_dir)
+    temp_quant.replace(quant_dir)
+    return quant_path
+
+
+def _resolve_local_fastq_salmon_quant_paths(
+    source: LocalFastqSalmonSource,
+    *,
+    cache_dir: Path,
+    quant_paths: Mapping[str, str | Path] | None,
+    transcriptome_path: str | Path | None,
+    salmon_executable: str,
+    threads: int,
+    force_download: bool,
+    force_index: bool,
+    force_quant: bool,
+    verify_reads: bool,
+) -> tuple[dict[str, Path], Path | None]:
+    expected_samples = [sample.sample_id for sample in source.samples]
+    if quant_paths is not None:
+        incompatible_flags = [
+            name
+            for name, enabled in (
+                ("force_index", force_index),
+                ("force_quant", force_quant),
+            )
+            if enabled
+        ]
+        if incompatible_flags:
+            formatted_flags = ", ".join(incompatible_flags)
+            raise ValueError(
+                "external Salmon quant paths cannot be regenerated; "
+                f"disable {formatted_flags} or omit quant_paths"
+            )
+        missing = sorted(set(expected_samples) - set(quant_paths))
+        unexpected = sorted(set(quant_paths) - set(expected_samples))
+        if missing or unexpected:
+            raise ValueError(
+                "Salmon quant paths must exactly match the declared sample manifest; "
+                f"missing={missing}, unexpected={unexpected}"
+            )
+        if verify_reads:
+            for sample in source.samples:
+                verify_local_fastq_sample_reads(sample)
+        return (
+            {sample_id: Path(quant_paths[sample_id]) for sample_id in expected_samples},
+            None,
+        )
+
+    transcriptome, index_dir = prepare_salmon_index(
+        source,
+        cache_dir=cache_dir,
+        transcriptome_path=transcriptome_path,
+        salmon_executable=salmon_executable,
+        threads=threads,
+        force_download=force_download,
+        force_index=force_index,
+    )
+    generated = {
+        sample.sample_id: quantify_local_fastq_salmon_sample(
+            source,
+            sample,
+            cache_dir=cache_dir,
+            index_dir=index_dir,
+            salmon_executable=salmon_executable,
+            threads=threads,
+            force_quant=force_quant,
+        )
+        for sample in source.samples
+    }
+    return generated, transcriptome
+
+
+def build_local_fastq_salmon_source_matrices(
+    source: LocalFastqSalmonSource,
+    *,
+    cache_dir: str | Path,
+    output_dir: str | Path | None = None,
+    quant_paths: Mapping[str, str | Path] | None = None,
+    transcriptome_path: str | Path | None = None,
+    transcript_to_gene: Mapping[str, str] | None = None,
+    salmon_executable: str = "salmon",
+    threads: int = 4,
+    force_download: bool = False,
+    force_index: bool = False,
+    force_quant: bool = False,
+    verify_reads: bool = False,
+    high_expression_threshold: float = 1.0,
+) -> SourceMatrixBuildResult:
+    """Build canonical source artifacts from local/controlled paired-FASTQ samples.
+
+    When ``quant_paths`` is omitted, every declared biological sample's paired-end
+    FASTQ lanes are checksum-verified on disk and quantified with Salmon against
+    the pinned transcriptome. Emitted sidecars (``run_manifest.csv`` and
+    ``salmon_quantification_audit.csv``) record sample roles, lane counts, and
+    cryptographic digests without leaking local filesystem paths.
+    """
+    cache = Path(cache_dir)
+    out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
+    resolved_quant_paths, prepared_transcriptome = _resolve_local_fastq_salmon_quant_paths(
+        source,
+        cache_dir=cache,
+        quant_paths=quant_paths,
+        transcriptome_path=transcriptome_path,
+        salmon_executable=salmon_executable,
+        threads=threads,
+        force_download=force_download,
+        force_index=force_index,
+        force_quant=force_quant,
+        verify_reads=verify_reads,
+    )
+    resolved_map = _resolve_sra_salmon_transcript_map(
+        source,
+        cache_dir=cache,
+        transcript_to_gene=transcript_to_gene,
+        transcriptome_path=transcriptome_path,
+        prepared_transcriptome=prepared_transcriptome,
+        force_download=force_download,
+    )
+
+    raw_gene_tpm, quantification_audit = salmon_gene_tpm_matrix(
+        resolved_quant_paths,
+        resolved_map,
+    )
+    quantification_audit = quantification_audit.rename(columns={"run_accession": "sample_id"})
+    raw_matrix_path = cache / f"{_artifact_stem(source.source_cohort)}_salmon_gene_tpm.tsv"
+    _atomic_write(
+        raw_matrix_path,
+        lambda tmp_path: raw_gene_tpm.to_csv(tmp_path, sep="\t", index=False),
+    )
+
+    sample_to_code = {sample.sample_id: sample.cancer_code for sample in source.samples}
+    geo_source = GeoMatrixSource(
+        cancer_code=source.cancer_code,
+        source_cohort=source.source_cohort,
+        source_project=source.source_project,
+        citation=source.citation,
+        file_name=raw_matrix_path.name,
+        unit="TPM",
+        gene_id_col="Ensembl_Gene_ID",
+        sep="\t",
+        sample_to_cancer_code=lambda sample_id: sample_to_code.get(str(sample_id)),
+        expected_source_samples=len(source.samples),
+        expected_samples_by_code=source.expected_n,
+        source_scale_class=source.source_scale_class,
+        linear_tpm_comparable=source.linear_tpm_comparable,
+        tpm_proxy=source.tpm_proxy,
+        notes=source.notes,
+        pipeline_stem=source.pipeline_stem,
+        source_version=source.source_version,
+        processing_pipeline=source.processing_pipeline,
+        tumor_origin=source.tumor_origin,
+        metastasis_site=source.metastasis_site,
+        source_type=LOCAL_FASTQ_SALMON_SOURCE_TYPE,
+    )
+    result = build_source_matrices(
+        geo_source,
+        cache_dir=cache,
+        output_dir=out_dir,
+        source_path=raw_matrix_path,
+        high_expression_threshold=high_expression_threshold,
+    )
+
+    manifest = local_fastq_salmon_run_manifest(source)
+    audit = quantification_audit.merge(
+        manifest[
+            [
+                "sample_id",
+                "case_id",
+                "sample_title",
+                "sample_role",
+                "n_lanes",
+                "cancer_code",
+                "included",
+            ]
+        ],
+        on="sample_id",
         how="left",
         validate="one_to_one",
     )

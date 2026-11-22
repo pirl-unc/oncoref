@@ -29,13 +29,14 @@ def test_every_published_matrix_has_one_executable_or_exempt_owner():
     assert len(audit) == len(sm.registry())
     assert audit[["cancer_code", "source_cohort"]].duplicated().sum() == 0
     assert audit["status"].value_counts().to_dict() == {
-        "executable_builder": len(audit) - 1,
-        "external_build_exemption": 1,
+        "executable_builder": len(audit),
     }
-    exemption = audit.loc[audit["status"].eq("external_build_exemption")].iloc[0]
-    assert exemption["cancer_code"] == "NUTM"
-    assert exemption["source_cohort"] == "UNC_NUTM1"
-    assert "controlled" in exemption["external_build_exemption"].lower()
+    nutm = audit.loc[audit["cancer_code"].eq("NUTM")].iloc[0]
+    assert nutm["source_cohort"] == "UNC_NUTM1"
+    assert nutm["source_id"] == "unc-nutm1"
+    assert nutm["builder"] == "scripts/build_local_fastq_salmon_source.py"
+    assert nutm["builder_args"] == "--source-id unc-nutm1"
+    assert nutm["external_build_exemption"] == ""
 
 
 def test_source_id_resolver_distinguishes_physical_and_declared_code_routes():
