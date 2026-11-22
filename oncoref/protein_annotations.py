@@ -15,6 +15,7 @@ from collections import defaultdict
 import pandas as pd
 
 from . import reference_data
+from .gene_ids import is_ensembl_gene_id
 
 
 def reviewed_human() -> list[dict]:
@@ -44,7 +45,7 @@ def _gene_rows(entries):
                 for prop in crossref.get("properties", []):
                     if prop.get("key") == "GeneId":
                         gene_id = prop["value"].split(".")[0]
-                        if gene_id.startswith("ENSG"):
+                        if is_ensembl_gene_id(gene_id):
                             gene_ids.add(gene_id)
         texts = defaultdict(list)
         evidence = defaultdict(set)

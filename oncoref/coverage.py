@@ -51,7 +51,15 @@ from .expression import (
 from .expression_engine import ID_COLUMNS as _ANTIGEN_ID_COLS
 from .figure_export import save_figure
 from .gene_families import gene_families, gene_family_ids, housekeeping_gene_ids
-from .gene_ids import canonical_gene_space, canonical_gene_symbol, resolve_symbol, symbol_synonyms
+from .gene_ids import (
+    canonical_gene_space,
+    canonical_gene_symbol,
+    gene_id_column,
+    is_ensembl_gene_id,
+    resolve_symbol,
+    symbol_column,
+    symbol_synonyms,
+)
 from .incidence import burden_category, cancer_burden
 from .normalization import percentile_rank
 
@@ -227,8 +235,8 @@ def _symbols_to_ids(symbols: Iterable[str]) -> set[str]:
         s = str(symbol).strip()
         if not s or s.lower() == "nan":
             continue
-        if s.upper().startswith("ENSG"):
-            out.add(_clean_id(s))
+        if is_ensembl_gene_id(s):
+            out.add(_clean_id(s).upper())
             continue
         gid = by_symbol.get(resolve_symbol(s).upper()) or by_symbol.get(s.upper())
         if gid:
@@ -236,22 +244,19 @@ def _symbols_to_ids(symbols: Iterable[str]) -> set[str]:
     return out
 
 
-def _ids_from_frame(df: pd.DataFrame, *, symbol_col: str = "Symbol") -> set[str]:
+def _ids_from_frame(df: pd.DataFrame, *, symbol_col: str | None = None) -> set[str]:
     ids: set[str] = set()
-    if "Ensembl_Gene_ID" in df.columns:
-        ids |= {
-            _clean_id(v)
-            for v in df["Ensembl_Gene_ID"].dropna().astype(str)
-            if v.strip() and v.strip().lower() != "nan"
-        }
-    elif "ensembl_gene_id" in df.columns:
-        ids |= {
-            _clean_id(v)
-            for v in df["ensembl_gene_id"].dropna().astype(str)
-            if v.strip() and v.strip().lower() != "nan"
-        }
-    if symbol_col in df.columns:
-        ids |= _symbols_to_ids(df[symbol_col].dropna().astype(str))
+    id_col = gene_id_column(df)
+    has_id = pd.Series(False, index=df.index)
+    if id_col is not None:
+        raw_ids = df[id_col].fillna("").astype(str).str.strip()
+        has_id = raw_ids.ne("") & raw_ids.str.lower().ne("nan")
+        ids |= {_clean_id(v) for v in raw_ids[has_id]}
+    resolved_sym_col = (
+        symbol_col if symbol_col is not None and symbol_col in df.columns else symbol_column(df)
+    )
+    if resolved_sym_col is not None:
+        ids |= _symbols_to_ids(df.loc[~has_id, resolved_sym_col].dropna().astype(str))
     return ids
 
 
@@ -1479,7 +1484,7 @@ def covering_set_matrix(
     group_ids: dict[str, str] = {}
     if "Member_Ensembl_Gene_IDs" in df.columns:
         groups = df.loc[
-            ~df["Ensembl_Gene_ID"].astype(str).str.startswith("ENSG"),
+            ~df["Ensembl_Gene_ID"].astype(str).map(is_ensembl_gene_id),
             ["Ensembl_Gene_ID", "Member_Ensembl_Gene_IDs"],
         ].drop_duplicates()
         for group_id, members in groups.itertuples(index=False, name=None):
@@ -1517,7 +1522,7 @@ def covering_set_matrix(
     )
     matrix.attrs["symbols"] = {
         gid: (canonical_gene_symbol(gid) or fallback.get(gid, gid))
-        if str(gid).startswith("ENSG")
+        if is_ensembl_gene_id(str(gid))
         else str(gid)
         for gid in matrix.columns
     }

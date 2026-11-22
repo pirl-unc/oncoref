@@ -137,7 +137,13 @@ def _compartment_masks(
 
 
 def _scale_clean_compartment(
-    values: pd.DataFrame, fraction: float, compartment: str, *, stacklevel: int = 3
+    values: pd.DataFrame,
+    fraction: float,
+    compartment: str,
+    *,
+    stacklevel: int = 3,
+    emit_warning: bool = True,
+    unfilled_out: dict[str, tuple[str, ...]] | None = None,
 ) -> pd.DataFrame:
     """Scale in float64 with the same reduction layout for every column.
 
@@ -150,14 +156,17 @@ def _scale_clean_compartment(
     positive = totals > 0
     if not positive.all():
         missing = values.columns[~positive].tolist()
-        warnings.warn(
-            f"clean_tpm cannot fill the {compartment} compartment "
-            f"({fraction:.0%} of 1e6) in {len(missing)} column(s): {missing[:5]!r}. "
-            "No positive measured mass/reference weight is available; the unfilled "
-            "budget is not redistributed. Normalize the complete gene matrix before subsetting.",
-            RuntimeWarning,
-            stacklevel=stacklevel,
-        )
+        if unfilled_out is not None:
+            unfilled_out[compartment] = tuple(str(col) for col in missing)
+        if emit_warning:
+            warnings.warn(
+                f"clean_tpm cannot fill the {compartment} compartment "
+                f"({fraction:.0%} of 1e6) in {len(missing)} column(s): {missing[:5]!r}. "
+                "No positive measured mass/reference weight is available; the unfilled "
+                "budget is not redistributed. Normalize the complete gene matrix before subsetting.",
+                RuntimeWarning,
+                stacklevel=stacklevel,
+            )
     scale = np.zeros_like(totals)
     np.divide(fraction * 1_000_000.0, totals, out=scale, where=positive)
     array *= scale
@@ -174,6 +183,9 @@ def _poly_a_reference_compartment(
     mask: np.ndarray,
     fraction: float,
     compartment: str,
+    *,
+    emit_warning: bool = True,
+    unfilled_out: dict[str, tuple[str, ...]] | None = None,
 ) -> pd.DataFrame:
     """Fixed PolyA composition for one censored compartment.
 
@@ -188,7 +200,14 @@ def _poly_a_reference_compartment(
         index=selected.index,
         columns=selected.columns,
     ).where(selected.notna())
-    return _scale_clean_compartment(weights, fraction, compartment, stacklevel=4)
+    return _scale_clean_compartment(
+        weights,
+        fraction,
+        compartment,
+        stacklevel=4,
+        emit_warning=emit_warning,
+        unfilled_out=unfilled_out,
+    )
 
 
 def clean_tpm(
@@ -198,6 +217,7 @@ def clean_tpm(
     exclude_ribosomal_proteins: bool = True,
     ribosomal_protein_fraction: float = RIBOSOMAL_PROTEIN_FRACTION,
     other_technical_fraction: float = OTHER_TECHNICAL_FRACTION,
+    on_empty_compartment: str = "warn",
 ) -> pd.DataFrame:
     """Multi-compartment **clean TPM** on a gene×sample matrix.
 
@@ -265,6 +285,8 @@ def clean_tpm(
         raise ValueError(
             "ribosomal_protein_fraction + other_technical_fraction must be < 1 (biology needs a budget)"
         )
+    if on_empty_compartment not in {"warn", "record"}:
+        raise ValueError("on_empty_compartment must be 'warn' or 'record'")
     if gene_table is None:
         raise ValueError(
             "clean_tpm needs a gene_table with 'Ensembl_Gene_ID' to assign compartments"
@@ -277,6 +299,8 @@ def clean_tpm(
     bm = ~(rm | tm)
     bio_fraction = 1.0 - ribosomal_protein_fraction - other_technical_fraction
 
+    emit_warning = on_empty_compartment == "warn"
+    unfilled: dict[str, tuple[str, ...]] = {}
     clean = values.astype(float).copy()
     gene_ids = _unversioned(gene_table["Ensembl_Gene_ID"])
     for mask, fraction, compartment in (
@@ -289,8 +313,18 @@ def clean_tpm(
             mask,
             fraction,
             compartment,
+            emit_warning=emit_warning,
+            unfilled_out=unfilled,
         )
-    clean.loc[bm] = _scale_clean_compartment(values.loc[bm], bio_fraction, "biological")
+    clean.loc[bm] = _scale_clean_compartment(
+        values.loc[bm],
+        bio_fraction,
+        "biological",
+        emit_warning=emit_warning,
+        unfilled_out=unfilled,
+    )
+    if unfilled:
+        clean.attrs["unfilled_compartments"] = unfilled
     return clean
 
 

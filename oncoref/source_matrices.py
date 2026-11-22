@@ -66,6 +66,22 @@ CACHE_DIR_ENV_VAR = "CANCERDATA_SOURCE_MATRICES"
 # physical compendium matrix. A sample present in two views is the same vector.
 _TREEHOUSE_POLYA_SAMPLE_NAMESPACE = "TREEHOUSE_POLYA_25_01"
 
+#: Published upstream source matrices whose exported gene tables omit technical-RNA
+#: rows (leaving the 9% technical compartment unfilled while preserving 75% biological
+#: and 16% ribosomal compartments cleanly).
+PARTIAL_TECHNICAL_COMPARTMENT_COHORTS: dict[str, str] = {
+    "SCLC": (
+        "sclc_ucologne_2015 upstream expression table omits the 9% other-technical RNA "
+        "compartment in 81 samples; biological (75%) and ribosomal (16%) clean-TPM "
+        "compartments remain intact"
+    ),
+}
+
+
+def partial_technical_compartment_cohorts() -> dict[str, str]:
+    """Audited cohorts whose upstream raw matrix omits technical-compartment rows."""
+    return dict(PARTIAL_TECHNICAL_COMPARTMENT_COHORTS)
+
 
 class SourceMatrixError(RuntimeError):
     """Unknown cohort or per-cohort download failure."""
