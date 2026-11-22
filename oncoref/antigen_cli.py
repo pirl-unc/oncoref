@@ -298,15 +298,23 @@ def subtract(args):
             raise ValueError(f"Invalid protein sequence for {label}")
     host_overrides = _host_overrides(args)
     species = getattr(args, "species", "human")
+    sequence_source = getattr(args, "sequence_source", "auto")
     if host_overrides:
         selection_kwargs = dict(host_overrides)
         if species != "human":
             selection_kwargs["species"] = species
+        if sequence_source != "auto":
+            selection_kwargs["sequence_source"] = sequence_source
         records = antigen_sets.select("CA|RA", **selection_kwargs).background_sequences(
             args.background
         )
     elif species != "human":
-        records = antigen_sets.sequences(args.background, species=species)
+        seq_kwargs = {"species": species}
+        if sequence_source != "auto":
+            seq_kwargs["sequence_source"] = sequence_source
+        records = antigen_sets.sequences(args.background, **seq_kwargs)
+    elif sequence_source != "auto":
+        records = antigen_sets.sequences(args.background, sequence_source=sequence_source)
     else:
         records = antigen_sets.sequences(args.background)
     if records.attrs.get("missing_gene_ids"):
@@ -439,6 +447,12 @@ def register(subparsers):
     peptides.add_argument("--deletion-cost", type=float, default=1)
     peptides.add_argument("--min-length", type=int, default=8)
     peptides.add_argument("--max-length", type=int, default=15)
+    peptides.add_argument(
+        "--sequence-source",
+        choices=list(antigen_sets.SEQUENCE_SOURCES),
+        default="auto",
+        help="Translation source: auto (prefer local sequence_bundle, else pyensembl), sequence_bundle, or pyensembl",
+    )
     peptides.set_defaults(func=subtract)
     for command in (listing, explanation, counts, peptides):
         command.add_argument(

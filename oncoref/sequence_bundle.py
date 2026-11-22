@@ -189,6 +189,110 @@ class SequenceBundle:
             raise ValueError("Native ORFdata content identity mismatch")
         return proteome
 
+    def to_sequences_table(self, *, roles: tuple[str, ...] | None = None):
+        """Expand bundle records and occurrences into an ``antigen_sets``/``PeptideIndex`` table.
+
+        Preserves every transcript/gene occurrence without requiring ``pyensembl``.
+        When ``roles`` is supplied (e.g. ``('exclude', 'review')``), keeps every
+        occurrence of any record whose record-level ``shared_sequence`` or
+        occurrence-level ``shared_sequence`` belongs to ``roles`` so ``exclude > review > allow``
+        precedence is never weakened.
+        """
+        import pandas as pd
+
+        allowed_roles = None
+        if roles is not None:
+            allowed_roles = tuple(dict.fromkeys(roles))
+            if not allowed_roles or any(r not in ROLE_ORDER for r in allowed_roles):
+                raise ValueError(
+                    f"Unknown sequence role in {roles!r}; choose from {tuple(ROLE_ORDER)}"
+                )
+            allowed_set = set(allowed_roles)
+
+        manifest = self.manifest
+        coverage = self.coverage
+        rows = []
+        for record in self.records():
+            rec_role = record["shared_sequence"]
+            seq = record["sequence"]
+            seq_hash = record["sequence_sha256"]
+            rid = record["record_id"]
+            qual = record.get("qualification") or {}
+            for occ in record["occurrences"]:
+                occ_role = occ.get("shared_sequence", rec_role)
+                if (
+                    allowed_roles is not None
+                    and rec_role not in allowed_set
+                    and occ_role not in allowed_set
+                ):
+                    continue
+                raw_tid = str(occ.get("transcript_id") or qual.get("transcript_id") or rid)
+                rows.append(
+                    {
+                        "gene_id": str(occ.get("gene_id", "")),
+                        "transcript_id": raw_tid.split(".", 1)[0],
+                        "transcript_accession": raw_tid,
+                        "transcript_biotype": str(
+                            occ.get("transcript_biotype")
+                            or qual.get("transcript_biotype")
+                            or "protein_coding"
+                        ),
+                        "record_id": str(rid),
+                        "occurrence_id": str(occ["occurrence_id"]),
+                        "sequence": seq,
+                        "sequence_sha256": seq_hash,
+                        "shared_sequence": str(occ_role),
+                        "record_shared_sequence": str(rec_role),
+                        "direct_target_candidate": bool(
+                            occ.get(
+                                "direct_target_candidate",
+                                record.get("direct_target_candidate", False),
+                            )
+                        ),
+                        "cancer_antigen_candidate": bool(
+                            occ.get(
+                                "cancer_antigen_candidate",
+                                record.get("cancer_antigen_candidate", False),
+                            )
+                        ),
+                        "reproductive_antigen_candidate": bool(
+                            occ.get(
+                                "reproductive_antigen_candidate",
+                                record.get("reproductive_antigen_candidate", False),
+                            )
+                        ),
+                    }
+                )
+        columns = [
+            "gene_id",
+            "transcript_id",
+            "transcript_accession",
+            "transcript_biotype",
+            "record_id",
+            "occurrence_id",
+            "sequence",
+            "sequence_sha256",
+            "shared_sequence",
+            "record_shared_sequence",
+            "direct_target_candidate",
+            "cancer_antigen_candidate",
+            "reproductive_antigen_candidate",
+        ]
+        out = pd.DataFrame(rows, columns=columns)
+        ref = manifest["reference"]
+        out.attrs.update(
+            reference=ref["reference_id"],
+            reference_id=ref["reference_id"],
+            taxon_id=ref.get("taxon_id", 9606),
+            bundle_id=self.identity,
+            selection_policy_id=manifest.get("selection_policy_id", ""),
+            role_policy_id=manifest.get("role_policy_id", ROLE_POLICY_ID),
+            sequence_source="sequence_bundle",
+            roles=list(allowed_roles) if allowed_roles is not None else list(ROLE_ORDER),
+            missing_translations=list(coverage.get("missing_translations", [])),
+        )
+        return out
+
 
 def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle:
     """Verify an unpacked bundle without network access; default to the current pin.
@@ -344,3 +448,22 @@ def ensure(*, cache_dir=None, download=False) -> Path:
                 shutil.rmtree(destination)
             unpacked.rename(destination)
     return destination
+
+
+def sequences_table(
+    bundle: SequenceBundle | None = None,
+    *,
+    path=None,
+    cache_dir=None,
+    download: bool = False,
+    roles: tuple[str, ...] | None = None,
+):
+    """Load or convert a verified ``SequenceBundle`` into an occurrence DataFrame."""
+    loaded = (
+        bundle
+        if bundle is not None
+        else load(path)
+        if path is not None
+        else load(ensure(cache_dir=cache_dir, download=download))
+    )
+    return loaded.to_sequences_table(roles=roles)

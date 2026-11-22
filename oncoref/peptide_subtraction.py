@@ -17,6 +17,37 @@ import pandas as pd
 
 AMINO_ACIDS = frozenset("ACDEFGHIKLMNPQRSTVWY")
 SEGMENTS = re.compile("[ACDEFGHIKLMNPQRSTVWY]+")
+NEAR_SELF_CONTRACT_ID = "oncoref.near-self-subtraction.2026-11-21.1"
+
+
+def near_self_contract() -> dict:
+    """Return the versioned downstream near-self / forbidden-background contract (#640)."""
+    from . import sequence_bundle, target_selection
+
+    return {
+        "contract_id": NEAR_SELF_CONTRACT_ID,
+        "catalog_policy_id": target_selection.POLICY_ID,
+        "sequence_role_policy_id": sequence_bundle.ROLE_POLICY_ID,
+        "default_background": "Unsafe|Other",
+        "supported_backgrounds": ["Unsafe", "Other", "Unsafe|Other"],
+        "sequence_bundle_roles": {
+            "Unsafe": ["exclude"],
+            "Unsafe|Other": ["exclude", "review"],
+        },
+        "invariants": [
+            "Other is never silently relabeled Unsafe; callers choose 'Unsafe|Other' (conservative default) or 'Unsafe' explicitly",
+            "No blanket CTA or candidate-antigen exemption is ever applied to background subtraction",
+            "Host-excluded or host-unresolved candidates join the background when a HostContext is supplied",
+            "Missing gene translations fail PeptideIndex construction in background_index() unless explicitly inspected",
+            "Cross-species sequence tables and catalog selections fail closed",
+        ],
+        "downstream_responsibilities": [
+            "MHC binding and antigen processing",
+            "Position/HLA/TCR-aware cross-reactivity scoring",
+            "Germline variant and sample-specific isoform personalization",
+            "Therapeutic risk-benefit adjudication",
+        ],
+    }
 
 
 @dataclass(frozen=True)
@@ -163,6 +194,61 @@ class PeptideIndex:
                 chunks.append(chunk)
                 offset += len(chunk)
         self._text = "".join(chunks)
+
+    @classmethod
+    def from_sequence_bundle(
+        cls,
+        bundle=None,
+        *,
+        background: str = "Unsafe|Other",
+        host=None,
+        roles: tuple[str, ...] | None = None,
+        policy: MatchPolicy | None = None,
+        lengths=range(8, 16),
+        path=None,
+        cache_dir=None,
+        download: bool = False,
+    ) -> PeptideIndex:
+        """Construct a ``PeptideIndex`` directly from ``sequence_bundle`` without ``pyensembl``.
+
+        When ``roles`` is omitted, builds the catalog-aligned ``antigen_sets.forbidden_background``
+        (``Unsafe``, ``Other``, or ``Unsafe|Other``, plus any ``HostContext`` exclusions) over the
+        verified bundle occurrences and verifies zero missing gene translations. When ``roles`` is
+        supplied (e.g. ``roles=('exclude', 'review')``), indexes every bundle record matching those
+        roles directly, including alternate-locus Ensembl records outside the primary gene catalog.
+        """
+        from . import antigen_sets, sequence_bundle
+
+        loaded_bundle = (
+            bundle
+            if bundle is not None
+            else sequence_bundle.load(path)
+            if path is not None
+            else sequence_bundle.load(
+                sequence_bundle.ensure(cache_dir=cache_dir, download=download)
+            )
+        )
+        if roles is not None:
+            if host is not None:
+                raise ValueError(
+                    "HostContext filtering requires catalog background mode (roles=None)"
+                )
+            records = loaded_bundle.to_sequences_table(roles=roles)
+            return cls(records, policy=policy, lengths=lengths)
+
+        table = loaded_bundle.to_sequences_table()
+        records = antigen_sets.forbidden_background(
+            background,
+            host=host,
+            species="human",
+            sequence_source="sequence_bundle",
+            sequences_table=table,
+        )
+        if records.attrs.get("missing_gene_ids"):
+            raise ValueError(
+                "Background has missing gene translations; subtraction coverage is incomplete"
+            )
+        return cls(records, policy=policy, lengths=lengths)
 
     def matches(self, peptide: str) -> pd.DataFrame:
         """All background occurrences within the inclusive configured distance.

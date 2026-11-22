@@ -19,12 +19,15 @@ the descriptor or loading an existing bundle performs no network access.
 
 ```python
 from oncoref import sequence_bundle
+from oncoref.peptide_subtraction import PeptideIndex
 
 pin = sequence_bundle.descriptor()
 path = sequence_bundle.ensure(download=True)  # explicit one-asset acquisition
 bundle = sequence_bundle.load(path)          # verifies current package dependencies
 records = bundle.records()                  # original bytes and all occurrences
 segments = bundle.segments(role="exclude", min_length=8)
+table = bundle.to_sequences_table()         # DataFrame adapter for antigen_sets / PeptideIndex
+index = PeptideIndex.from_sequence_bundle(bundle, background="Unsafe|Other")
 coverage = bundle.coverage
 ```
 
