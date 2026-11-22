@@ -45,7 +45,151 @@ LEGACY_TYPED_ACCESSORS = {
     "rare-cancer-fusion-rules": "oncoref.fusions.rare_cancer_fusion_rules_df",
 }
 
+LEGACY_CTA_TOP_LEVEL_EXPORTS: tuple[str, ...] = (
+    "CTA_by_axes",
+    "CTA_excluded_gene_ids",
+    "CTA_excluded_gene_names",
+    "CTA_filtered_gene_ids",
+    "CTA_filtered_gene_names",
+    "CTA_gene_ids",
+    "CTA_gene_names",
+    "CTA_never_expressed_gene_ids",
+    "CTA_never_expressed_gene_names",
+    "CTA_placental_restricted_gene_ids",
+    "CTA_placental_restricted_gene_names",
+    "CTA_relaxed_reproductive_gene_ids",
+    "CTA_relaxed_reproductive_gene_names",
+    "CTA_testis_restricted_gene_ids",
+    "CTA_testis_restricted_gene_names",
+    "CTA_unfiltered_gene_ids",
+    "CTA_unfiltered_gene_names",
+    "cta_by_axes",
+    "cta_candidate_references",
+    "cta_clinical_target_evidence",
+    "cta_clinical_target_gene_ids",
+    "cta_clinical_target_gene_names",
+    "cta_clinical_target_references",
+    "cta_df",
+    "cta_evidence",
+    "cta_excluded_clinical_target_gene_ids",
+    "cta_excluded_clinical_target_gene_names",
+    "cta_excluded_gene_ids",
+    "cta_excluded_gene_names",
+    "cta_extended_df",
+    "cta_extended_gene_ids",
+    "cta_extended_gene_names",
+    "cta_filtered_gene_ids",
+    "cta_filtered_gene_names",
+    "cta_gene_id_to_name",
+    "cta_gene_ids",
+    "cta_gene_names",
+    "cta_never_expressed_gene_ids",
+    "cta_never_expressed_gene_names",
+    "cta_placental_restricted_gene_ids",
+    "cta_placental_restricted_gene_names",
+    "cta_relaxed_reproductive_gene_ids",
+    "cta_relaxed_reproductive_gene_names",
+    "cta_specificity_audit",
+    "cta_specificity_audit_references",
+    "cta_symbol_for_alias",
+    "cta_testis_restricted_gene_ids",
+    "cta_testis_restricted_gene_names",
+    "cta_unfiltered_gene_ids",
+    "cta_unfiltered_gene_names",
+    "cta_warning_gene_ids",
+    "cta_warning_gene_names",
+    "cta_warning_references",
+)
+
+LEGACY_API_MIGRATIONS: tuple[dict[str, str], ...] = (
+    {
+        "legacy_surface": "oncoref.cta / oncoref.cta_* / oncoref.CTA_*",
+        "generation": "v1_hpa_nominated_cta",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref.antigen_sets.gene_ids('CTA') / oncoref.target_selection.results()",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": (
+            "Historical HPA v23 + literature CTA list (~574 expressed genes, including genes now "
+            "classified Unsafe under rare-cell and literature exclusions); import oncoref.cta "
+            "explicitly only for historical reproduction."
+        ),
+    },
+    {
+        "legacy_surface": "oncoref.target_sets",
+        "generation": "v1_20_target_sets_213",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref.antigen_sets.select('CTA') / oncoref.target_selection.results()",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": "Frozen 213-gene expression snapshot superseded by set-based CA/RA/CTA catalog.",
+    },
+    {
+        "legacy_surface": "oncoref.cta_screen",
+        "generation": "v1_22_genome_wide_screen",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref.target_selection.results()",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": "Early genome-wide HPA screen superseded by multi-atlas + single-cell + literature catalog.",
+    },
+    {
+        "legacy_surface": "oncoref.normal_expression_categories",
+        "generation": "v1_21_normal_expression_categories",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": (
+            "oncoref.normal_expression_categories.reconcile_with_target_selection() / "
+            "oncoref.target_selection.results()"
+        ),
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": (
+            "HPA v23 Normal/Reproductive/Other(Disposable,Silent)/Unassessed screen reconciled "
+            "against active Unsafe/CA/RA/CTA/Other subtypes without weakening Unsafe precedence."
+        ),
+    },
+    {
+        "legacy_surface": "oncoref.cta_membership",
+        "generation": "v1_26_biological_membership_1416",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref.antigen_sets.proteins('CA|RA') / oncoref.target_selection.results()",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": "Literature-inclusive 1,416-gene biological nomination snapshot.",
+    },
+    {
+        "legacy_surface": "oncoref.cta_quantitative / oncoref.cta_research_policy",
+        "generation": "v1_31_quantitative_cta",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref.target_selection.results()",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": "Intermediate quantitative screen superseded by rebuilt target_selection catalog.",
+    },
+    {
+        "legacy_surface": "oncoref.cta_selection",
+        "generation": "v1_37_cta_selection_catalog",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref.target_selection.results() / oncoref.antigen_sets",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": "Versioned pre-CA/RA unified catalog snapshot retained for release-to-release audits.",
+    },
+    {
+        "legacy_surface": "oncoref.peptides / oncoref.cta_peptides",
+        "generation": "v1_cta_9mer_counts",
+        "current_status": "active_facade_over_current_catalog",
+        "replacement_surface": (
+            "oncoref.peptide_subtraction.PeptideIndex / oncoref.antigen_sets.select('CTA').background_index()"
+        ),
+        "active_policy_id": "oncoref.target-selection-sequence-roles.2026-11-21.1",
+        "notes": "Precomputed 9-mer summary helpers use active CTA defaults; use PeptideIndex for custom k-mers/edit distance.",
+    },
+    {
+        "legacy_surface": "oncoref.cta (CLI)",
+        "generation": "v1_cli_cta",
+        "current_status": "frozen_replacement_available",
+        "replacement_surface": "oncoref antigens list --set CTA",
+        "active_policy_id": "oncoref.target-selection.2026-11-20.2",
+        "notes": "Legacy CLI prints historical snapshot warning to stderr; use 'oncoref antigens'.",
+    },
+)
+
 _WARNED_LEGACY_DATASETS: set[str] = set()
+_WARNED_LEGACY_APIS: set[str] = set()
 _WARNING_LOCK = threading.Lock()
 
 
@@ -93,3 +237,58 @@ def warn_legacy_dataset_access(dataset: str, *, stacklevel: int = 2) -> None:
             stacklevel=stacklevel + 1,
         )
         _WARNED_LEGACY_DATASETS.add(name)
+
+
+def legacy_api_migrations() -> pd.DataFrame:
+    """Return the structured migration table across historical CTA/target API generations."""
+    from . import sequence_bundle, target_selection
+
+    rows = []
+    for entry in LEGACY_API_MIGRATIONS:
+        row = dict(entry)
+        if row["active_policy_id"].startswith("oncoref.target-selection."):
+            row["active_policy_id"] = target_selection.POLICY_ID
+        elif row["active_policy_id"].startswith("oncoref.target-selection-sequence-roles."):
+            row["active_policy_id"] = sequence_bundle.ROLE_POLICY_ID
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def legacy_api_migration(surface: str) -> dict[str, str] | None:
+    """Lookup the migration record for a legacy module, top-level accessor, or CLI surface."""
+    token = str(surface).strip()
+    if (
+        token in LEGACY_CTA_TOP_LEVEL_EXPORTS
+        or token.removeprefix("oncoref.") in LEGACY_CTA_TOP_LEVEL_EXPORTS
+    ):
+        return legacy_api_migrations().iloc[0].to_dict()
+    frame = legacy_api_migrations()
+    for row in frame.to_dict(orient="records"):
+        parts = [p.strip() for p in row["legacy_surface"].split("/")]
+        if token in parts or f"oncoref.{token}" in parts:
+            return row
+    return None
+
+
+def warn_legacy_api_access(
+    name: str,
+    *,
+    replacement: str = "oncoref.antigen_sets.gene_ids('CTA') / oncoref.target_selection.results()",
+    stacklevel: int = 2,
+) -> None:
+    """Emit a once-per-process ``DeprecationWarning`` for top-level legacy CTA accessors."""
+    from . import target_selection
+
+    qualified = name if name.startswith("oncoref.") else f"oncoref.{name}"
+    with _WARNING_LOCK:
+        if qualified in _WARNED_LEGACY_APIS:
+            return
+        warnings.warn(
+            f"{qualified!r} is a frozen compatibility snapshot "
+            f"(frozen_replacement_available); new work belongs to oncoref via "
+            f"{replacement} (active policy {target_selection.POLICY_ID}). "
+            "Import 'oncoref.cta' explicitly only when reproducing historical v1 CTA counts.",
+            DeprecationWarning,
+            stacklevel=stacklevel + 1,
+        )
+        _WARNED_LEGACY_APIS.add(qualified)

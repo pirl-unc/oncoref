@@ -2240,7 +2240,17 @@ facades above:
 - `oncoref.coverage` — original mixed CTA/generic antigen-panel coverage module;
   prefer `oncoref.cta_coverage` or `oncoref.antigen_coverage`.
 - `oncoref.peptides` — original CTA-specific 9-mer module; prefer
-  `oncoref.cta_peptides`.
+  `oncoref.cta_peptides` or `oncoref.peptide_subtraction`.
+- Top-level `oncoref.cta_*` / `oncoref.CTA_*` accessors — frozen v1 HPA CTA
+  compatibility exports (`~574` expressed genes) that now emit a structured
+  `DeprecationWarning` pointing to `oncoref.antigen_sets.gene_ids("CTA")` and
+  `oncoref.target_selection.results()`. Use `oncoref.legacy_api_migrations()` for
+  the full cross-generation migration table across `cta`, `target_sets`,
+  `cta_screen`, `normal_expression_categories`, `cta_membership`,
+  `cta_quantitative`, and `cta_selection`, and
+  `oncoref.normal_expression_categories.reconcile_with_target_selection()` to
+  cross-tabulate legacy `Disposable` / `Silent` categories onto active
+  `target_selection` without weakening `Unsafe` precedence.
 
 ## Annotation-scoped CTA identities
 

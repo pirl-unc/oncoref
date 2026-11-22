@@ -44,6 +44,7 @@ from . import (
     ici_response,
     mouse,
     normal_cell_data,
+    normal_expression_categories,
     normal_tissues,
     peptide_subtraction,
     pfizer_canine_protein,
@@ -145,61 +146,6 @@ from .coverage import (
     mean_antigens_per_patient_by_cohort,
     within_sample_percentile_addressable_fraction_by_cohort,
     within_sample_percentile_coverage_sweep,
-)
-from .cta import (
-    CTA_by_axes,
-    CTA_excluded_gene_ids,
-    CTA_excluded_gene_names,
-    CTA_filtered_gene_ids,
-    CTA_filtered_gene_names,
-    CTA_gene_ids,
-    CTA_gene_names,
-    CTA_never_expressed_gene_ids,
-    CTA_never_expressed_gene_names,
-    CTA_placental_restricted_gene_ids,
-    CTA_placental_restricted_gene_names,
-    CTA_relaxed_reproductive_gene_ids,
-    CTA_relaxed_reproductive_gene_names,
-    CTA_testis_restricted_gene_ids,
-    CTA_testis_restricted_gene_names,
-    CTA_unfiltered_gene_ids,
-    CTA_unfiltered_gene_names,
-    cta_by_axes,
-    cta_candidate_references,
-    cta_clinical_target_evidence,
-    cta_clinical_target_gene_ids,
-    cta_clinical_target_gene_names,
-    cta_clinical_target_references,
-    cta_df,
-    cta_evidence,
-    cta_excluded_clinical_target_gene_ids,
-    cta_excluded_clinical_target_gene_names,
-    cta_excluded_gene_ids,
-    cta_excluded_gene_names,
-    cta_extended_df,
-    cta_extended_gene_ids,
-    cta_extended_gene_names,
-    cta_filtered_gene_ids,
-    cta_filtered_gene_names,
-    cta_gene_id_to_name,
-    cta_gene_ids,
-    cta_gene_names,
-    cta_never_expressed_gene_ids,
-    cta_never_expressed_gene_names,
-    cta_placental_restricted_gene_ids,
-    cta_placental_restricted_gene_names,
-    cta_relaxed_reproductive_gene_ids,
-    cta_relaxed_reproductive_gene_names,
-    cta_specificity_audit,
-    cta_specificity_audit_references,
-    cta_symbol_for_alias,
-    cta_testis_restricted_gene_ids,
-    cta_testis_restricted_gene_names,
-    cta_unfiltered_gene_ids,
-    cta_unfiltered_gene_names,
-    cta_warning_gene_ids,
-    cta_warning_gene_names,
-    cta_warning_references,
 )
 from .drivers import (
     DRIVER_EVIDENCE_SCOPE_KINDS,
@@ -409,7 +355,18 @@ from .incidence import (
     cancer_code_burden_map,
     cohorts_for_burden_category,
 )
-from .legacy import legacy_dataset_disposition, legacy_dataset_dispositions
+from .legacy import (
+    LEGACY_CTA_TOP_LEVEL_EXPORTS as _LEGACY_CTA_TOP_LEVEL_EXPORTS,
+)
+from .legacy import (
+    legacy_api_migration,
+    legacy_api_migrations,
+    legacy_dataset_disposition,
+    legacy_dataset_dispositions,
+)
+from .legacy import (
+    warn_legacy_api_access as _warn_legacy_api_access,
+)
 from .normalization import (
     BIOLOGICAL_FRACTION,
     HOUSEKEEPING_NORMALIZATION_METHOD,
@@ -878,6 +835,8 @@ __all__ = [
     "is_protein_coding_gene",
     "is_rescue_feature",
     "known_cohort_ids",
+    "legacy_api_migration",
+    "legacy_api_migrations",
     "legacy_dataset_disposition",
     "legacy_dataset_dispositions",
     "locally_available_percentile_cohorts",
@@ -899,6 +858,7 @@ __all__ = [
     "molecular_sample_counts",
     "mouse",
     "normal_cell_data",
+    "normal_expression_categories",
     "normal_tissues",
     "normalize_expression",
     "normalize_protein_sequence",
@@ -1005,6 +965,7 @@ __all__ = [
 ]
 
 _LAZY_SUBMODULES = frozenset({"cta_curation_plots", "curation", "figure_export", "plots"})
+_LEGACY_CTA_EXPORT_SET = frozenset(_LEGACY_CTA_TOP_LEVEL_EXPORTS)
 
 
 def __getattr__(name: str):
@@ -1014,4 +975,9 @@ def __getattr__(name: str):
         mod = importlib.import_module(f".{name}", __name__)
         globals()[name] = mod
         return mod
+    if name in _LEGACY_CTA_EXPORT_SET:
+        from . import cta as _cta_module
+
+        _warn_legacy_api_access(name, stacklevel=2)
+        return getattr(_cta_module, name)
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
