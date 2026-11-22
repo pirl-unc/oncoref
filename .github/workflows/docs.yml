@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
@@ -14,13 +15,11 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      PAGES_ARTIFACT_NAME: github-pages-${{ github.run_id }}-${{ github.run_attempt }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -52,10 +51,31 @@ jobs:
           name: ${{ env.PAGES_ARTIFACT_NAME }}
           path: site
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Pages artifact index
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for attempt in 1 2 3 4 5 6 7 8 9 10; do
+            count=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?name=${PAGES_ARTIFACT_NAME}" --jq '.total_count')
+            if [ "${count:-0}" -ge 1 ]; then
+              echo "Verified indexed Pages artifact ${PAGES_ARTIFACT_NAME}"
+              exit 0
+            fi
+            sleep 3
+          done
+          echo "Artifact ${PAGES_ARTIFACT_NAME} did not appear in run artifacts index" >&2
+          exit 1
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
         with:
           artifact_name: ${{ env.PAGES_ARTIFACT_NAME }}
-          # The first smaller deployment also prunes the old large archive.
-          timeout: 1800000
+          timeout: 600000
