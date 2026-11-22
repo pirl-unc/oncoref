@@ -2172,25 +2172,39 @@ sources:
     category: expression
     cancer_codes: [NUTM]
     source_type: unc-case-series
+    builder: scripts/build_local_fastq_salmon_source.py
+    builder_args: ["--source-id", "unc-nutm1"]
+    access_level: controlled
+    acquisition_status: local_manifest_required
+    expected_samples_by_code: {NUTM: 3}
     source_project: UNC NUTM1 case series
     source_cohort: UNC_NUTM1
     source_version: UNC NUTM1 case series; Ensembl 112
+    salmon_source_version: Controlled UNC NUTM1 paired-end RNA-seq case series; Salmon against Ensembl release 115 (GRCh38.p14 cDNA + ncRNA); harmonized to Ensembl gene space
     unit: unverified transformed expression
     source_scale_class: invalid_legacy_tpm
     linear_tpm_comparable: false
     tumor_origin: primary
     processing_pipeline: INVALID legacy rescaling of gene_tpm_cognizant_corrector to 1e6; original transform requires verification
-    external_build_exemption: >
-      The three-case matrix was generated from controlled UNC case-series
-      RNA-seq files that are not publicly downloadable. The released matrix
-      remains auditable by its sample manifest and checksums, but a public
-      registry-backed downloader cannot reproduce it.
+    salmon_processing_pipeline: local_fastq_salmon_ensembl115_gene_tpm_oncoref_canonical_clean_tpm_16_9_75
+    pipeline_stem: unc_nutm1_salmon
+    reference:
+      combined_file: Homo_sapiens.GRCh38.115.cdna_ncrna.fa.gz
+      combined_sha256: cb3481247fad636b3043fd585788f90bea5825c3f01805f333b103f2a56b3540
+      fastas:
+        - file_name: Homo_sapiens.GRCh38.cdna.all.fa.gz
+          url: https://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/cdna/Homo_sapiens.GRCh38.cdna.all.fa.gz
+          sha256: 93af088ed22a46daa9645fc6292fb120c1e4ffe791d24abbcbd35062666c03f1
+        - file_name: Homo_sapiens.GRCh38.ncrna.fa.gz
+          url: https://ftp.ensembl.org/pub/release-115/fasta/homo_sapiens/ncrna/Homo_sapiens.GRCh38.ncrna.fa.gz
+          sha256: 7825db09257902df82172928537c1da16cfe79edcca56425556f74f1507437a0
     special_handling: >
       Invalid expression scale in source-v5.22.10: the importer treated the
       transformed gene_tpm_cognizant_corrector field as linear TPM, producing
-      2163 negative measurements. Do not use existing NUTM expression artifacts
-      for quantitative analysis. Rebuild the controlled three-case source and
-      all derived artifacts after verifying the original field's scale.
+      2163 negative measurements. Existing NUTM expression artifacts remain
+      withheld (source_scale_class=invalid_legacy_tpm) until rebuilt from the
+      controlled three-case paired-FASTQ manifest via
+      scripts/build_local_fastq_salmon_source.py --source-id unc-nutm1 --manifest <manifest.yaml>.
 
   - id: gse30929-lps
     category: expression
