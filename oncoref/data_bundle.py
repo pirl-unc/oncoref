@@ -51,7 +51,6 @@ Public API:
 
 from __future__ import annotations
 
-import contextlib
 import hashlib
 import json
 import os
@@ -1390,30 +1389,39 @@ def list_cache_versions() -> list[dict]:
     return out
 
 
-def prune_cache(*, keep_current: bool = True, dry_run: bool = False) -> list[dict]:
-    """Delete every version-pinned cache dir EXCEPT the installed version (when
-    ``keep_current=True``). With ``dry_run=True`` returns the candidate list
-    without touching disk. Returns the list of dirs deleted (or planned)."""
-    candidates = []
-    for entry in list_cache_versions():
-        if keep_current and entry["is_current"]:
+def prune_cache(
+    *,
+    keep_current: bool = True,
+    keep_versions: tuple[str, ...] = (),
+    dry_run: bool = False,
+) -> list[dict]:
+    """Delete every version-pinned cache dir EXCEPT retained versions (current + overlay
+    bases when ``keep_current=True``, plus ``keep_versions``). With ``dry_run=True``
+    returns the candidate list without touching disk."""
+    from . import cache_retention
+
+    report = cache_retention.prune_caches(
+        targets="bundle",
+        keep_current=keep_current,
+        keep_versions=keep_versions,
+        include_legacy_pirlygenes=False,
+        dry_run=dry_run,
+    )
+    source_rows = report["entries"] if dry_run else report["deleted"]
+    out: list[dict] = []
+    for row in source_rows:
+        if not row["prunable"]:
             continue
-        candidates.append(entry)
-    if dry_run:
-        return candidates
-    for entry in candidates:
-        path = entry["path"]
-        for child in sorted(path.rglob("*"), reverse=True):
-            try:
-                if child.is_file() or child.is_symlink():
-                    child.unlink()
-                else:
-                    child.rmdir()
-            except OSError:
-                pass
-        with contextlib.suppress(OSError):
-            path.rmdir()
-    return candidates
+        out.append(
+            {
+                "version": row["version"],
+                "path": Path(row["path"]),
+                "size_bytes": row["logical_bytes"],
+                "reclaimable_bytes": row["reclaimable_bytes"],
+                "is_current": False,
+            }
+        )
+    return out
 
 
 __all__ = [

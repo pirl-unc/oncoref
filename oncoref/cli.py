@@ -178,16 +178,36 @@ def _cmd_version(args: argparse.Namespace) -> int:
     return 0
 
 
-def _print_bundle_prune(args: argparse.Namespace) -> int:
-    deleted = data_bundle.prune_cache(keep_current=not args.include_current, dry_run=not args.yes)
-    if not deleted:
+def _print_cache_prune(args: argparse.Namespace) -> int:
+    from . import cache_retention
+
+    report = cache_retention.prune_caches(
+        targets=args.name or "bundle",
+        keep_current=not args.include_current,
+        keep_versions=args.keep_versions,
+        include_legacy_pirlygenes=args.include_legacy_pirlygenes,
+        dry_run=not args.yes,
+    )
+    if args.json:
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 0
+    rows = [e for e in report["entries"] if e["prunable"]] if not args.yes else report["deleted"]
+    if not rows:
         print("Nothing to prune.")
         return 0
     verb = "Would delete" if not args.yes else "Deleted"
-    for entry in deleted:
-        print(f"{verb} {entry['version']}  ({_fmt_bytes(entry['size_bytes'])})  {entry['path']}")
+    for entry in rows:
+        print(
+            f"{verb} [{entry['target']}] {entry['id']}  "
+            f"(logical {_fmt_bytes(entry['logical_bytes'])}, "
+            f"reclaimable {_fmt_bytes(entry['reclaimable_bytes'])})  {entry['path']}"
+        )
+    reclaimed = report["reclaimable_bytes"] if not args.yes else report["reclaimed_bytes"]
+    print(
+        f"\nTotal physical space {'reclaimable' if not args.yes else 'reclaimed'}: {_fmt_bytes(reclaimed)}"
+    )
     if not args.yes:
-        print("\n(dry run — pass --yes to delete)")
+        print("(dry run — pass --yes to delete)")
     return 0
 
 
@@ -291,15 +311,15 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         return 0
     if args.data_version is not None and args.action not in {"status", "fetch", "path"}:
         raise ValueError("--version is supported for status, fetch, path and provenance")
-    if args.json and args.action != "list":
-        raise ValueError("--json is supported for data list")
+    if args.json and args.action not in {"list", "prune"}:
+        raise ValueError("--json is supported for data list and data prune")
     from .species_assets import species_assets
 
     asset_target = any(args.name in (a.id, a.group) for a in species_assets(selected))
-    if args.action != "list" and (selected.taxon_id != 9606 or asset_target):
+    if args.action not in {"list", "prune"} and (selected.taxon_id != 9606 or asset_target):
         return _cmd_species_data(args)
     if (
-        args.action != "list"
+        args.action not in {"list", "prune"}
         and selected.taxon_id == 9606
         and (args.offline or args.asset_overrides or args.cache_root)
     ):
@@ -413,11 +433,7 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         return 0
 
     if args.action == "prune":
-        target = args.name or "bundle"
-        if target != "bundle":
-            print("Error: data prune currently supports only the bundle cache", file=sys.stderr)
-            return 1
-        return _print_bundle_prune(args)
+        return _print_cache_prune(args)
 
     return 1
 
@@ -1153,7 +1169,19 @@ def _build_parser() -> argparse.ArgumentParser:
     p_data.add_argument(
         "--include-current",
         action="store_true",
-        help="For 'data prune', also delete the current bundle cache",
+        help="For 'data prune', also delete current pinned cache entries",
+    )
+    p_data.add_argument(
+        "--keep-version",
+        dest="keep_versions",
+        action="append",
+        default=[],
+        help="Additional version/digest pin to retain during 'data prune' (repeatable)",
+    )
+    p_data.add_argument(
+        "--include-legacy-pirlygenes",
+        action="store_true",
+        help="For 'data prune', also inspect/prune obsolete ~/.cache/pirlygenes/bundled_data entries",
     )
     p_data.add_argument(
         "--species",
