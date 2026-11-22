@@ -154,10 +154,18 @@ GSE141460_EXPECTED_REFERENCE_SAMPLES = {
     "WEPN20Dia",
 }
 GSE125285_MATRIX_URL = (
-    "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE125nnn/GSE125285/suppl/GSE125285_S35_log2GE.txt.gz"
+    "https://www.ncbi.nlm.nih.gov/geo/download/?type=rnaseq_counts"
+    "&acc=GSE125285&format=file&file=GSE125285_norm_counts_TPM_GRCh38.p13_NCBI.tsv.gz"
 )
-GSE125285_MATRIX_MD5 = "40021d435ed67c3f267fd4ac2a973d1e"
-GSE125285_MATRIX_BYTES = 6_265_086
+GSE125285_MATRIX_MD5 = "8009883874cad758d19f43dccf44ecac"
+GSE125285_MATRIX_SHA256 = "0a12577632d939426c6dd1d0d045b301c184c7351a834ac2db8c2a637b41d82f"
+GSE125285_MATRIX_BYTES = 5_074_386
+GSE125285_RAW_COUNTS_URL = (
+    "https://www.ncbi.nlm.nih.gov/geo/download/?type=rnaseq_counts"
+    "&acc=GSE125285&format=file&file=GSE125285_raw_counts_GRCh38.p13_NCBI.tsv.gz"
+)
+GSE125285_RAW_COUNTS_SHA256 = "abfcfcaed3564d2a8c01cb9be1eabb9945ab1d25ae5d8a42591639bb1c6a3376"
+GSE125285_RAW_COUNTS_BYTES = 2_472_251
 GSE125285_SOFT_URL = (
     "https://ftp.ncbi.nlm.nih.gov/geo/series/GSE125nnn/GSE125285/soft/GSE125285_family.soft.gz"
 )
@@ -1908,31 +1916,45 @@ def gse125285_skin_matrix(
     matrix_path: str | Path,
     soft_path: str | Path,
 ) -> tuple[pd.DataFrame, dict[str, list[str]], pd.DataFrame]:
-    """Return BCC/cSCC tumor nCPM proxies and a lossless sample manifest.
+    """Return BCC/cSCC tumor linear RNA-seq TPMs and a lossless sample manifest.
 
-    GSE125285 publishes ``log2(CPM + 1)`` for 35 paired tumors and adjacent
-    normals. The inverse-transformed tumor columns are scaled back to exactly
-    one million only to remove rounding drift. They remain CPM proxies, not
-    gene-length-normalized bulk TPM.
+    GSE125285 (SRP180015) has NCBI-generated GRCh38.p13 exon-union gene-length
+    normalized TPMs across all 70 paired tumor and matched adjacent normal skin
+    libraries (GSM3567640..GSM3567709). Only the 25 BCC and 10 cSCC primary
+    tumors enter the tumor references; all 35 matched adjacent normals remain
+    explicitly audited exclusions.
     """
     source = pd.read_csv(Path(matrix_path), sep="\t", low_memory=False)
-    if not len(source.columns) or source.columns[0] != "gene symbol":
-        raise ValueError("GSE125285 matrix must start with 'gene symbol'")
-    records = _geo_sample_records_by_matrix_column(
-        soft_path,
-        source.columns[1:],
-        matrix_column_for_title=lambda title: f"{title}1",
-        required_fields=("title", "source name", "disease state", "tissue", "patient id"),
-    )
+    if not len(source.columns) or source.columns[0] != "GeneID":
+        raise ValueError("GSE125285 NCBI TPM matrix must start with 'GeneID'")
+    samples = parse_geo_soft_samples(soft_path)
+    required_fields = ("title", "source name", "disease state", "tissue", "patient id")
+    for sample in samples.values():
+        missing = [field for field in required_fields if not str(sample.get(field, "")).strip()]
+        if missing:
+            raise ValueError(
+                f"{soft_path} sample {sample['geo_accession']} lacks fields: {missing}"
+            )
+    observed = [str(col) for col in source.columns[1:]]
+    if len(observed) != len(set(observed)):
+        raise ValueError("GSE125285 NCBI TPM matrix contains duplicate sample columns")
+    if set(observed) != set(samples):
+        missing_metadata = sorted(set(observed) - set(samples))
+        missing_matrix = sorted(set(samples) - set(observed))
+        raise ValueError(
+            "GSE125285 matrix/SOFT sample mismatch: "
+            f"matrix_without_metadata={missing_metadata}, metadata_without_matrix={missing_matrix}"
+        )
+
     diagnosis_to_code = {
         "Basal cell carcinoma (BCC)": "BCC",
         "Squamous cell carcinoma (SCC)": "cSCC",
     }
     unexpected_diagnoses = sorted(
-        {record["disease state"] for record in records.values()} - set(diagnosis_to_code)
+        {record["disease state"] for record in samples.values()} - set(diagnosis_to_code)
     )
     unexpected_tissues = sorted(
-        {record["tissue"] for record in records.values()} - {"Tumor", "Normal adjacent tissue"}
+        {record["tissue"] for record in samples.values()} - {"Tumor", "Normal adjacent tissue"}
     )
     if unexpected_diagnoses or unexpected_tissues:
         raise ValueError(
@@ -1940,24 +1962,18 @@ def gse125285_skin_matrix(
             f"diagnoses={unexpected_diagnoses}, tissues={unexpected_tissues}"
         )
 
-    symbols = source["gene symbol"].astype(str).str.strip()
-    if not symbols.str.fullmatch(r"/[^/]+/").all():
-        raise ValueError("GSE125285 gene symbols no longer use one /SYMBOL/ wrapper")
-    symbols = symbols.str.slice(1, -1).str.strip()
-    if symbols.eq("").any() or symbols.duplicated().any():
-        raise ValueError("GSE125285 matrix contains blank or duplicate gene symbols")
+    gene_ids = source["GeneID"].astype(str).str.strip()
+    if gene_ids.eq("").any() or gene_ids.duplicated().any():
+        raise ValueError("GSE125285 NCBI TPM matrix contains blank or duplicate GeneIDs")
 
     routed: dict[str, list[str]] = {"BCC": [], "cSCC": []}
-    tumor_columns: list[str] = []
     tumor_ids: list[str] = []
     manifest_rows = []
-    for matrix_column in source.columns[1:]:
-        record = records[str(matrix_column)]
+    for gsm in observed:
+        record = samples[gsm]
         code = diagnosis_to_code[record["disease state"]]
         included = record["tissue"] == "Tumor"
-        gsm = record["geo_accession"]
         if included:
-            tumor_columns.append(str(matrix_column))
             tumor_ids.append(gsm)
             routed[code].append(gsm)
         manifest_rows.append(
@@ -1974,10 +1990,10 @@ def gse125285_skin_matrix(
                 "primary_diagnosis": record["disease state"],
                 "md5sum": GSE125285_MATRIX_MD5,
                 "file_size": GSE125285_MATRIX_BYTES,
-                "workflow_type": "author HTSeq counts converted to log2(CPM+1)",
-                "raw_unit": "log2(CPM+1)",
+                "workflow_type": "NCBI GEO RNA-seq counts exon-union length-normalized TPM (GRCh38.p13)",
+                "raw_unit": "TPM",
                 "processing_pipeline": (
-                    "gse125285_log2_cpm_inverse_ncpm_proxy_ensembl112_clean_tpm_16_9_75"
+                    "gse125285_ncbi_grch38p13_gene_length_tpm_ensembl112_clean_tpm_16_9_75"
                 ),
                 "source_url": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE125285",
                 "lineage_evidence_source": (
@@ -1986,29 +2002,19 @@ def gse125285_skin_matrix(
                 "included": included,
                 "exclusion_reason": "" if included else "matched_adjacent_normal",
                 "lineage_label": code if included else "",
-                "source_matrix_column": str(matrix_column),
+                "source_matrix_column": gsm,
                 "source_record": gsm,
             }
         )
-    if {code: len(samples) for code, samples in routed.items()} != {"BCC": 25, "cSCC": 10}:
+    if {code: len(cols) for code, cols in routed.items()} != {"BCC": 25, "cSCC": 10}:
         raise ValueError(f"GSE125285 tumor routing changed: {routed}")
 
-    logged = _validate_nonnegative_numeric_values(
-        source[tumor_columns],
-        label="GSE125285 log2(CPM+1) matrix",
+    tpm = _validate_nonnegative_numeric_values(
+        source[tumor_ids],
+        label="GSE125285 NCBI GRCh38.p13 TPM matrix",
     )
-    inverse = pd.DataFrame(
-        np.exp2(logged.to_numpy(dtype=float)) - 1.0,
-        index=logged.index,
-        columns=tumor_ids,
-    )
-    inverse = _validate_nonnegative_numeric_values(
-        inverse,
-        label="GSE125285 inverse-transformed CPM matrix",
-    )
-    ncpm = _scale_columns_to_million(inverse, label="GSE125285 inverse-transformed CPM matrix")
     return (
-        pd.concat([pd.DataFrame({"source_symbol": symbols}), ncpm], axis=1),
+        pd.concat([pd.DataFrame({"source_gene_id": gene_ids}), tpm], axis=1),
         routed,
         pd.DataFrame(manifest_rows),
     )
@@ -2735,7 +2741,7 @@ def _build_geo_candidate_source_matrices(
     defaults = {
         "gse125285-bcc-cscc": {
             "matrix_url": GSE125285_MATRIX_URL,
-            "matrix_name": "GSE125285_S35_log2GE.txt.gz",
+            "matrix_name": "GSE125285_norm_counts_TPM_GRCh38.p13_NCBI.tsv.gz",
             "matrix_md5": GSE125285_MATRIX_MD5,
             "matrix_bytes": GSE125285_MATRIX_BYTES,
             "soft_url": GSE125285_SOFT_URL,
@@ -2787,6 +2793,7 @@ def _build_geo_candidate_source_matrices(
 
     if source_id == "gse125285-bcc-cscc":
         raw, routed, manifest = gse125285_skin_matrix(matrix, soft)
+        row_id_col = "source_gene_id"
         source = GeoMatrixSource(
             cancer_code=["BCC", "cSCC"],
             source_cohort=str(entry["source_cohort"]),
@@ -2796,26 +2803,27 @@ def _build_geo_candidate_source_matrices(
             unit="TPM",
             expected_source_samples=35,
             expected_samples_by_code={"BCC": 25, "cSCC": 10},
-            source_scale_class="bulk_rnaseq_cpm_proxy",
-            linear_tpm_comparable=False,
-            tpm_proxy=True,
-            native_unit="nCPM proxy",
+            source_scale_class="linear_rnaseq_tpm",
+            linear_tpm_comparable=True,
+            tpm_proxy=False,
+            native_unit="NCBI GRCh38.p13 gene-length-normalized TPM",
             notes=(
-                "GSE125285 diagnosis-confirmed primary BCC and cSCC tumors. Author "
-                "log2(CPM+1) is inverted and rescaled to nCPM; matched adjacent normals "
-                "are excluded. The result preserves within-sample ranks but lacks "
-                "gene-length normalization and is not bulk-TPM comparable or, by "
-                "itself, classification-ready."
+                "GSE125285 diagnosis-confirmed primary BCC and cSCC tumors from checksum-pinned "
+                "NCBI GEO RNA-seq counts (GRCh38.p13 exon-union gene-length-normalized TPM, "
+                "SRP180015); matched adjacent normals are excluded. GeneIDs are harmonized to "
+                "the Ensembl 112 canonical gene space and renormalized per tumor to 1e6 TPM. "
+                "Supersedes the earlier author log2(CPM+1) nCPM proxy build (#737)."
             ),
             processing_pipeline=(
-                "gse125285_log2_cpm_inverse_ncpm_proxy_ensembl112_clean_tpm_16_9_75"
+                "gse125285_ncbi_grch38p13_gene_length_tpm_ensembl112_clean_tpm_16_9_75"
             ),
             tumor_origin="primary",
-            source_type="geo-rnaseq-cpm-proxy",
+            source_type="geo-rnaseq-ncbi-tpm",
         )
         manifest_name = "gse125285_bcc_cscc_sample_manifest.csv"
     else:
         raw, routed, manifest = gse139682_gbc_matrix(matrix, soft)
+        row_id_col = "source_symbol"
         source = GeoMatrixSource(
             cancer_code="GBC",
             source_cohort=str(entry["source_cohort"]),
@@ -2841,18 +2849,23 @@ def _build_geo_candidate_source_matrices(
         )
         manifest_name = "gse139682_gbc_sample_manifest.csv"
 
-    value_cols = [column for column in raw.columns if column != "source_symbol"]
+    value_cols = [column for column in raw.columns if column != row_id_col]
     _, diagnostics = coerce_source_expression_values(
         raw,
         value_cols=value_cols,
-        row_id_col="source_symbol",
+        row_id_col=row_id_col,
     )
     canonical, audit = canonicalize_source_gene_matrix(
         raw,
-        row_id_col="source_symbol",
+        row_id_col=row_id_col,
         value_cols=value_cols,
         high_expression_threshold=high_expression_threshold,
     )
+    if source_id == "gse125285-bcc-cscc":
+        canonical[value_cols] = _scale_columns_to_million(
+            canonical[value_cols],
+            label="GSE125285 canonicalized NCBI TPM matrix",
+        )
     out_dir = Path(output_dir) if output_dir is not None else cache / "derived"
     result = build_canonical_source_matrices(
         source,
@@ -2887,7 +2900,7 @@ def build_gse125285_source_matrices(
     force_download: bool = False,
     high_expression_threshold: float = 1.0,
 ) -> SourceMatrixBuildResult:
-    """Build direct BCC/cSCC nCPM-proxy references from GSE125285."""
+    """Build direct BCC/cSCC linear-TPM references from NCBI GEO RNA-seq counts for GSE125285."""
     return _build_geo_candidate_source_matrices(
         source_id="gse125285-bcc-cscc",
         cache_dir=cache_dir,

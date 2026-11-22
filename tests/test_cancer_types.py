@@ -189,10 +189,15 @@ def test_treehouse_tcga_cohort_uses_canonical_identity_and_exact_legacy_alias():
     assert legacy not in cancer_types.known_cohort_ids()
     assert registry.loc[canonical, "n_samples"] == 9541
     assert registry.loc[canonical, "n_codes"] == 32
-    assert len(canonical_matrices) == 32
-    assert canonical_matrices["n_samples"].sum() == 9541
+    assert len(canonical_matrices) == 31
+    assert canonical_matrices["n_samples"].sum() == 9422
     assert len(canonical_sources) == 32
     assert canonical_sources["n_reference_samples"].sum() == 9541
+    thym_histology = "TREEHOUSE_POLYA_25_01_TCGA_THYM_HISTOLOGY"
+    assert thym_histology in registry.index
+    thym_sources = availability.loc[availability["source_cohort"] == thym_histology]
+    assert set(thym_sources["cancer_code"]) == {"THYM", "THYMCA"}
+    assert thym_sources["n_reference_samples"].sum() == 119
     assert derived in registry.index
     derived_sources = availability.loc[availability["source_cohort"] == derived]
     assert set(derived_sources["cancer_code"]) == {
@@ -665,6 +670,7 @@ def test_reference_source_and_review_policy_drive_classification_targets():
         "STAD_MSI",
         "OV",
         "CMN",
+        "THYMCA",
     }
     assert set(records.loc[records["reference_source"] == "member_union"].index) == {
         "CRC_MSI",
@@ -683,7 +689,6 @@ def test_reference_source_and_review_policy_drive_classification_targets():
     }
     assert set(records.loc[records["reference_source"] == "parent"].index) == {
         "RCC_NCC_UNCLASSIFIED",
-        "THYMCA",
     }
     assert set(records.loc[records["reference_source"] == "none"].index) == {
         "RCC_NCC",
@@ -699,7 +704,6 @@ def test_reference_source_and_review_policy_drive_classification_targets():
         "RCC_NCC",
         "RCC_NCC_UNCLASSIFIED",
         "SGC",
-        "THYMCA",
         "NET_NONPANCREATIC",
         "NEN_EXTRAPULMONARY_HG",
         "CMN",
@@ -757,7 +761,8 @@ def test_reference_source_and_review_policy_drive_classification_targets():
         == cancer_types.classification_target_codes()
     )
     assert cd.cancer_ontology.cancer_type_reference_source("CRC_MSI") == "member_union"
-    assert cd.cancer_ontology.cancer_type_reference_code("THYMCA") == "THYM_EPITHELIAL"
+    assert cd.cancer_ontology.cancer_type_reference_source("THYMCA") == "own_cohort"
+    assert cd.cancer_ontology.cancer_type_reference_code("THYMCA") == "THYMCA"
 
 
 def test_reference_availability_never_promotes_unreviewed_classification_targets():

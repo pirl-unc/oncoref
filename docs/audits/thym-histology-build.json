@@ -1,0 +1,49 @@
+{
+  "source_cohort": "TREEHOUSE_POLYA_25_01_TCGA_THYM_HISTOLOGY",
+  "revision": "0cc9138746c08b304f8dac92c31983e0ef44af1d",
+  "parent": {
+    "url": "https://github.com/pirl-unc/oncoref/releases/download/source-v5.22.10/THYM_per_sample_tpm.parquet",
+    "sha256": "14d8eebcd8e1207b8fd6f54f3728f19d1f6c8519bd027cd23c71d51b543c5707",
+    "md5": "063f6729be3ca25f45dc4d09fa5d8603"
+  },
+  "sources": {
+    "pan_sample": {
+      "filename": "thym_tcga_pan_can_atlas_2018_sample.tsv",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/thym_tcga_pan_can_atlas_2018/data_clinical_sample.txt",
+      "sha256": "924a652da15705672d4dba11f7fb9a040d39fd42d63cfcce6cdc4008d6c20a71"
+    },
+    "pan_patient": {
+      "filename": "thym_tcga_pan_can_atlas_2018_patient.tsv",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/thym_tcga_pan_can_atlas_2018/data_clinical_patient.txt",
+      "sha256": "6d2d8a0bd6ca5c8795475677eda5e4a42db1cbe29ad1d1749dc2abd9ff3438e4"
+    },
+    "tcga_patient": {
+      "filename": "thym_tcga_patient.tsv",
+      "url": "https://media.githubusercontent.com/media/cBioPortal/datahub/0cc9138746c08b304f8dac92c31983e0ef44af1d/public/thym_tcga/data_clinical_patient.txt",
+      "sha256": "474a4cceb0a3f1d4fe76290a435d737a54cfa71511a7b32057d94ef3c239dd66"
+    }
+  },
+  "matrix_sha256": {
+    "THYM": "6a27f08bca170d922efeb33b21ad8969ccecba3110130ca342770b76f17b5080",
+    "THYMCA": "012b658a9cd9bc4b713d347d15c9ad01368fd273c8fc678a1d950ade57bca800"
+  },
+  "n_genes": 34571,
+  "n_parent_samples": 119,
+  "n_samples_by_code": {
+    "THYM": 108,
+    "THYMCA": 11
+  },
+  "n_indeterminate": 0,
+  "who_subtype_counts": {
+    "WHO Type AB": 35,
+    "WHO Type B2": 27,
+    "WHO Type A": 15,
+    "WHO Type B1": 14,
+    "WHO Type C (Thymic Carcinoma, 8586/3)": 11,
+    "WHO Type B3": 11,
+    "WHO Type B2|Type B3": 3,
+    "WHO Type A|Type AB": 2,
+    "WHO Type B1|Type B2": 1
+  },
+  "limitations": "TCGA-THYM splits cleanly into 108 primary WHO Type A/AB/B1/B2/B3 thymomas (THYM) and 11 primary WHO Type C / ICD-O-3 8586/3 thymic carcinomas (THYMCA) with zero cross-table conflicts. THYMCA n=11 has thin upper-tail quantile precision; THYM_EPITHELIAL unions both disjoint cohorts (n=119)."
+}

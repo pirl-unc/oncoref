@@ -3991,8 +3991,6 @@ def _reference_availability_frame(rows: list[dict]) -> pd.DataFrame:
 
 
 _NON_COMPARABLE_REPLACEMENT_PLANS: dict[str, str] = {
-    "BCC": "Replace log2(CPM+1) nCPM proxy (GSE125285) with raw-read or gene-length-normalized bulk RNA-seq (#737).",
-    "cSCC": "Replace log2(CPM+1) nCPM proxy (GSE125285) with raw-read or gene-length-normalized bulk RNA-seq (#737).",
     "CMN": "Replace GPL96 microarray TPM-proxy (GSE11482) with pediatric renal bulk RNA-seq when publicly available (#737).",
     "CTCL": "Supplement or replace ECCITE-seq donor pseudobulk nTPM (GSE171811) with sorted malignant T-cell bulk RNA-seq (#737).",
     "EPN": "Supplement diagnosis malignant-cell scRNA pseudobulk (GSE141460) with OpenPBTA/CBTN primary bulk RNA-seq (#737).",
@@ -4002,6 +4000,18 @@ _NON_COMPARABLE_REPLACEMENT_PLANS: dict[str, str] = {
     "SARC_ESS_HG": "Replace GPL22303 microarray TPM-proxy (GSE85383) with fusion-annotated HG-ESS bulk RNA-seq (#737).",
     "SARC_ESS_LG": "Replace GPL22303 microarray TPM-proxy (GSE85383) with fusion-annotated LG-ESS bulk RNA-seq (#737).",
     "SARC_MYXLPS": "Replace GPL96 microarray TPM-proxy (GSE30929) with FUS::DDIT3 bulk RNA-seq (#737).",
+}
+
+_NON_COMPARABLE_PUBLIC_RNASEQ_AUDIT: dict[str, str] = {
+    "CMN": "no_public_primary_bulk_rnaseq (GEO RNA-seq audit 2026-11-22: 0 cohorts; Treehouse RiboD has n=1 unselected)",
+    "CTCL": "sorted_malignant_scrna_preferred_over_unpurified_bulk (skin biopsy bulk mixes reactive T cells and keratinocytes)",
+    "EPN": "diagnosis_malignant_scrna_retained_pending_subtype_resolved_openpbta_split",
+    "HCL": "sorted_malignant_scrna_only_public_cohort (Zenodo 14917813; no public sorted bulk RNA-seq)",
+    "MTC": "controlled_access_only (EGAS00001001473 primary MTC RNA-seq; public GEO GSE114069/GSE114070 are TT/MZ-CRC-1 cell lines)",
+    "NUTM": "controlled_local_fastq_builder_ready (scripts/build_local_fastq_salmon_source.py)",
+    "SARC_ESS_HG": "no_public_hg_ess_bulk_rnaseq (GEO audit 2026-11-22: 0 public HG-ESS bulk RNA-seq matrices)",
+    "SARC_ESS_LG": "underpowered_public_rnaseq_only (GSE196757 has 2 patients with technical replicates vs n=9 in GSE85383)",
+    "SARC_MYXLPS": "unsubtyped_3prime_tag_seq_only (GSE352573 uses Lexogen QuantSeq 3' tag-seq without histological subtype labels)",
 }
 
 
@@ -4054,6 +4064,9 @@ def non_comparable_expression_cohorts(*, include_invalid: bool = True) -> pd.Dat
                 "allowed_uses": (
                     "none_withheld" if is_invalid else "within_sample_rank_and_pathway_only"
                 ),
+                "public_rnaseq_audit_status": _NON_COMPARABLE_PUBLIC_RNASEQ_AUDIT.get(
+                    code, "pending_audit"
+                ),
                 "replacement_plan": _NON_COMPARABLE_REPLACEMENT_PLANS.get(
                     code, "Audit linear bulk RNA-seq replacement (#737)."
                 ),
@@ -4092,74 +4105,54 @@ def umbrella_expression_coverage() -> pd.DataFrame:
     for code in sorted(cov.index):
         rec = cov.loc[code]
         ref_source = str(rec["reference_source"])
-        if ref_source != "member_union" and code != "THYMCA":
+        if ref_source != "member_union":
             continue
-        if ref_source == "member_union":
-            members = tuple(str(m) for m in aggregates.get(code, ()))
-            direct_children = tuple(
-                str(c)
-                for c in cov.index[cov["parent_code"].fillna("").astype(str).eq(code)]
-                if str(cov.loc[c, "reference_source"]) in {"parent", "none"}
-            )
-            avail_members = [
-                m for m in members if bool(avail_by_pair.get((code, m), m in selected.index))
-            ]
-            non_comp = [
-                m
+        members = tuple(str(m) for m in aggregates.get(code, ()))
+        direct_children = tuple(
+            str(c)
+            for c in cov.index[cov["parent_code"].fillna("").astype(str).eq(code)]
+            if str(cov.loc[c, "reference_source"]) in {"parent", "none"}
+        )
+        avail_members = [
+            m for m in members if bool(avail_by_pair.get((code, m), m in selected.index))
+        ]
+        non_comp = [
+            m
+            for m in avail_members
+            if m in selected.index and not bool(selected.loc[m, "linear_tpm_comparable"])
+        ]
+        comp_members = [m for m in avail_members if m not in non_comp]
+        missing_children = sorted((set(direct_children) | set(members)) - set(avail_members))
+        total_n = int(
+            sum(
+                int(selected.loc[m, "n_reference_samples"])
                 for m in avail_members
-                if m in selected.index and not bool(selected.loc[m, "linear_tpm_comparable"])
-            ]
-            comp_members = [m for m in avail_members if m not in non_comp]
-            missing_children = sorted((set(direct_children) | set(members)) - set(avail_members))
-            total_n = int(
-                sum(
-                    int(selected.loc[m, "n_reference_samples"])
-                    for m in avail_members
-                    if m in selected.index and pd.notna(selected.loc[m, "n_reference_samples"])
-                )
+                if m in selected.index and pd.notna(selected.loc[m, "n_reference_samples"])
             )
-            if missing_children or len(avail_members) < len(members):
-                status = "partial_member_gap"
-            elif non_comp:
-                status = "includes_proxy_scale_members"
-            else:
-                status = "complete_linear_tpm"
-            rows.append(
-                {
-                    "cancer_code": code,
-                    "name": str(rec["name"]),
-                    "reference_source": ref_source,
-                    "is_classification_target": bool(rec["is_classification_target"]),
-                    "member_codes": ";".join(members),
-                    "available_member_codes": ";".join(avail_members),
-                    "unbacked_child_subtypes": ";".join(missing_children),
-                    "non_comparable_member_codes": ";".join(non_comp),
-                    "n_members": len(members),
-                    "n_available_members": len(avail_members),
-                    "n_comparable_members": len(comp_members),
-                    "total_reference_samples": total_n,
-                    "coverage_status": status,
-                }
-            )
+        )
+        if missing_children or len(avail_members) < len(members):
+            status = "partial_member_gap"
+        elif non_comp:
+            status = "includes_proxy_scale_members"
         else:
-            # Explicit disclosure row for THYMCA -> parent THYM_EPITHELIAL fallback (#737).
-            rows.append(
-                {
-                    "cancer_code": code,
-                    "name": str(rec["name"]),
-                    "reference_source": ref_source,
-                    "is_classification_target": bool(rec["is_classification_target"]),
-                    "member_codes": "",
-                    "available_member_codes": "",
-                    "unbacked_child_subtypes": code,
-                    "non_comparable_member_codes": "",
-                    "n_members": 0,
-                    "n_available_members": 0,
-                    "n_comparable_members": 0,
-                    "total_reference_samples": 0,
-                    "coverage_status": "parent_fallback_no_direct_cohort",
-                }
-            )
+            status = "complete_linear_tpm"
+        rows.append(
+            {
+                "cancer_code": code,
+                "name": str(rec["name"]),
+                "reference_source": ref_source,
+                "is_classification_target": bool(rec["is_classification_target"]),
+                "member_codes": ";".join(members),
+                "available_member_codes": ";".join(avail_members),
+                "unbacked_child_subtypes": ";".join(missing_children),
+                "non_comparable_member_codes": ";".join(non_comp),
+                "n_members": len(members),
+                "n_available_members": len(avail_members),
+                "n_comparable_members": len(comp_members),
+                "total_reference_samples": total_n,
+                "coverage_status": status,
+            }
+        )
     return pd.DataFrame(rows)
 
 

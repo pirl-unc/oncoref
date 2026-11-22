@@ -316,40 +316,43 @@ sources:
   - id: gse125285-bcc-cscc
     category: expression
     cancer_codes: [BCC, cSCC]
-    source_type: geo-rnaseq-cpm-proxy
+    source_type: geo-rnaseq-ncbi-tpm
     accession: GSE125285
     url: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE125285
     source_cohort: GSE125285_BCC_CSCC
     source_project: GEO
+    source_version: GSE125285; SRP180015; PMID:33997165; NCBI GRCh38.p13 exon-union gene-length TPM sha256 0a12577632d939426c6dd1d0d045b301c184c7351a834ac2db8c2a637b41d82f; harmonized to Ensembl release 112
     builder: scripts/build_nci_gap_geo_references.py
     builder_args: [gse125285-bcc-cscc]
-    processing_pipeline: gse125285_log2_cpm_inverse_ncpm_proxy_ensembl112_clean_tpm_16_9_75
-    matrix_file_url: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE125nnn/GSE125285/suppl/GSE125285_S35_log2GE.txt.gz
-    matrix_file_name: GSE125285_S35_log2GE.txt.gz
-    matrix_file_md5: 40021d435ed67c3f267fd4ac2a973d1e
-    matrix_file_bytes: 6265086
+    processing_pipeline: gse125285_ncbi_grch38p13_gene_length_tpm_ensembl112_clean_tpm_16_9_75
+    matrix_file_url: https://www.ncbi.nlm.nih.gov/geo/download/?type=rnaseq_counts&acc=GSE125285&format=file&file=GSE125285_norm_counts_TPM_GRCh38.p13_NCBI.tsv.gz
+    matrix_file_name: GSE125285_norm_counts_TPM_GRCh38.p13_NCBI.tsv.gz
+    matrix_file_md5: 8009883874cad758d19f43dccf44ecac
+    matrix_file_sha256: 0a12577632d939426c6dd1d0d045b301c184c7351a834ac2db8c2a637b41d82f
+    matrix_file_bytes: 5074386
     soft_file_url: https://ftp.ncbi.nlm.nih.gov/geo/series/GSE125nnn/GSE125285/soft/GSE125285_family.soft.gz
     soft_file_name: GSE125285_family.soft.gz
     soft_file_md5: 61f0585098689af76fa5039bf7d241c1
     soft_file_bytes: 5094
-    unit: nCPM proxy
+    unit: TPM
     expected_source_samples: 70
     expected_samples_by_code: {BCC: 25, cSCC: 10}
-    source_scale_class: bulk_rnaseq_cpm_proxy
-    linear_tpm_comparable: false
-    tpm_proxy: true
+    source_scale_class: linear_rnaseq_tpm
+    linear_tpm_comparable: true
+    tpm_proxy: false
     tumor_origin: primary
     library_prep: bulk polyA RNA-seq
     expected_size_gb: 0.01
-    citation: GSE125285; PMID:33997165
+    citation: GSE125285; SRP180015; PMID:33997165
     source_pmid: PMID:33997165
     special_handling: >
       Select the 25 diagnosis-confirmed BCC tumors and 10 diagnosis-confirmed
-      cSCC tumors from the 70-sample paired study; retain all 35 matched adjacent
-      normals as explicit exclusions. Invert author log2(CPM+1) and rescale each
-      tumor to nCPM. The result preserves within-sample ranks but lacks
-      gene-length normalization, so it is neither bulk-TPM comparable nor, by
-      itself, classification-ready.
+      cSCC tumors from the 70-sample paired study using checksum-pinned NCBI
+      GEO RNA-seq counts (GRCh38.p13 exon-union gene-length-normalized TPM,
+      SRP180015); retain all 35 matched adjacent normals as explicit exclusions.
+      Harmonize NCBI GeneIDs to the Ensembl 112 canonical gene space (29,936
+      genes) and renormalize each tumor to 1e6 TPM before 16/9/75 clean-TPM
+      normalization. Supersedes the earlier author log2(CPM+1) nCPM proxy build (#737).
 
   - id: gse139682-gbc
     category: expression
@@ -674,6 +677,36 @@ sources:
       membership audit. 157 primary TNBC tumors; 77 primary cases indeterminate.
       Overlaps the BRCA umbrella and PAM50 cohorts; never sum their counts.
       See docs/audits/brca-tnbc.md for pinned inputs and reproduction commands.
+
+  - id: treehouse-polya-25-01-tcga-thym-histology
+    category: expression
+    cancer_codes: [THYM, THYMCA]
+    source_type: source-matrix-subset
+    source_cohort: TREEHOUSE_POLYA_25_01_TCGA_THYM_HISTOLOGY
+    source_project: Treehouse (TCGA-THYM) x cBioPortal WHO histology
+    source_version: Treehouse 25.01 PolyA; THYM source-v5.22.10; cBioPortal datahub 0cc9138746c08b304f8dac92c31983e0ef44af1d
+    url: https://github.com/pirl-unc/oncoref/releases/download/source-v5.22.10/THYM_per_sample_tpm.parquet
+    builder: scripts/build_tcga_thym_histology.py
+    processing_pipeline: treehouse_polya_25_01_tcga_thym_histology_tpm_to_tpm_oncoref_canonical_clean_tpm_16_9_75
+    unit: TPM
+    library_prep: polyA
+    citation: TCGA-THYM WHO histology and ICD-O-3 morphology (PMID 29444460; PMID 29395863); Treehouse Tumor Compendium 25.01 PolyA; cBioPortal datahub pinned revision.
+    source_pmid: PMID:29444460
+    source_scale_class: linear_rnaseq_tpm
+    linear_tpm_comparable: true
+    tpm_proxy: false
+    pipeline_stem: treehouse_polya_25_01_tcga_thym_histology
+    tumor_origin: primary
+    routed_samples_may_overlap: false
+    expected_samples_by_code: {THYM: 108, THYMCA: 11}
+    special_handling: >
+      Exact disjoint column partition of the checksum-pinned released TCGA-THYM
+      raw TPM matrix (119 primary tumors). Require primary tumor barcodes (-01)
+      and concordant WHO histology plus ICD-O-3 morphology across pinned
+      cBioPortal PanCancer Atlas and TCGA-THYM clinical tables: 108 WHO Type
+      A/AB/B1/B2/B3 thymomas enter THYM and 11 WHO Type C / ICD-O-3 8586/3
+      thymic carcinomas enter THYMCA (zero indeterminate conflicts). THYM_EPITHELIAL
+      unions both disjoint cohorts (n=119). See docs/audits/thym-histology.md.
 
   - id: treehouse-polya-25-01-tcga-brca-pam50
     category: expression

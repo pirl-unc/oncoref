@@ -58,10 +58,11 @@ def _replace_rows(
     *,
     cancer_codes: set[str],
 ) -> pd.DataFrame:
-    existing = pd.read_csv(bundle_path)
-    rebuilt = pd.read_csv(rebuild_path)
+    existing = pd.read_csv(bundle_path, low_memory=False)
+    rebuilt = pd.read_csv(rebuild_path, low_memory=False)
     kept = existing[~existing["cancer_code"].astype(str).isin(cancer_codes)]
     merged = pd.concat([kept, rebuilt], ignore_index=True, sort=False)
+    bundle_path.unlink(missing_ok=True)
     merged.to_csv(bundle_path, index=False)
     return merged
 
@@ -74,13 +75,14 @@ def _merge_representative_provenance(
 ) -> pd.DataFrame:
     bundle_path = bundle_dir / _REPRESENTATIVE_PROVENANCE
     rebuild_path = rebuild_dir / _REPRESENTATIVE_PROVENANCE
-    existing = pd.read_csv(bundle_path)
-    rebuilt = pd.read_csv(rebuild_path)
+    existing = pd.read_csv(bundle_path, low_memory=False)
+    rebuilt = pd.read_csv(rebuild_path, low_memory=False)
     existing_codes = existing["representative_id"].astype(str).str.split("__").str[0]
     kept = existing[~existing_codes.isin(cancer_codes)]
     merged = assign_representative_partitions(
         pd.concat([kept, rebuilt], ignore_index=True, sort=False)
     )
+    bundle_path.unlink(missing_ok=True)
     merged.to_csv(bundle_path, index=False)
     return merged
 
@@ -105,6 +107,7 @@ def _copy_rebuilt_shards(
 
     for source, destination in copies:
         destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.unlink(missing_ok=True)
         shutil.copy2(source, destination)
 
 
@@ -249,7 +252,9 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
         metadata.loc[missing_build_source, "build_source_cohort"] = metadata.loc[
             missing_build_source, "source_cohort"
         ]
-    metadata.to_csv(bundle_dir / EXPRESSION_ARTIFACT_BUILD_METADATA_PATH, index=False)
+    metadata_out = bundle_dir / EXPRESSION_ARTIFACT_BUILD_METADATA_PATH
+    metadata_out.unlink(missing_ok=True)
+    metadata.to_csv(metadata_out, index=False)
 
     summary_path = bundle_dir / EXPRESSION_ARTIFACT_BUILD_METADATA_JSON_PATH
     summary = json.loads(summary_path.read_text())
@@ -269,6 +274,7 @@ def merge(bundle_dir: Path, rebuild_dir: Path) -> set[str]:
             "representative_partition": representative_partition_build_metadata(provenance),
         }
     )
+    summary_path.unlink(missing_ok=True)
     summary_path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     return cancer_codes
 

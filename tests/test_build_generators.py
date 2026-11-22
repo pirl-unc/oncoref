@@ -2153,7 +2153,7 @@ def test_build_gse141460_source_matrices_writes_reference_and_manifest(monkeypat
 
 
 def _write_gse125285_fixture(matrix_path: Path, soft_path: Path) -> None:
-    matrix = {"gene symbol": ["/TP53/", "/EGFR/"]}
+    matrix: dict[str, list] = {"GeneID": ["7157", "1956"]}
     soft_lines = []
     gsm_number = 1
     for diagnosis, n_cases in (
@@ -2165,10 +2165,11 @@ def _write_gse125285_fixture(matrix_path: Path, soft_path: Path) -> None:
             patient = f"{prefix}{case_number:02d}"
             for suffix, tissue in (("N", "Normal adjacent tissue"), ("T", "Tumor")):
                 title = f"{patient}-{suffix}"
-                matrix[f"{title}1"] = np.log2(np.array([400_001.0, 599_999.0]))
+                gsm = f"GSM{gsm_number:07d}"
+                matrix[gsm] = [400_000.0, 600_000.0]
                 soft_lines.extend(
                     [
-                        f"^SAMPLE = GSM{gsm_number:07d}",
+                        f"^SAMPLE = {gsm}",
                         f"!Sample_title = {title}",
                         "!Sample_source_name_ch1 = Skin",
                         f"!Sample_characteristics_ch1 = disease state: {diagnosis}",
@@ -2214,7 +2215,7 @@ def _write_gse139682_fixture(matrix_path: Path, soft_path: Path) -> None:
     [
         (
             "gse125285-bcc-cscc",
-            "GSE125285_S35_log2GE.txt.gz",
+            "GSE125285_norm_counts_TPM_GRCh38.p13_NCBI.tsv.gz",
             "GSE125285_family.soft.gz",
             _write_gse125285_fixture,
             expression_source_adapters.build_gse125285_source_matrices,
@@ -2288,14 +2289,9 @@ def test_build_nci_gap_geo_references_route_tumors_and_audit_controls(
     assert set(manifest.loc[manifest["included"], "lineage_label"]) == set(expected_counts)
     assert manifest.loc[~manifest["included"], "exclusion_reason"].ne("").all()
     assert set(result.summary_rows["n_samples"]) == set(expected_counts.values())
-    if source_id == "gse125285-bcc-cscc":
-        assert set(result.sample_qc["source_scale_class"]) == {"bulk_rnaseq_cpm_proxy"}
-        assert not result.sample_qc["linear_tpm_comparable"].any()
-        assert result.sample_qc["tpm_proxy"].all()
-    else:
-        assert set(result.sample_qc["source_scale_class"]) == {"linear_rnaseq_tpm"}
-        assert result.sample_qc["linear_tpm_comparable"].all()
-        assert not result.sample_qc["tpm_proxy"].any()
+    assert set(result.sample_qc["source_scale_class"]) == {"linear_rnaseq_tpm"}
+    assert result.sample_qc["linear_tpm_comparable"].all()
+    assert not result.sample_qc["tpm_proxy"].any()
 
 
 def _openpbta_cranio_fixture() -> tuple[pd.DataFrame, pd.DataFrame]:

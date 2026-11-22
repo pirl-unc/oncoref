@@ -36,6 +36,7 @@ nav:
       - API guide: api.md
       - Species & data groups: species.md
       - Data versions & reproducibility: data-versions.md
+      - THYMCA & GSE125285 cohort upgrades (#737): audits/thym-histology.md
       - HPA cancer reference: hpa-cancer-reference.md
       - SRA expression sources: sra-expression-integration.md
       - Reference gene identities: cta-gene-identities.md
