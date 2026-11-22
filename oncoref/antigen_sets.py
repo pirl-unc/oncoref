@@ -34,6 +34,7 @@ EXCLUSION_CATEGORIES = {
 }
 SEQUENCE_SOURCES = ("auto", "sequence_bundle", "pyensembl")
 NEAR_SELF_CONTRACT_ID = "oncoref.near-self-subtraction.2026-11-21.1"
+ISOFORM_SELECTIVITY_CONTRACT_ID = "oncoref.isoform-selectivity.2026-11-22.1"
 ENSEMBL_RELEASE = 115
 _UNSET = object()
 _BUNDLE_TABLE_CACHE: dict[str, pd.DataFrame] = {}
@@ -652,3 +653,121 @@ def _sequences(
         sequence_scope="all annotated protein translations",
     )
     return result
+
+
+def isoform_selectivity_contract() -> dict:
+    """Return the versioned isoform-selective target & locus-Unsafe-precedence contract (#736)."""
+    return {
+        "contract_id": ISOFORM_SELECTIVITY_CONTRACT_ID,
+        "catalog_policy_id": target_selection.POLICY_ID,
+        "default_max_normal_isoform_tpm": 1.0,
+        "default_min_tumor_isoform_tpm": 10.0,
+        "invariants": [
+            "Gene-level Unsafe precedence NEVER yields to an isoform nomination without transcript/junction-level healthy-normal quantification",
+            "Even when healthy-normal transcript expression is absent, only peptides subtracted against the full Unsafe proteome (including canonical Unsafe isoforms of the same locus) may qualify",
+            "Qualifying an isoform-unique junction/exon peptide NEVER reclassifies the parent locus or canonical Unsafe protein",
+        ],
+    }
+
+
+def _extract_isoform_max_tpm(
+    table: pd.DataFrame | None,
+    *,
+    value_col: str,
+) -> dict[str, float]:
+    if table is None or table.empty:
+        return {}
+    if "transcript_id" not in table.columns:
+        raise ValueError("Isoform expression table requires a 'transcript_id' column")
+    work = table.copy()
+    tids = work["transcript_id"].astype(str).str.strip().str.split(".", n=1).str[0]
+    if value_col in work.columns:
+        vals = pd.to_numeric(work[value_col], errors="coerce")
+    else:
+        num_cols = [c for c in work.columns if c not in {"transcript_id", "gene_id", "Symbol"}]
+        if not num_cols:
+            raise ValueError(
+                f"Isoform expression table requires {value_col!r} or numeric sample/tissue columns"
+            )
+        vals = work[num_cols].apply(pd.to_numeric, errors="coerce").max(axis=1)
+    grouped = pd.DataFrame({"tid": tids, "val": vals}).groupby("tid", sort=False)["val"].max()
+    return {str(k): float(v) for k, v in grouped.items() if pd.notna(v)}
+
+
+def evaluate_isoform_selectivity(
+    candidate_sequences: pd.DataFrame,
+    *,
+    unsafe_index,
+    normal_isoform_tpm: pd.DataFrame | None = None,
+    tumor_isoform_tpm: pd.DataFrame | None = None,
+    max_normal_tpm: float = 1.0,
+    min_tumor_tpm: float = 10.0,
+    lengths=range(8, 16),
+) -> pd.DataFrame:
+    """Evaluate isoform-selective peptide targetability without weakening locus Unsafe rules (#736).
+
+    Enforces three conjunctive gates on every candidate transcript row:
+    1. Transcript/junction-resolved healthy normal RNA quantification must be supplied
+       for ``transcript_id`` and satisfy ``observed_max_normal_tpm <= max_normal_tpm``.
+    2. Subtracting ``sequence`` against ``unsafe_index`` (which must include any
+       normal-expressed canonical isoforms of the same gene) must leave >=1 unique k-mer.
+    3. Transcript-resolved tumor expression must satisfy ``observed_max_tumor_tpm >= min_tumor_tpm``.
+    """
+    required = {"transcript_id", "sequence"}
+    missing_cols = sorted(required - set(candidate_sequences.columns))
+    if missing_cols:
+        raise ValueError(f"candidate_sequences lacks required columns: {missing_cols}")
+
+    normal_max = _extract_isoform_max_tpm(normal_isoform_tpm, value_col="max_normal_tpm")
+    tumor_max = _extract_isoform_max_tpm(tumor_isoform_tpm, value_col="max_tumor_tpm")
+
+    rows = []
+    for rec in candidate_sequences.to_dict("records"):
+        raw_tid = str(rec["transcript_id"]).strip()
+        tid = raw_tid.split(".", 1)[0]
+        gene_id = str(rec.get("gene_id") or "")
+        seq = str(rec["sequence"])
+        subtracted = unsafe_index.subtract(seq, lengths=lengths)
+        unique_peptides = sorted(set(subtracted["peptide"].astype(str))) if len(subtracted) else []
+        n_retained = len(unique_peptides)
+
+        obs_norm = normal_max.get(tid)
+        obs_tum = tumor_max.get(tid)
+
+        if obs_norm is None:
+            status = "held_missing_normal_isoform_quantification"
+            qualifies = False
+        elif obs_norm > max_normal_tpm:
+            status = "excluded_normal_isoform_expression"
+            qualifies = False
+        elif n_retained == 0:
+            status = "excluded_no_unsafe_unique_peptides"
+            qualifies = False
+        elif obs_tum is None or obs_tum < min_tumor_tpm:
+            status = "held_insufficient_tumor_isoform_expression"
+            qualifies = False
+        else:
+            status = "qualifies_isoform_selective_peptides_only"
+            qualifies = True
+
+        rows.append(
+            {
+                "gene_id": gene_id,
+                "transcript_id": raw_tid,
+                "observed_max_normal_isoform_tpm": obs_norm if obs_norm is not None else pd.NA,
+                "observed_max_tumor_isoform_tpm": obs_tum if obs_tum is not None else pd.NA,
+                "n_retained_unique_kmers": n_retained,
+                "retained_unique_peptides": ";".join(unique_peptides),
+                "isoform_status": status,
+                "qualifies_isoform_selective": qualifies,
+                "locus_unsafe_precedence_preserved": True,
+            }
+        )
+    out = pd.DataFrame(rows)
+    out.attrs.update(
+        contract_id=ISOFORM_SELECTIVITY_CONTRACT_ID,
+        catalog_policy_id=target_selection.POLICY_ID,
+        max_normal_tpm=max_normal_tpm,
+        min_tumor_tpm=min_tumor_tpm,
+    )
+    return out
