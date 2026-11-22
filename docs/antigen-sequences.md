@@ -45,7 +45,10 @@ Rows carry the current policy and evidence. The older `target_sets` and
 
 ## Sequences, occurrences and retained peptides
 
-Install `oncoref[genome]` and provision human Ensembl 115 locally. Translation
+Human sequence lookups automatically use the verified offline `sequence_bundle` when
+staged locally (`sequence_source="auto"` or `sequence_source="sequence_bundle"`),
+requiring neither `oncoref[genome]` nor `pyensembl`, and fall back to local Ensembl
+115 (`oncoref[genome]`, `sequence_source="pyensembl"`) otherwise. Translation
 extraction preserves every annotated protein translation, including loss-of-function
 and decay-associated transcripts and multiple occurrences of the same sequence.
 `transcript_biotype` records the annotation for each occurrence. It inherits gene-level evidence, without
@@ -53,11 +56,16 @@ claiming isoform-specific expression. Missing translations appear in
 `sequences.attrs["missing_gene_ids"]`; they are coverage gaps, not negatives.
 
 ```python
-from oncoref.peptide_subtraction import PeptideIndex, MatchPolicy
+from oncoref import antigen_sets
+from oncoref.peptide_subtraction import MatchPolicy, PeptideIndex, near_self_contract
 
-background_records = antigen_sets.sequences("Unsafe|Other")
+# Direct bundle-backed index without pyensembl:
+background = PeptideIndex.from_sequence_bundle(background="Unsafe|Other")
+contract = near_self_contract()
+
+# Or explicit forbidden-background table with provenance & uncertainty attrs:
+background_records = antigen_sets.forbidden_background("Unsafe|Other")
 targets = antigen_sets.sequences("CA")  # or CTA, RA, CA|RA
-background = PeptideIndex(background_records)  # lengths 8–15, exact matches
 target_index = PeptideIndex(targets)
 
 peptide = "ACDEFGHIK"                 # illustrative sequence

@@ -32,8 +32,25 @@ EXCLUSION_CATEGORIES = {
     "Other": ("Other",),
     "Unsafe|Other": ("Unsafe", "Other"),
 }
+SEQUENCE_SOURCES = ("auto", "sequence_bundle", "pyensembl")
+NEAR_SELF_CONTRACT_ID = "oncoref.near-self-subtraction.2026-11-21.1"
 ENSEMBL_RELEASE = 115
 _UNSET = object()
+_BUNDLE_TABLE_CACHE: dict[str, pd.DataFrame] = {}
+
+
+def _load_bundle_sequences_table() -> pd.DataFrame:
+    """Return a cached occurrence table for the pinned current sequence bundle."""
+    from . import sequence_bundle
+
+    pin_id = sequence_bundle.descriptor()["bundle_id"]
+    cached = _BUNDLE_TABLE_CACHE.get(pin_id)
+    if cached is not None:
+        return cached
+    loaded = sequence_bundle.load(sequence_bundle.ensure(download=False)).to_sequences_table()
+    _BUNDLE_TABLE_CACHE.clear()
+    _BUNDLE_TABLE_CACHE[pin_id] = loaded
+    return loaded
 
 
 @dataclass(frozen=True)
@@ -45,6 +62,7 @@ class AntigenSelection:
     _sequences_table: pd.DataFrame | None = None
     _species: str = "human"
     _sex_eligible_ids: frozenset[str] | None = None
+    _sequence_source: str = "auto"
 
     @property
     def metadata(self):
@@ -116,30 +134,42 @@ class AntigenSelection:
         )
         return result.reset_index(drop=True)
 
-    def sequences(self, *, genome=None):
+    def sequences(self, *, genome=None, sequence_source: str | None = None):
         return _sequences(
             self.proteins(),
             self.group,
             genome=genome,
             sequences_table=self._sequences_table,
             species=self._species,
+            sequence_source=self._sequence_source if sequence_source is None else sequence_source,
         )
 
-    def background_sequences(self, background="Unsafe|Other", *, genome=None):
+    def background_sequences(
+        self, background="Unsafe|Other", *, genome=None, sequence_source: str | None = None
+    ):
         return _sequences(
             self.background_proteins(background),
             background,
             genome=genome,
             sequences_table=self._sequences_table,
             species=self._species,
+            sequence_source=self._sequence_source if sequence_source is None else sequence_source,
         )
 
     def background_index(
-        self, background="Unsafe|Other", *, genome=None, policy=None, lengths=range(8, 16)
+        self,
+        background="Unsafe|Other",
+        *,
+        genome=None,
+        sequence_source: str | None = None,
+        policy=None,
+        lengths=range(8, 16),
     ):
         from .peptide_subtraction import PeptideIndex
 
-        records = self.background_sequences(background, genome=genome)
+        records = self.background_sequences(
+            background, genome=genome, sequence_source=sequence_source
+        )
         if records.attrs["missing_gene_ids"]:
             raise ValueError(
                 "Background has missing gene translations; subtraction coverage is incomplete"
@@ -156,6 +186,7 @@ def select(
     host_evidence=None,
     species="human",
     sequences_table=None,
+    sequence_source: str = "auto",
     **overrides,
 ):
     """Select once, then obtain consistent protein, gene, sequence and background views.
@@ -166,6 +197,10 @@ def select(
     from . import target_filters
     from .species import resolve_species
 
+    if sequence_source not in SEQUENCE_SOURCES:
+        raise ValueError(
+            f"Unknown sequence_source {sequence_source!r}; choose from {SEQUENCE_SOURCES}"
+        )
     resolved = resolve_species(species)
     if group not in CANDIDATE_SETS:
         raise ValueError(f"Select a candidate set: {', '.join(CANDIDATE_SETS)}")
@@ -191,6 +226,7 @@ def select(
         _sequences_table=sequences_table,
         _species=resolved.name,
         _sex_eligible_ids=sex_ids,
+        _sequence_source=sequence_source,
     )
 
 
@@ -295,29 +331,160 @@ def loss_consequences(gene: str) -> list[dict]:
     return result
 
 
-def sequences(group="CTA", *, genome=None, species="human", **selection) -> pd.DataFrame:
+def sequences(
+    group="CTA",
+    *,
+    genome=None,
+    species="human",
+    sequence_source: str = "auto",
+    sequences_table=None,
+    **selection,
+) -> pd.DataFrame:
     """Translations from selected loci, with an exact catalog sequence match flag."""
     protein_rows = (
         proteins(group)
         if species == "human" and not selection
         else proteins(group, species=species, **selection)
     )
-    return _sequences(protein_rows, group, genome=genome, species=species)
+    return _sequences(
+        protein_rows,
+        group,
+        genome=genome,
+        sequences_table=sequences_table,
+        species=species,
+        sequence_source=sequence_source,
+    )
 
 
-def _sequences(
-    protein_rows, group, *, genome=None, sequences_table=None, species="human"
+def forbidden_background(
+    background="Unsafe|Other",
+    *,
+    host=None,
+    mode="all",
+    species="human",
+    sequence_source: str = "auto",
+    genome=None,
+    sequences_table=None,
+    **overrides,
 ) -> pd.DataFrame:
-    """All annotated protein translations, one row per transcript occurrence.
+    """Return the version-pinned downstream forbidden/near-self background table (#640).
 
-    Uses an explicit ``sequences_table``, an ``orfdata.Proteome``, or a local
-    Ensembl 115 reference (oncoref[genome]); never downloads assets. Missing
-    genes/translations are recorded in ``attrs['missing_gene_ids']``.
-    Stops/ambiguous residues remain in originals; peptide matching splits at them.
+    Explicitly separates ``Unsafe`` from ``Other`` unless ``background='Unsafe|Other'``
+    (the conservative default), never applies a blanket CTA exemption, incorporates any
+    ``HostContext`` exclusions, fails closed on cross-species mismatch, and attaches
+    explicit uncertainty/provenance fields in ``result.attrs``.
     """
     from .species import resolve_species
 
+    if background not in EXCLUSION_CATEGORIES:
+        raise ValueError("Background must be Unsafe, Other or Unsafe|Other")
     resolved = resolve_species(species)
+    selected = select(
+        "CA|RA",
+        mode=mode,
+        host=host,
+        species=resolved,
+        sequences_table=sequences_table,
+        sequence_source=sequence_source,
+        **overrides,
+    )
+    bg_proteins = selected.background_proteins(background)
+    records = _sequences(
+        bg_proteins,
+        background,
+        genome=genome,
+        sequences_table=selected._sequences_table,
+        species=resolved.name,
+        sequence_source=sequence_source,
+    )
+    classifications = (
+        bg_proteins["classification"].astype(str)
+        if "classification" in bg_proteins
+        else pd.Series("", index=bg_proteins.index, dtype="string")
+    )
+    reasons = (
+        bg_proteins["background_reason"].astype(str)
+        if "background_reason" in bg_proteins
+        else pd.Series("", index=bg_proteins.index, dtype="string")
+    )
+    records.attrs.update(
+        near_self_contract_id=NEAR_SELF_CONTRACT_ID,
+        catalog_policy_id=target_selection.POLICY_ID,
+        species=resolved.name,
+        taxon_id=resolved.taxon_id,
+        background=background,
+        included_categories=list(EXCLUSION_CATEGORIES[background]),
+        omitted_categories=[
+            cat for cat in ("Unsafe", "Other") if cat not in EXCLUSION_CATEGORIES[background]
+        ],
+        cta_exemption_applied=False,
+        unmeasured_home_entity_ids=sorted(
+            bg_proteins.loc[classifications.eq("Other:Unscreened tissue"), "entity_id"].astype(str)
+        ),
+        review_hold_entity_ids=sorted(
+            bg_proteins.loc[
+                classifications.isin(["Other:Review", "Other:Sequence"]), "entity_id"
+            ].astype(str)
+        ),
+        host_excluded_entity_ids=sorted(
+            bg_proteins.loc[reasons.str.startswith("Host:"), "entity_id"].astype(str)
+        ),
+        downstream_policy_boundary=(
+            "oncoref supplies version-pinned reference proteome sequences, catalog exclusions, "
+            "host-filtered candidates, and explicit uncertainty metadata; MHC presentation, "
+            "TCR cross-reactivity weighting, and clinical risk thresholds belong to downstream callers."
+        ),
+    )
+    return records
+
+
+def _sequences(
+    protein_rows,
+    group,
+    *,
+    genome=None,
+    sequences_table=None,
+    species="human",
+    sequence_source: str = "auto",
+) -> pd.DataFrame:
+    """All annotated protein translations, one row per transcript occurrence.
+
+    Uses an explicit ``sequences_table``, the verified offline ``sequence_bundle``
+    (when ``sequence_source='sequence_bundle'`` or ``'auto'`` with a staged local
+    human bundle), or a local Ensembl 115 reference (``oncoref[genome]``); never
+    downloads assets implicitly. Missing genes/translations are recorded in
+    ``attrs['missing_gene_ids']``. Stops/ambiguous residues remain in originals;
+    peptide matching splits at them.
+    """
+    from .species import resolve_species
+
+    if sequence_source not in SEQUENCE_SOURCES:
+        raise ValueError(
+            f"Unknown sequence_source {sequence_source!r}; choose from {SEQUENCE_SOURCES}"
+        )
+    resolved = resolve_species(species)
+    if sequences_table is not None:
+        table_taxon = sequences_table.attrs.get("taxon_id")
+        if table_taxon is not None and int(table_taxon) != resolved.taxon_id:
+            raise ValueError(
+                f"Sequence reference taxon mismatch: sequences_table taxon_id={table_taxon} "
+                f"cannot be used for species {resolved.name!r} (taxon_id={resolved.taxon_id})"
+            )
+    elif genome is None:
+        if sequence_source == "sequence_bundle":
+            if resolved.taxon_id != 9606:
+                raise ValueError(
+                    f"sequence_bundle currently pins human GRCh38/Ensembl 115 (taxon 9606), "
+                    f"not {resolved.name!r}"
+                )
+            sequences_table = _load_bundle_sequences_table()
+        elif sequence_source == "auto" and resolved.taxon_id == 9606:
+            try:
+                sequences_table = _load_bundle_sequences_table()
+            except FileNotFoundError:
+                sequences_table = None
+    elif sequence_source == "sequence_bundle":
+        raise ValueError("Cannot pass both genome=... and sequence_source='sequence_bundle'")
     if sequences_table is not None:
         by_gene = (
             dict(iter(sequences_table.groupby("gene_id")))
@@ -384,8 +551,19 @@ def _sequences(
             reference=sequences_table.attrs.get(
                 "reference", sequences_table.attrs.get("reference_id", f"{resolved.name}:explicit")
             ),
+            sequence_source=sequences_table.attrs.get("sequence_source", "explicit_table"),
             missing_gene_ids=sorted(missing),
             sequence_scope="all annotated protein translations",
+            **(
+                {"bundle_id": sequences_table.attrs["bundle_id"]}
+                if "bundle_id" in sequences_table.attrs
+                else {}
+            ),
+            **(
+                {"role_policy_id": sequences_table.attrs["role_policy_id"]}
+                if "role_policy_id" in sequences_table.attrs
+                else {}
+            ),
         )
         return result
 
@@ -469,6 +647,7 @@ def _sequences(
     result.attrs.update(
         policy_id=target_selection.POLICY_ID,
         reference=expected_ref,
+        sequence_source="pyensembl",
         missing_gene_ids=sorted(missing),
         sequence_scope="all annotated protein translations",
     )
