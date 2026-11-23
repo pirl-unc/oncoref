@@ -89,15 +89,19 @@ def has_explicit_cache_override(*, envkeys: tuple[str, ...] = ()) -> bool:
 
 
 def _has_cached_payload(path: Path) -> bool:
-    """Return True when ``path`` contains at least one non-lock cached file."""
+    """Return True when ``path`` contains at least one non-lock, non-hidden cached file."""
     if not path.exists():
         return False
     if path.is_file():
-        return not path.name.endswith(".lock")
+        return not path.name.startswith(".") and not path.name.endswith(".lock")
     try:
         for child in path.rglob("*"):
-            if child.is_file() and not child.name.endswith(".lock"):
-                return True
+            if not child.is_file():
+                continue
+            rel_parts = child.relative_to(path).parts
+            if any(part.startswith(".") for part in rel_parts) or child.name.endswith(".lock"):
+                continue
+            return True
     except OSError:
         return False
     return False

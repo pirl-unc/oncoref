@@ -154,8 +154,14 @@ def cache_base_dir() -> Path:
         legacy_base = (Path.home() / ".cache" / "oncoref").expanduser()
         if (
             legacy_base != base
-            and not (base / "sources").exists()
             and (legacy_base / "sources").exists()
+            and (
+                not (base / "sources").exists()
+                or (
+                    not _downloads._has_cached_payload(base / "sources")
+                    and _downloads._has_cached_payload(legacy_base / "sources")
+                )
+            )
         ):
             return legacy_base
     return base

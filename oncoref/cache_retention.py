@@ -642,7 +642,6 @@ def prune_caches(
     )
     planned = [entry for entry in before["entries"] if entry["prunable"]]
     if not dry_run and "bundle" in _normalize_targets(targets):
-        import datacache
         import datacache.bundle_store as _bs
 
         for entry in before["entries"]:
@@ -650,7 +649,7 @@ def prune_caches(
                 bpath = Path(entry["path"])
                 with contextlib.suppress(*_bs.INVALID_STORE_ERRORS):
                     if _bs.store_at(bpath) is not None:
-                        datacache.prune_bundles(bpath, keep=1)
+                        _bs.prune_bundles(bpath, keep=1)
     if dry_run or not planned:
         return {
             **before,
