@@ -1,0 +1,24 @@
+{
+  "schema": "oncoref.nuclear-spillover-qc.v1",
+  "policy_id": "oncoref.nuclear-spillover-qc.2026-11-23.1",
+  "ensembl_release": 115,
+  "evaluated_proteins": 388,
+  "cleared_proteins": 5,
+  "disposition_counts": {
+    "retained_established_cytoplasmic_or_bulk": 282,
+    "retained_unresolved_paralog_or_exonic_host": 52,
+    "retained_literature_or_ihc_supported": 33,
+    "retained_nuclear_no_spillover_geometry": 16,
+    "nuclear_spillover_cleared": 4,
+    "promoter_spillover_immune_explained": 1
+  },
+  "cleared_labels": [
+    "METTL21EP",
+    "PLAC1",
+    "TENT5D",
+    "ZAN",
+    "NUTM1"
+  ],
+  "magea12_regression_status": "retained_literature_or_ihc_supported",
+  "sha256": "3bd8224ac50ff83e121d1e30816f5ead8e7d5ef6acecf1f1c6efd3b5aca60fbd"
+}

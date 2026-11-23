@@ -217,9 +217,9 @@ def compute_bleed_cleaned_donor_summary(
 ) -> float:
     """Compute within-tissue donor summary after masking verified multiplex-bleed samples.
 
-    If ``orthogonal_supported`` is True (e.g. target-organ single-cell RNA >= 1 nTPM or
-    independent non-GTEx bulk >= 2 nTPM), **no** samples are masked even if ``flagged_samples``
-    is non-empty.
+    If ``orthogonal_supported`` is True (e.g. target-organ single-cell RNA >= 0.5 nTPM,
+    independent non-GTEx bulk >= 0.5 nTPM, or sorted immune RNA >= 0.5 TPM), **no** samples
+    are masked even if ``flagged_samples`` is non-empty.
     """
     s = values.copy()
     if isinstance(s, pd.DataFrame):

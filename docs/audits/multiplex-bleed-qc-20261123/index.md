@@ -4,12 +4,12 @@ Policy `oncoref.multiplex-bleed-qc.2026-11-23.1` · Reference panel `gtex_indivi
 
 ## Method
 
-Ultra-abundant tissue-specific transcripts (`>= 1,000 TPM`, such as spermatid `PRM1`/`PRM2`/`TNP1` in testis or `SEMG1`/`SEMG2`/`TGM4` in prostate) bleed at `10^-5` to `5 x 10^-3` into unrelated biopsies sequenced on shared multiplexed Illumina flowcells ([Nieuwenhuis et al., *Genome Res* 2020](https://doi.org/10.1101/gr.255380.119)).
+Ultra-abundant tissue-specific transcripts (`>= 1,000 TPM`, such as spermatid `PRM1`/`PRM2`/`TNP1` in testis or `KLK3`/`MSMB`/`KLK2`/`ACP3` in prostate) bleed at `10^-5` to `5 x 10^-3` into unrelated biopsies sequenced on shared multiplexed Illumina flowcells ([Nieuwenhuis et al., *Genome Res* 2020](https://doi.org/10.1101/gr.255380.119)).
 
 A biopsy $b$ in non-source organ $T$ is flagged for source-$S$ bleed if and only if:
-1. **Multi-sentinel co-detection:** `>= 3` sentinel markers from $\mathcal{M}_S$ are simultaneously detected at `>= 0.5 TPM` in biopsy $b$.
+1. **Multi-sentinel co-detection:** `>= 3` sentinel markers from $\mathcal{M}_S$ are simultaneously detected at `>= 0.25 TPM` in biopsy $b$.
 2. **Stoichiometric proportionality:** Median $\hat{\alpha}_{b,g} = \text{TPM}_{b,g} / \text{median\_TPM}_{S,g} \in [10^{-5}, 5 \times 10^{-3}]$ with $\text{IQR}(\log_{10} \hat{\alpha}_{b,g}) \le 0.5$.
-3. **Orthogonal somatic veto:** Independent `HPA v23` single-cell clusters (`< 1.0 nTPM`) and non-GTEx `rna_tissue_hpa` (`< 2.0 nTPM`) confirm no true expression in organ $T$.
+3. **Orthogonal somatic veto:** Independent `HPA v23` single-cell clusters (`< 0.5 nTPM`), non-GTEx `rna_tissue_hpa` (`< 0.5 nTPM`), and sorted immune cells (`< 0.5 TPM`) confirm no true expression in organ $T$.
 
 ## Top GTEx Sites with Coordinated Testis Sentinel Bleed
 

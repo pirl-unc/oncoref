@@ -1,0 +1,777 @@
+{
+  "schema": "oncoref.cleared-candidate-comparison-observations.v1",
+  "policy_id": "oncoref.nuclear-spillover-qc.2026-11-23.1",
+  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-20.1",
+  "candidates": {
+    "PEG:a27e8303d3e053b68495": {
+      "entity_id": "PEG:a27e8303d3e053b68495",
+      "protein_group_label": "ZAN",
+      "required_coverage_complete": true,
+      "missing_required_contexts": [],
+      "unsafe_sequence_overlap_pct": 0.23,
+      "normal_reference_tpm": 0.511204,
+      "disposable_max_tpm": 0.01119,
+      "disposable_max_ntpm": 0.0,
+      "reproductive_status": "qualifies",
+      "reproductive_supported_tpm": 16.674,
+      "reproductive_compartments": [
+        {
+          "compartment": "cervix",
+          "scope": "reproductive",
+          "max_tpm": 0.12551,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "endometrium",
+          "scope": "reproductive",
+          "max_tpm": 0.016234,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "epididymis",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "fallopian tube",
+          "scope": "reproductive",
+          "max_tpm": 0.036074,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "lactating_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.035883,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "ovary",
+          "scope": "reproductive",
+          "max_tpm": 0.067128,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "placenta",
+          "scope": "reproductive",
+          "max_tpm": 0.019668,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "prostate",
+          "scope": "reproductive",
+          "max_tpm": 0.219824,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "resting_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.314914,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "seminal vesicle",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "testis",
+          "scope": "reproductive",
+          "max_tpm": 16.674,
+          "qualifies_tenfold": true
+        },
+        {
+          "compartment": "uterus",
+          "scope": "reproductive",
+          "max_tpm": 0.096869,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "vagina",
+          "scope": "reproductive",
+          "max_tpm": 0.140454,
+          "qualifies_tenfold": false
+        }
+      ],
+      "top_tumor_observations": [
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-XE-AAO3-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-XE-AAO3-01",
+          "participant_id": "TCGA:TCGA-XE-AAO3",
+          "cancer_code": "TGCT",
+          "value": 10.520102
+        },
+        {
+          "source_id": "TARGET_ALL_2018",
+          "sample_id": "TARGET-10-PANSIA-09A",
+          "sample_key": "TARGET_ALL_2018:TARGET-10-PANSIA-09A",
+          "participant_id": "TARGET:TARGET-10-PANSIA",
+          "cancer_code": "B_ALL",
+          "value": 10.1565
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-S6-A8JY-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-S6-A8JY-01",
+          "participant_id": "TCGA:TCGA-S6-A8JY",
+          "cancer_code": "TGCT",
+          "value": 9.340249
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-SO-A8JP-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-SO-A8JP-01",
+          "participant_id": "TCGA:TCGA-SO-A8JP",
+          "cancer_code": "TGCT",
+          "value": 7.710003
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-S6-A8JX-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-S6-A8JX-01",
+          "participant_id": "TCGA:TCGA-S6-A8JX",
+          "cancer_code": "TGCT",
+          "value": 7.680131
+        },
+        {
+          "source_id": "TARGET_ALL_2018",
+          "sample_id": "TARGET-10-PASKHT-03A",
+          "sample_key": "TARGET_ALL_2018:TARGET-10-PASKHT-03A",
+          "participant_id": "TARGET:TARGET-10-PASKHT",
+          "cancer_code": "B_ALL",
+          "value": 5.1084
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-W4-A7U2-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-W4-A7U2-01",
+          "participant_id": "TCGA:TCGA-W4-A7U2",
+          "cancer_code": "TGCT",
+          "value": 5.010105
+        }
+      ]
+    },
+    "PEG:f0572db6c19c2e532885": {
+      "entity_id": "PEG:f0572db6c19c2e532885",
+      "protein_group_label": "PLAC1",
+      "required_coverage_complete": true,
+      "missing_required_contexts": [],
+      "unsafe_sequence_overlap_pct": 0.0,
+      "normal_reference_tpm": 0.824638,
+      "disposable_max_tpm": 0.168112,
+      "disposable_max_ntpm": 0.0,
+      "reproductive_status": "qualifies",
+      "reproductive_supported_tpm": 187.021784,
+      "reproductive_compartments": [
+        {
+          "compartment": "cervix",
+          "scope": "reproductive",
+          "max_tpm": 0.583791,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "embryo",
+          "scope": "developmental",
+          "max_tpm": 3.976377,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "endometrium",
+          "scope": "reproductive",
+          "max_tpm": 0.839071,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "epididymis",
+          "scope": "reproductive",
+          "max_tpm": 0.05927,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "fallopian tube",
+          "scope": "reproductive",
+          "max_tpm": 1.432764,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "lactating_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.220398,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "ovary",
+          "scope": "reproductive",
+          "max_tpm": 2.226123,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "placenta",
+          "scope": "reproductive",
+          "max_tpm": 187.021784,
+          "qualifies_tenfold": true
+        },
+        {
+          "compartment": "prostate",
+          "scope": "reproductive",
+          "max_tpm": 0.862834,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "resting_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.41177,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "seminal vesicle",
+          "scope": "reproductive",
+          "max_tpm": 0.049091,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "testis",
+          "scope": "reproductive",
+          "max_tpm": 5.42912,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "uterus",
+          "scope": "reproductive",
+          "max_tpm": 1.68965,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "vagina",
+          "scope": "reproductive",
+          "max_tpm": 0.499053,
+          "qualifies_tenfold": false
+        }
+      ],
+      "top_tumor_observations": [
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAKNXS-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAKNXS-01A",
+          "participant_id": "TARGET:TARGET-50-PAKNXS",
+          "cancer_code": "WILMS",
+          "value": 152.613
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-OR-A5KZ-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-OR-A5KZ-01",
+          "participant_id": "TCGA:TCGA-OR-A5KZ",
+          "cancer_code": "ACC",
+          "value": 110.002171
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-OR-A5K5-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-OR-A5K5-01",
+          "participant_id": "TCGA:TCGA-OR-A5K5",
+          "cancer_code": "ACC",
+          "value": 100.963288
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR29_0786_S01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:THR29_0786_S01",
+          "participant_id": "TREEHOUSE:THR29_0786",
+          "cancer_code": "SARC_RMS_ERMS",
+          "value": 96.97
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-E2-A14W-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-E2-A14W-01",
+          "participant_id": "TCGA:TCGA-E2-A14W",
+          "cancer_code": "BRCA",
+          "value": 88.529432
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-OR-A5JE-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-OR-A5JE-01",
+          "participant_id": "TCGA:TCGA-OR-A5JE",
+          "cancer_code": "ACC",
+          "value": 71.699025
+        },
+        {
+          "source_id": "TARGET_NBL_2018",
+          "sample_id": "TARGET-30-PASZPI-01A",
+          "sample_key": "TARGET_NBL_2018:TARGET-30-PASZPI-01A",
+          "participant_id": "TARGET:TARGET-30-PASZPI",
+          "cancer_code": "NBL",
+          "value": 65.7013
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-IE-A4EH-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-IE-A4EH-01",
+          "participant_id": "TCGA:TCGA-IE-A4EH",
+          "cancer_code": "SARC_LMS",
+          "value": 60.698075
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAJPCM-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAJPCM-01A",
+          "participant_id": "TARGET:TARGET-50-PAJPCM",
+          "cancer_code": "WILMS",
+          "value": 57.7035
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-D8-A1JI-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-D8-A1JI-01",
+          "participant_id": "TCGA:TCGA-D8-A1JI",
+          "cancer_code": "BRCA",
+          "value": 57.451679
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DX-A8BN-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DX-A8BN-01",
+          "participant_id": "TCGA:TCGA-DX-A8BN",
+          "cancer_code": "SARC_UPS",
+          "value": 54.878786
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR29_0729_S01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:THR29_0729_S01",
+          "participant_id": "TREEHOUSE:THR29_0729",
+          "cancer_code": "SARC_RMS_ARMS",
+          "value": 54.55
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-B6-A0RL-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-B6-A0RL-01",
+          "participant_id": "TCGA:TCGA-B6-A0RL",
+          "cancer_code": "BRCA",
+          "value": 52.998343
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-N8-A4PN-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-N8-A4PN-01",
+          "participant_id": "TCGA:TCGA-N8-A4PN",
+          "cancer_code": "UCS",
+          "value": 52.461077
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-P3-A6T6-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-P3-A6T6-01",
+          "participant_id": "TCGA:TCGA-P3-A6T6",
+          "cancer_code": "HNSC",
+          "value": 48.290692
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR52_4981_S01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:THR52_4981_S01",
+          "participant_id": "TREEHOUSE:THR52_4981",
+          "cancer_code": "SARC_LPS_UNSPEC",
+          "value": 48.22
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-29-1702-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-29-1702-01",
+          "participant_id": "TCGA:TCGA-29-1702",
+          "cancer_code": "OV",
+          "value": 47.811074
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAJPDN-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAJPDN-01A",
+          "participant_id": "TARGET:TARGET-50-PAJPDN",
+          "cancer_code": "WILMS",
+          "value": 47.1009
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR54_4632_S01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:THR54_4632_S01",
+          "participant_id": "TREEHOUSE:THR54_4632",
+          "cancer_code": "SARC_LPS_UNSPEC",
+          "value": 46.5
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DX-A1KW-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DX-A1KW-01",
+          "participant_id": "TCGA:TCGA-DX-A1KW",
+          "cancer_code": "SARC_DDLPS",
+          "value": 46.150409
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-09-0364-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-09-0364-01",
+          "participant_id": "TCGA:TCGA-09-0364",
+          "cancer_code": "OV",
+          "value": 46.099259
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAJMVC-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAJMVC-01A",
+          "participant_id": "TARGET:TARGET-50-PAJMVC",
+          "cancer_code": "WILMS",
+          "value": 45.6271
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-BH-A0HL-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-BH-A0HL-01",
+          "participant_id": "TCGA:TCGA-BH-A0HL",
+          "cancer_code": "BRCA",
+          "value": 43.26024
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-09-1674-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-09-1674-01",
+          "participant_id": "TCGA:TCGA-09-1674",
+          "cancer_code": "OV",
+          "value": 42.979297
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-BR-A4IY-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-BR-A4IY-01",
+          "participant_id": "TCGA:TCGA-BR-A4IY",
+          "cancer_code": "STAD",
+          "value": 42.67058
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAJNVX-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAJNVX-01A",
+          "participant_id": "TARGET:TARGET-50-PAJNVX",
+          "cancer_code": "WILMS",
+          "value": 42.4871
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-E2-A56Z-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-E2-A56Z-01",
+          "participant_id": "TCGA:TCGA-E2-A56Z",
+          "cancer_code": "BRCA",
+          "value": 39.639506
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DX-A8BX-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DX-A8BX-01",
+          "participant_id": "TCGA:TCGA-DX-A8BX",
+          "cancer_code": "SARC_UPS",
+          "value": 39.020667
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DX-AB35-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DX-AB35-01",
+          "participant_id": "TCGA:TCGA-DX-AB35",
+          "cancer_code": "SARC_LPS_UNSPEC",
+          "value": 38.850645
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-E7-A6MD-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-E7-A6MD-01",
+          "participant_id": "TCGA:TCGA-E7-A6MD",
+          "cancer_code": "BLCA",
+          "value": 37.628802
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DX-A3LW-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DX-A3LW-01",
+          "participant_id": "TCGA:TCGA-DX-A3LW",
+          "cancer_code": "SARC_DDLPS",
+          "value": 37.368878
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-BT-A3PH-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-BT-A3PH-01",
+          "participant_id": "TCGA:TCGA-BT-A3PH",
+          "cancer_code": "BLCA",
+          "value": 37.18026
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAKECR-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAKECR-01A",
+          "participant_id": "TARGET:TARGET-50-PAKECR",
+          "cancer_code": "WILMS",
+          "value": 36.4473
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DX-A48N-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DX-A48N-01",
+          "participant_id": "TCGA:TCGA-DX-A48N",
+          "cancer_code": "SARC_DDLPS",
+          "value": 35.589093
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAJLIP-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAJLIP-01A",
+          "participant_id": "TARGET:TARGET-50-PAJLIP",
+          "cancer_code": "WILMS",
+          "value": 35.3001
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR52_4932_S01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:THR52_4932_S01",
+          "participant_id": "TREEHOUSE:THR52_4932",
+          "cancer_code": "SARC_LPS_UNSPEC",
+          "value": 34.96
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-66-2763-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-66-2763-01",
+          "participant_id": "TCGA:TCGA-66-2763",
+          "cancer_code": "LUSC",
+          "value": 34.479385
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-13-0800-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-13-0800-01",
+          "participant_id": "TCGA:TCGA-13-0800",
+          "cancer_code": "OV",
+          "value": 34.021186
+        },
+        {
+          "source_id": "MMRF_COMMPASS",
+          "sample_id": "MMRF_2535_1_BM_CD138pos",
+          "sample_key": "MMRF_COMMPASS:MMRF_2535_1_BM_CD138pos",
+          "participant_id": "MMRF:2535",
+          "cancer_code": "MM",
+          "value": 32.9104
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-DK-A3IT-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-DK-A3IT-01",
+          "participant_id": "TCGA:TCGA-DK-A3IT",
+          "cancer_code": "BLCA",
+          "value": 32.549418
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-CQ-7065-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-CQ-7065-01",
+          "participant_id": "TCGA:TCGA-CQ-7065",
+          "cancer_code": "HNSC",
+          "value": 32.47056
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR52_4997_S01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:THR52_4997_S01",
+          "participant_id": "TREEHOUSE:THR52_4997",
+          "cancer_code": "SARC_UPS",
+          "value": 32.38
+        },
+        {
+          "source_id": "TARGET_RT_2017",
+          "sample_id": "TARGET-52-PAUGYZ-01A",
+          "sample_key": "TARGET_RT_2017:TARGET-52-PAUGYZ-01A",
+          "participant_id": "TARGET:TARGET-52-PAUGYZ",
+          "cancer_code": "RT",
+          "value": 32.3394
+        },
+        {
+          "source_id": "TARGET_WT_2015",
+          "sample_id": "TARGET-50-PAJPAR-01A",
+          "sample_key": "TARGET_WT_2015:TARGET-50-PAJPAR-01A",
+          "participant_id": "TARGET:TARGET-50-PAJPAR",
+          "cancer_code": "WILMS",
+          "value": 32.2917
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-60-2724-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-60-2724-01",
+          "participant_id": "TCGA:TCGA-60-2724",
+          "cancer_code": "LUSC",
+          "value": 31.760446
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-SI-A71Q-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-SI-A71Q-01",
+          "participant_id": "TCGA:TCGA-SI-A71Q",
+          "cancer_code": "SARC_MPNST",
+          "value": 31.650554
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-CV-7245-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-CV-7245-01",
+          "participant_id": "TCGA:TCGA-CV-7245",
+          "cancer_code": "HNSC",
+          "value": 31.460261
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-FX-A3NK-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-FX-A3NK-01",
+          "participant_id": "TCGA:TCGA-FX-A3NK",
+          "cancer_code": "SARC_DDLPS",
+          "value": 30.939063
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-K4-A3WU-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-K4-A3WU-01",
+          "participant_id": "TCGA:TCGA-K4-A3WU",
+          "cancer_code": "BLCA",
+          "value": 30.640276
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-CV-6960-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-CV-6960-01",
+          "participant_id": "TCGA:TCGA-CV-6960",
+          "cancer_code": "HNSC",
+          "value": 30.090937
+        }
+      ]
+    },
+    "PEG:7693c3d3919399c5d348": {
+      "entity_id": "PEG:7693c3d3919399c5d348",
+      "protein_group_label": "METTL21EP",
+      "required_coverage_complete": false,
+      "missing_required_contexts": [
+        "bone marrow",
+        "choroid plexus",
+        "duodenum",
+        "lymph node",
+        "parathyroid gland",
+        "rectum",
+        "retina",
+        "smooth muscle",
+        "tongue"
+      ],
+      "unsafe_sequence_overlap_pct": 0.0,
+      "normal_reference_tpm": 6.038408,
+      "disposable_max_tpm": 0.0,
+      "disposable_max_ntpm": 0.0,
+      "reproductive_status": "unassessed",
+      "reproductive_supported_tpm": null,
+      "reproductive_compartments": [
+        {
+          "compartment": "cervix",
+          "scope": "reproductive",
+          "max_tpm": 0.787114,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "fallopian tube",
+          "scope": "reproductive",
+          "max_tpm": 0.651824,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "lactating_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.389185,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "ovary",
+          "scope": "reproductive",
+          "max_tpm": 0.994759,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "prostate",
+          "scope": "reproductive",
+          "max_tpm": 0.904463,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "resting_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.69112,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "testis",
+          "scope": "reproductive",
+          "max_tpm": 1.24373,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "uterus",
+          "scope": "reproductive",
+          "max_tpm": 0.784446,
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "vagina",
+          "scope": "reproductive",
+          "max_tpm": 1.51674,
+          "qualifies_tenfold": false
+        }
+      ],
+      "top_tumor_observations": [
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-KU-A6H8-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-KU-A6H8-01",
+          "participant_id": "TCGA:TCGA-KU-A6H8",
+          "cancer_code": "HNSC",
+          "value": 10.669926
+        },
+        {
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-CQ-6222-01",
+          "sample_key": "TREEHOUSE_POLYA_25_01:TCGA-CQ-6222-01",
+          "participant_id": "TCGA:TCGA-CQ-6222",
+          "cancer_code": "HNSC",
+          "value": 6.640098
+        },
+        {
+          "source_id": "CGCI_BLGSP",
+          "sample_id": "BLGSP-71-23-00468-01A",
+          "sample_key": "CGCI_BLGSP:BLGSP-71-23-00468-01A",
+          "participant_id": "CGCI_BLGSP:BLGSP-71-23-00468",
+          "cancer_code": "BL",
+          "value": 6.422
+        },
+        {
+          "source_id": "CGCI_BLGSP",
+          "sample_id": "BLGSP-71-17-00356-01A",
+          "sample_key": "CGCI_BLGSP:BLGSP-71-17-00356-01A",
+          "participant_id": "CGCI_BLGSP:BLGSP-71-17-00356",
+          "cancer_code": "BL",
+          "value": 5.769
+        },
+        {
+          "source_id": "CGCI_BLGSP",
+          "sample_id": "BLGSP-71-23-00452-01A",
+          "sample_key": "CGCI_BLGSP:BLGSP-71-23-00452-01A",
+          "participant_id": "CGCI_BLGSP:BLGSP-71-23-00452",
+          "cancer_code": "BL",
+          "value": 5.0994
+        }
+      ]
+    }
+  }
+}

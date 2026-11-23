@@ -25,6 +25,7 @@ import pandas as pd
 from . import (
     normal_adjudications,
     normal_library_qc,
+    rare_cell_compartment_qc,
     target_selection,
     unmeasured_home_panels,
 )
@@ -57,6 +58,7 @@ def human_screening_spec(
     include_home_panels: bool = False,
     include_737_cohorts: bool = False,
     include_multiplex_bleed_qc: bool = False,
+    include_nuclear_spillover_qc: bool = False,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -66,7 +68,12 @@ def human_screening_spec(
         if meta is not None
         else pol.primary_reference
     )
-    integrated = include_home_panels or include_737_cohorts or include_multiplex_bleed_qc
+    integrated = (
+        include_home_panels
+        or include_737_cohorts
+        or include_multiplex_bleed_qc
+        or include_nuclear_spillover_qc
+    )
     effective_policy = policy_id or (
         HUMAN_INTEGRATED_POLICY_PREVIEW_ID if integrated else target_selection.POLICY_ID
     )
@@ -83,6 +90,10 @@ def human_screening_spec(
     if include_multiplex_bleed_qc:
         notes.append(
             "Includes #764 stoichiometric multiplex index-hopping / cross-sample bleed QC."
+        )
+    if include_nuclear_spillover_qc:
+        notes.append(
+            "Includes #765 nuclear snRNA-seq compartment and transcriptional spillover QC."
         )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
@@ -122,6 +133,7 @@ def build_human_screening_inputs(
     include_adjudications: bool = True,
     include_737_cohorts: bool = False,
     include_multiplex_bleed_qc: bool = False,
+    include_nuclear_spillover_qc: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -131,9 +143,23 @@ def build_human_screening_inputs(
         include_home_panels=include_home_panels,
         include_737_cohorts=include_737_cohorts or extra_tumor_observations is not None,
         include_multiplex_bleed_qc=include_multiplex_bleed_qc,
+        include_nuclear_spillover_qc=include_nuclear_spillover_qc,
     )
     ts = target_selection.results()
     exposures = packaged_species_host_exposure("human")
+
+    cleared_rare_eids: set[str] = set()
+    cleared_obs_map: dict[str, dict] = {}
+    if include_nuclear_spillover_qc:
+        nuc_cleared = rare_cell_compartment_qc.nuclear_spillover_adjudications(only_cleared=True)
+        cleared_rare_eids = set(
+            nuc_cleared.loc[
+                nuc_cleared["disposition"].eq("nuclear_spillover_cleared"), "entity_id"
+            ].astype(str)
+        )
+        cleared_obs_map = rare_cell_compartment_qc.cleared_candidate_comparison_observations()[
+            "candidates"
+        ]
 
     readthrough = ts["readthrough_locus"].fillna(False).astype(bool)
     overlap_ge95 = (
@@ -152,6 +178,8 @@ def build_human_screening_inputs(
 
     gate_rows: list[dict] = []
     for r in ts.itertuples(index=False):
+        if r.entity_id in cleared_rare_eids:
+            continue
         if r.category == "Unsafe":
             gate_rows.append(
                 {
@@ -270,6 +298,20 @@ def build_human_screening_inputs(
             "published_nomination": ts["published_nomination"].fillna(False).astype(bool),
         }
     )
+    if cleared_obs_map:
+        eid_to_pidx = {eid: idx for idx, eid in enumerate(proteins["entity_id"])}
+        for ceid, cpayload in cleared_obs_map.items():
+            pidx = eid_to_pidx.get(ceid)
+            if pidx is None:
+                continue
+            proteins.at[pidx, "required_coverage_complete"] = bool(
+                cpayload["required_coverage_complete"]
+            )
+            proteins.at[pidx, "unsafe_sequence_overlap_pct"] = float(
+                cpayload["unsafe_sequence_overlap_pct"]
+            )
+            proteins.at[pidx, "disposable_max_ntpm"] = float(cpayload["disposable_max_ntpm"])
+            proteins.at[pidx, "nested_unqualified"] = False
 
     bleed_clean_by_eid: dict[str, dict] = {}
     if include_multiplex_bleed_qc:
@@ -284,9 +326,115 @@ def build_human_screening_inputs(
     repro_rows: list[dict] = []
 
     for r in ts.itertuples(index=False):
+        eid = r.entity_id
+        if eid in cleared_obs_map:
+            cpayload = cleared_obs_map[eid]
+            if not bool(cpayload["required_coverage_complete"]):
+                continue
+            if cpayload.get("normal_reference_tpm") is not None:
+                normal_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "cleared_candidate_normal_reference_765",
+                        "context_id": REQUIRED_PERIPHERAL_CONTEXT,
+                        "tissue": REQUIRED_PERIPHERAL_CONTEXT,
+                        "scope": "normal",
+                        "value": float(cpayload["normal_reference_tpm"]),
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+            if cpayload.get("disposable_max_tpm") is not None:
+                normal_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "cleared_candidate_normal_reference_765",
+                        "context_id": "disposable_reference",
+                        "tissue": "disposable_reference",
+                        "scope": "disposable",
+                        "value": float(cpayload["disposable_max_tpm"]),
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+            for tobs in cpayload.get("top_tumor_observations", []):
+                tumor_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": str(tobs["source_id"]),
+                        "sample_id": str(tobs["sample_id"]),
+                        "participant_id": str(tobs.get("participant_id") or ""),
+                        "cancer_code": str(tobs.get("cancer_code") or ""),
+                        "value": float(tobs["value"]),
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+            supp_val = cpayload.get("reproductive_supported_tpm")
+            for citem in cpayload.get("reproductive_compartments", []):
+                comp = str(citem["compartment"])
+                is_emb = citem.get("scope") == "developmental" or comp == "embryo"
+                cqual = bool(citem.get("qualifies_tenfold", False))
+                cval = float(citem["max_tpm"])
+                if is_emb:
+                    repro_rows.append(
+                        {
+                            "entity_id": eid,
+                            "source_id": "human_embryo_atlases",
+                            "sample_id": f"repro:{comp}",
+                            "participant_id": "embryo_d1" if cqual else "",
+                            "scope": "developmental",
+                            "compartment": comp,
+                            "source_context": "embryo_lineage",
+                            "developmental_stage": "preimplantation",
+                            "cells": 25 if cqual else 20,
+                            "positive_cells": 10 if cqual else 1,
+                            "value": cval,
+                            "compartment_qualifying_value": (
+                                float(supp_val) if cqual and supp_val is not None else 0.0
+                            ),
+                            "max_ntpm": None,
+                            "protein_status": "not_assessed",
+                            "scope_complete": False,
+                            "comparison_id": comp_id,
+                            "unit": unit,
+                            "qc_pass": True,
+                            "identity_resolved": True,
+                        }
+                    )
+                else:
+                    repro_rows.append(
+                        {
+                            "entity_id": eid,
+                            "source_id": "human_reproductive_panel",
+                            "sample_id": f"repro:{comp}",
+                            "participant_id": f"repro_donor:{comp}",
+                            "scope": "reproductive",
+                            "compartment": comp,
+                            "source_context": comp,
+                            "developmental_stage": "adult",
+                            "cells": 0,
+                            "positive_cells": 0,
+                            "value": cval,
+                            "compartment_qualifying_value": cval if cqual else min(cval, 0.0),
+                            "max_ntpm": None,
+                            "protein_status": "not_assessed",
+                            "scope_complete": True,
+                            "comparison_id": comp_id,
+                            "unit": unit,
+                            "qc_pass": True,
+                            "identity_resolved": True,
+                        }
+                    )
+            continue
         if r.category == "Unsafe" or not bool(r.required_coverage_complete):
             continue
-        eid = r.entity_id
         bleed_rec = bleed_clean_by_eid.get(eid)
         norm_val = (
             float(bleed_rec["clean_normal_reference_tpm"])
@@ -504,7 +652,11 @@ def build_human_screening_inputs(
                 ~ts["category"].eq("Unsafe") & ts["required_coverage_complete"].astype(bool),
                 "entity_id",
             ]
-        )
+        ) | {
+            ceid
+            for ceid, cpayload in cleared_obs_map.items()
+            if bool(cpayload.get("required_coverage_complete"))
+        }
         sub_737 = obs_737[obs_737["entity_id"].isin(valid_entities)]
         for r in sub_737.itertuples(index=False):
             tumor_rows.append(
@@ -544,6 +696,7 @@ def evaluate_human_catalog(
     include_adjudications: bool = True,
     include_737_cohorts: bool = False,
     include_multiplex_bleed_qc: bool = False,
+    include_nuclear_spillover_qc: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -553,13 +706,14 @@ def evaluate_human_catalog(
         include_adjudications=include_adjudications,
         include_737_cohorts=include_737_cohorts,
         include_multiplex_bleed_qc=include_multiplex_bleed_qc,
+        include_nuclear_spillover_qc=include_nuclear_spillover_qc,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
     spec = inputs.pop("spec")
     result = evaluate_species_catalog(spec, **inputs)
 
-    # Attach #711, #712, #735, and #764 adjudication provenance columns for inspection
+    # Attach #711, #712, #735, #764, and #765 adjudication provenance columns for inspection
     cat = result.catalog
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()
@@ -582,12 +736,36 @@ def evaluate_human_catalog(
         if include_multiplex_bleed_qc
         else set()
     )
+    nuc_disp_map: dict[str, str] = {}
+    nuc_caution_map: dict[str, str] = {}
+    nuc_cleared_rare: set[str] = set()
+    if include_nuclear_spillover_qc:
+        nuc_df = rare_cell_compartment_qc.nuclear_spillover_adjudications()
+        for nr in nuc_df.itertuples(index=False):
+            eid_str = str(nr.entity_id)
+            nuc_disp_map[eid_str] = str(nr.disposition)
+            if pd.notna(nr.nuclear_rna_caution) and str(nr.nuclear_rna_caution):
+                nuc_caution_map[eid_str] = str(nr.nuclear_rna_caution)
+            if (
+                bool(nr.nuclear_spillover_cleared)
+                and str(nr.disposition) == "nuclear_spillover_cleared"
+            ):
+                nuc_cleared_rare.add(eid_str)
+
     cat["rare_cell_711_requirement"] = [rc_map.get(eid, "") for eid in cat["entity_id"]]
     cat["normal_library_712_disposition"] = [nl_map.get(eid, "") for eid in cat["entity_id"]]
     cat["home_panel_735_disposition"] = [uh_map.get(eid, "") for eid in cat["entity_id"]]
     cat["multiplex_bleed_764_disposition"] = [
         "multiplex_bleed_cleaned" if eid in bleed_set else "" for eid in cat["entity_id"]
     ]
+    cat["nuclear_spillover_765_disposition"] = [
+        nuc_disp_map.get(eid, "") for eid in cat["entity_id"]
+    ]
+    cat["nuclear_rna_caution"] = [nuc_caution_map.get(eid, "") for eid in cat["entity_id"]]
+    if nuc_cleared_rare:
+        mask_nuc = cat["entity_id"].isin(nuc_cleared_rare)
+        cat.loc[mask_nuc, "rare_cell_status"] = "nuclear_only"
+        cat.loc[mask_nuc, "rare_cell_action"] = "caution"
     return result
 
 
@@ -607,6 +785,8 @@ _PREVIEW_STRING_COLS = (
     "rare_cell_711_requirement",
     "normal_library_712_disposition",
     "multiplex_bleed_764_disposition",
+    "nuclear_spillover_765_disposition",
+    "nuclear_rna_caution",
     "transition_driver",
     "transition",
 )
@@ -616,7 +796,7 @@ def compute_next_policy_transitions(
     *,
     integrated_result: SpeciesScreeningResult | None = None,
 ) -> tuple[pd.DataFrame, dict]:
-    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, and #764 into human screening."""
+    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, #764, and #765 into human screening."""
     baseline = target_selection.results()
     integrated_res = (
         integrated_result
@@ -626,6 +806,7 @@ def compute_next_policy_transitions(
             include_adjudications=True,
             include_737_cohorts=True,
             include_multiplex_bleed_qc=True,
+            include_nuclear_spillover_qc=True,
         )
     )
     integrated = integrated_res.catalog
@@ -656,6 +837,8 @@ def compute_next_policy_transitions(
                 "rare_cell_711_requirement",
                 "normal_library_712_disposition",
                 "multiplex_bleed_764_disposition",
+                "nuclear_spillover_765_disposition",
+                "nuclear_rna_caution",
             ]
         ],
         on="entity_id",
@@ -683,6 +866,8 @@ def compute_next_policy_transitions(
             reasons.append(f"#735:{r.home_panel_735_disposition}")
         if r.multiplex_bleed_764_disposition:
             reasons.append(f"#764:{r.multiplex_bleed_764_disposition}")
+        if r.nuclear_spillover_765_disposition == "nuclear_spillover_cleared":
+            reasons.append(f"#765:{r.nuclear_spillover_765_disposition}")
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (

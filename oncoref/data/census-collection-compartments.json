@@ -1,0 +1,11 @@
+{
+  "schema": "oncoref.census-collection-compartments.v1",
+  "policy_id": "oncoref.nuclear-spillover-qc.2026-11-23.1",
+  "collections": 93,
+  "compartment_counts": {
+    "cell": 53,
+    "nucleus": 31,
+    "mixed": 9
+  },
+  "sha256": "77d04473b94aea68a14aec052539ee3cc834b2a9ab4beb86869a7a7b615b65fe"
+}
