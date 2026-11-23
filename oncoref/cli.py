@@ -388,10 +388,10 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         if args.action == "dir" and selected.taxon_id != 9606:
             return _cmd_species_data(args)
         return _cmd_species_data(args)
-    if args.asset_overrides and not asset_target and selected.taxon_id == 9606:
-        raise ValueError("--asset-overrides requires a registered species asset")
     if args.action == "list":
         return _cmd_data_list(args, selected)
+    if args.asset_overrides and not asset_target and selected.taxon_id == 9606:
+        raise ValueError("--asset-overrides requires a registered species asset")
 
     if args.action == "status":
         try:
