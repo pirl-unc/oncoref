@@ -359,13 +359,14 @@ def test_packaged_snapshot_matches_report_metadata(catalog):
 
 
 def test_report_provenance_manifest():
+    from tests import released_inputs
+
     manifest = json.loads((OUT / "manifest.json").read_text())
-    for paths, base in [
-        (manifest["implementation_sha256"], ROOT),
-        (manifest["outputs_sha256"], OUT),
-    ]:
-        for path, digest in paths.items():
-            assert hashlib.sha256((base / path).read_bytes()).hexdigest() == digest, path
+    for path, digest in manifest["implementation_sha256"].items():
+        content = released_inputs.read(path, digest)
+        assert hashlib.sha256(content).hexdigest() == digest, path
+    for path, digest in manifest["outputs_sha256"].items():
+        assert hashlib.sha256((OUT / path).read_bytes()).hexdigest() == digest, path
 
 
 def test_same_context_sum_and_missing_member_coverage():

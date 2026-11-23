@@ -1,0 +1,554 @@
+{
+  "source_ref": "v1.49.0",
+  "scope": "Frozen v1.49.0 code and script inputs bound by dated docs/audits manifests (#753).",
+  "files": {
+    "oncoref/cell_rna_policy.py": {
+      "sha256": "4049e03fbb1da6f0aa305ed97a07ba00ba84dc804fc7a705cef28f9c089ef532",
+      "bytes": 14564
+    },
+    "oncoref/compartment_rna_policy.py": {
+      "sha256": "72ebc17a2cd3184126b1894b913da732515630d5d9d99344f10813f9a06e1c38",
+      "bytes": 10346
+    },
+    "oncoref/cta.py": {
+      "sha256": "aefd16716e7a6dbe97991c398432ce85c978049066aa89ce47e501fc49a00c56",
+      "bytes": 40755
+    },
+    "oncoref/cta_continuous_screen.py": {
+      "sha256": "f22069db0c820dd5995096231b264e887a072349e5474d457297ba8da3ecf731",
+      "bytes": 16856
+    },
+    "oncoref/cta_contract.py": {
+      "sha256": "834157d149aeb3be99c42489984cf4aea7925bcfa7c0353a6b7fe313a3b44b9e",
+      "bytes": 8633
+    },
+    "oncoref/cta_decision_flow.py": {
+      "sha256": "569083d7ad10b5cc82ddeb3ca6e3c3c34231e3fc4d5f920e7d9a602f89e2d0a4",
+      "bytes": 4160
+    },
+    "oncoref/cta_funnel.py": {
+      "sha256": "14641c0b446da9f717287e52adc547c1f5e696aff8fb6d0eab22806120a9d21e",
+      "bytes": 4529
+    },
+    "oncoref/cta_landscape.py": {
+      "sha256": "1a23b0b0640f51a7af4ec120542db2d9bb11f52159eae2cbf016b04f34d66b25",
+      "bytes": 22491
+    },
+    "oncoref/cta_literature.py": {
+      "sha256": "45d937b7d7d0d06753d8dcbaa376af416a77878c8c75adcb8ea69fe389eaf68a",
+      "bytes": 26272
+    },
+    "oncoref/cta_normal_screen.py": {
+      "sha256": "1626131f01db16e27bfc714af0ccd3cf3cbc865a59fbf340983ffae5f280918c",
+      "bytes": 11994
+    },
+    "oncoref/cta_policy.py": {
+      "sha256": "87c4b6aead2638c3f99039acdac0d57af8cf638dfc0a7fe5cd56741af49c7487",
+      "bytes": 11590
+    },
+    "oncoref/cta_provenance.py": {
+      "sha256": "30968214f4d5e08dbfc5d7584054b760e32e6fa1f359928c49c990616c0e25e0",
+      "bytes": 13706
+    },
+    "oncoref/cta_representatives.py": {
+      "sha256": "477d3ba50d9b327b32a504799c66f40e79b7d2070e8224775380cf1942c0eff8",
+      "bytes": 4509
+    },
+    "oncoref/cta_research_policy.py": {
+      "sha256": "a1010b02e32f8188c442089d8c2980ae3ae8b65acbc3be7ac9b06d8fb49be2c9",
+      "bytes": 8712
+    },
+    "oncoref/cta_screen.py": {
+      "sha256": "a8a01906e5d5213ab9d50883350899fd0d23f88e1fc840da103ab677b7e8d5c5",
+      "bytes": 15273
+    },
+    "oncoref/cta_sources.py": {
+      "sha256": "75cae6c6bb7fc7b663f0bb12f22fe01e951d09003570f628513aff43864e6155",
+      "bytes": 16644
+    },
+    "oncoref/cta_tissues.py": {
+      "sha256": "b51ddf26c56777a82bcfb9d4637539e27c207273d9e9a507ae06c81c9a5ee7a7",
+      "bytes": 7241
+    },
+    "oncoref/expression_diffuseness.py": {
+      "sha256": "17f09b3a07daef9108c0e91bfa11b9dc0280e9af7474c479a9fd7f7093072e41",
+      "bytes": 10099
+    },
+    "oncoref/external_ihc.py": {
+      "sha256": "47687d2dcbf57e0f026825dd6aa8d529745525fe3d13999bf449b9a3a3132ddc",
+      "bytes": 7348
+    },
+    "oncoref/gene_knowledge.py": {
+      "sha256": "57bd6663530a84d9835c8f8a30fc8a19582520dd13f56699b772a1d68e6d498a",
+      "bytes": 8691
+    },
+    "oncoref/gene_matching.py": {
+      "sha256": "36e70d22c02c09c411dc7ab53224c84ee39491eea58faf5d52e59fb2016c5c32",
+      "bytes": 16740
+    },
+    "oncoref/host_context.py": {
+      "sha256": "3d55ad0e2f1e25a5cfec83c969fc295e85d7cb91f35c0f7e1547838d6adab58d",
+      "bytes": 11953
+    },
+    "oncoref/hpa_cancer.py": {
+      "sha256": "a45957c7b0763981053838050ca33d8faba7920d21358d5459f519e600e9d108",
+      "bytes": 14116
+    },
+    "oncoref/ihc_observations.py": {
+      "sha256": "6cc8515f094c6804b9220a0e23ac7adaf660e7973de3ff0ccb105da981826f6c",
+      "bytes": 3996
+    },
+    "oncoref/library_qc.py": {
+      "sha256": "0ff88ae882e964281b2d20cb7c3f7fa66139eddd175c715227e7946168d29e10",
+      "bytes": 6664
+    },
+    "oncoref/normal_cell_screen.py": {
+      "sha256": "22daab0763ebfc2233e3a30ba2ebdecd0be7f23033946da4827963f2d8391c43",
+      "bytes": 11018
+    },
+    "oncoref/normal_library_qc.py": {
+      "sha256": "1440f6e993368cc2599f161c0c53c60092557ee8c73a6a17f3ba87fa46560001",
+      "bytes": 1871
+    },
+    "oncoref/normal_rna_review.py": {
+      "sha256": "828050c978bdeeada29937e8773b3a6e6d2012187bd065dd16eb0b310feb1437",
+      "bytes": 5575
+    },
+    "oncoref/normal_sequence_sets.py": {
+      "sha256": "76f39fdd9af29ae16db9fd03e28808c1e6988634a332c61b27d98aafc1cc01e5",
+      "bytes": 4259
+    },
+    "oncoref/normal_tissue_gene_filters.py": {
+      "sha256": "90d6fe00722a11c303310914a5673e839a487d4347b2fa78d236ca277c4f71fc",
+      "bytes": 10640
+    },
+    "oncoref/protein_equivalence.py": {
+      "sha256": "0b3438d305a6a2a854320ea46ab74a41618a18d48b399a2f770fe670fa1fc7b0",
+      "bytes": 11383
+    },
+    "oncoref/reference_identity.py": {
+      "sha256": "ac306c9080716381a57aebfdef5cb13022d0249b55739f817e14ffddc90f765f",
+      "bytes": 6004
+    },
+    "oncoref/reproductive_evidence.py": {
+      "sha256": "9239dad65042033d487decc556c1befb33a582a5e3029b2795dd54fa42ee4d97",
+      "bytes": 5222
+    },
+    "oncoref/samples.py": {
+      "sha256": "d7bbc28bf0c8a9930e788b4a30071e9002a7ca589f0282b9a9d84146350d7cd7",
+      "bytes": 12555
+    },
+    "oncoref/sequence_groups.py": {
+      "sha256": "350ce4087ff9c50270e898b0bee3f54fdcafd15c8fedfe26e9defb93ff9fdd34",
+      "bytes": 10857
+    },
+    "oncoref/target_filters.py": {
+      "sha256": "185f9e6a31f8b3a3d0459e011439909ad749bcb0ba46e10c581b36644f58881b",
+      "bytes": 25068
+    },
+    "oncoref/target_selection.py": {
+      "sha256": "3f0d7cd4fc12686257386d84697d6e6fc22f2ddac0b9f01aeca5f60e745c1f5e",
+      "bytes": 49224
+    },
+    "oncoref/target_sets.py": {
+      "sha256": "8ee4337957b894e4ebb00521eac3cf29db45ae2572fd776d073c37e5df73579c",
+      "bytes": 12817
+    },
+    "oncoref/tcr_trials.py": {
+      "sha256": "39adf122c758a2d50eaa881f6d402ab63b43239c3a35d13153b3fcd42c5af9aa",
+      "bytes": 10114
+    },
+    "oncoref/tissue_tiers.py": {
+      "sha256": "70515a1d994a4a5e9a8eba5286266211b6b3a4ed67547946dff5be95c19f1b2c",
+      "bytes": 21805
+    },
+    "oncoref/transcript_selection.py": {
+      "sha256": "d6f2eca0bbac4c6fa5a25046318df610f30e3991693679714303812095627723",
+      "bytes": 11128
+    },
+    "scripts/antigen_sample_evidence.py": {
+      "sha256": "fae49bfe7cdcc6b5334b7b64075827740709ddd1ba284105f80999612a0104c9",
+      "bytes": 14623
+    },
+    "scripts/audit_cta_embryonic_coverage.py": {
+      "sha256": "fc158cf46845de973da36bbfce0f8c9bc2faf54a32717801722bd1ad29c6d0eb",
+      "bytes": 4800
+    },
+    "scripts/audit_cta_profile_concentration.py": {
+      "sha256": "ba132f170be960349406139f3e7703cf196ab8683c011ea2786ca8eea788a505",
+      "bytes": 34564
+    },
+    "scripts/audit_cta_source_coverage.py": {
+      "sha256": "4f1f0e73022c6adef0240041db3ddb8aa3970a09985fe045c6bad32dcf53c8d7",
+      "bytes": 16260
+    },
+    "scripts/audit_cta_target_evidence.py": {
+      "sha256": "2451e776513e9ca7f9031a91a8e44bed63f0cb7d23c689ee1fc907c8bcf6c970",
+      "bytes": 4369
+    },
+    "scripts/audit_cta_transcripts.py": {
+      "sha256": "5817ed68b06f3890c505756120271423d21d79b4cd92f09b052a08999aa7988c",
+      "bytes": 21130
+    },
+    "scripts/audit_normal_library_qc.py": {
+      "sha256": "e17cc8ee990c613a902e3e16467bf52bc2d5d0ef23c90c1fb24b2877bc3a30eb",
+      "bytes": 2738
+    },
+    "scripts/audit_target_category_profiles.py": {
+      "sha256": "c2501df1b45288da57ecde034acbed6730da8c4a39196e216c6c86b289ed8a7f",
+      "bytes": 11063
+    },
+    "scripts/audit_target_thresholds.py": {
+      "sha256": "4aa467816b9d4f5c749c148e1185a219918494f61b1db608f02cfae2141ac588",
+      "bytes": 15578
+    },
+    "scripts/build_cancer_only_audit.py": {
+      "sha256": "6ea848385abb8184ce9fa895b897e0e2d11e5d4461159e0e8146d1772751aba1",
+      "bytes": 40290
+    },
+    "scripts/build_cta_adjudication_report.py": {
+      "sha256": "049d038827829ee2898f7b9991b17a8114c47f2aa80f1f3c9d7ec41d36a07efc",
+      "bytes": 8211
+    },
+    "scripts/build_cta_alternative_evidence.py": {
+      "sha256": "73653a6f8f3608a35de9d8ce8e086e530a13a93dbb9eecac8a1fb2091c59362d",
+      "bytes": 15978
+    },
+    "scripts/build_cta_candidate_evidence.py": {
+      "sha256": "cb326e755d00e6b06941e4d7550b10b213f5b0f85441e7b70e63af8807f8034d",
+      "bytes": 23994
+    },
+    "scripts/build_cta_category_funnel.py": {
+      "sha256": "371ba58f87d960ede6e26981b39b372426002f1d334806036290322cb9ae8057",
+      "bytes": 14687
+    },
+    "scripts/build_cta_contract_report.py": {
+      "sha256": "ca76ccdea7b1e56928f79b64f3b97c65f60848e6ec2ec35e4fc078b0d96937a2",
+      "bytes": 7270
+    },
+    "scripts/build_cta_evidence_axes.py": {
+      "sha256": "b41a574a3a439c506a7bd2282857041c649fceccdac9722af49d3e04e0dddf1a",
+      "bytes": 5108
+    },
+    "scripts/build_cta_inventory_report.py": {
+      "sha256": "f52bc5c20925f740bb5ebdb708b5b65c57c5ccccbba01008218c09c8909fda2c",
+      "bytes": 13538
+    },
+    "scripts/build_cta_membership.py": {
+      "sha256": "786b30e2e3039bc2f88380c55f382a5b67c3db326d94a562d2cf5446b34b79ad",
+      "bytes": 23286
+    },
+    "scripts/build_cta_migration_report.py": {
+      "sha256": "6dcb2397a18becee7e38dcd9bb1ef8f9dc1e40f7419b3935ab5ac365f1a6ab02",
+      "bytes": 6866
+    },
+    "scripts/build_cta_policy.py": {
+      "sha256": "0d2bbfc5ab41a9cb05996267dad00cf772655ef477d46032fa1bca26f1e5a1eb",
+      "bytes": 23751
+    },
+    "scripts/build_cta_research_policy.py": {
+      "sha256": "c832402794910a6cb684185b50814e6482c0156d644a35866ee4e67b14aaa635",
+      "bytes": 15237
+    },
+    "scripts/build_cta_selection_audit.py": {
+      "sha256": "6e1496c22a371d46aca6a58e4fc8fa73515db06bede9196ed3b833bf6a217c95",
+      "bytes": 47215
+    },
+    "scripts/build_cta_selection_release.py": {
+      "sha256": "951431a2247e120f48f2dc703fb18d5ad91b7a5a389159395b17d20f144b795b",
+      "bytes": 31749
+    },
+    "scripts/build_cta_simplification_report.py": {
+      "sha256": "3770c0cf5dae6f21213df85cad0f83d0d8fe71b446713492c3c568a7ce32e44d",
+      "bytes": 13031
+    },
+    "scripts/build_cta_translation_report.py": {
+      "sha256": "8fb46257f70480852d037a4146db09144c70ab80f9def06d2149f5abbec4e6b4",
+      "bytes": 7878
+    },
+    "scripts/build_gene_mapping_risk.py": {
+      "sha256": "4a34a374a509b470fd0482545eaa9ebed455e6a94b0d92ae83433f849718935a",
+      "bytes": 6822
+    },
+    "scripts/build_host_exposure.py": {
+      "sha256": "cd86e0bd9cc2c45150691118f56cc2b352b338343e47d73d4601c0bff91b5c2a",
+      "bytes": 8433
+    },
+    "scripts/build_normal_cell_mappings.py": {
+      "sha256": "b1537349d305b3acb34365e05d753d23bb9ff88fe15d464c12810b63f6456666",
+      "bytes": 5314
+    },
+    "scripts/build_other_literature_report.py": {
+      "sha256": "fb884185596ef298e746981ffa5862c391822de4ea94cb77fba87085ecbf81ef",
+      "bytes": 21065
+    },
+    "scripts/build_rare_cell_evidence.py": {
+      "sha256": "60ceabb0725a64dbe590b649e931878e37e3947672775bb8ecf65db26ac849f5",
+      "bytes": 35083
+    },
+    "scripts/build_target_policy_reference.py": {
+      "sha256": "5b6f9694e76048c64b3c91d655a7228f1837f7ca285a493b6f55589adbb382b7",
+      "bytes": 20781
+    },
+    "scripts/build_target_sample_ranks.py": {
+      "sha256": "81ed938dd48369b2b9bc645bb32ff6886324ea763e50d86c7cde9468434d45fb",
+      "bytes": 5004
+    },
+    "scripts/build_target_selection_report.py": {
+      "sha256": "93d22e07eeb7603c63c06a763d5811e6e5d4c07dd97c0dd86e56ac4a31a563e2",
+      "bytes": 14072
+    },
+    "scripts/build_tcr_trial_report.py": {
+      "sha256": "a9a89c98b8782a80ac4bd6eb84b190c6091f713738e164c51416bda614da2d45",
+      "bytes": 20861
+    },
+    "scripts/build_tissue_marker_panels.py": {
+      "sha256": "71dc01bdcdad8cb51a5cd41403d56a992f2fe57282aa7b7be9e56af13d229159",
+      "bytes": 3849
+    },
+    "scripts/build_transcript_selection_report.py": {
+      "sha256": "0697e660efc5a9b110057b3af2867e18473752d635ffbf5e5c4b9f8528c305e0",
+      "bytes": 25802
+    },
+    "scripts/bulk_normal_percentiles.py": {
+      "sha256": "d998d535b4b54811b215973c5402111816f797236c56540881c6f4e0da3ed5fa",
+      "bytes": 5917
+    },
+    "scripts/collect_cta_candidate_tumors.py": {
+      "sha256": "f92215ab44c387083da7937014509a28646f4688eabbc7db2f3b6a568f38dee5",
+      "bytes": 3719
+    },
+    "scripts/cta_adaptive_report.py": {
+      "sha256": "8bb26deced26bb025d1271dcfcecb8f16ce9283318a2e81de92e5cd5d435d411",
+      "bytes": 9546
+    },
+    "scripts/cta_adaptive_report_render.py": {
+      "sha256": "45b69668d87cebc6875d501d38e3987853a4362247d0265bf5ad3e9bab08fbc8",
+      "bytes": 17061
+    },
+    "scripts/cta_cell_policy_report.py": {
+      "sha256": "c5463acbc19e748a5b8f41a056c4810d0b86c1f06933eed7f812f156a8a15982",
+      "bytes": 15582
+    },
+    "scripts/cta_clinical_curation_report.py": {
+      "sha256": "a0657429024f073051522cb398d62b4eb36be6f7b6c2a27a971445c32b7cbada",
+      "bytes": 19178
+    },
+    "scripts/cta_compartment_report.py": {
+      "sha256": "adae787db1bd205fa00a84d987700df2efeca862307c26f1fee750876afe5bcc",
+      "bytes": 43422
+    },
+    "scripts/cta_continuous_report.py": {
+      "sha256": "96dbf578d7ed7e327eb5894f3f568c2018f40de5d93cabfbab716281830b92ea",
+      "bytes": 27331
+    },
+    "scripts/cta_curation_report.py": {
+      "sha256": "bd3123f34320c14a16f070442df6a71768154c7161f6f82eca85a4e8c417b78e",
+      "bytes": 15608
+    },
+    "scripts/cta_evidence_assets/biology-categories.json": {
+      "sha256": "f6a547cc2ca105207fdb95763a40bea918f2f3d012c856e4ec873501e22b87a0",
+      "bytes": 11610
+    },
+    "scripts/cta_evidence_assets/catalog-review.json": {
+      "sha256": "9256e267fc7759a64a1ce7da540d8d856b89ee3ba439543dada5afd8e6fd5962",
+      "bytes": 7731
+    },
+    "scripts/cta_evidence_assets/cta-transcript-support.json.gz": {
+      "sha256": "32b8dd58fc06eae4bd1ee7fa8c4436a092dd1da0d9b1ce321a7f7c30b4207202",
+      "bytes": 18512
+    },
+    "scripts/cta_evidence_assets/explorer.js": {
+      "sha256": "da8552e0c3ec5f86023f128fff1ad0dbf7703cad1a5a34c30c5b6cec30c83217",
+      "bytes": 21416
+    },
+    "scripts/cta_evidence_assets/literature-review.json": {
+      "sha256": "3a486867b95a51cc5c2091b24a7c715673d5b35c395ee9977b61904d7584f11a",
+      "bytes": 14521
+    },
+    "scripts/cta_evidence_assets/named-candidate-report.md": {
+      "sha256": "256c7e2d7ba5c4c2a7604d4715f657ce4210ae266de446ffff39c49c2adfa9a8",
+      "bytes": 19320
+    },
+    "scripts/cta_evidence_assets/report.html": {
+      "sha256": "b1742252b696add588525c3a7e7d672f2b022172ed44f5eee1b5d5f9adf30a31",
+      "bytes": 13959
+    },
+    "scripts/cta_evidence_assets/style.css": {
+      "sha256": "3db29b3491fe16cfb2b789c5e800beb7e94b157c73ecc12c86c52eac993f7f58",
+      "bytes": 4686
+    },
+    "scripts/cta_evidence_assets/target-filter-guide.md": {
+      "sha256": "5507043b65061e5abc3fdf7c9aa5405511871727bf24672f72052ff37174e456",
+      "bytes": 4713
+    },
+    "scripts/cta_evidence_assets/target-selection-guide.md": {
+      "sha256": "c7f80455db815878f38d6b890a4d2534f5759a87f9f13c1ca93e05dc2fbac7f5",
+      "bytes": 8819
+    },
+    "scripts/cta_expanded_funnel.py": {
+      "sha256": "2f289b42ef7651a267d4e4ea66c03b89a89f7f112d454d1fa59ac2dd5c4abfcb",
+      "bytes": 30556
+    },
+    "scripts/cta_expanded_normal.py": {
+      "sha256": "c3eaefdb22e6b0b88659b2e2fb90807b091dda1a56174abf6a05da77a5441e94",
+      "bytes": 13565
+    },
+    "scripts/cta_geometric_sources_report.py": {
+      "sha256": "c27192e12c1ca97564bb51c4cda01826307c0ea9fc2a1579e56b05168390b852",
+      "bytes": 14813
+    },
+    "scripts/cta_harmonized_report.py": {
+      "sha256": "58b79bdd1a176239bf22808c195d1cee081bc03f74dbff0be9a713e91f506986",
+      "bytes": 34715
+    },
+    "scripts/cta_permitted_report.py": {
+      "sha256": "f864eb76c9eefbc9d11682d5dd466fb816b19646b882fd3fda81ce2e0d98046a",
+      "bytes": 20509
+    },
+    "scripts/cta_permitted_report_render.py": {
+      "sha256": "5241ebc3957f78dd1b44f40e86de56ae5063c0a689492616db0f7e5564430772",
+      "bytes": 18514
+    },
+    "scripts/cta_profile_data.py": {
+      "sha256": "d1079b838f95c2871aeb6b4d78a86d54dafc79a500a89476034965bd09fd8fb0",
+      "bytes": 4381
+    },
+    "scripts/cta_protein_group_normal.py": {
+      "sha256": "938302b47b075c33eb5fc0691944cbfe8fd84cebc7023e3b215327e7df8110e3",
+      "bytes": 17880
+    },
+    "scripts/cta_quantitative_threshold_report.py": {
+      "sha256": "ad4a1c7e7ac45f37c7f1e0b22d28000afc711ee954dc54f6b63ae75e140b7389",
+      "bytes": 28519
+    },
+    "scripts/cta_recalibration_report.py": {
+      "sha256": "bb25d21fd17965818288c352981a5a226a0697aff502e80061d412f217720512",
+      "bytes": 25478
+    },
+    "scripts/cta_report_common.py": {
+      "sha256": "5c8e25b79e39404ef099ff5960a3f775e4e22ce03bddc760ccd190df54fa7c13",
+      "bytes": 6982
+    },
+    "scripts/cta_report_pages.py": {
+      "sha256": "efde8865d370e2602277f8b79f51ce722cdc6006e6f80c25a8e1382233f32a14",
+      "bytes": 29454
+    },
+    "scripts/cta_scope_report.py": {
+      "sha256": "f68f0cda6bee98a31429ef56f758116034dc962b361c4c7b61426511f4a72cd7",
+      "bytes": 24805
+    },
+    "scripts/cta_scope_report_render.py": {
+      "sha256": "989c9b9e235856d5690c3395d9d090fcaa6e014179cacef22440bf7bd21ac615",
+      "bytes": 25650
+    },
+    "scripts/cta_screen_report.py": {
+      "sha256": "72a65f96c1e62241c30ecd87df12387b60229d8b49645a095a3547a66f4dbdb0",
+      "bytes": 18455
+    },
+    "scripts/cta_selectivity_report.py": {
+      "sha256": "9919bffd94ab56add0dec64088da713a80362ece1cd5e32b190f1d39f3c47206",
+      "bytes": 16762
+    },
+    "scripts/cta_source_links.py": {
+      "sha256": "43243b74f41725035d20a100fb431984ff6a22252bc9b18acb7e3d65f516d2c5",
+      "bytes": 1667
+    },
+    "scripts/cta_tissue_tier_report.py": {
+      "sha256": "1ef74182b8da7cbd9c2255a7c08cefc3786b6774ac6a59710093c178cd765620",
+      "bytes": 17647
+    },
+    "scripts/curate_external_ihc.py": {
+      "sha256": "ce2d21b7475d2fc45873a084be8c9726c37dcb848a2d49b591b81db1d6624bde",
+      "bytes": 15057
+    },
+    "scripts/gtex_sample_evidence.py": {
+      "sha256": "f6bcfd85611e231fcebb1f5b04f7c4c01facfeee2bafdc431d4c622028f4fe4d",
+      "bytes": 8460
+    },
+    "scripts/import_cta_related_sources.py": {
+      "sha256": "6c9151bb8976b396702a826cbcf3933474573c00a9b92bb54d85e07101466f65",
+      "bytes": 8382
+    },
+    "scripts/migrate_transcript_selection.py": {
+      "sha256": "7f8e12e688ab087dc005038eae145ba52b08b95a6493330748e5f2a674a5f510",
+      "bytes": 18910
+    },
+    "scripts/normal_cell_cta_report.py": {
+      "sha256": "4a1909ce0c59a3379bb2b7d6b5667351a6298bdaf83138e9f378dee0bfbce6b9",
+      "bytes": 10358
+    },
+    "scripts/normal_expression_categories_report.py": {
+      "sha256": "6ec010498ec132aad0bb32c2242e0de5d28fd5f4c8448d39abb387a01a2c35f8",
+      "bytes": 9821
+    },
+    "scripts/normal_sequence_sets_report.py": {
+      "sha256": "53004bdcddbf510e4ff40752fef221c27923c19f65150a5c045ccfd9d2d00e0d",
+      "bytes": 18784
+    },
+    "scripts/normal_tissue_registry_report.py": {
+      "sha256": "ae57b1dae9cd6e68ed3ab682de0e529ff3c4aa30991dd0d67adab0aa035f03bd",
+      "bytes": 6766
+    },
+    "scripts/plot_cta_geometric.py": {
+      "sha256": "8baf43629c3cbc61a19b2c92602a11c44078294e439ddb6e317a9e3229fd6fc1",
+      "bytes": 14032
+    },
+    "scripts/rebuild_target_catalog.py": {
+      "sha256": "b6843ee356e5487bf6f8f62a89fd5c9b035a33e49d26e0cede86ab05d341049f",
+      "bytes": 68708
+    },
+    "scripts/render_cta_curation.py": {
+      "sha256": "191aad5b81479950f8b852d16f91d628e6cb47a99fdbff77c01d7a3eb7814289",
+      "bytes": 2511
+    },
+    "scripts/render_curation_summary.py": {
+      "sha256": "6262f36626870caa090a01812ea30371a8677b93f6d40de8304f668542474a82",
+      "bytes": 89287
+    },
+    "scripts/render_neither_cta_review.py": {
+      "sha256": "2cda2edd5f2010393c114fe03c7e0cfc7a50b5b6a7ca0ee7ccd0782c81dca69a",
+      "bytes": 18862
+    },
+    "scripts/render_normal_cell_report.py": {
+      "sha256": "f01672fae2497aaa82daf32f298f5123c9f9ae4d4865aa79ce7b541c00b94a7f",
+      "bytes": 22291
+    },
+    "scripts/render_normal_rna_sources.py": {
+      "sha256": "a59fb1018a3734e07b8746fec350ce4e6a55497ef3d0187442ede38115f116e3",
+      "bytes": 23694
+    },
+    "scripts/render_target_catalog.py": {
+      "sha256": "fd0a60dc0fe603a452f44a2bd4e32cb374cf710408cc5aaa980f5fce4e37597b",
+      "bytes": 38358
+    },
+    "scripts/render_target_thresholds.py": {
+      "sha256": "7e14953bb071399be93687a1622c0bfb1cf49784840fb235191d8539d7042a9b",
+      "bytes": 23294
+    },
+    "scripts/report_cta_125_changes.py": {
+      "sha256": "b974894215a53b12bb6ca5315d57de830c0c78b70dc86d17e73c0b3246319d66",
+      "bytes": 14838
+    },
+    "scripts/review_neither_ctas.py": {
+      "sha256": "904b68e03f8e35d23e6674856de794f4600c4ca7a1440cccdb358f1879ad93ae",
+      "bytes": 10577
+    },
+    "scripts/target_sets_report.py": {
+      "sha256": "6ecc115b72b3460093148989031f8cf5c49226f52e45a778fa67012f28bbd60b",
+      "bytes": 21734
+    },
+    "scripts/templates/neither-review-explorer.html": {
+      "sha256": "d895c1a736c72d466e4af7041d4ec79269fcfaa97473295b964de04c6f65d12d",
+      "bytes": 5465
+    },
+    "scripts/templates/normal-cell-explorer.html": {
+      "sha256": "531dbf4262b316bbef99b06618c5a7c30acb4a7671ecb8b29b43d3e98ca9d247",
+      "bytes": 5815
+    },
+    "scripts/verify_tcr_trial_sequences.py": {
+      "sha256": "98a134560e1322219f884c51481bb9603459b62bb91a57beff8f5ea3354a4110",
+      "bytes": 2620
+    }
+  }
+}

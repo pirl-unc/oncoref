@@ -1,0 +1,188 @@
+"""Reviewed gene findings, with tissue/state and source-specific limitations.
+
+The reference separates observations from their screening consequences. A
+literature search hit, homology, a developmental phenotype or an unquantified
+annotation alone cannot establish adult normal production. These are research
+adjudications, not estimates of clinical toxicity or peptide presentation.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from importlib.resources import files
+
+import pandas as pd
+
+EFFECTS = {"exclude", "review", "reproductive", "context"}
+
+
+def _supersedes(row):
+    value = row.get("supersedes")
+    if value is None or (isinstance(value, float) and pd.isna(value)):
+        return []
+    if not isinstance(value, list) or any(not isinstance(i, str) for i in value):
+        raise ValueError("supersedes must be a list of finding IDs")
+    return value
+
+
+def validate(records: list[dict]) -> None:
+    """Reject incomplete provenance, identity and incompatible conclusions."""
+    seen = set()
+    by_id = {r["id"]: r for r in records}
+    for row in records:
+        if row["id"] in seen:
+            raise ValueError("Duplicate knowledge finding")
+        seen.add(row["id"])
+        for prior in _supersedes(row):
+            if prior not in by_id or prior == row["id"]:
+                raise ValueError("Supersession requires an existing, different finding")
+            if not set(by_id[prior]["gene_ids"]) <= set(row["gene_ids"]):
+                raise ValueError("Supersession must cover the original gene identities")
+            if by_id[prior]["taxonomy_id"] != row["taxonomy_id"]:
+                raise ValueError("Supersession cannot cross species")
+            if row["review_date"] <= by_id[prior]["review_date"]:
+                raise ValueError("Supersession requires a later review")
+        if not row["gene_ids"] or any(not re.fullmatch(r"ENSG\d{11}", g) for g in row["gene_ids"]):
+            raise ValueError("Knowledge requires exact Ensembl gene identities")
+        if row["effect"] not in EFFECTS or row["review_status"] != "accepted":
+            raise ValueError("Unreviewed leads cannot enter the knowledge reference")
+        interpretation = row.get(
+            "interpretation_status", "unresolved" if row["effect"] == "review" else "accepted"
+        )
+        if interpretation not in {"accepted", "unresolved", "rejected"}:
+            raise ValueError("Unknown finding interpretation")
+        if interpretation != "accepted" and row["effect"] in {"exclude", "reproductive"}:
+            raise ValueError(
+                "Unresolved or rejected interpretations cannot establish positive evidence"
+            )
+        if not all(
+            row.get(k)
+            for k in [
+                "finding",
+                "tissue",
+                "cell_type",
+                "state",
+                "assay",
+                "source_title",
+                "source_location",
+                "limitations",
+                "decision_reason",
+            ]
+        ):
+            raise ValueError("Knowledge requires context, method, finding and limitations")
+        if not row["source_url"].startswith("https://"):
+            raise ValueError("Knowledge requires a source link")
+        if row["effect"] == "exclude" and (
+            row["taxonomy_id"] != 9606
+            or row["stage"] != "adult"
+            or row["tissue_tier"] not in {"vital", "protected"}
+            or row["support"] not in {"normal_protein", "localized_rna_and_function"}
+        ):
+            raise ValueError("Exclusion requires established adult human normal production")
+        if row["effect"] == "reproductive" and (
+            row["taxonomy_id"] != 9606
+            or row["tissue_tier"] != "reproductive"
+            or row["support"] not in {"normal_protein", "localized_rna_and_function"}
+        ):
+            raise ValueError("Reproductive credit requires direct human production evidence")
+        # pandas 2/3 differ in whether mixed columns retain None or use NaN.
+        # Neither representation may turn an unquantified finding into a value.
+        if bool(pd.isna(row.get("value"))) != bool(pd.isna(row.get("unit"))):
+            raise ValueError("Measurements require native value and unit together")
+
+
+def findings(
+    gene: str | None = None, *, taxonomy_id: int = 9606, include_updates: bool = False
+) -> pd.DataFrame:
+    """Return detached reviewed findings by exact gene ID or case-insensitive symbol.
+
+    No findings means no curated evidence in this reference, not normal absence.
+    Species are filtered explicitly; human findings never transfer by orthology.
+    ``effect`` records the reviewed consequence: exclude, review, reproductive
+    presence, or context only. Native units (including fold changes) are retained.
+    ``include_updates=True`` adds accepted curation queued for the next selection
+    build. It does not change the released classifications returned by
+    :mod:`cta_selection`. The default reproduces the released evidence set.
+    """
+    data = json.loads(files("oncoref").joinpath("data/gene-knowledge.json").read_text())
+    if data["schema"] != "oncoref.gene-knowledge" or data["version"] != 1:
+        raise ValueError("Unsupported gene knowledge schema")
+    records = data["findings"]
+    if include_updates:
+        updates = json.loads(
+            files("oncoref").joinpath("data/gene-knowledge-updates.json").read_text()
+        )
+        if (
+            updates["schema"] != "oncoref.gene-knowledge-updates"
+            or updates["version"] != 1
+            or updates["status"] != "pending_selection_build"
+        ):
+            raise ValueError("Unsupported knowledge update schema or status")
+        records = [*records, *updates["findings"]]
+    validate(records)
+    rows = [r for r in records if r["taxonomy_id"] == taxonomy_id]
+    if gene is not None:
+        rows = [
+            r
+            for r in rows
+            if gene in r["gene_ids"] or gene.casefold() in {s.casefold() for s in r["gene_symbols"]}
+        ]
+    return pd.DataFrame(rows, columns=[*data["columns"], "supersedes"]).assign(
+        supersedes=lambda d: d.supersedes.map(lambda v: v if isinstance(v, list) else [])
+    )
+
+
+def historical_dispositions(gene: str | None = None) -> pd.DataFrame:
+    """One explicit migration decision per original finding; original bytes stay frozen.
+
+    A revised policy effect does not resolve the underlying observation's identity.
+    The original status, review depth and limitations remain in ``original``.
+    """
+    data = json.loads(files("oncoref").joinpath("data/cta-finding-migrations.json").read_text())
+    rows = data["migrations"]
+    if gene is not None:
+        rows = [
+            r for r in rows if r["gene_id"] == gene or r["symbol"].casefold() == gene.casefold()
+        ]
+    return pd.DataFrame(rows, columns=data["columns"])
+
+
+def annotate(facts: pd.DataFrame, evidence: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Apply exact-member findings without copying evidence from a paralog.
+
+    A normal exclusion/hold on any member applies to the identical reference
+    protein. Reproductive presence requires evidence covering every member;
+    explicitly reviewed protein-equivalent members can share a finding.
+    """
+    if evidence is None:
+        evidence = findings()
+    validate(evidence.to_dict("records"))
+    d = facts.copy()
+    members = d.member_gene_ids.map(lambda x: set(json.loads(x)) if isinstance(x, str) else set(x))
+    if members.map(lambda group: not group).any():
+        raise ValueError("Protein findings require at least one explicit member identity")
+    human = evidence[evidence.taxonomy_id.eq(9606)]
+    superseded = {i for r in human.to_dict("records") for i in _supersedes(r)}
+    active = human[~human.id.isin(superseded)]
+    for effect, column in [
+        ("exclude", "knowledge_normal_exclusion"),
+        ("review", "knowledge_normal_hold"),
+        ("reproductive", "knowledge_reproductive_support"),
+    ]:
+        ids = {g for genes in active.loc[active.effect.eq(effect), "gene_ids"] for g in genes}
+        d[column] = members.map(
+            lambda group, ids=ids, effect=effect: (
+                group <= ids if effect == "reproductive" else bool(group & ids)
+            )
+        )
+    finding_ids_by_gene: dict[str, set[str]] = {}
+    for row in human.itertuples():
+        for gene in row.gene_ids:
+            finding_ids_by_gene.setdefault(gene, set()).add(row.id)
+    d["knowledge_finding_ids"] = members.map(
+        lambda group: json.dumps(
+            sorted(set().union(*(finding_ids_by_gene.get(gene, set()) for gene in group)))
+        )
+    )
+    return d

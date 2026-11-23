@@ -43,6 +43,8 @@ def test_other_review_covers_every_baseline_protein_and_preserves_evidence():
     assert set(high.protein_label) == {"OR2B6", "SCGB1C2", "OR6C2"}
     assert high.classification.eq("Unassessed").all()
     receipt = json.loads((report / "manifest.json").read_text())
+    from tests import released_inputs
+
     for section, folder in [("inputs", root), ("outputs", report)]:
         for name, expected in receipt[section].items():
             if section == "inputs" and name in receipt.get("input_snapshots", []):
@@ -51,6 +53,8 @@ def test_other_review_covers_every_baseline_protein_and_preserves_evidence():
                 assert hashlib.sha256(path.read_bytes()).hexdigest() == saved["sha256"]
                 with zipfile.ZipFile(path) as archive:
                     content = archive.read(name)
+            elif section == "inputs":
+                content = released_inputs.read(name, expected)
             else:
                 content = (folder / name).read_bytes()
             assert hashlib.sha256(content).hexdigest() == expected, name

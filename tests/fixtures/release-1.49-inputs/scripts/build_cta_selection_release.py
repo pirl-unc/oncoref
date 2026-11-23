@@ -1,0 +1,711 @@
+#!/usr/bin/env python3
+"""Package current CTA decisions and publish a species-scoped source inventory."""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+import pandas as pd
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from cta_report_common import sha256, write_csv  # noqa: E402
+
+from oncoref import canine, human, mouse, tcr_trials  # noqa: E402
+from oncoref.cta_selection import RESULT_COLUMNS  # noqa: E402
+from oncoref.expression_registry import expression_sources  # noqa: E402
+from oncoref.version import __version__  # noqa: E402
+
+AUDIT = ROOT / "docs/audits/cta-selection-20261028"
+DATA = ROOT / "oncoref/data"
+
+
+def source_inventory() -> pd.DataFrame:
+    """List biological roles separately from native availability and selection use."""
+    rows = []
+
+    def add(
+        taxon: int,
+        source: str,
+        name: str,
+        categories: list[str],
+        status: str,
+        unit: str,
+        stage: str,
+        url: str,
+        limitation: str,
+    ) -> None:
+        for category in categories:
+            rows.append(
+                {
+                    "taxon_id": taxon,
+                    "source_id": source,
+                    "name": name,
+                    "evidence_category": category,
+                    "status": status,
+                    "native_unit": unit,
+                    "stage": stage,
+                    "source_url": url,
+                    "limitations": limitation,
+                }
+            )
+
+    add(
+        9606,
+        "gene-knowledge",
+        "Reviewed human gene knowledge: normal cells and reproductive protein",
+        ["normal_protein", "normal_cell_rna", "reproductive_expression"],
+        "used_in_selection",
+        "source-native qualitative and quantitative observations",
+        "explicit per-finding stage and activation state",
+        "https://pirl-unc.github.io/oncoref/audits/cta-other-literature-20261030/",
+        "Exact gene/protein attribution; sparse RNA and unresolved species/isoforms remain review holds. Search leads are not accepted findings.",
+    )
+    add(
+        9606,
+        "olfactory_durante_supplement",
+        "Durante et al. 2020 adult human olfactory atlas supplementary tables",
+        ["normal_cell_rna"],
+        "used_in_selection",
+        "positive neurons; cluster detection fraction",
+        "adult",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC7065961/",
+        "Exact reported genes enter knowledge review holds; sparse detection is not TPM, protein, donor replication or proof of absence for unlisted genes.",
+    )
+    for sid, quantity in [
+        ("olfactory_verbeurgt_cq", "native qPCR Cq; assay IDs and donor identity"),
+        ("olfactory_verbeurgt_copies", "estimated RNA copies per 20 ng total RNA"),
+    ]:
+        add(
+            9606,
+            sid,
+            "Verbeurgt et al. 2014 whole human olfactory mucosa",
+            ["normal_cell_rna"],
+            "used_in_selection",
+            quantity,
+            "adult; 26 donor samples",
+            "https://doi.org/10.1371/journal.pone.0096333",
+            "OR10A4 normal RNA supplies a reviewed hold. Native values are not TPM, protein or a clinical toxicity estimate; unlisted genes are not measured zero.",
+        )
+    add(
+        9606,
+        "normal-induction-evidence",
+        "Published human normal immune induction contexts",
+        ["reproductive_expression", "normal_cell_rna"],
+        "used_in_selection",
+        "qualitative reported RNA induction",
+        "adult; activated",
+        "https://pmc.ncbi.nlm.nih.gov/articles/PMC6457222/",
+        "Qualitative counterevidence to indirect reproductive-site restriction; no TPM or clinical-toxicity inference",
+    )
+    add(
+        9606,
+        "hpa_rna_consensus",
+        "HPA v23 / GTEx consensus",
+        ["normal_bulk_rna", "reproductive_expression"],
+        "used_in_selection",
+        "nTPM",
+        "adult; placenta handled separately",
+        "https://v23.proteinatlas.org/about/download",
+        "Bulk source summaries; not exhaustive pediatric, pregnancy or rare-cell coverage",
+    )
+    add(
+        9606,
+        "tyser_E-MTAB-9388",
+        "Tyser human gastrulation atlas",
+        ["developmental_expression"],
+        "used_in_selection",
+        "TPM",
+        "Carnegie stage 7",
+        "https://doi.org/10.1038/s41586-021-04158-y",
+        "One embryo; cell support does not establish independent-donor replication",
+    )
+    add(
+        9606,
+        "petropoulos_E-MTAB-3929",
+        "Petropoulos preimplantation atlas",
+        ["developmental_expression"],
+        "used_in_selection",
+        "TPM",
+        "3–7 days, stage × inferred lineage",
+        "https://www.ebi.ac.uk/gxa/sc/experiments/E-MTAB-3929/Results",
+        "1,519 measured cells; stage and embryo counts retained; not coverage of all fetal stages",
+    )
+    add(
+        9606,
+        "hpa_brain",
+        "HPA v23 human brain, 193 subregions",
+        ["normal_bulk_rna"],
+        "used_in_selection",
+        "nTPM",
+        "adult",
+        "https://v23.proteinatlas.org/download/rna_brain_hpa.tsv.zip",
+        "Maximum subregion mean after within-context group sums; no automatic negative-IHC credit",
+    )
+    add(
+        9606,
+        "gtex_tissue_rna",
+        "Direct GTEx v11 tissue medians",
+        ["normal_bulk_rna"],
+        "used_in_selection",
+        "TPM",
+        "adult",
+        "https://gtexportal.org/home/downloads/adult-gtex",
+        "52 native whole-organ contexts; 14 microdissected and two cultured/transformed contexts remain outside this adapter. Exact whole-organ HPA negative-IHC grades apply; donor medians do not exclude donor outliers. Native reader preserves all 68 contexts.",
+    )
+    add(
+        9606,
+        "oncoref_tumor_union",
+        "OncoRef source-mapped tumor union",
+        ["tumor_expression"],
+        "used_in_selection",
+        "TPM",
+        "cohort-specific",
+        "https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/cta-expanded-funnel-20261027/tumor-union",
+        "132 compatible cohorts; source namespaces deduplicate views, not patients across studies",
+    )
+    add(
+        9606,
+        "hpa_cancer",
+        "HPA v23 cancer sample measurements",
+        ["tumor_expression"],
+        "used_in_selection",
+        "pTPM",
+        "cohort-specific",
+        "https://v23.proteinatlas.org/about/download",
+        "Protein-coding RNA denominator; no numerical protein or peptide abundance",
+    )
+    add(
+        9606,
+        "hpa_single_cell_tissue",
+        "HPA v23 tissue/cell clusters",
+        ["normal_cell_rna", "reproductive_expression"],
+        "used_in_selection",
+        "nTPM",
+        "source-labelled adult; reproductive locations explicit",
+        "https://v23.proteinatlas.org/about/download",
+        "At least 20 reads; missing cell types and disease states remain uncovered",
+    )
+    for source, name, unit in [
+        ("hpa_immune_cell", "HPA v23 immune summaries", "nTPM"),
+        ("hpa_immune_monaco", "Monaco immune summaries via HPA v23", "TPM"),
+    ]:
+        add(
+            9606,
+            source,
+            name,
+            ["immune_rna"],
+            "used_in_selection",
+            unit,
+            "adult",
+            "https://v23.proteinatlas.org/about/download",
+            "Sorted populations retain native units; no matched negative-IHC relaxation",
+        )
+    add(
+        9606,
+        "dice",
+        "DICE immune distributions",
+        ["immune_rna"],
+        "used_in_selection",
+        "TPM",
+        "adult",
+        "https://dice-database.org/",
+        "15 distributions; third-highest value; unpaired locus distributions retain bounds; optional coverage",
+    )
+    add(
+        9606,
+        "GSE155683_adult",
+        "Collin adult corneal atlas",
+        ["normal_cell_rna"],
+        "used_in_selection",
+        "CP10K",
+        "adult",
+        "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE155683",
+        "Two supported sample groups; optional coverage; CP10K is not length-normalized TPM",
+    )
+    add(
+        9606,
+        "hpa_normal_tissue",
+        "HPA v23 normal-tissue IHC",
+        ["normal_protein", "reproductive_expression"],
+        "used_in_selection",
+        "HPA categorical level and reliability",
+        "adult",
+        "https://v23.proteinatlas.org/about/assays%2Bannotation",
+        "Reliability describes evidence support, not a calibrated false-negative probability",
+    )
+    add(
+        9606,
+        "external_ihc",
+        "Curated external staining observations",
+        ["normal_protein"],
+        "used_in_selection",
+        "native categorical findings",
+        "source-specific",
+        "https://github.com/pirl-unc/oncoref/tree/v1.21.0/docs/audits/external-ihc-20261027",
+        "Reagent, tissue, cell type and validation scope remain explicit; no inherited HPA grade",
+    )
+    add(
+        9606,
+        "cta_policy_findings",
+        "Reviewed normal protein and clinical exclusions",
+        ["normal_protein", "clinical_safety"],
+        "used_in_selection",
+        "categorical reviewed findings",
+        "source-specific",
+        "https://github.com/pirl-unc/oncoref/blob/v1.21.0/oncoref/data/cta-policy-findings.csv",
+        "Qualitative reported Low is distinct from HPA Low and numerical intensity; clinical evidence is product-specific",
+    )
+    for clinical in tcr_trials.evidence()["sources"].values():
+        add(
+            9606,
+            clinical["source_id"],
+            clinical["title"],
+            ["clinical_safety"],
+            "used_in_selection",
+            "reviewed clinical attribution",
+            "adult clinical cohort",
+            clinical["url"],
+            "Peptide/HLA/receptor scope; targeted review, not all trials; no species transfer",
+        )
+    papers = pd.read_csv(DATA / "cta-publication-sources.csv").drop_duplicates("source_tag")
+    for row in papers.itertuples():
+        add(
+            9606,
+            row.source_tag,
+            row.citation,
+            ["nomination"],
+            "annotation",
+            "gene-list membership",
+            "publication-specific",
+            f"https://doi.org/{row.doi}" if pd.notna(row.doi) else row.source_url,
+            "Comparison annotation only; no membership bypass of the quantitative funnel",
+        )
+    add(
+        9606,
+        "Ensembl-115",
+        "Ensembl 115 coding annotations and MANE/canonical tags",
+        ["translation_evidence"],
+        "used_in_selection",
+        "versioned CDS and protein sequence",
+        "reference annotation",
+        "https://ftp.ensembl.org/pub/release-115/",
+        "Reference selection and completeness do not establish tissue-specific protein production.",
+    )
+    add(
+        9606,
+        "transcript-evidence",
+        "Reviewed coding and representative-protein findings",
+        ["translation_evidence"],
+        "used_in_selection",
+        "exact-reference, source-linked review",
+        "finding-specific",
+        "https://pirl-unc.github.io/oncoref/audits/cta-transcript-selection-20261108/",
+        "Gene or sequence scope, experimental setting and unresolved conflicts are retained.",
+    )
+    dog_roles = {
+        "bgee-srp009687": ["normal_bulk_rna", "reproductive_expression"],
+        "bgee-srp181218": ["normal_bulk_rna", "reproductive_expression"],
+        "barkbase": ["normal_bulk_rna", "reproductive_expression", "developmental_expression"],
+        "pfizer-dog-protein": ["normal_protein"],
+        "doga": ["normal_bulk_rna", "reproductive_expression", "developmental_expression"],
+        "pfizer-dog-rna": ["normal_bulk_rna"],
+        "gse304066-osteosarcoma": ["tumor_expression"],
+    }
+    urls = {
+        "bgee-srp009687": "https://www.ncbi.nlm.nih.gov/sra/?term=SRP009687",
+        "bgee-srp181218": "https://www.ncbi.nlm.nih.gov/sra/?term=SRP181218",
+        "barkbase": "https://pubmed.ncbi.nlm.nih.gov/31181663/",
+        "pfizer-dog-protein": "https://doi.org/10.1038/s41597-026-07512-9",
+        "pfizer-dog-rna": "https://doi.org/10.1038/s41597-026-07512-9",
+        "doga": "https://doi.org/10.1038/s41467-024-52798-1",
+        "gse304066-osteosarcoma": "https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE304066",
+    }
+    for source in expression_sources(species="dog"):
+        status = {"metadata_only": "metadata_only", "blocked_provenance": "blocked_provenance"}.get(
+            source.acquisition_status, "native_matrix"
+        )
+        add(
+            9615,
+            source.id,
+            source.id,
+            dog_roles[source.id],
+            status,
+            source.unit or "unresolved",
+            "sample metadata; adult/embryonic must remain separate",
+            urls[source.id],
+            source.expression_contract.provenance_notes,
+        )
+    for species in (canine, mouse):
+        native = species.cta_snapshot().as_dict()
+        parents = {record["id"]: record for record in native["evidence"]}
+        for source in native["sources"]:
+            facts = [
+                fact
+                for fact in native["facts"]
+                if parents[fact["evidence_id"]]["source_id"] == source["id"]
+            ]
+            categories = {"nomination"}
+            for fact in facts:
+                if fact["observation"]["status"] == "not_reported":
+                    continue
+                role = fact["tissue_role"]
+                protein = fact["measurement"]["feature_level"] in {"protein", "protein_group"}
+                if role == "reproductive":
+                    categories.add("reproductive_expression")
+                elif role == "tumor":
+                    categories.add("tumor_expression")
+                elif role == "somatic":
+                    categories.add("normal_protein" if protein else "normal_bulk_rna")
+            add(
+                native["taxon_id"],
+                source["id"],
+                source["id"],
+                sorted(categories),
+                "native_observations",
+                "source-native observations; no absolute expression unit",
+                "reported study scope",
+                source["url"],
+                source["scope"] + "; no quantitative CTA policy",
+            )
+    for source, name, categories, unit, stage, url, limitation in [
+        (
+            "tabula_muris",
+            "Tabula Muris / Senis",
+            ["normal_cell_rna", "immune_rna"],
+            "platform-specific counts and processed expression",
+            "adult and ageing",
+            "https://doi.org/10.1038/s41586-020-2496-1",
+            "Literature identified; matrices, strain/sex, stage and reference reconciliation are not integrated",
+        ),
+        (
+            "moca",
+            "Mouse Organogenesis Cell Atlas",
+            ["developmental_expression"],
+            "UMI counts",
+            "E9.5-E13.5",
+            "https://doi.org/10.1038/s41586-019-0969-x",
+            "Literature identified; UMI counts cannot use human TPM cutoffs without a declared measurement policy",
+        ),
+        (
+            "mouse_gastrulation",
+            "Mouse gastrulation and early organogenesis",
+            ["developmental_expression"],
+            "native single-cell RNA counts",
+            "embryonic",
+            "https://doi.org/10.1038/s41586-019-0933-9",
+            "Literature identified; embryo, stage and strain provenance need ingestion",
+        ),
+        (
+            "gxd",
+            "MGI Gene Expression Database",
+            ["developmental_expression", "normal_protein", "normal_bulk_rna"],
+            "assay-specific RNA and protein observations",
+            "stage-specific",
+            "https://www.informatics.jax.org/mgihome/GXD/aboutGXD.shtml",
+            "Literature identified; distinguish measured not-detected from not-analyzed search results; no complete normal panel inferred",
+        ),
+    ]:
+        add(10090, source, name, categories, "not_integrated", unit, stage, url, limitation)
+    return pd.DataFrame(rows)
+
+
+def mouse_selection_metadata() -> dict:
+    """Describe the sparse native seed without implying a mouse admission policy."""
+    snapshot = mouse.cta_snapshot()
+    candidates = snapshot.candidates()
+    return {
+        "selection_status": "unavailable",
+        "evidence_status": snapshot.coverage["status"],
+        "policy_id": None,
+        "universe": f"{len(candidates)} curated native nominations; not a genome-wide classification",
+        "reference": candidates[0]["reference"] if candidates else None,
+        "limitations": [
+            *snapshot.coverage["limitations"],
+            "No quantitative mouse selection policy; unassessed nominations have null categories.",
+            "Literature-identified atlases remain unintegrated; no complete normal panel or strain equivalence is inferred.",
+        ],
+    }
+
+
+def universe_counts(decisions: pd.DataFrame, audit: Path) -> dict:
+    """Account for the input inventory separately from classified protein groups."""
+    path = audit / "out-of-universe.csv.gz"
+    outside = pd.read_csv(path, low_memory=False) if path.exists() else decisions.iloc[:0]
+    inside_genes = {g for ids in decisions.member_gene_ids for g in json.loads(ids)}
+    outside_genes = set()
+    if len(outside):
+        # The replay starts from this full exact-protein inventory. The current
+        # filter-status display omits member IDs for out-of-universe rows, so it
+        # cannot supply their gene denominator. Join only by exact group ID.
+        mapping = pd.read_csv(
+            AUDIT / "protein-group-classifications.csv.gz",
+            usecols=["protein_equivalence_group_id", "member_gene_ids"],
+        )
+        mapped = outside.merge(mapping, on="protein_equivalence_group_id", validate="one_to_one")
+        if len(mapped) != len(outside):
+            raise ValueError("Out-of-universe group lacks its explicit member identities")
+        if mapped.member_gene_ids.map(lambda value: not json.loads(value)).any():
+            raise ValueError("Out-of-universe member identities are missing")
+        outside_genes = {g for ids in mapped.member_gene_ids for g in json.loads(ids)}
+    return {
+        "counting_unit": "selected_reference_protein_equivalence_group",
+        "input_groups": len(decisions) + len(outside),
+        "classified_groups": len(decisions),
+        "out_of_universe_groups": len(outside),
+        "input_gene_loci": len(inside_genes | outside_genes),
+        "classified_gene_loci": len(inside_genes),
+        "out_of_universe_gene_loci": len(outside_genes),
+        "gene_count_note": "Gene sets can overlap; only disjoint protein-group counts add",
+        "translation_support_eligible_groups": int(decisions.translation_support_eligible.sum()),
+        "translation_support_insufficient_groups": int(
+            (~decisions.translation_support_eligible).sum()
+        ),
+        "scope_note": "Every candidate record enters classification; translation support is a CTA admission requirement, not an inventory exclusion.",
+    }
+
+
+def build(audit: Path = AUDIT) -> None:
+    """Export a small wheel-backed table, preserving every group and member identity."""
+    source = audit / "protein-group-classifications.csv.gz"
+    decisions = pd.read_csv(source, low_memory=False)
+    universe = universe_counts(decisions, audit)
+    source_identity = "sha256:" + sha256(source)
+    reference = human.cta_snapshot().as_dict()["references"][0]["identity"]
+    rows = []
+    flag_columns = [
+        "Antibody concern",
+        "external_review_flag",
+        "low_normal_protein_flag",
+        "limited_protein_review_flag",
+        "stem_progenitor_expression_flag",
+        "reproductive_protein_association",
+        "reproductive_cell_association",
+        "reproductive_cell_indirect_association",
+        "normal_induction_evidence",
+        "knowledge_normal_exclusion",
+        "knowledge_normal_hold",
+        "knowledge_reproductive_support",
+        "tumor_restricted_rna_support",
+        "reliable_tumor_protein",
+    ]
+    for row in decisions.to_dict("records"):
+        identities = [
+            {
+                "gene_id": member["canonical_gene_id"],
+                "symbol": member["canonical_symbol"],
+                "namespace": "Ensembl gene",
+                "historical_gene_ids": json.loads(member["historical_ensembl_gene_ids"])
+                if member["historical_ensembl_gene_ids"] is not None
+                else None,
+                "alternate_gene_ids": json.loads(member["alternate_ensembl_gene_ids"])
+                if member["alternate_ensembl_gene_ids"] is not None
+                else None,
+                "synonyms": json.loads(member["gene_name_synonyms"])
+                if member["gene_name_synonyms"] is not None
+                else None,
+                "identity_status": member["identity_status"],
+                "history_status": "curated_snapshot"
+                if member["identity_status"] == "matched"
+                else "outside_identity_catalog",
+            }
+            for member in json.loads(row["member_identities"])
+        ]
+        rows.append(
+            {
+                "taxon_id": 9606,
+                "species": "human",
+                "entity_id": row["protein_equivalence_group_id"],
+                "entity_kind": "protein_equivalence_group",
+                "label": row["protein_group_label"],
+                "gene_ids": row["member_gene_ids"],
+                "gene_identities": json.dumps(identities, separators=(",", ":")),
+                "identity_status": "resolved"
+                if all(member["identity_status"] == "matched" for member in identities)
+                else "partial",
+                "reference_id": reference["reference_id"],
+                "category": row["category"],
+                "subtype": row.get("subtype"),
+                "classification": row.get("classification", row["category"]),
+                "assessment_status": row.get("assessment_status", "screened"),
+                "policy_id": row["policy"],
+                "reasons": json.dumps(
+                    row["exclusion_reasons"].split(" | ")
+                    if pd.notna(row["exclusion_reasons"])
+                    else []
+                ),
+                "evidence_flags": json.dumps(
+                    [column for column in flag_columns if row.get(column, False)]
+                    + (
+                        [
+                            "Clinical RNA credit: "
+                            + str(row.get("clinical_product_ids"))
+                            + "; tested epitope limits apply"
+                        ]
+                        if row.get("clinical_rna_credit", False)
+                        else []
+                    )
+                    + (
+                        ["Adult concentration unassessed"]
+                        if row.get("adult_profile_status") == "unassessed"
+                        else []
+                    )
+                    + (
+                        ["Developmental concentration unassessed"]
+                        if row.get("developmental_association", False)
+                        else []
+                    )
+                ),
+                "source_snapshot_id": source_identity,
+            }
+        )
+    write_csv(pd.DataFrame(rows, columns=RESULT_COLUMNS), DATA / "cta-selection-human.csv.gz")
+    profiles = pd.DataFrame(
+        {
+            "entity_id": decisions.protein_equivalence_group_id,
+            "tumor_max_tpm": decisions.oncoref_maximum_tpm,
+            "tumor_max_ptpm": decisions.hpa_tumor_group_lower_bound_ptpm,
+            "tumor_samples_ge10": decisions.tumor_samples_ge10,
+            "replicated_tumor_rna": decisions.tumor_restricted_rna_support,
+            "reliable_tumor_protein": decisions.reliable_tumor_protein,
+            "cancer_evidence": decisions.cancer_association,
+            "preliminary_tumor_restriction_profile": decisions.tumor_restricted_profile,
+            "tumor_restriction_status": decisions.apply(
+                lambda r: (
+                    "not_profile_match"
+                    if not r.tumor_restricted_profile
+                    else "excluded_by_normal_evidence"
+                    if r.category == "Unsafe"
+                    else r.assessment_status
+                    if r.assessment_status != "screened"
+                    else "reviewed_panel_restriction"
+                    if r.normal_restriction_reviewed
+                    else "normal_coverage_review_required"
+                ),
+                axis=1,
+            ),
+            "normal_max_ntpm": decisions.healthy_maximum_ntpm,
+            "normal_max_tpm": decisions.healthy_maximum_tpm,
+            "normal_max_cp10k": decisions.healthy_maximum_cp10k,
+            "adult_rna_below_floor": decisions.normal_maximum_floor_ratio.lt(1),
+            "unconfirmed_normal_signal": decisions.normal_maximum_floor_ratio.ge(1)
+            & decisions.adult_supported_floor_ratio.lt(1),
+            "adult_normal_protein_detected": decisions.any_detected_protein,
+            "adult_disposable_expression": decisions.disposable_maximum_floor_ratio.ge(1)
+            | decisions.disposable_protein_positive,
+            "adult_disposable_only": decisions.other_disposable,
+            "reproductive_max_ntpm": decisions.reproductive_ntpm,
+            "reproductive_evidence": decisions.positive_context,
+            "developmental_lineage_max_tpm": decisions.developmental_all_lineage_max_tpm,
+            "developmental_measured": decisions.developmental_measured,
+            "rare_cell_screened": decisions.rare_cell_screened,
+            "rare_cell_flag": decisions.rare_cell_flag,
+            "rare_cell_hold": decisions.rare_cell_hold,
+            "rare_cell_max_pct": decisions.rare_cell_max_pct,
+            "rare_cell_type": decisions.rare_cell_type,
+            "unsafe_sequence_overlap_pct": decisions.unsafe_sequence_overlap_pct.where(
+                decisions.category.ne("Unsafe")
+            ),
+            "translation_qualified": decisions.translation_qualified,
+            "translation_support_eligible": decisions.translation_support_eligible,
+            "translation_support_reasons": decisions.translation_support_reasons,
+            "translation_qualification_reasons": decisions.translation_qualification_reasons,
+            "translation_qualification_policy": decisions.translation_qualification_policy,
+            "representative_sequence_sha256s": decisions.representative_sequence_sha256s,
+            **{
+                name: decisions[name]
+                for name in [
+                    "representative_selection_policy",
+                    "representative_selection_approved",
+                    "representative_selection_reasons",
+                    "representative_candidate_sha256s",
+                    "representative_evidence_ids",
+                    "representative_transcripts",
+                ]
+            },
+        }
+    )
+    write_csv(profiles, DATA / "cta-selection-profiles-human.csv.gz")
+    inventory = source_inventory()
+    write_csv(inventory, DATA / "cta-selection-sources.csv")
+    write_csv(inventory, audit / "species-source-inventory.csv")
+    metadata = {
+        "schema": "oncoref.cta-selection",
+        "schema_version": 1,
+        "release": "1.21.0" if audit == ROOT / "docs/audits/cta-release-1.21.0" else __version__,
+        "data_sha256": {
+            name: sha256(DATA / name)
+            for name in [
+                "cta-selection-human.csv.gz",
+                "cta-selection-profiles-human.csv.gz",
+                "cta-selection-sources.csv",
+                "cta-rare-cell-screen.csv.gz",
+            ]
+        },
+        "species": {
+            "human": {
+                "selection_status": "available",
+                "evidence_status": "partial",
+                "policy_id": decisions.policy.iloc[0],
+                "universe": f"{len(decisions)} classified protein-equivalence groups from {universe['input_groups']} input groups",
+                "universe_counts": universe,
+                "reference": reference,
+                "limitations": [
+                    "Research prioritization calibrated using PRAME; no clinical safety or pediatric validation",
+                    "Developmental coverage is stage-limited; gastrulation and preimplantation measurements do not cover later fetal/postnatal development",
+                    "Native RNA units remain separate and nominal thresholds lack assay-specific toxicity calibration",
+                    "Low normal protein is a tolerated flag; author descriptions and HPA categories retain different scales",
+                    "Representative-protein equivalence is not exhaustive isoform identity",
+                    "Reviewed TCR-T experience supplies at most one RNA ladder step; tested peptide/HLA/product limits apply and clinical or protein exclusions remain independent",
+                    "HPA diffuseness applies only to complete adult/placental profiles; developmental concentration is unassessed without a comparable panel",
+                    "Other includes assessed noncandidates and held/incomplete cases. Subtype does not establish evidence completeness or sequence allowance.",
+                    "Rare-cell screening uses the existing brain, spinal-cord, heart and selected lung CELLxGENE panels. At least 1% detection in a Vital population supplies exclusion evidence; Protected detection supplies a review hold. Detection frequency is not abundance. Unmeasured ages, organs and excluded lineages remain coverage limits, not allowances.",
+                    "Indirect reproductive-cell association can reflect passenger or ambient RNA; it establishes sample-site association, not the producing cell. All normal and concentration gates still apply.",
+                ],
+            },
+            "dog": {
+                "selection_status": "unavailable",
+                "evidence_status": "partial",
+                "policy_id": None,
+                "universe": "14 curated native nominations; not a genome-wide classification",
+                "reference": canine.cta_candidates()[0]["reference"],
+                "limitations": [
+                    "No validated species-specific quantitative selection policy",
+                    "Native normal matrices need reference reconciliation and source-specific scale handling",
+                    "Tumor cohort integration is blocked by unit/reference provenance",
+                    "Unassessed nominations have null categories; human expression and safety evidence never transfer by orthology",
+                ],
+            },
+            "mouse": mouse_selection_metadata(),
+        },
+        "inputs": {
+            str(source.relative_to(ROOT)): sha256(source),
+            str((AUDIT / "protein-group-classifications.csv.gz").relative_to(ROOT)): sha256(
+                AUDIT / "protein-group-classifications.csv.gz"
+            ),
+            "report_manifest": sha256(audit / "manifest.json"),
+            **{
+                str(path.relative_to(ROOT)): sha256(path)
+                for species in ("dog", "mouse")
+                for path in sorted((DATA / "species" / species).glob("cta-*.json"))
+            },
+        },
+    }
+    (DATA / "cta-selection.json").write_text(json.dumps(metadata, indent=2) + "\n")
+    print(
+        json.dumps(
+            {
+                "rows": len(rows),
+                "categories": decisions.category.value_counts().to_dict(),
+                "source_category_rows": len(inventory),
+            },
+            indent=2,
+        )
+    )
+
+
+if __name__ == "__main__":
+    build()
