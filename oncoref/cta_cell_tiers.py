@@ -1,38 +1,12 @@
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
+"""Compatibility shim for frozen legacy module ``oncoref.cta_cell_tiers`` (#756).
 
-"""Compatibility helpers; tier assignments live in :mod:`tissue_tiers`.
-
-``differentiated_airway`` identifies an anatomical family, not a common tier.
-Club cells are Vital; mature ciliated and goblet cells are Protected.
+Implementation lives in :mod:`oncoref._legacy.cta_cell_tiers`; active target
+selection lives in :mod:`oncoref.target_selection` and :mod:`oncoref.antigen_sets`.
 """
 
 from __future__ import annotations
 
-import re
+import importlib as _importlib
+import sys as _sys
 
-import pandas as pd
-
-from .tissue_tiers import assess
-
-AIRWAY_TISSUES = frozenset({"lung", "bronchus"})
-DIFFERENTIATED_AIRWAY = re.compile(
-    r"ciliated|club cell|goblet|ionocyte|secretory|serous|mucous", re.I
-)
-
-
-def differentiated_airway(tissue: pd.Series, cell_type: pd.Series) -> pd.Series:
-    """True for differentiated (non-basal) airway epithelial cell types."""
-    return tissue.fillna("").str.lower().isin(AIRWAY_TISSUES) & cell_type.fillna("").str.contains(
-        DIFFERENTIATED_AIRWAY
-    )
-
-
-def cell_tiers(tissue: pd.Series, cell_type: pd.Series) -> pd.Series:
-    """Resolve once per unique anatomy/cell label, retaining the caller's index."""
-    pairs = list(zip(tissue.fillna(""), cell_type.fillna("")))
-    mapping = {p: assess(*p, resolution="cell")["tier"] for p in set(pairs)}
-    return pd.Series([mapping[p] for p in pairs], index=tissue.index)
+_sys.modules[__name__] = _importlib.import_module("oncoref._legacy.cta_cell_tiers")
