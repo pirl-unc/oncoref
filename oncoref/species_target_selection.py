@@ -490,10 +490,18 @@ def observations_from_expression_dataset(
             lookup_tissue = raw_tissue
             raw_lower = " ".join(raw_tissue.lower().replace("_", " ").split())
             if raw_lower in {"lactating mammary", "lactating mammary gland", "lactating breast"}:
-                lookup_tissue = "breast" if species_obj.taxon_id == 9606 else "mammary gland"
+                lookup_tissue = (
+                    "breast"
+                    if anatomy.lactating_mammary_compartment == "lactating_breast"
+                    else "mammary gland"
+                )
                 phys_state = phys_state or "lactating"
             elif raw_lower in {"resting mammary", "resting mammary gland", "resting breast"}:
-                lookup_tissue = "breast" if species_obj.taxon_id == 9606 else "mammary gland"
+                lookup_tissue = (
+                    "breast"
+                    if anatomy.resting_mammary_compartment == "resting_breast"
+                    else "mammary gland"
+                )
                 phys_state = phys_state or "resting"
             ann = normal_tissues.resolve_normal_tissue(
                 lookup_tissue,
@@ -798,11 +806,7 @@ def classify_sex_restriction(
 
     if table is None:
         resolved = resolve_species(species)
-        frame = (
-            target_selection.results()
-            if resolved.taxon_id == 9606
-            else packaged_species_results(resolved)
-        )
+        frame = packaged_species_results(resolved)
     else:
         frame = table.copy()
         inferred = frame.attrs.get(
@@ -1544,12 +1548,27 @@ def packaged_species_metadata(species: Species | str | int = "human") -> dict | 
     from importlib.resources import files
 
     resolved = resolve_species(species)
-    if resolved.taxon_id == 9606:
-        return target_selection.metadata()
     meta_path = files("oncoref").joinpath(f"data/species/{resolved.name}/target-selection.json")
     if not meta_path.is_file():
         return None
     return json.loads(meta_path.read_text(encoding="utf-8"))
+
+
+def _resolve_packaged_species_asset(
+    resolved_name: str, meta: dict, path_key: str, default_stem: str
+):
+    from importlib.resources import files
+    from pathlib import Path
+
+    from . import reference_data
+
+    rel = meta.get(path_key)
+    if rel:
+        direct = Path(str(files("oncoref").joinpath("data", rel)))
+        if direct.is_file():
+            return direct
+        return reference_data.bundled_or_managed_path(Path(rel).name.removesuffix(".csv.gz"))
+    return reference_data.bundled_or_managed_path(default_stem)
 
 
 def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
@@ -1559,12 +1578,22 @@ def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
     meta = packaged_species_metadata(resolved)
     if meta is None:
         raise FileNotFoundError(f"No packaged target-selection metadata for {resolved.name!r}")
-    path = reference_data.bundled_or_managed_path(f"{resolved.name}-target-selection")
+    path = _resolve_packaged_species_asset(
+        resolved.name, meta, "data_path", f"{resolved.name}-target-selection"
+    )
     if reference_data._sha256(path) != meta["data_sha256"]:
         raise ValueError(
             f"{resolved.name} target-selection CSV does not match its metadata SHA-256"
         )
     df = pd.read_csv(path, low_memory=False)
+    if "species" not in df.columns:
+        df.insert(0, "species", resolved.name)
+    if "taxon_id" not in df.columns:
+        df.insert(0, "taxon_id", resolved.taxon_id)
+    if "policy" not in df.columns:
+        df["policy"] = meta["policy_id"]
+    if "target_policy_id" not in df.columns:
+        df["target_policy_id"] = meta["policy_id"]
     for str_col in (
         "home_tissue",
         "Unsafe_reasons",
@@ -1573,7 +1602,6 @@ def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
         "sex_restriction_class",
         "sex_restriction_code",
         "cta_tier",
-        "tumor_top_cancer_code",
         "tumor_top_sample",
         "rare_cell_basis",
         "subtype",
@@ -1611,25 +1639,57 @@ def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
 _SPECIES_CATALOG_CACHE: dict[str, pd.DataFrame] = {}
 _SPECIES_HOST_EXPOSURE_CACHE: dict[str, dict] = {}
 _SPECIES_SEQUENCES_CACHE: dict[str, pd.DataFrame] = {}
+_SPECIES_SYMBOL_INDEX_CACHE: dict[str, dict[str, tuple[str, ...]]] = {}
 
 
-def packaged_species_host_exposure(species: Species | str | int = "human") -> dict:
-    """Return detached per-compartment host exposure observations for ``species``."""
+def _symbol_index_for_species(species_name: str, dataset_name: str) -> dict[str, tuple[str, ...]]:
+    cached = _SPECIES_SYMBOL_INDEX_CACHE.get(species_name)
+    if cached is None:
+        from .gene_ids import unversioned
+        from .load_dataset import get_data
+
+        cat = get_data(dataset_name, copy=False).fillna("")
+        grouped: dict[str, list[str]] = {}
+        for sym, gid in zip(cat["symbol"], cat["ensembl_gene_id"]):
+            if isinstance(sym, str) and sym and isinstance(gid, str) and gid:
+                grouped.setdefault(sym, []).append(unversioned(gid))
+        cached = {k: tuple(dict.fromkeys(v)) for k, v in grouped.items()}
+        _SPECIES_SYMBOL_INDEX_CACHE[species_name] = cached
+    return cached
+
+
+def _packaged_species_host_exposure_ref(species: Species | str | int = "human") -> dict:
+    from importlib.resources import files
+
     from . import host_context, reference_data
 
     resolved = resolve_species(species)
-    if resolved.taxon_id == 9606:
-        return host_context.exposure_evidence()
     meta = packaged_species_metadata(resolved)
     if meta is None:
         return {}
     cached = _SPECIES_HOST_EXPOSURE_CACHE.get(resolved.name)
     if cached is None:
-        path = reference_data.bundled_or_managed_path(f"{resolved.name}-host-exposure")
-        if reference_data._sha256(path) != meta["host_exposure_sha256"]:
+        path = _resolve_packaged_species_asset(
+            resolved.name, meta, "host_exposure_path", f"{resolved.name}-host-exposure"
+        )
+        actual_sha = reference_data._sha256(path)
+        if actual_sha != meta["host_exposure_sha256"]:
             raise ValueError(
                 f"{resolved.name} host-exposure table does not match its metadata SHA-256"
             )
+        if receipt_rel := meta.get("host_exposure_receipt_path"):
+            receipt = json.loads(
+                files("oncoref").joinpath("data", receipt_rel).read_text(encoding="utf-8")
+            )
+            if (
+                receipt["policy_id"] != host_context.POLICY_ID
+                or receipt["catalog_policy_id"] != meta["policy_id"]
+            ):
+                raise ValueError("Host exposure belongs to another policy")
+            if receipt.get("catalog_data_sha256") != meta["data_sha256"]:
+                raise ValueError("Host exposure belongs to another catalog snapshot")
+            if receipt["sha256"] != actual_sha:
+                raise ValueError("Host exposure does not match its receipt")
         cached = (
             pd.read_csv(path, keep_default_na=False)
             .set_index("entity_id")
@@ -1637,19 +1697,24 @@ def packaged_species_host_exposure(species: Species | str | int = "human") -> di
             .to_dict()
         )
         _SPECIES_HOST_EXPOSURE_CACHE[resolved.name] = cached
-    return deepcopy(cached)
+    return cached
 
 
-def packaged_species_sequences(species: Species | str | int = "mouse") -> pd.DataFrame:
-    """Return all verified reference proteome translations for an evaluated non-human species."""
-    from . import reference_data
+def packaged_species_host_exposure(species: Species | str | int = "human") -> dict:
+    """Return detached per-compartment host exposure observations for ``species``."""
+    return deepcopy(_packaged_species_host_exposure_ref(species))
+
+
+def packaged_species_sequences(species: Species | str | int = "human") -> pd.DataFrame:
+    """Return all verified reference proteome translations for an evaluated species."""
+    from . import antigen_sets, reference_data
 
     resolved = resolve_species(species)
-    if resolved.taxon_id == 9606:
-        raise ValueError("Use antigen_sets.sequences(..., species='human') for human translations")
     meta = packaged_species_metadata(resolved)
     if meta is None:
         raise FileNotFoundError(f"No packaged proteome sequence table for {resolved.name!r}")
+    if meta.get("sequence_provider") == "sequence_bundle":
+        return antigen_sets._load_bundle_sequences_table()
     cached = _SPECIES_SEQUENCES_CACHE.get(resolved.name)
     if cached is None:
         path = reference_data.bundled_or_managed_path(f"{resolved.name}-proteome-sequences")
@@ -1676,7 +1741,7 @@ def packaged_species_sequences(species: Species | str | int = "mouse") -> pd.Dat
 
 
 def packaged_species_screening_sources(species: Species | str | int = "mouse") -> pd.DataFrame:
-    """Return the SHA-256-pinned primary input manifest for an evaluated non-human species."""
+    """Return the SHA-256-pinned primary input manifest for an evaluated species."""
     from importlib.resources import files
 
     resolved = resolve_species(species)
@@ -1689,7 +1754,7 @@ def packaged_species_screening_sources(species: Species | str | int = "mouse") -
 
 
 def packaged_species_tumor_cohorts(species: Species | str | int = "mouse") -> pd.DataFrame:
-    """Return the strain-explicit tumor cohort registry for an evaluated non-human species."""
+    """Return the strain-explicit tumor cohort registry for an evaluated species."""
     from importlib.resources import files
 
     resolved = resolve_species(species)
@@ -1718,25 +1783,15 @@ def packaged_species_results(
     category: str | None = None,
 ) -> pd.DataFrame:
     """Return the packaged target-selection catalog for human, dog or mouse."""
+    from .species_antigens import cta_snapshot
+
     resolved = resolve_species(species)
     if category is not None and category not in target_selection.CATEGORIES:
         raise ValueError(
             f"Unknown category {category!r}; expected one of {target_selection.CATEGORIES}"
         )
-    if resolved.taxon_id == 9606:
-        out = target_selection.results(gene, category=category)
-        out.insert(0, "species", "human")
-        out.insert(0, "taxon_id", 9606)
-        if "policy" not in out:
-            out["policy"] = target_selection.POLICY_ID
-        if "target_policy_id" not in out:
-            out["target_policy_id"] = target_selection.POLICY_ID
-        out.attrs.update(taxon_id=9606, species="human", policy_id=target_selection.POLICY_ID)
-        return out
-
-    from .species_antigens import cta_snapshot
-
-    if packaged_species_metadata(resolved) is not None:
+    meta = packaged_species_metadata(resolved)
+    if meta is not None:
         cached = _SPECIES_CATALOG_CACHE.get(resolved.name)
         if cached is None:
             cached = _load_packaged_species_catalog_cached(resolved.name)
@@ -1752,11 +1807,15 @@ def packaged_species_results(
                     f"nomination:{resolved.taxon_id}:{cand['id']}",
                 }:
                     alias_gene_ids.update(cand["gene_ids"])
+            if sym_ds := meta.get("symbol_index"):
+                alias_gene_ids.update(
+                    _symbol_index_for_species(resolved.name, sym_ds).get(gene, ())
+                )
             target_tokens = {gene, *alias_gene_ids}
             evaluated = evaluated[
                 evaluated.protein_group_label.isin(target_tokens)
                 | evaluated.protein_group_label.str.split("/").map(
-                    lambda parts: bool(set(parts) & target_tokens)
+                    lambda parts: bool({p for p in parts if len(p) >= 3} & target_tokens)
                 )
                 | evaluated.entity_id.isin(target_tokens)
                 | evaluated.member_gene_ids.map(
@@ -1811,36 +1870,20 @@ def packaged_species_results(
 
 def packaged_species_coverage(species: Species | str | int = "human") -> dict:
     """Structured readiness, policy parameters, anatomy and category counts."""
+    from .expression_registry import expression_sources
     from .species_antigens import cta_snapshot
+    from .species_assets import registered_references
     from .species_policies import species_policy
 
     resolved = resolve_species(species)
     anatomy = anatomy_for_species(resolved)
     pol = species_policy(resolved)
-    snap = cta_snapshot(resolved)
-    if resolved.taxon_id == 9606:
-        meta = target_selection.metadata()
-        sex_df = classify_sex_restriction(species="human")
-        return {
-            "taxon_id": 9606,
-            "species": "human",
-            "selection_status": "evaluated",
-            "policy_id": target_selection.POLICY_ID,
-            "reference": snap.as_dict()["references"][0]["identity"],
-            "anatomy": anatomy.as_dict(),
-            "thresholds": asdict(pol.thresholds),
-            "counts": meta["summary"]["categories"],
-            "sex_restricted_counts": (
-                sex_df["sex_restriction_code"].value_counts().to_dict() if not sex_df.empty else {}
-            ),
-            "populated_inputs": [b.role for b in pol.datasets if b.status == "active_in_catalog"],
-            "missing_inputs": [],
-        }
-
-    from .expression_registry import expression_sources
-    from .species_assets import registered_references
-
-    refs = [r["id"] for r in registered_references(resolved)]
+    try:
+        refs = [r["id"] for r in registered_references(resolved)]
+    except FileNotFoundError:
+        refs = []
+    if not refs:
+        refs = list(pol.registered_reference_aliases)
     pkg_meta = packaged_species_metadata(resolved)
     if pkg_meta is not None:
         return {
@@ -1864,6 +1907,7 @@ def packaged_species_coverage(species: Species | str | int = "human") -> dict:
             ],
         }
 
+    snap = cta_snapshot(resolved)
     cat = packaged_species_results(resolved)
     expr = expression_sources(species=resolved)
     ready_expr = [s.id for s in expr if s.acquisition_status == "available"]

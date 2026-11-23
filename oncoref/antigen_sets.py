@@ -205,19 +205,16 @@ def select(
     resolved = resolve_species(species)
     if group not in CANDIDATE_SETS:
         raise ValueError(f"Select a candidate set: {', '.join(CANDIDATE_SETS)}")
-    if table is None and resolved.taxon_id != 9606:
+    if table is None or host_evidence is None:
         from .species_target_selection import (
             packaged_species_host_exposure,
             packaged_species_results,
         )
 
-        table = packaged_species_results(resolved)
+        if table is None:
+            table = packaged_species_results(resolved)
         if host_evidence is None:
             host_evidence = packaged_species_host_exposure(resolved)
-    elif host_evidence is None and resolved.taxon_id != 9606:
-        from .species_target_selection import packaged_species_host_exposure
-
-        host_evidence = packaged_species_host_exposure(resolved)
     sex_ids: frozenset[str] | None = None
     if group in SEX_SETS:
         from .species_target_selection import SEX_SETS as _SEX_SPEC
@@ -286,17 +283,15 @@ def proteins(
             raise ValueError(
                 "Host profiles and candidate filters require select(...).background_proteins()"
             )
-        if resolved.taxon_id == 9606:
-            rows = target_selection.results()
-        else:
-            from .species_target_selection import packaged_species_results
+        from .species_target_selection import packaged_species_results
 
-            rows = packaged_species_results(resolved)
+        rows = packaged_species_results(resolved)
         result = rows[rows.category.isin(EXCLUSION_CATEGORIES[group])].reset_index(drop=True)
         result.attrs.update(
-            catalog_policy_id=target_selection.POLICY_ID,
+            catalog_policy_id=rows.attrs.get("policy_id", target_selection.POLICY_ID),
             set=group,
             species=resolved.name,
+            taxon_id=resolved.taxon_id,
         )
         return result
     return select(group, mode=mode, host=host, species=resolved, **overrides).proteins()
@@ -482,18 +477,16 @@ def _sequences(
             )
     elif genome is None:
         if sequence_source == "sequence_bundle":
-            if resolved.taxon_id != 9606:
+            from .species_target_selection import packaged_species_metadata
+
+            meta = packaged_species_metadata(resolved)
+            if meta is None or meta.get("sequence_provider") != "sequence_bundle":
                 raise ValueError(
                     f"sequence_bundle currently pins human GRCh38/Ensembl 115 (taxon 9606), "
                     f"not {resolved.name!r}"
                 )
             sequences_table = _load_bundle_sequences_table()
-        elif sequence_source == "auto" and resolved.taxon_id == 9606:
-            try:
-                sequences_table = _load_bundle_sequences_table()
-            except FileNotFoundError:
-                sequences_table = None
-        elif sequence_source == "auto" and resolved.taxon_id != 9606:
+        elif sequence_source == "auto":
             from .species_target_selection import (
                 packaged_species_metadata,
                 packaged_species_sequences,
