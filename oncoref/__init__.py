@@ -43,6 +43,7 @@ from . import (
     host_context,
     human,
     human_protein_atlas,
+    human_screening_inputs,
     ici_response,
     mouse,
     normal_adjudications,

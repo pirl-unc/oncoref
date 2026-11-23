@@ -1054,13 +1054,17 @@ def evaluate_species_catalog(
     if "home_tissue" not in d:
         d["home_tissue"] = ""
     d["home_tissue"] = d["home_tissue"].fillna("").astype(str)
-    d["home_tissue_unmeasured"] = d["home_tissue"].map(
-        lambda text: any(
-            part.strip() in spec.anatomy.unmeasured_home_tissues
-            for part in text.split(";")
-            if part.strip()
+    if "home_tissue_unmeasured" in d:
+        d["home_tissue_unmeasured"] = d["home_tissue_unmeasured"].fillna(False).astype(bool)
+    else:
+        d["home_tissue_unmeasured"] = d["home_tissue"].map(
+            lambda text: any(
+                part.strip() in spec.anatomy.unmeasured_home_tissues
+                for chunk in text.split(";")
+                for part in chunk.split("|")
+                if part.strip()
+            )
         )
-    )
 
     gate_unsafe = pd.Series(False, index=d.index)
     gate_hold = pd.Series(False, index=d.index)
@@ -1171,7 +1175,12 @@ def evaluate_species_catalog(
         overlap_fn = cta_sequence_overlap.unsafe_overlap(ninemers, d.index)
         d["unsafe_sequence_overlap_pct"] = (100.0 * overlap_fn(d["unsafe"])).round(2)
     else:
-        d["unsafe_sequence_overlap_pct"] = np.nan
+        if "unsafe_sequence_overlap_pct" not in d:
+            d["unsafe_sequence_overlap_pct"] = np.nan
+        else:
+            d["unsafe_sequence_overlap_pct"] = pd.to_numeric(
+                d["unsafe_sequence_overlap_pct"], errors="coerce"
+            )
 
     nested = d["nested_unqualified"].astype(bool) if "nested_unqualified" in d else False
     readthrough = d["readthrough_locus"].astype(bool) if "readthrough_locus" in d else False
@@ -1245,10 +1254,21 @@ def evaluate_species_catalog(
             and row.evidence_resolved
             and row.sequence_pass
         )
+        explicit_cov = (
+            bool(row.required_coverage_complete)
+            if hasattr(row, "required_coverage_complete")
+            and pd.notna(row.required_coverage_complete)
+            else None
+        )
         if not has_panel or n_df is None:
-            req_cov.append(False)
-            ca_status.append("unassessed")
-            ra_status.append("unassessed")
+            panel_complete = (
+                bool(explicit_cov)
+                if (has_panel and explicit_cov is not None and not eligible_for_comparison)
+                else False
+            )
+            req_cov.append(panel_complete)
+            ca_status.append("unassessed" if not panel_complete else "does_not_qualify")
+            ra_status.append("unassessed" if not panel_complete else "does_not_qualify")
             norm_ref.append(np.nan)
             disp_max.append(np.nan)
             norm_contexts_json.append("[]")
@@ -1369,23 +1389,56 @@ def evaluate_species_catalog(
         if not valid_r.empty and "compartment" in valid_r:
             threshold = spec.enrichment_fold * denom
             for comp, cgroup in valid_r.groupby("compartment", sort=True):
+                if not str(comp).strip():
+                    continue
                 cmax = float(cgroup.value.max())
                 is_dev = cgroup.scope.eq("developmental").any()
+                ntpm_vals = (
+                    cgroup["max_ntpm"].dropna()
+                    if "max_ntpm" in cgroup.columns
+                    else pd.Series(dtype=float)
+                )
+                c_ntpm = float(ntpm_vals.max()) if not ntpm_vals.empty else None
+                c_prot = (
+                    str(cgroup["protein_status"].dropna().iloc[0])
+                    if "protein_status" in cgroup.columns
+                    and not cgroup["protein_status"].dropna().empty
+                    else "not_assessed"
+                )
+                c_scope = (
+                    bool(cgroup["scope_complete"].dropna().all())
+                    if "scope_complete" in cgroup.columns
+                    and not cgroup["scope_complete"].dropna().empty
+                    else (not is_dev)
+                )
+                supp_vals = (
+                    cgroup["compartment_qualifying_value"].dropna()
+                    if "compartment_qualifying_value" in cgroup.columns
+                    else pd.Series(dtype=float)
+                )
+                qual_val = float(supp_vals.max()) if not supp_vals.empty else cmax
                 host_exposure[eid][str(comp)] = {
                     "coverage": "measured",
                     "max_tpm": cmax,
-                    "max_ntpm": None,
-                    "protein_status": "not_assessed",
-                    "scope_complete": not is_dev,
+                    "max_ntpm": c_ntpm,
+                    "protein_status": c_prot,
+                    "scope_complete": c_scope,
                 }
-                if cmax >= threshold:
+                if qual_val >= threshold:
                     qual_comps.append(str(comp))
 
-        peaks = [v for v in (t_peak, r_supp) if v is not None and pd.notna(v)]
+        dev_mean = getattr(row, "developmental_mean_tpm", np.nan)
+        peaks = [v for v in (t_peak, r_supp, dev_mean) if v is not None and pd.notna(v)]
         target_peak = max(peaks) if peaks else 0.0
-        b_ok = d_max <= spec.disposable_cap and (
-            (ca_rec["status"] != "qualifies" and ra_rec["status"] != "qualifies")
-            or (target_peak >= spec.detection_floor and target_peak > max(n_max, d_max))
+        d_ntpm = getattr(row, "disposable_max_ntpm", np.nan)
+        ntpm_ok = pd.isna(d_ntpm) or float(d_ntpm) <= spec.disposable_cap
+        b_ok = (
+            d_max <= spec.disposable_cap
+            and ntpm_ok
+            and (
+                (ca_rec["status"] != "qualifies" and ra_rec["status"] != "qualifies")
+                or (target_peak >= spec.detection_floor and target_peak > max(n_max, d_max))
+            )
         )
 
         ca_status.append(

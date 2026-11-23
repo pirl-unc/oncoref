@@ -1,0 +1,36 @@
+{
+  "schema": "oncoref.human-737-tumor-observations.v1",
+  "baseline_policy_id": "oncoref.target-selection.2026-11-20.2",
+  "cohorts": [
+    {
+      "cancer_code": "THYMCA",
+      "source_cohort": "TREEHOUSE_POLYA_25_01_TCGA_THYM_HISTOLOGY",
+      "source_matrix_version": "5.22.15",
+      "matrix_sha256": "012b658a9cd9bc4b713d347d15c9ad01368fd273c8fc678a1d950ade57bca800",
+      "included_samples": 11,
+      "qc_passing_samples": 11,
+      "retained_observations_ge_1_tpm": 350
+    },
+    {
+      "cancer_code": "BCC",
+      "source_cohort": "GSE125285_BCC_CSCC",
+      "source_matrix_version": "5.22.15",
+      "matrix_sha256": "a5e76d4bf9dc5f43b46b63f6ea57f9cb6b48c2fb0b6997a88e7cd69fbd6f9f99",
+      "included_samples": 25,
+      "qc_passing_samples": 25,
+      "retained_observations_ge_1_tpm": 3818
+    },
+    {
+      "cancer_code": "cSCC",
+      "source_cohort": "GSE125285_BCC_CSCC",
+      "source_matrix_version": "5.22.15",
+      "matrix_sha256": "0d2e6cae4c0f2fff19b6b2b9a071d0cc36c956d79d303e1086ccd11240331cba",
+      "included_samples": 10,
+      "qc_passing_samples": 10,
+      "retained_observations_ge_1_tpm": 1326
+    }
+  ],
+  "row_count": 5494,
+  "bytes": 56099,
+  "sha256": "e04197b3308f0900d7e69a58d4297b463c07a589b4385daac673cc36d6972683"
+}

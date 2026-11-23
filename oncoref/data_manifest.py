@@ -443,6 +443,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "unit-separated quantitative home-tissue expression and 10x tumor-fold adjudications across all 568 home_tissue protein groups (#735)",
     ),
+    "human-737-tumor-observations": (
+        "cta-evidence",
+        "QC-passing, identity-harmonized per-sample linear-TPM observations across #737 upgraded tumor cohorts (THYMCA, BCC, cSCC)",
+    ),
+    "human-integrated-policy-preview": (
+        "cta-evidence",
+        "protein-level category and classification transitions when folding #735, #711/#712, and #737 into evaluate_species_catalog (#755)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",

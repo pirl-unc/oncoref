@@ -124,6 +124,8 @@ oncoref = [
     "data/data-file-renames.json",
     "data/nose-skin-reference.json",
     "data/rna-ihc-calibration.json",
+    "data/human-737-tumor-observations.json",
+    "data/human-integrated-policy-preview.json",
 ]
 
 [tool.setuptools.exclude-package-data]
