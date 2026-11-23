@@ -89,6 +89,7 @@ oncoref = [
     "data/*.csv",
     "data/*.csv.gz",
     "data/*.yaml",
+    "data/species/*/*.csv",
     "data/species/*/*.yaml",
     "data/species/*/*.json",
     "data/species/*/*.json.gz",
@@ -148,6 +149,9 @@ oncoref = [
     "data/cta-rare-cell-screen.csv.gz",
     "data/cta-screen-results.csv",
     "data/unmeasured-home-gene-expression.csv.gz",
+    "data/mouse-target-selection.csv.gz",
+    "data/mouse-host-exposure.csv.gz",
+    "data/mouse-proteome-sequences.csv.gz",
 ]
 
 [tool.ruff]

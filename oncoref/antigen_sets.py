@@ -206,9 +206,18 @@ def select(
     if group not in CANDIDATE_SETS:
         raise ValueError(f"Select a candidate set: {', '.join(CANDIDATE_SETS)}")
     if table is None and resolved.taxon_id != 9606:
-        from .species_target_selection import packaged_species_results
+        from .species_target_selection import (
+            packaged_species_host_exposure,
+            packaged_species_results,
+        )
 
         table = packaged_species_results(resolved)
+        if host_evidence is None:
+            host_evidence = packaged_species_host_exposure(resolved)
+    elif host_evidence is None and resolved.taxon_id != 9606:
+        from .species_target_selection import packaged_species_host_exposure
+
+        host_evidence = packaged_species_host_exposure(resolved)
     sex_ids: frozenset[str] | None = None
     if group in SEX_SETS:
         from .species_target_selection import SEX_SETS as _SEX_SPEC
@@ -484,6 +493,17 @@ def _sequences(
                 sequences_table = _load_bundle_sequences_table()
             except FileNotFoundError:
                 sequences_table = None
+        elif sequence_source == "auto" and resolved.taxon_id != 9606:
+            from .species_target_selection import (
+                packaged_species_metadata,
+                packaged_species_sequences,
+            )
+
+            if packaged_species_metadata(resolved) is not None:
+                try:
+                    sequences_table = packaged_species_sequences(resolved)
+                except FileNotFoundError:
+                    sequences_table = None
     elif sequence_source == "sequence_bundle":
         raise ValueError("Cannot pass both genome=... and sequence_source='sequence_bundle'")
     if sequences_table is not None:

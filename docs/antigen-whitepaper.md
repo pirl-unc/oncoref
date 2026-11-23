@@ -346,7 +346,7 @@ OncoRef applies one mathematical definition of <span class="cat cat-ca">CA</span
 | --- | --- | --- | --- | --- |
 | Homo sapiens (`human`, 9606) | `ensembl115` | `TPM` | 8/8 active | 327 CTA · 69 CA only · 128 RA only · 1,120 Other · 18,249 Unsafe |
 | Canis lupus familiaris (`dog`, 9615) | `refseq106`, `ensembl98` | `TPM`, `TMM-CPM` | 1/8 active | 14 native nominations in Other:Review (pending_reconciled_panels) |
-| Mus musculus (`mouse`, 10090) | `ensembl115` | `TPM` | 2/8 active | 1 native nominations in Other:Review (pending_reconciled_panels) |
+| Mus musculus (`mouse`, 10090) | `ensembl115` | `TPM` | 8/8 active | 20 CTA · 29 CA only · 296 RA only · 2,593 Other · 18,495 Unsafe |
 
 ### *Homo sapiens* (taxon 9606)
 

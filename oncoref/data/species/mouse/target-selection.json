@@ -1,0 +1,129 @@
+{
+  "schema": "oncoref.species-target-selection-metadata.v1",
+  "taxon_id": 10090,
+  "species": "mouse",
+  "scientific_name": "Mus musculus",
+  "selection_status": "evaluated",
+  "policy_id": "oncoref.species-screening-policy.2026-11-21.1",
+  "comparison_id": "oncoref.mouse-grcm39-tpm.2026-11-22.1",
+  "comparison_unit": "TPM",
+  "reference": {
+    "schema": "openvax.reference",
+    "schema_version": 1,
+    "taxon_id": 10090,
+    "assembly_accession": "GCA_000001635.9",
+    "annotation_source": "Ensembl",
+    "annotation_release": "115",
+    "source_version": "Ensembl-115",
+    "identifier_namespaces": {
+      "gene": "Ensembl gene",
+      "protein": "Ensembl protein",
+      "transcript": "Ensembl transcript"
+    },
+    "content_provenance": {
+      "gtf": "fa45f9fed56e85d5c83e5912f88d76e277729da0761f99e33e4c88d4b08a9ec0",
+      "ncrna": "f778c212c11e8a8b059a2412c81f52f7ae0bcf708b717126ea92a19eae8c7127",
+      "protein": "560dddca2516fbc6649df6bc95c28a8d1f9e5019d5ae0cf6071a0360f482aeb0",
+      "rna": "6f394d606bda651bcc37211a02fd9b3c8ef8e82b061a57b863195d4bfa2237ed"
+    },
+    "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b"
+  },
+  "data_sha256": "46993f810805d35ff8735aed93c59dcda20a1387fb2e089d6d1d6d1c2655574a",
+  "data_bytes": 3113468,
+  "host_exposure_sha256": "a736fc638868c45bab93efd1e33dcc81a46fcd5e51b8dbf76fba933a2157e8db",
+  "host_exposure_bytes": 2517414,
+  "sequences_sha256": "f24c23f55d85ab70259f38936e1ac1fc94c12686b6f34159116250f07b3a344c",
+  "sequences_bytes": 11560752,
+  "required_normal_contexts": [
+    "adipose tissue",
+    "adrenal gland",
+    "blood",
+    "bone",
+    "bone marrow",
+    "brain",
+    "colon",
+    "esophagus",
+    "eye",
+    "heart",
+    "kidney",
+    "liver",
+    "lung",
+    "olfactory epithelium",
+    "pancreas",
+    "pituitary gland",
+    "salivary gland",
+    "skeletal muscle",
+    "skin",
+    "small intestine",
+    "spleen",
+    "stomach",
+    "thyroid gland",
+    "urinary bladder"
+  ],
+  "measured_reproductive_compartments": [
+    "cervix",
+    "coagulating_gland",
+    "embryo",
+    "endometrium",
+    "epididymis",
+    "fallopian tube",
+    "lactating_mammary",
+    "ovary",
+    "placenta",
+    "prostate",
+    "resting_mammary",
+    "seminal vesicle",
+    "testis",
+    "uterine_horn",
+    "uterus",
+    "vagina"
+  ],
+  "tumor_cohorts": [
+    "MC38",
+    "B16F10",
+    "CT26",
+    "LLC",
+    "4T1",
+    "KP_LUAD",
+    "BMPC_PRAD",
+    "P815"
+  ],
+  "tumor_samples": 36,
+  "summary": {
+    "proteins": 21433,
+    "loci": 21760,
+    "sequences": 66037,
+    "categories": {
+      "CTA": 20,
+      "Cancer Antigen only": 29,
+      "Reproductive Antigen only": 296,
+      "Other": 2593,
+      "Unsafe": 18495
+    },
+    "classifications": {
+      "CTA": 20,
+      "Cancer Antigen only": 29,
+      "Other:Expression": 2067,
+      "Other:Review": 429,
+      "Other:Sequence": 87,
+      "Other:Unscreened tissue": 10,
+      "Reproductive Antigen only": 296,
+      "Unsafe": 18495
+    },
+    "sex_restriction_codes": {
+      "CTA-F": 1,
+      "CTA-M": 3,
+      "CTA-MF": 16,
+      "ERA-only": 8,
+      "FRA-only": 15,
+      "MRA-only": 66,
+      "SRA-only": 207
+    },
+    "sex_restriction_classes": {
+      "Embryo / placenta-only": 8,
+      "Female-restricted": 16,
+      "Male-restricted": 69,
+      "Shared male & female": 223
+    }
+  }
+}

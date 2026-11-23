@@ -673,12 +673,13 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
     assert dog_rows.classification.eq("Other:Review").all()
     assert not dog_rows.is_target_candidate.any()
     assert canine.sex_restricted_antigens().empty
-    assert classify_sex_restriction(species="mouse").empty
+    assert not classify_sex_restriction(species="mouse").empty
 
     mouse_rows = mouse.target_selection("ENSMUSG00000051257")
     assert len(mouse_rows) == 1
-    assert mouse_rows.iloc[0].classification == "Other:Review"
-    assert mouse.target_selection(category="CTA").empty
+    assert mouse_rows.iloc[0].classification in {"Other:Review", "Unsafe"}
+    assert not mouse_rows.iloc[0].is_cta
+    assert not mouse.target_selection(category="CTA").empty
 
     assert cli.main(["antigens", "funnel", "--species", "dog", "--format", "json"]) == 0
     funnel_rows = json.loads(capsys.readouterr().out)
@@ -687,7 +688,7 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
 
     assert cli.main(["antigens", "explain", "P1A", "--species", "mouse", "--format", "json"]) == 0
     exp = json.loads(capsys.readouterr().out)
-    assert len(exp) == 1 and exp[0]["classification"] == "Other:Review"
+    assert len(exp) == 1 and exp[0]["classification"] in {"Other:Review", "Unsafe"}
 
     assert (
         cli.main(["antigens", "list", "--set", "Other", "--species", "dog", "--format", "json"])

@@ -1,0 +1,9 @@
+cancer_code,label,model_kind,strain,mhc_haplotype,source_accession,n_samples,native_feature_space,quantification
+MC38,MC38 subcutaneous colon adenocarcinoma,syngeneic_graft,C57BL/6,H-2b,GSE355313,4,Ensembl gene (ENSMUSG),linear TPM from raw counts and gene_length
+B16F10,B16-F10 subcutaneous melanoma,syngeneic_graft,C57BL/6,H-2b,GSE334005,3,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
+CT26,CT26 subcutaneous colon carcinoma,syngeneic_graft,BALB/c,H-2d,GSE334005,4,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
+LLC,Lewis lung carcinoma (LLC) subcutaneous graft,syngeneic_graft,C57BL/6,H-2b,GSE334005,3,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
+4T1,4T1 triple-negative mammary carcinoma,syngeneic_line,BALB/c,H-2d,GSE332912,3,Ensembl gene (ENSMUSG),author linear TPM
+KP_LUAD,Primary Kras;Trp53 lung adenocarcinoma GEMM,primary_gemm,C57BL/6,H-2b,GSE277076,10,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from raw counts and Ensembl 115 exonic_bp
+BMPC_PRAD,BMPC MYC;Pten primary & metastatic prostate adenocarcinoma GEMM,primary_gemm,FVB,H-2q,GSE287166,6,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from normalized counts and Ensembl 115 exonic_bp
+P815,P815 mastocytoma (native DBA/2 source of P1A/Trap1a),syngeneic_line,DBA/2,H-2d,GSE181773,3,Ensembl gene (ENSMUSG),within-sample linear TPM from FPKM

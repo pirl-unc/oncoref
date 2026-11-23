@@ -162,8 +162,15 @@ def explain(args):
             ]
     elif args.papers or args.loss:
         raise ValueError("--papers and --loss are currently human-only curation views")
+    species_host_evidence = None
+    if resolved.taxon_id != 9606:
+        from .species_target_selection import packaged_species_host_exposure
+
+        species_host_evidence = packaged_species_host_exposure(resolved)
     for mode in target_filters.FILTER_MODES:
-        evaluated = target_filters.apply(target_filters.FILTER_MODES[mode], rows)
+        evaluated = target_filters.apply(
+            target_filters.FILTER_MODES[mode], rows, host_evidence=species_host_evidence
+        )
         output[mode] = [
             "pass" if row.keep else "fail: " + row.filter_failed for row in evaluated.itertuples()
         ]
@@ -183,12 +190,16 @@ def explain(args):
             ),
         ),
     ):
-        evaluated = target_filters.apply(filt, rows)
+        evaluated = target_filters.apply(filt, rows, host_evidence=species_host_evidence)
         output[label] = [
             "pass" if row.keep else "fail: " + row.filter_failed for row in evaluated.itertuples()
         ]
     if overrides := _host_overrides(args):
-        selected = target_filters.apply(replace(target_filters.TargetFilter(), **overrides), rows)
+        selected = target_filters.apply(
+            replace(target_filters.TargetFilter(), **overrides),
+            rows,
+            host_evidence=species_host_evidence,
+        )
         for column in (
             "host_status",
             "host_reasons",

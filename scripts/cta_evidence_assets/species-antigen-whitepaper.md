@@ -70,7 +70,9 @@ $dog_nominations_table
 
 ## *Mus musculus* (laboratory mouse · taxon 10090)
 
-Preclinical vaccine, TCR, and bispecific studies in mice require host-proteome peptide subtraction and endogenous normal-tissue screening on mouse-native coordinates rather than human-to-mouse symbol projection—especially across X-linked CTA families (`Magea`, `Mageb`, `Xlr`, `Trap1a`) where copy number and tissue regulation diverge sharply from primates.
+Preclinical vaccine, TCR, and bispecific studies in mice require host-proteome peptide subtraction and endogenous normal-tissue screening on mouse-native coordinates rather than human-to-mouse symbol projection—especially across X-linked CTA families (`Magea`, `Mageb`, `Xlr`, `Trap1a`, `Pramef`) where copy number and tissue regulation diverge sharply from primates.
+
+Murine target selection is evaluated genome-wide across **$mouse_n** Ensembl 115 `GRCm39` protein-equivalence groups (**$mouse_loci** primary-assembly coding loci, **8/8** evidence pillars active): **$mouse_cta** <span class="cat cat-cta">CTA</span>, **$mouse_ca_only** <span class="cat cat-ca">CA only</span>, **$mouse_ra_only** <span class="cat cat-ra">RA only</span> (**$mouse_union** total candidates), **$mouse_other_n** <span class="cat cat-other">Other</span>, and **$mouse_unsafe_n** <span class="cat cat-unsafe">Unsafe</span>. Across the **$mouse_ra** murine Reproductive Antigens (**$mouse_cta** CTAs), 16-compartment `HostContext` sex-restriction partitioning yields **$mouse_mra_n** `MRA` (**$mouse_cta_m_n** `CTA-M`), **$mouse_era_n** `ERA` (**$mouse_cta_e_n** `CTA-E`), **$mouse_fra_n** `FRA` (**$mouse_cta_f_n** `CTA-F`), and **$mouse_sra_n** `SRA` (**$mouse_cta_mf_n** `CTA-MF`).
 
 ### Murine dataset and threshold parameterization
 
@@ -78,15 +80,23 @@ $mouse_datasets_table
 
 Key murine methodological rules enforced in code (`oncoref.mouse`, `oncoref.species_target_selection`):
 
-- **Complete pinned Ensembl 115 GRCm39 host proteome:** `mouse.references.ensure_reference("ensembl115")` verifies SHA-256-pinned GTF, cDNA, ncRNA, and protein FASTAs (**66,668** annotated proteins across **57,314** unique amino-acid sequences), enabling full murine `PEG` grouping, 9-mer <span class="cat cat-unsafe">Unsafe</span> containment, and `PeptideIndex` self-proteome subtraction.
-- **Strain-explicit provenance:** Reference coordinates belong to **C57BL/6J** (`GRCm39`), whereas classical rejection antigens and syngeneic tumors span **DBA/2** (`P815`), **BALB/c** (`CT26`, `4T1`, `J558`), and **C57BL/6** (`B16-F10`, `MC38`). Coding polymorphisms and strain-specific endogenous expression are tracked explicitly rather than assumed invariant across inbred strains.
-- **UMI developmental and single-cell atlases:** Mouse Organogenesis Cell Atlas (`moca`, E9.5–E13.5 UMI) and `tabula_muris` 10x droplet counts retain their native UMI contracts—feeding donor/animal multi-molecule rare-cell grading (`assess_rare_cell_rna`) without equating UMI counts to bulk `TPM`.
+- **Complete pinned Ensembl 115 GRCm39 host proteome:** `mouse.references.ensure_reference("ensembl115")` verifies SHA-256-pinned GTF, cDNA, ncRNA, and protein FASTAs (**66,037** qualified primary-assembly coding translations across **21,433** `PEG`s and **21,760** coding loci), enabling full murine `PEG` grouping, 9-mer <span class="cat cat-unsafe">Unsafe</span> containment, and offline `PeptideIndex` self-proteome subtraction (`mouse-proteome-sequences`).
+- **Strain-explicit tumor and normal provenance:** Reference coordinates belong to **C57BL/6J** (`GRCm39`), whereas syngeneic grafts and GEMMs span **C57BL/6** (`MC38`, `B16F10`, `LLC`, `KP_LUAD`), **BALB/c** (`CT26`, `4T1`), **FVB** (`BMPC_PRAD`), and **DBA/2** (`P815`). Cell-line replicates deduplicate donor counts per line rather than inflating independent animal counts.
+- **Multi-modal normal safety without negative-IHC inflation:** Adult somatic bulk RNA (`Bgee 15.2` + `GSE219045` across 24 required and additional somatic contexts), `Tabula Muris` 10x droplet UMI (`assess_rare_cell_rna`), and `MGI GXD 6.27` adult `TS28` immunohistochemistry/immunoblot detections gate safety in their native units with zero negative-IHC RNA ceiling multipliers.
 
-### Packaged murine nomination ledger (`P1A` / `Trap1a`)
+### Murine syngeneic and GEMM tumor cohorts
+
+$mouse_cohorts_table
+
+### Top murine CTAs by peak tumor expression
+
+$mouse_top_cta_table
+
+### Historical murine nomination check (`P1A` / `Trap1a`)
 
 $mouse_nominations_table
 
-`P1A` (`Trap1a`, `ENSMUSG00000051257` / `ENSMUST00000054534.4` / `ENSMUSP00000059448.4`, 224 aa) illustrates why OncoRef separates nomination provenance from quantitative admission: the DBA/2 `P815` rejection antigen (`M36387.1` / `AAA40475.1`, Van den Eynde et al. 1991) encodes an identical 224-aa protein to C57BL/6J `ENSMUSP00000059448.4` despite strain-level cDNA differences, while sensitive RT-PCR with Southern blot follow-up in BALB/c mice (Sarma et al. 1999) detects endogenous normal somatic RNA in **lung, spleen, liver, and thymus** alongside testis and `J558` plasmacytoma cells. Without a reconciled genome-wide murine `TPM` panel, `P1A` remains `Other:Review` with its somatic counterevidence preserved.
+`P1A` (`Trap1a`, `ENSMUSG00000051257` / `ENSMUST00000054534.4` / `ENSMUSP00000059448.4`, 224 aa) illustrates why OncoRef separates nomination provenance from quantitative admission: the DBA/2 `P815` rejection antigen (`M36387.1` / `AAA40475.1`, Van den Eynde et al. 1991) encodes an identical 224-aa protein to C57BL/6J `ENSMUSP00000059448.4` and reaches high expression in `P815` mastocytoma, while endogenous somatic counterevidence in BALB/c lung, spleen, liver, and thymus (Sarma et al. 1999) plus quantitative multi-organ screening classify `Trap1a` as `$mouse_p1a_call` rather than admitting it to `CTA`.
 
 ## Programmatic and CLI access
 
