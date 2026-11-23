@@ -7,6 +7,7 @@ import json
 import tarfile
 
 import datacache
+import datacache.bundle_store as _bundle_store
 import pytest
 
 from oncoref import (
@@ -153,11 +154,10 @@ def test_data_bundle_uses_datacache_archive_store_and_prunes_generations(
     inspected = datacache.inspect_archive(sdir, verify_files=True)
     assert inspected.status == "available"
     assert inspected.recorded_sha256 == manifest["tarball"]["sha256"]
-    reg = data_bundle.archive_registry(manifest)
-    reg_inspected = reg.inspect("expression-bundle", verify_files=True)
+    reg_inspected = data_bundle.inspect_bundle_archive(manifest, verify_files=True)
     assert reg_inspected.status == "available"
     assert reg_inspected.verified is True
-    assert len(datacache.list_bundles(sdir)) == 1
+    assert len(_bundle_store.list_bundles(sdir)) == 1
     assert (
         data_bundle.cache_dir()
         == tmp_path
@@ -166,7 +166,7 @@ def test_data_bundle_uses_datacache_archive_store_and_prunes_generations(
         / "bundled_data"
         / f"v{DATA_VERSION}"
         / "bundles"
-        / datacache.list_bundles(sdir)[0].name
+        / _bundle_store.list_bundles(sdir)[0].name
     )
     assert data_bundle.verify_local()["completion_marker"]["valid"] is True
 
@@ -177,7 +177,7 @@ def test_data_bundle_uses_datacache_archive_store_and_prunes_generations(
         verbose=False,
         release_manifest=manifest,
     )
-    assert len(datacache.list_bundles(sdir)) == 1
+    assert len(_bundle_store.list_bundles(sdir)) == 1
 
     # Tampering with an installed file is caught by datacache.inspect_archive inside verify_local()
     target_csv = data_bundle.cache_dir() / "pan-cancer-expression.csv"
