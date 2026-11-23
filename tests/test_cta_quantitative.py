@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
+import oncoref
 from oncoref import cta_quantitative as policy
 
 AUDIT = Path(__file__).resolve().parents[1] / "docs/audits/cta-quantitative-20261026"
@@ -166,7 +167,7 @@ def test_audit_artifact_hashes_and_published_result_match():
     manifest = json.loads((AUDIT / "run-manifest.json").read_text())
     for filename, expected in manifest["outputs"].items():
         assert hashlib.sha256((AUDIT / filename).read_bytes()).hexdigest() == expected
-    published = Path(policy.__file__).parent / "data/cta-quantitative-gene-sets.csv.gz"
+    published = Path(oncoref.__file__).resolve().parent / "data/cta-quantitative-gene-sets.csv.gz"
     assert published.read_bytes() == (AUDIT / "gene-results.csv.gz").read_bytes()
 
 
