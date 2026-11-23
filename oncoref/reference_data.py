@@ -207,8 +207,72 @@ def local_path(name: str, version: str | None = None) -> Path:
     return cache_dir() / name / version / spec["filename"]
 
 
-def is_cached(name: str, version: str | None = None) -> bool:
-    return local_path(name, version).exists()
+def is_cached(
+    name: str,
+    version: str | None = None,
+    *,
+    include_bundled: bool = False,
+    bundled_dir: Path | None = None,
+) -> bool:
+    """Return True when *name*/*version* is locally available without downloading (#762).
+
+    Checks the local reference cache by default; pass ``include_bundled=True`` to
+    also count packaged ``oncoref/data/<filename>`` copies in source/sdist checkouts.
+    Never creates cache directories or initiates network requests.
+    """
+    resolved_version = resolve_version(name, version)
+    spec = _source(name)
+    if include_bundled:
+        pin = spec.get("pins", {}).get(resolved_version)
+        data_root = Path(__file__).parent / "data" if bundled_dir is None else Path(bundled_dir)
+        local_bundled = data_root / spec["filename"]
+        if local_bundled.is_file() and (not pin or _matches_pin(local_bundled, pin)):
+            return True
+    candidate = cache_base_dir() / "sources" / name / resolved_version / spec["filename"]
+    return candidate.is_file() and _cached_file_ok(name, resolved_version, candidate)
+
+
+def preflight(
+    name: str,
+    version: str | None = None,
+    *,
+    bundled_dir: Path | None = None,
+) -> dict:
+    """Read-only local availability check for a reference or externalized asset (#762).
+
+    Performs zero network calls and creates no directories on disk.
+    """
+    resolved_version = resolve_version(name, version)
+    spec = _source(name)
+    pin = spec.get("pins", {}).get(resolved_version)
+    data_root = Path(__file__).parent / "data" if bundled_dir is None else Path(bundled_dir)
+    local_bundled = data_root / spec["filename"]
+    bundled_ok = local_bundled.is_file() and (not pin or _matches_pin(local_bundled, pin))
+    cache_candidate = cache_base_dir() / "sources" / name / resolved_version / spec["filename"]
+    cached_ok = cache_candidate.is_file() and _cached_file_ok(
+        name, resolved_version, cache_candidate
+    )
+    if bundled_ok:
+        origin = "bundled"
+        resolved_path = str(local_bundled)
+    elif cached_ok:
+        origin = "cache"
+        resolved_path = str(cache_candidate)
+    else:
+        origin = "missing"
+        resolved_path = str(cache_candidate)
+    return {
+        "name": name,
+        "version": resolved_version,
+        "available": bool(bundled_ok or cached_ok),
+        "is_bundled": bool(bundled_ok),
+        "is_cached": bool(cached_ok),
+        "origin": origin,
+        "path": resolved_path,
+        "url": spec["urls"][resolved_version],
+        "bytes": pin.get("bytes") if pin else None,
+        "sha256": pin.get("sha256") if pin else None,
+    }
 
 
 def _manifest_path() -> Path:
@@ -482,13 +546,27 @@ def _zip_member(zf: zipfile.ZipFile, preferred: str) -> str:
     return tsvs[0]
 
 
-def ensure(name: str, version: str | None = None) -> Path:
+def ensure(
+    name: str,
+    version: str | None = None,
+    *,
+    allow_download: bool = True,
+) -> Path:
     """Return a local path to *name*/*version*, downloading if absent or if the
-    cached copy fails the manifest size check (a truncated/partial file)."""
+    cached copy fails the manifest size check (a truncated/partial file).
+
+    Pass ``allow_download=False`` to fail fast with :class:`ReferenceDataError`
+    when the asset is not already cached locally (#762).
+    """
     version = resolve_version(name, version)
-    path = local_path(name, version)
-    if path.exists() and _cached_file_ok(name, version, path):
-        return path
+    candidate = cache_base_dir() / "sources" / name / version / _source(name)["filename"]
+    if candidate.exists() and _cached_file_ok(name, version, candidate):
+        return candidate
+    if not allow_download:
+        raise ReferenceDataError(
+            f"reference asset {name!r} ({version}) is not cached locally and allow_download=False; "
+            f"run `oncoref data fetch {name}`"
+        )
     return download(name, version)
 
 
@@ -497,12 +575,15 @@ def bundled_or_managed_path(
     version: str | None = None,
     *,
     bundled_dir: Path | None = None,
+    allow_download: bool = True,
 ) -> Path:
     """Return a verified packaged data file when present locally, else fetch via ``ensure``.
 
     Source checkouts and sdists retain ``oncoref/data/<filename>`` for offline builds and CI,
     while slimmed wheels omit externalized archival/calibration tables and materialize them on
-    demand into ``cache_dir()`` with full SHA-256 verification (#738).
+    demand into ``cache_dir()`` with full SHA-256 verification (#738). Pass
+    ``allow_download=False`` to raise :class:`ReferenceDataError` immediately if neither a
+    bundled copy nor a cached copy is present (#762).
     """
     resolved_version = resolve_version(name, version)
     spec = _source(name)
@@ -515,7 +596,7 @@ def bundled_or_managed_path(
                 f"packaged {spec['filename']} checksum/size does not match pinned {name}/{resolved_version}"
             )
         return local_bundled
-    return ensure(name, resolved_version)
+    return ensure(name, resolved_version, allow_download=allow_download)
 
 
 def pinned_path(name: str, version: str, *, import_path: str | Path | None = None) -> Path:
