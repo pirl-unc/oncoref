@@ -477,6 +477,7 @@ def test_expression_source_candidates_preserve_physical_source_boundaries():
         "SCLC_NEUROD1",
         "SCLC_POU2F3",
         "SCLC_YAP1",
+        "THYMCA",
         "VSCC",
         "cSCC",
     }
@@ -514,8 +515,8 @@ def test_expression_source_candidates_preserve_physical_source_boundaries():
 
 def test_nci_gap_direct_references_have_explicit_scale_and_target_policy():
     expected = {
-        "BCC": ("GSE125285_BCC_CSCC", "bulk_rnaseq_cpm_proxy", False, 25),
-        "cSCC": ("GSE125285_BCC_CSCC", "bulk_rnaseq_cpm_proxy", False, 10),
+        "BCC": ("GSE125285_BCC_CSCC", "linear_rnaseq_tpm", True, 25),
+        "cSCC": ("GSE125285_BCC_CSCC", "linear_rnaseq_tpm", True, 10),
         "GBC": ("GSE139682_GBC", "linear_rnaseq_tpm", True, 10),
         "CRANIO": ("OPENPBTA_V23_CBTN_CRANIO", "linear_rnaseq_tpm", True, 29),
         "DIPG": ("OPENPBTA_V23_DIPG_H3K27", "linear_rnaseq_tpm", True, 32),

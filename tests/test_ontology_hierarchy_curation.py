@@ -141,7 +141,7 @@ def test_rcc_and_thymic_parent_rollups_are_explicit():
     assert set(cohort_aggregate_members("RCC")) == {"KICH", "KIRC", "KIRP"}
     assert cancer_type_lineage("THYMCA") == ["THYM_EPITHELIAL", "THYMCA"]
     assert set(cancer_type_subtypes_of("THYM_EPITHELIAL")) == {"THYM", "THYMCA"}
-    assert set(cohort_aggregate_members("THYM_EPITHELIAL")) == {"THYM"}
+    assert set(cohort_aggregate_members("THYM_EPITHELIAL")) == {"THYM", "THYMCA"}
 
 
 def test_sarc_rms_fusion_rollup():

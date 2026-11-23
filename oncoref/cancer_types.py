@@ -78,6 +78,8 @@ CANCER_TYPE_ALIASES = {
     "head_neck": "HNSC",
     "hnscc": "HNSC",
     "thyroid": "THCA",
+    "thymic_carcinoma": "THYMCA",
+    "thymic_epithelial_tumor": "THYM_EPITHELIAL",
     "endometrial": "UCEC",
     "uterine": "UCEC",
     "testicular": "TGCT",

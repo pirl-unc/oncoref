@@ -197,8 +197,8 @@ def test_cta_curation_and_pinned_bundle_versions():
     assert len(oncoref.cta_unfiltered_gene_ids()) == 2533
     # The QC refresh changes the derived bundle, not these legacy CTA lookup IDs
     # or the source matrices used for annotation-independent gene identity.
-    assert DATA_VERSION == "5.23.30"
-    assert SOURCE_MATRIX_VERSION == "5.22.14"
+    assert DATA_VERSION == "5.23.31"
+    assert SOURCE_MATRIX_VERSION == "5.22.15"
 
 
 @pytest.mark.parametrize("release", [93, 112])

@@ -55,22 +55,19 @@ def test_cancer_reference_expression_availability_include_aggregates():
         )
 
 
-def test_umbrella_expression_coverage_surfaces_thymca_gap_and_proxy_members():
+def test_umbrella_expression_coverage_surfaces_thym_complete_and_proxy_members():
     cov = oncoref.umbrella_expression_coverage().set_index("cancer_code")
     assert "THYM_EPITHELIAL" in cov.index
-    assert "THYMCA" in cov.index
+    assert "THYMCA" not in cov.index
     assert "NSCLC" in cov.index
     assert "SARC_ESS" in cov.index
     assert "SARC_LPS" in cov.index
 
     thym_ep = cov.loc["THYM_EPITHELIAL"]
-    assert thym_ep["available_member_codes"] == "THYM"
-    assert thym_ep["unbacked_child_subtypes"] == "THYMCA"
-    assert thym_ep["coverage_status"] == "partial_member_gap"
-
-    thymca = cov.loc["THYMCA"]
-    assert thymca["reference_source"] == "parent"
-    assert thymca["coverage_status"] == "parent_fallback_no_direct_cohort"
+    assert thym_ep["available_member_codes"] == "THYM;THYMCA"
+    assert thym_ep["unbacked_child_subtypes"] == ""
+    assert int(thym_ep["total_reference_samples"]) == 119
+    assert thym_ep["coverage_status"] == "complete_linear_tpm"
 
     assert cov.loc["NSCLC", "coverage_status"] == "complete_linear_tpm"
     assert cov.loc["SARC_ESS", "coverage_status"] == "includes_proxy_scale_members"
@@ -79,10 +76,9 @@ def test_umbrella_expression_coverage_surfaces_thymca_gap_and_proxy_members():
     assert cov.loc["SARC_LPS", "non_comparable_member_codes"] == "SARC_MYXLPS"
 
 
-def test_non_comparable_expression_cohorts_inventories_all_11_non_linear_cohorts():
+def test_non_comparable_expression_cohorts_inventories_all_9_non_linear_cohorts():
     all_nc = oncoref.non_comparable_expression_cohorts()
     assert set(all_nc["cancer_code"]) == {
-        "BCC",
         "CMN",
         "CTCL",
         "EPN",
@@ -92,15 +88,17 @@ def test_non_comparable_expression_cohorts_inventories_all_11_non_linear_cohorts
         "SARC_ESS_HG",
         "SARC_ESS_LG",
         "SARC_MYXLPS",
-        "cSCC",
     }
+    assert "public_rnaseq_audit_status" in all_nc.columns
+    assert all_nc["public_rnaseq_audit_status"].astype(str).str.strip().ne("").all()
     nutm = all_nc.set_index("cancer_code").loc["NUTM"]
     assert bool(nutm["is_invalid_withheld"]) is True
     assert nutm["allowed_uses"] == "none_withheld"
 
     proxy_only = oncoref.non_comparable_expression_cohorts(include_invalid=False)
-    assert len(proxy_only) == 10
+    assert len(proxy_only) == 8
     assert "NUTM" not in set(proxy_only["cancer_code"])
+    assert "bulk_rnaseq_cpm_proxy" not in set(proxy_only["scale_family"])
     assert set(proxy_only["allowed_uses"]) == {"within_sample_rank_and_pathway_only"}
 
 

@@ -63,14 +63,17 @@ __version__ = "1.48.0"
 # 5.23.28 rebuilds HL and TGCT after library background and spermatid-program QC.
 # 5.23.30 retains all TGCT libraries with reproductive-program notes only;
 # the 31 other TCGA summary shards remain unchanged from 5.23.29.
-DATA_VERSION = "5.23.30"
+# 5.23.31 partitions TCGA-THYM into disjoint WHO thymoma (THYM, n=108) and
+# thymic carcinoma (THYMCA, n=11) cohorts and upgrades GSE125285 BCC/cSCC to
+# NCBI GRCh38.p13 gene-length-normalized linear RNA-seq TPM (#737).
+DATA_VERSION = "5.23.31"
 
 # Version of the per-cohort RAW source matrices (source_matrices.py). Independent of
 # DATA_VERSION: the source matrices are the unchanging raw-TPM inputs, while DATA_VERSION
 # tracks the derived bundle that's rebuilt from them. Canonicalization happens downstream
 # (read/build time), so a canonical-space bundle bump must NOT repoint — or orphan the
 # local caches of — these raw matrices. Bump only when a cohort's raw matrix changes.
-SOURCE_MATRIX_VERSION = "5.22.14"
+SOURCE_MATRIX_VERSION = "5.22.15"
 
 version_string = f"v{__version__}"
 

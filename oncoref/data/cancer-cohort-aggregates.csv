@@ -33,7 +33,8 @@ NEC,NEC_MERKEL,high-grade neuroendocrine carcinoma rollup
 RCC,KICH,renal cell carcinoma rollup
 RCC,KIRC,renal cell carcinoma rollup
 RCC,KIRP,renal cell carcinoma rollup
-THYM_EPITHELIAL,THYM,thymic epithelial tumor rollup (available expression matrix)
+THYM_EPITHELIAL,THYM,thymic epithelial tumor rollup (WHO Type A/AB/B1/B2/B3 thymoma member)
+THYM_EPITHELIAL,THYMCA,thymic epithelial tumor rollup (WHO Type C / 8586/3 thymic carcinoma member)
 BTC,CHOL,biliary tract cancer rollup (reference-backed member)
 BTC,GBC,biliary tract cancer rollup (reference-backed member)
 SGC,ACINIC,salivary gland carcinoma rollup (reference-backed member)
