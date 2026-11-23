@@ -471,6 +471,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "verified native-TPM normal, reproductive, and per-sample tumor observations for cleared former-Unsafe candidates (#765, #768)",
     ),
+    "clinical-organ-clearances": (
+        "cta-evidence",
+        "epitope-, HLA-, and Ensembl-115-isoform-scoped human TCR-T organ-safety clearances and Xq28 CTAG2 attribution (#766)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",

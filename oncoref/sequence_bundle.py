@@ -68,6 +68,12 @@ def target_selection_dispositions():
             "is_target_candidate",
             "cta_tier",
             "decision_reason",
+            "clinical_clearance_scope",
+            "clinical_cleared_organs",
+            "clinical_cleared_epitopes",
+            "clinical_hla_alleles",
+            "clinical_cleared_transcripts",
+            "clinical_trial_source_ids",
         ]
     ].copy()
     out["gene_ids"] = out.member_gene_ids.map(lambda raw: tuple(json.loads(raw)))

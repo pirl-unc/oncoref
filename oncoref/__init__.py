@@ -27,6 +27,7 @@ from . import (
     cache_retention,
     cancer_ontology,
     canine,
+    clinical_organ_clearance,
     cohorts,
     cta_coverage,
     cta_literature,
@@ -704,6 +705,7 @@ __all__ = [
     "clean_tpm_other_technical_gene_ids",
     "clean_tpm_protocol_sensitive_gene_ids",
     "clean_tpm_ribosomal_gene_ids",
+    "clinical_organ_clearance",
     "cohort_aggregate_members",
     # cohort vocabulary
     "cohort_aggregates",

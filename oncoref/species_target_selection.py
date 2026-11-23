@@ -1695,6 +1695,9 @@ def _load_packaged_species_catalog_cached(
     ):
         if bool_col in df.columns:
             df[bool_col] = df[bool_col].fillna(False).astype(bool)
+    from . import clinical_organ_clearance
+
+    df = clinical_organ_clearance.annotate_catalog(df, enabled=(resolved.taxon_id == 9606))
     df.attrs.update(
         taxon_id=resolved.taxon_id,
         species=resolved.name,

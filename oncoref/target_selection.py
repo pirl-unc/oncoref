@@ -12,10 +12,13 @@ import json
 import re
 from collections.abc import Callable
 from copy import deepcopy
+from functools import lru_cache
 from importlib.resources import files
 
 import numpy as np
 import pandas as pd
+
+from .load_dataset import _register_derived_cache
 
 POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
@@ -368,6 +371,25 @@ def metadata() -> dict:
     return json.loads(files("oncoref").joinpath("data/target-selection.json").read_text())
 
 
+@lru_cache(maxsize=1)
+def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
+    from . import clinical_organ_clearance
+
+    with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
+        base = pd.read_csv(handle, compression="gzip", low_memory=False)
+    base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
+    gene_index: dict[str, list[int]] = {}
+    for idx, (lbl, raw_ids) in enumerate(zip(base["protein_group_label"], base["member_gene_ids"])):
+        gene_index.setdefault(str(lbl), []).append(idx)
+        for gid in json.loads(raw_ids):
+            if gid != lbl:
+                gene_index.setdefault(str(gid), []).append(idx)
+    return base, gene_index
+
+
+_register_derived_cache(_cached_results_bundle.cache_clear)
+
+
 def results(
     gene: str | None = None, *, category: str | None = None, changed_only: bool = False
 ) -> pd.DataFrame:
@@ -380,13 +402,12 @@ def results(
     """
     if category is not None and category not in CATEGORIES:
         raise ValueError(f"Unknown category {category!r}; expected one of {CATEGORIES}")
-    with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
-        result = pd.read_csv(handle, compression="gzip", low_memory=False)
+    base, gene_index = _cached_results_bundle()
     if gene is not None:
-        result = result[
-            result.protein_group_label.eq(gene)
-            | result.member_gene_ids.map(lambda ids: gene in json.loads(ids))
-        ]
+        idxs = gene_index.get(gene, [])
+        result = base.iloc[idxs].copy()
+    else:
+        result = base.copy()
     if category is not None:
         result = result[result.category.eq(category)]
     if changed_only:

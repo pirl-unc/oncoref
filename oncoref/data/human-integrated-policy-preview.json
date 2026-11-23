@@ -12,8 +12,8 @@
   },
   "integrated_categories": {
     "Unsafe": 18252,
-    "Other": 1064,
-    "CTA": 335,
+    "Other": 1063,
+    "CTA": 336,
     "Reproductive Antigen only": 122,
     "Cancer Antigen only": 120
   },
@@ -29,8 +29,8 @@
   },
   "integrated_classifications": {
     "Unsafe": 18252,
-    "Other:Review": 733,
-    "CTA": 335,
+    "Other:Review": 732,
+    "CTA": 336,
     "Other:Expression": 255,
     "Reproductive Antigen only": 122,
     "Cancer Antigen only": 120,
@@ -38,7 +38,7 @@
     "Other:Unscreened tissue": 28
   },
   "integrated_sex_restriction_codes": {
-    "CTA-MF": 152,
+    "CTA-MF": 153,
     "CTA-M": 142,
     "MRA-only": 67,
     "SRA-only": 45,
@@ -47,7 +47,7 @@
     "CTA-F": 3,
     "FRA-only": 3
   },
-  "changed_proteins": 75,
+  "changed_proteins": 76,
   "transition_counts": {
     "Other:Unscreened tissue -> Cancer Antigen only": 49,
     "Other:Unscreened tissue -> Other:Expression": 7,
@@ -55,10 +55,11 @@
     "Other:Unscreened tissue -> Unsafe": 5,
     "Other:Expression -> Cancer Antigen only": 2,
     "Unsafe -> CTA": 2,
+    "Other:Review -> CTA": 1,
     "Other:Review -> Reproductive Antigen only": 1,
     "Other:Review -> Unsafe": 1,
     "Reproductive Antigen only -> Other:Expression": 1,
     "Unsafe -> Other:Review": 1
   },
-  "sha256": "a187c3873788e86fc56c86fd5d411b11b156daf6dc2af0987d601456106fc6a4"
+  "sha256": "669fe13551be5590fb1fecab7d2bc81bfb29c562b4244421ded1887bab5d7563"
 }

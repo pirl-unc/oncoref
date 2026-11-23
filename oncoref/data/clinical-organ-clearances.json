@@ -1,0 +1,317 @@
+{
+  "schema": "oncoref.clinical-organ-clearances",
+  "schema_version": 1,
+  "policy_id": "oncoref.clinical-organ-clearance.2026-11-23.1",
+  "ensembl_release": 115,
+  "locus_attributions": {
+    "CTAG2": {
+      "id": "RCA-20261123-CTAG2-XQ28",
+      "entity_id": "PEG:0c251c50f994bfdf3967",
+      "protein": "CTAG2",
+      "gene_id": "ENSG00000126890",
+      "locus": "X:154651972-154653579 (-)",
+      "selected_transcript": "ENST00000369585",
+      "uncleared_isoform": "ENST00000247306",
+      "shared_kmer_fraction": 0.50856,
+      "self_family_partners": [
+        "CTAG1A (ENSG00000268651)",
+        "CTAG1B (ENSG00000184033)"
+      ],
+      "external_unsafe_overlap_pct": 0.4,
+      "xq28_neighbors": [
+        "ENSG00000306286 (antisense + strand lncRNA X:154619409-154655372 spanning 100% of CTAG2)",
+        "GAB3 (same - strand protein_coding X:154675249-154751583, 21,670 bp upstream)"
+      ],
+      "brain_snrnaseq_resolution": "Brain snRNA-seq signal (3.18% L5 cortical neurons in 2 donors) is nucleus-only with 0.00 TPM bulk brain RNA, negative brain IHC (0/4), and paralog_ambiguous driven 100% by closed self-family CTA NY-ESO-1 (CTAG1A/CTAG1B, itself 0.00 TPM brain bulk) plus Xq28 GAB3 / antisense ENSG00000306286 transcription.",
+      "lung_scrnaseq_resolution": "Lung AT2 scRNA-seq signal (4.29% in 3 donors, 0.00 TPM bulk lung, 0.2 nTPM HPA lung) is cleared at the epitope/isoform level by first-pass intravenous lete-cel c259 TCR-T clinical safety (COC-20261123-CTAG2-LETE-CEL)."
+    }
+  },
+  "entries": [
+    {
+      "clearance_id": "COC-20261123-CTAG2-LETE-CEL",
+      "entity_id": "PEG:0c251c50f994bfdf3967",
+      "protein_group_label": "CTAG2",
+      "gene_id": "ENSG00000126890",
+      "product_id": "lete_cel_c259",
+      "modality": "TCR-T",
+      "status": "cleared",
+      "clearance_scope": "epitope",
+      "exposure_route": "systemic_iv",
+      "barrier_compartment_exposure_verified": false,
+      "objective_tumor_responses": true,
+      "cohort_ids": [
+        "lete_mrcls_20"
+      ],
+      "hla_matched_patients_treated": 20,
+      "cleared_organs": [
+        "lung",
+        "urinary bladder"
+      ],
+      "cleared_epitopes": [
+        "SLLMWITQC"
+      ],
+      "hla_alleles": [
+        "HLA-A*02:01",
+        "HLA-A*02:05",
+        "HLA-A*02:06"
+      ],
+      "cleared_transcripts": [
+        "ENST00000369585"
+      ],
+      "uncleared_coding_transcripts": [
+        "ENST00000247306"
+      ],
+      "source_keys": [
+        "lete_mrcls_2025",
+        "lete_protocol"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_lete_mrcls_2025",
+        "tcr_trial_lete_protocol"
+      ],
+      "rationale": "Intravenously infused letetresgene autoleucel (c259 TCR-T) recognizes HLA-A*02 / SLLMWITQC at positions 157-165 of LAGE-1a (ENST00000369585, 180 aa), achieves ~40% objective tumor responses across two sequential MRCLS cohorts (n=20 infused, JCO-24-01466 / NCT02992743), traverses the pulmonary capillary/alveolar bed on first pass, and shows zero attributed alveolar pneumonitis or cystitis. Explicitly excludes LAGE-1b (ENST00000247306, 210 aa, which lacks SLLMWITQC), heart (confounded day-161 cardiac arrest retained per #544), and brain (blood-brain barrier; brain snRNA-seq hold resolved separately by #711 Xq28 attribution)."
+    },
+    {
+      "clearance_id": "COC-20261123-NYESO1-LETE-CEL",
+      "entity_id": "PEG:dde00652f75f5114eae1",
+      "protein_group_label": "NY-ESO-1",
+      "gene_id": "ENSG00000184033",
+      "product_id": "lete_cel_c259",
+      "modality": "TCR-T",
+      "status": "cleared",
+      "clearance_scope": "epitope",
+      "exposure_route": "systemic_iv",
+      "barrier_compartment_exposure_verified": false,
+      "objective_tumor_responses": true,
+      "cohort_ids": [
+        "lete_mrcls_20"
+      ],
+      "hla_matched_patients_treated": 20,
+      "cleared_organs": [
+        "lung",
+        "urinary bladder"
+      ],
+      "cleared_epitopes": [
+        "SLLMWITQC"
+      ],
+      "hla_alleles": [
+        "HLA-A*02:01",
+        "HLA-A*02:05",
+        "HLA-A*02:06"
+      ],
+      "cleared_transcripts": [
+        "ENST00000328435",
+        "ENST00000599837"
+      ],
+      "uncleared_coding_transcripts": [
+        "ENST00000359887",
+        "ENST00000593606"
+      ],
+      "source_keys": [
+        "lete_mrcls_2025",
+        "lete_protocol"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_lete_mrcls_2025",
+        "tcr_trial_lete_protocol"
+      ],
+      "rationale": "Shared HLA-A*02 / SLLMWITQC target of letetresgene autoleucel (n=20 infused MRCLS patients); clears full-length 180 aa NY-ESO-1 transcripts while excluding truncated 168 aa ENST00000359887."
+    },
+    {
+      "clearance_id": "COC-20261123-PRAME-IMA203",
+      "entity_id": "PEG:92c0ae3f131964f8a71d",
+      "protein_group_label": "PRAME",
+      "gene_id": "ENSG00000185686",
+      "product_id": "ima203",
+      "modality": "TCR-T",
+      "status": "cleared",
+      "clearance_scope": "epitope",
+      "exposure_route": "systemic_iv",
+      "barrier_compartment_exposure_verified": false,
+      "objective_tumor_responses": true,
+      "cohort_ids": [
+        "ima203_phase1_40"
+      ],
+      "hla_matched_patients_treated": 40,
+      "cleared_organs": [
+        "kidney",
+        "lung"
+      ],
+      "cleared_epitopes": [
+        "SLLQHLIGL"
+      ],
+      "hla_alleles": [
+        "HLA-A*02:01"
+      ],
+      "cleared_transcripts": [
+        "ENST00000398741",
+        "ENST00000398743",
+        "ENST00000402697",
+        "ENST00000405655",
+        "ENST00000543184"
+      ],
+      "uncleared_coding_transcripts": [
+        "ENST00000406503"
+      ],
+      "source_keys": [
+        "ima203_2025"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_ima203_2025"
+      ],
+      "rationale": "IMA203 autologous TCR-T targeting HLA-A*02:01 / SLLQHLIGL (n=40 infused solid-tumor patients, Nat Med 2025) achieved confirmed tumor responses with zero clinical renal or pulmonary on-target toxicity; liver excluded from cleared_organs due to CRS-associated grade 4 transaminitis."
+    },
+    {
+      "clearance_id": "COC-20261123-MAGEA4-AFAMI-CEL",
+      "entity_id": "PEG:70dd37fba425999495d4",
+      "protein_group_label": "MAGEA4",
+      "gene_id": "ENSG00000147381",
+      "product_id": "afami_cel_c1032",
+      "modality": "TCR-T",
+      "status": "cleared",
+      "clearance_scope": "epitope",
+      "exposure_route": "systemic_iv",
+      "barrier_compartment_exposure_verified": false,
+      "objective_tumor_responses": true,
+      "cohort_ids": [
+        "afami_phase1_38",
+        "spearhead1_cohort1_52"
+      ],
+      "hla_matched_patients_treated": 90,
+      "cleared_organs": [
+        "lung",
+        "liver",
+        "kidney"
+      ],
+      "cleared_epitopes": [
+        "GVYDGREHTV"
+      ],
+      "hla_alleles": [
+        "HLA-A*02:01",
+        "HLA-A*02:02",
+        "HLA-A*02:03",
+        "HLA-A*02:06"
+      ],
+      "cleared_transcripts": [
+        "ENST00000276344",
+        "ENST00000360243",
+        "ENST00000370335",
+        "ENST00000370340",
+        "ENST00000393920",
+        "ENST00000393921",
+        "ENST00000430273",
+        "ENST00000457310",
+        "ENST00000682265",
+        "ENST00000684668",
+        "ENST00000911914",
+        "ENST00000911915",
+        "ENST00000911916",
+        "ENST00000911917",
+        "ENST00000911918",
+        "ENST00000911919",
+        "ENST00000911920",
+        "ENST00000911921",
+        "ENST00000911922",
+        "ENST00000911923",
+        "ENST00000911924",
+        "ENST00000911925",
+        "ENST00000911926",
+        "ENST00000911927",
+        "ENST00000911928",
+        "ENST00000911929"
+      ],
+      "uncleared_coding_transcripts": [
+        "ENST00000682728"
+      ],
+      "source_keys": [
+        "afami_phase1_2023",
+        "spearhead1_2024",
+        "afami_protocol"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_afami_phase1_2023",
+        "tcr_trial_spearhead1_2024",
+        "tcr_trial_afami_protocol"
+      ],
+      "rationale": "FDA-approved afamitresgene autoleucel (c1032 TCR-T, n=90 infused across NCT03132922 and SPEARHEAD-1 NCT04044768) clears GVYDGREHTV-containing isoforms in perfused visceral organs; bone marrow and brain excluded due to recorded conditioning aplasia and stroke fatalities."
+    },
+    {
+      "clearance_id": "COC-20261123-NEG-MAGEA3-TITIN",
+      "entity_id": "PEG:8fe6e7c0c5898d381def",
+      "protein_group_label": "MAGEA3",
+      "gene_id": "ENSG00000221867",
+      "product_id": "magea3_a3a",
+      "modality": "TCR-T",
+      "status": "blocked_clinical_toxicity",
+      "clearance_scope": "",
+      "hla_matched_patients_treated": 2,
+      "cleared_organs": [],
+      "cleared_epitopes": [],
+      "hla_alleles": [
+        "HLA-A*01:01"
+      ],
+      "cleared_transcripts": [],
+      "uncleared_coding_transcripts": [],
+      "source_keys": [
+        "magea3_titin_2013"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_magea3_titin_2013"
+      ],
+      "rationale": "Negative-clearance control: fatal cardiac toxicity in 2/2 treated HLA-A*01:01 patients via titin (TTN ESDPIVAQY) cross-recognition (Linette et al. 2013)."
+    },
+    {
+      "clearance_id": "COC-20261123-NEG-MAGEA12-NEURO",
+      "entity_id": "PEG:4182d88ed01f30868284",
+      "protein_group_label": "MAGEA12",
+      "gene_id": "ENSG00000213401",
+      "product_id": "magea3_a2_neuro",
+      "modality": "TCR-T",
+      "status": "blocked_clinical_toxicity",
+      "clearance_scope": "",
+      "hla_matched_patients_treated": 9,
+      "cleared_organs": [],
+      "cleared_epitopes": [],
+      "hla_alleles": [
+        "HLA-A*02:01"
+      ],
+      "cleared_transcripts": [],
+      "uncleared_coding_transcripts": [],
+      "source_keys": [
+        "magea3_neuro_2013",
+        "magea3_reexamination_2021"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_magea3_neuro_2013",
+        "tcr_trial_magea3_reexamination_2021"
+      ],
+      "rationale": "Negative-clearance control: fatal necrotizing leukoencephalopathy (2 deaths among 3 neurological events in 9 patients, Morgan et al. 2013); MAGEA12 remains Unsafe."
+    },
+    {
+      "clearance_id": "COC-20261123-NEG-TBI1301-LUNG",
+      "entity_id": "PEG:0c251c50f994bfdf3967",
+      "protein_group_label": "CTAG2",
+      "gene_id": "ENSG00000126890",
+      "product_id": "tbi1301",
+      "modality": "TCR-T",
+      "status": "blocked_unresolved_event",
+      "clearance_scope": "",
+      "hla_matched_patients_treated": 9,
+      "cleared_organs": [],
+      "cleared_epitopes": [],
+      "hla_alleles": [
+        "HLA-A*02:01",
+        "HLA-A*02:06"
+      ],
+      "cleared_transcripts": [],
+      "uncleared_coding_transcripts": [],
+      "source_keys": [
+        "tbi1301_2022"
+      ],
+      "trial_source_ids": [
+        "tcr_trial_tbi1301_2022"
+      ],
+      "rationale": "Product-isolation control: TBI-1301 (n=9) reported an unresolved Grade 3 steroid-responsive lung injury and is never pooled or credited; CTAG2 lung clearance rests solely on lete_cel_c259."
+    }
+  ]
+}
