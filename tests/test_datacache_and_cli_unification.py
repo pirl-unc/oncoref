@@ -117,6 +117,20 @@ def test_legacy_dot_cache_reused_when_platform_cache_empty(monkeypatch, tmp_path
     (legacy_root / "bundled_data" / f"v{DATA_VERSION}").mkdir(parents=True)
     assert data_bundle.cache_root() == legacy_root / "bundled_data"
 
+    # Empty directories or .lock files in platform cache do not shadow populated ~/.cache subdirs
+    (fake_home / "Library" / "Caches" / "oncoref" / "source-matrices" / "v5.22.15").mkdir(
+        parents=True
+    )
+    (fake_home / "Library" / "Caches" / "oncoref" / "bundled_data").mkdir(parents=True)
+    (fake_home / "Library" / "Caches" / "oncoref" / "bundled_data" / ".v5.oncoref.lock").write_text(
+        ""
+    )
+    (legacy_root / "source-matrices" / "v5.22.15").mkdir(parents=True)
+    (legacy_root / "source-matrices" / "v5.22.15" / "THYMCA.parquet").write_bytes(b"PAR1")
+    (legacy_root / "bundled_data" / f"v{DATA_VERSION}" / "marker.csv").write_text("x\n")
+    assert source_matrices.cache_root() == legacy_root / "source-matrices"
+    assert data_bundle.cache_root() == legacy_root / "bundled_data"
+
 
 def test_data_bundle_uses_datacache_archive_store_and_prunes_generations(
     monkeypatch, tmp_path, http_downloads

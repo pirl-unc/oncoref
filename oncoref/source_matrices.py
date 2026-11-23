@@ -423,6 +423,7 @@ def fetch(
             f"offline mode is enabled; refusing to download per-sample matrix for {code!r} ({url})"
         )
     try:
+        dest.parent.mkdir(parents=True, exist_ok=True)
         with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
             # Another process may have populated the cache while we waited.
             if dest.exists() and not force:

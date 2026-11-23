@@ -1,0 +1,62 @@
+{
+  "schema": "oncoref.human-integrated-policy-preview.v1",
+  "baseline_policy_id": "oncoref.target-selection.2026-11-20.2",
+  "preview_policy_id": "oncoref.human-integrated-preview.2026-11-22.1",
+  "total_proteins": 19893,
+  "baseline_categories": {
+    "Unsafe": 18249,
+    "Other": 1120,
+    "CTA": 327,
+    "Reproductive Antigen only": 128,
+    "Cancer Antigen only": 69
+  },
+  "integrated_categories": {
+    "Unsafe": 18255,
+    "Other": 1064,
+    "CTA": 333,
+    "Reproductive Antigen only": 121,
+    "Cancer Antigen only": 120
+  },
+  "baseline_classifications": {
+    "Unsafe": 18249,
+    "Other:Review": 734,
+    "CTA": 327,
+    "Other:Expression": 249,
+    "Reproductive Antigen only": 128,
+    "Other:Unscreened tissue": 89,
+    "Cancer Antigen only": 69,
+    "Other:Sequence": 48
+  },
+  "integrated_classifications": {
+    "Unsafe": 18255,
+    "Other:Review": 733,
+    "CTA": 333,
+    "Other:Expression": 255,
+    "Reproductive Antigen only": 121,
+    "Cancer Antigen only": 120,
+    "Other:Sequence": 48,
+    "Other:Unscreened tissue": 28
+  },
+  "integrated_sex_restriction_codes": {
+    "CTA-MF": 152,
+    "CTA-M": 140,
+    "MRA-only": 66,
+    "SRA-only": 45,
+    "CTA-E": 38,
+    "ERA-only": 7,
+    "CTA-F": 3,
+    "FRA-only": 3
+  },
+  "changed_proteins": 71,
+  "transition_counts": {
+    "Other:Unscreened tissue -> Cancer Antigen only": 49,
+    "Other:Unscreened tissue -> Other:Expression": 7,
+    "Reproductive Antigen only -> CTA": 6,
+    "Other:Unscreened tissue -> Unsafe": 5,
+    "Other:Expression -> Cancer Antigen only": 2,
+    "Other:Review -> Unsafe": 1,
+    "Reproductive Antigen only -> Other:Expression": 1
+  },
+  "sha256": "b14455220b107ec41b9b9a35df6aa71f79384db8d3f82d43f509f5f2017ac905",
+  "bytes": 21885
+}
