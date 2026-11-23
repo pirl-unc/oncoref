@@ -1,0 +1,8 @@
+entity_id,protein_group_label,dominant_source_organ,source_peak_tpm,baseline_normal_reference_tpm,raw_gtex_p95_max_tpm,top_raw_gtex_site,clean_gtex_p95_max_tpm,top_clean_gtex_site,hpa_somatic_max_ntpm,clean_normal_reference_tpm,bleed_qc_applied,max_non_tgct_tumor_tpm,top_non_tgct_cancer_code,top_non_tgct_sample
+PEG:630ddd31edc8c33b698a,PRM1,testis,58750.8,8.053368,8.053368,Thyroid,5.711255,Small_Intestine_Terminal_Ileum,1.6,5.711255,True,58.9687,BRCA,TCGA-AO-A0JL-01
+PEG:59d63e36958214a05e64,PRM2,testis,50820.5,7.756607,7.756607,Thyroid,6.648625,Small_Intestine_Terminal_Ileum,1.3,6.648625,True,8.5975,BL,BLGSP-71-08-00042-01B
+PEG:93cbe02d0a8decdb1264,SEMG2,prostate,26737.9,9.524564,9.524564,Bladder,11.867107,Bladder,0.6,11.867107,False,,,
+PEG:1e1807a736855e4a0438,TGM4,prostate,22106.5,5.673914,2.435072,Adrenal_Gland,2.435072,Adrenal_Gland,2.3,5.673914,False,,,
+PEG:22b36adf4dff15d65281,DPPA5,testis,12332.385,4.034286,0.859271,Thyroid,0.80128,Thyroid,0.5,4.034286,False,,,
+PEG:17c92f499d8151570b01,MBD3L3,testis,10365.46,0.8,0.084123,Brain_Caudate_basal_ganglia,0.086464,Colon_Sigmoid,0.1,0.8,False,,,
+PEG:89f20b287c5756513eb6,LALBA,testis,45625.2,0.781727,0.176187,Skin_Sun_Exposed_Lower_leg,0.187257,Skin_Sun_Exposed_Lower_leg,0.1,0.781727,False,,,

@@ -1,0 +1,7 @@
+{
+  "schema": "oncoref.multiplex-bleed-gene-deltas.v1",
+  "policy_id": "oncoref.multiplex-bleed-qc.2026-11-23.1",
+  "evaluated_candidates": 7,
+  "bleed_qc_applied_count": 2,
+  "sha256": "37580c824f6299f86d6ef8f4879899b03c828fcb4862a1d5dd9c4a5822c6ac4b"
+}

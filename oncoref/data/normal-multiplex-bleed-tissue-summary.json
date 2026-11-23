@@ -1,0 +1,6 @@
+{
+  "schema": "oncoref.multiplex-bleed-tissue-summary.v1",
+  "policy_id": "oncoref.multiplex-bleed-qc.2026-11-23.1",
+  "rows": 213,
+  "sha256": "b55d7d6b3cd871ee69d057777da9da495e72bec59a2e29b070b6f2cc48293134"
+}
