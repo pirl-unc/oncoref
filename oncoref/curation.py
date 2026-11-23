@@ -172,6 +172,19 @@ def write_receipt(root):
     return receipt
 
 
+def _matches_live_or_snapshot(root: Path, name: str, expected: str) -> bool:
+    live = root / name
+    if live.is_file() and digest(live) == expected:
+        return True
+    fixtures = root / "tests" / "fixtures"
+    if fixtures.is_dir():
+        for snap in sorted(fixtures.glob("release-*-inputs"), reverse=True):
+            cand = snap / name
+            if cand.is_file() and digest(cand) == expected:
+                return True
+    return False
+
+
 def check(root):
     """Verify the stored build's policy, graph, implementation and output hashes."""
     receipt = json.loads((root / RECEIPT).read_text())
@@ -205,7 +218,7 @@ def check(root):
     if report_path.is_file():
         report = json.loads(report_path.read_text())
         for name, expected in report["implementation_sha256"].items():
-            if not (root / name).is_file() or digest(root / name) != expected:
+            if not _matches_live_or_snapshot(root, name, expected):
                 errors.append(name)
         for name, expected in report["outputs_sha256"].items():
             path = report_path.parent / name

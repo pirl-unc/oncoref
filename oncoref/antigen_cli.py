@@ -40,7 +40,6 @@ def _host_overrides(args) -> dict:
 
 def list_antigens(args):
     from .species import resolve_species
-    from .species_target_selection import packaged_species_results
 
     resolved = resolve_species(getattr(args, "species", "human"))
     overrides = {
@@ -52,19 +51,9 @@ def list_antigens(args):
     if args.set in antigen_sets.EXCLUSION_CATEGORIES:
         if args.mode != "all" or overrides:
             raise ValueError("Candidate filters do not apply to Unsafe/Other backgrounds")
-        if resolved.taxon_id == 9606:
-            rows = antigen_sets.proteins(args.set)
-        else:
-            all_rows = packaged_species_results(resolved)
-            rows = all_rows[
-                all_rows.category.isin(antigen_sets.EXCLUSION_CATEGORIES[args.set])
-            ].reset_index(drop=True)
+        rows = antigen_sets.proteins(args.set, species=resolved)
     else:
-        selection = (
-            antigen_sets.select(args.set, mode=args.mode, **overrides)
-            if resolved.taxon_id == 9606
-            else antigen_sets.select(args.set, mode=args.mode, species=resolved, **overrides)
-        )
+        selection = antigen_sets.select(args.set, mode=args.mode, species=resolved, **overrides)
         rows = selection.proteins()
         print(json.dumps(selection.metadata), file=sys.stderr)
     if args.ids:
@@ -98,22 +87,13 @@ def list_antigens(args):
 
 def explain(args):
     from .species import resolve_species
-    from .species_target_selection import packaged_species_results
+    from .species_target_selection import (
+        packaged_species_host_exposure,
+        packaged_species_results,
+    )
 
     resolved = resolve_species(getattr(args, "species", "human"))
-    rows = (
-        target_selection.results(args.gene)
-        if resolved.taxon_id == 9606
-        else packaged_species_results(resolved, args.gene)
-    )
-    if rows.empty and resolved.taxon_id == 9606:
-        # Resolve exact member symbols as well as grouped display labels.
-        from .gene_matching import gene_identity_catalog
-
-        identities = gene_identity_catalog()
-        ids = identities.loc[identities.canonical_symbol.eq(args.gene), "canonical_gene_id"]
-        pieces = [target_selection.results(gene) for gene in ids]
-        rows = pd.concat(pieces).drop_duplicates("entity_id") if pieces else rows
+    rows = packaged_species_results(resolved, args.gene)
     if rows.empty:
         raise ValueError(f"No current antigen catalog record for {args.gene!r}")
     fields = [
@@ -145,7 +125,7 @@ def explain(args):
         if f in rows
     ]
     output = rows[fields].copy()
-    if resolved.taxon_id == 9606:
+    if "paper_source_count" in rows:
         counts = target_filters.paper_counts()
         for column in counts:
             output[column] = rows.entity_id.map(counts[column]).fillna(0).astype(int)
@@ -162,11 +142,7 @@ def explain(args):
             ]
     elif args.papers or args.loss:
         raise ValueError("--papers and --loss are currently human-only curation views")
-    species_host_evidence = None
-    if resolved.taxon_id != 9606:
-        from .species_target_selection import packaged_species_host_exposure
-
-        species_host_evidence = packaged_species_host_exposure(resolved)
+    species_host_evidence = packaged_species_host_exposure(resolved)
     for mode in target_filters.FILTER_MODES:
         evaluated = target_filters.apply(
             target_filters.FILTER_MODES[mode], rows, host_evidence=species_host_evidence
@@ -225,11 +201,7 @@ def funnel(args):
     from .species_target_selection import packaged_species_results
 
     resolved = resolve_species(getattr(args, "species", "human"))
-    table = (
-        target_selection.results()
-        if resolved.taxon_id == 9606
-        else packaged_species_results(resolved)
-    )
+    table = packaged_species_results(resolved)
     if args.published_only:
         table = table[table.published_nomination]
     categories = table.category.value_counts().rename_axis("stage").reset_index(name="remaining")
@@ -311,23 +283,20 @@ def subtract(args):
     species = getattr(args, "species", "human")
     sequence_source = getattr(args, "sequence_source", "auto")
     if host_overrides:
-        selection_kwargs = dict(host_overrides)
-        if species != "human":
-            selection_kwargs["species"] = species
-        if sequence_source != "auto":
-            selection_kwargs["sequence_source"] = sequence_source
-        records = antigen_sets.select("CA|RA", **selection_kwargs).background_sequences(
-            args.background
-        )
-    elif species != "human":
-        seq_kwargs = {"species": species}
-        if sequence_source != "auto":
-            seq_kwargs["sequence_source"] = sequence_source
-        records = antigen_sets.sequences(args.background, **seq_kwargs)
-    elif sequence_source != "auto":
-        records = antigen_sets.sequences(args.background, sequence_source=sequence_source)
-    else:
+        records = antigen_sets.select(
+            "CA|RA",
+            species=species,
+            sequence_source=sequence_source,
+            **host_overrides,
+        ).background_sequences(args.background)
+    elif species == "human" and sequence_source == "auto":
         records = antigen_sets.sequences(args.background)
+    else:
+        records = antigen_sets.sequences(
+            args.background,
+            species=species,
+            sequence_source=sequence_source,
+        )
     if records.attrs.get("missing_gene_ids"):
         raise ValueError(
             "Background has missing gene translations; subtraction cannot claim complete coverage"

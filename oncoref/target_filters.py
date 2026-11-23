@@ -342,8 +342,7 @@ def apply(
         "species", str(d["species"].iloc[0]) if "species" in d and len(d) else "human"
     )
     host = context(f, species=species_name)
-    effective_evidence = {} if species_name != "human" and host_evidence is None else host_evidence
-    assessment = host_context.assess(d, host, evidence=effective_evidence)
+    assessment = host_context.assess(d, host, evidence=host_evidence)
     for name in assessment:
         d[name] = assessment[name]
     h0 = d[["normal_reference_tpm", "disposable_max_tpm"]].max(axis=1, skipna=False).clip(lower=1.0)

@@ -10,8 +10,6 @@ from __future__ import annotations
 import json
 import math
 from dataclasses import asdict, dataclass
-from functools import cache
-from importlib.resources import files
 
 import pandas as pd
 
@@ -23,37 +21,16 @@ COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
 
 def _compartments_for_species(species="human") -> tuple[str, ...]:
     from .species import resolve_species
-
-    resolved = resolve_species(species)
-    if resolved.taxon_id == 9606:
-        return COMPARTMENTS
     from .species_target_selection import anatomy_for_species
 
-    return anatomy_for_species(resolved).reproductive_compartments
+    return anatomy_for_species(resolve_species(species)).reproductive_compartments
 
 
 def normalize(values, *, species="human") -> tuple[str, ...]:
     from .species import resolve_species
+    from .species_target_selection import anatomy_for_species
 
-    resolved = resolve_species(species)
-    if resolved.taxon_id != 9606:
-        from .species_target_selection import anatomy_for_species
-
-        return anatomy_for_species(resolved).normalize_compartments(values)
-    if not isinstance(values, tuple):
-        raise ValueError("Tissue choices must be tuples of names")
-    found = set()
-    aliases = {c.replace("_", " "): (c,) for c in COMPARTMENTS}
-    aliases["uterus"] = ("uterus", "endometrium")
-    aliases.update(breast=catalog.MAMMARY_COMPARTMENTS, mammary=catalog.MAMMARY_COMPARTMENTS)
-    for name in values:
-        if not isinstance(name, str):
-            raise ValueError("Tissue names must be strings")
-        key = " ".join(name.lower().replace("_", " ").split())
-        if key not in aliases:
-            raise ValueError(f"Unknown compartment {name!r}")
-        found.update(aliases[key])
-    return tuple(c for c in COMPARTMENTS if c in found)
+    return anatomy_for_species(resolve_species(species)).normalize_compartments(values)
 
 
 @dataclass(frozen=True)
@@ -148,17 +125,12 @@ def from_legacy(
         raise ValueError("Unknown host profile")
     if not any((profile != "all", pregnant, lactating, allow, protect, absent_override)):
         return None
-    if resolved_species.taxon_id == 9606:
-        female_tract = catalog.FEMALE_TRACT_COMPARTMENTS
-        male_accessory = catalog.MALE_ACCESSORY_COMPARTMENTS
-        lactating_comp = "lactating_breast"
-    else:
-        from .species_target_selection import anatomy_for_species
+    from .species_target_selection import anatomy_for_species
 
-        anat = anatomy_for_species(resolved_species)
-        female_tract = anat.female_tract_compartments
-        male_accessory = anat.male_accessory_compartments
-        lactating_comp = anat.mammary_compartments[0]
+    anat = anatomy_for_species(resolved_species)
+    female_tract = anat.female_tract_compartments
+    male_accessory = anat.male_accessory_compartments
+    lactating_comp = anat.lactating_mammary_compartment
     absent, accepted, protected, notes = set(), set(), set(protect), []
     if profile in {"male-patient", "female-patient"}:
         opposite = (
@@ -202,43 +174,30 @@ def from_legacy(
     )
 
 
-@cache
-def _evidence():
-    import hashlib
+def _evidence(species="human") -> dict:
+    from .species_target_selection import _packaged_species_host_exposure_ref
 
-    root = files("oncoref") / "data"
-    path = root / "host-exposure.csv.gz"
-    meta = json.loads((root / "host-exposure.json").read_text())
-    if meta["policy_id"] != POLICY_ID or meta["catalog_policy_id"] != catalog.POLICY_ID:
-        raise ValueError("Host exposure belongs to another policy")
-    if meta.get("catalog_data_sha256") != catalog.metadata()["data_sha256"]:
-        raise ValueError("Host exposure belongs to another catalog snapshot")
-    if hashlib.sha256(path.read_bytes()).hexdigest() != meta["sha256"]:
-        raise ValueError("Host exposure does not match its receipt")
-    return (
-        pd.read_csv(path, keep_default_na=False)
-        .set_index("entity_id")
-        .exposures.map(json.loads)
-        .to_dict()
-    )
+    return _packaged_species_host_exposure_ref(species)
 
 
-def exposure_evidence() -> dict:
+def exposure_evidence(species="human") -> dict:
     """Detached per-compartment observations and coverage, never clinical clearance."""
-    from copy import deepcopy
+    from .species_target_selection import packaged_species_host_exposure
 
-    return deepcopy(_evidence())
+    return packaged_species_host_exposure(species)
 
 
 def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
     """Evaluate protection independently of target-set membership and paper counts."""
     if host is not None and not isinstance(host, HostContext):
         raise ValueError("host must be a HostContext")
-    evidence = (
-        _evidence()
-        if host is not None and host.protected and evidence is None
-        else (evidence or {})
-    )
+    if host is not None and host.protected and evidence is None:
+        try:
+            evidence = _evidence(host.species)
+        except TypeError:
+            evidence = _evidence()
+    else:
+        evidence = evidence or {}
     rows = []
     for row in table.itertuples():
         rejected, unknown, observed = [], [], []
