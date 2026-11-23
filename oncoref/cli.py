@@ -230,8 +230,12 @@ def _cmd_species_data(args):
 
     options = _species_asset_options(args)
     target = args.name or "all"
-    if args.action == "dir":
-        print(assets.asset_cache_dir(cache_root=args.cache_root))
+    if args.action in {"dir", "dirs"}:
+        d = assets.asset_cache_dir(cache_root=args.cache_root)
+        if args.json:
+            print(json.dumps({"species": str(d)}, indent=2))
+        else:
+            print(d)
         return 0
     selected = assets.species_assets(args.species)
     if target != "all":
@@ -250,15 +254,37 @@ def _cmd_species_data(args):
         return 1
     if args.action == "status":
         print(json.dumps([assets.inspect_asset(a, **options) for a in selected], indent=2))
-    elif args.action == "metadata":
-        print(json.dumps([a.as_dict() for a in selected], indent=2))
+    elif args.action in {"metadata", "info"}:
+        rows = [
+            {
+                **a.as_dict(),
+                "inspection": assets.inspect_asset(a, **options),
+                "available_versions": list(assets.asset_versions(a.id, species=args.species)),
+            }
+            if args.action == "info"
+            else a.as_dict()
+            for a in selected
+        ]
+        print(json.dumps(rows[0] if args.action == "info" and len(rows) == 1 else rows, indent=2))
+    elif args.action == "verify":
+        inspected = [assets.inspect_asset(a, **options) for a in selected]
+        ok = all(item["status"] == "available" for item in inspected)
+        if args.json:
+            print(json.dumps({"verified": ok, "assets": inspected}, indent=2))
+        else:
+            for item in inspected:
+                print(f"{item['asset_id']}\t{item['status']}\t{item['path']}")
+        return 0 if ok else 1
     elif args.action == "path":
         if len(selected) != 1:
             raise ValueError("Specify one asset for data path")
         state = assets.inspect_asset(selected[0], **options)
         if state["status"] != "available":
             raise ValueError(f"{selected[0].id}: {state['status']}")
-        print(state["path"])
+        if args.json:
+            print(json.dumps({"asset_id": selected[0].id, "path": state["path"]}, indent=2))
+        else:
+            print(state["path"])
     elif args.action == "fetch":
         if args.force:
             raise ValueError(
@@ -271,21 +297,57 @@ def _cmd_species_data(args):
         )
         if not args.offline and missing > args.max_bytes:
             raise ValueError(f"Transfer requires {missing} bytes; budget is {args.max_bytes}")
-        for asset in selected:
-            print(
+        fetched_paths = [
+            str(
                 assets.ensure_asset(
                     asset, offline=args.offline, max_bytes=args.max_bytes, **options
                 )
             )
+            for asset in selected
+        ]
+        if args.json:
+            print(json.dumps({"downloaded": fetched_paths}, indent=2))
+        else:
+            for p in fetched_paths:
+                print(p)
     else:
         raise ValueError(f"data {args.action} is unavailable for {args.species}; no human fallback")
     return 0
 
 
+def _resolve_cache_dirs() -> dict[str, str]:
+    import os
+    from pathlib import Path
+
+    from . import _downloads, sequence_bundle, source_matrices, species_assets
+
+    shard_env = os.environ.get("ONCOREF_SHARD_CACHE_DIR", "").strip()
+    shard_dir = (
+        Path(shard_env).expanduser()
+        if shard_env
+        else _downloads.oncoref_cache_root() / "shard_cache"
+    )
+    return {
+        "root": str(_downloads.oncoref_cache_root()),
+        "bundle": str(data_bundle.cache_dir()),
+        "hpa": str(reference_data.cache_base_dir() / "sources"),
+        "reference": str(reference_data.cache_base_dir() / "sources"),
+        "source": str(source_matrices.cache_root() / f"v{source_matrices.SOURCE_MATRIX_VERSION}"),
+        "sequence": str(sequence_bundle.cache_root()),
+        "species": str(species_assets.asset_cache_dir()),
+        "shard": str(shard_dir),
+    }
+
+
 def _cmd_data(args: argparse.Namespace) -> int:
     from ._downloads import download_options
 
-    with download_options(progress=args.progress, verbose=not args.quiet):
+    with download_options(
+        progress=args.progress,
+        verbose=not args.quiet,
+        offline=True if args.offline else None,
+        cache_root=args.cache_root,
+    ):
         try:
             return _cmd_data_impl(args)
         except (ImportError, FileNotFoundError) as exc:
@@ -294,8 +356,8 @@ def _cmd_data(args: argparse.Namespace) -> int:
 
 
 def _cmd_data_impl(args: argparse.Namespace) -> int:
-    """Unified data management over the catalog (expression bundle + HPA sources)."""
-    from . import catalog, source_matrices
+    """Unified OpenVax data management over every managed OncoRef dataset (#747)."""
+    from . import _downloads, catalog
     from .species import resolve_species
 
     selected = resolve_species(args.species)
@@ -309,25 +371,27 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         )
         print(json.dumps(result, indent=2))
         return 0
-    if args.data_version is not None and args.action not in {"status", "fetch", "path"}:
-        raise ValueError("--version is supported for status, fetch, path and provenance")
-    if args.json and args.action not in {"list", "prune"}:
-        raise ValueError("--json is supported for data list and data prune")
+    if args.data_version is not None and args.action not in {
+        "status",
+        "info",
+        "verify",
+        "fetch",
+        "path",
+    }:
+        raise ValueError(
+            "--version is supported for status, info, verify, fetch, path, and provenance"
+        )
     from .species_assets import species_assets
 
     asset_target = any(args.name in (a.id, a.group) for a in species_assets(selected))
-    if args.action not in {"list", "prune"} and (selected.taxon_id != 9606 or asset_target):
+    if args.action not in {"list", "prune", "dirs"} and (selected.taxon_id != 9606 or asset_target):
+        if args.action == "dir" and selected.taxon_id != 9606:
+            return _cmd_species_data(args)
         return _cmd_species_data(args)
-    if (
-        args.action not in {"list", "prune"}
-        and selected.taxon_id == 9606
-        and (args.offline or args.asset_overrides or args.cache_root)
-    ):
-        raise ValueError(
-            "Species asset options require a registered species asset; legacy human data uses its existing cache API"
-        )
     if args.action == "list":
         return _cmd_data_list(args, selected)
+    if args.asset_overrides and not asset_target and selected.taxon_id == 9606:
+        raise ValueError("--asset-overrides requires a registered species asset")
 
     if args.action == "status":
         try:
@@ -338,6 +402,9 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         except KeyError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1
+        if args.json:
+            print(json.dumps(rows, indent=2, default=str))
+            return 0
         print(
             f"{'Dataset':<46} {'Kind':<7} {'Present':<8} {'Size':>10} {'Cohorts':>8}  Description"
         )
@@ -351,6 +418,123 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
                 f"{r['description']}"
             )
         return 0
+
+    if args.action == "info":
+        if args.name in (None, "bundle", "oncoref", "pirlygenes"):
+            source = args.name if args.name in {"oncoref", "pirlygenes"} else "oncoref"
+            try:
+                payload = data_bundle.bundle_metadata(
+                    source,
+                    include_release_manifest=bool(getattr(args, "remote", False)),
+                )
+            except (ValueError, data_bundle.BundleIntegrityError, OSError) as e:
+                print(f"Error: {e}", file=sys.stderr)
+                return 1
+            if args.json:
+                print(json.dumps(payload, indent=2, sort_keys=True, default=str))
+                return 0
+            local_cache = payload["local_cache"]
+            print(f"name: bundle ({source})")
+            print(f"package_version: {payload['package_version']}")
+            print(f"data_version: {payload['data_version']}")
+            print(f"source_matrix_version: {payload['source_matrix_version']}")
+            print(f"cache_dir: {local_cache['cache_dir']}")
+            print(f"all_local: {local_cache['all_local']}")
+            print(f"verified_sha256: {local_cache['completion_marker']['verified_sha256']}")
+            print("\nUse --json (and --remote for release manifest) for complete metadata.")
+            return 0
+        try:
+            prov = catalog.provenance(args.name, args.data_version, species=selected)
+            vers = list(catalog.versions(args.name, species=selected))
+        except (KeyError, ValueError, reference_data.ReferenceDataError) as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
+        info_payload = {**prov, "available_versions": vers}
+        if args.json:
+            print(json.dumps(info_payload, indent=2, sort_keys=True, default=str))
+            return 0
+        for key, value in info_payload.items():
+            print(f"{key}: {value}")
+        return 0
+
+    if args.action == "verify":
+        target = args.name or "all"
+        if target == "bundle":
+            try:
+                snap = data_bundle.verify_local()
+            except (FileNotFoundError, RuntimeError) as e:
+                if args.json:
+                    print(
+                        json.dumps(
+                            {"target": "bundle", "verified": False, "error": str(e)}, indent=2
+                        )
+                    )
+                else:
+                    print(f"Error: {e}", file=sys.stderr)
+                return 1
+            if args.json:
+                print(
+                    json.dumps(
+                        {
+                            "target": "bundle",
+                            "verified": True,
+                            "data_version": snap["data_version"],
+                            "cache_dir": snap["cache_dir"],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                print(f"Verified bundle v{snap['data_version']} at {snap['cache_dir']}")
+            return 0
+        try:
+            status_rows = catalog.status(
+                None if target == "all" else target,
+                **({"version": args.data_version} if args.data_version is not None else {}),
+                species=selected,
+            )
+        except KeyError as e:
+            print(f"Error: {e}", file=sys.stderr)
+            return 1
+        checked = []
+        all_ok = True
+        for row in status_rows:
+            if target == "all" and not row["present"]:
+                continue
+            if row["kind"] == "bundle":
+                try:
+                    data_bundle.verify_local()
+                    vstate, ok = "verified", True
+                except (FileNotFoundError, RuntimeError) as exc:
+                    vstate, ok = f"invalid: {exc}", False
+            else:
+                prov = catalog.provenance(
+                    row["name"],
+                    args.data_version,
+                    species=selected,
+                    verify_content=True,
+                )
+                vstate = str(prov.get("verification_state") or "unknown")
+                ok = vstate in {"verified", "content_recorded"} and bool(prov.get("exists"))
+            all_ok = all_ok and ok
+            checked.append(
+                {
+                    "name": row["name"],
+                    "kind": row["kind"],
+                    "version": row["version"],
+                    "path": row["path"],
+                    "verification_state": vstate,
+                    "verified": ok,
+                }
+            )
+        if args.json:
+            print(json.dumps({"target": target, "verified": all_ok, "items": checked}, indent=2))
+        elif not checked:
+            print("No cached datasets present to verify.")
+        else:
+            for item in checked:
+                print(f"{item['name']}\t{item['verification_state']}\t{item['path'] or '-'}")
+        return 0 if all_ok else 1
 
     if args.action == "contract":
         print(json.dumps(data_bundle.bundle_contract(), indent=2, sort_keys=True, default=str))
@@ -376,25 +560,26 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         print(json.dumps(manifest, indent=2, sort_keys=True, default=str))
         return 0
 
-    if args.action == "dir":
+    if args.action in {"dir", "dirs"}:
         target = args.name or "all"
-        dirs = {
-            "bundle": data_bundle.cache_dir(),
-            "hpa": reference_data.cache_dir(),
-            "reference": reference_data.cache_dir(),
-            "source": source_matrices.cache_dir(),
-        }
+        dirs = _resolve_cache_dirs()
         if target == "all":
-            for name, path in dirs.items():
-                print(f"{name}\t{path}")
+            if args.json:
+                print(json.dumps(dirs, indent=2, sort_keys=True))
+            else:
+                for name, path in dirs.items():
+                    print(f"{name}\t{path}")
             return 0
         if target not in dirs:
             print(
-                "Error: data dir target must be all, bundle, hpa, reference, or source",
+                f"Error: data {args.action} target must be one of: all, {', '.join(dirs)}",
                 file=sys.stderr,
             )
             return 1
-        print(dirs[target])
+        if args.json:
+            print(json.dumps({target: dirs[target]}, indent=2))
+        else:
+            print(dirs[target])
         return 0
 
     if args.action == "fetch":
@@ -407,10 +592,18 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
         except KeyError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1
-        except Exception as e:  # network / extract failure
+        except Exception as e:  # network / offline / extract failure
             print(f"Error: {e}", file=sys.stderr)
             return 1
-        print(f"Downloaded: {', '.join(downloaded)}" if downloaded else "Already present.")
+        if args.json:
+            print(
+                json.dumps(
+                    {"target": args.name or "all", "downloaded": downloaded},
+                    indent=2,
+                )
+            )
+        else:
+            print(f"Downloaded: {', '.join(downloaded)}" if downloaded else "Already present.")
         return 0
 
     if args.action == "path":
@@ -418,18 +611,31 @@ def _cmd_data_impl(args: argparse.Namespace) -> int:
             print("Error: 'data path' requires a dataset name", file=sys.stderr)
             return 1
         try:
-            print(
-                catalog.ensure(
+            if _downloads.is_offline():
+                resolved_path = catalog.path(
+                    args.name,
+                    args.data_version,
+                    species=selected,
+                )
+                if resolved_path is None:
+                    raise FileNotFoundError(
+                        f"Offline mode is enabled and {args.name!r} is not cached locally"
+                    )
+            else:
+                resolved_path = catalog.ensure(
                     args.name,
                     **({"version": args.data_version} if args.data_version is not None else {}),
                 )
-            )
         except KeyError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 1
-        except Exception as e:  # network / extract failure
+        except Exception as e:  # network / offline / extract failure
             print(f"Error: {e}", file=sys.stderr)
             return 1
+        if args.json:
+            print(json.dumps({"name": args.name, "path": str(resolved_path)}, indent=2))
+        else:
+            print(resolved_path)
         return 0
 
     if args.action == "prune":
@@ -1119,21 +1325,24 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=[
             "list",
             "status",
+            "info",
+            "fetch",
+            "path",
+            "verify",
+            "dirs",
+            "prune",
+            # Backward-compatible aliases:
+            "dir",
             "contract",
             "metadata",
             "release-manifest",
             "versions",
             "provenance",
-            "dir",
-            "fetch",
-            "path",
-            "prune",
         ],
         help=(
-            "list (catalog), status (cache state), contract (bundle contract JSON), "
-            "metadata (contract + local/release state JSON), release-manifest "
-            "(release metadata JSON), dir (cache roots), fetch (download), path "
-            "(ensure + print), prune (bundle cache cleanup)"
+            "list (catalog), status (local state), info (versions/provenance/contract), "
+            "fetch (download), path (resolve local path), verify (integrity check), "
+            "dirs (cache roots), prune (safe retention cleanup)"
         ),
     )
     p_data.add_argument(
@@ -1189,16 +1398,27 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Species name or NCBI taxonomy ID (default: human; dog/canine are aliases)",
     )
     p_data.add_argument(
-        "--json", action="store_true", help="Print full inventory records as JSON (data list only)"
+        "--json",
+        action="store_true",
+        help="Emit machine-readable JSON (supported across all 'oncoref data' subcommands)",
     )
     p_data.add_argument("--group", default=None, help="Conceptual data group for list")
     p_data.add_argument(
-        "--offline", action="store_true", help="Verify species assets without network"
+        "--offline",
+        action="store_true",
+        help="Forbid network access (also honored via OPENVAX_OFFLINE=1)",
+    )
+    p_data.add_argument(
+        "--remote",
+        action="store_true",
+        help="Include remote release manifest when running 'oncoref data info bundle'",
     )
     p_data.add_argument(
         "--asset-overrides", help="JSON mapping taxon:asset IDs to existing local files"
     )
-    p_data.add_argument("--cache-root", help="Datacache root for species assets")
+    p_data.add_argument(
+        "--cache-root", help="Override the unified OncoRef cache root for this command"
+    )
     p_data.add_argument(
         "--max-bytes",
         type=int,

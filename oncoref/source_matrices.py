@@ -34,7 +34,6 @@ new release. Cache layout:
 
 from __future__ import annotations
 
-import os
 import re
 import shutil
 import tempfile
@@ -355,15 +354,14 @@ def source_sample_namespace(source_cohort: str) -> str:
     return source_cohort
 
 
+def cache_root() -> Path:
+    """Base source-matrix cache root without creating directories."""
+    return _downloads.resolve_cache_subdir("source-matrices", envkeys=(CACHE_DIR_ENV_VAR,))
+
+
 def cache_dir(*, version: str = SOURCE_MATRIX_VERSION) -> Path:
     """Source-matrix cache directory for ``version`` (created on demand)."""
-    override = os.environ.get(CACHE_DIR_ENV_VAR)
-    base = (
-        Path(override).expanduser()
-        if override
-        else (Path.home() / ".cache" / "oncoref" / "source-matrices")
-    )
-    out = base / f"v{version}"
+    out = cache_root() / f"v{version}"
     out.mkdir(parents=True, exist_ok=True)
     return out
 
@@ -420,6 +418,10 @@ def fetch(
         _downloads.report_cached(label, dest, verbose=verbose)
         return dest
     url = release_url(code, version)
+    if _downloads.is_offline():
+        raise SourceMatrixError(
+            f"offline mode is enabled; refusing to download per-sample matrix for {code!r} ({url})"
+        )
     try:
         with FileLock(str(dest.with_name(f".{dest.name}.oncoref.lock"))):
             # Another process may have populated the cache while we waited.

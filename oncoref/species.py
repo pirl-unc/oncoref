@@ -206,22 +206,28 @@ class SpeciesDataGroup:
         return self.cta_snapshot().gene_ids(reference=reference)
 
     def target_selection(
-        self, gene: str | None = None, *, category: str | None = None
+        self,
+        gene: str | None = None,
+        *,
+        category: str | None = None,
+        allow_download: bool = True,
     ) -> pd.DataFrame:
         """Evaluated set-based target catalog (CTA / CA / RA / Other / Unsafe) for this species."""
         if self.name != "antigens":
             raise ValueError("target_selection() requires the antigens group")
         from .species_target_selection import packaged_species_results
 
-        return packaged_species_results(self.species, gene, category=category)
+        return packaged_species_results(
+            self.species, gene, category=category, allow_download=allow_download
+        )
 
-    def target_selection_coverage(self) -> dict:
+    def target_selection_coverage(self, *, allow_download: bool = True) -> dict:
         """Target-selection readiness, comparative anatomy and category counts."""
         if self.name != "antigens":
             raise ValueError("target_selection_coverage() requires the antigens group")
         from .species_target_selection import packaged_species_coverage
 
-        return packaged_species_coverage(self.species)
+        return packaged_species_coverage(self.species, allow_download=allow_download)
 
     def host_compartments(self) -> tuple[str, ...]:
         """Reproductive and mammary compartments applicable to this species' HostContext."""
@@ -253,13 +259,13 @@ class SpeciesDataGroup:
 
         return classify_sex_restriction(species=self.species)
 
-    def host_exposure(self) -> dict:
+    def host_exposure(self, *, allow_download: bool = True) -> dict:
         """Per-compartment reproductive and mammary RNA exposure observations for HostContext."""
         if self.name != "antigens":
             raise ValueError("host_exposure() requires the antigens group")
         from .species_target_selection import packaged_species_host_exposure
 
-        return packaged_species_host_exposure(self.species)
+        return packaged_species_host_exposure(self.species, allow_download=allow_download)
 
     def screening_sources(self) -> pd.DataFrame:
         """SHA-256-pinned primary input manifest for evaluated non-human target catalogs."""

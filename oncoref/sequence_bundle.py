@@ -10,7 +10,6 @@ import gzip
 import hashlib
 import io
 import json
-import os
 import re
 import tempfile
 import zipfile
@@ -384,6 +383,17 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
     )
 
 
+def cache_root(cache_dir=None) -> Path:
+    """Base sequence-bundle cache root without creating directories."""
+    from . import _downloads
+
+    return _downloads.resolve_cache_subdir(
+        "sequence-bundles",
+        override=cache_dir,
+        envkeys=("ONCOREF_SEQUENCE_CACHE_DIR",),
+    )
+
+
 def ensure(*, cache_dir=None, download=False) -> Path:
     """Acquire only the one pinned ZIP, bounded by its declared byte limits.
 
@@ -392,13 +402,10 @@ def ensure(*, cache_dir=None, download=False) -> Path:
     """
     from filelock import FileLock
 
+    from . import _downloads
+
     pin = descriptor()
-    root = Path(
-        cache_dir
-        or os.environ.get(
-            "ONCOREF_SEQUENCE_CACHE_DIR", Path.home() / ".cache/oncoref/sequence-bundles"
-        )
-    )
+    root = cache_root(cache_dir)
     destination = root / pin["bundle_id"].rsplit(":", 1)[-1]
     if destination.exists():
         try:
@@ -410,6 +417,10 @@ def ensure(*, cache_dir=None, download=False) -> Path:
     if not download:
         raise FileNotFoundError(
             "Pinned sequence bundle is not cached; use ensure(download=True) explicitly"
+        )
+    if _downloads.is_offline():
+        raise FileNotFoundError(
+            "Offline mode is enabled; refusing to download pinned sequence bundle"
         )
     root.mkdir(parents=True, exist_ok=True)
     with FileLock(str(root / (destination.name + ".lock"))):
