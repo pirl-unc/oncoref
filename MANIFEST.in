@@ -8,6 +8,7 @@ recursive-include tests/js *.cjs
 recursive-include tests/fixtures *.json *.csv *.gz *.yaml
 # Released bytes of receipt-bound files, kept whole: they are compared by hash.
 recursive-include tests/fixtures/release-1.37-inputs *
+recursive-include tests/fixtures/release-1.49-inputs *
 recursive-include tests/fixtures/human-cta-reference *.gz
 recursive-include tests/data/pfizer-assignments *.json *.gz *.tsv *.md
 recursive-exclude oncoref/data/cancer-reference-expression *

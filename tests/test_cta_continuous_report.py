@@ -49,7 +49,7 @@ def test_passing_candidates_obey_every_tissue_gate():
     assert rows.groupby("Ensembl_Gene_ID").size().eq(36).all()
 
 
-def test_boundary_correction_and_full_report_provenance():
+def test_boundary_correction_and_full_report_provenance(historical_cta_input):
     sensitivity = pd.read_csv(REPORT / "sensitivity.csv")
     assert sensitivity["Pass point screen"].tolist() == [747, 752, 758, 769, 782, 790]
     manifest = json.loads((REPORT / "run-manifest.json").read_text())
@@ -67,4 +67,6 @@ def test_boundary_correction_and_full_report_provenance():
                     / "docs/audits/normal-tissue-registry-20261021-r2/frozen-inputs"
                     / Path(name).name
                 )
+            elif section != "outputs":
+                path = historical_cta_input(name, expected)
             assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name

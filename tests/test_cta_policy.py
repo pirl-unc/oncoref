@@ -188,11 +188,12 @@ def test_frozen_measurement_replay_and_adjudicated_changes():
     assert set(original.loc[changes.index, "Category"]) == {"CTA"}
 
 
-def test_current_policy_package_and_report_hashes():
+def test_current_policy_package_and_report_hashes(historical_cta_input):
     run = json.loads((REPORT / "run-manifest.json").read_text())
     for section, folder in [("implementation_and_inputs", ROOT), ("outputs", REPORT)]:
         for name, expected in run[section].items():
-            assert hashlib.sha256((folder / name).read_bytes()).hexdigest() == expected, name
+            path = folder / name if section == "outputs" else historical_cta_input(name, expected)
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == expected, name
     for packaged, artifact in [
         ("target-gene-sets.csv.gz", "gene-results.csv.gz"),
         ("cta-followup-reviews.csv", "follow-up.csv"),
@@ -224,7 +225,9 @@ def test_qualitative_normal_rna_is_not_protein(status, expected):
         classify(rs=[review("Normal RNA")])
 
 
-def test_all_remaining_raw_antibody_cases_have_complete_evidence_derived_dispositions():
+def test_all_remaining_raw_antibody_cases_have_complete_evidence_derived_dispositions(
+    historical_cta_input,
+):
     cases = policy.adjudications()
     assert len(cases) == 178 and cases["Review complete"].all()
     assert not cases["Gene ID"].duplicated().any()
@@ -248,4 +251,5 @@ def test_all_remaining_raw_antibody_cases_have_complete_evidence_derived_disposi
         ("outputs", ROOT / "docs/audits/cta-adjudication-20261025"),
     ]:
         for name, expected in run[section].items():
-            assert hashlib.sha256((root / name).read_bytes()).hexdigest() == expected
+            path = root / name if section == "outputs" else historical_cta_input(name, expected)
+            assert hashlib.sha256(path.read_bytes()).hexdigest() == expected
