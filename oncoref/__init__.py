@@ -63,6 +63,7 @@ from . import (
     tgct_localization,
     therapy_evidence,
     tissue_tiers,
+    unmeasured_home_panels,
 )
 from .apd1 import (
     cancer_apd1_response,
@@ -500,6 +501,12 @@ from .tumor_references import (
     subtype_tumor_reference_expression,
     tcga_deconvolved_expression,
     tumor_reference_expression_provenance,
+)
+from .unmeasured_home_panels import (
+    unmeasured_home_gene_expression,
+    unmeasured_home_protein_adjudications,
+    unmeasured_home_tissue_panels,
+    unmeasured_home_tissue_summary,
 )
 from .version import __version__
 
@@ -993,6 +1000,11 @@ __all__ = [
     "tpm_to_housekeeping_normalized",
     "tumor_reference_expression_provenance",
     "umbrella_expression_coverage",
+    "unmeasured_home_gene_expression",
+    "unmeasured_home_panels",
+    "unmeasured_home_protein_adjudications",
+    "unmeasured_home_tissue_panels",
+    "unmeasured_home_tissue_summary",
     "unresolved_tenfold_rare_cell_entity_ids",
     "unversioned",
     "validate_expression_join",

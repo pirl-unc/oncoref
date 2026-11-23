@@ -147,6 +147,7 @@ oncoref = [
     "data/cta-selection-profiles-human.csv.gz",
     "data/cta-rare-cell-screen.csv.gz",
     "data/cta-screen-results.csv",
+    "data/unmeasured-home-gene-expression.csv.gz",
 ]
 
 [tool.ruff]

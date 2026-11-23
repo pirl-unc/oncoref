@@ -435,6 +435,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "prioritized Ensembl 115 host-geometry, paralog 31-mer, orthogonal bulk RNA, and Unsafe-background propagation ledger for 15 tenfold Other:Review candidates (#711)",
     ),
+    "unmeasured-home-tissue-panels": (
+        "cta-evidence",
+        "checksum-pinned adult human bulk TPM, single-cell UMI, and targeted receptor copy-number panels covering all unmeasured home tissues (#735)",
+    ),
+    "unmeasured-home-protein-adjudications": (
+        "cta-evidence",
+        "unit-separated quantitative home-tissue expression and 10x tumor-fold adjudications across all 568 home_tissue protein groups (#735)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
@@ -813,6 +821,9 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "normal-library-peak-adjudications",
         "hpa-normal-statistic-sensitivity",
         "rare-cell-candidate-adjudications",
+        "unmeasured-home-tissue-panels",
+        "unmeasured-home-protein-adjudications",
+        "unmeasured-home-gene-expression",
     }
 )
 
@@ -856,6 +867,10 @@ EXTERNALIZED_ORIGINATED: dict[str, tuple[str, str]] = {
     "cta-screen-results": (
         "cta",
         "ordered CTA research decisions; Variable genes are excluded pending reconsideration",
+    ),
+    "unmeasured-home-gene-expression": (
+        "cta-evidence",
+        "genome-wide Ensembl 115 quantitative bulk TPM and donor-resolved single-cell UMI expression across unmeasured home tissues (#735)",
     ),
 }
 

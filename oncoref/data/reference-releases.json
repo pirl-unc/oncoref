@@ -1921,6 +1921,23 @@
           "taxon_id": 9606
         }
       }
+    },
+    "unmeasured-home-gene-expression": {
+      "description": "genome-wide Ensembl 115 quantitative bulk TPM and donor-resolved single-cell UMI expression across unmeasured home tissues (#735)",
+      "filename": "unmeasured-home-gene-expression.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta-evidence",
+      "default_version": "2026-11-22",
+      "versions": {
+        "2026-11-22": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-unmeasured-homes-20261122/unmeasured-home-gene-expression.csv.gz",
+          "sha256": "28c1a03739035ec7185847be276fc2c788c6ba8b5329476a761b43717c619fbe",
+          "archive_sha256": "28c1a03739035ec7185847be276fc2c788c6ba8b5329476a761b43717c619fbe",
+          "bytes": 1868649,
+          "taxon_id": 9606
+        }
+      }
     }
   }
 }
