@@ -1546,12 +1546,16 @@ def evaluate_species_catalog(
     sex_code_by_eid = (
         sex_df.set_index("entity_id")["sex_restriction_code"].to_dict() if not sex_df.empty else {}
     )
-    classified["sex_restriction_class"] = classified["entity_id"].map(sex_class_by_eid).fillna("")
-    classified["sex_restriction_code"] = classified["entity_id"].map(sex_code_by_eid).fillna("")
+    classified["sex_restriction_class"] = [
+        sex_class_by_eid.get(eid, "") for eid in classified["entity_id"]
+    ]
+    classified["sex_restriction_code"] = [
+        sex_code_by_eid.get(eid, "") for eid in classified["entity_id"]
+    ]
 
     if not seq_df.empty:
         cat_by_eid = classified.set_index("entity_id")["category"].to_dict()
-        seq_df["catalog_category"] = seq_df["entity_id"].map(cat_by_eid).fillna("")
+        seq_df["catalog_category"] = [cat_by_eid.get(eid, "") for eid in seq_df["entity_id"]]
         seq_df["selection_category"] = seq_df["catalog_category"]
         seq_df["set"] = seq_df["catalog_category"]
         seq_df["background_reason"] = ""
@@ -1608,7 +1612,12 @@ def packaged_species_metadata(species: Species | str | int = "human") -> dict | 
 
 
 def _resolve_packaged_species_asset(
-    resolved_name: str, meta: dict, path_key: str, default_stem: str
+    resolved_name: str,
+    meta: dict,
+    path_key: str,
+    default_stem: str,
+    *,
+    allow_download: bool = True,
 ):
     from importlib.resources import files
     from pathlib import Path
@@ -1620,11 +1629,15 @@ def _resolve_packaged_species_asset(
         direct = Path(str(files("oncoref").joinpath("data", rel)))
         if direct.is_file():
             return direct
-        return reference_data.bundled_or_managed_path(Path(rel).name.removesuffix(".csv.gz"))
-    return reference_data.bundled_or_managed_path(default_stem)
+        return reference_data.bundled_or_managed_path(
+            Path(rel).name.removesuffix(".csv.gz"), allow_download=allow_download
+        )
+    return reference_data.bundled_or_managed_path(default_stem, allow_download=allow_download)
 
 
-def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
+def _load_packaged_species_catalog_cached(
+    species_name: str, *, allow_download: bool = True
+) -> pd.DataFrame:
     from . import reference_data
 
     resolved = resolve_species(species_name)
@@ -1632,7 +1645,11 @@ def _load_packaged_species_catalog_cached(species_name: str) -> pd.DataFrame:
     if meta is None:
         raise FileNotFoundError(f"No packaged target-selection metadata for {resolved.name!r}")
     path = _resolve_packaged_species_asset(
-        resolved.name, meta, "data_path", f"{resolved.name}-target-selection"
+        resolved.name,
+        meta,
+        "data_path",
+        f"{resolved.name}-target-selection",
+        allow_download=allow_download,
     )
     if reference_data._sha256(path) != meta["data_sha256"]:
         raise ValueError(
@@ -1711,7 +1728,11 @@ def _symbol_index_for_species(species_name: str, dataset_name: str) -> dict[str,
     return cached
 
 
-def _packaged_species_host_exposure_ref(species: Species | str | int = "human") -> dict:
+def _packaged_species_host_exposure_ref(
+    species: Species | str | int = "human",
+    *,
+    allow_download: bool = True,
+) -> dict:
     from importlib.resources import files
 
     from . import host_context, reference_data
@@ -1723,7 +1744,11 @@ def _packaged_species_host_exposure_ref(species: Species | str | int = "human") 
     cached = _SPECIES_HOST_EXPOSURE_CACHE.get(resolved.name)
     if cached is None:
         path = _resolve_packaged_species_asset(
-            resolved.name, meta, "host_exposure_path", f"{resolved.name}-host-exposure"
+            resolved.name,
+            meta,
+            "host_exposure_path",
+            f"{resolved.name}-host-exposure",
+            allow_download=allow_download,
         )
         actual_sha = reference_data._sha256(path)
         if actual_sha != meta["host_exposure_sha256"]:
@@ -1753,12 +1778,20 @@ def _packaged_species_host_exposure_ref(species: Species | str | int = "human") 
     return cached
 
 
-def packaged_species_host_exposure(species: Species | str | int = "human") -> dict:
+def packaged_species_host_exposure(
+    species: Species | str | int = "human",
+    *,
+    allow_download: bool = True,
+) -> dict:
     """Return detached per-compartment host exposure observations for ``species``."""
-    return deepcopy(_packaged_species_host_exposure_ref(species))
+    return deepcopy(_packaged_species_host_exposure_ref(species, allow_download=allow_download))
 
 
-def packaged_species_sequences(species: Species | str | int = "human") -> pd.DataFrame:
+def packaged_species_sequences(
+    species: Species | str | int = "human",
+    *,
+    allow_download: bool = True,
+) -> pd.DataFrame:
     """Return all verified reference proteome translations for an evaluated species."""
     from . import antigen_sets, reference_data
 
@@ -1767,10 +1800,20 @@ def packaged_species_sequences(species: Species | str | int = "human") -> pd.Dat
     if meta is None:
         raise FileNotFoundError(f"No packaged proteome sequence table for {resolved.name!r}")
     if meta.get("sequence_provider") == "sequence_bundle":
+        if not allow_download:
+            from . import sequence_bundle
+
+            if not sequence_bundle.is_cached():
+                raise reference_data.ReferenceDataError(
+                    "sequence_bundle is not cached locally and allow_download=False; "
+                    "run `oncoref data fetch sequence_bundle`"
+                )
         return antigen_sets._load_bundle_sequences_table()
     cached = _SPECIES_SEQUENCES_CACHE.get(resolved.name)
     if cached is None:
-        path = reference_data.bundled_or_managed_path(f"{resolved.name}-proteome-sequences")
+        path = reference_data.bundled_or_managed_path(
+            f"{resolved.name}-proteome-sequences", allow_download=allow_download
+        )
         if reference_data._sha256(path) != meta["sequences_sha256"]:
             raise ValueError(
                 f"{resolved.name} proteome sequence table does not match its metadata SHA-256"
@@ -1834,6 +1877,7 @@ def packaged_species_results(
     gene: str | None = None,
     *,
     category: str | None = None,
+    allow_download: bool = True,
 ) -> pd.DataFrame:
     """Return the packaged target-selection catalog for human, dog or mouse."""
     from .species_antigens import cta_snapshot
@@ -1847,7 +1891,9 @@ def packaged_species_results(
     if meta is not None:
         cached = _SPECIES_CATALOG_CACHE.get(resolved.name)
         if cached is None:
-            cached = _load_packaged_species_catalog_cached(resolved.name)
+            cached = _load_packaged_species_catalog_cached(
+                resolved.name, allow_download=allow_download
+            )
             _SPECIES_CATALOG_CACHE[resolved.name] = cached
         evaluated = cached.copy()
         evaluated.attrs.update(cached.attrs)
@@ -1921,7 +1967,11 @@ def packaged_species_results(
     return evaluated.reset_index(drop=True)
 
 
-def packaged_species_coverage(species: Species | str | int = "human") -> dict:
+def packaged_species_coverage(
+    species: Species | str | int = "human",
+    *,
+    allow_download: bool = True,
+) -> dict:
     """Structured readiness, policy parameters, anatomy and category counts."""
     from .expression_registry import expression_sources
     from .species_antigens import cta_snapshot
@@ -1961,7 +2011,7 @@ def packaged_species_coverage(species: Species | str | int = "human") -> dict:
         }
 
     snap = cta_snapshot(resolved)
-    cat = packaged_species_results(resolved)
+    cat = packaged_species_results(resolved, allow_download=allow_download)
     expr = expression_sources(species=resolved)
     ready_expr = [s.id for s in expr if s.acquisition_status == "available"]
     pending_expr = [s.id for s in expr if s.acquisition_status != "available"]

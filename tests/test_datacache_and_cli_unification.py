@@ -242,3 +242,64 @@ def test_streamlined_cli_actions_universal_json_and_global_offline(monkeypatch, 
     p_payload = json.loads(capsys.readouterr().out)
     assert p_payload["name"] == "housekeeping-genes"
     assert p_payload["path"].endswith(".csv")
+
+
+def test_pandas4_warning_free_canine_target_selection_and_offline_preflight(monkeypatch, tmp_path):
+    """Regression tests for #761 (Pandas4Warning on empty sex_class_by_eid) and #762 (offline preflight / allow_download=False)."""
+    import warnings
+
+    import oncoref
+    from oncoref import species_target_selection
+
+    _clear_cache_env(monkeypatch)
+    empty_cache = tmp_path / "empty_ref_cache"
+    monkeypatch.setenv("ONCOREF_CACHE_DIR", str(empty_cache))
+
+    # #761: Canine target_selection() and target_selection_coverage() emit zero Pandas4Warning / FutureWarning
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        dog_cat = oncoref.canine.target_selection()
+        dog_cov = oncoref.canine.target_selection_coverage()
+        human_cov = oncoref.human.target_selection_coverage(allow_download=False)
+    assert not dog_cat.empty
+    assert (dog_cat["sex_restriction_class"] == "").all()
+    assert (dog_cat["sex_restriction_code"] == "").all()
+    assert dog_cov["taxon_id"] == 9615
+    assert human_cov["counts"]["CTA"] == 327
+
+    # #762: preflight / is_cached / allow_download=False fail fast locally without touching network
+    empty_bundled = tmp_path / "no_bundled_data"
+    empty_bundled.mkdir()
+    pf = reference_data.preflight("mouse-target-selection", bundled_dir=empty_bundled)
+    assert pf["available"] is False
+    assert pf["origin"] == "missing"
+    assert pf["is_cached"] is False
+    assert (
+        reference_data.is_cached(
+            "mouse-target-selection", include_bundled=True, bundled_dir=empty_bundled
+        )
+        is False
+    )
+    assert not empty_cache.exists()
+
+    monkeypatch.setattr(
+        _downloads,
+        "fetch_file",
+        lambda *a, **kw: pytest.fail("network call attempted under allow_download=False"),
+    )
+    with pytest.raises(reference_data.ReferenceDataError, match="allow_download=False"):
+        reference_data.bundled_or_managed_path(
+            "mouse-target-selection",
+            bundled_dir=empty_bundled,
+            allow_download=False,
+        )
+    species_target_selection._SPECIES_CATALOG_CACHE.pop("mouse", None)
+    monkeypatch.setattr(
+        reference_data,
+        "bundled_or_managed_path",
+        lambda name, version=None, *, bundled_dir=None, allow_download=True: reference_data.ensure(
+            name, version, allow_download=allow_download
+        ),
+    )
+    with pytest.raises(reference_data.ReferenceDataError, match="allow_download=False"):
+        oncoref.mouse.target_selection(allow_download=False)

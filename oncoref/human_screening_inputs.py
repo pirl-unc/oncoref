@@ -525,9 +525,9 @@ def evaluate_human_catalog(
         .set_index("entity_id")["home_panel_disposition"]
         .to_dict()
     )
-    cat["rare_cell_711_requirement"] = cat["entity_id"].map(rc_map).fillna("")
-    cat["normal_library_712_disposition"] = cat["entity_id"].map(nl_map).fillna("")
-    cat["home_panel_735_disposition"] = cat["entity_id"].map(uh_map).fillna("")
+    cat["rare_cell_711_requirement"] = [rc_map.get(eid, "") for eid in cat["entity_id"]]
+    cat["normal_library_712_disposition"] = [nl_map.get(eid, "") for eid in cat["entity_id"]]
+    cat["home_panel_735_disposition"] = [uh_map.get(eid, "") for eid in cat["entity_id"]]
     return result
 
 
