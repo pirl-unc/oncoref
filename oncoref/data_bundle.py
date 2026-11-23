@@ -63,6 +63,9 @@ import urllib.error
 from pathlib import Path
 from typing import Any
 
+import datacache
+import datacache.bundle_store as _bundle_store
+import requests
 from filelock import FileLock
 
 from . import _downloads
@@ -136,11 +139,21 @@ CACHE_DIR_ENV_VAR = "CANCERDATA_BUNDLED_DATA"
 #: Back-compat env var honored when this package's own override is unset.
 LEGACY_CACHE_DIR_ENV_VAR = "PIRLYGENES_BUNDLED_DATA"
 
-#: Default cache parents. New downloads go under the oncoref root; an existing
-#: pirlygenes cache for the current version is reused to avoid a re-download.
-_DEFAULT_CACHE_PARENT = Path.home() / ".cache" / "oncoref" / "bundled_data"
+#: Default cache parents. New downloads resolve through ``oncoref_cache_root()``
+#: (honoring ``OPENVAX_DATA_CACHE``, ``ONCOREF_CACHE_DIR``, platform dirs, and
+#: legacy ``~/.cache/oncoref``); an existing ``~/.cache/pirlygenes`` cache for
+#: the current version is also reused to avoid a forced re-download.
+_AUTO_DEFAULT_CACHE_PARENT = Path.home() / ".cache" / "oncoref" / "bundled_data"
+_DEFAULT_CACHE_PARENT = _AUTO_DEFAULT_CACHE_PARENT
 _LEGACY_CACHE_PARENT = Path.home() / ".cache" / "pirlygenes" / "bundled_data"
 _PACKAGE_DATA_DIR = Path(__file__).parent / "data"
+
+
+def _resolved_default_cache_parent() -> Path:
+    if _DEFAULT_CACHE_PARENT is not _AUTO_DEFAULT_CACHE_PARENT:
+        return Path(_DEFAULT_CACHE_PARENT)
+    return _downloads.oncoref_cache_root() / "bundled_data"
+
 
 # Names that live in the downloadable tarball (relative to the cache root) and
 # are NOT bundled in the wheel. load_dataset checks here after the wheel data dir.
@@ -169,7 +182,7 @@ def _cache_override() -> str | None:
 def cache_root() -> Path:
     """Parent of all version-pinned cache dirs (``v<version>/`` lives inside).
 
-    Defaults to the oncoref cache root, but if *this* version was already
+    Defaults to the unified oncoref cache root, but if *this* version was already
     downloaded under the legacy pirlygenes root (and not yet under the new one),
     that legacy root is returned so the migration doesn't force a re-download.
     """
@@ -177,13 +190,19 @@ def cache_root() -> Path:
     if override:
         # Override points at the version-pinned dir; its parent is the root.
         return Path(override).expanduser().parent
+    default_parent = _resolved_default_cache_parent()
     version_dir = f"v{DATA_VERSION}"
-    if (
-        not (_DEFAULT_CACHE_PARENT / version_dir).exists()
-        and (_LEGACY_CACHE_PARENT / version_dir).exists()
-    ):
-        return _LEGACY_CACHE_PARENT
-    return _DEFAULT_CACHE_PARENT
+    if not (default_parent / version_dir).exists():
+        if (
+            _DEFAULT_CACHE_PARENT is _AUTO_DEFAULT_CACHE_PARENT
+            and not _downloads.has_explicit_cache_override()
+        ):
+            dot_cache_parent = (Path.home() / ".cache" / "oncoref" / "bundled_data").expanduser()
+            if (dot_cache_parent / version_dir).exists():
+                return dot_cache_parent
+        if (_LEGACY_CACHE_PARENT / version_dir).exists():
+            return _LEGACY_CACHE_PARENT
+    return default_parent
 
 
 def resolve_version(version: str | None = None) -> str:
@@ -217,8 +236,8 @@ def release_sources(version: str | None = None) -> tuple[dict, ...]:
     )
 
 
-def cache_dir(version: str | None = None) -> Path:
-    """Where the downloaded bundle lives on disk for this version."""
+def store_dir(version: str | None = None) -> Path:
+    """Version-pinned bundle store directory (contains datacache ``bundles/`` or flat legacy files)."""
     concrete = resolve_version(version)
     override = _cache_override()
     if override:
@@ -231,6 +250,77 @@ def cache_dir(version: str | None = None) -> Path:
             historical = current.parent / "historical" / f"v{concrete}"
         return historical
     return cache_root() / f"v{concrete}"
+
+
+def _active_bundle_tree(path: Path) -> Path:
+    """Resolve the active extracted directory inside a datacache store, or ``path`` for flat directories."""
+    path = Path(path)
+    try:
+        store = _bundle_store.store_at(path)
+    except _bundle_store.INVALID_STORE_ERRORS:
+        return path
+    if store is None:
+        return path
+    try:
+        current = store.current_bundle()
+    except _bundle_store.INVALID_STORE_ERRORS:
+        return path
+    return Path(current) if current is not None else path
+
+
+def cache_dir(version: str | None = None) -> Path:
+    """Where the active extracted bundle files live on disk for this version."""
+    return _active_bundle_tree(store_dir(version))
+
+
+def archive_registry(
+    release_manifest: dict,
+    *,
+    version: str | None = None,
+) -> datacache.VersionedArchiveRegistry:
+    """Build a ``datacache.VersionedArchiveRegistry`` over ``store_dir`` for a validated release manifest."""
+    concrete = resolve_version(version or release_manifest.get("data_version"))
+    tarball = release_manifest["tarball"]
+    sha256 = tarball.get("sha256")
+    raw_size = tarball.get("bytes")
+    size = int(raw_size) if raw_size is not None else None
+    marker_payload = {
+        "manifest_version": CACHE_MANIFEST_VERSION,
+        "data_version": concrete,
+        "source_url": tarball["url"],
+        "release_manifest": release_manifest,
+        "verified_sha256": bool(sha256),
+        "downloadable_paths": list(DOWNLOADABLE_PATHS),
+        "inventory": release_manifest.get("inventory", {}),
+    }
+    source_spec: dict[str, Any] = {"url": tarball["url"]}
+    if sha256:
+        source_spec["sha256"] = sha256
+    if size is not None:
+        source_spec["size"] = size
+    return datacache.VersionedArchiveRegistry(
+        {
+            "expression-bundle": {
+                "default_version": concrete,
+                "description": f"OncoRef expression bundle v{concrete}",
+                "versions": {
+                    concrete: {
+                        "sources": [source_spec],
+                        "expected_sha256": sha256,
+                        "expected_size": size,
+                        "extra_files": {
+                            CACHE_COMPLETE_FILENAME: json.dumps(
+                                marker_payload, indent=2, sort_keys=True
+                            )
+                            + "\n"
+                        },
+                    }
+                },
+            }
+        },
+        store_path=lambda _name, ver: store_dir(ver),
+        verified=bool(sha256 and size is not None),
+    )
 
 
 def _cache_lock(root: Path) -> FileLock:
@@ -597,15 +687,17 @@ def _fetch_release_manifest(
 
 
 def _bundle_inventory(root: Path) -> dict[str, dict]:
-    return {p: _entry_inventory(root / p) for p in DOWNLOADABLE_PATHS}
+    tree = _active_bundle_tree(root)
+    return {p: _entry_inventory(tree / p) for p in DOWNLOADABLE_PATHS}
 
 
 def _incomplete_bundle_paths(root: Path) -> list[str]:
-    return [p for p in DOWNLOADABLE_PATHS if not _path_complete(root / p)]
+    tree = _active_bundle_tree(root)
+    return [p for p in DOWNLOADABLE_PATHS if not _path_complete(tree / p)]
 
 
 def _completion_marker_path(root: Path) -> Path:
-    return root / CACHE_COMPLETE_FILENAME
+    return _active_bundle_tree(root) / CACHE_COMPLETE_FILENAME
 
 
 def _read_completion_marker(root: Path) -> dict | None:
@@ -765,6 +857,8 @@ def bundle_contract() -> dict:
         "source_matrix_version": SOURCE_MATRIX_VERSION,
         "cache_dir_env_var": CACHE_DIR_ENV_VAR,
         "legacy_cache_dir_env_var": LEGACY_CACHE_DIR_ENV_VAR,
+        "openvax_cache_env_var": _downloads.OPENVAX_CACHE_ENV_VAR,
+        "oncoref_cache_env_var": _downloads.ONCOREF_CACHE_ENV_VAR,
         "cache_complete_filename": CACHE_COMPLETE_FILENAME,
         "cache_manifest_version": CACHE_MANIFEST_VERSION,
         "bundle_manifest_version": BUNDLE_MANIFEST_VERSION,
@@ -823,6 +917,19 @@ def bundle_metadata(
     }
 
 
+def _clear_legacy_flat_store(root: Path) -> None:
+    """Clear legacy non-datacache entries inside ``root`` before an explicit archive install."""
+    if not root.exists() or (root / _bundle_store.MARKER).exists():
+        return
+    for child in list(root.iterdir()):
+        if child.name.startswith(".datacache-"):
+            continue
+        if child.is_dir() and not child.is_symlink():
+            shutil.rmtree(child)
+        else:
+            child.unlink(missing_ok=True)
+
+
 def _download_and_extract(
     url: str,
     root: Path,
@@ -831,73 +938,93 @@ def _download_and_extract(
     release_manifest: dict | None = None,
     data_version: str = DATA_VERSION,
 ) -> None:
-    """Download a tarball from ``url`` and extract it into ``root``.
+    """Install a bundle tarball into ``root`` via ``datacache.install_archive``.
 
-    Extraction goes into a staging dir first and is promoted into ``root`` only
-    after it completes, so a failed/corrupt download never leaves a half-populated
-    cache that a later run would read as valid. Raises ``urllib.error.URLError``
-    (unreachable, e.g. 404) or ``tarfile.TarError`` (corrupt/non-tar body) — the
-    caller falls back to the next source on either.
+    Uses DataCache's atomic generation store (``bundles/<UTC>/`` + ``.datacache-manifest.json``),
+    validates that every required downloadable path is non-empty before publication, writes
+    ``.oncoref-bundle-complete.json`` inside the same transaction, and prunes superseded
+    generations via ``datacache.prune_bundles``.
     """
-    verbose = _downloads.is_verbose(verbose)
-    with tempfile.NamedTemporaryFile(suffix=".tar.gz", delete=False) as tmp:
-        tmp_path = Path(tmp.name)
-    staging = Path(tempfile.mkdtemp(prefix=".staging-", dir=root))
-    try:
-        _downloads.fetch_file(
-            url,
-            tmp_path,
-            label=f"expression bundle v{data_version}",
-            force=True,
-            verbose=verbose,
-            display_path=root,
+    if _downloads.is_offline():
+        raise FileNotFoundError(
+            f"Offline mode is enabled; refusing to download expression bundle v{data_version} from {url}"
         )
-        _downloads.report(f"verifying expression bundle v{data_version}", verbose=verbose)
-        if release_manifest:
-            tarball = release_manifest["tarball"]
-            expected_bytes = tarball.get("bytes")
-            if expected_bytes is not None and tmp_path.stat().st_size != int(expected_bytes):
-                raise BundleIntegrityError(
-                    f"{url} size mismatch: got {tmp_path.stat().st_size} bytes, "
-                    f"expected {expected_bytes}"
-                )
-            actual_sha256 = _sha256_file(tmp_path)
-            if actual_sha256 != tarball["sha256"]:
-                raise BundleIntegrityError(
-                    f"{url} sha256 mismatch: got {actual_sha256}, expected {tarball['sha256']}"
-                )
-        if verbose:
-            sys.stderr.write("oncoref: extracting...\n")
-            sys.stderr.flush()
-        with tarfile.open(tmp_path) as tf:
-            # filter=data is Python 3.12+; fall back to the older API.
-            try:
-                tf.extractall(staging, filter="data")
-            except TypeError:
-                tf.extractall(staging)
-        incomplete = _incomplete_bundle_paths(staging)
+    verbose = _downloads.is_verbose(verbose)
+    tarball = (release_manifest or {}).get("tarball") or {}
+    expected_sha256 = tarball.get("sha256")
+    raw_bytes = tarball.get("bytes")
+    expected_bytes = int(raw_bytes) if raw_bytes is not None else None
+
+    marker_payload = {
+        "manifest_version": CACHE_MANIFEST_VERSION,
+        "data_version": data_version,
+        "source_url": url,
+        "release_manifest": release_manifest,
+        "verified_sha256": bool(expected_sha256),
+        "downloadable_paths": list(DOWNLOADABLE_PATHS),
+        "inventory": (release_manifest or {}).get("inventory", {}),
+    }
+    source_spec: dict[str, Any] = {"url": url}
+    if expected_sha256:
+        source_spec["sha256"] = expected_sha256
+    if expected_bytes is not None:
+        source_spec["size"] = expected_bytes
+
+    def _validate_extracted(staged_tree: Path) -> bool:
+        incomplete = [p for p in DOWNLOADABLE_PATHS if not _path_complete(staged_tree / p)]
         if incomplete:
             raise tarfile.TarError(
                 "bundle tarball is missing or has empty required paths: " + ", ".join(incomplete)
             )
-        # Promote staged entries into the cache, replacing any prior copy.
-        _completion_marker_path(root).unlink(missing_ok=True)
-        for entry in staging.iterdir():
-            dest = root / entry.name
-            if dest.is_dir():
-                shutil.rmtree(dest)
-            elif dest.exists():
-                dest.unlink()
-            shutil.move(str(entry), str(dest))
-        _write_completion_marker(
+        return True
+
+    root = Path(root)
+    root.mkdir(parents=True, exist_ok=True)
+    _clear_legacy_flat_store(root)
+    _downloads.report(
+        f"installing expression bundle v{data_version}\n  from {url}\n  to   {root}",
+        verbose=verbose,
+    )
+    try:
+        datacache.install_archive(
             root,
-            source_url=url,
-            release_manifest=release_manifest,
-            data_version=data_version,
+            [source_spec],
+            expected_sha256=expected_sha256,
+            expected_size=expected_bytes,
+            extra_files={
+                CACHE_COMPLETE_FILENAME: json.dumps(marker_payload, indent=2, sort_keys=True) + "\n"
+            },
+            force=True,
+            verified=bool(expected_sha256 and expected_bytes is not None),
+            download_options={
+                "timeout": 180,
+                "max_retries": 2,
+                "show_progress": _downloads._show_progress(verbose),
+            },
+            validator=_validate_extracted,
         )
-    finally:
-        tmp_path.unlink(missing_ok=True)
-        shutil.rmtree(staging, ignore_errors=True)
+        datacache.prune_bundles(root, keep=1)
+    except datacache.FileValidationError as error:
+        if isinstance(error.__cause__, tarfile.TarError):
+            raise error.__cause__ from error
+        msg = str(error)
+        low = msg.lower()
+        if "size" in low and ("mismatch" in low or "expected" in low):
+            raise BundleIntegrityError(f"{url} size mismatch: {msg}") from error
+        if "sha-256" in low or "sha256" in low or "digest" in low or "hash" in low:
+            raise BundleIntegrityError(f"{url} sha256 mismatch: {msg}") from error
+        if "tar archive" in low or "archive is empty" in low or "no regular files" in low:
+            raise tarfile.ReadError(msg) from error
+        raise BundleIntegrityError(f"{url} validation failed: {msg}") from error
+    except requests.HTTPError as error:
+        response = error.response
+        if response is not None:
+            raise urllib.error.HTTPError(
+                url, response.status_code, str(error), response.headers, None
+            ) from error
+        raise urllib.error.URLError(str(error)) from error
+    except requests.RequestException as error:
+        raise urllib.error.URLError(str(error)) from error
 
 
 def _link_or_copy(source: str, destination: str) -> str:
@@ -976,8 +1103,9 @@ def _download_and_apply_overlay(
             except TypeError:
                 archive.extractall(overlay_staging)
 
+        base_tree = _active_bundle_tree(base_root)
         for relative in DOWNLOADABLE_PATHS:
-            source = base_root / relative
+            source = base_tree / relative
             destination = composition / relative
             if source.is_dir():
                 shutil.copytree(source, destination, copy_function=_link_or_copy)
@@ -1030,7 +1158,7 @@ def _download_and_apply_overlay(
 def _base_cache_candidates(root: Path, data_version: str) -> tuple[Path, ...]:
     candidates = [
         root.parent / f"v{data_version}",
-        _DEFAULT_CACHE_PARENT / f"v{data_version}",
+        _resolved_default_cache_parent() / f"v{data_version}",
         _LEGACY_CACHE_PARENT / f"v{data_version}",
     ]
     unique: list[Path] = []
@@ -1237,11 +1365,12 @@ def fetch(*, version: str | None = None, verbose: bool = True) -> Path:
     Concurrent writers are serialized. This operation always overwrites the
     active version so callers can deliberately repair a corrupt cache.
     """
-    root = cache_dir(version) if version is not None else cache_dir()
-    with _cache_lock(root):
-        return _fetch_into_cache(
-            root, verbose=verbose, **({"version": version} if version is not None else {})
+    store_path = store_dir(version) if version is not None else store_dir()
+    with _cache_lock(store_path):
+        _fetch_into_cache(
+            store_path, verbose=verbose, **({"version": version} if version is not None else {})
         )
+        return cache_dir(version) if version is not None else cache_dir()
 
 
 def ensure_local(
@@ -1249,30 +1378,31 @@ def ensure_local(
 ) -> Path:
     """Make sure the bundle is present locally; download if not.
 
-    With ``auto_fetch=False``, raises ``FileNotFoundError`` instead of
-    triggering a network call — for read-only inspection paths that shouldn't
-    surprise users with a large download.
+    With ``auto_fetch=False`` (or ``OPENVAX_OFFLINE=1`` / ``--offline``), raises
+    ``FileNotFoundError`` instead of triggering a network call.
     """
-    root = cache_dir(version) if version is not None else cache_dir()
     if bundle_is_local(version) if version is not None else bundle_is_local():
-        return root
-    if not auto_fetch:
+        return cache_dir(version) if version is not None else cache_dir()
+    store_path = store_dir(version) if version is not None else store_dir()
+    if not auto_fetch or _downloads.is_offline():
         raise FileNotFoundError(
-            f"oncoref data bundle not found at {root}. "
+            f"oncoref data bundle not found at {store_path}. "
             "Run `oncoref data fetch bundle` to download it."
         )
-    with _cache_lock(root):
+    with _cache_lock(store_path):
         # Another process may have populated the cache while this caller waited.
         # Reuse it instead of replacing files under that process's readers.
         if bundle_is_local(version) if version is not None else bundle_is_local():
-            return root
-        return _fetch_into_cache(
-            root, verbose=verbose, **({"version": version} if version is not None else {})
+            return cache_dir(version) if version is not None else cache_dir()
+        _fetch_into_cache(
+            store_path, verbose=verbose, **({"version": version} if version is not None else {})
         )
+        return cache_dir(version) if version is not None else cache_dir()
 
 
 def status() -> dict:
     """Snapshot of cache state — used by ``oncoref data status bundle``."""
+    sdir = store_dir()
     root = cache_dir()
     items = _bundle_inventory(root)
     for p, item in items.items():
@@ -1284,6 +1414,7 @@ def status() -> dict:
         "package_version": __version__,
         "data_version": DATA_VERSION,
         "source_matrix_version": SOURCE_MATRIX_VERSION,
+        "store_dir": str(sdir),
         "cache_dir": str(root),
         "release_url": RELEASE_URL,
         "release_urls": list(RELEASE_URLS),
@@ -1303,12 +1434,19 @@ def status() -> dict:
 
 
 def verify_local() -> dict:
-    """Return :func:`status` only when the current cache has a valid completion marker.
-
-    This is stricter than :func:`bundle_is_local`: legacy complete caches remain
-    readable, but callers that need a post-fetch integrity boundary can require the
-    marker written by current oncoref fetches.
-    """
+    """Return :func:`status` only when the current cache passes completion and DataCache integrity checks."""
+    sdir = store_dir()
+    try:
+        dc_store = _bundle_store.store_at(sdir)
+    except _bundle_store.INVALID_STORE_ERRORS:
+        dc_store = None
+    if dc_store is not None:
+        inspected = datacache.inspect_archive(sdir, verify_files=True)
+        if inspected.status != "available":
+            raise RuntimeError(
+                f"oncoref data bundle failed datacache archive verification ({inspected.status}): "
+                f"{inspected.error}"
+            )
     snap = status()
     if not snap["all_local"]:
         missing = [p for p, item in snap["items"].items() if not item["complete"]]
@@ -1373,17 +1511,19 @@ def list_cache_versions() -> list[dict]:
     root = cache_root()
     if not root.exists():
         return []
+    current_store = store_dir()
     current = cache_dir()
     out: list[dict] = []
     for child in sorted(root.iterdir()):
         if not child.is_dir() or not child.name.startswith("v"):
             continue
+        resolved_child = child.resolve()
         out.append(
             {
                 "version": child.name,
                 "path": child,
                 "size_bytes": _dir_size_bytes(child),
-                "is_current": child.resolve() == current.resolve(),
+                "is_current": resolved_child in {current_store.resolve(), current.resolve()},
             }
         )
     return out
@@ -1446,6 +1586,7 @@ __all__ = [
     "RELEASE_URLS",
     "TARBALL_FILENAME",
     "BundleIntegrityError",
+    "archive_registry",
     "bundle_contract",
     "bundle_is_local",
     "bundle_release_manifest",
@@ -1462,5 +1603,6 @@ __all__ = [
     "local_item_paths",
     "prune_cache",
     "status",
+    "store_dir",
     "verify_local",
 ]

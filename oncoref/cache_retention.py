@@ -138,6 +138,7 @@ def _collect_bundle_entries(
     from . import data_bundle
 
     primary_root = data_bundle.cache_root()
+    current_store = data_bundle.store_dir()
     current_dir = data_bundle.cache_dir()
     roots: list[tuple[str, Path]] = [("oncoref", primary_root)]
     legacy_root = data_bundle._LEGACY_CACHE_PARENT
@@ -185,7 +186,7 @@ def _collect_bundle_entries(
             status, reason, prunable = "protected", "unmanaged_custom_entry", False
         elif _active_lock_exists([lock_file]):
             status, reason, prunable = "protected", "active_lock", False
-        elif keep_current and child.resolve() == current_dir.resolve():
+        elif keep_current and child.resolve() in {current_store.resolve(), current_dir.resolve()}:
             status, reason, prunable = "retained", "active_pin", False
         elif ver in keep_set or f"v{ver}" in keep_set:
             status, reason, prunable = "retained", "explicit_keep_version", False
@@ -220,12 +221,7 @@ def _collect_bundle_entries(
 def _collect_source_entries(*, keep_current: bool, keep_set: set[str]) -> list[dict]:
     from . import source_matrices
 
-    override = os.environ.get(source_matrices.CACHE_DIR_ENV_VAR)
-    root = (
-        Path(override).expanduser()
-        if override
-        else (Path.home() / ".cache" / "oncoref" / "source-matrices")
-    )
+    root = source_matrices.cache_root()
     if not root.exists() or root.is_symlink():
         return []
 
@@ -386,11 +382,7 @@ def _collect_reference_entries(*, keep_current: bool, keep_set: set[str]) -> lis
 def _collect_sequence_entries(*, keep_current: bool, keep_set: set[str]) -> list[dict]:
     from . import sequence_bundle
 
-    root = Path(
-        os.environ.get(
-            "ONCOREF_SEQUENCE_CACHE_DIR", Path.home() / ".cache" / "oncoref" / "sequence-bundles"
-        )
-    ).expanduser()
+    root = sequence_bundle.cache_root()
     if not root.exists() or root.is_symlink():
         return []
 
@@ -436,17 +428,10 @@ def _collect_species_entries(*, keep_current: bool, keep_set: set[str]) -> list[
     env_root = os.environ.get("ONCOREF_ASSET_CACHE")
     if env_root is not None:
         base = Path(env_root).expanduser()
-        # datacache creates <cache_root>/oncoref/species or uses cache_directory_path
-        candidates = [base / "oncoref" / "species", base / "species"]
-        # Check species_assets.asset_cache_dir only if base already exists to avoid mkdir side effects
-        if base.exists():
-            candidates.insert(0, species_assets.asset_cache_dir(cache_root=base))
+        candidates = [base / "species", base / "oncoref" / "species"]
         root = next((c for c in candidates if c.exists()), candidates[0])
     else:
-        default_parent = Path.home() / ".cache" / "datacache" / "oncoref" / "species"
-        root = (
-            species_assets.asset_cache_dir() if default_parent.parent.exists() else default_parent
-        )
+        root = species_assets.asset_cache_dir()
     if not root.exists() or root.is_symlink():
         return []
 
@@ -656,6 +641,16 @@ def prune_caches(
         include_legacy_pirlygenes=include_legacy_pirlygenes,
     )
     planned = [entry for entry in before["entries"] if entry["prunable"]]
+    if not dry_run and "bundle" in _normalize_targets(targets):
+        import datacache
+        import datacache.bundle_store as _bs
+
+        for entry in before["entries"]:
+            if entry["target"] == "bundle" and not entry["prunable"]:
+                bpath = Path(entry["path"])
+                with contextlib.suppress(*_bs.INVALID_STORE_ERRORS):
+                    if _bs.store_at(bpath) is not None:
+                        datacache.prune_bundles(bpath, keep=1)
     if dry_run or not planned:
         return {
             **before,

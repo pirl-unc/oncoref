@@ -149,10 +149,18 @@ def registered_references(species) -> tuple[dict, ...]:
 
 
 def asset_cache_dir(*, cache_root=None) -> Path:
-    from datacache import Cache
+    from . import _downloads
 
-    root = cache_root if cache_root is not None else os.environ.get("ONCOREF_ASSET_CACHE")
-    return Path(Cache("oncoref", cache_root=root).cache_directory_path) / "species"
+    if cache_root is not None:
+        return Path(cache_root).expanduser() / "species"
+    env_override = os.environ.get("ONCOREF_ASSET_CACHE", "").strip()
+    if env_override:
+        return Path(env_override).expanduser() / "species"
+    resolved = _downloads.oncoref_cache_root() / "species"
+    legacy_datacache = Path.home() / ".cache" / "datacache" / "oncoref" / "species"
+    if not resolved.exists() and legacy_datacache.exists():
+        return legacy_datacache
+    return resolved
 
 
 def _overrides(local_overrides):
@@ -228,7 +236,10 @@ def ensure_asset(
     """
     from datacache import fetch_file
 
+    from . import _downloads
     from .managed_expression import ManagedExpressionAsset, open_managed
+
+    offline = bool(offline) or _downloads.is_offline()
 
     if isinstance(asset, ManagedExpressionAsset):
         return open_managed(

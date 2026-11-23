@@ -231,11 +231,11 @@ def _load_shard_directory(shard_dir: Path) -> pd.DataFrame:
             tuple((p.name, p.stat().st_size, p.stat().st_mtime_ns) for p in paths),
         )
     )
-    override = os.environ.get("ONCOREF_SHARD_CACHE_DIR")
+    override = os.environ.get("ONCOREF_SHARD_CACHE_DIR", "").strip()
     cache_dir = (
         Path(override).expanduser()
         if override
-        else Path.home() / ".cache" / "oncoref" / "shard_cache"
+        else data_bundle._downloads.oncoref_cache_root() / "shard_cache"
     )
     cache_file = cache_dir / f"{shard_dir.name}.parquet"
     sig_file = cache_dir / f"{shard_dir.name}.sig"

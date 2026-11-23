@@ -145,8 +145,20 @@ class ReferenceDataError(RuntimeError):
 
 def cache_base_dir() -> Path:
     """Base reference cache root without creating directories."""
-    override = os.environ.get(CACHE_DIR_ENV_KEY) or os.environ.get(ONCOREF_CACHE_DIR_ENV_KEY)
-    return Path(override).expanduser() if override else Path.home() / ".cache" / "oncoref"
+    base = _downloads.oncoref_cache_root(
+        envkeys=(CACHE_DIR_ENV_KEY, ONCOREF_CACHE_DIR_ENV_KEY),
+    )
+    if not _downloads.has_explicit_cache_override(
+        envkeys=(CACHE_DIR_ENV_KEY, ONCOREF_CACHE_DIR_ENV_KEY)
+    ):
+        legacy_base = (Path.home() / ".cache" / "oncoref").expanduser()
+        if (
+            legacy_base != base
+            and not (base / "sources").exists()
+            and (legacy_base / "sources").exists()
+        ):
+            return legacy_base
+    return base
 
 
 def cache_dir() -> Path:

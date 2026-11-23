@@ -39,7 +39,7 @@
     "oncoref/library_qc.py": "0ff88ae882e964281b2d20cb7c3f7fa66139eddd175c715227e7946168d29e10",
     "oncoref/normal_library_qc.py": "1440f6e993368cc2599f161c0c53c60092557ee8c73a6a17f3ba87fa46560001",
     "oncoref/normal_tissues.py": "a61a7e2807e0b226b969f0d0457fb353d5fad0347a2558ea804aea9cc0ff675d",
-    "oncoref/reference_data.py": "25e55377f5105904e0ac2c87e7298690eaba3024bd6c916a59e20740738e3476",
+    "oncoref/reference_data.py": "de674c1cf731d7221594f51cbb76a031d4cce6a6c04c261f8e09b534c6e216f5",
     "oncoref/samples.py": "d7bbc28bf0c8a9930e788b4a30071e9002a7ca589f0282b9a9d84146350d7cd7",
     "oncoref/species_policies.py": "ea2ed904bca80b6fe55ea9bdfb8bd52ad19c9b3baf068751ffcbb8228fdebbda",
     "oncoref/species_target_selection.py": "53099f8e712371a1c7a807c55ef152e44afe1d53c4a9bb3939fe3827239ba190",
