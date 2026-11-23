@@ -152,7 +152,7 @@ _PACKAGE_DATA_DIR = Path(__file__).parent / "data"
 def _resolved_default_cache_parent() -> Path:
     if _DEFAULT_CACHE_PARENT is not _AUTO_DEFAULT_CACHE_PARENT:
         return Path(_DEFAULT_CACHE_PARENT)
-    return _downloads.oncoref_cache_root() / "bundled_data"
+    return _downloads.resolve_cache_subdir("bundled_data")
 
 
 # Names that live in the downloadable tarball (relative to the cache root) and
@@ -192,15 +192,22 @@ def cache_root() -> Path:
         return Path(override).expanduser().parent
     default_parent = _resolved_default_cache_parent()
     version_dir = f"v{DATA_VERSION}"
-    if not (default_parent / version_dir).exists():
+    default_ver = default_parent / version_dir
+    if not default_ver.exists() or not _downloads._has_cached_payload(default_ver):
         if (
             _DEFAULT_CACHE_PARENT is _AUTO_DEFAULT_CACHE_PARENT
             and not _downloads.has_explicit_cache_override()
         ):
             dot_cache_parent = (Path.home() / ".cache" / "oncoref" / "bundled_data").expanduser()
-            if (dot_cache_parent / version_dir).exists():
+            dot_ver = dot_cache_parent / version_dir
+            if dot_ver.exists() and (
+                not default_ver.exists() or _downloads._has_cached_payload(dot_ver)
+            ):
                 return dot_cache_parent
-        if (_LEGACY_CACHE_PARENT / version_dir).exists():
+        leg_ver = _LEGACY_CACHE_PARENT / version_dir
+        if leg_ver.exists() and (
+            not default_ver.exists() or _downloads._has_cached_payload(leg_ver)
+        ):
             return _LEGACY_CACHE_PARENT
     return default_parent
 
@@ -273,12 +280,13 @@ def cache_dir(version: str | None = None) -> Path:
     return _active_bundle_tree(store_dir(version))
 
 
-def archive_registry(
+def inspect_bundle_archive(
     release_manifest: dict,
     *,
     version: str | None = None,
-) -> datacache.VersionedArchiveRegistry:
-    """Build a ``datacache.VersionedArchiveRegistry`` over ``store_dir`` for a validated release manifest."""
+    verify_files: bool = True,
+) -> datacache.ArchiveInspection:
+    """Verify ``store_dir`` against a validated release manifest via ``datacache.inspect_archive``."""
     concrete = resolve_version(version or release_manifest.get("data_version"))
     tarball = release_manifest["tarball"]
     sha256 = tarball.get("sha256")
@@ -298,28 +306,15 @@ def archive_registry(
         source_spec["sha256"] = sha256
     if size is not None:
         source_spec["size"] = size
-    return datacache.VersionedArchiveRegistry(
-        {
-            "expression-bundle": {
-                "default_version": concrete,
-                "description": f"OncoRef expression bundle v{concrete}",
-                "versions": {
-                    concrete: {
-                        "sources": [source_spec],
-                        "expected_sha256": sha256,
-                        "expected_size": size,
-                        "extra_files": {
-                            CACHE_COMPLETE_FILENAME: json.dumps(
-                                marker_payload, indent=2, sort_keys=True
-                            )
-                            + "\n"
-                        },
-                    }
-                },
-            }
+    return datacache.inspect_archive(
+        store_dir(concrete),
+        [source_spec],
+        expected_sha256=sha256,
+        expected_size=size,
+        extra_files={
+            CACHE_COMPLETE_FILENAME: json.dumps(marker_payload, indent=2, sort_keys=True) + "\n"
         },
-        store_path=lambda _name, ver: store_dir(ver),
-        verified=bool(sha256 and size is not None),
+        verify_files=verify_files,
     )
 
 
@@ -1003,7 +998,7 @@ def _download_and_extract(
             },
             validator=_validate_extracted,
         )
-        datacache.prune_bundles(root, keep=1)
+        _bundle_store.prune_bundles(root, keep=1)
     except datacache.FileValidationError as error:
         if isinstance(error.__cause__, tarfile.TarError):
             raise error.__cause__ from error
@@ -1586,7 +1581,6 @@ __all__ = [
     "RELEASE_URLS",
     "TARBALL_FILENAME",
     "BundleIntegrityError",
-    "archive_registry",
     "bundle_contract",
     "bundle_is_local",
     "bundle_release_manifest",
@@ -1596,6 +1590,7 @@ __all__ = [
     "fetch",
     "find",
     "find_local_item",
+    "inspect_bundle_archive",
     "is_downloadable",
     "is_local",
     "item_is_local",

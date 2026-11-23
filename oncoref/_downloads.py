@@ -88,6 +88,25 @@ def has_explicit_cache_override(*, envkeys: tuple[str, ...] = ()) -> bool:
     return False
 
 
+def _has_cached_payload(path: Path) -> bool:
+    """Return True when ``path`` contains at least one non-lock, non-hidden cached file."""
+    if not path.exists():
+        return False
+    if path.is_file():
+        return not path.name.startswith(".") and not path.name.endswith(".lock")
+    try:
+        for child in path.rglob("*"):
+            if not child.is_file():
+                continue
+            rel_parts = child.relative_to(path).parts
+            if any(part.startswith(".") for part in rel_parts) or child.name.endswith(".lock"):
+                continue
+            return True
+    except OSError:
+        return False
+    return False
+
+
 def resolve_cache_subdir(
     subpath: str,
     *,
@@ -103,9 +122,16 @@ def resolve_cache_subdir(
             return Path(val).expanduser()
     base = oncoref_cache_root()
     primary = base / subpath
-    if not has_explicit_cache_override():
+    if not has_explicit_cache_override(envkeys=envkeys):
         legacy_sub = (Path.home() / ".cache" / "oncoref" / subpath).expanduser()
-        if legacy_sub != primary and not primary.exists() and legacy_sub.exists():
+        if (
+            legacy_sub != primary
+            and legacy_sub.exists()
+            and (
+                not primary.exists()
+                or (not _has_cached_payload(primary) and _has_cached_payload(legacy_sub))
+            )
+        ):
             return legacy_sub
     return primary
 
