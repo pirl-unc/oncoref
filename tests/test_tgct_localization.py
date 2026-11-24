@@ -32,7 +32,7 @@ def test_tgct_reproductive_localization_audit_covers_all_154_libraries():
 
 
 def test_tgct_aafl_protein_support_partitions_all_34_aafl_peaking_catalog_proteins():
-    ts = target_selection.results()
+    ts = target_selection._baseline_2026_11_20_frame()
     expected_ids = set(
         ts.loc[
             ts["tumor_top_sample"].astype(str).str.contains("TCGA-2G-AAFL-01", na=False),

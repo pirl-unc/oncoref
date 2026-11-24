@@ -18,8 +18,8 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 ## Antigen Classification
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), OncoRef
-classifies **327 CTA, 69 Cancer Antigen only, 128 Reproductive Antigen only, 1,120 Other and
-18,249 Unsafe**:
+classifies **331 CTA, 117 Cancer Antigen only, 133 Reproductive Antigen only, 1,062 Other and
+18,250 Unsafe**:
 
 1. **Normal-tissue safety screen:** Bulk RNA (GTEx v11, HPA v23), sorted immune subsets (HPA, DICE, Monaco),
    single-cell clusters, donor-resolved rare-cell UMI atlases (CELLxGENE + Siletti), adult cornea scRNA,
@@ -35,8 +35,8 @@ classifies **327 CTA, 69 Cancer Antigen only, 128 Reproductive Antigen only, 1,1
    and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can
    safely lose. Downstream patient profiles (`--profile` / `target_filters`) mark reproductive compartments as
    <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or
-   <span class="cat cat-absent">Absent</span>—identifying **174** female-safe CTAs (`CTA-M + CTA-E`) and **40** male-safe
-   CTAs (`CTA-F + CTA-E`) under strict protection of all opposite-sex adult organs
+   <span class="cat cat-absent">Absent</span>—identifying **264** female-safe CTAs (`CTA-M + CTA-E`: `225 + 39`) and **42** male-safe
+   CTAs (`CTA-F + CTA-E`: `3 + 39`) under strict protection of all opposite-sex adult organs
    ([cross-sex CTAs](antigen-whitepaper.md#sex-restricted-reproductive-antigens-and-cross-sex-ctas),
    [rules and limits](host-selection.md)).
 

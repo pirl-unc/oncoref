@@ -18,19 +18,17 @@ def test_packaged_asset_pin_matches_current_policy_and_complete_inventory():
     manifest = json.loads((audit / "manifest.json").read_text())
     pin = bundle.descriptor()
     assert pin["bundle_id"] == manifest["bundle_id"] == bundle.content_id(manifest)
-    assert manifest["selection_policy_id"] == target_selection.POLICY_ID
+    assert manifest["selection_policy_id"] == target_selection.BASELINE_2026_11_20_POLICY_ID
     assert manifest["role_policy_id"] == bundle.ROLE_POLICY_ID
     assert manifest["record_count"] == sum(manifest["record_roles"].values())
     assert manifest["record_count"] == 245535
     assert manifest["occurrence_count"] >= manifest["record_count"]
     for name, expected in manifest["package_dependencies"].items():
-        live = root / "oncoref/data" / name
-        actual = (
-            bundle.digest(live.read_bytes())
-            if live.is_file()
-            else bundle.digest(data_file_renames.as_released(name))
-        )
-        assert actual == expected
+        try:
+            raw = released_inputs.read(f"oncoref/data/{name}", expected)
+        except AssertionError:
+            raw = data_file_renames.as_released(name)
+        assert bundle.digest(raw) == expected
 
     historical_audit = root / "docs/audits/sequence-bundle-20261104"
     historical_manifest = json.loads((historical_audit / "manifest.json").read_text())
@@ -59,7 +57,7 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     assert (~unsafe.cancer_antigen_candidate).all()
 
     ctas = dispositions[dispositions.category.eq("CTA")]
-    assert len(ctas) == 327
+    assert len(ctas) == 331
     assert (ctas.shared_sequence == "allow").all()
     assert ctas.direct_target_candidate.all()
     assert ctas.cancer_antigen_candidate.all()
@@ -67,14 +65,14 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     assert ctas.representative_sequence_sha256s.map(bool).all()
 
     ca_only = dispositions[dispositions.category.eq("Cancer Antigen only")]
-    assert len(ca_only) == 69
+    assert len(ca_only) == 117
     assert (ca_only.shared_sequence == "allow").all()
     assert (~ca_only.direct_target_candidate).all()
     assert ca_only.cancer_antigen_candidate.all()
     assert ca_only.representative_sequence_sha256s.map(bool).all()
 
     ra_only = dispositions[dispositions.category.eq("Reproductive Antigen only")]
-    assert len(ra_only) == 128
+    assert len(ra_only) == 133
     assert (ra_only.shared_sequence == "allow").all()
     assert (~ra_only.direct_target_candidate).all()
     assert ra_only.reproductive_antigen_candidate.all()
@@ -85,12 +83,12 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
         assert (sub.shared_sequence == "review").all()
 
     by_label = dispositions.set_index("protein_group_label")
-    for rescued in ("MAGEC2", "CSAG1"):
+    for rescued in ("MAGEC2", "CSAG1", "PLAC1", "DKKL1", "CTAG2", "DUX4", "MAGEB6", "FOXR2"):
         assert by_label.loc[rescued, "shared_sequence"] == "allow"
         assert bool(by_label.loc[rescued, "direct_target_candidate"])
-    for newly_unsafe in ("OBP2A", "SLCO6A1", "SPATA45", "COX7B2"):
+    for newly_unsafe in ("OBP2A", "SLCO6A1", "SPATA45", "COX7B2", "SP7", "GFY", "DAZL"):
         assert by_label.loc[newly_unsafe, "shared_sequence"] == "exclude"
-    for unscreened in ("SP7", "OR56A3"):
+    for unscreened in ("DSPP", "CALHM3"):
         assert by_label.loc[unscreened, "shared_sequence"] == "review"
 
 
@@ -120,6 +118,16 @@ def test_cached_current_bundle_enforces_target_selection_roles():
                     covered_ca.update(occ["decision_ids"])
     assert cta_entities <= covered_cta
     assert ca_entities <= covered_ca
+    seq_tbl = loaded.to_sequences_table()
+    label_to_gid = {
+        row.protein_group_label: json.loads(row.member_gene_ids)[0]
+        for row in ts.itertuples(index=False)
+    }
+    roles_by_gid = seq_tbl.groupby("gene_id")["shared_sequence"].unique().to_dict()
+    for unsafe_lbl in ("SP7", "GFY", "DAZL"):
+        assert set(roles_by_gid[label_to_gid[unsafe_lbl]]) == {"exclude"}
+    for allow_lbl in ("PLAC1", "ZAN", "DKKL1", "MAGEB6", "CTAG2", "DUX4"):
+        assert "allow" in set(roles_by_gid[label_to_gid[allow_lbl]])
 
 
 def make_bundle(folder, *, role="allow", second=False):

@@ -885,13 +885,22 @@ def classify_sex_restriction(
         target_filters.TargetFilter(host=m_sex_host), ra, host_evidence=exposures
     ).set_index("entity_id")
 
-    def max_comp_tpm(eid: str, compartments: tuple[str, ...]) -> float:
+    def max_comp_tpm(
+        eid: str, compartments: tuple[str, ...], *, prefer_sex_key: str = "female_max_tpm"
+    ) -> float:
         rec = exposures.get(eid, {})
-        vals = [
-            rec[c]["max_tpm"]
-            for c in compartments
-            if c in rec and rec[c].get("max_tpm") is not None
-        ]
+        vals = []
+        for c in compartments:
+            if c not in rec:
+                continue
+            c_rec = rec[c]
+            v = (
+                c_rec.get(prefer_sex_key, c_rec.get("max_tpm"))
+                if c == anatomy.resting_mammary_compartment and len(compartments) == 1
+                else c_rec.get("max_tpm")
+            )
+            if v is not None:
+                vals.append(v)
         return float(max(vals)) if vals else float("nan")
 
     rows = []
@@ -927,7 +936,13 @@ def classify_sex_restriction(
                 "male_sex_organ_only_eligible": ms_sex,
                 "male_sex_organ_max_tpm": max_comp_tpm(eid, anatomy.male_sex_compartments),
                 "female_sex_organ_max_tpm": max_comp_tpm(eid, anatomy.female_sex_compartments),
-                "resting_breast_max_tpm": max_comp_tpm(eid, (anatomy.resting_mammary_compartment,)),
+                "resting_breast_max_tpm": max_comp_tpm(
+                    eid,
+                    (anatomy.resting_mammary_compartment,),
+                    prefer_sex_key="male_max_tpm"
+                    if sex_class == "Female-restricted"
+                    else "female_max_tpm",
+                ),
                 "tumor_max_tpm": getattr(r, "tumor_max_tpm", np.nan),
                 "tumor_top_cancer_code": getattr(r, "tumor_top_cancer_code", ""),
                 "reproductive_qualifying_compartments": getattr(
@@ -1417,13 +1432,19 @@ def evaluate_species_catalog(
                     else pd.Series(dtype=float)
                 )
                 qual_val = float(supp_vals.max()) if not supp_vals.empty else cmax
-                host_exposure[eid][str(comp)] = {
+                he_entry: dict[str, object] = {
                     "coverage": "measured",
                     "max_tpm": cmax,
                     "max_ntpm": c_ntpm,
                     "protein_status": c_prot,
                     "scope_complete": c_scope,
                 }
+                for sex_key in ("female_max_tpm", "male_max_tpm"):
+                    if sex_key in cgroup.columns:
+                        s_vals = cgroup[sex_key].dropna()
+                        if not s_vals.empty:
+                            he_entry[sex_key] = float(s_vals.max())
+                host_exposure[eid][str(comp)] = he_entry
                 if qual_val >= threshold or (
                     "germline_protamine_diluted_qualified" in cgroup.columns
                     and bool(cgroup["germline_protamine_diluted_qualified"].fillna(False).any())

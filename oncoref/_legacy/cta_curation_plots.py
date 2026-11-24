@@ -365,6 +365,7 @@ def active_policy_gate_matrix() -> pd.DataFrame:
     rare_map = {
         "below_screen": "pass",
         "dismissed": "pass",
+        "nuclear_only": "pass",
         "established": "fail_unsafe",
         "unresolved": "fail_review",
         "unassessed": "unassessed",

@@ -349,3 +349,33 @@ def test_host_protein_panels_include_native_aliases_and_preserve_positive_findin
     result = protein_evidence(panels)
     assert result["protein_status"] == "unresolved"
     assert result["protein_findings"][0]["Tissue"] == "endometrium 1"
+
+
+def test_resting_breast_sex_stratification_in_host_context(rows):
+    ev = {
+        "a": {
+            "resting_breast": observation(
+                176.7,
+                female_max_tpm=0.87,
+                male_max_tpm=176.7,
+            )
+        }
+    }
+    fem = hc.from_legacy("female-patient", protect_tissues=("resting_breast",))
+    fem_ooph = hc.from_legacy(
+        "female-patient", protect_tissues=("resting_breast",), absent_tissues=("ovary",)
+    )
+    male = hc.from_legacy("male-patient", protect_tissues=("resting_breast",))
+    male_castrated = hc.from_legacy(
+        "male-patient",
+        protect_tissues=("resting_breast",),
+        absent_tissues=("testis", "prostate"),
+    )
+    bare_prostate_absent = hc.HostContext(absent=("prostate",), protect=("resting_breast",))
+    unstrat = hc.HostContext(protect=("resting_breast",))
+    assert hc.assess(rows, fem, evidence=ev).iloc[0].host_status == "eligible"
+    assert hc.assess(rows, fem_ooph, evidence=ev).iloc[0].host_status == "eligible"
+    assert hc.assess(rows, male, evidence=ev).iloc[0].host_status == "excluded"
+    assert hc.assess(rows, male_castrated, evidence=ev).iloc[0].host_status == "excluded"
+    assert hc.assess(rows, bare_prostate_absent, evidence=ev).iloc[0].host_status == "excluded"
+    assert hc.assess(rows, unstrat, evidence=ev).iloc[0].host_status == "excluded"

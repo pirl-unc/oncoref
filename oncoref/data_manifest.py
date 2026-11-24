@@ -503,6 +503,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "isobaric (I==L) tryptic-peptide MS paralog sharing audit for CTAGE1/MIA2, TGM4/TGM2, and SPATA31A3/SPATA31C (#769)",
     ),
+    "baseline-2026-11-20-deltas": (
+        "cta-evidence",
+        "compact row-level delta reconstructing the 2026-11-20.2 human baseline catalog from the promoted 2026-11-23.1 catalog (#775)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
@@ -895,6 +899,7 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "assay-boundary-adjudications",
         "assay-boundary-comparison-observations",
         "tryptic-ms-paralog-audit",
+        "baseline-2026-11-20-deltas",
         "mouse-target-selection",
         "mouse-host-exposure",
         "mouse-proteome-sequences",
@@ -991,7 +996,9 @@ def package_data_size_audit() -> pd.DataFrame:
         rel = path.relative_to(data_root).as_posix()
         stem = _stem_for_data_file(rel)
         size_bytes = path.stat().st_size
-        shipped_in_wheel = stem not in EXTERNALIZED_ORIGINATED
+        shipped_in_wheel = (stem not in EXTERNALIZED_ORIGINATED) or (
+            rel.endswith(".json") and not rel.endswith(".json.gz")
+        )
 
         if stem in WHEEL:
             bucket = "WHEEL"

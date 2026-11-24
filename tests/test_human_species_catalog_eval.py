@@ -9,31 +9,45 @@ from oncoref import human, human_screening_inputs, target_selection
 
 
 def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
-    baseline = target_selection.results()
-    res = human.evaluate_integrated_catalog(
+    promoted = target_selection.results()
+    res_default = human.evaluate_integrated_catalog()
+    cat_default = res_default.catalog
+
+    assert len(cat_default) == len(promoted) == 19893
+    assert (cat_default["taxon_id"] == 9606).all()
+    assert (cat_default["species"] == "human").all()
+    assert cat_default["classification"].equals(promoted["classification"])
+    assert cat_default["category"].equals(promoted["category"])
+    assert cat_default["is_cta"].equals(promoted["is_cta"].astype(bool))
+    assert cat_default["is_cancer_antigen"].equals(promoted["is_cancer_antigen"].astype(bool))
+    assert cat_default["is_reproductive_antigen"].equals(
+        promoted["is_reproductive_antigen"].astype(bool)
+    )
+    assert int(promoted["is_cta"].sum()) == 331
+
+    # Exact sex-restriction subset parity across all 464 human RA/CTA proteins
+    expected_sex = human.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
+    got_sex = res_default.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
+    pd.testing.assert_series_equal(got_sex.sort_index(), expected_sex.sort_index())
+
+    # Disabling all 2026-11-23 integrated layers reproduces the frozen 2026-11-20.2 baseline (327 CTA)
+    baseline_20261120 = target_selection._baseline_2026_11_20_frame()
+    res_base = human.evaluate_integrated_catalog(
         include_home_panels=False,
         include_adjudications=False,
         include_737_cohorts=False,
+        include_multiplex_bleed_qc=False,
+        include_nuclear_spillover_qc=False,
+        include_clinical_clearances=False,
+        include_repeat_family_equivalence=False,
+        include_assay_boundary_fixes=False,
     )
-    cat = res.catalog
+    assert res_base.catalog["classification"].equals(baseline_20261120["classification"])
+    assert int(res_base.catalog["is_cta"].sum()) == 327
 
-    assert len(cat) == len(baseline) == 19893
-    assert (cat["taxon_id"] == 9606).all()
-    assert (cat["species"] == "human").all()
-    assert cat["classification"].equals(baseline["classification"])
-    assert cat["category"].equals(baseline["category"])
-    assert cat["is_cta"].equals(baseline["is_cta"].astype(bool))
-    assert cat["is_cancer_antigen"].equals(baseline["is_cancer_antigen"].astype(bool))
-    assert cat["is_reproductive_antigen"].equals(baseline["is_reproductive_antigen"].astype(bool))
-
-    # Exact sex-restriction subset parity across all 455 human RA/CTA proteins
-    expected_sex = human.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
-    got_sex = res.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
-    pd.testing.assert_series_equal(got_sex, expected_sex)
-
-    # Pinned default human catalog remains untouched
+    # Pinned default human catalog matches promoted policy_id (331 CTA)
     assert human.target_selection().attrs["policy_id"] == target_selection.POLICY_ID
-    assert int(human.target_selection()["is_cta"].sum()) == 327
+    assert int(human.target_selection()["is_cta"].sum()) == 331
 
 
 def test_upgraded_737_tumor_observations_and_integrated_policy_preview():

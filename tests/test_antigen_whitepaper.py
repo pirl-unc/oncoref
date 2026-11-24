@@ -98,7 +98,7 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
         and not line.startswith("| ---")
         and not line.startswith("| Studied protein")
     ]
-    assert len(excluded_rows) == 11
+    assert len(excluded_rows) == 9
     assert all(not row.endswith("| — |") for row in excluded_rows)
 
 

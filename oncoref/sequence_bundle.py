@@ -73,6 +73,7 @@ def target_selection_dispositions():
             "clinical_cleared_epitopes",
             "clinical_hla_alleles",
             "clinical_cleared_transcripts",
+            "clinical_unverified_isoforms",
             "clinical_trial_source_ids",
             "closed_homolog_family_id",
             "co_silenced_coding_sibling_ids",
@@ -129,6 +130,7 @@ class SequenceBundle:
     _records: bytes
     _coverage: bytes
     _orfdata: bytes
+    _project_current_roles: bool = False
 
     @property
     def identity(self):
@@ -144,7 +146,45 @@ class SequenceBundle:
 
     def records(self):
         """Yield full originals with qualification, roles and all source occurrences."""
-        yield from _decode_records(self._records)
+        if not self._project_current_roles:
+            yield from _decode_records(self._records)
+            return
+        disp = target_selection_dispositions()
+        gene_roles: dict[str, tuple[str, bool, bool, bool, str]] = {}
+        for r in disp.itertuples(index=False):
+            info = (
+                str(r.shared_sequence),
+                bool(r.direct_target_candidate),
+                bool(r.cancer_antigen_candidate),
+                bool(r.reproductive_antigen_candidate),
+                str(r.entity_id),
+            )
+            for gid in r.gene_ids:
+                gene_roles[str(gid)] = info
+        for record in _decode_records(self._records):
+            for occ in record["occurrences"]:
+                gid = str(occ.get("gene_id", ""))
+                if gid in gene_roles:
+                    s_role, is_cta, is_ca, is_ra, eid = gene_roles[gid]
+                    occ["shared_sequence"] = s_role
+                    occ["direct_target_candidate"] = is_cta
+                    occ["cancer_antigen_candidate"] = is_ca
+                    occ["reproductive_antigen_candidate"] = is_ra
+                    occ["decision_ids"] = [eid]
+            record["shared_sequence"] = max(
+                (o["shared_sequence"] for o in record["occurrences"]), key=ROLE_ORDER.get
+            )
+            allow_rec = record["shared_sequence"] == "allow"
+            record["direct_target_candidate"] = allow_rec and any(
+                bool(o.get("direct_target_candidate")) for o in record["occurrences"]
+            )
+            record["cancer_antigen_candidate"] = allow_rec and any(
+                bool(o.get("cancer_antigen_candidate")) for o in record["occurrences"]
+            )
+            record["reproductive_antigen_candidate"] = allow_rec and any(
+                bool(o.get("reproductive_antigen_candidate")) for o in record["occurrences"]
+            )
+            yield record
 
     def segments(self, *, role=None, min_length=1):
         """Yield coordinate-bearing runs; never concatenate across an interruption."""
@@ -293,12 +333,19 @@ class SequenceBundle:
         ]
         out = pd.DataFrame(rows, columns=columns)
         ref = manifest["reference"]
+        from . import target_selection
+
+        effective_policy_id = (
+            target_selection.POLICY_ID
+            if self._project_current_roles
+            else manifest.get("selection_policy_id", "")
+        )
         out.attrs.update(
             reference=ref["reference_id"],
             reference_id=ref["reference_id"],
             taxon_id=ref.get("taxon_id", 9606),
             bundle_id=self.identity,
-            selection_policy_id=manifest.get("selection_policy_id", ""),
+            selection_policy_id=effective_policy_id,
             role_policy_id=manifest.get("role_policy_id", ROLE_POLICY_ID),
             sequence_source="sequence_bundle",
             roles=list(allowed_roles) if allowed_roles is not None else list(ROLE_ORDER),
@@ -330,11 +377,19 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
     if set(manifest["payloads"]) != PAYLOADS:
         raise ValueError("Missing or unexpected sequence bundle payload")
     if pin:
+        baseline_deps: dict[str, str] = {}
+        delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
+        if delta_res.is_file():
+            delta_doc = json.loads(delta_res.read_text(encoding="utf-8"))
+            if manifest.get("selection_policy_id") == delta_doc.get("baseline_policy_id"):
+                baseline_deps = dict(delta_doc.get("baseline_package_dependencies_sha256", {}))
         for name, expected in manifest["package_dependencies"].items():
             if Path(name).name != name:
                 raise ValueError("Invalid package dependency name")
             live = files("oncoref").joinpath(f"data/{name}")
             if live.is_file() and digest(live.read_bytes()) == expected:
+                continue
+            if baseline_deps.get(name) == expected:
                 continue
             if digest(data_file_renames.as_released(name)) != expected:
                 raise ValueError(f"Mixed package/bundle policy: {name}")
@@ -388,11 +443,15 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
             raise ValueError("Record lost occurrence role precedence")
     if len(ids) != manifest["record_count"] or len(occurrences) != manifest["occurrence_count"]:
         raise ValueError("Sequence bundle count mismatch")
+    from . import target_selection
+
+    project_live = bool(pin and manifest.get("selection_policy_id") != target_selection.POLICY_ID)
     return SequenceBundle(
         manifest_bytes,
         payloads["records.jsonl.gz"],
         payloads["coverage.json"],
         payloads["orfdata-proteome.json.gz"],
+        project_live,
     )
 
 

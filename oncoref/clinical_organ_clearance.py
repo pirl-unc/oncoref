@@ -87,6 +87,7 @@ CLINICAL_CLEARANCE_COLUMNS: tuple[str, ...] = (
     "clinical_cleared_epitopes",
     "clinical_hla_alleles",
     "clinical_cleared_transcripts",
+    "clinical_unverified_isoforms",
     "clinical_trial_source_ids",
 )
 
@@ -300,6 +301,7 @@ def annotate_catalog(frame: pd.DataFrame, *, enabled: bool = True) -> pd.DataFra
                 "epitopes": set(),
                 "hlas": set(),
                 "transcripts": set(),
+                "unverified": set(),
                 "sources": set(),
             },
         )
@@ -307,9 +309,10 @@ def annotate_catalog(frame: pd.DataFrame, *, enabled: bool = True) -> pd.DataFra
         cur["epitopes"].update(e.get("cleared_epitopes", []))
         cur["hlas"].update(e.get("hla_alleles", []))
         cur["transcripts"].update(e.get("cleared_transcripts", []))
+        cur["unverified"].update(e.get("uncleared_coding_transcripts", []))
         cur["sources"].update(e.get("trial_source_ids", []))
 
-    scopes, organs, epitopes, hlas, txs, srcs = [], [], [], [], [], []
+    scopes, organs, epitopes, hlas, txs, unv_txs, srcs = [], [], [], [], [], [], []
     for eid in out["entity_id"].astype(str):
         rec = by_eid.get(eid)
         if rec is None:
@@ -318,6 +321,7 @@ def annotate_catalog(frame: pd.DataFrame, *, enabled: bool = True) -> pd.DataFra
             epitopes.append("[]")
             hlas.append("[]")
             txs.append("[]")
+            unv_txs.append("[]")
             srcs.append("[]")
         else:
             scopes.append(rec["scope"])
@@ -325,6 +329,7 @@ def annotate_catalog(frame: pd.DataFrame, *, enabled: bool = True) -> pd.DataFra
             epitopes.append(json.dumps(sorted(rec["epitopes"])))
             hlas.append(json.dumps(sorted(rec["hlas"])))
             txs.append(json.dumps(sorted(rec["transcripts"])))
+            unv_txs.append(json.dumps(sorted(rec["unverified"] - rec["transcripts"])))
             srcs.append(json.dumps(sorted(rec["sources"])))
 
     out["clinical_clearance_scope"] = scopes
@@ -332,6 +337,7 @@ def annotate_catalog(frame: pd.DataFrame, *, enabled: bool = True) -> pd.DataFra
     out["clinical_cleared_epitopes"] = epitopes
     out["clinical_hla_alleles"] = hlas
     out["clinical_cleared_transcripts"] = txs
+    out["clinical_unverified_isoforms"] = unv_txs
     out["clinical_trial_source_ids"] = srcs
     return out
 

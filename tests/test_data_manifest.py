@@ -171,3 +171,32 @@ def test_pirlygenes_migration_snapshot_has_exact_provenance():
         "data_path": "pirlygenes/data",
         "captured_at": "2026-06-12",
     }
+
+
+def test_pyproject_package_data_covers_all_non_excluded_data_files():
+    import fnmatch
+
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # Python 3.10
+        try:
+            import tomli as tomllib  # type: ignore[no-redef]
+        except ModuleNotFoundError:
+            from setuptools._vendor import tomli as tomllib  # type: ignore[no-redef]
+
+    pyproject = tomllib.loads(
+        (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+    )
+    inc = pyproject["tool"]["setuptools"]["package-data"]["oncoref"]
+    exc = pyproject["tool"]["setuptools"]["exclude-package-data"]["oncoref"]
+    pkg_root = Path(__file__).resolve().parents[1] / "oncoref"
+    unmatched = []
+    for p in sorted(_DATA_DIR.rglob("*")):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(pkg_root).as_posix()
+        if any(fnmatch.fnmatch(rel, pat) for pat in exc):
+            continue
+        if not any(fnmatch.fnmatch(rel, pat) for pat in inc):
+            unmatched.append(rel)
+    assert not unmatched, f"oncoref/data files omitted from wheel package-data: {unmatched}"

@@ -9,35 +9,35 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-20.2",
+    "policy_id": "oncoref.target-selection.2026-11-23.1",
     "proteins": 19893,
     "categories": {
-      "Unsafe": 18249,
-      "Other": 1120,
-      "CTA": 327,
-      "Reproductive Antigen only": 128,
-      "Cancer Antigen only": 69
+      "Unsafe": 18250,
+      "Other": 1062,
+      "CTA": 331,
+      "Reproductive Antigen only": 133,
+      "Cancer Antigen only": 117
     },
     "classifications": {
-      "Unsafe": 18249,
-      "Other:Review": 734,
-      "CTA": 327,
-      "Other:Expression": 249,
-      "Reproductive Antigen only": 128,
-      "Other:Unscreened tissue": 89,
-      "Cancer Antigen only": 69,
-      "Other:Sequence": 48
+      "Unsafe": 18250,
+      "Other:Review": 731,
+      "CTA": 331,
+      "Other:Expression": 255,
+      "Reproductive Antigen only": 133,
+      "Cancer Antigen only": 117,
+      "Other:Sequence": 48,
+      "Other:Unscreened tissue": 28
     },
     "memberships": {
-      "is_cancer_antigen": 396,
-      "is_reproductive_antigen": 455,
-      "is_cta": 327,
-      "is_target_candidate": 524
+      "is_cancer_antigen": 448,
+      "is_reproductive_antigen": 464,
+      "is_cta": 331,
+      "is_target_candidate": 581
     },
     "cta_tiers": {
-      "core": 206,
-      "core_with_extended_exposure": 100,
-      "extended_only": 21
+      "core": 228,
+      "core_with_extended_exposure": 80,
+      "extended_only": 23
     },
     "changes": [
       {
@@ -111,8 +111,8 @@
         "proteins": 18170
       }
     ],
-    "shared_eligible": 842,
-    "assessed_for_cancer_evidence": 921,
+    "shared_eligible": 845,
+    "assessed_for_cancer_evidence": 920,
     "unsafe_changes": {
       "released_unsafe_now_other": 89,
       "newly_unsafe": 79
@@ -121,15 +121,17 @@
       "status": {
         "not_extracted": 18089,
         "below_screen": 1373,
-        "unresolved": 259,
-        "established": 128,
+        "unresolved": 257,
+        "established": 125,
         "unassessed": 36,
-        "dismissed": 8
+        "dismissed": 8,
+        "nuclear_only": 5
       },
       "action": {
         "none": 19503,
-        "review": 262,
-        "unsafe": 128
+        "review": 260,
+        "unsafe": 125,
+        "caution": 5
       },
       "legacy_flag_unassessed": 0
     },
@@ -186,11 +188,11 @@
       "does_not_qualify": 395
     },
     "published_nomination_by_category": {
-      "CTA": 252,
-      "Cancer Antigen only": 27,
-      "Other": 118,
-      "Reproductive Antigen only": 77,
-      "Unsafe": 1759
+      "Unsafe": 1759,
+      "CTA": 253,
+      "Other": 103,
+      "Reproductive Antigen only": 84,
+      "Cancer Antigen only": 34
     }
   },
   "comparison": {
@@ -945,6 +947,8 @@
     ],
     "tumor_matrix_cache_sha256": "8f0bb3074e1b3c3ccfe53a3037242f9cffc28dfb07828c562d28393e8b7eec4b"
   },
-  "data_sha256": "bae22e175b9c7df90c4842f90cca25dc368009f8c70e38046f8bd2d68231ad8b",
-  "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html"
+  "data_sha256": "7c53f8a39bc00f703633bbbac25c633f1b34ffff217ee4d33b8ed0fb1affa2b9",
+  "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
+  "policy_id": "oncoref.target-selection.2026-11-23.1",
+  "data_bytes": 3715324
 }

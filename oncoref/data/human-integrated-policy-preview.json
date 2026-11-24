@@ -1,7 +1,7 @@
 {
   "schema": "oncoref.human-integrated-policy-preview.v1",
   "baseline_policy_id": "oncoref.target-selection.2026-11-20.2",
-  "preview_policy_id": "oncoref.human-integrated-preview.2026-11-22.1",
+  "preview_policy_id": "oncoref.target-selection.2026-11-23.1",
   "total_proteins": 19893,
   "baseline_categories": {
     "Unsafe": 18249,
@@ -38,11 +38,11 @@
     "Other:Unscreened tissue": 28
   },
   "integrated_sex_restriction_codes": {
-    "CTA-M": 146,
-    "CTA-MF": 143,
-    "MRA-only": 68,
-    "SRA-only": 55,
+    "CTA-M": 225,
+    "MRA-only": 104,
+    "CTA-MF": 64,
     "CTA-E": 39,
+    "SRA-only": 19,
     "ERA-only": 7,
     "CTA-F": 3,
     "FRA-only": 3
@@ -63,5 +63,5 @@
     "Reproductive Antigen only -> Other:Expression": 1,
     "Unsafe -> Other:Review": 1
   },
-  "sha256": "4a0a664cb658bb91c736b3f73b82414d1e3eaf80b29538396ab83870da67cb4a"
+  "sha256": "ebb199b79120f3b7110c27bf4729354c10deeb9379d38217d46da2536fe69155"
 }

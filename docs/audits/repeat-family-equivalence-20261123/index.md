@@ -23,3 +23,26 @@ Summing natively across `DUX4` (`ENSG00000260596`) and all `20` primary-assembly
 ## 3. Downstream Coding Closed-Family Contract (`tsarina`)
 
 `closed-homolog-families.csv` (`48` rows across `12` closed families) populates `closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, and `closed_self_paralog_ids` on `target_selection.results()`, `antigen_sets`, and `sequence_bundle.target_selection_dispositions()` so `tsarina`'s `cta_exclusive_peptides()` retains epitopes shared with somatic-safe germline siblings (`CT47C1`, `TSPY9`, `SPANXN2/5`, `CSAG2/3`) while strictly subtracting `Unsafe` and `Other:Review` somatic paralogs.
+
+| Family ID | Representative Members | Co-Silenced Coding Sibling Examples | Excluded Unsafe / Review Paralogs |
+|---|---|---|---|
+| `D4Z4` | `DUX4` (`CTA-E`) | *(20 `unprocessed_pseudogene` `DUX4L*` repeat units in `closed_self_paralog_ids`)* | `DUX4L9` (`< 85%` recall), somatic homeobox genes |
+| `CT47` | `CT47A1..12` (`CTA`), `CT47B1` (`CTA`) | `CT47C1` (`ENSG00000277535`, `RA only`) | `ENSG00000278646` (`Other:Review`, untranslated) |
+| `TSPY` | `TSPY1`, `TSPY2`, `TSPY3`, `TSPY4`, `TSPY8`, `TSPY10` (`CTA`) | `TSPY9` (`ENSG00000238074`, `RA only`) | `TSPYL1..TSPYL6` (`Unsafe` somatic nucleosome assembly proteins) |
+| `SPANX` | `SPANXA1/2`, `SPANXB1`, `SPANXC`, `SPANXD`, `SPANXN1..4` | `SPANXN2` (`ENSG00000268988`), `SPANXN5` (`ENSG00000204363`) | None (`0%` `Unsafe` overlap) |
+| `CSAG` | `CSAG1` (`CTA`) | `CSAG2` (`ENSG00000268902`, `CA only`), `CSAG3` (`ENSG00000268916`, `CA only`) | None |
+| `CTAG` | `NY-ESO-1` (`CTAG1A/B`, `CTA`), `CTAG2` (`CTA`) | `ENSG00000184033`, `ENSG00000268651`, `ENSG00000126890` | `LAGE3` (`Unsafe` ubiquitous `EKC/KEOPS` subunit — never grouped) |
+
+## Programmatic Inspection
+
+```python
+import json
+from oncoref import repeat_family_equivalence, target_selection
+
+adj = repeat_family_equivalence.repeat_family_adjudications()
+fams = repeat_family_equivalence.closed_homolog_families()
+
+dux4 = target_selection.results("DUX4").iloc[0]
+assert dux4["classification"] == "CTA" and dux4["sex_restriction_code"] == "CTA-E"
+assert len(json.loads(dux4["closed_self_paralog_ids"])) == 20
+```

@@ -113,8 +113,8 @@ mouse.screening_datasets()
 role_comparison_table()
 
 # 2. Query biological sets and sex-restricted subsets (MRA/FRA/ERA/SRA, CTA-M/F/E/MF)
-cta_female_safe = antigen_sets.select("CTA-M")          # 201 female-safe human CTAs
-era_targets = antigen_sets.select("CTA-E")              # 20 adult-absent embryo/placenta CTAs
+cta_female_safe = antigen_sets.select("CTA-M")          # $cta_m_n male-restricted female-safe human CTAs
+era_targets = antigen_sets.select("CTA-E")              # $cta_e_n adult-absent embryo/placenta CTAs
 human.sex_restricted_antigens()
 
 # 3. Parameterize canine or murine HostContext and run full catalog evaluation on native panels

@@ -387,7 +387,11 @@ def apply(
         kth_patient_fold = folds.map(patient_fold)
         cancer &= kth_patient_fold.ge(f.min_tumor_fold)
         host_tumor_pass &= (kth_patient_fold * (h0 / host_denom)).ge(f.min_tumor_fold)
-    reproductive = d.is_reproductive_antigen & d.reproductive_fold.ge(f.min_reproductive_fold)
+    reproductive = (
+        d.is_reproductive_antigen
+        if f.min_reproductive_fold <= target_selection.REPRODUCTIVE_FOLD
+        else d.is_reproductive_antigen & d.reproductive_fold.ge(f.min_reproductive_fold)
+    )
     if host is not None:
         # A stricter cancer-evidence requirement may leave a protein in RA.
         # That alone is not host exposure and must not enter the background.

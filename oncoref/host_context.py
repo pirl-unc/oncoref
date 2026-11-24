@@ -198,6 +198,35 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
             evidence = _evidence()
     else:
         evidence = evidence or {}
+    is_female_host = False
+    is_male_host = False
+    if host is not None:
+        species_comps = set(_compartments_for_species(host.species))
+        fem_tract = tuple(
+            c
+            for c in ("uterus", "uterine_horn", "vagina", "cervix", "endometrium", "fallopian tube")
+            if c in species_comps
+        )
+        male_tract = tuple(
+            c
+            for c in ("prostate", "epididymis", "seminal vesicle", "coagulating_gland")
+            if c in species_comps
+        )
+        all_male_absent = bool(male_tract) and all(c in host.absent for c in male_tract)
+        all_fem_absent = bool(fem_tract) and all(c in host.absent for c in fem_tract)
+        is_female_host = ("testis" in host.absent and "ovary" not in host.absent) or (
+            "testis" in host.absent
+            and all_male_absent
+            and any(c not in host.absent for c in fem_tract)
+        )
+        is_male_host = not is_female_host and (
+            ("ovary" in host.absent and "testis" not in host.absent)
+            or (
+                "ovary" in host.absent
+                and all_fem_absent
+                and any(c not in host.absent for c in male_tract)
+            )
+        )
     rows = []
     for row in table.itertuples():
         rejected, unknown, observed = [], [], []
@@ -207,6 +236,11 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 unknown.append(tissue)
                 continue
             value = item.get("max_tpm")
+            if tissue in {"resting_breast", "resting_mammary"} and host is not None:
+                if is_female_host and item.get("female_max_tpm") is not None:
+                    value = item.get("female_max_tpm")
+                elif is_male_host and item.get("male_max_tpm") is not None:
+                    value = item.get("male_max_tpm")
             if (
                 isinstance(value, bool)
                 or not isinstance(value, (int, float))

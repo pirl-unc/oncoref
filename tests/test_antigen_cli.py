@@ -44,11 +44,14 @@ def test_combined_cli_fold_and_patient_constraints(capsys):
 
 
 def test_explain_held_gene_and_member_symbol(capsys):
-    assert cli.main(["antigens", "explain", "CTAG2", "--format", "json"]) == 0
+    assert cli.main(["antigens", "explain", "CAGE1", "--format", "json"]) == 0
     row = json.loads(capsys.readouterr().out)[0]
     assert row["classification"] == "Other:Review"
     assert row["rare_cell_status"] == "unresolved"
     assert row["strict"].startswith("fail:")
+    assert cli.main(["antigens", "explain", "CTAG2", "--format", "json"]) == 0
+    ctag2_row = json.loads(capsys.readouterr().out)[0]
+    assert ctag2_row["classification"] == "CTA"
     assert cli.main(["antigens", "explain", "SSX2", "--format", "json"]) == 0
     assert json.loads(capsys.readouterr().out)[0]["protein_group_label"] == "SSX2/B"
     assert cli.main(["antigens", "explain", "not-a-gene"]) == 1

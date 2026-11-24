@@ -30,8 +30,13 @@ def evidence():
 def test_evidence_and_flags_match_their_provenance(evidence):
     provenance = json.loads((DATA / "rare-cell-evidence.json").read_text())
     assert provenance["sha256"] == sha(DATA / "rare-cell-evidence.csv.gz")
-    assert provenance["policy_id"] == policy.POLICY_ID
-    assert provenance["rules"] == policy.definition()["rare_cell_rna"]
+    assert provenance["policy_id"] == policy.BASELINE_2026_11_20_POLICY_ID
+    live_rules = policy.definition()["rare_cell_rna"]
+    for k, expected_v in provenance["rules"].items():
+        if isinstance(expected_v, dict):
+            assert {sub_k: live_rules[k][sub_k] for sub_k in expected_v} == expected_v
+        else:
+            assert live_rules[k] == expected_v
     assert provenance["mapping_risk"]["sha256"] == sha(DATA / "gene-mapping-risk.csv.gz")
     assert provenance["fractional_count_cells"] == 0
     assert provenance["status_counts"] == evidence.rare_cell_status.value_counts().to_dict()
@@ -80,10 +85,12 @@ def test_literature_review_covers_every_dependent_candidate_and_follows_its_rubr
         "candidate_sweep": 813,
         "rare_cell_dependents": 99,
     }
-    catalog = policy.results()
+    catalog = policy._baseline_2026_11_20_frame()
+    live_catalog = policy.results()
     reviewed = catalog[catalog.literature_effect.ne("not_reviewed")]
     assert set(reviewed.entity_id) == set(entries.entity_id)
     acting = entries[entries.effect.ne("none")]
+    assert live_catalog[live_catalog.entity_id.isin(acting.entity_id)].category.eq("Unsafe").all()
     earlier = acting[acting.review.eq("rare_cell_dependents")]
     assert set(earlier.protein) == {
         "AMBN", "BTNL2", "GDF9", "ITIH6", "MAGEA12", "MYH13", "OTOG", "SCGB1D1", "SLC25A2"

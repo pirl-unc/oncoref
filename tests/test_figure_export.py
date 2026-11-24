@@ -238,7 +238,7 @@ def test_cta_curation_stage_definitions_attrition_and_active_policy_exports():
 
     gates = cta_curation_plots.active_policy_gate_matrix()
     assert len(gates) == 19893
-    assert int(gates["is_cta"].sum()) == 327
+    assert int(gates["is_cta"].sum()) == 331
     assert set(gates["gate_cancer_enrichment_10x"]).issubset({"pass", "fail", "unassessed"})
     assert set(gates["gate_reproductive_enrichment_10x"]).issubset({"pass", "fail", "unassessed"})
 

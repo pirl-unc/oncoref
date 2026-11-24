@@ -117,6 +117,63 @@ it is not a validated universal equivalence relation. TCR recognition also depen
 on peptide position, HLA and receptor. Neither a retained sequence nor a low
 distance establishes presentation, cross-reactivity or therapeutic safety.
 
+## 1-mismatch Hamming near-self risk and tryptic-MS paralog auditing (`#769`)
+
+Exact 9-mer uniqueness against `Unsafe` proteins (`unsafe_sequence_overlap_pct < 95%`) prevents targeting identical self-peptides, but paralogous cancer–germline families (`MAGE-A`, `PAGE`, `GAGE`) frequently differ from `Unsafe` somatic paralogs by only **one amino acid**—the exact mechanism behind fatal clinical TCR cross-reactivity (`MAGEA3` / `MAGEA12` `KMAELVHFL` vs. `KVAELVHFL`). Conversely, bottom-up healthy-tissue mass spectrometry digests proteins with trypsin and cannot distinguish isobaric isoleucine (`I`) from leucine (`L`), causing peptides shared with ubiquitous `Unsafe` paralogs to masquerade as healthy somatic translation of a CTA.
+
+`oncoref.assay_boundary_adjudications` exposes both pure 1-substitution Hamming screening (`insertion_cost=2.0, deletion_cost=2.0`, forbidding indel window shifts at `max_distance=1.0`) and precomputed `tsarina` columns on `target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()`:
+
+- `exact_unique_9mers`: distinct candidate 9-mers absent at `0` mismatches from every `Unsafe` Ensembl 115 protein.
+- `safe_2mm_9mers`: distinct candidate 9-mers at Hamming distance **≥ 2** from every `Unsafe` protein (`0` exact and `0` 1-mismatch `Unsafe` neighbors).
+- `unsafe_near_self_1mm_pct`: percentage of `exact_unique_9mers` that sit within **1 amino-acid substitution** of an `Unsafe` protein (`81.4%` for `MAGEA6` [`86` exact → `16` `≥2-mm` safe against `MAGEA3`/`MAGEA12`]; `64.8%` for `MAGEA2/B` [`165` → `58`]; `42.9%` for `PAGE2` [`21` → `12`]).
+- `unsafe_shared_tryptic_peptides`: canonical `I == L` tryptic peptides (`6–30 aa`) shared exactly with `Unsafe` Ensembl 115 proteins (`CTAGE1` shares `55 / 138` [`39.9%`] tryptic peptides with ubiquitous `Unsafe` `MIA2` [`49` peptides] and `CTAGE4/9`, explaining 5-organ healthy MS attributions without `CTAGE1` somatic transcription).
+
+```python
+from oncoref import antigen_sets, assay_boundary_adjudications
+from oncoref.peptide_subtraction import PeptideIndex
+
+# Pure 1-substitution Hamming index (no insertions or deletions) against Unsafe|Other:
+bg_records = antigen_sets.forbidden_background("Unsafe|Other")
+hamming_1mm_bg = PeptideIndex(
+    bg_records,
+    policy=assay_boundary_adjudications.hamming_1mm_policy(),
+    lengths=(9,),
+)
+
+# Inspect precomputed 1-mm near-self and tryptic-MS paralog metrics on CTAs:
+ctas = antigen_sets.proteins("CTA").set_index("protein_group_label")
+ctas.loc[
+    ["MAGEA6", "MAGEA2/B", "PAGE2", "CTAGE1", "CTAG2", "PLAC1", "DUX4"],
+    [
+        "exact_unique_9mers",
+        "safe_2mm_9mers",
+        "unsafe_near_self_1mm_pct",
+        "unsafe_shared_tryptic_peptides",
+    ],
+]
+
+# Detailed I==L tryptic-peptide MS paralog audit (CTAGE1/MIA2, TGM4/TGM2, SPATA31A3/SPATA31C):
+ms_audit = assay_boundary_adjudications.tryptic_ms_paralog_audit()
+```
+
+## Downstream `tsarina` contracts: closed coding families (`#767`) & isoform clearances (`#766`)
+
+Downstream epitope-selection pipelines (`tsarina`) subtract non-target human translations when building `cta_exclusive_peptides()`. Two structured column sets prevent false peptide subtraction and over-broad clinical safety claims:
+
+1. **Closed coding-family sibling preservation (`#767`):** Coding gene families whose non-identical paralogs split across `CTA` and `RA only` / `CA only` (`CT47A1..12` + `CT47B1` vs. `RA only` `CT47C1`; `TSPY1..10` vs. `RA only` `TSPY9`; `SPANXN1..5`; `CSAG1` vs. `CA only` `CSAG2/3`; `NY-ESO-1` vs. `CTAG2`) carry `closed_homolog_family_id` and JSON-encoded Ensembl gene IDs in `co_silenced_coding_sibling_ids` (plus `closed_self_paralog_ids` for `unprocessed_pseudogene` arrays like `DUX4` / `DUX4L*`). Every gene in `co_silenced_coding_sibling_ids` is verified somatically silent (`CTA`, `CA only`, or `RA only`)—never `Unsafe` (`TSPYL1..6` are excluded) and never `Other:Review`—so downstream selectors can exempt co-silenced germline siblings from self-subtraction.
+2. **Isoform- and epitope-scoped clinical clearance (`#766`):** `CTAG2` (`LAGE-1`) encodes `SLLMWITQC` on `ENST00000369585` (`LAGE-1a`, `180 aa`) but **not** on `ENST00000247306` (`LAGE-1b`, `210 aa`). Catalog and `sequence_bundle.target_selection_dispositions()` rows carry `clinical_clearance_scope`, `clinical_cleared_epitopes`, `clinical_hla_alleles`, `clinical_cleared_organs`, `clinical_cleared_transcripts`, and `clinical_unverified_isoforms` so epitope callers only apply clinical lung/bladder clearance to verified pMHC complexes.
+
+```python
+import json
+from oncoref import sequence_bundle
+
+disp = sequence_bundle.target_selection_dispositions().set_index("protein_group_label")
+ctag2 = disp.loc["CTAG2"]
+assert ctag2["clinical_clearance_scope"] == "epitope"
+assert json.loads(ctag2["clinical_cleared_transcripts"]) == ["ENST00000369585"]
+assert json.loads(ctag2["clinical_unverified_isoforms"]) == ["ENST00000247306"]
+```
+
 ## Germline coding polymorphisms, isoform selectivity and ncORF/TE contracts
 
 Reference proteomes represent a single haplotype. Common germline missense variants (`AF >= 0.001`) can create self-peptides in healthy patients that are absent from the reference FASTA. Augment any background table or `PeptideIndex` with `CodingVariant` records (validated fail-closed against 1-based reference coordinates):
