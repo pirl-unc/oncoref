@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 
 from . import (
+    clinical_organ_clearance,
     normal_adjudications,
     normal_library_qc,
     rare_cell_compartment_qc,
@@ -59,6 +60,7 @@ def human_screening_spec(
     include_737_cohorts: bool = False,
     include_multiplex_bleed_qc: bool = False,
     include_nuclear_spillover_qc: bool = False,
+    include_clinical_clearances: bool = False,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -73,6 +75,7 @@ def human_screening_spec(
         or include_737_cohorts
         or include_multiplex_bleed_qc
         or include_nuclear_spillover_qc
+        or include_clinical_clearances
     )
     effective_policy = policy_id or (
         HUMAN_INTEGRATED_POLICY_PREVIEW_ID if integrated else target_selection.POLICY_ID
@@ -94,6 +97,10 @@ def human_screening_spec(
     if include_nuclear_spillover_qc:
         notes.append(
             "Includes #765 nuclear snRNA-seq compartment and transcriptional spillover QC."
+        )
+    if include_clinical_clearances:
+        notes.append(
+            "Includes #766 epitope/isoform-scoped clinical organ-safety clearances & Xq28 attribution."
         )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
@@ -134,6 +141,7 @@ def build_human_screening_inputs(
     include_737_cohorts: bool = False,
     include_multiplex_bleed_qc: bool = False,
     include_nuclear_spillover_qc: bool = False,
+    include_clinical_clearances: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -144,6 +152,7 @@ def build_human_screening_inputs(
         include_737_cohorts=include_737_cohorts or extra_tumor_observations is not None,
         include_multiplex_bleed_qc=include_multiplex_bleed_qc,
         include_nuclear_spillover_qc=include_nuclear_spillover_qc,
+        include_clinical_clearances=include_clinical_clearances,
     )
     ts = target_selection.results()
     exposures = packaged_species_host_exposure("human")
@@ -160,6 +169,16 @@ def build_human_screening_inputs(
         cleared_obs_map = rare_cell_compartment_qc.cleared_candidate_comparison_observations()[
             "candidates"
         ]
+    if include_clinical_clearances:
+        coc_doc = clinical_organ_clearance.ledger()
+        ctag2_attr = coc_doc.get("locus_attributions", {}).get("CTAG2")
+        if ctag2_attr and any(
+            e["entity_id"] == ctag2_attr["entity_id"]
+            and e["status"] == "cleared"
+            and "lung" in e.get("cleared_organs", [])
+            for e in coc_doc["entries"]
+        ):
+            cleared_rare_eids.add(str(ctag2_attr["entity_id"]))
 
     readthrough = ts["readthrough_locus"].fillna(False).astype(bool)
     overlap_ge95 = (
@@ -697,6 +716,7 @@ def evaluate_human_catalog(
     include_737_cohorts: bool = False,
     include_multiplex_bleed_qc: bool = False,
     include_nuclear_spillover_qc: bool = False,
+    include_clinical_clearances: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -707,14 +727,16 @@ def evaluate_human_catalog(
         include_737_cohorts=include_737_cohorts,
         include_multiplex_bleed_qc=include_multiplex_bleed_qc,
         include_nuclear_spillover_qc=include_nuclear_spillover_qc,
+        include_clinical_clearances=include_clinical_clearances,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
     spec = inputs.pop("spec")
     result = evaluate_species_catalog(spec, **inputs)
 
-    # Attach #711, #712, #735, #764, and #765 adjudication provenance columns for inspection
-    cat = result.catalog
+    # Attach #711, #712, #735, #764, #765, and #766 adjudication provenance columns for inspection
+    cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
+    object.__setattr__(result, "catalog", cat)
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()
         .set_index("entity_id")["resolution_requirement"]
@@ -752,6 +774,18 @@ def evaluate_human_catalog(
             ):
                 nuc_cleared_rare.add(eid_str)
 
+    clin_disp_map: dict[str, str] = {}
+    if include_clinical_clearances:
+        coc_doc = clinical_organ_clearance.ledger()
+        ctag2_attr = coc_doc.get("locus_attributions", {}).get("CTAG2")
+        if ctag2_attr and any(
+            e["entity_id"] == ctag2_attr["entity_id"]
+            and e["status"] == "cleared"
+            and "lung" in e.get("cleared_organs", [])
+            for e in coc_doc["entries"]
+        ):
+            clin_disp_map[str(ctag2_attr["entity_id"])] = "clinical_organ_and_xq28_cleared"
+
     cat["rare_cell_711_requirement"] = [rc_map.get(eid, "") for eid in cat["entity_id"]]
     cat["normal_library_712_disposition"] = [nl_map.get(eid, "") for eid in cat["entity_id"]]
     cat["home_panel_735_disposition"] = [uh_map.get(eid, "") for eid in cat["entity_id"]]
@@ -762,6 +796,9 @@ def evaluate_human_catalog(
         nuc_disp_map.get(eid, "") for eid in cat["entity_id"]
     ]
     cat["nuclear_rna_caution"] = [nuc_caution_map.get(eid, "") for eid in cat["entity_id"]]
+    cat["clinical_clearance_766_disposition"] = [
+        clin_disp_map.get(eid, "") for eid in cat["entity_id"]
+    ]
     if nuc_cleared_rare:
         mask_nuc = cat["entity_id"].isin(nuc_cleared_rare)
         cat.loc[mask_nuc, "rare_cell_status"] = "nuclear_only"
@@ -787,6 +824,13 @@ _PREVIEW_STRING_COLS = (
     "multiplex_bleed_764_disposition",
     "nuclear_spillover_765_disposition",
     "nuclear_rna_caution",
+    "clinical_clearance_766_disposition",
+    "clinical_clearance_scope",
+    "clinical_cleared_organs",
+    "clinical_cleared_epitopes",
+    "clinical_hla_alleles",
+    "clinical_cleared_transcripts",
+    "clinical_trial_source_ids",
     "transition_driver",
     "transition",
 )
@@ -796,7 +840,7 @@ def compute_next_policy_transitions(
     *,
     integrated_result: SpeciesScreeningResult | None = None,
 ) -> tuple[pd.DataFrame, dict]:
-    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, #764, and #765 into human screening."""
+    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, #764, #765, and #766 into human screening."""
     baseline = target_selection.results()
     integrated_res = (
         integrated_result
@@ -807,6 +851,7 @@ def compute_next_policy_transitions(
             include_737_cohorts=True,
             include_multiplex_bleed_qc=True,
             include_nuclear_spillover_qc=True,
+            include_clinical_clearances=True,
         )
     )
     integrated = integrated_res.catalog
@@ -839,6 +884,13 @@ def compute_next_policy_transitions(
                 "multiplex_bleed_764_disposition",
                 "nuclear_spillover_765_disposition",
                 "nuclear_rna_caution",
+                "clinical_clearance_766_disposition",
+                "clinical_clearance_scope",
+                "clinical_cleared_organs",
+                "clinical_cleared_epitopes",
+                "clinical_hla_alleles",
+                "clinical_cleared_transcripts",
+                "clinical_trial_source_ids",
             ]
         ],
         on="entity_id",
@@ -868,6 +920,8 @@ def compute_next_policy_transitions(
             reasons.append(f"#764:{r.multiplex_bleed_764_disposition}")
         if r.nuclear_spillover_765_disposition == "nuclear_spillover_cleared":
             reasons.append(f"#765:{r.nuclear_spillover_765_disposition}")
+        if r.clinical_clearance_766_disposition:
+            reasons.append(f"#766:{r.clinical_clearance_766_disposition}")
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (
