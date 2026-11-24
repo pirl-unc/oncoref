@@ -449,7 +449,15 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "human-integrated-policy-preview": (
         "cta-evidence",
-        "protein-level category and classification transitions when folding #735, #711/#712, and #737 into evaluate_species_catalog (#755)",
+        "protein-level category and classification transitions when folding #735, #711/#712, #737, and #764-#768 into evaluate_species_catalog (#755)",
+    ),
+    "normal-multiplex-bleed-tissue-summary": (
+        "expression-qc",
+        "per-site GTEx v11 stoichiometric multi-sentinel cross-sample bleed incidence across source organs (#764)",
+    ),
+    "normal-multiplex-bleed-gene-deltas": (
+        "cta-evidence",
+        "per-protein GTEx donor-P95 normal-reference adjustments under stoichiometric multiplex-bleed QC (#764)",
     ),
     "nose-skin-reference": (
         "cta-evidence",

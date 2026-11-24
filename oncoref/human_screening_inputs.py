@@ -22,7 +22,12 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from . import normal_adjudications, target_selection, unmeasured_home_panels
+from . import (
+    normal_adjudications,
+    normal_library_qc,
+    target_selection,
+    unmeasured_home_panels,
+)
 from .load_dataset import get_data
 from .reference_identity import ReferenceIdentity
 from .species import resolve_species
@@ -51,6 +56,7 @@ def human_screening_spec(
     policy_id: str | None = None,
     include_home_panels: bool = False,
     include_737_cohorts: bool = False,
+    include_multiplex_bleed_qc: bool = False,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -60,7 +66,7 @@ def human_screening_spec(
         if meta is not None
         else pol.primary_reference
     )
-    integrated = include_home_panels or include_737_cohorts
+    integrated = include_home_panels or include_737_cohorts or include_multiplex_bleed_qc
     effective_policy = policy_id or (
         HUMAN_INTEGRATED_POLICY_PREVIEW_ID if integrated else target_selection.POLICY_ID
     )
@@ -74,6 +80,10 @@ def human_screening_spec(
         )
     if include_737_cohorts:
         notes.append("Includes #737 QC-passing linear-TPM tumor cohorts (THYMCA, BCC, cSCC).")
+    if include_multiplex_bleed_qc:
+        notes.append(
+            "Includes #764 stoichiometric multiplex index-hopping / cross-sample bleed QC."
+        )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
         reference=ref,
@@ -111,6 +121,7 @@ def build_human_screening_inputs(
     include_home_panels: bool = False,
     include_adjudications: bool = True,
     include_737_cohorts: bool = False,
+    include_multiplex_bleed_qc: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -119,6 +130,7 @@ def build_human_screening_inputs(
         policy_id=policy_id,
         include_home_panels=include_home_panels,
         include_737_cohorts=include_737_cohorts or extra_tumor_observations is not None,
+        include_multiplex_bleed_qc=include_multiplex_bleed_qc,
     )
     ts = target_selection.results()
     exposures = packaged_species_host_exposure("human")
@@ -259,6 +271,12 @@ def build_human_screening_inputs(
         }
     )
 
+    bleed_clean_by_eid: dict[str, dict] = {}
+    if include_multiplex_bleed_qc:
+        bleed_df = normal_library_qc.multiplex_bleed_gene_deltas(only_applied=True)
+        for br in bleed_df.to_dict("records"):
+            bleed_clean_by_eid[str(br["entity_id"])] = br
+
     comp_id = spec.comparison_id
     unit = spec.comparison_unit
     normal_rows: list[dict] = []
@@ -269,15 +287,25 @@ def build_human_screening_inputs(
         if r.category == "Unsafe" or not bool(r.required_coverage_complete):
             continue
         eid = r.entity_id
-        if pd.notna(r.normal_reference_tpm):
+        bleed_rec = bleed_clean_by_eid.get(eid)
+        norm_val = (
+            float(bleed_rec["clean_normal_reference_tpm"])
+            if bleed_rec is not None
+            else (float(r.normal_reference_tpm) if pd.notna(r.normal_reference_tpm) else np.nan)
+        )
+        if pd.notna(norm_val):
             normal_rows.append(
                 {
                     "entity_id": eid,
-                    "source_id": "human_normal_reference_20261120",
+                    "source_id": (
+                        "human_normal_reference_bleed_qc_764"
+                        if bleed_rec is not None
+                        else "human_normal_reference_20261120"
+                    ),
                     "context_id": REQUIRED_PERIPHERAL_CONTEXT,
                     "tissue": REQUIRED_PERIPHERAL_CONTEXT,
                     "scope": "normal",
-                    "value": float(r.normal_reference_tpm),
+                    "value": norm_val,
                     "comparison_id": comp_id,
                     "unit": unit,
                     "qc_pass": True,
@@ -346,6 +374,28 @@ def build_human_screening_inputs(
                     "identity_resolved": True,
                 }
             )
+        if (
+            bleed_rec is not None
+            and pd.notna(bleed_rec.get("max_non_tgct_tumor_tpm"))
+            and float(bleed_rec["max_non_tgct_tumor_tpm"]) > 0
+            and str(bleed_rec.get("top_non_tgct_sample") or "")
+        ):
+            nt_sample = str(bleed_rec["top_non_tgct_sample"])
+            if nt_sample != (str(r.tumor_top_sample) if pd.notna(r.tumor_top_sample) else ""):
+                tumor_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "oncoref_somatic_tumor_witness_764",
+                        "sample_id": nt_sample,
+                        "participant_id": f"somatic:{nt_sample}",
+                        "cancer_code": str(bleed_rec.get("top_non_tgct_cancer_code") or ""),
+                        "value": float(bleed_rec["max_non_tgct_tumor_tpm"]),
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
 
         qual_comps = {
             c.strip()
@@ -493,6 +543,7 @@ def evaluate_human_catalog(
     include_home_panels: bool = False,
     include_adjudications: bool = True,
     include_737_cohorts: bool = False,
+    include_multiplex_bleed_qc: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -501,13 +552,14 @@ def evaluate_human_catalog(
         include_home_panels=include_home_panels,
         include_adjudications=include_adjudications,
         include_737_cohorts=include_737_cohorts,
+        include_multiplex_bleed_qc=include_multiplex_bleed_qc,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
     spec = inputs.pop("spec")
     result = evaluate_species_catalog(spec, **inputs)
 
-    # Attach #711, #712, and #735 adjudication provenance columns for inspection
+    # Attach #711, #712, #735, and #764 adjudication provenance columns for inspection
     cat = result.catalog
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()
@@ -525,9 +577,17 @@ def evaluate_human_catalog(
         .set_index("entity_id")["home_panel_disposition"]
         .to_dict()
     )
+    bleed_set = (
+        set(normal_library_qc.multiplex_bleed_gene_deltas(only_applied=True)["entity_id"])
+        if include_multiplex_bleed_qc
+        else set()
+    )
     cat["rare_cell_711_requirement"] = [rc_map.get(eid, "") for eid in cat["entity_id"]]
     cat["normal_library_712_disposition"] = [nl_map.get(eid, "") for eid in cat["entity_id"]]
     cat["home_panel_735_disposition"] = [uh_map.get(eid, "") for eid in cat["entity_id"]]
+    cat["multiplex_bleed_764_disposition"] = [
+        "multiplex_bleed_cleaned" if eid in bleed_set else "" for eid in cat["entity_id"]
+    ]
     return result
 
 
@@ -546,6 +606,7 @@ _PREVIEW_STRING_COLS = (
     "home_panel_735_disposition",
     "rare_cell_711_requirement",
     "normal_library_712_disposition",
+    "multiplex_bleed_764_disposition",
     "transition_driver",
     "transition",
 )
@@ -555,7 +616,7 @@ def compute_next_policy_transitions(
     *,
     integrated_result: SpeciesScreeningResult | None = None,
 ) -> tuple[pd.DataFrame, dict]:
-    """Recompute exact protein-level transitions from folding #735, #711/#712, and #737 into human screening."""
+    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, and #764 into human screening."""
     baseline = target_selection.results()
     integrated_res = (
         integrated_result
@@ -564,6 +625,7 @@ def compute_next_policy_transitions(
             include_home_panels=True,
             include_adjudications=True,
             include_737_cohorts=True,
+            include_multiplex_bleed_qc=True,
         )
     )
     integrated = integrated_res.catalog
@@ -593,6 +655,7 @@ def compute_next_policy_transitions(
                 "home_panel_735_disposition",
                 "rare_cell_711_requirement",
                 "normal_library_712_disposition",
+                "multiplex_bleed_764_disposition",
             ]
         ],
         on="entity_id",
@@ -618,6 +681,8 @@ def compute_next_policy_transitions(
             and r.home_panel_735_disposition != "already_excluded_upstream"
         ):
             reasons.append(f"#735:{r.home_panel_735_disposition}")
+        if r.multiplex_bleed_764_disposition:
+            reasons.append(f"#764:{r.multiplex_bleed_764_disposition}")
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (
@@ -634,7 +699,7 @@ def compute_next_policy_transitions(
     )
     for col in _PREVIEW_STRING_COLS:
         if col in changed.columns:
-            changed[col] = changed[col].fillna("").astype(str)
+            changed[col] = changed[col].astype("object").fillna("").astype(str)
     changed = changed.sort_values(
         ["transition", "protein_group_label"], ascending=[True, True]
     ).reset_index(drop=True)
@@ -663,7 +728,7 @@ def next_policy_preview(*, recompute: bool = False) -> pd.DataFrame:
     df = get_data("human-integrated-policy-preview").copy()
     for col in _PREVIEW_STRING_COLS:
         if col in df.columns:
-            df[col] = df[col].fillna("").astype(str)
+            df[col] = df[col].astype("object").fillna("").astype(str)
     return df
 
 

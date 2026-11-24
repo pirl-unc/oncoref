@@ -1,0 +1,214 @@
+gtex_site,organ,contaminating_source,n_samples,n_donors,flagged_samples,flagged_pct,max_bleed_fraction,median_bleed_fraction
+Brain_Nucleus_accumbens_basal_ganglia,basal ganglia,liver,285,285,252,88.421,0.000381,0.00012
+Brain_Putamen_basal_ganglia,basal ganglia,liver,254,254,210,82.677,0.000478,9.9e-05
+Brain_Cerebellum,cerebellum,liver,266,266,217,81.579,0.003868,0.000104
+Brain_Caudate_basal_ganglia,basal ganglia,liver,300,300,242,80.667,0.000391,0.000108
+Brain_Cortex,cerebral cortex,liver,270,270,216,80.0,0.001089,7.7e-05
+Brain_Anterior_cingulate_cortex_BA24,cerebral cortex,liver,233,233,181,77.682,0.000604,7.1e-05
+Brain_Frontal_Cortex_BA9,cerebral cortex,liver,269,269,204,75.836,0.00062,7.6e-05
+Brain_Cerebellar_Hemisphere,cerebellum,liver,277,277,201,72.563,0.002611,8.7e-05
+Brain_Amygdala,amygdala,liver,181,181,128,70.718,0.000384,6.7e-05
+Brain_Hypothalamus,hypothalamus,liver,257,257,179,69.65,0.003682,8.7e-05
+Brain_Hippocampus,hippocampal formation,liver,255,255,171,67.059,0.00345,7.3e-05
+Esophagus_Mucosa,esophagus,liver,614,614,387,63.029,0.002519,0.000108
+Esophagus_Muscularis,esophagus,liver,561,561,346,61.676,0.004146,0.00011
+Esophagus_Gastroesophageal_Junction,esophagus,liver,403,403,248,61.538,0.003933,0.000105
+Brain_Substantia_nigra,midbrain,liver,183,183,107,58.47,0.00022,6.9e-05
+Skin_Sun_Exposed_Lower_leg,skin,liver,754,754,426,56.499,0.004707,6.7e-05
+Colon_Sigmoid,colon,liver,419,419,236,56.325,0.002416,9.5e-05
+Colon_Transverse,colon,liver,479,479,260,54.28,0.002397,0.000103
+Skin_Not_Sun_Exposed_Suprapubic,skin,liver,651,651,338,51.92,0.004648,7.9e-05
+Muscle_Skeletal,skeletal muscle,liver,818,818,402,49.144,0.001559,7.9e-05
+Artery_Tibial,blood vessel,liver,691,691,311,45.007,0.004083,9.3e-05
+Minor_Salivary_Gland,salivary gland,liver,181,181,78,43.094,0.000695,0.000114
+Brain_Spinal_cord_cervical_c-1,spinal cord,liver,204,204,86,42.157,0.000415,8.2e-05
+Adrenal_Gland,adrenal gland,liver,295,295,122,41.356,0.003102,0.00015
+Bladder,urinary bladder,liver,77,77,27,35.065,0.000263,7.7e-05
+Pituitary,pituitary gland,liver,313,313,109,34.824,0.001482,0.000339
+Heart_Atrial_Appendage,heart muscle,liver,461,461,153,33.189,0.003309,0.000271
+Artery_Aorta,blood vessel,liver,472,472,149,31.568,0.002696,0.00015
+Adipose_Subcutaneous,adipose tissue,liver,714,714,217,30.392,0.004028,0.000154
+Thyroid,thyroid gland,liver,684,684,206,30.117,0.002599,0.000241
+Heart_Left_Ventricle,heart muscle,liver,452,452,131,28.982,0.002103,0.000143
+Artery_Coronary,blood vessel,liver,268,268,61,22.761,0.00274,0.000236
+Stomach,stomach,liver,407,407,81,19.902,0.002723,0.000187
+Lung,lung,liver,604,604,120,19.868,0.004739,0.00048
+Spleen,spleen,liver,277,277,55,19.856,0.003915,0.000394
+Nerve_Tibial,peripheral nerve,liver,670,670,117,17.463,0.003387,0.000621
+Adipose_Visceral_Omentum,adipose tissue,liver,587,587,91,15.503,0.00364,0.000369
+Small_Intestine_Terminal_Ileum,small intestine,liver,207,207,28,13.527,0.001307,0.000211
+Kidney_Cortex,kidney,liver,104,104,11,10.577,0.000361,0.000159
+Kidney_Medulla,kidney,liver,11,11,1,9.091,0.000347,0.000347
+Whole_Blood,blood,liver,803,803,33,4.11,0.004938,0.00322
+Pancreas,pancreas,liver,362,362,10,2.762,0.004456,0.000549
+Spleen,spleen,pancreas,277,277,245,88.448,0.00489,0.000167
+Pituitary,pituitary gland,pancreas,313,313,263,84.026,0.002268,0.000103
+Adrenal_Gland,adrenal gland,pancreas,295,295,241,81.695,0.001004,0.000111
+Esophagus_Mucosa,esophagus,pancreas,614,614,484,78.827,0.003315,0.000116
+Liver,liver,pancreas,262,262,206,78.626,0.004495,0.000112
+Brain_Cerebellum,cerebellum,pancreas,266,266,202,75.94,0.004896,0.000121
+Kidney_Cortex,kidney,pancreas,104,104,75,72.115,0.003628,7.5e-05
+Colon_Transverse,colon,pancreas,479,479,333,69.52,0.003529,9e-05
+Minor_Salivary_Gland,salivary gland,pancreas,181,181,123,67.956,0.001856,9.9e-05
+Esophagus_Muscularis,esophagus,pancreas,561,561,361,64.349,0.004855,0.00011
+Thyroid,thyroid gland,pancreas,684,684,440,64.327,0.002004,9.8e-05
+Adipose_Visceral_Omentum,adipose tissue,pancreas,587,587,372,63.373,0.004702,9.2e-05
+Artery_Aorta,blood vessel,pancreas,472,472,296,62.712,0.004985,0.000145
+Artery_Coronary,blood vessel,pancreas,268,268,168,62.687,0.004311,0.000115
+Lung,lung,pancreas,604,604,373,61.755,0.003299,0.000109
+Esophagus_Gastroesophageal_Junction,esophagus,pancreas,403,403,242,60.05,0.002858,6.9e-05
+Brain_Cerebellar_Hemisphere,cerebellum,pancreas,277,277,165,59.567,0.004972,7.5e-05
+Nerve_Tibial,peripheral nerve,pancreas,670,670,374,55.821,0.003874,0.000101
+Colon_Sigmoid,colon,pancreas,419,419,233,55.609,0.001665,9.4e-05
+Skin_Not_Sun_Exposed_Suprapubic,skin,pancreas,651,651,360,55.3,0.004198,8.3e-05
+Adipose_Subcutaneous,adipose tissue,pancreas,714,714,380,53.221,0.004441,9.3e-05
+Heart_Left_Ventricle,heart muscle,pancreas,452,452,240,53.097,0.003441,4.7e-05
+Artery_Tibial,blood vessel,pancreas,691,691,366,52.967,0.004106,0.000102
+Skin_Sun_Exposed_Lower_leg,skin,pancreas,754,754,394,52.255,0.003031,8.8e-05
+Whole_Blood,blood,pancreas,803,803,414,51.557,0.004174,0.000104
+Heart_Atrial_Appendage,heart muscle,pancreas,461,461,236,51.193,0.003173,6.5e-05
+Bladder,urinary bladder,pancreas,77,77,37,48.052,0.000285,4e-05
+Muscle_Skeletal,skeletal muscle,pancreas,818,818,383,46.822,0.00228,6.7e-05
+Brain_Cortex,cerebral cortex,pancreas,270,270,126,46.667,0.001366,5.9e-05
+Brain_Anterior_cingulate_cortex_BA24,cerebral cortex,pancreas,233,233,106,45.494,0.001738,3.8e-05
+Kidney_Medulla,kidney,pancreas,11,11,5,45.455,0.000156,4.4e-05
+Brain_Frontal_Cortex_BA9,cerebral cortex,pancreas,269,269,120,44.61,0.002552,4.7e-05
+Brain_Caudate_basal_ganglia,basal ganglia,pancreas,300,300,123,41.0,0.000411,2.9e-05
+Brain_Amygdala,amygdala,pancreas,181,181,74,40.884,0.004849,3.2e-05
+Brain_Putamen_basal_ganglia,basal ganglia,pancreas,254,254,101,39.764,0.000411,3.3e-05
+Brain_Spinal_cord_cervical_c-1,spinal cord,pancreas,204,204,80,39.216,0.001518,4.1e-05
+Brain_Hippocampus,hippocampal formation,pancreas,255,255,99,38.824,0.000436,4.2e-05
+Brain_Hypothalamus,hypothalamus,pancreas,257,257,99,38.521,0.000742,3.4e-05
+Brain_Substantia_nigra,midbrain,pancreas,183,183,70,38.251,0.000506,4.8e-05
+Stomach,stomach,pancreas,407,407,144,35.381,0.004092,0.000224
+Brain_Nucleus_accumbens_basal_ganglia,basal ganglia,pancreas,285,285,100,35.088,0.00053,3.5e-05
+Small_Intestine_Terminal_Ileum,small intestine,pancreas,207,207,40,19.324,0.00243,0.000261
+Pancreas,pancreas,pancreas,362,362,0,0.0,0.0,0.0
+Colon_Transverse,colon,prostate,479,479,206,43.006,0.00485,0.001633
+Whole_Blood,blood,prostate,803,803,300,37.36,0.004967,0.002555
+Skin_Sun_Exposed_Lower_leg,skin,prostate,754,754,213,28.249,0.00498,0.00344
+Small_Intestine_Terminal_Ileum,small intestine,prostate,207,207,57,27.536,0.003548,0.001652
+Skin_Not_Sun_Exposed_Suprapubic,skin,prostate,651,651,174,26.728,0.004992,0.003
+Lung,lung,prostate,604,604,152,25.166,0.004854,0.002173
+Thyroid,thyroid gland,prostate,684,684,162,23.684,0.004952,0.002099
+Brain_Hypothalamus,hypothalamus,prostate,257,257,52,20.233,0.004821,0.003078
+Kidney_Medulla,kidney,prostate,11,11,2,18.182,0.002223,0.001721
+Adipose_Subcutaneous,adipose tissue,prostate,714,714,114,15.966,0.004207,0.001079
+Bladder,urinary bladder,prostate,77,77,11,14.286,0.004413,0.001578
+Artery_Coronary,blood vessel,prostate,268,268,37,13.806,0.003848,0.001111
+Stomach,stomach,prostate,407,407,54,13.268,0.004645,0.002057
+Kidney_Cortex,kidney,prostate,104,104,13,12.5,0.002295,0.001444
+Colon_Sigmoid,colon,prostate,419,419,49,11.695,0.004953,0.002062
+Nerve_Tibial,peripheral nerve,prostate,670,670,73,10.896,0.004791,0.001887
+Pancreas,pancreas,prostate,362,362,38,10.497,0.002344,0.000427
+Artery_Tibial,blood vessel,prostate,691,691,56,8.104,0.003555,0.000328
+Artery_Aorta,blood vessel,prostate,472,472,38,8.051,0.002002,0.000399
+Adipose_Visceral_Omentum,adipose tissue,prostate,587,587,47,8.007,0.004235,0.001106
+Liver,liver,prostate,262,262,19,7.252,0.001879,0.000214
+Brain_Nucleus_accumbens_basal_ganglia,basal ganglia,prostate,285,285,18,6.316,0.00453,0.002801
+Esophagus_Muscularis,esophagus,prostate,561,561,35,6.239,0.001787,0.000396
+Esophagus_Mucosa,esophagus,prostate,614,614,35,5.7,0.004819,0.003241
+Esophagus_Gastroesophageal_Junction,esophagus,prostate,403,403,22,5.459,0.002995,0.001068
+Brain_Hippocampus,hippocampal formation,prostate,255,255,13,5.098,0.004743,0.002777
+Brain_Substantia_nigra,midbrain,prostate,183,183,9,4.918,0.00363,0.003182
+Minor_Salivary_Gland,salivary gland,prostate,181,181,8,4.42,0.004847,0.002783
+Brain_Spinal_cord_cervical_c-1,spinal cord,prostate,204,204,9,4.412,0.004792,0.002557
+Brain_Cerebellum,cerebellum,prostate,266,266,9,3.383,0.003079,0.001096
+Brain_Caudate_basal_ganglia,basal ganglia,prostate,300,300,10,3.333,0.004677,0.003017
+Muscle_Skeletal,skeletal muscle,prostate,818,818,24,2.934,0.002104,0.000266
+Brain_Putamen_basal_ganglia,basal ganglia,prostate,254,254,3,1.181,0.00444,0.001558
+Brain_Frontal_Cortex_BA9,cerebral cortex,prostate,269,269,3,1.115,0.002837,0.002249
+Brain_Cortex,cerebral cortex,prostate,270,270,2,0.741,0.001708,0.001335
+Adrenal_Gland,adrenal gland,prostate,295,295,2,0.678,0.004088,0.003778
+Heart_Left_Ventricle,heart muscle,prostate,452,452,3,0.664,0.004014,0.001749
+Pituitary,pituitary gland,prostate,313,313,2,0.639,0.003967,0.002388
+Brain_Amygdala,amygdala,prostate,181,181,1,0.552,0.002795,0.002795
+Brain_Anterior_cingulate_cortex_BA24,cerebral cortex,prostate,233,233,1,0.429,0.000559,0.000559
+Brain_Cerebellar_Hemisphere,cerebellum,prostate,277,277,1,0.361,0.000292,0.000292
+Spleen,spleen,prostate,277,277,1,0.361,0.00123,0.00123
+Heart_Atrial_Appendage,heart muscle,prostate,461,461,1,0.217,0.003971,0.003971
+Brain_Cerebellum,cerebellum,stomach,266,266,159,59.774,0.004405,0.000201
+Pituitary,pituitary gland,stomach,313,313,179,57.188,0.00316,0.000227
+Spleen,spleen,stomach,277,277,149,53.791,0.003607,0.000226
+Brain_Cerebellar_Hemisphere,cerebellum,stomach,277,277,132,47.653,0.002044,0.000145
+Esophagus_Mucosa,esophagus,stomach,614,614,246,40.065,0.004522,0.000226
+Pancreas,pancreas,stomach,362,362,129,35.635,0.001445,0.000252
+Liver,liver,stomach,262,262,92,35.115,0.002709,0.00023
+Small_Intestine_Terminal_Ileum,small intestine,stomach,207,207,72,34.783,0.003111,0.000221
+Adrenal_Gland,adrenal gland,stomach,295,295,100,33.898,0.002581,0.000233
+Artery_Aorta,blood vessel,stomach,472,472,159,33.686,0.001647,0.000251
+Esophagus_Muscularis,esophagus,stomach,561,561,171,30.481,0.003168,0.000239
+Minor_Salivary_Gland,salivary gland,stomach,181,181,55,30.387,0.004093,0.000241
+Colon_Transverse,colon,stomach,479,479,140,29.228,0.00254,0.000214
+Artery_Coronary,blood vessel,stomach,268,268,74,27.612,0.002484,0.000214
+Esophagus_Gastroesophageal_Junction,esophagus,stomach,403,403,110,27.295,0.003509,0.000187
+Whole_Blood,blood,stomach,803,803,208,25.903,0.001243,0.000226
+Kidney_Cortex,kidney,stomach,104,104,26,25.0,0.000457,0.000164
+Colon_Sigmoid,colon,stomach,419,419,102,24.344,0.001406,0.00022
+Nerve_Tibial,peripheral nerve,stomach,670,670,159,23.731,0.004813,0.000198
+Lung,lung,stomach,604,604,139,23.013,0.003139,0.000308
+Artery_Tibial,blood vessel,stomach,691,691,157,22.721,0.003606,0.00019
+Skin_Not_Sun_Exposed_Suprapubic,skin,stomach,651,651,140,21.505,0.003066,0.000218
+Brain_Cortex,cerebral cortex,stomach,270,270,56,20.741,0.001936,0.000157
+Heart_Left_Ventricle,heart muscle,stomach,452,452,91,20.133,0.000712,0.000128
+Skin_Sun_Exposed_Lower_leg,skin,stomach,754,754,151,20.027,0.002656,0.000218
+Muscle_Skeletal,skeletal muscle,stomach,818,818,162,19.804,0.00067,0.00015
+Adipose_Visceral_Omentum,adipose tissue,stomach,587,587,110,18.739,0.004532,0.000242
+Kidney_Medulla,kidney,stomach,11,11,2,18.182,0.000359,0.000219
+Heart_Atrial_Appendage,heart muscle,stomach,461,461,83,18.004,0.000728,0.000131
+Brain_Anterior_cingulate_cortex_BA24,cerebral cortex,stomach,233,233,41,17.597,0.000337,6.6e-05
+Adipose_Subcutaneous,adipose tissue,stomach,714,714,124,17.367,0.004996,0.000257
+Brain_Frontal_Cortex_BA9,cerebral cortex,stomach,269,269,46,17.1,0.001588,7.3e-05
+Bladder,urinary bladder,stomach,77,77,11,14.286,0.001921,0.000271
+Brain_Substantia_nigra,midbrain,stomach,183,183,24,13.115,0.001149,0.000111
+Brain_Spinal_cord_cervical_c-1,spinal cord,stomach,204,204,26,12.745,0.000621,0.000185
+Thyroid,thyroid gland,stomach,684,684,82,11.988,0.004544,0.000347
+Brain_Hypothalamus,hypothalamus,stomach,257,257,30,11.673,0.001195,0.000153
+Brain_Nucleus_accumbens_basal_ganglia,basal ganglia,stomach,285,285,32,11.228,0.000533,9.7e-05
+Brain_Putamen_basal_ganglia,basal ganglia,stomach,254,254,26,10.236,0.000563,0.000141
+Brain_Caudate_basal_ganglia,basal ganglia,stomach,300,300,30,10.0,0.001571,7.4e-05
+Brain_Amygdala,amygdala,stomach,181,181,17,9.392,0.000689,6.2e-05
+Brain_Hippocampus,hippocampal formation,stomach,255,255,17,6.667,0.000295,0.000106
+Adrenal_Gland,adrenal gland,testis,295,295,154,52.203,0.004598,0.000105
+Liver,liver,testis,262,262,136,51.908,0.001964,0.000105
+Esophagus_Muscularis,esophagus,testis,561,561,260,46.346,0.001855,0.00012
+Colon_Transverse,colon,testis,479,479,210,43.841,0.003928,0.000117
+Stomach,stomach,testis,407,407,174,42.752,0.002807,0.000126
+Colon_Sigmoid,colon,testis,419,419,176,42.005,0.004169,0.000133
+Esophagus_Gastroesophageal_Junction,esophagus,testis,403,403,150,37.221,0.003309,0.000103
+Artery_Aorta,blood vessel,testis,472,472,173,36.653,0.004155,0.000158
+Small_Intestine_Terminal_Ileum,small intestine,testis,207,207,75,36.232,0.004316,0.000168
+Pancreas,pancreas,testis,362,362,131,36.188,0.00173,8.1e-05
+Esophagus_Mucosa,esophagus,testis,614,614,206,33.55,0.002162,0.000155
+Thyroid,thyroid gland,testis,684,684,222,32.456,0.003782,0.000257
+Nerve_Tibial,peripheral nerve,testis,670,670,209,31.194,0.001772,0.000161
+Skin_Not_Sun_Exposed_Suprapubic,skin,testis,651,651,203,31.183,0.004583,0.000196
+Bladder,urinary bladder,testis,77,77,24,31.169,0.000553,0.000141
+Artery_Tibial,blood vessel,testis,691,691,202,29.233,0.003835,0.000147
+Artery_Coronary,blood vessel,testis,268,268,77,28.731,0.003981,0.000144
+Adipose_Subcutaneous,adipose tissue,testis,714,714,202,28.291,0.003011,0.000145
+Pituitary,pituitary gland,testis,313,313,82,26.198,0.002654,0.000196
+Muscle_Skeletal,skeletal muscle,testis,818,818,213,26.039,0.002992,8.4e-05
+Adipose_Visceral_Omentum,adipose tissue,testis,587,587,149,25.383,0.004768,0.000166
+Heart_Atrial_Appendage,heart muscle,testis,461,461,116,25.163,0.000493,9.1e-05
+Heart_Left_Ventricle,heart muscle,testis,452,452,108,23.894,0.001516,7e-05
+Kidney_Cortex,kidney,testis,104,104,24,23.077,0.00187,0.000156
+Skin_Sun_Exposed_Lower_leg,skin,testis,754,754,171,22.679,0.002461,0.000204
+Brain_Cortex,cerebral cortex,testis,270,270,54,20.0,0.000887,0.000111
+Spleen,spleen,testis,277,277,54,19.495,0.000982,0.000201
+Minor_Salivary_Gland,salivary gland,testis,181,181,30,16.575,0.002563,0.000205
+Brain_Putamen_basal_ganglia,basal ganglia,testis,254,254,37,14.567,0.000601,8.2e-05
+Brain_Cerebellum,cerebellum,testis,266,266,37,13.91,0.002231,0.000253
+Brain_Frontal_Cortex_BA9,cerebral cortex,testis,269,269,37,13.755,0.000243,0.000101
+Lung,lung,testis,604,604,78,12.914,0.002596,0.000232
+Brain_Nucleus_accumbens_basal_ganglia,basal ganglia,testis,285,285,36,12.632,0.002949,0.000332
+Brain_Anterior_cingulate_cortex_BA24,cerebral cortex,testis,233,233,29,12.446,0.000558,7.1e-05
+Brain_Amygdala,amygdala,testis,181,181,20,11.05,0.000211,7.7e-05
+Brain_Caudate_basal_ganglia,basal ganglia,testis,300,300,31,10.333,0.000596,9.3e-05
+Brain_Spinal_cord_cervical_c-1,spinal cord,testis,204,204,21,10.294,0.000212,0.000101
+Brain_Cerebellar_Hemisphere,cerebellum,testis,277,277,26,9.386,0.000716,0.00015
+Kidney_Medulla,kidney,testis,11,11,1,9.091,0.000239,0.000239
+Brain_Hippocampus,hippocampal formation,testis,255,255,23,9.02,0.000202,6.9e-05
+Brain_Hypothalamus,hypothalamus,testis,257,257,23,8.949,0.001073,0.000432
+Brain_Substantia_nigra,midbrain,testis,183,183,13,7.104,0.000501,8.8e-05
+Whole_Blood,blood,testis,803,803,49,6.102,0.000987,0.000227

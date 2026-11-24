@@ -49,6 +49,7 @@ from . import (
     normal_adjudications,
     normal_cell_data,
     normal_expression_categories,
+    normal_library_qc,
     normal_tissues,
     peptide_subtraction,
     pfizer_canine_protein,
