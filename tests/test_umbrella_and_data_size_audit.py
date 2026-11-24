@@ -127,7 +127,7 @@ def test_package_data_size_audit_accounts_for_every_shipped_file():
     assert bool(by_path.loc["cta-selection-audit-human.json.gz", "shipped_in_wheel"]) is False
 
     wheel_only_bytes = int(audit.loc[audit["shipped_in_wheel"], "size_bytes"].sum())
-    assert wheel_only_bytes < 33_000_000
+    assert wheel_only_bytes < 33_500_000
 
     summary = oncoref.package_data_size_summary()
     assert int(summary["n_files"].sum()) == len(disk_files)

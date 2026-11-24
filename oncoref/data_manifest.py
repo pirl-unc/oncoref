@@ -505,7 +505,35 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
     ),
     "baseline-2026-11-20-deltas": (
         "cta-evidence",
-        "compact row-level delta reconstructing the 2026-11-20.2 human baseline catalog from the promoted 2026-11-23.1 catalog (#775)",
+        "compact row-level delta reconstructing the 2026-11-20.2 human baseline catalog from the promoted catalog (#775)",
+    ),
+    "gtex-deconvolution-anchors": (
+        "cta-evidence",
+        "auto-selected lineage-disjoint high-specificity GTEx v11 tissue anchor genes (#778)",
+    ),
+    "gtex-deconvolution-tissue-summary": (
+        "cta-evidence",
+        "per-shard GTEx v11 swap quarantine, SM-plate pipetting splash, hopping, and boundary summary (#778)",
+    ),
+    "gtex-quarantined-swaps": (
+        "cta-evidence",
+        "GTEx v11 libraries quarantined globally as foreign-organ swaps (#778)",
+    ),
+    "gtex-sample-splash-events": (
+        "cta-evidence",
+        "per-sample GTEx v11 foreign splash, swap, same-donor carryover, and boundary events (#778)",
+    ),
+    "gtex-deconvolution-receipt": (
+        "cta-evidence",
+        "SHA-256 verification receipt and global counts for #778 holistic GTEx deconvolution",
+    ),
+    "gtex-donor-sex": (
+        "cta-evidence",
+        "splash-robust chromosomal sex (XX vs XY) across all 946 GTEx v11 donors (#778)",
+    ),
+    "normal-tissue-source-grid": (
+        "expression",
+        "comprehensive canonical human tissue x normal-source coverage matrix across GTEx, HPA, Census, immune, developmental, and #735 panels (#778)",
     ),
     "nose-skin-reference": (
         "cta-evidence",
@@ -900,6 +928,9 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "assay-boundary-comparison-observations",
         "tryptic-ms-paralog-audit",
         "baseline-2026-11-20-deltas",
+        "gtex-deconvolution-tissue-summary",
+        "gtex-sample-splash-events",
+        "gtex-deconvolution-receipt",
         "mouse-target-selection",
         "mouse-host-exposure",
         "mouse-proteome-sequences",

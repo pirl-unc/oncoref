@@ -5,7 +5,7 @@ Dataset modules are shared with their top-level imports, for example
 ``human.human_protein_atlas`` is ``oncoref.human_protein_atlas``.
 """
 
-from . import human_protein_atlas, human_screening_inputs, normal_cell_data
+from . import gtex, human_protein_atlas, human_screening_inputs, normal_cell_data
 from .human_screening_inputs import (
     build_human_screening_inputs as screening_inputs,
 )
@@ -17,6 +17,7 @@ from .human_screening_inputs import (
     next_policy_summary,
     upgraded_737_tumor_observations,
 )
+from .normal_tissues import normal_tissue_source_grid as tissue_source_grid
 from .species import for_species as _for_species
 
 _data = _for_species(9606)
@@ -32,7 +33,7 @@ groups = (references, expression, cancer, antigens, normalization, governance, l
 inventory = _data.inventory
 
 # Named dataset modules exposed here; inventory() describes the complete catalog.
-datasets = (human_protein_atlas, normal_cell_data)
+datasets = (gtex, human_protein_atlas, normal_cell_data)
 
 cta_selection = antigens.cta_selection
 cta_selection_coverage = antigens.cta_selection_coverage
@@ -71,6 +72,7 @@ __all__ = [
     "expression",
     "governance",
     "groups",
+    "gtex",
     "host_compartments",
     "human_protein_atlas",
     "human_screening_inputs",
@@ -90,5 +92,6 @@ __all__ = [
     "species",
     "target_selection",
     "target_selection_coverage",
+    "tissue_source_grid",
     "upgraded_737_tumor_observations",
 ]

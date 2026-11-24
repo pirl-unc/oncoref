@@ -656,6 +656,31 @@ def normal_tissue_mapping_inventory(*, species, source_id=None, source_version=N
     return tuple(result)
 
 
+def normal_tissue_source_grid(
+    *,
+    category: str | None = None,
+    missing_from_gtex: bool = False,
+):
+    """Return the canonical human tissue x source coverage grid across all 12 normal panels (#778).
+
+    Columns enumerate direct GTEx v11 shards, GTEx v11 median columns (including the 14
+    histological subcompartment columns), GTEx v8 via HPA (highlighting ``retina``),
+    Uppsala HPA surgical biopsies, HPA tissue/brain RNA, HPA consensus, HPA single-cell,
+    CELLxGENE Census donor scRNA/snRNA, sorted immune cohorts (DICE/Monaco/HPA),
+    specialized #735 home & embryonic panels, and HPA IHC protein coverage.
+    """
+    from .load_dataset import get_data
+
+    df = get_data("normal-tissue-source-grid").copy()
+    str_cols = [c for c in df.columns if c != "independent_modality_families"]
+    df[str_cols] = df[str_cols].fillna("")
+    if category is not None:
+        df = df[df["tissue_category"].eq(str(category).strip().lower())].reset_index(drop=True)
+    if missing_from_gtex:
+        df = df[df["gtex_v11_shards"].fillna("").eq("")].reset_index(drop=True)
+    return df
+
+
 def classify_normal_tissue_pattern(detections) -> dict:
     """Find scopes containing EVERY supplied detection, including mixed branches.
 
