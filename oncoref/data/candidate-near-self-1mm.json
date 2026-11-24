@@ -1,0 +1,9 @@
+{
+  "schema": "oncoref.candidate-near-self-1mm.v1",
+  "policy_id": "oncoref.assay-boundary-and-near-self.2026-11-23.1",
+  "rows": 1649,
+  "sha256": "1cda03b30a95703f78fc77ad600f1701b0ce6f618ad39e5062c4d89ecdd6693b",
+  "baseline_unsafe_9mers_indexed": 11740908,
+  "integrated_unsafe_9mers_indexed": 11739452,
+  "candidate_unique_9mers_evaluated": 303147
+}

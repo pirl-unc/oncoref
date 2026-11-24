@@ -51,6 +51,7 @@ def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
         include_nuclear_spillover_qc=True,
         include_clinical_clearances=True,
         include_repeat_family_equivalence=True,
+        include_assay_boundary_fixes=True,
     )
     recomputed, recomputed_summary = human_screening_inputs.compute_next_policy_transitions(
         integrated_result=integrated_res

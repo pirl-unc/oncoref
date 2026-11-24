@@ -77,6 +77,10 @@ def target_selection_dispositions():
             "closed_homolog_family_id",
             "co_silenced_coding_sibling_ids",
             "closed_self_paralog_ids",
+            "exact_unique_9mers",
+            "safe_2mm_9mers",
+            "unsafe_near_self_1mm_pct",
+            "unsafe_shared_tryptic_peptides",
         ]
     ].copy()
     out["gene_ids"] = out.member_gene_ids.map(lambda raw: tuple(json.loads(raw)))

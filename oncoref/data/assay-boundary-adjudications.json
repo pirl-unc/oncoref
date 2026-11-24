@@ -1,0 +1,16 @@
+{
+  "schema": "oncoref.assay-boundary-adjudications.v1",
+  "policy_id": "oncoref.assay-boundary-and-near-self.2026-11-23.1",
+  "rows": 26,
+  "sha256": "3202261d3779039ea9c801b015998ef0dca68579f6f321d453c0d46dd42d4c37",
+  "disposition_counts": {
+    "reclassified_ra_only_admixed_tgct_witness": 11,
+    "retained_unsafe_adult_cornea_multi_umi": 4,
+    "germline_tf_protamine_diluted_qualified": 3,
+    "retained_ca_only_germline_guard_failed": 2,
+    "retained_unsafe_ihc_or_rna_discordant_guard_failed": 2,
+    "retained_cta_independent_somatic_witness": 2,
+    "adult_cornea_sparse_umi_cleared": 1,
+    "ihc_rna_zero_cleared": 1
+  }
+}
