@@ -1,0 +1,12 @@
+{
+  "schema": "oncoref.released-inputs",
+  "release": "1.50.0",
+  "policy_id": "oncoref.target-selection.2026-11-20.2",
+  "sha256": {
+    "oncoref/data/target-selection.csv.gz": "bae22e175b9c7df90c4842f90cca25dc368009f8c70e38046f8bd2d68231ad8b",
+    "oncoref/data/target-selection.json": "825035d15d693ff92f28dc06389854d8f733937161d770780c4bb9b8a080a7fc",
+    "oncoref/data/host-exposure.csv.gz": "8295edf45418426cae975ef5187ec8ead1281b80524b676a75304bb779f7305c",
+    "oncoref/data/host-exposure.json": "ba9104848dafd453ad0ce7ba7f746667bb61f420944c5b234da77b7672e1f261",
+    "oncoref/data/species/human/target-selection.json": "cf0793f209bd03e36a441fc36fcb16cd507af8e277829d4fef759da4f77bd557"
+  }
+}

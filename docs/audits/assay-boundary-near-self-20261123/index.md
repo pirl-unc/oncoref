@@ -19,3 +19,31 @@ Policy ID: `oncoref.assay-boundary-and-near-self.2026-11-23.1`
 - **`MAGEA2/B`:** `306` total -> `165` exact-unique -> **`58` safe `>= 2-mm`** (`64.85%` 1-mm near-self).
 - **`PAGE2`:** `103` total -> `21` exact-unique -> **`12` safe `>= 2-mm`** (`42.86%` 1-mm near-self).
 - **`CTAGE1` (`ENSG00000212710`) vs. `MIA2` (`ENSG00000150527`):** `55 / 138` (`39.86%`) canonical tryptic peptides (`I == L`) are shared directly with ubiquitous `Unsafe` `MIA2 (49); CTAGE4 (8); CTAGE9 (8); ACR (1); ANKRD11 (1); CEP135 (1)`, explaining healthy multi-organ bottom-up MS attributions without requiring `CTAGE1`-specific translation.
+
+### Summary of Controversial Target Dispositions & Near-Self Footprints
+
+| Protein | Promoted Category | Sex Subset | Exact Unique 9-mers | Safe `>= 2-mm` 9-mers | `1-mm` Near-Self % | Shared `Unsafe` Tryptic Peptides | Key Rule / Note |
+|---|---|---|---:|---:|---:|---:|---|
+| `PLAC1` | `CTA` | `CTA-M` | `204` | `204` | `0.00%` | `0` | `#765` nuclear 5'-UTR intron & `PABIR2` readthrough cleared |
+| `DKKL1` | `CTA` | `CTA-MF` | `234` | `234` | `0.00%` | `0` | `#768` sparse adult cornea (`8 / 21,343` multi-UMI cells) cleared |
+| `MAGEB6` | `CTA` | `CTA-M` | `367` | `358` | `2.45%` | `0` | `#768` single-antibody IHC with `0.012 TPM` somatic RNA cleared |
+| `CTAG2` | `CTA` | `CTA-MF` | `172` | `172` | `0.00%` | `0` | `#766` `LAGE-1a` (`ENST00000369585`) `SLLMWITQC` clinical clearance |
+| `DUX4` | `CTA` | `CTA-E` | `413` | `412` | `0.24%` | `0` | `#765 + #767` symmetric `D4Z4` repeat-array silence |
+| `FOXR2` | `CTA` | `CTA-M` | `303` | `303` | `0.00%` | `0` | `#768` protamine-diluted spermatogonial TF (`135` Testis donors) |
+| `SPATA31A3` | `CTA` | `CTA-M` | `1,303` | `1,254` | `3.76%` | `14` | `#768` germline TF; shares `14` tryptic peptides with `SPATA31C1/C2` |
+| `PRM1` | `CTA` | `CTA-M` | `43` | `43` | `0.00%` | `0` | `#764`/`#776` Thyroid & opposite-sex bleed cleaned (`5.71 TPM`); female `BRCA` `58.97 TPM` |
+| `PRM2` | `Reproductive Antigen only` | `MRA-only` | `94` | `94` | `0.00%` | `0` | `#768`/`#776` `TCGA-TGCT` Note `R` parenchymal admixture demoted; female-safe `MRA-only` |
+| `SPATA19` | `CTA` | `CTA-M` | `159` | `159` | `0.00%` | `0` | `#768 + #737 + #776` somatic `cSCC` witness (`13.28 TPM`) + female breast `0.41 TPM` |
+| `MAGEA6` | `CTA` | `CTA-MF` | `86` | `16` | `81.40%` | `9` | `#769` high 1-mm cross-reactivity risk vs. `Unsafe` `MAGEA3`/`MAGEA12` |
+| `CTAGE1` | `CTA` | `CTA-M` | `539` | `520` | `3.53%` | `55` | `#769` `55/138` tryptic peptides shared with `Unsafe` `MIA2` |
+
+## Programmatic Inspection
+
+```python
+from oncoref import assay_boundary_adjudications, peptide_subtraction, target_selection
+
+adj = assay_boundary_adjudications.assay_boundary_adjudications()
+near_self = assay_boundary_adjudications.candidate_near_self_1mm()
+ms_audit = assay_boundary_adjudications.tryptic_ms_paralog_audit()
+policy_1mm = assay_boundary_adjudications.hamming_1mm_policy()
+```

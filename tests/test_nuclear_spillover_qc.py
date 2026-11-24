@@ -113,7 +113,10 @@ def test_packaged_nuclear_spillover_tables_and_catalog_transitions():
     assert bool(by_label.loc["PLAC1", "nuclear_spillover_cleared"]) is True
     assert float(by_label.loc["PLAC1", "finding_bulk_tpm"]) < 0.01
 
-    res = human_screening_inputs.evaluate_human_catalog(include_nuclear_spillover_qc=True)
+    res = human_screening_inputs.evaluate_human_catalog(
+        include_nuclear_spillover_qc=True,
+        include_repeat_family_equivalence=False,
+    )
     cat = res.catalog.set_index("protein_group_label")
     assert cat.loc["MAGEA12", "classification"] == "Unsafe"
     assert cat.loc["PLAC1", "classification"] == "CTA"

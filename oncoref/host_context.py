@@ -207,6 +207,19 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 unknown.append(tissue)
                 continue
             value = item.get("max_tpm")
+            if tissue in {"resting_breast", "resting_mammary"} and host is not None:
+                if (
+                    "testis" in host.absent
+                    and "ovary" not in host.absent
+                    and item.get("female_max_tpm") is not None
+                ):
+                    value = item.get("female_max_tpm")
+                elif (
+                    "ovary" in host.absent
+                    and "testis" not in host.absent
+                    and item.get("male_max_tpm") is not None
+                ):
+                    value = item.get("male_max_tpm")
             if (
                 isinstance(value, bool)
                 or not isinstance(value, (int, float))

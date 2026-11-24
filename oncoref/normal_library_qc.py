@@ -54,6 +54,17 @@ STOICHIOMETRIC_SENTINEL_PANELS: dict[str, tuple[str, tuple[str, ...]]] = {
     ),
 }
 
+# Extended sentinel panels for opposite-sex reproductive & mammary host-exposure shards (#776):
+# adds a pure post-meiotic spermatid chromatin sub-panel unaffected by squamous-epithelial
+# LELP1/CRISP2 co-expression in vagina and ectocervix.
+HOST_EXPOSURE_SENTINEL_PANELS: dict[str, tuple[str, tuple[str, ...]]] = {
+    **STOICHIOMETRIC_SENTINEL_PANELS,
+    "testis_chromatin": (
+        "Testis",
+        ("PRM1", "PRM2", "TNP1", "TNP2"),
+    ),
+}
+
 
 def _sha256_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
@@ -282,6 +293,7 @@ def multiplex_bleed_receipt() -> dict:
 
 __all__ = [
     "CARRYOVER_PANELS",
+    "HOST_EXPOSURE_SENTINEL_PANELS",
     "MULTIPLEX_BLEED_POLICY_ID",
     "STOICHIOMETRIC_SENTINEL_PANELS",
     "carryover_reference",

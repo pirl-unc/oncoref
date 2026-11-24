@@ -20,7 +20,8 @@ import pandas as pd
 
 from .load_dataset import _register_derived_cache
 
-POLICY_ID = "oncoref.target-selection.2026-11-20.2"
+POLICY_ID = "oncoref.target-selection.2026-11-23.1"
+BASELINE_2026_11_20_POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
 ENRICHMENT_FOLD = 10.0
@@ -41,7 +42,14 @@ RARE_CELL_REPLICATE_DONORS = 3
 RARE_CELL_SINGLE_STUDY_PCT = 5.0
 #: Protected populations need twice the frequency, as their bulk ceiling is twice Vital's.
 RARE_CELL_PROTECTED_FACTOR = 2.0
-RARE_CELL_STATUSES = ("established", "unresolved", "dismissed", "below_screen", "unassessed")
+RARE_CELL_STATUSES = (
+    "established",
+    "unresolved",
+    "nuclear_only",
+    "dismissed",
+    "below_screen",
+    "unassessed",
+)
 EVIDENCE_STATUSES = ("qualifies", "does_not_qualify", "unassessed")
 CATEGORIES = ("CTA", "Cancer Antigen only", "Reproductive Antigen only", "Other", "Unsafe")
 SHARED_CHECKS = (
@@ -247,6 +255,10 @@ def definition() -> dict:
             "consequences": {
                 "established": "Unsafe",
                 "unresolved": "Other:Review; strong evidence needs attribution or confirmation.",
+                "nuclear_only": (
+                    "Cleared nuclear/intronic or promoter-spillover snRNA-seq signal (#765); "
+                    "recorded with nuclear_rna_caution."
+                ),
                 "dismissed": "No finding; the reason and counts stay in the record.",
                 "below_screen": "No finding. Not a demonstration of absence or safety.",
                 "unassessed": "Recorded as unmeasured; never treated as negative.",
@@ -277,9 +289,10 @@ def definition() -> dict:
             "excluded_tumors": {
                 "codes": list(GERM_CELL_TUMORS),
                 "reason": (
-                    "No histology is excluded wholesale. Reproductive programs are advisory "
-                    "sample notes, not evidence of normal-cell contamination, and never exclude "
-                    "TGCT or other libraries. Independent QC exclusions still apply."
+                    "No histology is excluded wholesale. Library-level parenchymal testis "
+                    "admixture notes (Note R, testis_tissue_content >= 0.001 in TCGA-TGCT) "
+                    "require at least one non-admixed >=10x tumor witness before qualifying "
+                    "CA (#713, #768); independent QC exclusions apply everywhere."
                 ),
             },
             "comparability": (
@@ -358,6 +371,18 @@ def definition() -> dict:
             "alone is not a target nomination. Publication cannot override an exclusion or hold."
         ),
         "only_meaning": "Membership in one qualified set, not proven absence from the other context.",
+        "integrated_adjudications": {
+            "rare_cell_attribution_711": "oncoref/data/rare-cell-attribution-reviews.json",
+            "normal_library_qc_712": "oncoref/data/normal-library-peak-adjudications.csv",
+            "unmeasured_home_panels_735": "oncoref/data/unmeasured-home-protein-adjudications.csv",
+            "upgraded_tumor_cohorts_737": "oncoref/data/human-737-tumor-observations.csv.gz",
+            "multiplex_bleed_qc_764": "oncoref/data/normal-multiplex-bleed-gene-deltas.csv",
+            "nuclear_spillover_qc_765": "oncoref/data/nuclear-spillover-adjudications.csv",
+            "clinical_organ_clearance_766": "oncoref/data/clinical-organ-clearances.json",
+            "closed_repeat_family_equivalence_767": "oncoref/data/repeat-family-adjudications.csv",
+            "assay_boundary_adjudications_768": "oncoref/data/assay-boundary-adjudications.csv",
+            "near_self_1mm_and_ms_audit_769": "oncoref/data/candidate-near-self-1mm.csv",
+        },
     }
 
 
@@ -383,7 +408,7 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
         base = pd.read_csv(handle, compression="gzip", low_memory=False)
     base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
     base = repeat_family_equivalence.annotate_catalog(base, enabled=True)
-    base = assay_boundary_adjudications.annotate_catalog(base, enabled=True, integrated=False)
+    base = assay_boundary_adjudications.annotate_catalog(base, enabled=True, integrated=True)
     gene_index: dict[str, list[int]] = {}
     for idx, (lbl, raw_ids) in enumerate(zip(base["protein_group_label"], base["member_gene_ids"])):
         gene_index.setdefault(str(lbl), []).append(idx)
@@ -393,7 +418,60 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
     return base, gene_index
 
 
+@lru_cache(maxsize=1)
+def _baseline_2026_11_20_frame() -> pd.DataFrame:
+    """Reconstruct the exact 129-column ``oncoref.target-selection.2026-11-20.2`` baseline."""
+    with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
+        df = pd.read_csv(handle, compression="gzip", low_memory=False)
+    delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
+    if not delta_res.is_file():
+        return df
+    doc = json.loads(delta_res.read_text(encoding="utf-8"))
+    drop_cols = [c for c in doc.get("added_columns", []) if c in df.columns]
+    if drop_cols:
+        df = df.drop(columns=drop_cols)
+    df["policy"] = doc.get("baseline_policy_id", BASELINE_2026_11_20_POLICY_ID)
+    eid_to_idx = {str(eid): i for i, eid in enumerate(df["entity_id"])}
+    for eid, changes in doc.get("rows", {}).items():
+        idx = eid_to_idx.get(eid)
+        if idx is None:
+            continue
+        for col, val in changes.items():
+            if col not in df.columns:
+                continue
+            if (
+                val is not None
+                and isinstance(val, str)
+                and df[col].dtype.kind in ("f", "i", "u", "b")
+            ):
+                df[col] = df[col].astype(object)
+            df.at[idx, col] = np.nan if val is None else val
+    return df
+
+
+@lru_cache(maxsize=1)
+def _baseline_2026_11_20_host_exposures() -> dict[str, dict]:
+    """Return exact ``2026-11-20.2`` ``host-exposure`` dict across all 921 baseline entities."""
+    from .species_target_selection import packaged_species_host_exposure
+
+    full = packaged_species_host_exposure("human")
+    delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
+    if not delta_res.is_file():
+        return full
+    doc = json.loads(delta_res.read_text(encoding="utf-8"))
+    allowed = set(doc.get("baseline_host_exposure_entity_ids", []))
+    out = {k: deepcopy(v) for k, v in full.items() if k in allowed} if allowed else deepcopy(full)
+    for eid, comp_deltas in doc.get("baseline_host_exposure_deltas", {}).items():
+        if eid not in out:
+            continue
+        for comp, orig_comp_dict in comp_deltas.items():
+            out[eid][comp] = deepcopy(orig_comp_dict)
+    return out
+
+
 _register_derived_cache(_cached_results_bundle.cache_clear)
+_register_derived_cache(_baseline_2026_11_20_frame.cache_clear)
+_register_derived_cache(_baseline_2026_11_20_host_exposures.cache_clear)
 
 
 def results(

@@ -112,11 +112,40 @@ def test_comparative_anatomy_profiles_and_host_contexts():
 
 
 def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(capsys):
-    published = pd.read_csv(
+    # Frozen 2026-11-10 rebuild CSV matches exact reconstructed 2026-11-20.2 baseline
+    frozen_published = pd.read_csv(
         ROOT / "docs/audits/target-selection-20261110/rebuild/summary/sex-restricted-antigens.csv"
     )
+    frozen_computed = classify_sex_restriction(
+        target_selection._baseline_2026_11_20_frame(),
+        species="human",
+        host_evidence=target_selection._baseline_2026_11_20_host_exposures(),
+    )
+    pd.testing.assert_frame_equal(frozen_computed, frozen_published)
+
+    # Live promoted catalog (#775 + #776) matches docs/antigen-whitepaper/sex-restricted-antigens.csv
+    published = pd.read_csv(ROOT / "docs/antigen-whitepaper/sex-restricted-antigens.csv")
     computed = human.sex_restricted_antigens()
     pd.testing.assert_frame_equal(computed, published)
+
+    by_lbl = computed.set_index("protein_group_label")
+    for rescued_cta_m in (
+        "PRM1",
+        "SPATA19",
+        "CT83",
+        "TGM4",
+        "SEMG2",
+        "ODF1",
+        "ADAM2",
+        "PLAC1",
+        "MAGEB6",
+        "FOXR2",
+        "SPATA31A3",
+    ):
+        assert by_lbl.loc[rescued_cta_m, "sex_restriction_code"] == "CTA-M"
+    assert by_lbl.loc["DUX4", "sex_restriction_code"] == "CTA-E"
+    for shared_cta_mf in ("PRAME", "LALBA", "SCGB1D4", "CTAG2", "DKKL1"):
+        assert by_lbl.loc[shared_cta_mf, "sex_restriction_code"] == "CTA-MF"
 
     cta_m = antigen_sets.proteins("CTA-M")
     cta_e = antigen_sets.proteins("CTA-E")

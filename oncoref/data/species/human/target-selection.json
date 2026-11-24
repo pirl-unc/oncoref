@@ -4,8 +4,8 @@
   "species": "human",
   "scientific_name": "Homo sapiens",
   "selection_status": "evaluated",
-  "policy_id": "oncoref.target-selection.2026-11-20.2",
-  "comparison_id": "oncoref.native-gene-tpm-normal-reference.2026-11-20.1",
+  "policy_id": "oncoref.target-selection.2026-11-23.1",
+  "comparison_id": "oncoref.human-grch38-integrated-tpm.2026-11-23.1",
   "comparison_unit": "TPM",
   "reference": {
     "schema": "openvax.reference",
@@ -29,49 +29,49 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "bae22e175b9c7df90c4842f90cca25dc368009f8c70e38046f8bd2d68231ad8b",
-  "data_bytes": 3691861,
+  "data_sha256": "ea10aa9acdefe9a5a740745319677fe12b658ddf3d191145825c30e790eaf170",
+  "data_bytes": 3673435,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
-  "host_exposure_sha256": "8295edf45418426cae975ef5187ec8ead1281b80524b676a75304bb779f7305c",
-  "host_exposure_bytes": 153718,
+  "host_exposure_sha256": "34d476dec15dd5205fb8649412132e0370c3925f17f4421e7a558abd39fca908",
+  "host_exposure_bytes": 164442,
   "sequence_provider": "sequence_bundle",
   "symbol_index": "canonical-gene-space",
   "summary": {
     "proteins": 19893,
     "loci": 20099,
     "categories": {
-      "CTA": 327,
-      "Cancer Antigen only": 69,
-      "Reproductive Antigen only": 128,
-      "Other": 1120,
-      "Unsafe": 18249
+      "Unsafe": 18250,
+      "Other": 1062,
+      "CTA": 331,
+      "Reproductive Antigen only": 133,
+      "Cancer Antigen only": 117
     },
     "classifications": {
-      "CTA": 327,
-      "Cancer Antigen only": 69,
-      "Other:Expression": 249,
-      "Other:Review": 734,
+      "Unsafe": 18250,
+      "Other:Review": 731,
+      "CTA": 331,
+      "Other:Expression": 255,
+      "Reproductive Antigen only": 133,
+      "Cancer Antigen only": 117,
       "Other:Sequence": 48,
-      "Other:Unscreened tissue": 89,
-      "Reproductive Antigen only": 128,
-      "Unsafe": 18249
+      "Other:Unscreened tissue": 28
     },
     "sex_restriction_codes": {
-      "CTA-E": 38,
-      "CTA-F": 2,
-      "CTA-M": 136,
-      "CTA-MF": 151,
+      "CTA-E": 39,
+      "CTA-F": 3,
+      "CTA-M": 225,
+      "CTA-MF": 64,
       "ERA-only": 7,
-      "FRA-only": 4,
-      "MRA-only": 71,
-      "SRA-only": 46
+      "FRA-only": 3,
+      "MRA-only": 104,
+      "SRA-only": 19
     },
     "sex_restriction_classes": {
-      "Embryo / placenta-only": 45,
+      "Embryo / placenta-only": 46,
       "Female-restricted": 6,
-      "Male-restricted": 207,
-      "Shared male & female": 197
+      "Male-restricted": 329,
+      "Shared male & female": 83
     }
   }
 }

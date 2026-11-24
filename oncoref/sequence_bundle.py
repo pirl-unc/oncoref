@@ -330,11 +330,19 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
     if set(manifest["payloads"]) != PAYLOADS:
         raise ValueError("Missing or unexpected sequence bundle payload")
     if pin:
+        baseline_deps: dict[str, str] = {}
+        delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
+        if delta_res.is_file():
+            delta_doc = json.loads(delta_res.read_text(encoding="utf-8"))
+            if manifest.get("selection_policy_id") == delta_doc.get("baseline_policy_id"):
+                baseline_deps = dict(delta_doc.get("baseline_package_dependencies_sha256", {}))
         for name, expected in manifest["package_dependencies"].items():
             if Path(name).name != name:
                 raise ValueError("Invalid package dependency name")
             live = files("oncoref").joinpath(f"data/{name}")
             if live.is_file() and digest(live.read_bytes()) == expected:
+                continue
+            if baseline_deps.get(name) == expected:
                 continue
             if digest(data_file_renames.as_released(name)) != expected:
                 raise ValueError(f"Mixed package/bundle policy: {name}")

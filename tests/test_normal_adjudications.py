@@ -58,7 +58,7 @@ def test_normal_library_peak_adjudications_covers_all_eight_712_candidates():
 
 def test_hpa_normal_statistic_sensitivity_preserves_unsafe_precedence():
     sens = oncoref.hpa_normal_statistic_sensitivity().set_index("scenario_id")
-    ts = target_selection.results()
+    ts = target_selection._baseline_2026_11_20_frame()
 
     active = sens.loc["active_policy_gtex_p95_plus_hpa_biopsy_p95"]
     assert bool(active["is_active_policy"]) is True

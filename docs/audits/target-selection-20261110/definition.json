@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-20.2",
+  "policy_id": "oncoref.target-selection.2026-11-23.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -77,6 +77,7 @@
     "consequences": {
       "established": "Unsafe",
       "unresolved": "Other:Review; strong evidence needs attribution or confirmation.",
+      "nuclear_only": "Cleared nuclear/intronic or promoter-spillover snRNA-seq signal (#765); recorded with nuclear_rna_caution.",
       "dismissed": "No finding; the reason and counts stay in the record.",
       "below_screen": "No finding. Not a demonstration of absence or safety.",
       "unassessed": "Recorded as unmeasured; never treated as negative."
@@ -96,7 +97,7 @@
     "descriptive": "Counts at the actual tenfold threshold distinguish samples, known patients, anonymous samples and cancer types. Above-normal counts are legacy descriptors.",
     "excluded_tumors": {
       "codes": [],
-      "reason": "No histology is excluded wholesale. Reproductive programs are advisory sample notes, not evidence of normal-cell contamination, and never exclude TGCT or other libraries. Independent QC exclusions still apply."
+      "reason": "No histology is excluded wholesale. Library-level parenchymal testis admixture notes (Note R, testis_tissue_content >= 0.001 in TCGA-TGCT) require at least one non-admixed >=10x tumor witness before qualifying CA (#713, #768); independent QC exclusions apply everywhere."
     },
     "comparability": "One documented comparison scale and complete required normal contexts. Equal unit names alone do not establish comparability. No TPM/nTPM/pTPM/CP10K pooling.",
     "missing_reference": "unassessed, never zero",
@@ -158,5 +159,17 @@
   },
   "translation": "Qualifying coding reference or supported noncanonical ORF plus complete approved MANE-first/canonical representative; resolve conflicting coding evidence. Experimental protein detection is retained separately.",
   "published_target_support": "Positive evidence annotation for a curated, exact-scope target nomination. Preserve every protein-paper link and its attested claim; biology or background-table coverage alone is not a target nomination. Publication cannot override an exclusion or hold.",
-  "only_meaning": "Membership in one qualified set, not proven absence from the other context."
+  "only_meaning": "Membership in one qualified set, not proven absence from the other context.",
+  "integrated_adjudications": {
+    "rare_cell_attribution_711": "oncoref/data/rare-cell-attribution-reviews.json",
+    "normal_library_qc_712": "oncoref/data/normal-library-peak-adjudications.csv",
+    "unmeasured_home_panels_735": "oncoref/data/unmeasured-home-protein-adjudications.csv",
+    "upgraded_tumor_cohorts_737": "oncoref/data/human-737-tumor-observations.csv.gz",
+    "multiplex_bleed_qc_764": "oncoref/data/normal-multiplex-bleed-gene-deltas.csv",
+    "nuclear_spillover_qc_765": "oncoref/data/nuclear-spillover-adjudications.csv",
+    "clinical_organ_clearance_766": "oncoref/data/clinical-organ-clearances.json",
+    "closed_repeat_family_equivalence_767": "oncoref/data/repeat-family-adjudications.csv",
+    "assay_boundary_adjudications_768": "oncoref/data/assay-boundary-adjudications.csv",
+    "near_self_1mm_and_ms_audit_769": "oncoref/data/candidate-near-self-1mm.csv"
+  }
 }

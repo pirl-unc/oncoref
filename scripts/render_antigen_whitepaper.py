@@ -489,7 +489,31 @@ def build():
     ]:
         for field in ["source_id", "tissue", "source_context"]:
             data[f"{prefix}_{field}"] = data[source].map(lambda x, field=field: contexts(x, field))
-    funnel = pd.read_csv(BUILD / "summary/funnel-all.csv")
+    funnel_steps = [
+        ("Normal-tissue safety exclusions (Unsafe)", int(data.category.eq("Unsafe").sum())),
+        (
+            "Coverage, identity, or rare-cell review (Other:Review)",
+            int(data.classification.eq("Other:Review").sum()),
+        ),
+        (
+            "Nested, readthrough, or Unsafe 9-mer sequence (Other:Sequence)",
+            int(data.classification.eq("Other:Sequence").sum()),
+        ),
+        (
+            "Unscreened adult home sub-niche (Other:Unscreened tissue)",
+            int(data.classification.eq("Other:Unscreened tissue").sum()),
+        ),
+        (
+            "Below 10x enrichment or Disposable cap (Other:Expression)",
+            int(data.classification.eq("Other:Expression").sum()),
+        ),
+    ]
+    rem = len(data)
+    funnel_rows = []
+    for step_label, removed_n in funnel_steps:
+        rem -= removed_n
+        funnel_rows.append({"step": step_label, "removed": removed_n, "remaining": rem})
+    funnel = pd.DataFrame(funnel_rows)
     if not funnel.remaining.eq(len(data) - funnel.removed.cumsum()).all() or (
         funnel.remaining.iloc[-1] != data.is_target_candidate.sum()
     ):
@@ -618,6 +642,9 @@ def build():
     outputs = {
         "tissue-hierarchy.md": tissue_hierarchy(),
         f"{ASSETS}/sources.csv": inventory.to_csv(index=False, lineterminator="\n"),
+        f"{ASSETS}/sex-restricted-antigens.csv": human.sex_restricted_antigens().to_csv(
+            index=False, lineterminator="\n"
+        ),
         f"{ASSETS}/tumor-ranks.csv": candidates[
             fields + [c for c in candidates if c.startswith("rank_")]
         ].to_csv(index=False, lineterminator="\n"),
@@ -628,7 +655,8 @@ def build():
     examples = study[study.familiar_names.notna() | study.clinical_scope.notna()]
     held = examples[examples.category.isin(["Unsafe", "Other"])].copy()
     other_examples = study[
-        study.protein_group_label.isin(["CAGE1", "DAZL", "POTEC"]) & study.category.eq("Other")
+        study.protein_group_label.isin(["CAGE1", "DAZL", "POTEC"])
+        & study.category.isin(["Other", "Unsafe"])
     ].copy()
     highlighted_holds = pd.concat([held, other_examples]).drop_duplicates("entity_id").copy()
 
@@ -738,7 +766,7 @@ def build():
     profiles = target_filters.profile_summary(data).set_index("profile")
     testis_profile = profiles.loc["male-patient (protect testis)"]
     pregnant_profile = profiles.loc["female-patient (pregnant)"]
-    sex_table = pd.read_csv(BUILD / "summary/sex-restricted-antigens.csv")
+    sex_table = human.sex_restricted_antigens()
     sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
     unsafe_reasons = data.Unsafe_reasons.fillna("").map(
         lambda v: set(v.split(" | ")) if v else set()

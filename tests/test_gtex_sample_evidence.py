@@ -97,7 +97,9 @@ def test_live_ceiling_reproduces_accepted_normal_measurements():
         frame.qc_pass & frame.identity_resolved & frame.scope.isin(["normal", "disposable"])
     ]
     expected = accepted.groupby("entity_id").value.max()
-    actual = target_selection.results().set_index("entity_id").loc[expected.index]
+    actual = (
+        target_selection._baseline_2026_11_20_frame().set_index("entity_id").loc[expected.index]
+    )
     assert actual[["normal_reference_tpm", "disposable_max_tpm"]].max(
         axis=1
     ).tolist() == pytest.approx(expected.tolist())

@@ -7,9 +7,9 @@ home-tissue panels, and #737 linear-TPM tumor cohorts (THYMCA, BCC, cSCC) direct
 ``species_target_selection.evaluate_species_catalog(human_spec, ...)``.
 
 Default packaged catalog calls (``target_selection.results()``, ``human.target_selection()``)
-remain deterministically pinned to ``oncoref.target-selection.2026-11-20.2``, while
-``evaluate_human_catalog(...)`` and ``next_policy_preview()`` evaluate both exact baseline
-parity and integrated v1.49 candidate transitions through the shared multi-species engine.
+and default ``evaluate_human_catalog()`` calls both evaluate the promoted integrated policy
+``oncoref.target-selection.2026-11-23.1``, while explicit ``include_*=False`` flags reproduce
+the frozen ``oncoref.target-selection.2026-11-20.2`` baseline and single-rule ablations.
 """
 
 from __future__ import annotations
@@ -29,6 +29,7 @@ from . import (
     normal_library_qc,
     rare_cell_compartment_qc,
     repeat_family_equivalence,
+    species_target_selection,
     target_selection,
     tgct_localization,
     unmeasured_home_panels,
@@ -41,13 +42,12 @@ from .species_target_selection import (
     SpeciesScreeningResult,
     SpeciesScreeningSpec,
     evaluate_species_catalog,
-    packaged_species_host_exposure,
     packaged_species_metadata,
 )
 
 HUMAN_BASELINE_COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
-HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-22.1"
-HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.human-integrated-preview.2026-11-22.1"
+HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-23.1"
+HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-23.1"
 
 REQUIRED_PERIPHERAL_CONTEXT = "peripheral_normal_reference"
 
@@ -59,13 +59,13 @@ def _sha256_bytes(payload: bytes) -> str:
 def human_screening_spec(
     *,
     policy_id: str | None = None,
-    include_home_panels: bool = False,
-    include_737_cohorts: bool = False,
-    include_multiplex_bleed_qc: bool = False,
-    include_nuclear_spillover_qc: bool = False,
-    include_clinical_clearances: bool = False,
-    include_repeat_family_equivalence: bool = False,
-    include_assay_boundary_fixes: bool = False,
+    include_home_panels: bool = True,
+    include_737_cohorts: bool = True,
+    include_multiplex_bleed_qc: bool = True,
+    include_nuclear_spillover_qc: bool = True,
+    include_clinical_clearances: bool = True,
+    include_repeat_family_equivalence: bool = True,
+    include_assay_boundary_fixes: bool = True,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -75,7 +75,16 @@ def human_screening_spec(
         if meta is not None
         else pol.primary_reference
     )
-    integrated = (
+    all_layers = (
+        include_home_panels
+        and include_737_cohorts
+        and include_multiplex_bleed_qc
+        and include_nuclear_spillover_qc
+        and include_clinical_clearances
+        and include_repeat_family_equivalence
+        and include_assay_boundary_fixes
+    )
+    any_layer = (
         include_home_panels
         or include_737_cohorts
         or include_multiplex_bleed_qc
@@ -84,10 +93,15 @@ def human_screening_spec(
         or include_repeat_family_equivalence
         or include_assay_boundary_fixes
     )
-    effective_policy = policy_id or (
-        HUMAN_INTEGRATED_POLICY_PREVIEW_ID if integrated else target_selection.POLICY_ID
-    )
-    comp_id = HUMAN_INTEGRATED_COMPARISON_ID if integrated else HUMAN_BASELINE_COMPARISON_ID
+    if policy_id is not None:
+        effective_policy = policy_id
+    elif all_layers:
+        effective_policy = target_selection.POLICY_ID
+    elif not any_layer:
+        effective_policy = target_selection.BASELINE_2026_11_20_POLICY_ID
+    else:
+        effective_policy = "oncoref.human-integrated-ablation.2026-11-23.1"
+    comp_id = HUMAN_INTEGRATED_COMPARISON_ID if any_layer else HUMAN_BASELINE_COMPARISON_ID
     notes = [
         "Evaluated through species_target_selection.evaluate_species_catalog (#755).",
     ]
@@ -151,14 +165,14 @@ def upgraded_737_tumor_observations(*, cancer_code: str | None = None) -> pd.Dat
 
 def build_human_screening_inputs(
     *,
-    include_home_panels: bool = False,
+    include_home_panels: bool = True,
     include_adjudications: bool = True,
-    include_737_cohorts: bool = False,
-    include_multiplex_bleed_qc: bool = False,
-    include_nuclear_spillover_qc: bool = False,
-    include_clinical_clearances: bool = False,
-    include_repeat_family_equivalence: bool = False,
-    include_assay_boundary_fixes: bool = False,
+    include_737_cohorts: bool = True,
+    include_multiplex_bleed_qc: bool = True,
+    include_nuclear_spillover_qc: bool = True,
+    include_clinical_clearances: bool = True,
+    include_repeat_family_equivalence: bool = True,
+    include_assay_boundary_fixes: bool = True,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -173,8 +187,12 @@ def build_human_screening_inputs(
         include_repeat_family_equivalence=include_repeat_family_equivalence,
         include_assay_boundary_fixes=include_assay_boundary_fixes,
     )
-    ts = target_selection.results()
-    exposures = packaged_species_host_exposure("human")
+    ts = target_selection._baseline_2026_11_20_frame()
+    exposures = (
+        species_target_selection.packaged_species_host_exposure("human")
+        if include_multiplex_bleed_qc
+        else target_selection._baseline_2026_11_20_host_exposures()
+    )
 
     cleared_rare_eids: set[str] = set()
     cleared_obs_map: dict[str, dict] = {}
@@ -478,11 +496,21 @@ def build_human_screening_inputs(
                     }
                 )
             supp_val = cpayload.get("reproductive_supported_tpm")
+            he_eid = exposures.get(eid, {})
             for citem in cpayload.get("reproductive_compartments", []):
                 comp = str(citem["compartment"])
+                he_comp = he_eid.get(comp, {})
                 is_emb = citem.get("scope") == "developmental" or comp == "embryo"
                 cqual = bool(citem.get("qualifies_tenfold", False))
-                cval = float(citem["max_tpm"])
+                cval = float(
+                    he_comp["max_tpm"] if he_comp.get("max_tpm") is not None else citem["max_tpm"]
+                )
+                c_ntpm = he_comp.get("max_ntpm") if "max_ntpm" in he_comp else citem.get("max_ntpm")
+                c_prot = (
+                    he_comp.get("protein_status")
+                    if "protein_status" in he_comp
+                    else citem.get("protein_status", "not_assessed")
+                )
                 if is_emb:
                     repro_rows.append(
                         {
@@ -500,8 +528,8 @@ def build_human_screening_inputs(
                             "compartment_qualifying_value": (
                                 float(supp_val) if cqual and supp_val is not None else 0.0
                             ),
-                            "max_ntpm": citem.get("max_ntpm"),
-                            "protein_status": citem.get("protein_status", "not_assessed"),
+                            "max_ntpm": c_ntpm,
+                            "protein_status": c_prot,
                             "scope_complete": False,
                             "comparison_id": comp_id,
                             "unit": unit,
@@ -524,8 +552,10 @@ def build_human_screening_inputs(
                             "positive_cells": 0,
                             "value": cval,
                             "compartment_qualifying_value": cval if cqual else min(cval, 0.0),
-                            "max_ntpm": citem.get("max_ntpm"),
-                            "protein_status": citem.get("protein_status", "not_assessed"),
+                            "female_max_tpm": he_comp.get("female_max_tpm"),
+                            "male_max_tpm": he_comp.get("male_max_tpm"),
+                            "max_ntpm": c_ntpm,
+                            "protein_status": c_prot,
                             "scope_complete": True,
                             "comparison_id": comp_id,
                             "unit": unit,
@@ -731,6 +761,8 @@ def build_human_screening_inputs(
                         "germline_protamine_diluted_qualified": bool(
                             eid in germline_tf_eids and comp == "testis"
                         ),
+                        "female_max_tpm": item.get("female_max_tpm"),
+                        "male_max_tpm": item.get("male_max_tpm"),
                         "max_ntpm": item.get("max_ntpm"),
                         "protein_status": item.get("protein_status", "not_assessed"),
                         "scope_complete": bool(item.get("scope_complete", True)),
@@ -845,14 +877,14 @@ def build_human_screening_inputs(
 
 def evaluate_human_catalog(
     *,
-    include_home_panels: bool = False,
+    include_home_panels: bool = True,
     include_adjudications: bool = True,
-    include_737_cohorts: bool = False,
-    include_multiplex_bleed_qc: bool = False,
-    include_nuclear_spillover_qc: bool = False,
-    include_clinical_clearances: bool = False,
-    include_repeat_family_equivalence: bool = False,
-    include_assay_boundary_fixes: bool = False,
+    include_737_cohorts: bool = True,
+    include_multiplex_bleed_qc: bool = True,
+    include_nuclear_spillover_qc: bool = True,
+    include_clinical_clearances: bool = True,
+    include_repeat_family_equivalence: bool = True,
+    include_assay_boundary_fixes: bool = True,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -1061,7 +1093,7 @@ def compute_next_policy_transitions(
     integrated_result: SpeciesScreeningResult | None = None,
 ) -> tuple[pd.DataFrame, dict]:
     """Recompute exact protein-level transitions from folding #735, #711/#712, #737, and #764-#768 into human screening."""
-    baseline = target_selection.results()
+    baseline = target_selection._baseline_2026_11_20_frame()
     integrated_res = (
         integrated_result
         if integrated_result is not None
@@ -1185,8 +1217,8 @@ def compute_next_policy_transitions(
 
     summary = {
         "schema": "oncoref.human-integrated-policy-preview.v1",
-        "baseline_policy_id": target_selection.POLICY_ID,
-        "preview_policy_id": HUMAN_INTEGRATED_POLICY_PREVIEW_ID,
+        "baseline_policy_id": target_selection.BASELINE_2026_11_20_POLICY_ID,
+        "preview_policy_id": target_selection.POLICY_ID,
         "total_proteins": len(integrated),
         "baseline_categories": baseline["category"].value_counts().to_dict(),
         "integrated_categories": integrated["category"].value_counts().to_dict(),

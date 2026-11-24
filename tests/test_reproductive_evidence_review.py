@@ -67,14 +67,21 @@ def test_ocular_paper_is_counterevidence_not_antigen_support():
 
 
 def test_review_holds_remain_in_default_subtraction_background():
-    from oncoref import antigen_sets
+    from oncoref import antigen_sets, target_selection
 
     root = Path(__file__).parents[1]
     cohort = pd.read_csv(
         root / "docs/audits/antigen-evidence-review-20261118/requested-cohorts.csv"
     )
     holds = set(cohort.loc[cohort.baseline_classification.eq("Other:Review"), "entity_id"])
-    selection = antigen_sets.select("CA|RA")
     assert len(holds) == 31
-    assert not holds & set(selection.proteins().entity_id)
-    assert holds <= set(selection.background_proteins().entity_id)
+    live = target_selection.results().set_index("entity_id")
+    # CTAG2 (#766) and DUX4 (#765 + #767) resolved to CTA; the remaining 29 stay in Unsafe|Other
+    resolved_to_cta = set(
+        live.loc[live.index.isin(holds) & live["category"].eq("CTA"), "protein_group_label"]
+    )
+    assert resolved_to_cta <= {"CTAG2", "DUX4", "TENT5D"}
+    still_held = {eid for eid in holds if live.at[eid, "category"] in {"Other", "Unsafe"}}
+    selection = antigen_sets.select("CA|RA")
+    assert not still_held & set(selection.proteins().entity_id)
+    assert still_held <= set(selection.background_proteins().entity_id)

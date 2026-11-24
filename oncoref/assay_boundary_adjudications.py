@@ -274,7 +274,7 @@ def assay_boundary_comparison_observations() -> dict:
 
 
 def annotate_catalog(
-    frame: pd.DataFrame, *, enabled: bool = True, integrated: bool = False
+    frame: pd.DataFrame, *, enabled: bool = True, integrated: bool = True
 ) -> pd.DataFrame:
     """Attach ``tsarina`` ``#769`` 1-mismatch Hamming & tryptic-MS columns to a catalog DataFrame."""
     out = frame.copy()

@@ -73,8 +73,11 @@ def test_loss_context_is_independent_of_membership_and_retains_organ_scope():
     testis = next(r for r in records if r["expression_context"]["tissue"] == "testis")
     assert testis["matched_level"] == "bulk" and testis["tier"] == "protected"
     assert testis["evidence"] and "androgen" in testis["persistent_loss"]
-    # CTAG2 fails RA's fold requirement but its reproductive exposure is retained.
-    assert not antigen_sets.target_selection.results("CTAG2").is_reproductive_antigen.iloc[0]
+    # RPS4Y2 (Cancer Antigen only) fails RA's 10x fold requirement, while CTAG2 clears to CTA;
+    # both retain organ-level reproductive loss consequences independently of category.
+    assert not antigen_sets.target_selection.results("RPS4Y2").is_reproductive_antigen.iloc[0]
+    assert antigen_sets.loss_consequences("RPS4Y2")
+    assert antigen_sets.target_selection.results("CTAG2").is_cta.iloc[0]
     assert antigen_sets.loss_consequences("CTAG2")
     lalba = antigen_sets.loss_consequences("LALBA")
     assert any(r["expression_context"].get("compartment") == "lactating_breast" for r in lalba)

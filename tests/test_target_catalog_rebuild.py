@@ -20,7 +20,14 @@ from rebuild_target_catalog import group_normal_rows, participant_id  # noqa: E4
 
 @pytest.fixture(scope="module")
 def catalog():
-    return policy.results()
+    return policy._baseline_2026_11_20_frame()
+
+
+@pytest.fixture(scope="module")
+def rebuild_meta():
+    return json.loads(
+        (ROOT / "tests/fixtures/release-1.50-inputs/oncoref/data/target-selection.json").read_text()
+    )
 
 
 def test_complete_inventory_set_algebra_and_release_migrations(catalog):
@@ -57,7 +64,7 @@ def test_complete_inventory_set_algebra_and_release_migrations(catalog):
     assert set(catalog.rare_cell_action) == {"none", "unsafe", "review"}
     assert not catalog.loc[catalog.rare_cell_action.eq("review"), "is_target_candidate"].any()
     assert catalog.loc[catalog.rare_cell_status.eq("established"), "category"].eq("Unsafe").all()
-    assert len(policy.results(changed_only=True)) == 464
+    assert int((catalog.category != catalog.released_category).sum()) == 464
     assert set(policy.results(category="Cancer Antigen only").category) == {"Cancer Antigen only"}
     with pytest.raises(ValueError, match="Unknown category"):
         policy.results(category="Cancer-only")
@@ -205,8 +212,8 @@ def test_named_assignments_and_accepted_review_holds(catalog):
     assert policy.results(gene).protein_group_label.tolist() == ["H2BW2"]
 
 
-def test_comparison_has_required_contexts_and_witnesses(catalog):
-    summary = policy.metadata()["summary"]
+def test_comparison_has_required_contexts_and_witnesses(catalog, rebuild_meta):
+    summary = rebuild_meta["summary"]
     normal = pd.read_csv(OUT / "normal-comparison.csv.gz")
     assert set(normal.unit) == {"TPM"}
     normal = normal[normal.scope.eq("normal") & normal.qc_pass & normal.identity_resolved]
@@ -335,10 +342,10 @@ def test_paper_nominations_preserve_exact_members_and_full_claim_ledger(catalog)
     assert catalog[catalog.category.eq("Cancer Antigen only")].published_nomination.sum() == 27
 
 
-def test_packaged_snapshot_matches_report_metadata(catalog):
-    meta = policy.metadata()
-    path = ROOT / "oncoref/data/target-selection.csv.gz"
-    assert hashlib.sha256(path.read_bytes()).hexdigest() == meta["data_sha256"]
+def test_packaged_snapshot_matches_report_metadata(catalog, rebuild_meta):
+    meta = rebuild_meta
+    frozen_path = ROOT / "tests/fixtures/release-1.50-inputs/oncoref/data/target-selection.csv.gz"
+    assert hashlib.sha256(frozen_path.read_bytes()).hexdigest() == meta["data_sha256"]
     assert meta["summary"] == json.loads((OUT / "summary.json").read_text())
     from oncoref import reference_data
 
@@ -352,10 +359,52 @@ def test_packaged_snapshot_matches_report_metadata(catalog):
     for row in sources:
         pin = reference_data.REFERENCE_SOURCES[row["source"]]["pins"][row["version"]]
         assert all(row[key] == pin[key] for key in ("url", "sha256", "archive_sha256", "bytes"))
-    assert catalog.policy.eq(policy.POLICY_ID).all()
+    assert catalog.policy.eq(policy.BASELINE_2026_11_20_POLICY_ID).all()
     for category in policy.CATEGORIES:
-        subset = pd.read_csv(OUT / (category.lower().replace(" ", "-") + ".csv.gz"))
+        subset = pd.read_csv(
+            OUT / (category.lower().replace(" ", "-") + ".csv.gz"), low_memory=False
+        )
         assert set(subset.entity_id) == set(catalog.loc[catalog.category.eq(category), "entity_id"])
+
+
+def test_promoted_integrated_catalog_invariants_and_metadata():
+    live = policy.results()
+    live_meta = policy.metadata()
+    live_path = ROOT / "oncoref/data/target-selection.csv.gz"
+    assert hashlib.sha256(live_path.read_bytes()).hexdigest() == live_meta["data_sha256"]
+    assert live_meta["policy_id"] == policy.POLICY_ID == "oncoref.target-selection.2026-11-23.1"
+    assert live.policy.eq(policy.POLICY_ID).all()
+    assert len(live) == 19893 and live.entity_id.is_unique
+    assert live.category.value_counts().to_dict() == {
+        "Unsafe": 18250,
+        "Other": 1062,
+        "CTA": 331,
+        "Reproductive Antigen only": 133,
+        "Cancer Antigen only": 117,
+    }
+    assert live.is_cta.equals(live.is_cancer_antigen & live.is_reproductive_antigen)
+    assert live.is_target_candidate.equals(live.is_cancer_antigen | live.is_reproductive_antigen)
+    assert set(live.rare_cell_status) <= {*policy.RARE_CELL_STATUSES, "not_extracted"}
+    assert set(live.rare_cell_action) <= {"none", "unsafe", "review", "caution"}
+    by_lbl = live.set_index("protein_group_label")
+    for cta_lbl in (
+        "PLAC1",
+        "ZAN",
+        "CTAG2",
+        "DUX4",
+        "MAGEB6",
+        "DKKL1",
+        "FOXR2",
+        "SPATA31A3",
+        "PPP4R3C",
+        "PRM1",
+        "SPATA19",
+    ):
+        assert by_lbl.loc[cta_lbl, "classification"] == "CTA"
+    for ra_lbl in ("PRM2", "CETN1", "PGK2"):
+        assert by_lbl.loc[ra_lbl, "classification"] == "Reproductive Antigen only"
+    for unsafe_lbl in ("SP7", "GFY", "PANX3", "BPIFB3", "GLYATL3", "DAZL", "MAGEA12"):
+        assert by_lbl.loc[unsafe_lbl, "classification"] == "Unsafe"
 
 
 def test_report_provenance_manifest():

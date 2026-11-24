@@ -134,14 +134,22 @@ def test_near_self_1mm_hamming_policy_and_ctage1_mia2_tryptic_ms_audit(
         assert col in disp.columns
         assert col in ctas.columns
 
-    # Baseline Unsafe proteins (DKKL1, MAGEB6, PLAC1, ZAN) report 0 unique 9-mers in baseline target_selection,
-    # whereas on integrated_cat all four newly cleared CTAs have positive unique & >=2-mm safe 9-mers!
-    for cleared_cta in ("PLAC1", "ZAN", "MAGEB6", "DKKL1"):
-        assert int(ts.loc[cleared_cta, "exact_unique_9mers"]) == 0
-        assert int(integrated_cat.loc[cleared_cta, "exact_unique_9mers"]) > 0
-        assert int(integrated_cat.loc[cleared_cta, "safe_2mm_9mers"]) > 0
+    # Promoted former-Unsafe/Review CTAs (PLAC1, ZAN, MAGEB6, DKKL1, CTAG2, DUX4, FOXR2)
+    # now have positive exact-unique & >=2-mm safe 9-mers directly on target_selection.results(),
+    # antigen_sets.proteins("CTA"), and sequence_bundle.target_selection_dispositions()!
+    for cleared_cta in ("PLAC1", "ZAN", "MAGEB6", "DKKL1", "CTAG2", "DUX4", "FOXR2"):
+        assert int(ts.loc[cleared_cta, "exact_unique_9mers"]) > 0
+        assert int(ts.loc[cleared_cta, "safe_2mm_9mers"]) > 0
+        assert int(ctas.loc[cleared_cta, "exact_unique_9mers"]) == int(
+            integrated_cat.loc[cleared_cta, "exact_unique_9mers"]
+        )
+        assert int(disp.loc[cleared_cta, "safe_2mm_9mers"]) == int(
+            integrated_cat.loc[cleared_cta, "safe_2mm_9mers"]
+        )
 
-    # Newly Unsafe #735/#711 proteins (SP7, DAZL) report 0 unique 9-mers on integrated_cat
+    # Newly Unsafe #735/#711 proteins (SP7, DAZL) report 0 unique 9-mers on both ts and integrated_cat
+    assert int(ts.loc["SP7", "exact_unique_9mers"]) == 0
+    assert int(ts.loc["DAZL", "exact_unique_9mers"]) == 0
     assert int(integrated_cat.loc["SP7", "exact_unique_9mers"]) == 0
     assert int(integrated_cat.loc["DAZL", "exact_unique_9mers"]) == 0
 

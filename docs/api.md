@@ -790,28 +790,41 @@ Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
 
-The rebuilt [Cancer and Reproductive Antigen catalog](target-selection.md) has a
-separate API with 632 CTA, 250 Cancer Antigen only, 28 Reproductive Antigen only,
-724 Other and 18,259 Unsafe:
+The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-23.1`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **331 CTA, 117 Cancer Antigen only, 133 Reproductive Antigen only, 1,062 Other and 18,250 Unsafe** (`581` candidate union `CA ∪ RA`):
 
 ```python
-from oncoref import target_selection
+from oncoref import (
+    antigen_sets,
+    assay_boundary_adjudications,
+    clinical_organ_clearance,
+    human,
+    mouse,
+    normal_library_qc,
+    rare_cell_compartment_qc,
+    repeat_family_equivalence,
+    target_selection,
+)
 
 contract = target_selection.definition()
 counts = target_selection.metadata()["summary"]
 catalog = target_selection.results()
 changes = target_selection.results(changed_only=True)
 cancer_only = target_selection.results(category="Cancer Antigen only")
-protein = target_selection.results("H2BW2")  # Exact protein label or member Ensembl ID.
-# evidence = target_selection.assess_cancer_rna(tumors, normals, ...)
-# decisions = target_selection.classify(assessed_facts)
+ctag2 = target_selection.results("CTAG2")  # Exact protein label or member Ensembl ID.
+
+# Cross-sex subsets (225 CTA-M, 39 CTA-E, 3 CTA-F, 64 CTA-MF) & mouse GRCm39 catalog (20 CTA)
+cta_female_safe = antigen_sets.select("CTA-M").proteins()
+mouse_ctas = mouse.target_selection(category="CTA")
+
+# Adjudication & QC ledgers (#764-#769)
+bleed_deltas = normal_library_qc.multiplex_bleed_gene_deltas(only_applied=True)
+nuclear_qc = rare_cell_compartment_qc.nuclear_spillover_adjudications()
+clearances = clinical_organ_clearance.clearances_table()
+repeat_fams = repeat_family_equivalence.closed_homolog_families()
+near_self = assay_boundary_adjudications.candidate_near_self_1mm()
 ```
 
-The new evaluator returns Cancer Antigen and Reproductive Antigen memberships,
-their intersection (CTA), their union (Target candidates), and one display
-category. It requires the new assessed inputs; it does not reinterpret released
-presence flags. `cta_literature.attestations()` preserves the paper links and
-claim scope independently of category.
+`target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()` return Cancer Antigen and Reproductive Antigen memberships, their intersection (`CTA`), sex-restriction codes (`CTA-M`, `CTA-E`, `CTA-F`, `CTA-MF`), structured isoform/epitope clinical clearances (`clinical_clearance_*`, `#766`), closed homolog family sibling IDs (`closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, `#767`), and 1-mismatch Hamming near-self & tryptic-MS paralog metrics (`exact_unique_9mers`, `safe_2mm_9mers`, `unsafe_near_self_1mm_pct`, `unsafe_shared_tryptic_peptides`, `#769`). Reproducible single-rule ablations against the frozen `2026-11-20.2` baseline remain available via `human.evaluate_integrated_catalog(...)` (`oncoref.human_screening_inputs`). `cta_literature.attestations()` preserves paper links and claim scope independently of category.
 
 Paper occurrences include `publication_claims` (exact source-table records) and
 `nomination_gene_ids` (the supported member loci). Background-only rows retain their
@@ -833,9 +846,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-That human snapshot selects **607 proteins / 655 loci**. Dog nominations remain
-unassigned/unassessed. Mouse returns one unassessed P1A nomination with partial
-evidence; quantitative mouse selection remains unavailable. The
+That human `1.36.0` compatibility snapshot (`human.cta_selection()`) selects **607 proteins / 655 loci**, distinct from the active multi-species catalogs (`human.target_selection()` with **331 CTAs**, `mouse.target_selection()` evaluated genome-wide across **21,433 Ensembl 115 GRCm39 protein groups** with **20 CTAs, 29 CA only, and 296 RA only**, and `canine.target_selection()` holding **14** native canine nominations in `Other:Review`; see [Multi-species whitepaper](species-antigen-whitepaper.md)). The
 [selection guide](cta-selection.md) documents common fields, native units,
 source categories, identity gaps and the independent sequence-background policy.
 The [four assessments](cta-evidence-axes.md) separate normal safety, one qualifying
