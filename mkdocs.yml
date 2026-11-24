@@ -25,6 +25,7 @@ nav:
       - Donor-level rare-cell RNA: audits/normal-cell-atlas-20261110/rare-cell/index.md
       - "Normal library & cell attribution (#711, #712)": audits/normal-attribution-20261122/index.md
       - Multiplex bleed QC (#764): audits/multiplex-bleed-qc-20261123/index.md
+      - Holistic GTEx deconvolution (#778): audits/gtex-holistic-deconvolution-20261124/index.md
       - Nuclear RNA & spillover QC (#765): audits/nuclear-rna-spillover-20261123/index.md
       - Clinical organ-safety tier (#766): audits/clinical-organ-clearance-20261123/index.md
       - Closed repeat-family equivalence (#767): audits/repeat-family-equivalence-20261123/index.md

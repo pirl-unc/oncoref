@@ -291,6 +291,13 @@ def multiplex_bleed_receipt() -> dict:
     )
 
 
+def quarantined_gtex_swap_sample_ids() -> frozenset[str]:
+    """Return sample IDs globally quarantined as foreign-organ swaps by #778 deconvolution."""
+    from .gtex_deconvolution import gtex_quarantined_swaps
+
+    return frozenset(gtex_quarantined_swaps()["sample_id"].astype(str))
+
+
 __all__ = [
     "CARRYOVER_PANELS",
     "HOST_EXPOSURE_SENTINEL_PANELS",
@@ -303,5 +310,6 @@ __all__ = [
     "multiplex_bleed_receipt",
     "multiplex_bleed_tissue_summary",
     "published_carryover",
+    "quarantined_gtex_swap_sample_ids",
     "stoichiometric_sentinel_reference",
 ]

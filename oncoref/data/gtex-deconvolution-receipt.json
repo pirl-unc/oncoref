@@ -1,0 +1,57 @@
+{
+  "anchor_genes": 185,
+  "anchor_source_archetypes": 25,
+  "anchor_source_sites": [
+    "adrenal_gland",
+    "brain_cerebellar_hemisphere",
+    "brain_cerebellum",
+    "brain_nucleus_accumbens_basal_ganglia",
+    "brain_spinal_cord_cervical_c-1",
+    "colon_transverse",
+    "esophagus_mucosa",
+    "heart_atrial_appendage",
+    "heart_left_ventricle",
+    "kidney_cortex",
+    "kidney_medulla",
+    "liver",
+    "lung",
+    "minor_salivary_gland",
+    "muscle_skeletal",
+    "pancreas",
+    "pituitary",
+    "prostate",
+    "skin_not_sun_exposed_suprapubic",
+    "skin_sun_exposed_lower_leg",
+    "small_intestine_terminal_ileum",
+    "stomach",
+    "testis",
+    "thyroid",
+    "vagina"
+  ],
+  "donor_sex_counts": {
+    "XX": 311,
+    "XY": 635
+  },
+  "files_sha256": {
+    "gtex-deconvolution-anchors.csv": "2e853d6e21c0a13422bee1cea0a19078a4d63c51f2539db375467601c13b2b9f",
+    "gtex-deconvolution-tissue-summary.csv": "4f4b4587fda552be3ec1f2c0ed0e3a12239506381d0bf7976f105ecf0fd7765a",
+    "gtex-donor-sex.csv": "07f164bb3eb2a838463f963425f346b5ec39f3123c40ac9788ffee59ecc0cb1d",
+    "gtex-quarantined-swaps.csv": "3342a411dee5cff1cb8cb3a0130c6254c5cb618f380622b236e387aa223bc3e4",
+    "gtex-sample-splash-events.csv.gz": "b534cb33adcac0648f2d39a7350c1cec405a9e7740f46a94d3e34a3bb16c3c9b"
+  },
+  "gtex_release": "v11",
+  "nnls_basis_genes": 342,
+  "policy_id": "oncoref.gtex-holistic-deconvolution.2026-11-24.3",
+  "quarantined_swap_samples": 2,
+  "regime_event_counts": {
+    "anatomical_boundary": 16058,
+    "flowcell_index_hopping": 100287,
+    "plate_pipetting_splash": 201,
+    "same_donor_carryover": 225,
+    "tube_swap": 2
+  },
+  "samples_evaluated": 18637,
+  "shards_evaluated": 52,
+  "unique_donors": 946,
+  "unique_sm_plate_prefixes": 904
+}

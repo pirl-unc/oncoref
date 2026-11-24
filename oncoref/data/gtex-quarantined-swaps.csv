@@ -1,0 +1,3 @@
+sample_id,donor_id,donor_sex,sample_sex,sm_plate_prefix,target_site,source_site,regime,alpha_hat,nnls_weight,alpha_lower_q25,log10_iqr,anchors_detected,anchor_symbols,co_plated_on_sm_batch,cross_donor_batch_matched,cross_sex_impossible,same_donor_organ_present,native_retention
+GTEX-1GZHY-2426-SM-9JGGK,GTEX-1GZHY,XX,XY,9JGG,ovary,lung,tube_swap,1.335344,1.183739,1.222217,0.100969,5,SCGB3A2;SFTPA1;SFTPA2;SFTPB;SFTPC,True,False,False,True,0.391578
+GTEX-11GS4-2826-SM-5HL56,GTEX-11GS4,XY,XY,5HL5,nerve_tibial,pancreas,tube_swap,0.609031,0.618251,0.453888,0.194634,10,CELA3A;CLPS;CPA1;CTRB2;PLA2G1B;PNLIP;PRSS1;PRSS2;REG1A;REG1B,False,True,False,False,0.503667
