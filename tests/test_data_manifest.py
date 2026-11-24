@@ -176,7 +176,13 @@ def test_pirlygenes_migration_snapshot_has_exact_provenance():
 def test_pyproject_package_data_covers_all_non_excluded_data_files():
     import fnmatch
 
-    import tomllib
+    try:
+        import tomllib
+    except ModuleNotFoundError:  # Python 3.10
+        try:
+            import tomli as tomllib  # type: ignore[no-redef]
+        except ModuleNotFoundError:
+            from setuptools._vendor import tomli as tomllib  # type: ignore[no-redef]
 
     pyproject = tomllib.loads(
         (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8")
