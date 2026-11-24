@@ -487,6 +487,22 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "symmetric family-summed normal, developmental/reproductive, and tumor TPM observations across closed repeat arrays (#767)",
     ),
+    "assay-boundary-adjudications": (
+        "cta-evidence",
+        "TGCT parenchymal-admixture witness, RNA-zero HPA IHC, adult cornea multi-UMI, and protamine-diluted germline TF adjudications (#768)",
+    ),
+    "assay-boundary-comparison-observations": (
+        "cta-evidence",
+        "verified native-TPM normal, reproductive, and tumor observations for cleared #768 former-Unsafe candidates",
+    ),
+    "candidate-near-self-1mm": (
+        "cta-evidence",
+        "exact 9-mer unique, >=2-mismatch safe, 1-mismatch Hamming near-self percentage, and shared Unsafe tryptic peptide counts across candidate antigens (#769)",
+    ),
+    "tryptic-ms-paralog-audit": (
+        "cta-evidence",
+        "isobaric (I==L) tryptic-peptide MS paralog sharing audit for CTAGE1/MIA2, TGM4/TGM2, and SPATA31A3/SPATA31C (#769)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
@@ -876,6 +892,9 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "cleared-candidate-comparison-observations",
         "repeat-family-adjudications",
         "repeat-family-comparison-observations",
+        "assay-boundary-adjudications",
+        "assay-boundary-comparison-observations",
+        "tryptic-ms-paralog-audit",
         "mouse-target-selection",
         "mouse-host-exposure",
         "mouse-proteome-sequences",

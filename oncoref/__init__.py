@@ -21,6 +21,7 @@ genome and plotting features add only their named extras.
 from . import (
     antigen_coverage,
     antigen_sets,
+    assay_boundary_adjudications,
     barkbase,
     bgee_srp009687,
     bgee_srp181218,
@@ -610,6 +611,7 @@ __all__ = [
     # organized API modules
     "antigen_coverage",
     "antigen_sets",
+    "assay_boundary_adjudications",
     "attach_gene_identities",
     "available_percentile_cohorts",
     "available_representative_cohorts",

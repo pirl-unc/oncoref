@@ -1424,19 +1424,37 @@ def evaluate_species_catalog(
                     "protein_status": c_prot,
                     "scope_complete": c_scope,
                 }
-                if qual_val >= threshold:
+                if qual_val >= threshold or (
+                    "germline_protamine_diluted_qualified" in cgroup.columns
+                    and bool(cgroup["germline_protamine_diluted_qualified"].fillna(False).any())
+                    and n_max <= 0.10
+                    and cmax >= 5.0
+                ):
                     qual_comps.append(str(comp))
+
+        germline_diluted_ok = (
+            not valid_r.empty
+            and "germline_protamine_diluted_qualified" in valid_r.columns
+            and bool(valid_r["germline_protamine_diluted_qualified"].fillna(False).any())
+            and n_max <= 0.10
+            and pd.notna(r_peak)
+            and r_peak >= 5.0
+        )
+        if germline_diluted_ok and (r_supp is None or pd.isna(r_supp) or float(r_supp) < r_peak):
+            r_supp = r_peak
+            r_ratio = float(r_supp) / denom
 
         dev_mean = getattr(row, "developmental_mean_tpm", np.nan)
         peaks = [v for v in (t_peak, r_supp, dev_mean) if v is not None and pd.notna(v)]
         target_peak = max(peaks) if peaks else 0.0
         d_ntpm = getattr(row, "disposable_max_ntpm", np.nan)
         ntpm_ok = pd.isna(d_ntpm) or float(d_ntpm) <= spec.disposable_cap
+        ra_qual = ra_rec["status"] == "qualifies" or germline_diluted_ok
         b_ok = (
             d_max <= spec.disposable_cap
             and ntpm_ok
             and (
-                (ca_rec["status"] != "qualifies" and ra_rec["status"] != "qualifies")
+                (ca_rec["status"] != "qualifies" and not ra_qual)
                 or (target_peak >= spec.detection_floor and target_peak > max(n_max, d_max))
             )
         )
@@ -1450,7 +1468,7 @@ def evaluate_species_catalog(
         )
         ra_status.append(
             "qualifies"
-            if ra_rec["status"] == "qualifies"
+            if ra_qual
             else (
                 "unassessed"
                 if valid_r.empty and comparison_reproductive is None
@@ -1695,11 +1713,16 @@ def _load_packaged_species_catalog_cached(
     ):
         if bool_col in df.columns:
             df[bool_col] = df[bool_col].fillna(False).astype(bool)
-    from . import clinical_organ_clearance, repeat_family_equivalence
+    from . import (
+        assay_boundary_adjudications,
+        clinical_organ_clearance,
+        repeat_family_equivalence,
+    )
 
     is_human = resolved.taxon_id == 9606
     df = clinical_organ_clearance.annotate_catalog(df, enabled=is_human)
     df = repeat_family_equivalence.annotate_catalog(df, enabled=is_human)
+    df = assay_boundary_adjudications.annotate_catalog(df, enabled=is_human)
     df.attrs.update(
         taxon_id=resolved.taxon_id,
         species=resolved.name,

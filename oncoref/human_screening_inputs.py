@@ -23,12 +23,14 @@ import numpy as np
 import pandas as pd
 
 from . import (
+    assay_boundary_adjudications,
     clinical_organ_clearance,
     normal_adjudications,
     normal_library_qc,
     rare_cell_compartment_qc,
     repeat_family_equivalence,
     target_selection,
+    tgct_localization,
     unmeasured_home_panels,
 )
 from .load_dataset import get_data
@@ -63,6 +65,7 @@ def human_screening_spec(
     include_nuclear_spillover_qc: bool = False,
     include_clinical_clearances: bool = False,
     include_repeat_family_equivalence: bool = False,
+    include_assay_boundary_fixes: bool = False,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -79,6 +82,7 @@ def human_screening_spec(
         or include_nuclear_spillover_qc
         or include_clinical_clearances
         or include_repeat_family_equivalence
+        or include_assay_boundary_fixes
     )
     effective_policy = policy_id or (
         HUMAN_INTEGRATED_POLICY_PREVIEW_ID if integrated else target_selection.POLICY_ID
@@ -108,6 +112,10 @@ def human_screening_spec(
     if include_repeat_family_equivalence:
         notes.append(
             "Includes #767 closed homologous repeat-family sequence equivalence & symmetric quantification."
+        )
+    if include_assay_boundary_fixes:
+        notes.append(
+            "Includes #768 TGCT admixture witness, RNA-zero HPA IHC, adult cornea multi-UMI, and germline TF rules."
         )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
@@ -150,6 +158,7 @@ def build_human_screening_inputs(
     include_nuclear_spillover_qc: bool = False,
     include_clinical_clearances: bool = False,
     include_repeat_family_equivalence: bool = False,
+    include_assay_boundary_fixes: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -162,12 +171,15 @@ def build_human_screening_inputs(
         include_nuclear_spillover_qc=include_nuclear_spillover_qc,
         include_clinical_clearances=include_clinical_clearances,
         include_repeat_family_equivalence=include_repeat_family_equivalence,
+        include_assay_boundary_fixes=include_assay_boundary_fixes,
     )
     ts = target_selection.results()
     exposures = packaged_species_host_exposure("human")
 
     cleared_rare_eids: set[str] = set()
     cleared_obs_map: dict[str, dict] = {}
+    admixture_non_tgct_map: dict[str, tuple[float, str, str]] = {}
+    germline_tf_eids: set[str] = set()
     if include_nuclear_spillover_qc:
         nuc_cleared = rare_cell_compartment_qc.nuclear_spillover_adjudications(only_cleared=True)
         cleared_rare_eids = set(
@@ -223,6 +235,32 @@ def build_human_screening_inputs(
                 cleared_rare_eids.add(rf_eid)
                 if rf_eid in rf_obs:
                     cleared_obs_map[rf_eid] = rf_obs[rf_eid]
+    if include_assay_boundary_fixes:
+        ab_df = assay_boundary_adjudications.assay_boundary_adjudications()
+        ab_obs = assay_boundary_adjudications.assay_boundary_comparison_observations()["candidates"]
+        for ab_row in ab_df.itertuples(index=False):
+            ab_eid = str(ab_row.entity_id)
+            disp = str(ab_row.disposition)
+            if disp in {"ihc_rna_zero_cleared", "adult_cornea_sparse_umi_cleared"}:
+                cleared_rare_eids.add(ab_eid)
+                if ab_eid in ab_obs:
+                    cleared_obs_map[ab_eid] = ab_obs[ab_eid]
+            elif disp == "germline_tf_protamine_diluted_qualified":
+                germline_tf_eids.add(ab_eid)
+        tgct_restr = tgct_localization.tgct_admixture_restricted_entity_ids(
+            include_multi_r_tgct=True
+        )
+        tgct_sup = tgct_localization.tgct_aafl_protein_support()
+        for tr in tgct_sup.itertuples(index=False):
+            teid = str(tr.entity_id)
+            if teid in tgct_restr:
+                admixture_non_tgct_map[teid] = (
+                    float(tr.max_non_tgct_tpm) if pd.notna(tr.max_non_tgct_tpm) else 0.0,
+                    str(tr.top_non_tgct_sample) if pd.notna(tr.top_non_tgct_sample) else "",
+                    str(tr.top_non_tgct_cancer_code)
+                    if pd.notna(tr.top_non_tgct_cancer_code)
+                    else "",
+                )
 
     readthrough = ts["readthrough_locus"].fillna(False).astype(bool)
     overlap_ge95 = (
@@ -555,7 +593,24 @@ def build_human_screening_inputs(
                 }
             )
 
-        if pd.notna(r.tumor_max_tpm):
+        if eid in admixture_non_tgct_map:
+            nt_val, nt_sample, nt_code = admixture_non_tgct_map[eid]
+            if nt_val > 0 and nt_sample:
+                tumor_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "oncoref_non_admixed_tumor_witness_768",
+                        "sample_id": nt_sample,
+                        "participant_id": f"somatic:{nt_sample}",
+                        "cancer_code": nt_code,
+                        "value": nt_val,
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+        elif pd.notna(r.tumor_max_tpm):
             n_known = (
                 int(r.independent_patients_at_tenfold or 0)
                 if pd.notna(r.independent_patients_at_tenfold)
@@ -587,6 +642,7 @@ def build_human_screening_inputs(
             )
         if (
             bleed_rec is not None
+            and eid not in admixture_non_tgct_map
             and pd.notna(bleed_rec.get("max_non_tgct_tumor_tpm"))
             and float(bleed_rec["max_non_tgct_tumor_tpm"]) > 0
             and str(bleed_rec.get("top_non_tgct_sample") or "")
@@ -672,9 +728,43 @@ def build_human_screening_inputs(
                         "compartment_qualifying_value": (
                             float(val) if comp_qualifies else min(float(val), 0.0)
                         ),
+                        "germline_protamine_diluted_qualified": bool(
+                            eid in germline_tf_eids and comp == "testis"
+                        ),
                         "max_ntpm": item.get("max_ntpm"),
                         "protein_status": item.get("protein_status", "not_assessed"),
                         "scope_complete": bool(item.get("scope_complete", True)),
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+        if eid in germline_tf_eids and "testis" not in added_comps:
+            g_max = (
+                float(r.reproductive_max_sample_tpm)
+                if pd.notna(r.reproductive_max_sample_tpm)
+                else 0.0
+            )
+            if g_max >= 5.0:
+                repro_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "human_reproductive_panel_768",
+                        "sample_id": "repro:testis",
+                        "participant_id": "repro_donor:testis",
+                        "scope": "reproductive",
+                        "compartment": "testis",
+                        "source_context": "testis",
+                        "developmental_stage": "adult",
+                        "cells": 0,
+                        "positive_cells": 0,
+                        "value": g_max,
+                        "compartment_qualifying_value": g_max,
+                        "germline_protamine_diluted_qualified": True,
+                        "max_ntpm": None,
+                        "protein_status": "not_assessed",
+                        "scope_complete": True,
                         "comparison_id": comp_id,
                         "unit": unit,
                         "qc_pass": True,
@@ -762,6 +852,7 @@ def evaluate_human_catalog(
     include_nuclear_spillover_qc: bool = False,
     include_clinical_clearances: bool = False,
     include_repeat_family_equivalence: bool = False,
+    include_assay_boundary_fixes: bool = False,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -774,15 +865,27 @@ def evaluate_human_catalog(
         include_nuclear_spillover_qc=include_nuclear_spillover_qc,
         include_clinical_clearances=include_clinical_clearances,
         include_repeat_family_equivalence=include_repeat_family_equivalence,
+        include_assay_boundary_fixes=include_assay_boundary_fixes,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
     spec = inputs.pop("spec")
     result = evaluate_species_catalog(spec, **inputs)
 
-    # Attach #711, #712, #735, #764, #765, #766, and #767 adjudication provenance columns
+    is_integrated = (
+        include_home_panels
+        or include_737_cohorts
+        or include_multiplex_bleed_qc
+        or include_nuclear_spillover_qc
+        or include_clinical_clearances
+        or include_repeat_family_equivalence
+        or include_assay_boundary_fixes
+        or extra_tumor_observations is not None
+    )
+    # Attach #711, #712, #735, #764-#769 adjudication & near-self provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)
+    cat = assay_boundary_adjudications.annotate_catalog(cat, enabled=True, integrated=is_integrated)
     object.__setattr__(result, "catalog", cat)
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()
@@ -864,6 +967,38 @@ def evaluate_human_catalog(
         ):
             clin_disp_map[str(ctag2_attr["entity_id"])] = "clinical_organ_and_xq28_cleared"
 
+    ab_disp_map: dict[str, str] = {}
+    if include_assay_boundary_fixes:
+        ab_df = assay_boundary_adjudications.assay_boundary_adjudications()
+        tgct_restr_eval = tgct_localization.tgct_admixture_restricted_entity_ids(
+            include_multi_r_tgct=True
+        )
+        cat_by_eid = cat.set_index("entity_id")
+        for ar in ab_df.itertuples(index=False):
+            aeid = str(ar.entity_id)
+            if str(ar.rule_family) == "tgct_admixture_witness_713" and aeid in cat_by_eid.index:
+                crow = cat_by_eid.loc[aeid]
+                n_v = (
+                    float(crow["normal_reference_tpm"])
+                    if pd.notna(crow["normal_reference_tpm"])
+                    else 0.0
+                )
+                d_v = (
+                    float(crow["disposable_max_tpm"])
+                    if pd.notna(crow["disposable_max_tpm"])
+                    else 0.0
+                )
+                t_v = float(crow["tumor_max_tpm"]) if pd.notna(crow["tumor_max_tpm"]) else 0.0
+                dyn_ev = assay_boundary_adjudications.evaluate_non_admixed_tumor_witness(
+                    entity_id=aeid,
+                    max_non_tgct_tpm=t_v,
+                    single_tumor_threshold_tpm=10.0 * max(n_v, d_v, 1.0),
+                    admixture_restricted_ids=tgct_restr_eval,
+                )
+                ab_disp_map[aeid] = str(dyn_ev["disposition"])
+            else:
+                ab_disp_map[aeid] = str(ar.disposition)
+
     cat["rare_cell_711_requirement"] = [rc_map.get(eid, "") for eid in cat["entity_id"]]
     cat["normal_library_712_disposition"] = [nl_map.get(eid, "") for eid in cat["entity_id"]]
     cat["home_panel_735_disposition"] = [uh_map.get(eid, "") for eid in cat["entity_id"]]
@@ -878,6 +1013,7 @@ def evaluate_human_catalog(
         clin_disp_map.get(eid, "") for eid in cat["entity_id"]
     ]
     cat["repeat_family_767_disposition"] = [rf_disp_map.get(eid, "") for eid in cat["entity_id"]]
+    cat["assay_boundary_768_disposition"] = [ab_disp_map.get(eid, "") for eid in cat["entity_id"]]
     if nuc_cleared_rare:
         mask_nuc = cat["entity_id"].isin(nuc_cleared_rare)
         cat.loc[mask_nuc, "rare_cell_status"] = "nuclear_only"
@@ -905,6 +1041,7 @@ _PREVIEW_STRING_COLS = (
     "nuclear_rna_caution",
     "clinical_clearance_766_disposition",
     "repeat_family_767_disposition",
+    "assay_boundary_768_disposition",
     "closed_homolog_family_id",
     "co_silenced_coding_sibling_ids",
     "closed_self_paralog_ids",
@@ -923,7 +1060,7 @@ def compute_next_policy_transitions(
     *,
     integrated_result: SpeciesScreeningResult | None = None,
 ) -> tuple[pd.DataFrame, dict]:
-    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, and #764-#767 into human screening."""
+    """Recompute exact protein-level transitions from folding #735, #711/#712, #737, and #764-#768 into human screening."""
     baseline = target_selection.results()
     integrated_res = (
         integrated_result
@@ -936,6 +1073,7 @@ def compute_next_policy_transitions(
             include_nuclear_spillover_qc=True,
             include_clinical_clearances=True,
             include_repeat_family_equivalence=True,
+            include_assay_boundary_fixes=True,
         )
     )
     integrated = integrated_res.catalog
@@ -970,9 +1108,14 @@ def compute_next_policy_transitions(
                 "nuclear_rna_caution",
                 "clinical_clearance_766_disposition",
                 "repeat_family_767_disposition",
+                "assay_boundary_768_disposition",
                 "closed_homolog_family_id",
                 "co_silenced_coding_sibling_ids",
                 "closed_self_paralog_ids",
+                "exact_unique_9mers",
+                "safe_2mm_9mers",
+                "unsafe_near_self_1mm_pct",
+                "unsafe_shared_tryptic_peptides",
                 "clinical_clearance_scope",
                 "clinical_cleared_organs",
                 "clinical_cleared_epitopes",
@@ -1012,6 +1155,13 @@ def compute_next_policy_transitions(
             reasons.append(f"#766:{r.clinical_clearance_766_disposition}")
         if r.repeat_family_767_disposition == "closed_repeat_family_cleared":
             reasons.append(f"#767:{r.repeat_family_767_disposition}")
+        if r.assay_boundary_768_disposition in {
+            "reclassified_ra_only_admixed_tgct_witness",
+            "ihc_rna_zero_cleared",
+            "adult_cornea_sparse_umi_cleared",
+            "germline_tf_protamine_diluted_qualified",
+        }:
+            reasons.append(f"#768:{r.assay_boundary_768_disposition}")
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (

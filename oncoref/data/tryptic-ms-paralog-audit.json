@@ -1,0 +1,7 @@
+{
+  "schema": "oncoref.tryptic-ms-paralog-audit.v1",
+  "policy_id": "oncoref.assay-boundary-and-near-self.2026-11-23.1",
+  "rows": 12,
+  "sha256": "1c34488d0cf2ecee7f242a9a03d713b953a9edaf92f34f1c6b44676226dc7cb8",
+  "audited_candidates": 12
+}
