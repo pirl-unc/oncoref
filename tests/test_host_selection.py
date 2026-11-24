@@ -366,8 +366,16 @@ def test_resting_breast_sex_stratification_in_host_context(rows):
         "female-patient", protect_tissues=("resting_breast",), absent_tissues=("ovary",)
     )
     male = hc.from_legacy("male-patient", protect_tissues=("resting_breast",))
+    male_castrated = hc.from_legacy(
+        "male-patient",
+        protect_tissues=("resting_breast",),
+        absent_tissues=("testis", "prostate"),
+    )
+    bare_prostate_absent = hc.HostContext(absent=("prostate",), protect=("resting_breast",))
     unstrat = hc.HostContext(protect=("resting_breast",))
     assert hc.assess(rows, fem, evidence=ev).iloc[0].host_status == "eligible"
     assert hc.assess(rows, fem_ooph, evidence=ev).iloc[0].host_status == "eligible"
     assert hc.assess(rows, male, evidence=ev).iloc[0].host_status == "excluded"
+    assert hc.assess(rows, male_castrated, evidence=ev).iloc[0].host_status == "excluded"
+    assert hc.assess(rows, bare_prostate_absent, evidence=ev).iloc[0].host_status == "excluded"
     assert hc.assess(rows, unstrat, evidence=ev).iloc[0].host_status == "excluded"
