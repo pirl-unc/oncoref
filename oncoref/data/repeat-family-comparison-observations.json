@@ -1,0 +1,407 @@
+{
+  "schema": "oncoref.repeat-family-comparison-observations.v1",
+  "policy_id": "oncoref.repeat-family-equivalence.2026-11-23.1",
+  "candidates": {
+    "PEG:480888ecf4b591dc9c7f": {
+      "entity_id": "PEG:480888ecf4b591dc9c7f",
+      "protein_group_label": "DUX4",
+      "family_gene_ids": [
+        "ENSG00000258834",
+        "ENSG00000260596",
+        "ENSG00000274599",
+        "ENSG00000275610",
+        "ENSG00000276046",
+        "ENSG00000276164",
+        "ENSG00000276904",
+        "ENSG00000276964",
+        "ENSG00000277274",
+        "ENSG00000278641",
+        "ENSG00000278664",
+        "ENSG00000278761",
+        "ENSG00000278790",
+        "ENSG00000280337",
+        "ENSG00000280457",
+        "ENSG00000280757",
+        "ENSG00000280799",
+        "ENSG00000281058",
+        "ENSG00000281627",
+        "ENSG00000281652",
+        "ENSG00000281720"
+      ],
+      "required_coverage_complete": true,
+      "unsafe_sequence_overlap_pct": 0.72,
+      "disposable_max_ntpm": 0.0,
+      "normal_reference_tpm": 0.3,
+      "normal_reference_top_context": "rna_tissue_hpa:somatic_max",
+      "disposable_max_tpm": 0.0,
+      "reproductive_supported_tpm": 112.4,
+      "reproductive_compartments": [
+        {
+          "compartment": "placenta",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "testis",
+          "scope": "reproductive",
+          "max_tpm": 1.8,
+          "max_ntpm": 0.9,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "ovary",
+          "scope": "reproductive",
+          "max_tpm": 0.104077,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "epididymis",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "prostate",
+          "scope": "reproductive",
+          "max_tpm": 1.649183,
+          "max_ntpm": 0.2,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "seminal vesicle",
+          "scope": "reproductive",
+          "max_tpm": 0.1,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "fallopian tube",
+          "scope": "reproductive",
+          "max_tpm": 0.3,
+          "max_ntpm": 0.2,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "uterus",
+          "scope": "reproductive",
+          "max_tpm": 0.108624,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "endometrium",
+          "scope": "reproductive",
+          "max_tpm": 0.1,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "cervix",
+          "scope": "reproductive",
+          "max_tpm": 0.20486,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "vagina",
+          "scope": "reproductive",
+          "max_tpm": 0.126463,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "lactating_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "resting_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.086136,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "embryo",
+          "scope": "developmental",
+          "max_tpm": 112.4,
+          "petropoulos_e3_post_burst_tpm": 6.375666,
+          "qualifies_tenfold": true,
+          "cleavage_4cell_provenance": {
+            "source_id": "hendrickson_GSE85632_4cell_cleavage",
+            "pmid": "28459457",
+            "corroborating_pmids": [
+              "28459456",
+              "31327740",
+              "21060811"
+            ],
+            "developmental_stage": "4-cell cleavage (E2)",
+            "mean_tpm": 112.4,
+            "hpa_germline_late_spermatid_ntpm": 10.8,
+            "hpa_somatic_max_ntpm": 0.0
+          }
+        }
+      ],
+      "top_tumor_observations": [
+        {
+          "cancer_code": "B_ALL",
+          "source_id": "TARGET_ALL_2018",
+          "sample_id": "TARGET-10-PANTSM-09A",
+          "participant_id": "TARGET:TARGET-10-PANTSM",
+          "value": 28.3106
+        },
+        {
+          "cancer_code": "SARC_RMS_ERMS",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR24_2154_S01",
+          "participant_id": "TREEHOUSE:THR24_2154",
+          "value": 24.35
+        },
+        {
+          "cancer_code": "MENINGIOMA",
+          "source_id": "GSE270638_MENINGIOMA_2024",
+          "sample_id": "TB20",
+          "participant_id": "",
+          "value": 14.70327
+        },
+        {
+          "cancer_code": "NET_PANCREAS",
+          "source_id": "GSE118014_ALVAREZ_2018",
+          "sample_id": "SRS3619149",
+          "participant_id": "",
+          "value": 9.522479
+        },
+        {
+          "cancer_code": "NET_LUNG",
+          "source_id": "DRMETRICS_ALCALA_2019_LNEN",
+          "sample_id": "S02126",
+          "participant_id": "",
+          "value": 7.387802
+        },
+        {
+          "cancer_code": "ADCC",
+          "source_id": "GSE294016_BARTL_2025_SGC",
+          "sample_id": "P-80",
+          "participant_id": "",
+          "value": 6.874531
+        },
+        {
+          "cancer_code": "ADCC",
+          "source_id": "GSE294016_BARTL_2025_SGC",
+          "sample_id": "P-20",
+          "participant_id": "",
+          "value": 5.57089
+        }
+      ]
+    },
+    "PEG:97b601a4d18436c07534": {
+      "entity_id": "PEG:97b601a4d18436c07534",
+      "protein_group_label": "ENSG00000278646",
+      "family_gene_ids": [
+        "ENSG00000224089",
+        "ENSG00000226023",
+        "ENSG00000226600",
+        "ENSG00000230594",
+        "ENSG00000236371",
+        "ENSG00000278646"
+      ],
+      "required_coverage_complete": true,
+      "unsafe_sequence_overlap_pct": 3.03,
+      "disposable_max_ntpm": 0.0,
+      "normal_reference_tpm": 0.3,
+      "normal_reference_top_context": "rna_tissue_hpa:somatic_max",
+      "disposable_max_tpm": 0.0,
+      "reproductive_supported_tpm": 51.949851,
+      "reproductive_compartments": [
+        {
+          "compartment": "placenta",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "testis",
+          "scope": "reproductive",
+          "max_tpm": 5.4,
+          "max_ntpm": 2.7,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "ovary",
+          "scope": "reproductive",
+          "max_tpm": 0.104116,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "epididymis",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "prostate",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "seminal vesicle",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "fallopian tube",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "uterus",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "endometrium",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "cervix",
+          "scope": "reproductive",
+          "max_tpm": 0.077243,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "vagina",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "lactating_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.0,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "resting_breast",
+          "scope": "reproductive",
+          "max_tpm": 0.041389,
+          "max_ntpm": 0.0,
+          "protein_status": "not_detected",
+          "qualifies_tenfold": false
+        },
+        {
+          "compartment": "embryo",
+          "scope": "developmental",
+          "max_tpm": 51.949851,
+          "petropoulos_e3_post_burst_tpm": 51.949851,
+          "qualifies_tenfold": true
+        }
+      ],
+      "top_tumor_observations": [
+        {
+          "cancer_code": "NEC_LUNG_LARGECELL",
+          "source_id": "DRMETRICS_ALCALA_2019_LNEN",
+          "sample_id": "S00725",
+          "participant_id": "",
+          "value": 26.197015
+        },
+        {
+          "cancer_code": "LIHC",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-G3-A7M6-01",
+          "participant_id": "TCGA:TCGA-G3-A7M6",
+          "value": 24.180065
+        },
+        {
+          "cancer_code": "NEC_LUNG_LARGECELL",
+          "source_id": "DRMETRICS_ALCALA_2019_LNEN",
+          "sample_id": "S00581",
+          "participant_id": "",
+          "value": 18.750392
+        },
+        {
+          "cancer_code": "STAD",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-IN-A6RI-01",
+          "participant_id": "TCGA:TCGA-IN-A6RI",
+          "value": 8.670109
+        },
+        {
+          "cancer_code": "STAD_CIN",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-IN-A6RI-01",
+          "participant_id": "TCGA:TCGA-IN-A6RI",
+          "value": 8.670109
+        },
+        {
+          "cancer_code": "KIRP",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-A4-7915-01",
+          "participant_id": "TCGA:TCGA-A4-7915",
+          "value": 8.420148
+        },
+        {
+          "cancer_code": "LIHC",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "TCGA-G3-A5SJ-01",
+          "participant_id": "TCGA:TCGA-G3-A5SJ",
+          "value": 6.150011
+        },
+        {
+          "cancer_code": "SARC_MYXFIB",
+          "source_id": "TREEHOUSE_POLYA_25_01",
+          "sample_id": "THR52_4939_S01",
+          "participant_id": "TREEHOUSE:THR52_4939",
+          "value": 6.01
+        }
+      ]
+    }
+  }
+}

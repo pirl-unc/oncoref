@@ -373,11 +373,12 @@ def metadata() -> dict:
 
 @lru_cache(maxsize=1)
 def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
-    from . import clinical_organ_clearance
+    from . import clinical_organ_clearance, repeat_family_equivalence
 
     with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
         base = pd.read_csv(handle, compression="gzip", low_memory=False)
     base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
+    base = repeat_family_equivalence.annotate_catalog(base, enabled=True)
     gene_index: dict[str, list[int]] = {}
     for idx, (lbl, raw_ids) in enumerate(zip(base["protein_group_label"], base["member_gene_ids"])):
         gene_index.setdefault(str(lbl), []).append(idx)

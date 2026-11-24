@@ -27,6 +27,7 @@ nav:
       - Multiplex bleed QC (#764): audits/multiplex-bleed-qc-20261123/index.md
       - Nuclear RNA & spillover QC (#765): audits/nuclear-rna-spillover-20261123/index.md
       - Clinical organ-safety tier (#766): audits/clinical-organ-clearance-20261123/index.md
+      - Closed repeat-family equivalence (#767): audits/repeat-family-equivalence-20261123/index.md
       - Unmeasured home-tissue panels (#735): audits/unmeasured-home-panels-20261122/index.md
       - TGCT localization audit (#713): audits/tgct-aafl-localization-20261122/index.md
       - CTpedia comparison: ctpedia-filtering.md

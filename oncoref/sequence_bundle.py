@@ -74,6 +74,9 @@ def target_selection_dispositions():
             "clinical_hla_alleles",
             "clinical_cleared_transcripts",
             "clinical_trial_source_ids",
+            "closed_homolog_family_id",
+            "co_silenced_coding_sibling_ids",
+            "closed_self_paralog_ids",
         ]
     ].copy()
     out["gene_ids"] = out.member_gene_ids.map(lambda raw: tuple(json.loads(raw)))

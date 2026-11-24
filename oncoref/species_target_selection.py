@@ -1695,9 +1695,11 @@ def _load_packaged_species_catalog_cached(
     ):
         if bool_col in df.columns:
             df[bool_col] = df[bool_col].fillna(False).astype(bool)
-    from . import clinical_organ_clearance
+    from . import clinical_organ_clearance, repeat_family_equivalence
 
-    df = clinical_organ_clearance.annotate_catalog(df, enabled=(resolved.taxon_id == 9606))
+    is_human = resolved.taxon_id == 9606
+    df = clinical_organ_clearance.annotate_catalog(df, enabled=is_human)
+    df = repeat_family_equivalence.annotate_catalog(df, enabled=is_human)
     df.attrs.update(
         taxon_id=resolved.taxon_id,
         species=resolved.name,
