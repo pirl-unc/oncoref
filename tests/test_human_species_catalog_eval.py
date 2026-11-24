@@ -47,6 +47,8 @@ def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
         include_home_panels=True,
         include_adjudications=True,
         include_737_cohorts=True,
+        include_multiplex_bleed_qc=True,
+        include_nuclear_spillover_qc=True,
     )
     recomputed, recomputed_summary = human_screening_inputs.compute_next_policy_transitions(
         integrated_result=integrated_res

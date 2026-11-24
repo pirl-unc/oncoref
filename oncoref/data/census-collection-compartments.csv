@@ -1,0 +1,94 @@
+collection_id,assay_compartment,compartment_basis,tissues,n_donors,collection_doi,collection_name
+03cdc7f4-bd08-49d0-a395-4487c0e5a168,cell,whole_cell_scrnaseq,lung,3,10.1016/j.immuni.2023.01.032,Emphysema Cell Atlas
+05e3d0fc-c9dd-4f14-9163-2b242b3bb5c2,mixed,title_mixed_sc_and_sn,eye,25,,Single cell atlas of the human optic nerve
+07e12576-b41b-4350-adfc-059bfc4328ea,cell,whole_cell_scrnaseq,lung,30,10.1038/s41588-024-01702-0,Single-cell RNA-seq analysis of Interstitial Lung Disease (ILD) subtypes
+0a77d4c0-d5d0-40f0-aa1a-5e1429bcbd7e,cell,whole_cell_scrnaseq,pancreas,5,10.1016/j.molmet.2022.101595,A transcriptional cross species map of pancreatic islet cells
+0c8a364b-97b5-4cc8-a593-23c38c6f0ac5,cell,whole_cell_scrnaseq,liver,4,10.1016/j.jhep.2023.12.023,Single-cell and spatial transcriptomics characterisation of the immunological landscape in the healthy and PSC human liver
+0cbf8ef8-87bd-4b51-8521-ec3f68183e11,mixed,title_mixed_sc_and_sn,eye,83,,Single cell atlas of the human trabecular meshwork and ciliary body
+0d35c0fd-ef0b-4b70-bce6-645a4660e5fa,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,8,10.1101/2024.11.03.621787,Molecular Signatures of Resilience to Alzheimer’s Disease in Neocortical Layer 4 Neurons
+0e54d4de-44f0-4d50-8649-b5c2bbe8f5d1,mixed,title_mixed_sc_and_sn,urinary bladder,1,10.1016/j.isci.2024.111628,Exploring the Utility of snRNA-seq in Profiling Human Bladder Tissue: A Comprehensive Comparison with scRNA-seq
+0f528c8a-a25c-4840-8fa3-d156fa11086f,mixed,title_mixed_sc_and_sn,kidney,45,,An atlas of healthy and injured cell states and niches in the human kidney (Version 1.5)
+0f7d022a-46c7-4e64-be4c-e34adbb78089,mixed,title_mixed_sc_and_sn,eye,63,,Single cell atlas of the human ocular surface
+120e86b4-1195-48c5-845b-b98054105eec,cell,whole_cell_scrnaseq,kidney,7,10.1126/science.aat5031,Spatiotemporal immune zonation of the human kidney
+16c1e722-96ae-4bf6-b408-cd7f8918484f,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,5,10.1038/s41586-019-0903-2,Single nuclei RNA- sequencing from the white matter of individuals with progressive MS and non-neurological controls
+180bff9c-c8a5-4539-b13b-ddbc00d643e6,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,3,10.1038/s41593-020-00764-7,Molecular characterization of selectively vulnerable neurons in Alzheimer's Disease
+1a486c4c-c115-4721-8c9f-f9f096e10857,cell,whole_cell_scrnaseq,eye,3,10.1038/s41467-019-12780-8,Single-cell transcriptomic atlas of the human retina identifies cell types associated with age-related macular degeneration
+1ca90a2d-2943-483d-b678-b809bf464c30,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,47,10.1038/s41593-024-01774-5,SEA-AD: Seattle Alzheimer’s Disease Brain Cell Atlas
+1cbfb478-2c7f-4d15-b522-9f74e9fe52a8,cell,whole_cell_scrnaseq,colon,12,10.1038/s41586-024-08560-0,Progressive plasticity during colorectal cancer metastasis
+1d1c7275-476a-49e2-9022-ad1b1c793594,cell,whole_cell_scrnaseq,eye,7,10.1038/s41598-020-66092-9,Cell Atlas of The Human Fovea and Peripheral Retina
+1df8c90d-d299-4b2e-a54d-a5a80f36e780,cell,whole_cell_scrnaseq,kidney,5,10.1073/pnas.2103240118,"Single-cell analyses of renal cell cancers reveal insights into tumor microenvironment, cell of origin, and therapy response"
+20eea6c8-9d64-42c9-9b6f-c11b5249e0e9,cell,whole_cell_scrnaseq,heart,3,10.1038/s41467-023-40505-5,Single-cell genomics improves the discovery of risk variants and genes of atrial fibrillation
+22ccff12-9a18-4b01-ba10-302df57a01f8,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,8,10.1016/j.neuron.2021.09.001,Single-nucleus transcriptome analysis reveals cell-type-specific molecular signatures across reward circuitry in the human brain
+283d65eb-dd53-496d-adb7-7570c7caa443,nucleus,curated_snrnaseq_or_multiome_nuclei,brain;spinal cord,4,10.1126/science.add7046,Human Brain Cell Atlas v1.0
+307ce143-7cc8-4813-99b1-3797834149c9,nucleus,curated_snrnaseq_or_multiome_nuclei,kidney,7,10.1038/s41467-025-59997-4,snRNA-seq of human kidney with ureteral obstruction
+3116d060-0a8e-4767-99bb-e866badea1ed,mixed,title_mixed_sc_and_sn,heart,10,10.1038/s41586-023-06311-1,Spatially resolved multiomics of human cardiac niches
+3472f32d-4a33-48e2-aad5-666d4631bf4c,cell,whole_cell_scrnaseq,eye,2,10.15252/embj.2018100811,A single-cell transcriptome atlas of the adult human retina
+348da6dc-5bf6-435d-adc5-37747b9ae38a,nucleus,curated_snrnaseq_or_multiome_nuclei,eye,4,10.1016/j.xgen.2022.100164,Single-cell multiome of the human retina and deep learning nominate causal variants in complex eye diseases
+3db5617e-9f12-4eb4-8416-94893a0d7c46,cell,whole_cell_scrnaseq,small intestine,1,10.1038/s41556-023-01337-z,Epithelial zonation along the mammalian small intestine defines five discrete metabolic domains
+433700dc-e8a5-48b0-b5cd-beb22f3f88fe,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,9,,Brain vascular single-cell multi-omics elucidates disease risk associations
+4429f25e-5c91-4981-9cf2-6a1044c36732,cell,whole_cell_scrnaseq,lymph node,6,10.1016/j.ccell.2025.06.002,Single cell atlas of large B-cell lymphoma
+48c15b0c-6039-4e0f-9668-b6b3c0b830ad,mixed,title_mixed_sc_and_sn,eye,79,,Single cell atlas of the human retinal pigment epithelium and the choroid
+4c6eaf5c-6d57-4c76-b1e9-60df8c655f1e,mixed,title_mixed_sc_and_sn,eye,94,10.1101/2023.11.07.566105,Single cell atlas of the human retina
+4cbb929b-b03b-4aa8-a943-00f61dc22641,cell,whole_cell_scrnaseq,kidney,10,10.1101/2025.03.06.637075,Multimodal benchmarking dataset for renal cortex characterization (mBDRC)
+4d74781b-8186-4c9a-b659-ff4dc4601d91,cell,whole_cell_scrnaseq,esophagus;lung,9,10.1186/s13059-019-1906-x,"scRNA-seq assessment of the human lung, spleen, and esophagus tissue stability after cold preservation"
+4f30b962-d49b-4624-a233-64f048cf8632,cell,whole_cell_scrnaseq,lung,4,10.1164/rccm.202207-1384OC,A Unique Cellular Organization of Human Distal Airways and Its Disarray in Chronic Obstructive Pulmonary Disease
+51544e44-293b-4c2b-8c26-560678423380,cell,whole_cell_scrnaseq,pancreas,12,10.1038/s42255-022-00531-x,Multiomics single-cell analysis of human pancreatic islets reveals novel cellular states in health and type 1 diabetes
+58e85c2f-d52e-4c19-8393-b854b84d516e,cell,whole_cell_scrnaseq,pancreas,17,10.1101/2025.01.17.633590,"A pancreatic islet scRNA-seq atlas from 48 non-diabetic, prediabetic and type 2 diabetic individuals of matched demographic and ethnic backgrounds"
+5c868b6f-62c5-4532-9d7f-a346ad4b50a7,cell,whole_cell_scrnaseq,colon;small intestine,55,10.1016/j.immuni.2023.01.002,The landscape of immune dysregulation in Crohn’s disease revealed through single-cell transcriptomic profiling in the ileum and colon
+5d445965-6f1a-4b68-ba3a-b8f765155d3a,cell,whole_cell_scrnaseq,lung,3,10.1038/s41586-020-2922-4,A molecular cell atlas of the human lung from single cell RNA sequencing
+625f6bf4-2f33-4942-962e-35243d284837,cell,whole_cell_scrnaseq,lung,3,10.7554/eLife.62522,LungMAP — Human data from a broad age healthy donor group
+63d03351-06be-478e-a0db-f7a653b6b19b,cell,whole_cell_scrnaseq,eye,6,10.1073/pnas.2200914119,Cell atlas of the human ocular anterior segment: Tissue-specific and shared cell types
+64b24fda-6591-4ce1-89e7-33eb6c43ad7b,cell,whole_cell_scrnaseq,colon;small intestine,3,10.1016/j.jcmgh.2022.02.007,A proximal-to-distal survey of healthy adult human small intestine and colon epithelium by single-cell transcriptomics
+68e7e5b7-4dc9-4609-832e-7656aa6182ba,cell,whole_cell_scrnaseq,heart,3,10.1161/CIRCULATIONAHA.120.051921,Sex-Specific Control of Human Heart Maturation by the Progesterone Receptor
+6b701826-37bb-4356-9792-ff41fc4c3161,nucleus,curated_snrnaseq_or_multiome_nuclei,adipose tissue,14,10.1101/2025.09.14.673351,Single-Nucleus Analysis of Human White Adipose Tissue Reveals Adipocyte Subsets with Distinct Metabolic Profiles
+6f6d381a-7701-4781-935c-db10d30de293,cell,whole_cell_scrnaseq,lung,65,10.1038/s41591-023-02327-2,The integrated Human Lung Cell Atlas
+6ff3401b-d72c-4940-a00c-3f0792397082,cell,whole_cell_scrnaseq,lung,12,10.15252/embj.20105114,SARS-CoV-2 receptor ACE2 and TMPRSS2 are primarily expressed in bronchial transient secretory cells
+72d37bc9-76cc-442d-9131-da0e273862db,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,2,10.1038/s41586-023-06884-x,Cellular development and evolution of the mammalian cerebellum
+74e10dc4-cbb2-4605-a189-8a1cd8e44d8c,cell,whole_cell_scrnaseq,liver,5,10.1016/j.cell.2021.12.018,Spatial proteogenomics reveals distinct and evolutionarily conserved hepatic macrophage niches
+7855daa4-3f34-4aae-b65a-87720c02e7cd,cell,whole_cell_scrnaseq,eye,16,10.1073/pnas.2306153120,Transcriptomic Analysis of the Ocular Posterior Segment Completes a Cell Atlas of the Human Eye
+7c4552fd-8a6d-4da3-9854-2dfa8baca8bf,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,5,10.1186/s40478-024-01853-5,Deciphering glial contributions to CSF1R-related disorder via single-nuclear transcriptomic profiling
+8191c283-0816-424b-9b61-c3e1d6258a77,nucleus,title_snrnaseq,heart,4,10.1038/s41586-022-05060-x,Spatial multi-omic map of human myocardial infarction
+84ce6837-548d-4a1f-919f-0bc0d9a3952f,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,381,10.1101/2024.10.31.24316513,Population-scale cross-disorder atlas of the human prefrontal cortex at single-cell resolution
+854c0855-23ad-4362-8b77-6b1639e7a9fc,cell,whole_cell_scrnaseq,brain;heart;pancreas,46,10.1016/j.cell.2023.11.026,Automatic cell-type harmonization and integration across Human Cell Atlas datasets
+8c782494-01ed-491b-97b9-6f0d3b76c676,cell,whole_cell_scrnaseq,heart,61,10.1016/j.xcrm.2024.101556,Transcriptomic and spatial dissection of human ex vivo right atrial tissue reveals proinflammatory microvascular changes in ischemic heart disease
+8f17ac63-aaba-44b5-9b78-60f121da4c2f,cell,whole_cell_scrnaseq,heart,6,10.1101/2024.09.10.612293,A Coding and Non-Coding Atlas of the Human Arterial Cell
+939769a8-d8d2-4d01-abfc-55699893fd49,cell,whole_cell_scrnaseq,eye,4,10.1016/j.celrep.2019.12.082,Integration of eQTL and a Single-Cell Atlas in the Human Eye Identifies Causal Genes for Age-Related Macular Degeneration
+9b02383a-9358-4f0f-9795-a891ec523bcc,cell,whole_cell_scrnaseq,kidney,5,10.1038/s41467-021-22368-w,Single cell transcriptional and chromatin accessibility profiling redefine cellular heterogeneity in the adult human kidney
+9d63fcf1-5ca0-4006-8d8f-872f3327dbe9,nucleus,postmortem_adult_cns_nuclear_isolation,brain;spinal cord,20,10.1186/s40478-023-01568-z,"Brain matters: Unveiling the Distinct Contributions of Region, Age, and Sex to Glia diversity and CNS Function"
+9f29fcd0-7075-4420-bd61-e2ec1aebad89,cell,whole_cell_scrnaseq,lung,6,10.1016/j.ajt.2024.08.019,Ischemia Reperfusion Responses in Human Lung Transplants at the Single Cell Resolution
+a18474f4-ff1e-4864-af69-270b956cee5b,cell,whole_cell_scrnaseq,esophagus;small intestine;stomach,18,10.1158/2159-8290.cd-22-0824,Single-cell RNA sequencing unifies developmental programs of Esophageal and Gastric Intestinal Metaplasia
+a3ffde6c-7ad2-498a-903c-d58e732f7470,nucleus,title_snrnaseq,esophagus;heart;lung,6,10.1126/science.abl4290,Single-nucleus cross-tissue molecular reference maps to decipher disease gene function
+a98b828a-622a-483a-80e0-15703678befd,cell,whole_cell_scrnaseq,kidney,18,,HCA kidney seed network: University of Michigan
+aee9c366-f2fb-470b-8937-577d5d87d3fc,nucleus,postmortem_adult_cns_nuclear_isolation,brain,12,10.1007/s00401-023-02599-5,"Cortical brain samples from C9-ALS, C9-ALS/FTD, C9-FTD patients and age matched controls"
+af286675-7167-4816-a907-c72d41b73d37,cell,whole_cell_scrnaseq,ureter,10,10.1016/j.devcel.2022.07.004,Single-cell and spatial mapping Identify cell types and signaling Networks in the human ureter
+af893e86-8e9f-41f1-a474-ef05359b1fb7,cell,whole_cell_scrnaseq,eye,6,10.1016/j.xgen.2023.100298,Single-cell transcriptomic atlas for adult human retina
+b0f0b447-ac37-45b0-b1bf-5c0b7d871120,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,8,10.1038/s41593-022-01061-1,Single-cell genomic profiling of human dopamine neurons identifies a population that selectively degenerates in Parkinson’s disease
+b3e2c6e3-9b05-4da9-8f42-da38a664b45b,mixed,title_mixed_sc_and_sn,kidney,1,10.1038/s41467-022-32972-z,Multimodal single cell sequencing implicates chromatin accessibility and genetic background in diabetic kidney disease progression
+b52eb423-5d0d-4645-b217-e1c6d38b2e72,cell,whole_cell_scrnaseq,heart,14,10.1038/s41586-020-2797-4,Cells of the adult human heart
+b953c942-f5d8-434f-9da7-e726ba7c1481,nucleus,postmortem_adult_cns_nuclear_isolation,brain,8,10.1016/j.neuron.2022.06.021,Single-soma transcriptomics of tangle-bearing neurons in Alzheimer’s disease
+ba84c7ba-8d8c-4720-a76e-3ee37dc89f0b,nucleus,title_snrnaseq,adipose tissue,9,10.1038/s41588-024-02048-3,Human subcutaneous and visceral adipocyte atlases uncover classical and non-classical adipocytes and depot-specific patterns
+bacccb91-066d-4453-b70e-59de0b4598cd,nucleus,postmortem_adult_cns_nuclear_isolation,brain,15,10.1126/science.adf0834,Single-cell analysis of prenatal and postnatal human cortical development
+c1241244-b22d-483d-875b-75699efb9f3c,nucleus,title_snrnaseq,lung,9,10.1038/s41588-022-01243-4,A spatially resolved atlas of the human lung characterizes a gland-associated immune niche
+c53573b2-eff4-4c5e-9ad0-b24d422dfd9b,nucleus,postmortem_adult_cns_nuclear_isolation,brain,10,10.1016/j.cell.2024.08.019,Cross-dementia human brain snRNA-seq (Rexach et al 2024)
+cae8bad0-39e9-4771-85a7-822b0e06de9f,nucleus,postmortem_adult_cns_nuclear_isolation,brain,4,10.1038/s41586-023-06981-x,Protracted Neuronal Recruitment in the Temporal Lobe of Young Children
+ceb895f4-ff9f-403a-b7c3-187a9657ac2c,nucleus,postmortem_adult_cns_nuclear_isolation,brain,2,10.1126/sciadv.adg3754,Multi-omic profiling of the developing human cerebral cortex at the single cell level
+cec4ef8e-1e70-49a2-ae43-1e6bf1fd5978,nucleus,postmortem_adult_cns_nuclear_isolation,brain,6,10.1038/s41467-024-45165-7,Transcriptional responses of the human dorsal striatum in opioid use disorder implicates cell type-specifc programs
+d0941303-7ce3-4422-9249-cf31eb98c480,nucleus,postmortem_adult_cns_nuclear_isolation,brain,8,10.1038/s41586-024-08504-8,HYPOMAP: A comprehensive spatio-cellularmap of the human hypothalamus
+d17249d2-0e6e-4500-abb8-e6c93fa1ac6f,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,6,10.1126/science.adf6812,Transcriptomic cytoarchitecture reveals principles of human neocortex organization
+d5d0df8f-4eee-49d8-a221-a288f50a1590,nucleus,postmortem_adult_cns_nuclear_isolation,brain,24,10.1038/s41597-024-04117-y,A multi-region single nucleus transcriptomic atlas of Parkinson’s disease
+dc3a5256-5c39-4a21-ac0c-4ede3e7b2323,cell,whole_cell_scrnaseq,kidney,19,10.1038/s41467-022-35297-z,Healthy living donor kidney
+dc4cd1f7-667a-4c29-ae77-9401b9700d7f,cell,whole_cell_scrnaseq,lung,7,10.1165/rcmb.2021-0555OC,Anomalous Epithelial Variations and Ectopic Inflammatory Response in Chronic Obstructive Pulmonary Disease
+dfc09a93-bce0-4c77-893d-e153d1b7f9fa,cell,whole_cell_scrnaseq,small intestine,2,10.1016/j.cell.2021.04.028,Charting human development using a multi-endodermal organ atlas and organoid models
+e1fa9900-3fc9-4b57-9dce-c95724c88716,nucleus,curated_snrnaseq_or_multiome_nuclei,brain,4,10.1126/science.abo7257,Molecular and cellular evolution of the primate dorsolateral prefrontal cortex
+e33ffcd3-7cbf-4b8c-b0f4-85587ad5019a,cell,whole_cell_scrnaseq,colon;lymph node;small intestine,7,10.1038/s41586-021-03852-1,Cells of the human intestinal tract mapped across space and time
+e4c9ed14-e560-4900-a3bf-b0f8d2ce6a10,cell,whole_cell_scrnaseq,lung,7,10.1038/s41586-021-03569-1,A molecular single-cell lung atlas of lethal COVID-19
+e5f58829-1a66-40b5-a624-9046778e74f5,cell,whole_cell_scrnaseq,colon;eye;heart;kidney;liver;lung;pancreas;small intestine;stomach;tongue,16,10.1126/science.abl4896,Tabula Sapiens
+e75342a8-0f3b-4ec5-8ee1-245a23e0f7cb,cell,whole_cell_scrnaseq,heart,6,10.1126/science.abo1984,Pathogenic variants damage cell composition and single cell transcription in cardiomyopathies
+e9c73b68-e980-49c2-8d0d-1c9cab21507e,cell,whole_cell_scrnaseq,eye,3,10.1093/hmg/ddab140,Human photoreceptor cells from different macular subregions have distinct transcriptional profiles
+eeba7193-4d32-46bd-a21b-089936d60601,cell,whole_cell_scrnaseq,heart,5,10.1126/science.abq3061,Recruited macrophages elicit atrial fibrillation
+f11cb29c-b546-4738-9bd8-66ea621a7bd5,cell,whole_cell_scrnaseq,colon;esophagus;lymph node;small intestine;stomach,44,10.1038/s41586-024-07571-1,Single-cell integration reveals metaplasia in inflammatory gut diseases
+f406a653-c079-4bf9-aab6-85846c27571d,nucleus,postmortem_adult_cns_nuclear_isolation,brain,4,10.1038/s41588-025-02083-8,Simultaneous profiling of transcription and chromatin accessibility at the single-cell level for postnatal human brain development
+f7cecffa-00b4-4560-a29a-8ad626b8ee08,cell,whole_cell_scrnaseq,kidney,4,10.1016/j.ccell.2022.11.001,Mapping single-cell transcriptomes in the intra-tumoral and associated territories of kidney cancer
+f86d6317-7215-409e-bfda-3f4ded3dadaa,cell,whole_cell_scrnaseq,lung,17,10.1038/s41467-023-40173-5,Human CellCards Multi-Study CellRef 1.0 Atlas
+fe0e718d-2ee9-42cc-894b-0b490f437dfd,cell,whole_cell_scrnaseq,adipose tissue,9,10.1038/s41586-022-04518-2,A single-cell atlas of human and mouse white adipose tissue
+ff69f0ee-fef6-4895-9f48-6c64a68c8289,cell,whole_cell_scrnaseq,liver,4,10.1097/HC9.0000000000000813,Single-Cell Atlas Of Human Pediatric Liver Reveals Age-Related Hepatic Gene Signatures

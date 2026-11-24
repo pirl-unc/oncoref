@@ -459,6 +459,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "per-protein GTEx donor-P95 normal-reference adjustments under stoichiometric multiplex-bleed QC (#764)",
     ),
+    "census-collection-compartments": (
+        "expression-qc",
+        "CELLxGENE Census adult normal collection assay-compartment annotations (nucleus vs cell, #765)",
+    ),
+    "nuclear-spillover-adjudications": (
+        "cta-evidence",
+        "Ensembl 115 promoter, termination-readthrough, and non-coding 5'-UTR intron spillover adjudications (#765)",
+    ),
+    "cleared-candidate-comparison-observations": (
+        "cta-evidence",
+        "verified native-TPM normal, reproductive, and per-sample tumor observations for cleared former-Unsafe candidates (#765, #768)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
@@ -840,6 +852,12 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "unmeasured-home-tissue-panels",
         "unmeasured-home-protein-adjudications",
         "unmeasured-home-gene-expression",
+        "human-integrated-policy-preview",
+        "normal-multiplex-bleed-tissue-summary",
+        "normal-multiplex-bleed-gene-deltas",
+        "census-collection-compartments",
+        "nuclear-spillover-adjudications",
+        "cleared-candidate-comparison-observations",
         "mouse-target-selection",
         "mouse-host-exposure",
         "mouse-proteome-sequences",
