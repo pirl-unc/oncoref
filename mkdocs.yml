@@ -41,6 +41,7 @@ nav:
       - Patient-context gene filters: normal-tissue-gene-filters.md
   - Data, Species & API:
       - API guide: api.md
+      - GTEx reference & deconvolution: gtex.md
       - Species & data groups: species.md
       - Murine antigen catalog (#734): audits/mouse-target-catalog-20261122/index.md
       - Data versions & reproducibility: data-versions.md

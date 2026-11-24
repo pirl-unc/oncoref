@@ -1,331 +1,36 @@
 # Licensed under the Apache License, Version 2.0.
-"""Unified GTEx normal-tissue RNA interface across versions, providers, QC, cleanup, and normalization (#778).
-
-Separates three orthogonal operations into one central, cacheable :class:`GtexSpec`:
-
-1. **``qc`` — Reject invalid columns or contaminated ``(gene, sample)`` cells**
-   (*never alters surviving numbers; drops bad columns or masks splashed cells as ``NaN``*):
-   - ``"cell_lines"``: drop *in vitro* ``Cells_EBV-transformed_lymphocytes`` & ``Cells_Cultured_fibroblasts``.
-   - ``"swaps"``: drop globally quarantined foreign-organ tube swaps & cross-sex chimeras.
-   - ``"splash"``: mask (``NaN``) positive sample cells materially corrupted by ``>= 0.5%``
-     non-boundary foreign splash or biologically impossible opposite-sex bleed (never masks
-     ``0.0`` zeros or high endogenous expression where foreign bleed is ``< 20%`` of observed TPM).
-   Pass ``qc=None`` (untouched), ``qc="all"`` (alias for :data:`ALL_QC`), or any list/set of operations.
-
-2. **``cleanup`` — Improve continuous TPM & donor-quantile estimates on surviving observations:**
-   - ``"index_hopping"``: subtract stoichiometric patterned-flowcell multiplexed pool bleed
-     (``2e-5 .. 5e-3`` using conservative 25th-percentile anchor ratios).
-   - ``"deconvolution"``: apply joint 52-shard NNLS shadow-source suppression, sample
-     ``purity_weights``, and purity-weighted Harrell-Davis Beta donor quantiles.
-   Pass ``cleanup=None`` (no model subtraction/reweighting), ``cleanup="all"`` (alias for
-   :data:`ALL_CLEANUP`), or any list/set of operations.
-
-3. **``normalize`` — Cross-cohort expression scale renormalization (applied after ``qc`` & ``cleanup``):**
-   - ``normalize=None`` (native ``TPM`` / ``nTPM``) or ``normalize="clean_tpm"`` (16/9/75
-     multi-compartment renormalization via :func:`oncoref.normalization.clean_tpm`).
-"""
+"""Version- and provider-agnostic GTEx RNA loaders across ``(qc, cleanup, normalize)`` (#778)."""
 
 from __future__ import annotations
 
-import contextlib
 import functools
 import gzip
-import hashlib
-import json
-import os
-import re
-import tempfile
 import warnings
 from collections.abc import Iterable
-from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from filelock import FileLock
 
-from . import gtex_deconvolution, normal_tissues, normalization, reference_data
-
-SOURCE_ID = "gtex_tissue_rna"
-SHARD_SOURCE_ID = "gtex_individual_tissue_tpm"
-HPA_TISSUE_GTEX_SOURCE_ID = "rna_tissue_gtex"
-HPA_BRAIN_GTEX_SOURCE_ID = "rna_brain_gtex"
-
-_UNSET = object()
-
-#: Atomic sample/value rejection rules (drop columns or mask contaminated cells as NaN).
-ALL_QC: tuple[str, ...] = (
-    "cell_lines",
-    "swaps",
-    "splash",
+from .. import bulk_qc, normal_tissues, normalization, reference_data
+from . import deconvolution as gtex_deconvolution
+from .spec import (
+    _HPA_TISSUE_TO_GTEX_SITE,
+    _UNSET,
+    CELL_LINE_COLUMNS,
+    GTEX_V11_SUBCOMPARTMENT_COLUMNS,
+    HPA_BRAIN_GTEX_SOURCE_ID,
+    HPA_TISSUE_GTEX_SOURCE_ID,
+    HPA_UNIQUE_GTEX_TISSUES,
+    SHARD_SOURCE_ID,
+    SOURCE_ID,
+    GtexSpec,
+    _effective_derived_cache_dir,
+    normalize_column_to_site,
+    primary_shard_sites,
+    resolve_spec,
+    spec_cache_key,
 )
-
-#: Named aliases that expand directly to sets of atomic :data:`ALL_QC` operations.
-QC_ALIASES: dict[str, frozenset[str]] = {
-    "all": frozenset(ALL_QC),
-    "none": frozenset(),
-    "raw": frozenset(),
-}
-
-#: Atomic quantitative TPM / quantile estimation steps on surviving observations.
-ALL_CLEANUP: tuple[str, ...] = (
-    "index_hopping",
-    "deconvolution",
-)
-
-#: Named aliases that expand directly to sets of atomic :data:`ALL_CLEANUP` operations.
-CLEANUP_ALIASES: dict[str, frozenset[str]] = {
-    "all": frozenset(ALL_CLEANUP),
-    "none": frozenset(),
-    "raw": frozenset(),
-}
-
-CELL_LINE_COLUMNS: frozenset[str] = frozenset(
-    {
-        "Cells_Cultured_fibroblasts",
-        "Cells_EBV-transformed_lymphocytes",
-        "Cells - Cultured fibroblasts",
-        "Cells - Transformed fibroblasts",
-        "Cells - EBV-transformed lymphocytes",
-    }
-)
-
-GTEX_V11_SUBCOMPARTMENT_COLUMNS: frozenset[str] = frozenset(
-    {
-        "Colon_Transverse_Mixed_Cell",
-        "Colon_Transverse_Mucosa",
-        "Colon_Transverse_Muscularis",
-        "Liver_Hepatocyte",
-        "Liver_Mixed_Cell",
-        "Liver_Portal_Tract",
-        "Pancreas_Acini",
-        "Pancreas_Islets",
-        "Pancreas_Mixed_Cell",
-        "Small_Intestine_Terminal_Ileum_Lymphoid_Aggregate",
-        "Small_Intestine_Terminal_Ileum_Mixed_Cell",
-        "Stomach_Mixed_Cell",
-        "Stomach_Mucosa",
-        "Stomach_Muscularis",
-    }
-)
-
-HPA_UNIQUE_GTEX_TISSUES: frozenset[str] = frozenset({"retina"})
-
-_HPA_TISSUE_TO_GTEX_SITE: dict[str, str] = {
-    "adipose tissue": "adipose_subcutaneous",
-    "adrenal gland": "adrenal_gland",
-    "amygdala": "brain_amygdala",
-    "basal ganglia": "brain_putamen_basal_ganglia",
-    "breast": "breast_mammary_tissue",
-    "caudate": "brain_caudate_basal_ganglia",
-    "cerebellum": "brain_cerebellum",
-    "cerebral cortex": "brain_cortex",
-    "cervix": "cervix_ectocervix",
-    "colon": "colon_transverse",
-    "endometrium": "uterus",
-    "esophagus": "esophagus_mucosa",
-    "fallopian tube": "fallopian_tube",
-    "heart muscle": "heart_left_ventricle",
-    "hippocampal formation": "brain_hippocampus",
-    "hippocampus": "brain_hippocampus",
-    "hypothalamus": "brain_hypothalamus",
-    "kidney": "kidney_cortex",
-    "liver": "liver",
-    "lung": "lung",
-    "midbrain": "brain_substantia_nigra",
-    "nucleus accumbens": "brain_nucleus_accumbens_basal_ganglia",
-    "ovary": "ovary",
-    "pancreas": "pancreas",
-    "pituitary gland": "pituitary",
-    "prostate": "prostate",
-    "putamen": "brain_putamen_basal_ganglia",
-    "retina": "retina",
-    "salivary gland": "minor_salivary_gland",
-    "skeletal muscle": "muscle_skeletal",
-    "skin": "skin_sun_exposed_lower_leg",
-    "small intestine": "small_intestine_terminal_ileum",
-    "spinal cord": "brain_spinal_cord_cervical_c-1",
-    "spleen": "spleen",
-    "stomach": "stomach",
-    "substantia nigra": "brain_substantia_nigra",
-    "testis": "testis",
-    "thyroid gland": "thyroid",
-    "urinary bladder": "bladder",
-    "vagina": "vagina",
-}
-
-
-def _expand_ops(
-    value: str | bool | Iterable[str] | None,
-    *,
-    allowed: tuple[str, ...],
-    aliases: dict[str, frozenset[str]],
-    param_name: str,
-) -> frozenset[str]:
-    """Expand ``None``, ``"all"`` (or other aliases), or any list/set of operations to a ``frozenset``."""
-    if value is None or value is False:
-        return frozenset()
-    if value is True:
-        return aliases["all"]
-    if isinstance(value, str):
-        raw_tokens = [p.strip().lower() for p in re.split(r"[+,]", value) if p.strip()]
-        if not raw_tokens:
-            return frozenset()
-    elif isinstance(value, Iterable):
-        raw_tokens = []
-        for item in value:
-            if not isinstance(item, str):
-                raise TypeError(
-                    f"{param_name} elements must be operation strings; got {type(item).__name__}"
-                )
-            for p in re.split(r"[+,]", item):
-                tok = p.strip().lower()
-                if tok:
-                    raw_tokens.append(tok)
-    else:
-        raise TypeError(
-            f"{param_name} must be None, an alias ({sorted(aliases)}), or an iterable of operations; "
-            f"got {type(value).__name__}"
-        )
-
-    expanded: set[str] = set()
-    unknown: list[str] = []
-    allowed_set = set(allowed)
-    for tok in raw_tokens:
-        if tok in aliases:
-            expanded.update(aliases[tok])
-        elif tok in allowed_set:
-            expanded.add(tok)
-        else:
-            unknown.append(tok)
-    if unknown:
-        raise ValueError(
-            f"Unknown GTEx {param_name} step(s) {sorted(set(unknown))}; "
-            f"choose from {allowed}, aliases {sorted(aliases)}, or None"
-        )
-    return frozenset(expanded)
-
-
-def expand_qc_ops(value: str | bool | Iterable[str] | None) -> frozenset[str]:
-    """Expand a ``qc`` alias (e.g. ``'all'``) or list/set of operations into canonical :data:`ALL_QC` members."""
-    return _expand_ops(value, allowed=ALL_QC, aliases=QC_ALIASES, param_name="qc")
-
-
-def expand_cleanup_ops(value: str | bool | Iterable[str] | None) -> frozenset[str]:
-    """Expand a ``cleanup`` alias (e.g. ``'all'``) or list/set of operations into canonical :data:`ALL_CLEANUP` members."""
-    return _expand_ops(value, allowed=ALL_CLEANUP, aliases=CLEANUP_ALIASES, param_name="cleanup")
-
-
-@dataclass(frozen=True)
-class GtexSpec:
-    """Composable GTEx sample/value ``qc``, quantitative ``cleanup``, and ``normalize`` spec (#778)."""
-
-    qc: frozenset[str] | str | bool | Iterable[str] | None = frozenset()
-    cleanup: frozenset[str] | str | bool | Iterable[str] | None = frozenset()
-    normalize: str | None = None
-    sex: str | None = None
-    include_subcompartments: bool = True
-    hpa_unique_tissues_only: bool = False
-
-    def __post_init__(self) -> None:
-        object.__setattr__(self, "qc", expand_qc_ops(self.qc))
-        object.__setattr__(self, "cleanup", expand_cleanup_ops(self.cleanup))
-        norm_val = (
-            None
-            if self.normalize is None or str(self.normalize).strip().lower() == "none"
-            else str(self.normalize).strip().lower()
-        )
-        if norm_val is not None and norm_val != "clean_tpm":
-            raise ValueError(f"normalize must be None or 'clean_tpm'; got {self.normalize!r}")
-        object.__setattr__(self, "normalize", norm_val)
-        if self.sex is not None and self.sex not in {"XX", "XY"}:
-            raise ValueError(f"sex must be None, 'XX', or 'XY'; got {self.sex!r}")
-
-    @property
-    def drop_cell_lines(self) -> bool:
-        return "cell_lines" in self.qc
-
-    @property
-    def quarantine_swaps(self) -> bool:
-        return "swaps" in self.qc
-
-    @property
-    def reject_splash(self) -> bool:
-        return "splash" in self.qc
-
-    @property
-    def subtract_index_hopping(self) -> bool:
-        return "index_hopping" in self.cleanup
-
-    @property
-    def nnls_deconvolution(self) -> bool:
-        return "deconvolution" in self.cleanup
-
-    @property
-    def clean_tpm(self) -> bool:
-        return self.normalize == "clean_tpm"
-
-    @property
-    def is_raw_default(self) -> bool:
-        return (
-            not self.qc
-            and not self.cleanup
-            and self.normalize is None
-            and self.sex is None
-            and self.include_subcompartments
-            and not self.hpa_unique_tissues_only
-        )
-
-    def to_dict(self) -> dict:
-        return {
-            "qc": [x for x in ALL_QC if x in self.qc],
-            "cleanup": [x for x in ALL_CLEANUP if x in self.cleanup],
-            "normalize": self.normalize,
-            "sex": self.sex,
-            "include_subcompartments": self.include_subcompartments,
-            "hpa_unique_tissues_only": self.hpa_unique_tissues_only,
-        }
-
-
-def resolve_spec(
-    *,
-    qc: GtexSpec | str | bool | Iterable[str] | None = None,
-    cleanup: object = _UNSET,
-    normalize: object = _UNSET,
-    sex: object = _UNSET,
-    include_subcompartments: object = _UNSET,
-    hpa_unique_tissues_only: object = _UNSET,
-) -> GtexSpec:
-    """Construct and validate a :class:`GtexSpec` from ``qc``, ``cleanup``, and ``normalize``."""
-    if isinstance(qc, GtexSpec):
-        return GtexSpec(
-            qc=qc.qc,
-            cleanup=qc.cleanup if cleanup is _UNSET else cleanup,  # type: ignore[arg-type]
-            normalize=qc.normalize if normalize is _UNSET else normalize,  # type: ignore[arg-type]
-            sex=qc.sex if sex is _UNSET else sex,  # type: ignore[arg-type]
-            include_subcompartments=(
-                qc.include_subcompartments
-                if include_subcompartments is _UNSET
-                else bool(include_subcompartments)
-            ),
-            hpa_unique_tissues_only=(
-                qc.hpa_unique_tissues_only
-                if hpa_unique_tissues_only is _UNSET
-                else bool(hpa_unique_tissues_only)
-            ),
-        )
-    return GtexSpec(
-        qc=qc,
-        cleanup=None if cleanup is _UNSET else cleanup,  # type: ignore[arg-type]
-        normalize=None if normalize is _UNSET else normalize,  # type: ignore[arg-type]
-        sex=None if sex is _UNSET else sex,  # type: ignore[arg-type]
-        include_subcompartments=(
-            True if include_subcompartments is _UNSET else bool(include_subcompartments)
-        ),
-        hpa_unique_tissues_only=(
-            False if hpa_unique_tissues_only is _UNSET else bool(hpa_unique_tissues_only)
-        ),
-    )
 
 
 def versions(provider: str = "direct", *, granularity: str = "medians") -> tuple[str, ...]:
@@ -345,43 +50,6 @@ def versions(provider: str = "direct", *, granularity: str = "medians") -> tuple
     raise ValueError(f"Unknown GTEx provider {provider!r}; expected 'direct' or 'hpa'")
 
 
-def _primary_shard_sites() -> tuple[str, ...]:
-    pins = sorted(reference_data.REFERENCE_SOURCES[SHARD_SOURCE_ID]["pins"])
-    return tuple(pk.removeprefix("v11-") for pk in pins)
-
-
-def normalize_column_to_site(column: str) -> str:
-    """Normalize a GTEx v8/v10/v11 or HPA-GTEx column name to a canonical GTEx site key."""
-    raw = str(column).strip()
-    low = raw.lower()
-    if low in _HPA_TISSUE_TO_GTEX_SITE:
-        return _HPA_TISSUE_TO_GTEX_SITE[low]
-    norm = (
-        re.sub(r"[ ()-]+", "_", raw.replace("c-1", "cMINUS1"))
-        .strip("_")
-        .replace("cMINUS1", "c-1")
-        .lower()
-        .removeprefix("v11-")
-    )
-    primary = set(_primary_shard_sites())
-    if norm in primary:
-        return norm
-    if norm == "small_intestine_terminal_ileum_lymphoid_aggregate":
-        return "small_intestine_terminal_ileum"
-    for suffix in (
-        "_mixed_cell",
-        "_mucosa",
-        "_muscularis",
-        "_hepatocyte",
-        "_portal_tract",
-        "_acini",
-        "_islets",
-    ):
-        if norm.endswith(suffix) and norm[: -len(suffix)] in primary:
-            return norm[: -len(suffix)]
-    return norm
-
-
 def _is_boundary_columns(src_col: str, tgt_col: str) -> bool:
     s_site = normalize_column_to_site(src_col)
     t_site = normalize_column_to_site(tgt_col)
@@ -391,153 +59,6 @@ def _is_boundary_columns(src_col: str, tgt_col: str) -> bool:
         str(tgt_col).lower().endswith("lymphoid_aggregate")
         and gtex_deconvolution.organ_lineage_family(s_site) == "lymphoid_hematopoietic"
     )
-
-
-def derived_cache_dir() -> Path:
-    """Directory holding materialized GTEx Parquet tables (read-only; creates no dirs)."""
-    return reference_data.cache_base_dir() / "derived" / "gtex"
-
-
-def spec_cache_key(
-    *,
-    provider: str,
-    version: str,
-    granularity: str,
-    stat: str,
-    value_column: str,
-    spec: GtexSpec,
-    upstream_sha256: dict[str, str],
-) -> tuple[str, dict]:
-    """Compute a deterministic cache key and provenance manifest for a GTEx query spec."""
-    payload = {
-        "schema": "oncoref.gtex-derived-spec.v4",
-        "policy_id": gtex_deconvolution.GTEX_DECONVOLUTION_POLICY_ID,
-        "provider": provider,
-        "version": version,
-        "granularity": granularity,
-        "stat": stat,
-        "value_column": value_column,
-        "spec": spec.to_dict(),
-        "upstream_sha256": dict(sorted(upstream_sha256.items())),
-    }
-    digest = hashlib.sha256(json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()[:16]
-    slug = f"{provider}-{version}-{granularity}-{stat}-{value_column.lower()}"
-    if spec.sex:
-        slug += f"-{spec.sex.lower()}"
-    slug = re.sub(r"[^a-zA-Z0-9_.-]+", "_", slug)
-    key = f"{slug}-{digest}"
-    payload["spec_key"] = key
-    return key, payload
-
-
-def cached_specs() -> pd.DataFrame:
-    """Read-only inventory of materialized derived GTEx tables in ``derived/gtex``."""
-    cdir = derived_cache_dir()
-    cols = [
-        "spec_key",
-        "provider",
-        "version",
-        "granularity",
-        "stat",
-        "value_column",
-        "qc",
-        "cleanup",
-        "normalize",
-        "bytes",
-        "path",
-    ]
-    if not cdir.is_dir():
-        return pd.DataFrame(columns=cols)
-    rows = []
-    for meta_path in sorted(cdir.glob("*.json")):
-        pq_path = meta_path.with_suffix(".parquet")
-        if not pq_path.is_file():
-            continue
-        with contextlib.suppress(OSError, json.JSONDecodeError):
-            meta = json.loads(meta_path.read_text(encoding="utf-8"))
-            sp = meta.get("spec", {})
-            rows.append(
-                {
-                    "spec_key": meta.get("spec_key", meta_path.stem),
-                    "provider": meta.get("provider", ""),
-                    "version": meta.get("version", ""),
-                    "granularity": meta.get("granularity", ""),
-                    "stat": meta.get("stat", ""),
-                    "value_column": meta.get("value_column", ""),
-                    "qc": ";".join(sp.get("qc", ())),
-                    "cleanup": ";".join(sp.get("cleanup", ())),
-                    "normalize": sp.get("normalize") or "none",
-                    "bytes": pq_path.stat().st_size,
-                    "path": str(pq_path),
-                }
-            )
-    return pd.DataFrame(rows, columns=cols)
-
-
-def clear_derived_cache(spec_key: str | None = None) -> int:
-    """Remove one or all materialized GTEx derived Parquet caches; returns files removed."""
-    cdir = derived_cache_dir()
-    if not cdir.is_dir():
-        return 0
-    removed = 0
-    targets = (
-        [cdir / f"{spec_key}.parquet", cdir / f"{spec_key}.json"]
-        if spec_key
-        else list(cdir.iterdir())
-    )
-    for p in targets:
-        if p.is_file() and not p.name.endswith(".lock"):
-            with contextlib.suppress(OSError):
-                p.unlink()
-                removed += 1
-    return removed
-
-
-def _read_or_compute_cached_df(
-    key: str,
-    manifest_payload: dict,
-    builder_fn,
-    *,
-    use_cache: bool,
-) -> pd.DataFrame:
-    if not use_cache:
-        df = builder_fn()
-        df.attrs["gtex_spec"] = manifest_payload
-        return df
-
-    cdir = derived_cache_dir()
-    cdir.mkdir(parents=True, exist_ok=True)
-    pq_path = cdir / f"{key}.parquet"
-    meta_path = cdir / f"{key}.json"
-    lock_path = cdir / f".{key}.lock"
-
-    with FileLock(str(lock_path)):
-        if pq_path.is_file() and meta_path.is_file():
-            with contextlib.suppress(Exception):
-                meta = json.loads(meta_path.read_text(encoding="utf-8"))
-                if meta.get("spec_key") == key:
-                    df = pd.read_parquet(pq_path)
-                    df.attrs["gtex_spec"] = meta
-                    df.attrs["cache_path"] = str(pq_path)
-                    return df
-
-        df = builder_fn()
-        with contextlib.suppress(Exception):
-            fd, tmp_pq = tempfile.mkstemp(dir=cdir, prefix=f".{key}-", suffix=".parquet.part")
-            os.close(fd)
-            try:
-                df.to_parquet(tmp_pq, index=False)
-                os.replace(tmp_pq, pq_path)
-                meta_out = {**manifest_payload, "rows": len(df), "columns": list(df.columns)}
-                meta_path.write_text(
-                    json.dumps(meta_out, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-                )
-            finally:
-                Path(tmp_pq).unlink(missing_ok=True)
-        df.attrs["gtex_spec"] = manifest_payload
-        if pq_path.is_file():
-            df.attrs["cache_path"] = str(pq_path)
-        return df
 
 
 def apply_summary_spec(
@@ -569,9 +90,6 @@ def apply_summary_spec(
     mat = out[val_cols].to_numpy(dtype=np.float64, copy=True)
     orig_nan = np.isnan(mat)
 
-    # On pre-aggregated summary matrices, > 0.5% splash bleed is cleaned when either splash QC
-    # or deconvolution cleanup is requested, while <= 0.5% lane hopping is subtracted when
-    # index_hopping cleanup is requested.
     clean_summary_splash = spec.reject_splash or spec.nnls_deconvolution
     if spec.subtract_index_hopping or clean_summary_splash:
         anchors = gtex_deconvolution.gtex_deconvolution_anchors()
@@ -597,14 +115,12 @@ def apply_summary_spec(
                     st: sub_df[[val_cols[i] for i in idxs]].max(axis=1)
                     for st, idxs in site_to_col_idxs.items()
                 }
-                nnls_w_mat = gtex_deconvolution.solve_nonnegative_archetype_mixture(
+                nnls_w_mat = bulk_qc.solve_nonnegative_archetype_mixture(
                     pd.DataFrame(basis_dict, index=anchor_present),
                     sub_df,
                     l1_penalty=5e-4,
                 )
 
-        # Collect candidate bleed contributors per (target_col_j, source_lineage_family) so
-        # sibling archetypes (e.g. 6 brain shards or 5 squamous shards) never double-subtract!
         best_by_col_fam: dict[tuple[int, str], tuple[float, float, np.ndarray]] = {}
         for src_site, grp in anchors.groupby("source_site", sort=True):
             if src_site not in site_to_col_idxs:
@@ -769,6 +285,10 @@ def tissue_rna(
         )
 
     if prov == "direct":
+        if value_column.upper() != "TPM":
+            raise ValueError(
+                f"Direct GTEx releases provide 'TPM' only; value_column={value_column!r} requires provider='hpa'"
+            )
         concrete = reference_data.resolve_version(SOURCE_ID, version)
         if spec.is_raw_default:
             path = reference_data.ensure(SOURCE_ID, concrete)
@@ -797,8 +317,13 @@ def tissue_rna(
             raw_df = pd.read_csv(p, sep="\t", skiprows=2)
             return apply_summary_spec(raw_df, spec=spec, provider="direct", value_column="TPM")
 
-        result = _read_or_compute_cached_df(
-            key, manifest_payload, _build_direct, use_cache=use_cache
+        result = bulk_qc.read_or_compute_cached_parquet(
+            _effective_derived_cache_dir(),
+            key,
+            manifest_payload,
+            _build_direct,
+            use_cache=use_cache,
+            spec_attr_name="gtex_spec",
         )
         result.attrs.update(prov_rec)
         result.attrs["unit"] = "clean_TPM" if spec.clean_tpm else "TPM"
@@ -831,7 +356,14 @@ def tissue_rna(
                 return wide
             return apply_summary_spec(wide, spec=spec, provider="hpa", value_column=value_column)
 
-        result = _read_or_compute_cached_df(key, manifest_payload, _build_hpa, use_cache=use_cache)
+        result = bulk_qc.read_or_compute_cached_parquet(
+            _effective_derived_cache_dir(),
+            key,
+            manifest_payload,
+            _build_hpa,
+            use_cache=use_cache,
+            spec_attr_name="gtex_spec",
+        )
         result.attrs["version"] = concrete
         result.attrs["unit"] = "clean_TPM" if spec.clean_tpm else value_column
         result.attrs["statistic"] = "tissue arithmetic mean (GTEx v8 via HPA)"
@@ -885,7 +417,7 @@ def tissues(
     concrete = reference_data.resolve_version(SOURCE_ID, version)
     tsum = gtex_deconvolution.gtex_deconvolution_tissue_summary().set_index("site")
     rows = []
-    for site in _primary_shard_sites():
+    for site in primary_shard_sites():
         rec = tsum.loc[site] if site in tsum.index else None
         rows.append(
             {
@@ -944,14 +476,13 @@ def _resolve_shard_pin(tissue: str, version: str = "v11") -> tuple[str, str]:
     pin_key = f"{version}-{site}"
     pins = reference_data.REFERENCE_SOURCES[SHARD_SOURCE_ID]["pins"]
     if pin_key not in pins:
-        avail = ", ".join(_primary_shard_sites())
+        avail = ", ".join(primary_shard_sites())
         raise ValueError(f"Unknown GTEx {version} tissue shard {tissue!r}; available: {avail}")
     return site, pin_key
 
 
 @functools.lru_cache(maxsize=2)
 def _cached_v11_primary_medians(path_str: str, mtime_ns: int, size_bytes: int) -> pd.DataFrame:
-    """Parse and cache unversioned primary-shard medians from ``gtex_tissue_rna:v11`` once."""
     del mtime_ns, size_bytes
     raw = pd.read_csv(path_str, sep="\t", skiprows=2)
     raw["_gid"] = raw["Name"].astype(str).str.split(".").str[0]
@@ -979,7 +510,6 @@ def _stream_gtex_shard(
     *,
     genes: set[str] | None,
 ) -> pd.DataFrame:
-    """Stream a GTEx ``.gct.gz`` shard (full or gene-subsetted)."""
     want_all = genes is None
     want_set = {str(g).strip() for g in genes} if genes is not None else set()
     want_bytes = {g.encode("ascii") for g in want_set}
@@ -1022,21 +552,7 @@ def sample_tpm(
     normalize: object = _UNSET,
     sex: object = _UNSET,
 ) -> pd.DataFrame:
-    """Load per-sample TPM for a GTEx primary shard in strict ``qc -> cleanup -> normalize`` order.
-
-    1. ``qc`` (sample/value rejection; never alters surviving observed numbers):
-       - ``"swaps"``: drops globally quarantined foreign-organ swap / chimera columns.
-       - ``"splash"``: masks (sets to ``NaN``, never fake ``0.0``!) positive cells in samples
-         carrying ``>= 0.5%`` non-boundary foreign splash or biologically impossible opposite-sex
-         bleed where expected bleed is ``>= 0.15 TPM`` and ``>= 20%`` of observed TPM.
-    2. ``cleanup`` (quantitative TPM / purity estimation on surviving native-TPM observations):
-       - ``"index_hopping"``: subtracts stoichiometric multiplexed pool hopping (``2e-5 .. 5e-3``)
-         via conservative 25th-percentile anchor ratios (deduplicated per source lineage family).
-       - ``"deconvolution"``: attaches sample ``purity_weights`` in ``df.attrs['purity_weights']``.
-    3. ``normalize=None | "clean_tpm"`` (applied after ``qc`` and ``cleanup``):
-       - Runs exact :func:`oncoref.normalization.clean_tpm` across all transcriptome compartments,
-         preserving ``NaN`` masks before subsetting ``genes``.
-    """
+    """Load per-sample TPM for a GTEx primary shard in strict ``qc -> cleanup -> normalize`` order."""
     spec = resolve_spec(qc=qc, cleanup=cleanup, normalize=normalize, sex=sex)
     site, pin_key = _resolve_shard_pin(tissue, version=version)
     shard_path = reference_data.ensure(SHARD_SOURCE_ID, pin_key)
@@ -1046,8 +562,6 @@ def sample_tpm(
         gtex_deconvolution.gtex_deconvolution_anchors() if need_live_anchors else pd.DataFrame()
     )
 
-    # Stream full shard when clean_tpm is requested so normalization.clean_tpm runs on the
-    # complete cleaned transcriptome with zero inlined compartment math (#778 review fix).
     if spec.clean_tpm or want_genes is None:
         stream_genes = None
     elif need_live_anchors:
@@ -1066,8 +580,7 @@ def sample_tpm(
     )
 
     keep_samps: list[str] = []
-    keep_samp_pos: list[int] = []
-    for pos_j, s in enumerate(samp_cols):
+    for s in samp_cols:
         if s in swaps_set:
             continue
         if spec.sex is not None:
@@ -1075,7 +588,6 @@ def sample_tpm(
             if dsex_df.get(did) != spec.sex:
                 continue
         keep_samps.append(s)
-        keep_samp_pos.append(pos_j)
 
     anchor_obs_by_gid: dict[str, np.ndarray] = {}
     if need_live_anchors and len(df_full) > 0 and keep_samps:
@@ -1086,7 +598,6 @@ def sample_tpm(
             if gid in a_set and gid not in anchor_obs_by_gid:
                 anchor_obs_by_gid[gid] = mat_keep_all[r_i]
 
-    # When clean_tpm is False and we streamed extra anchor genes, subset rows before vectorized work.
     if not spec.clean_tpm and want_genes is not None and stream_genes is not want_genes:
         unver_s = df_full["Name"].astype(str).str.split(".").str[0]
         keep_r = (
@@ -1106,7 +617,7 @@ def sample_tpm(
     ):
         ev_all = gtex_deconvolution.gtex_sample_splash_events(include_boundary=False)
         ev_site = ev_all[ev_all["target_site"].eq(site) & ev_all["sample_id"].isin(keep_samps)]
-        med_primary = _v11_primary_medians()
+        med_primary: pd.DataFrame | None = None
 
         unver_rows = df["Name"].astype(str).str.split(".").str[0].tolist()
         vals = df[keep_samps].to_numpy(dtype=np.float64, copy=True)
@@ -1114,8 +625,11 @@ def sample_tpm(
         src_med_vecs: dict[str, np.ndarray] = {}
 
         def _get_src_vec(ssrc: str) -> np.ndarray | None:
+            nonlocal med_primary
             if ssrc in src_med_vecs:
                 return src_med_vecs[ssrc]
+            if med_primary is None:
+                med_primary = _v11_primary_medians()
             if ssrc not in med_primary.columns:
                 return None
             v = med_primary[ssrc].reindex(unver_rows).fillna(0.0).to_numpy(dtype=np.float64)
@@ -1159,7 +673,6 @@ def sample_tpm(
 
         if need_live_anchors and anchor_obs_by_gid:
             target_fam = gtex_deconvolution.organ_lineage_family(site)
-            # Deduplicate live <0.5% hopping candidates per (sample_j, source_lineage_family)
             best_hop: dict[tuple[int, str], tuple[float, float, np.ndarray, bool]] = {}
             for src_site, grp in anchors_df.groupby("source_site", sort=True):
                 src_fam = gtex_deconvolution.organ_lineage_family(str(src_site))
@@ -1299,7 +812,7 @@ def tissue_summary(
     genes: list[str] | set[str] | tuple[str, ...] | None = None,
     version: str | None = None,
     provider: str = "direct",
-    stat: str = "p95",
+    stat: object = _UNSET,
     qc: object = _UNSET,
     cleanup: object = _UNSET,
     normalize: object = _UNSET,
@@ -1309,17 +822,7 @@ def tissue_summary(
     hpa_unique_tissues_only: object = _UNSET,
     use_cache: bool = True,
 ) -> pd.DataFrame:
-    """Summarize GTEx donor expression across one or all tissues (#778).
-
-    - ``stat``: ``"median"`` | ``"p95"`` | ``"p99"`` | ``"max"`` | ``"host_exposure"``
-    - ``qc="all"`` (default when ``qc`` is not a :class:`GtexSpec`): rejects cell lines,
-      quarantined swaps, and splashed cells; pass ``qc=None`` for no sample/value rejection.
-    - ``cleanup="all"`` (default when ``qc`` is not a :class:`GtexSpec`): applies index-hopping
-      subtraction and NNLS purity-weighted Harrell-Davis quantiles; pass ``cleanup=None`` for
-      unadjusted TPMs on QC-passing observations.
-    - ``normalize=None | "clean_tpm"``: optional 16/9/75 renormalization.
-    - ``sex=None | "XX" | "XY"``: optional donor chromosomal sex filter on ``v11`` shards.
-    """
+    """Summarize GTEx donor expression across one or all tissues (#778)."""
     prov = provider.strip().lower()
     if version is None or version == "latest":
         version = "v23" if prov == "hpa" else "v11"
@@ -1343,10 +846,29 @@ def tissue_summary(
             hpa_unique_tissues_only=hpa_unique_tissues_only,
         )
 
-    stat_norm = stat.strip().lower()
-    valid_stats = {"median", "p95", "p99", "max", "host_exposure"}
+    if stat is _UNSET:
+        stat_norm = "mean" if prov == "hpa" else ("median" if version != "v11" else "p95")
+    else:
+        stat_norm = str(stat).strip().lower()
+    valid_stats = {"mean", "median", "p95", "p99", "max", "host_exposure"}
     if stat_norm not in valid_stats:
         raise ValueError(f"Unknown stat {stat!r}; choose from {sorted(valid_stats)}")
+
+    if prov == "hpa":
+        if stat_norm != "mean":
+            raise ValueError(
+                f"HPA GTEx redistributes tissue arithmetic means only; got stat={stat!r} "
+                "(use stat='mean' or provider='direct', version='v11' for donor quantiles)"
+            )
+    elif prov == "direct":
+        if value_column.upper() != "TPM":
+            raise ValueError(
+                f"Direct GTEx releases provide 'TPM' only; value_column={value_column!r} requires provider='hpa'"
+            )
+        if stat_norm == "mean":
+            raise ValueError(
+                "Direct GTEx summaries use donor quantiles ('median', 'p95', 'p99', 'max', 'host_exposure'), not 'mean'"
+            )
 
     if prov == "hpa" or (prov == "direct" and version != "v11"):
         if prov == "direct" and stat_norm != "median":
@@ -1373,7 +895,7 @@ def tissue_summary(
         return mat
 
     if tissues_select is None:
-        target_sites = list(_primary_shard_sites())
+        target_sites = list(primary_shard_sites())
     elif isinstance(tissues_select, str):
         target_sites = [_resolve_shard_pin(tissues_select, version=version)[0]]
     else:
@@ -1448,7 +970,7 @@ def tissue_summary(
                     else:
                         out_vec[r_i] = float(sv[-1])
                 elif spec.nnls_deconvolution:
-                    out_vec[r_i] = gtex_deconvolution.purity_weighted_harrell_davis_quantile(
+                    out_vec[r_i] = bulk_qc.purity_weighted_harrell_davis_quantile(
                         rv, rw, quantile=q_map[stat_norm]
                     )
                 else:
@@ -1469,8 +991,13 @@ def tissue_summary(
         spec=spec,
         upstream_sha256=up_sha,
     )
-    out = _read_or_compute_cached_df(
-        key, manifest_payload, _compute_summary, use_cache=can_cache_full
+    out = bulk_qc.read_or_compute_cached_parquet(
+        _effective_derived_cache_dir(),
+        key,
+        manifest_payload,
+        _compute_summary,
+        use_cache=can_cache_full,
+        spec_attr_name="gtex_spec",
     )
     out.attrs["provider"] = "direct"
     out.attrs["version"] = version
@@ -1481,30 +1008,10 @@ def tissue_summary(
 
 
 __all__ = [
-    "ALL_CLEANUP",
-    "ALL_QC",
-    "CELL_LINE_COLUMNS",
-    "CLEANUP_ALIASES",
-    "GTEX_V11_SUBCOMPARTMENT_COLUMNS",
-    "HPA_BRAIN_GTEX_SOURCE_ID",
-    "HPA_TISSUE_GTEX_SOURCE_ID",
-    "HPA_UNIQUE_GTEX_TISSUES",
-    "QC_ALIASES",
-    "SHARD_SOURCE_ID",
-    "SOURCE_ID",
-    "GtexSpec",
     "apply_summary_spec",
-    "cached_specs",
-    "clear_derived_cache",
     "coverage_grid",
-    "derived_cache_dir",
     "donor_sex",
-    "expand_cleanup_ops",
-    "expand_qc_ops",
-    "normalize_column_to_site",
-    "resolve_spec",
     "sample_tpm",
-    "spec_cache_key",
     "tissue_rna",
     "tissue_summary",
     "tissues",

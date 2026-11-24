@@ -99,11 +99,18 @@ def test_legacy_dot_cache_reused_when_platform_cache_empty(monkeypatch, tmp_path
         "Gene\tTissue\tnTPM\n"
     )
     monkeypatch.setenv("HOME", str(fake_home))
-    monkeypatch.setattr(
-        datacache.common,
-        "_platform_cache_dir",
-        lambda name: str(fake_home / "Library" / "Caches" / name),
-    )
+
+    def fake_get_cache_root(name, *envkeys, override=None, legacy=()):
+        assert legacy == (str(legacy_root),)
+        plat = fake_home / "Library" / "Caches" / name
+        if _downloads._has_cached_payload(plat):
+            return str(plat)
+        for p in legacy:
+            if _downloads._has_cached_payload(data_bundle.Path(p)):
+                return str(p)
+        return str(plat)
+
+    monkeypatch.setattr(datacache, "get_cache_root", fake_get_cache_root)
 
     # Populated ~/.cache/oncoref is reused rather than forcing a re-download into ~/Library/Caches
     assert _downloads.oncoref_cache_root() == legacy_root

@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from oncoref import gtex, human, normal_tissues, reference_data
+from oncoref import bulk_qc, gtex, gtex_deconvolution, human, normal_tissues, reference_data
 
 
 def test_gtex_qc_cleanup_and_normalize_are_three_orthogonal_axes():
@@ -411,3 +411,35 @@ def test_real_cached_hpa_gtex_v23_cleans_prm1_splash_and_preserves_retina(monkey
     assert float(prm_clean["skeletal muscle"]) < 2.5
     assert float(prm_clean["testis"]) > 10000.0
     assert "retina" in clean_hpa.columns
+
+
+def test_gtex_subpackage_shared_bulk_qc_and_publication_figure_export(tmp_path: Path):
+    # Subpackage & shared bulk_qc wiring
+    assert gtex.deconvolution.gtex_quarantined_swaps is gtex_deconvolution.gtex_quarantined_swaps
+    assert (
+        gtex.deconvolution.solve_nonnegative_archetype_mixture
+        is bulk_qc.solve_nonnegative_archetype_mixture
+    )
+    assert (
+        gtex.deconvolution.purity_weighted_harrell_davis_quantile
+        is bulk_qc.purity_weighted_harrell_davis_quantile
+    )
+    assert bulk_qc.expand_ops(
+        "all", allowed=("a", "b"), aliases={"all": frozenset({"a", "b"})}, param_name="qc"
+    ) == frozenset({"a", "b"})
+
+    # Publication figure export writes both 300-dpi PNG and vector SVG
+    png, svg = gtex.plots.plot_normal_source_coverage_grid(tmp_path / "cov_grid")
+    assert png.is_file() and png.stat().st_size > 10_000
+    assert svg.is_file() and svg.stat().st_size > 5_000
+
+    # Defensive edge cases: Mapping rejected in expand_ops, NaN preserved in betainc,
+    # read-only cache fallback, and stat / value_column validation across providers
+    with pytest.raises(TypeError, match="dict/mapping"):
+        gtex.resolve_spec(qc={"swaps": False})  # type: ignore[arg-type]
+    beta_out = bulk_qc.regularized_betainc(2.0, 2.0, np.array([0.0, 0.5, np.nan, 1.0]))
+    assert np.isnan(beta_out[2]) and beta_out[1] == pytest.approx(0.5)
+    with pytest.raises(ValueError, match="arithmetic means only"):
+        gtex.tissue_summary(provider="hpa", stat="p95")
+    with pytest.raises(ValueError, match="'TPM' only"):
+        gtex.tissue_rna("v11", provider="direct", value_column="nTPM")

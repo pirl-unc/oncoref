@@ -1,0 +1,8 @@
+site,symbol,statistic,sex,label,raw_tpm,qc_only_tpm,full_clean_tpm
+ovary,SFTPB,max,all,"SFTPB in Ovary (max, XY-Lung swap)",3568.69,18.4629,10.2079
+breast_mammary_tissue,PRM1,host_exposure,XX,PRM1 in XX Breast (host P99),961.561,0.9134,0.9134
+breast_mammary_tissue,TGM4,host_exposure,XX,TGM4 in XX Breast (host P99),176.731,0.5661,0.5661
+ovary,PRM1,host_exposure,XX,PRM1 in Ovary (host P99),31.0642,0.7396,0.7396
+thyroid,PRM1,p95,all,PRM1 in Thyroid (somatic P95),8.0534,7.1894,2.2042
+thyroid,PRM2,p95,all,PRM2 in Thyroid (somatic P95),7.7566,7.4813,1.9732
+esophagus_muscularis,PRM1,p99,all,PRM1 in Esoph. Musc. (P99),21.1679,12.4037,4.7797

@@ -3,6 +3,18 @@
 **Policy ID:** `oncoref.gtex-holistic-deconvolution.2026-11-24.3`  
 **Evaluated Scope:** `52` GTEx v11 shards · `18,637` RNA-seq libraries · `946` `GTEX-XXXXX` donors · `904` Broad `SM-XXXX` 96-well prep-plate batches · `25` disjoint organ archetypes (`185` anchor genes, `342` 52-shard NNLS basis genes)
 
+[GTEx reference & API guide](../../gtex.md) · [Before/after evaluation CSV](evaluation-before-after.csv) · [HPA v8 PRM1 cleanup CSV](hpa-gtex-v8-prm1-cleanup.csv) · [Negative-control retention CSV](negative-controls-retention.csv) · [Clean-TPM housekeeping CV CSV](clean-tpm-housekeeping-cv.csv)
+
+![Separation of contamination regimes and per-shard splash incidence](gtex-contamination-regimes.png)
+
+![Cross-donor splash matrix and multi-gene stoichiometric linearity](gtex-splash-matrix-and-stoichiometry.png)
+
+![Donor chromosomal sex and male-cadaver mammary shard composition](gtex-donor-sex-and-mammary-bias.png)
+
+![Quantitative before/after evaluation of oncoref.gtex](gtex-cleanup-evaluation.png)
+
+![Canonical 70-tissue x 12-source human normal coverage matrix](gtex-normal-source-coverage-grid.png)
+
 ## Four Contamination Regimes Separated from Histological Lineage & Surgical Boundaries
 
 1. **Patterned-flowcell index hopping (`flowcell_index_hopping`, `2×10⁻⁵ – 5×10⁻³`):** Pervasive multiplexed pool bleed across co-sequenced tissues; conservatively subtracted via `alpha_lower_q25 * source_median_tpm` when bleed accounts for `≥25%` of observed TPM.
@@ -12,7 +24,7 @@
 
 ## Quarantined Foreign-Organ Swaps
 
-| Sample ID | Donor Sex | Labeled Shard | Detected Organ | Plate Batch | Foreign $\hat{\alpha}$ | NNLS Native Retention | Detected Anchors |
+| Sample ID | Donor Sex | Labeled Shard | Detected Organ | Plate Batch | Foreign `α̂` | NNLS Native Retention | Detected Anchors |
 | --- | --- | --- | --- | --- | ---: | ---: | --- |
 | `GTEX-1GZHY-2426-SM-9JGGK` | `XX` | `ovary` | `lung` | `SM-9JGG` | `1.335` | `0.392` | `SCGB3A2;SFTPA1;SFTPA2;SFTPB;SFTPC` |
 | `GTEX-11GS4-2826-SM-5HL56` | `XY` | `nerve_tibial` | `pancreas` | `SM-5HL5` | `0.609` | `0.504` | `CELA3A;CLPS;CPA1;CTRB2;PLA2G1B;PNLIP;PRSS1;PRSS2;REG1A;REG1B` |

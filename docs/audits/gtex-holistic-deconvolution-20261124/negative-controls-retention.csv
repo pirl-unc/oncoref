@@ -1,0 +1,7 @@
+site,symbol,label,raw_val,clean_val,kept_donors,total_donors
+testis,ACTB,ACTB in Testis (housekeeping),1362.415,1377.224,414,414
+testis,GAPDH,GAPDH in Testis (housekeeping),1098.696,1108.383,414,414
+testis,SOX9,SOX9 in Testis (Sertoli TF),117.374,117.987,414,414
+ovary,FOXL2,FOXL2 in Ovary (granulosa TF),193.509,200.962,192,193
+bladder,KLK3,KLK3 in Bladder (urogenital boundary),2.844,4.184,77,77
+bladder,MSMB,MSMB in Bladder (urogenital boundary),32.401,48.853,77,77
