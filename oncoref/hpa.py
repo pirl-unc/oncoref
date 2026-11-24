@@ -37,9 +37,159 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import reference_data
+from . import bulk_qc, reference_data
 from .cta_tissues import SAFETY_TISSUE_GROUPS
 from .load_dataset import _register_derived_cache, get_data
+
+ALL_HPA_BULK_QC: tuple[str, ...] = ("duplicate_gtex_tissues", "splash")
+HPA_BULK_QC_ALIASES: dict[str, frozenset[str]] = {
+    "all": frozenset(ALL_HPA_BULK_QC),
+    "none": frozenset(),
+    "raw": frozenset(),
+}
+
+ALL_HPA_BULK_CLEANUP: tuple[str, ...] = ("index_hopping", "deconvolution")
+HPA_BULK_CLEANUP_ALIASES: dict[str, frozenset[str]] = {
+    "all": frozenset(ALL_HPA_BULK_CLEANUP),
+    "none": frozenset(),
+    "raw": frozenset(),
+}
+
+#: HPA tissue labels that duplicate GTEx v11's 52 direct donor shards (excluding EyeGEx retina).
+HPA_DUPLICATE_GTEX_TISSUES: frozenset[str] = frozenset(
+    {
+        "adipose tissue",
+        "adrenal gland",
+        "amygdala",
+        "basal ganglia",
+        "blood vessel",
+        "breast",
+        "caudate",
+        "cerebellum",
+        "cerebral cortex",
+        "cervix",
+        "colon",
+        "endometrium",
+        "esophagus",
+        "fallopian tube",
+        "heart muscle",
+        "hippocampal formation",
+        "hippocampus",
+        "hypothalamus",
+        "kidney",
+        "liver",
+        "lung",
+        "midbrain",
+        "nucleus accumbens",
+        "ovary",
+        "pancreas",
+        "pituitary gland",
+        "prostate",
+        "putamen",
+        "salivary gland",
+        "skeletal muscle",
+        "skin",
+        "small intestine",
+        "spinal cord",
+        "spleen",
+        "stomach",
+        "substantia nigra",
+        "testis",
+        "thyroid gland",
+        "urinary bladder",
+        "vagina",
+    }
+)
+
+_HPA_TISSUE_NATIVE_PANELS: dict[str, frozenset[str]] = {
+    "adrenal gland": frozenset({"adrenal_gland"}),
+    "amygdala": frozenset({"brain"}),
+    "basal ganglia": frozenset({"brain"}),
+    "caudate": frozenset({"brain"}),
+    "cerebellum": frozenset({"brain"}),
+    "cerebral cortex": frozenset({"brain"}),
+    "choroid plexus": frozenset({"brain"}),
+    "hippocampal formation": frozenset({"brain"}),
+    "hippocampus": frozenset({"brain"}),
+    "hypothalamus": frozenset({"brain"}),
+    "midbrain": frozenset({"brain"}),
+    "nucleus accumbens": frozenset({"brain"}),
+    "putamen": frozenset({"brain"}),
+    "substantia nigra": frozenset({"brain"}),
+    "spinal cord": frozenset({"brain"}),
+    "retina": frozenset({"brain"}),
+    "esophagus": frozenset({"squamous_epithelium"}),
+    "skin": frozenset({"squamous_epithelium"}),
+    "tonsil": frozenset({"squamous_epithelium"}),
+    "tongue": frozenset({"squamous_epithelium", "striated_muscle"}),
+    "cervix": frozenset({"squamous_epithelium"}),
+    "vagina": frozenset({"squamous_epithelium"}),
+    "heart muscle": frozenset({"striated_muscle"}),
+    "skeletal muscle": frozenset({"striated_muscle"}),
+    "kidney": frozenset({"kidney"}),
+    "liver": frozenset({"liver"}),
+    "gallbladder": frozenset({"liver"}),
+    "lung": frozenset({"lung"}),
+    "pancreas": frozenset({"pancreas"}),
+    "pituitary gland": frozenset({"pituitary"}),
+    "salivary gland": frozenset({"salivary_gland"}),
+    "stomach": frozenset({"stomach"}),
+    "duodenum": frozenset({"stomach"}),
+    "small intestine": frozenset({"stomach"}),
+    "colon": frozenset({"stomach"}),
+    "rectum": frozenset({"stomach"}),
+    "appendix": frozenset({"stomach"}),
+    "testis": frozenset({"testis"}),
+    "epididymis": frozenset({"testis"}),
+    "thyroid gland": frozenset({"thyroid"}),
+    "parathyroid gland": frozenset({"thyroid"}),
+}
+
+
+def _resolve_hpa_native_panels(
+    tissue_label: str, *, brain_subregions: frozenset[str] = frozenset()
+) -> frozenset[str]:
+    low = tissue_label.strip().lower()
+    if low in _HPA_TISSUE_NATIVE_PANELS:
+        return _HPA_TISSUE_NATIVE_PANELS[low]
+    if low in brain_subregions:
+        if "pituitary" in low or "hypophys" in low:
+            return frozenset({"brain", "pituitary"})
+        return frozenset({"brain"})
+    inferred: set[str] = set()
+    if (
+        any(
+            tok in low
+            for tok in (
+                "cortex",
+                "gyrus",
+                "nucleus",
+                "thalam",
+                "callosum",
+                "cerebell",
+                "medulla",
+                "pons",
+                "tegment",
+                "white matter",
+                "olfactory",
+                "optic",
+                "ventricle",
+                "brain",
+                "spinal",
+            )
+        )
+        and "kidney" not in low
+        and "renal" not in low
+        and "adrenal" not in low
+        and "heart" not in low
+    ):
+        inferred.add("brain")
+    if "pituitary" in low or "hypophys" in low:
+        inferred.add("pituitary")
+    if ("muscle" in low and "smooth" not in low) or "heart" in low:
+        inferred.add("striated_muscle")
+    return frozenset(inferred)
+
 
 SAFETY_TISSUE_MAPPING_KINDS: frozenset[str] = frozenset(
     {"exact", "reviewed_equivalent", "reviewed_substructure", "unavailable"}
@@ -176,10 +326,328 @@ def _hpa_rna_consensus_for_version(version: str) -> pd.DataFrame:
     return _read_hpa("hpa_rna_consensus", version)
 
 
-def hpa_rna_consensus(version: str | None = None) -> pd.DataFrame:
-    """HPA tissue nTPM; newest registered release unless explicitly pinned."""
-    return _hpa_rna_consensus_for_version(
-        reference_data.resolve_version("hpa_rna_consensus", version)
+def _human_marker_panels_and_profiles() -> tuple[dict[str, pd.Series], pd.DataFrame]:
+    panels_df = get_data("tissue-marker-panels.csv")
+    panels: dict[str, pd.Series] = {}
+    for pname, grp in panels_df.groupby("panel", sort=True):
+        s = grp.set_index("gene_id")["reference_tpm"].astype(float)
+        panels[str(pname)] = s[~s.index.duplicated(keep="first")]
+    anchors_df = get_data("gtex-deconvolution-anchors")
+    # Ensure adrenal_gland (and ovary/prostate) anchor panels are populated alongside tissue-marker-panels.csv
+    for extra_site in ("adrenal_gland", "ovary", "prostate"):
+        if extra_site not in panels:
+            sub_a = anchors_df[anchors_df["source_site"].eq(extra_site)]
+            if not sub_a.empty:
+                s = sub_a.set_index("gene_id")["source_median_tpm"].astype(float)
+                panels[extra_site] = s[~s.index.duplicated(keep="first")]
+
+    prof_rows: dict[str, dict[str, float]] = {}
+    for pname, ser in panels.items():
+        for gid, val in ser.items():
+            prof_rows.setdefault(str(gid), {})[pname] = float(val)
+    for row in anchors_df.itertuples(index=False):
+        mapped = bulk_qc.GTEX_ANCHOR_SITE_TO_PANEL.get(str(row.source_site))
+        if mapped and mapped in panels:
+            prof_rows.setdefault(str(row.gene_id), {})[mapped] = max(
+                prof_rows.get(str(row.gene_id), {}).get(mapped, 0.0),
+                float(row.source_median_tpm),
+            )
+    prof_df = pd.DataFrame.from_dict(prof_rows, orient="index").fillna(0.0)
+    return panels, prof_df
+
+
+def _process_hpa_long_bulk_table(
+    raw_df: pd.DataFrame,
+    *,
+    source_name: str,
+    version: str,
+    tissue_col: str,
+    value_cols: tuple[str, ...],
+    qc_set: frozenset[str],
+    cleanup_set: frozenset[str],
+    norm: str | None,
+    brain_subregions: frozenset[str] = frozenset(),
+) -> pd.DataFrame:
+    import numpy as np
+
+    from .normalization import clean_tpm
+
+    df = raw_df.copy()
+    if "duplicate_gtex_tissues" in qc_set:
+        df = df[
+            ~df[tissue_col].astype(str).str.strip().str.lower().isin(HPA_DUPLICATE_GTEX_TISSUES)
+        ].reset_index(drop=True)
+    if df.empty or (not (qc_set - {"duplicate_gtex_tissues"}) and not cleanup_set and norm is None):
+        return df
+
+    if norm == "clean_tpm" and "TPM" not in df.columns:
+        raise ValueError(
+            f"normalize='clean_tpm' requires linear 'TPM', not non-linear consensus 'nTPM' ({source_name})"
+        )
+
+    if (
+        source_name == "hpa_rna_consensus"
+        and cleanup_set
+        and "duplicate_gtex_tissues" not in qc_set
+        and version == "v23"
+        and reference_data.is_cached("rna_tissue_gtex", "v23")
+    ):
+        from . import gtex
+
+        gtex_cons = gtex.tissue_rna(
+            version="v23",
+            source="hpa_consensus",
+            qc=tuple(sorted(qc_set & {"splash"})) or None,
+            cleanup=tuple(sorted(cleanup_set)),
+            normalize=None,
+            use_cache=False,
+        )
+        # Update ONLY overlapping tissues present in raw_df so HPA-unique surgical tissues stay intact!
+        gtex_cons_idx = gtex_cons.set_index(["Gene", tissue_col])["nTPM"]
+        key_idx = pd.MultiIndex.from_frame(df[["Gene", tissue_col]])
+        repl = gtex_cons_idx.reindex(key_idx).to_numpy()
+        has_repl = ~np.isnan(repl)
+        df = df.copy()
+        df.loc[has_repl, "nTPM"] = repl[has_repl]
+
+    df["_unversioned_gid"] = (
+        df["Gene"].astype(str).str.replace(r"\.\d+(?=_PAR_Y$|$)", "", regex=True)
+    )
+    all_gids = pd.Index(pd.unique(df["_unversioned_gid"]), name="Gene")
+    all_tissues = pd.Index(pd.unique(df[tissue_col].astype(str)), name=tissue_col)
+    gene_names = (
+        df.drop_duplicates("_unversioned_gid").set_index("_unversioned_gid")["Gene name"].to_dict()
+    )
+    panels, prof_df = _human_marker_panels_and_profiles()
+    native_map = {
+        str(col): _resolve_hpa_native_panels(str(col), brain_subregions=brain_subregions)
+        for col in all_tissues
+    }
+
+    present_vcols = [c for c in value_cols if c in df.columns]
+    raw_w_map: dict[str, pd.DataFrame] = {}
+    for vcol in present_vcols:
+        df[vcol] = pd.to_numeric(df[vcol], errors="coerce")
+        piv = df.pivot_table(
+            index="_unversioned_gid",
+            columns=tissue_col,
+            values=vcol,
+            aggfunc="max",
+            dropna=False,
+        ).reindex(index=all_gids, columns=all_tissues)
+        piv.columns = [str(c) for c in piv.columns]
+        raw_w_map[vcol] = piv
+
+    primary_col = present_vcols[0]
+    splash_nan_mask: np.ndarray | None = None
+    if "splash" in qc_set:
+        prim_before = raw_w_map[primary_col]
+        prim_masked = bulk_qc.mask_panel_splash_cells(
+            prim_before, panels, sample_native_panels=native_map, full_profiles=prof_df
+        )
+        splash_nan_mask = (
+            (prim_before.to_numpy(dtype=float) > 0.0)
+            & prim_before.notna().to_numpy()
+            & prim_masked.isna().to_numpy()
+        )
+
+    w_map: dict[str, pd.DataFrame] = {}
+    for vcol in present_vcols:
+        piv = raw_w_map[vcol].copy()
+        if splash_nan_mask is not None and splash_nan_mask.any():
+            arr = piv.to_numpy(dtype=float, copy=True)
+            arr[splash_nan_mask] = np.nan
+            piv = pd.DataFrame(arr, index=piv.index, columns=piv.columns)
+        if "index_hopping" in cleanup_set:
+            piv = bulk_qc.subtract_panel_index_hopping(
+                piv, panels, sample_native_panels=native_map, full_profiles=prof_df
+            )
+        if "deconvolution" in cleanup_set:
+            piv = bulk_qc.deconvolve_panel_admixture(
+                piv, panels, sample_native_panels=native_map, full_profiles=prof_df
+            )
+        w_map[vcol] = piv
+
+    if norm == "clean_tpm":
+        gene_tbl = pd.DataFrame(
+            {
+                "Ensembl_Gene_ID": all_gids,
+                "Symbol": [gene_names.get(str(g), str(g)) for g in all_gids],
+            },
+            index=all_gids,
+        )
+        prim_pre = w_map["TPM"]
+        prim_clean = clean_tpm(prim_pre, gene_table=gene_tbl, on_empty_compartment="record")
+        w_map["TPM"] = prim_clean
+        with np.errstate(divide="ignore", invalid="ignore"):
+            ratio_scale = np.where(
+                prim_pre.to_numpy(dtype=float) > 0.0,
+                prim_clean.to_numpy(dtype=float) / prim_pre.to_numpy(dtype=float),
+                1.0,
+            )
+        for vcol in present_vcols:
+            if vcol == "TPM":
+                continue
+            scaled = w_map[vcol].to_numpy(dtype=float) * ratio_scale
+            w_map[vcol] = pd.DataFrame(scaled, index=all_gids, columns=w_map[vcol].columns)
+
+    r_idx = all_gids.get_indexer(df["_unversioned_gid"])
+    c_idx = pd.Index([str(c) for c in all_tissues]).get_indexer(df[tissue_col].astype(str))
+    dup_mask = df.duplicated(["_unversioned_gid", tissue_col], keep=False).to_numpy()
+    for vcol in present_vcols:
+        clean_arr = w_map[vcol].to_numpy(dtype=float)[r_idx, c_idx]
+        if dup_mask.any():
+            raw_sum_piv = df.pivot_table(
+                index="_unversioned_gid",
+                columns=tissue_col,
+                values=vcol,
+                aggfunc="sum",
+                dropna=False,
+            ).reindex(index=all_gids, columns=all_tissues)
+            raw_sum_arr = raw_sum_piv.to_numpy(dtype=float)[r_idx, c_idx]
+            orig_vals = df[vcol].to_numpy(dtype=float)
+            with np.errstate(divide="ignore", invalid="ignore"):
+                prop = np.where(raw_sum_arr > 0.0, orig_vals / raw_sum_arr, 0.0)
+            clean_arr = np.where(dup_mask, clean_arr * prop, clean_arr)
+        df[vcol] = clean_arr
+    return df.drop(columns=["_unversioned_gid"]).reset_index(drop=True)
+
+
+def hpa_rna_consensus(
+    version: str | None = None,
+    *,
+    qc=None,
+    cleanup=None,
+    normalize: str | None = None,
+    use_cache: bool = True,
+) -> pd.DataFrame:
+    """HPA tissue nTPM; supports ``(qc=, cleanup=, normalize=)`` with ``'all'`` aliases (#780)."""
+    concrete = reference_data.resolve_version("hpa_rna_consensus", version)
+    qc_set = bulk_qc.expand_ops(
+        qc,
+        allowed=ALL_HPA_BULK_QC,
+        aliases=HPA_BULK_QC_ALIASES,
+        param_name="qc",
+        domain_label="HPA bulk",
+    )
+    cleanup_set = bulk_qc.expand_ops(
+        cleanup,
+        allowed=ALL_HPA_BULK_CLEANUP,
+        aliases=HPA_BULK_CLEANUP_ALIASES,
+        param_name="cleanup",
+        domain_label="HPA bulk",
+    )
+    norm = bulk_qc.resolve_normalize_option(normalize, domain_label="HPA bulk")
+    if not qc_set and not cleanup_set and norm is None:
+        return _hpa_rna_consensus_for_version(concrete)
+
+    spec = bulk_qc.BulkProcessingSpec(
+        domain="hpa_bulk",
+        source_id="hpa_rna_consensus",
+        source_version=concrete,
+        qc=qc_set,
+        cleanup=cleanup_set,
+        normalize=norm,
+    )
+    cache_dir = reference_data.local_path("hpa_rna_consensus", concrete).parent / "bulk_processed"
+    return bulk_qc.read_or_compute_cached_parquet(
+        cache_dir,
+        spec.cache_key(),
+        spec.manifest(),
+        lambda: _process_hpa_long_bulk_table(
+            _hpa_rna_consensus_for_version(concrete),
+            source_name="hpa_rna_consensus",
+            version=concrete,
+            tissue_col="Tissue",
+            value_cols=("nTPM",),
+            qc_set=qc_set,
+            cleanup_set=cleanup_set,
+            norm=norm,
+        ),
+        use_cache=use_cache,
+        spec_attr_name="bulk_spec",
+    )
+
+
+def hpa_rna_tissue(
+    version: str | None = None,
+    *,
+    include_brain: bool = False,
+    qc=None,
+    cleanup=None,
+    normalize: str | None = None,
+    use_cache: bool = True,
+) -> pd.DataFrame:
+    """HPA surgical normal-tissue bulk RNA (``rna_tissue_hpa``), with ``(qc=, cleanup=, normalize=)``."""
+    concrete = reference_data.resolve_version("rna_tissue_hpa", version)
+    qc_set = bulk_qc.expand_ops(
+        qc,
+        allowed=ALL_HPA_BULK_QC,
+        aliases=HPA_BULK_QC_ALIASES,
+        param_name="qc",
+        domain_label="HPA surgical bulk",
+    )
+    cleanup_set = bulk_qc.expand_ops(
+        cleanup,
+        allowed=ALL_HPA_BULK_CLEANUP,
+        aliases=HPA_BULK_CLEANUP_ALIASES,
+        param_name="cleanup",
+        domain_label="HPA surgical bulk",
+    )
+    norm = bulk_qc.resolve_normalize_option(normalize, domain_label="HPA surgical bulk")
+
+    def _raw() -> tuple[pd.DataFrame, frozenset[str]]:
+        base = _read_hpa("rna_tissue_hpa", concrete).copy()
+        brain_subs: frozenset[str] = frozenset()
+        if include_brain:
+            brain_ver = reference_data.resolve_version("rna_brain_hpa", version)
+            brain = _read_hpa("rna_brain_hpa", brain_ver).copy()
+            if "Subregion" in brain.columns and "Tissue" not in brain.columns:
+                brain = brain.rename(columns={"Subregion": "Tissue"})
+            brain_subs = frozenset(brain["Tissue"].dropna().astype(str).str.strip().str.lower())
+            keep_cols = [c for c in base.columns if c in brain.columns]
+            base = (
+                pd.concat([base[keep_cols], brain[keep_cols]], ignore_index=True)
+                .drop_duplicates(["Gene", "Tissue"], keep="first")
+                .reset_index(drop=True)
+            )
+        return base, brain_subs
+
+    if not qc_set and not cleanup_set and norm is None:
+        return _raw()[0]
+
+    spec = bulk_qc.BulkProcessingSpec(
+        domain="hpa_surgical_bulk",
+        source_id="rna_tissue_hpa",
+        source_version=concrete,
+        qc=qc_set,
+        cleanup=cleanup_set,
+        normalize=norm,
+        extra=(("include_brain", bool(include_brain)),),
+    )
+    cache_dir = reference_data.local_path("rna_tissue_hpa", concrete).parent / "bulk_processed"
+
+    def _build_surgical() -> pd.DataFrame:
+        raw_tbl, b_subs = _raw()
+        return _process_hpa_long_bulk_table(
+            raw_tbl,
+            source_name="rna_tissue_hpa",
+            version=concrete,
+            tissue_col="Tissue",
+            value_cols=("TPM", "pTPM", "nTPM"),
+            qc_set=qc_set,
+            cleanup_set=cleanup_set,
+            norm=norm,
+            brain_subregions=b_subs,
+        )
+
+    return bulk_qc.read_or_compute_cached_parquet(
+        cache_dir,
+        spec.cache_key(),
+        spec.manifest(),
+        _build_surgical,
+        use_cache=use_cache,
+        spec_attr_name="bulk_spec",
     )
 
 

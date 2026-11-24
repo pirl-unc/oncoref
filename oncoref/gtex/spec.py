@@ -158,13 +158,7 @@ class GtexSpec:
     def __post_init__(self) -> None:
         object.__setattr__(self, "qc", expand_qc_ops(self.qc))
         object.__setattr__(self, "cleanup", expand_cleanup_ops(self.cleanup))
-        norm_val = (
-            None
-            if self.normalize is None or str(self.normalize).strip().lower() == "none"
-            else str(self.normalize).strip().lower()
-        )
-        if norm_val is not None and norm_val != "clean_tpm":
-            raise ValueError(f"normalize must be None or 'clean_tpm'; got {self.normalize!r}")
+        norm_val = bulk_qc.resolve_normalize_option(self.normalize, domain_label="GTEx")
         object.__setattr__(self, "normalize", norm_val)
         if self.sex is not None and self.sex not in {"XX", "XY"}:
             raise ValueError(f"sex must be None, 'XX', or 'XY'; got {self.sex!r}")
