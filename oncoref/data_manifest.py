@@ -996,7 +996,9 @@ def package_data_size_audit() -> pd.DataFrame:
         rel = path.relative_to(data_root).as_posix()
         stem = _stem_for_data_file(rel)
         size_bytes = path.stat().st_size
-        shipped_in_wheel = stem not in EXTERNALIZED_ORIGINATED
+        shipped_in_wheel = (stem not in EXTERNALIZED_ORIGINATED) or (
+            rel.endswith(".json") and not rel.endswith(".json.gz")
+        )
 
         if stem in WHEEL:
             bucket = "WHEEL"

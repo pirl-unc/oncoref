@@ -2,7 +2,7 @@
   "schema": "oncoref.host-exposure.v1",
   "policy_id": "oncoref.host-selection.2026-11-18.2",
   "catalog_policy_id": "oncoref.target-selection.2026-11-23.1",
-  "catalog_data_sha256": "ea10aa9acdefe9a5a740745319677fe12b658ddf3d191145825c30e790eaf170",
+  "catalog_data_sha256": "7c53f8a39bc00f703633bbbac25c633f1b34ffff217ee4d33b8ed0fb1affa2b9",
   "sha256": "34d476dec15dd5205fb8649412132e0370c3925f17f4421e7a558abd39fca908",
   "inputs": {
     "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "7d5a856c718f323155e62ba512d4cc5c59c79fd7882a127165f077071e93d4ac",

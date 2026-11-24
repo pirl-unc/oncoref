@@ -762,7 +762,12 @@ def build():
     source_coverage = pd.read_csv(context_path)
     lit_sources = pd.read_csv(BUILD / "summary/literature-sources.csv")
     published = data.published_nomination.fillna(False).astype(bool)
-    other_compared_n = int(data[data.category.eq("Other")]["tumor_max_tpm"].notna().sum())
+    shared_ok_mask = ~data.category.eq("Unsafe") & data[
+        list(target_selection.SHARED_CHECKS)
+    ].astype(bool).all(axis=1)
+    other_compared_n = int(
+        data[data.category.eq("Other") & ~shared_ok_mask]["tumor_max_tpm"].notna().sum()
+    )
     profiles = target_filters.profile_summary(data).set_index("profile")
     testis_profile = profiles.loc["male-patient (protect testis)"]
     pregnant_profile = profiles.loc["female-patient (pregnant)"]

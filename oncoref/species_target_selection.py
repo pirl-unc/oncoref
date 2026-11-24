@@ -885,7 +885,9 @@ def classify_sex_restriction(
         target_filters.TargetFilter(host=m_sex_host), ra, host_evidence=exposures
     ).set_index("entity_id")
 
-    def max_comp_tpm(eid: str, compartments: tuple[str, ...]) -> float:
+    def max_comp_tpm(
+        eid: str, compartments: tuple[str, ...], *, prefer_sex_key: str = "female_max_tpm"
+    ) -> float:
         rec = exposures.get(eid, {})
         vals = []
         for c in compartments:
@@ -893,7 +895,7 @@ def classify_sex_restriction(
                 continue
             c_rec = rec[c]
             v = (
-                c_rec.get("female_max_tpm", c_rec.get("max_tpm"))
+                c_rec.get(prefer_sex_key, c_rec.get("max_tpm"))
                 if c == anatomy.resting_mammary_compartment and len(compartments) == 1
                 else c_rec.get("max_tpm")
             )
@@ -934,7 +936,13 @@ def classify_sex_restriction(
                 "male_sex_organ_only_eligible": ms_sex,
                 "male_sex_organ_max_tpm": max_comp_tpm(eid, anatomy.male_sex_compartments),
                 "female_sex_organ_max_tpm": max_comp_tpm(eid, anatomy.female_sex_compartments),
-                "resting_breast_max_tpm": max_comp_tpm(eid, (anatomy.resting_mammary_compartment,)),
+                "resting_breast_max_tpm": max_comp_tpm(
+                    eid,
+                    (anatomy.resting_mammary_compartment,),
+                    prefer_sex_key="male_max_tpm"
+                    if sex_class == "Female-restricted"
+                    else "female_max_tpm",
+                ),
                 "tumor_max_tpm": getattr(r, "tumor_max_tpm", np.nan),
                 "tumor_top_cancer_code": getattr(r, "tumor_top_cancer_code", ""),
                 "reproductive_qualifying_compartments": getattr(

@@ -35,7 +35,7 @@
 3. **Machine-readable columns on `target_selection.results()` and `sequence_bundle`:**
    - `clinical_clearance_scope`: `"epitope"` (never `"gene"`)
    - `clinical_cleared_epitopes`: `["SLLMWITQC"]`
-   - `clinical_cleared_alleles`: `["HLA-A*02:01", "HLA-A*02:05", "HLA-A*02:06"]`
+   - `clinical_hla_alleles`: `["HLA-A*02:01", "HLA-A*02:05", "HLA-A*02:06"]`
    - `clinical_cleared_organs`: `["lung", "urinary bladder"]`
    - `clinical_cleared_transcripts`: `["ENST00000369585"]`
    - `clinical_unverified_isoforms`: `["ENST00000247306"]` (`LAGE-1b`, `210 aa`, intron-2 retention lacking `SLLMWITQC`)

@@ -38,9 +38,9 @@ PEG:4557785da7c5fac1becc,PRAMEF20,CTA,True,Embryo / placenta-only,CTA-E,True,Tru
 PEG:ab75db1824a341158b3d,HNRNPCL2,CTA,True,Embryo / placenta-only,CTA-E,True,True,True,True,0.844001,0.306101,0.209871,14.480208529538292,SKCM,embryo
 PEG:c1785185f2736960b676,KLF18,CTA,True,Embryo / placenta-only,CTA-E,True,True,True,True,0.841746,0.075333,0.061744,14.300000000049955,SARC_OS,embryo
 PEG:f2094e3bf21340e3cefd,TPRX2,CTA,True,Embryo / placenta-only,CTA-E,True,True,True,True,1.11171,0.190204,0.209867,12.340208257061521,SARC_LMS,embryo
-PEG:9d6abe9ca1723310d8dc,ERVV-1,CTA,True,Female-restricted,CTA-F,False,True,False,True,2.97531,6.48163,0.405295,236.3521574308213,KIRP,embryo | placenta
-PEG:ce254373243f5169317f,OR1N1,CTA,True,Female-restricted,CTA-F,False,True,False,True,1.17315,4.89689,0.383534,98.33184204903867,OV,embryo
-PEG:f91756cbc2d34669ae1a,ZP4,CTA,True,Female-restricted,CTA-F,False,True,False,True,0.140829,22.674428,0.03392,74.4387879843248,LUSC,embryo | ovary
+PEG:9d6abe9ca1723310d8dc,ERVV-1,CTA,True,Female-restricted,CTA-F,False,True,False,True,2.97531,6.48163,0.278538,236.3521574308213,KIRP,embryo | placenta
+PEG:ce254373243f5169317f,OR1N1,CTA,True,Female-restricted,CTA-F,False,True,False,True,1.17315,4.89689,1.30549,98.33184204903867,OV,embryo
+PEG:f91756cbc2d34669ae1a,ZP4,CTA,True,Female-restricted,CTA-F,False,True,False,True,0.140829,22.674428,0.092314,74.4387879843248,LUSC,embryo | ovary
 PEG:1e1807a736855e4a0438,TGM4,CTA,True,Male-restricted,CTA-M,True,False,True,False,22106.5,1.07108,1.69799,17629.448498614605,PRAD,prostate | resting_breast
 PEG:61d3553743c78ae41bd5,XAGE1A/B,CTA,True,Male-restricted,CTA-M,True,False,True,False,362.72657,1.42992,1.00809,4068.6393117828993,BRCA,testis
 PEG:1d20071f2b6ad9942bb5,SPANXA1/2,CTA,True,Male-restricted,CTA-M,True,False,True,False,77.0684,0.096789,0.128915,3700.064718721573,ESCA,testis
@@ -337,9 +337,9 @@ PEG:1d16658bc8a8de4aa0b8,ZNF735,Reproductive Antigen only,False,Embryo / placent
 PEG:0c7f80687adb3c0d82e7,NOTO,Reproductive Antigen only,False,Embryo / placenta-only,ERA-only,True,True,True,True,1.76942,0.170347,0.69156,4.264996155356322,NEC_MERKEL,embryo
 PEG:013bdbe363b632ff9882,ZIM3,Reproductive Antigen only,False,Embryo / placenta-only,ERA-only,True,True,True,True,3.61787,0.21656,0.127813,3.5837,BL,embryo
 PEG:19fa7af455f6fe1ee17f,BMP15,Reproductive Antigen only,False,Embryo / placenta-only,ERA-only,True,True,True,True,2.07979,2.90757,0.075122,3.3329,BL,embryo
-PEG:38a0d9c3e5559e612c04,WEE2,Reproductive Antigen only,False,Female-restricted,FRA-only,False,True,False,True,1.354195,1.56827,0.658139,10.700294038461823,STAD,embryo
+PEG:38a0d9c3e5559e612c04,WEE2,Reproductive Antigen only,False,Female-restricted,FRA-only,False,True,False,True,1.354195,1.56827,0.673985,10.700294038461823,STAD,embryo
 PEG:a2206bad8a66a6b6d03c,ENSG00000285566,Reproductive Antigen only,False,Female-restricted,FRA-only,False,True,False,True,3.52199,11.9043,2.18767,8.228244297597433,NET_LUNG,lactating_breast
-PEG:2b550f9f93384c6062b0,NLRP8,Reproductive Antigen only,False,Female-restricted,FRA-only,False,True,False,True,2.01422,0.555883,1.19287,3.760057321001222,BRCA,embryo
+PEG:2b550f9f93384c6062b0,NLRP8,Reproductive Antigen only,False,Female-restricted,FRA-only,False,True,False,True,2.01422,0.555883,2.07563,3.760057321001222,BRCA,embryo
 PEG:78559dedca662dbe64d5,PSG7,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,0.217311,0.682925,1.395768,55.41975058093613,NEC_MERKEL,placenta
 PEG:cafc20d65ce6100c7d28,KRTAP20-4,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,10.0514,0.0,0.0,50.41146000162567,NEC_LUNG_LARGECELL,testis
 PEG:913384bfcd8cc2059749,OR51C1,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,43.5034,2.0256,0.426279,50.00193598524688,PRAD,prostate
@@ -384,7 +384,7 @@ PEG:43694d13ceb82e0c2017,SPATA31F1,Reproductive Antigen only,False,Male-restrict
 PEG:59d63e36958214a05e64,PRM2,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,50820.5,2.75382,2.10366,8.5975,BL,testis | prostate
 PEG:4bfc72faaa60a3db6ad7,EFCAB9,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,71.8905,0.391229,0.351847,8.56425,CLL,testis
 PEG:19355eaa66f9ef3fc3bf,DEFB127,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,1261.55,0.609992,0.0,8.5317,B_ALL,epididymis
-PEG:b6eb4b04f8ce0ee19f78,PRR30,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,883.34,0.157457,0.07721,8.17,CESC,testis | prostate
+PEG:b6eb4b04f8ce0ee19f78,PRR30,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,883.34,0.157457,0.07721,8.170027859850691,CESC,testis | prostate
 PEG:b154c71e081fc3b57ffc,CATSPER4,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,89.9495,0.569984,0.521416,8.0878,T_ALL,testis
 PEG:6e3f4e1bee75fa212591,SPANXN5,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,461.861,0.203307,0.300277,7.9300841070456,BRCA,testis
 PEG:7d51770a8c6cc1cc8b19,GPX5,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,18.9858,0.15335,0.099903,7.920194493996664,BRCA,epididymis | testis
@@ -397,7 +397,7 @@ PEG:5014bc3fef7bb406669c,SCP2D1,Reproductive Antigen only,False,Male-restricted,
 PEG:1eebb52a87d2599b843e,GOT1L1,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,66.8277,2.2265,0.116168,7.0585458913678325,SARC_PEC,testis
 PEG:3af933942e94b5931ad6,POM121L12,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,94.4528,0.098296,0.0,7.046515194697925,MCL,testis
 PEG:336d006059eecb2cf247,SPATA31A1,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,22.993,0.16699,0.079566,6.830114909479612,SARC_DDLPS,testis
-PEG:525452ed69c9a06a2fc2,BOD1L2,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,1466.32,0.19295,0.203381,6.5742,NEC_MERKEL,testis | prostate
+PEG:525452ed69c9a06a2fc2,BOD1L2,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,1466.32,0.19295,0.203381,6.574220760645795,NEC_MERKEL,testis | prostate
 PEG:febc559642ec8d6cb719,TSSK1B,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,111.691,0.889673,0.253074,6.492902272299142,NEC_MERKEL,testis
 PEG:39099f3e417798616cca,PTTG1IP2,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,54.4147,0.630077,0.358292,6.454712,cSCC,testis
 PEG:639b75885ff8db376581,PRSS54,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,160.608,0.278446,0.122062,6.409880682081725,TGCT,testis
@@ -430,7 +430,7 @@ PEG:037f1d7b1fdaaa4d69c0,OR2H1,Reproductive Antigen only,False,Male-restricted,M
 PEG:b7668edb7de9a67040bb,MSANTD5,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,32.465,0.6091,0.604153,3.4303121766331452,NET_LUNG,embryo | testis
 PEG:c42361808df3c56a8cf7,TEX51,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,267.883,0.145989,0.164048,3.361624230595556,SARC_PEC,testis
 PEG:86c0573ac5b314924664,CPXCR1,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,33.969,0.663073,0.0,3.3257,MM,testis
-PEG:c374a2fe6e21bcd73f84,ZNRF4,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,598.327,0.402536,0.140622,3.1439,NEC_MERKEL,testis
+PEG:c374a2fe6e21bcd73f84,ZNRF4,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,598.327,0.402536,0.140622,3.1439431768408537,NEC_MERKEL,testis
 PEG:ca65a9a92dfdb403341e,FAM47B,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,72.9731,0.139458,0.072084,3.092892,BCC,testis
 PEG:4d7a9416696f69562a7d,GARIN3,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,209.786,0.084335,0.033584,3.0700818078169636,TGCT,testis
 PEG:e683c4922f31769eb320,SPAM1,Reproductive Antigen only,False,Male-restricted,MRA-only,True,False,True,False,60.8927,0.106867,0.228465,3.0572888132738743,HL,testis
@@ -458,7 +458,7 @@ PEG:1dc2e7075282314c6200,TTLL2,Reproductive Antigen only,False,Shared male & fem
 PEG:02053e37f8d52dcfddad,H1-8,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,31.8835,4.33565,0.092454,7.6819,B_ALL,embryo | testis
 PEG:ad22a7bf35b45ca0ec8a,ENSG00000237378,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,36.388,6.97577,2.33835,6.51815245018462,NET_PANCREAS,embryo | testis
 PEG:7278598ea06d972facdd,NLRP13,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,8.2122,8.84151,5.66106,6.040153243760753,LUAD,embryo | resting_breast
-PEG:8f174438c4fb21866c3e,PGK2,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,877.947,0.840944,0.140977,5.0013,NEC_MERKEL,testis | prostate
+PEG:8f174438c4fb21866c3e,PGK2,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,877.947,0.840944,0.140977,5.001348050052367,NEC_MERKEL,testis | prostate
 PEG:bf74b1d1a638e14f9344,EXD1,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,89.4956,0.205048,0.641977,4.6892,B_ALL,testis
 PEG:a8b525b8c5ab45301a94,FAM170A,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,89.7908,0.570384,0.771684,3.4500652040159556,TGCT,testis
 PEG:501825951b91aba924ba,CYLC1,Reproductive Antigen only,False,Shared male & female,SRA-only,False,False,False,False,249.06,0.350348,0.028629,2.5700470872199297,TGCT,testis

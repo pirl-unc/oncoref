@@ -463,11 +463,64 @@ def main() -> None:
     )
     ic = integ_res.catalog.set_index("entity_id")
 
-    # Lookup tables for enriching tumor_top_sample, normal_reference_contexts, reproductive contexts
+    # Lookup tables for enriching tumor_top_sample, 135-cohort tumor witness counts, and contexts
     obs_737 = human_screening_inputs.upgraded_737_tumor_observations()
     obs_737_by_eid: dict[str, list[dict]] = {}
     for r in obs_737.to_dict("records"):
         obs_737_by_eid.setdefault(str(r["entity_id"]), []).append(r)
+
+    tsamp_df = pd.read_csv(
+        ROOT / "docs/audits/target-selection-20261110/rebuild/tumor-samples.csv.gz",
+        keep_default_na=False,
+    )
+    codes_by_key: dict[str, set[str]] = {}
+    pid_by_key: dict[str, str] = {}
+    sample_by_bare_id: dict[str, tuple[str, str, set[str]]] = {}
+    for r in tsamp_df.itertuples(index=False):
+        sc = str(r.source_cohort)
+        ns = str(r.namespace)
+        sid = str(r.sample_id)
+        skey = str(r.sample_key) or f"{ns}:{sid}"
+        cc = str(r.cancer_code)
+        pid = str(r.participant_id).strip()
+        for k in (skey, f"{sc}:{sid}", f"{ns}:{sid}"):
+            if cc:
+                codes_by_key.setdefault(k, set()).add(cc)
+            if pid:
+                pid_by_key[k] = pid
+        if sid:
+            prev_ns, prev_pid, prev_ccs = sample_by_bare_id.get(sid, (ns or sc, pid, set()))
+            if cc:
+                prev_ccs.add(cc)
+            sample_by_bare_id[sid] = (prev_ns, prev_pid or pid, prev_ccs)
+    tw_df = pd.read_csv(
+        ROOT / "docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
+        usecols=[
+            "entity_id",
+            "source_id",
+            "sample_id",
+            "participant_id",
+            "value",
+            "qc_pass",
+            "identity_resolved",
+        ],
+        keep_default_na=False,
+    )
+    tw_df = tw_df[
+        tw_df["qc_pass"].astype(str).eq("True") & tw_df["identity_resolved"].astype(str).eq("True")
+    ].copy()
+    tw_df["value"] = pd.to_numeric(tw_df["value"], errors="coerce")
+    tw_df = tw_df[tw_df["value"].notna()]
+    tw_by_eid: dict[str, list[tuple[str, str, str, tuple[str, ...], float]]] = {}
+    for r in tw_df.itertuples(index=False):
+        skey = f"{r.source_id}:{r.sample_id}"
+        ccs = tuple(sorted(codes_by_key.get(skey, set())))
+        tw_by_eid.setdefault(str(r.entity_id), []).append(
+            (str(r.source_id), str(r.sample_id), str(r.participant_id).strip(), ccs, float(r.value))
+        )
+    tgct_r_samples = set(
+        tgct_localization.tgct_reproductive_localization_audit(r_only=True)["sample_id"].astype(str)
+    )
 
     bleed_by_eid = (
         normal_library_qc.multiplex_bleed_gene_deltas(only_applied=True)
@@ -511,9 +564,6 @@ def main() -> None:
         "tumor_max_tpm",
         "tumor_fold",
         "tumor_top_cancer_code",
-        "samples_at_tenfold",
-        "independent_patients_at_tenfold",
-        "independent_patient_tumor_folds",
         "reproductive_max_sample_tpm",
         "reproductive_supported_tpm",
         "reproductive_fold",
@@ -571,10 +621,21 @@ def main() -> None:
                     "single_tumor_threshold_tpm",
                     "tumor_max_tpm",
                     "tumor_fold",
+                    "samples_at_tenfold",
+                    "independent_patients_at_tenfold",
+                    "anonymous_samples_at_tenfold",
+                    "patient_or_sample_witnesses_at_tenfold",
+                    "cancer_types_at_tenfold",
                     "reproductive_supported_tpm",
                     "reproductive_fold",
                 ):
                     promoted.at[idx, clear_num] = np.nan
+                for clear_str in (
+                    "independent_patient_tumor_folds",
+                    "tumor_top_sample",
+                    "tumor_top_cancer_code",
+                ):
+                    promoted.at[idx, clear_str] = np.nan
             continue
 
         if bool(row["is_target_candidate"]):
@@ -648,24 +709,11 @@ def main() -> None:
             ]
             promoted.at[idx, "reproductive_expression_contexts"] = json.dumps(exp_ctxs)
             top_tumors = cp.get("top_tumor_observations", [])
-            if top_tumors:
+            if top_tumors and eid not in tw_by_eid:
                 best_t = max(top_tumors, key=lambda x: float(x["value"]))
                 promoted.at[idx, "tumor_top_sample"] = (
                     f"{best_t['source_id']}:{best_t['sample_id']}"
                 )
-                if pd.notna(promoted.at[idx, "single_tumor_threshold_tpm"]):
-                    thr = float(promoted.at[idx, "single_tumor_threshold_tpm"])
-                    qual_t = [x for x in top_tumors if float(x["value"]) >= thr]
-                    promoted.at[idx, "cancer_types_at_tenfold"] = len(
-                        {str(x["cancer_code"]) for x in qual_t if x.get("cancer_code")}
-                    )
-                    anon_n = sum(
-                        1 for x in qual_t if not str(x.get("participant_id") or "").strip()
-                    )
-                    promoted.at[idx, "anonymous_samples_at_tenfold"] = anon_n
-                    promoted.at[idx, "patient_or_sample_witnesses_at_tenfold"] = (
-                        int(row["independent_patients_at_tenfold"] or 0) + anon_n
-                    )
 
         # Update normal_reference_contexts if #764 bleed or #735 home panel changed N
         if eid in bleed_by_eid and pd.notna(n_tpm):
@@ -694,32 +742,162 @@ def main() -> None:
                     ]
                 )
 
-        # Update tumor_top_sample for #768 TGCT admixture demotions or #737 upgrades
-        if eid in tgct_restr and eid in tgct_sup_by_eid:
-            tsup = tgct_sup_by_eid[eid]
-            if eid in obs_737_by_eid and pd.notna(t_tpm):
-                best737 = max(obs_737_by_eid[eid], key=lambda x: float(x["value"]))
-                if float(best737["value"]) >= float(tsup.get("max_non_tgct_tpm") or 0.0):
-                    promoted.at[idx, "tumor_top_sample"] = (
-                        f"{best737['source_cohort']}:{best737['sample_id']}"
+        # Reconcile exact 135-cohort tumor witness/patient counts whenever threshold, #737, #768, or cleared status applies
+        d_curr_val = (
+            float(promoted.at[idx, "disposable_max_tpm"])
+            if pd.notna(promoted.at[idx, "disposable_max_tpm"])
+            else 0.0
+        )
+        d_old_val = (
+            float(old_row["disposable_max_tpm"]) if pd.notna(old_row["disposable_max_tpm"]) else 0.0
+        )
+        needs_witness_recompute = pd.notna(n_tpm) and (
+            eid in obs_737_by_eid
+            or eid in tgct_restr
+            or eid in bleed_by_eid
+            or eid in cleared_obs_by_eid
+            or pd.isna(old_row["normal_reference_tpm"])
+            or abs(float(n_tpm) - float(old_row["normal_reference_tpm"])) > 1e-9
+            or abs(d_curr_val - d_old_val) > 1e-9
+        )
+        if needs_witness_recompute:
+            denom = max(float(n_tpm), d_curr_val, 1.0)
+            thr = 10.0 * denom
+            merged_obs: dict[str, tuple[str, set[str], float]] = {}
+
+            def _record_obs(
+                skey: str,
+                pid: str,
+                ccs: set[str],
+                val_f: float,
+                obs_map: dict[str, tuple[str, set[str], float]] = merged_obs,
+            ) -> None:
+                if skey in obs_map:
+                    prev_pid, prev_ccs, prev_val = obs_map[skey]
+                    obs_map[skey] = (
+                        pid or prev_pid,
+                        prev_ccs | {c for c in ccs if c},
+                        max(prev_val, val_f),
                     )
                 else:
-                    promoted.at[idx, "tumor_top_sample"] = str(
-                        tsup.get("top_non_tgct_sample") or ""
-                    )
-            else:
-                promoted.at[idx, "tumor_top_sample"] = str(tsup.get("top_non_tgct_sample") or "")
-                if cls_now == "Reproductive Antigen only":
-                    promoted.at[idx, "cancer_types_at_tenfold"] = 0
-                    promoted.at[idx, "anonymous_samples_at_tenfold"] = 0
-                    promoted.at[idx, "patient_or_sample_witnesses_at_tenfold"] = 0
-        elif eid in obs_737_by_eid and pd.notna(t_tpm):
-            old_t = float(old_row["tumor_max_tpm"]) if pd.notna(old_row["tumor_max_tpm"]) else -1.0
-            if float(t_tpm) > old_t + 1e-6:
-                best737 = max(obs_737_by_eid[eid], key=lambda x: float(x["value"]))
-                promoted.at[idx, "tumor_top_sample"] = (
-                    f"{best737['source_cohort']}:{best737['sample_id']}"
+                    obs_map[skey] = (pid, {c for c in ccs if c}, val_f)
+
+            for src_id, samp_id, part_id, ccs_tup, val_f in tw_by_eid.get(eid, []):
+                if eid in tgct_restr and (
+                    samp_id in tgct_r_samples or "TGCT" in ccs_tup or "TGCT" in src_id
+                ):
+                    continue
+                _record_obs(f"{src_id}:{samp_id}", part_id, set(ccs_tup), val_f)
+            if (
+                eid not in tgct_restr
+                and pd.notna(old_row["tumor_max_tpm"])
+                and pd.notna(old_row["tumor_top_sample"])
+                and str(old_row["tumor_top_sample"]).strip()
+            ):
+                old_top = str(old_row["tumor_top_sample"]).strip()
+                if ":" not in old_top:
+                    old_top = f"baseline_tumor:{old_top}"
+                old_ccs = set(codes_by_key.get(old_top, set()))
+                if (
+                    pd.notna(old_row["tumor_top_cancer_code"])
+                    and str(old_row["tumor_top_cancer_code"]).strip()
+                ):
+                    old_ccs.add(str(old_row["tumor_top_cancer_code"]).strip())
+                _record_obs(
+                    old_top,
+                    pid_by_key.get(old_top, ""),
+                    old_ccs,
+                    float(old_row["tumor_max_tpm"]),
                 )
+            if eid in tgct_restr and eid in tgct_sup_by_eid:
+                tr_sup = tgct_sup_by_eid[eid]
+                nt_val = (
+                    float(tr_sup["max_non_tgct_tpm"])
+                    if pd.notna(tr_sup["max_non_tgct_tpm"])
+                    else 0.0
+                )
+                nt_raw = (
+                    str(tr_sup["top_non_tgct_sample"]).strip()
+                    if pd.notna(tr_sup["top_non_tgct_sample"])
+                    else ""
+                )
+                nt_cc = (
+                    str(tr_sup["top_non_tgct_cancer_code"]).strip()
+                    if pd.notna(tr_sup["top_non_tgct_cancer_code"])
+                    else ""
+                )
+                if nt_val > 0.0 and nt_raw:
+                    if ":" in nt_raw:
+                        nt_skey = nt_raw
+                        nt_pid = pid_by_key.get(nt_skey, f"somatic:{nt_skey}")
+                        nt_ccs = set(codes_by_key.get(nt_skey, set()))
+                    elif nt_raw in sample_by_bare_id:
+                        nt_ns, nt_pid_lookup, cc_lookup = sample_by_bare_id[nt_raw]
+                        nt_skey = f"{nt_ns}:{nt_raw}"
+                        nt_pid = nt_pid_lookup or f"somatic:{nt_raw}"
+                        nt_ccs = set(cc_lookup)
+                    else:
+                        nt_skey = f"oncoref_non_admixed_tumor_witness_768:{nt_raw}"
+                        nt_pid = f"somatic:{nt_raw}"
+                        nt_ccs = set()
+                    if nt_cc:
+                        nt_ccs.add(nt_cc)
+                    _record_obs(nt_skey, nt_pid, nt_ccs, nt_val)
+            for r737 in obs_737_by_eid.get(eid, []):
+                skey = f"{r737['source_cohort']}:{r737['sample_id']}"
+                p737 = (
+                    str(r737["participant_id"]).strip() if pd.notna(r737["participant_id"]) else ""
+                )
+                _record_obs(skey, p737, {str(r737["cancer_code"])}, float(r737["value"]))
+            if eid in cleared_obs_by_eid:
+                for ct in cleared_obs_by_eid[eid].get("top_tumor_observations", []):
+                    skey = f"{ct['source_id']}:{ct['sample_id']}"
+                    pct = str(ct.get("participant_id") or "").strip() or pid_by_key.get(skey, "")
+                    ct_ccs = set(codes_by_key.get(skey, set()))
+                    if ct.get("cancer_code"):
+                        ct_ccs.add(str(ct["cancer_code"]))
+                    _record_obs(skey, pct, ct_ccs, float(ct["value"]))
+
+            if merged_obs:
+                best_skey, (_, best_ccs, best_val) = max(
+                    merged_obs.items(), key=lambda kv: (kv[1][2], kv[0])
+                )
+                promoted.at[idx, "tumor_max_tpm"] = best_val
+                promoted.at[idx, "tumor_fold"] = best_val / denom
+                promoted.at[idx, "tumor_top_sample"] = best_skey
+                if best_ccs:
+                    orig_cc = (
+                        str(old_row["tumor_top_cancer_code"]).strip()
+                        if pd.notna(old_row["tumor_top_cancer_code"])
+                        else ""
+                    )
+                    promoted.at[idx, "tumor_top_cancer_code"] = (
+                        orig_cc if orig_cc in best_ccs else sorted(best_ccs)[0]
+                    )
+                r_curr = promoted.at[idx, "reproductive_supported_tpm"]
+                promoted.at[idx, "target_peak_tpm"] = max(
+                    best_val, float(r_curr) if pd.notna(r_curr) else 0.0
+                )
+
+            passing_obs = [v for v in merged_obs.values() if v[2] >= thr]
+            by_patient: dict[str, float] = {}
+            anon_cnt = 0
+            c_codes: set[str] = set()
+            for part_id, obs_ccs, val_f in passing_obs:
+                c_codes |= obs_ccs
+                if part_id:
+                    by_patient[part_id] = max(by_patient.get(part_id, 0.0), val_f / denom)
+                else:
+                    anon_cnt += 1
+            folds_sorted = sorted(by_patient.values(), reverse=True)
+            promoted.at[idx, "samples_at_tenfold"] = len(passing_obs)
+            promoted.at[idx, "independent_patients_at_tenfold"] = len(folds_sorted)
+            promoted.at[idx, "anonymous_samples_at_tenfold"] = anon_cnt
+            promoted.at[idx, "patient_or_sample_witnesses_at_tenfold"] = (
+                len(folds_sorted) + anon_cnt
+            )
+            promoted.at[idx, "cancer_types_at_tenfold"] = len(c_codes)
+            promoted.at[idx, "independent_patient_tumor_folds"] = json.dumps(folds_sorted)
 
         # Update human-readable decision_reason on changed rows
         if cls_now != str(old_row["classification"]):
@@ -770,18 +948,14 @@ def main() -> None:
         if c_diff:
             he_deltas[eid] = c_diff
 
+    sb_manifest = json.loads(
+        (ROOT / "docs/audits/sequence-bundle-20261121/manifest.json").read_text(encoding="utf-8")
+    )
     delta_doc = {
         "schema": "oncoref.baseline-catalog-deltas.v1",
         "baseline_policy_id": "oncoref.target-selection.2026-11-20.2",
         "promoted_policy_id": PROMOTED_POLICY_ID,
-        "baseline_package_dependencies_sha256": {
-            "target-selection.csv.gz": _sha256_file(
-                FROZEN_150_DIR / "oncoref/data/target-selection.csv.gz"
-            ),
-            "target-selection.json": _sha256_file(
-                FROZEN_150_DIR / "oncoref/data/target-selection.json"
-            ),
-        },
+        "baseline_package_dependencies_sha256": dict(sb_manifest["package_dependencies"]),
         "added_columns": added_cols,
         "changed_entity_count": len(row_deltas),
         "baseline_host_exposure_entity_ids": sorted(base_he_df["entity_id"].astype(str).tolist()),

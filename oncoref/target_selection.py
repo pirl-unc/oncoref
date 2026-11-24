@@ -419,8 +419,7 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
 
 
 @lru_cache(maxsize=1)
-def _baseline_2026_11_20_frame() -> pd.DataFrame:
-    """Reconstruct the exact 129-column ``oncoref.target-selection.2026-11-20.2`` baseline."""
+def _baseline_2026_11_20_frame_cached() -> pd.DataFrame:
     with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
         df = pd.read_csv(handle, compression="gzip", low_memory=False)
     delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
@@ -449,9 +448,13 @@ def _baseline_2026_11_20_frame() -> pd.DataFrame:
     return df
 
 
+def _baseline_2026_11_20_frame() -> pd.DataFrame:
+    """Reconstruct the exact 129-column ``oncoref.target-selection.2026-11-20.2`` baseline."""
+    return _baseline_2026_11_20_frame_cached().copy(deep=True)
+
+
 @lru_cache(maxsize=1)
-def _baseline_2026_11_20_host_exposures() -> dict[str, dict]:
-    """Return exact ``2026-11-20.2`` ``host-exposure`` dict across all 921 baseline entities."""
+def _baseline_2026_11_20_host_exposures_cached() -> dict[str, dict]:
     from .species_target_selection import packaged_species_host_exposure
 
     full = packaged_species_host_exposure("human")
@@ -469,9 +472,14 @@ def _baseline_2026_11_20_host_exposures() -> dict[str, dict]:
     return out
 
 
+def _baseline_2026_11_20_host_exposures() -> dict[str, dict]:
+    """Return exact ``2026-11-20.2`` ``host-exposure`` dict across all 921 baseline entities."""
+    return deepcopy(_baseline_2026_11_20_host_exposures_cached())
+
+
 _register_derived_cache(_cached_results_bundle.cache_clear)
-_register_derived_cache(_baseline_2026_11_20_frame.cache_clear)
-_register_derived_cache(_baseline_2026_11_20_host_exposures.cache_clear)
+_register_derived_cache(_baseline_2026_11_20_frame_cached.cache_clear)
+_register_derived_cache(_baseline_2026_11_20_host_exposures_cached.cache_clear)
 
 
 def results(

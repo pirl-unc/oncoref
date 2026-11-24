@@ -52,7 +52,7 @@ Every protein group follows a deterministic decision tree with strict precedence
 
 *Figure 4.* Sequential attrition from **19,893** protein groups to **581** retained candidates, assigning each excluded protein once at its first failing gate. The broken x-axis above 3,000 keeps post-bulk filters readable. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-all.csv).
 
-Both enrichment routes apply the same threshold—**≥10×** above **H₀ = max(Normal N, Disposable D, 1 TPM)**—across **920** protein groups with complete healthy-panel TPM (**845** eligible groups plus **339** `Other` groups with complete bulk panels). Points above the dotted line in `Other` clear the fold cutoff numerically while remaining held for locus-specific single-cell attribution or unmeasured anatomical sub-niches (`TBATA`, `DSPP`, `CAGE1`).
+Both enrichment routes apply the same threshold—**≥10×** above **H₀ = max(Normal N, Disposable D, 1 TPM)**—across **920** protein groups with complete healthy-panel TPM (**845** shared-eligible groups plus **75** ineligible `Other` groups with complete bulk panels). Points above the dotted line in `Other` clear the fold cutoff numerically while remaining held for locus-specific single-cell attribution or unmeasured anatomical sub-niches (`TBATA`, `DSPP`, `CAGE1`).
 
 ![Cancer enrichment relative to the healthy adult baseline](audits/target-selection-20261110/rebuild/summary/cancer-enrichment.png)
 
@@ -136,7 +136,7 @@ Of **58** protein groups in the familiar or clinical reference panels, **28** la
 
 ## Peak tumor expression and edge cases
 
-Across the **581** candidate union, **167** protein groups reach **≥100 TPM** in at least one QC-passing tumor sample, **28** reach **≥1,000 TPM**, and **126** have **≥10 known independent patients** crossing the 10× cutoff. Median peak tumor expression is **73.68 TPM** for `CTA` and **39.77 TPM** for `CA only`.
+Across the **581** candidate union, **167** protein groups reach **≥100 TPM** in at least one QC-passing tumor sample, **28** reach **≥1,000 TPM**, and **134** have **≥10 known independent patients** crossing the 10× cutoff. Median peak tumor expression is **73.68 TPM** for `CTA` and **39.77 TPM** for `CA only`.
 
 Each table below ranks the top ten protein groups in its category by peak QC-passing tumor TPM ([all 581 candidates](antigen-whitepaper/tumor-ranks.csv)); `Unsafe` proteins (`18,250`) exit in Stage 1 before tumor comparison. Because `Tumor fold` divides by `max(N, D, 1 TPM)`, fold equals `Tumor TPM` whenever both `N` and `D` are below 1 TPM (`LALBA`, `SCGB1D4`, `VCY/1B`). In `Other`, high tumor peaks (`TBATA`, `DSPP`, `CAGE1`) reflect unresolved single-cell or unmeasured sub-niche reviews rather than low expression. Peak TPM measures single-library abundance, not the fraction of malignant cells expressing the protein.
 
@@ -150,9 +150,9 @@ Top 10 of 331 groups by peak tumor sample TPM.
 | 2 | TGM4 | PRAD | 17,629.45 | 5.67 | 22,106.5 | 3,107.11 | 94 |
 | 3 | XAGE1A/B | BRCA | 4,068.64 | 5.74 | 362.73 | 709.23 | 988 |
 | 4 | SPANXA1/2 | ESCA | 3,700.06 | 3 | 77.07 | 1,233.35 | 61 |
-| 5 | PRAME | SCLC | 3,692.46 | 10.93 | 310.91 | 337.97 | 2 |
+| 5 | PRAME | SCLC | 3,692.46 | 10.93 | 310.91 | 337.97 | 1,206 |
 | 6 | SCGB1D4 | UCEC | 3,576.17 | 0.42 | 1,383.54 | 3,576.17 | 49 |
-| 7 | MAGEA4 | SCLC | 3,201.68 | 2.95 | 327.97 | 1,083.95 | 3 |
+| 7 | MAGEA4 | SCLC | 3,201.68 | 2.95 | 327.97 | 1,083.95 | 745 |
 | 8 | RLN1 | PRAD | 3,039.25 | 5.85 | 268.82 | 519.47 | 127 |
 | 9 | SEMG2 | PRAD | 3,033.78 | 9.52 | 26,737.9 | 318.52 | 7 |
 | 10 | VCY/1B | SKCM | 2,858.58 | 0.1 | 269.66 | 2,858.58 | 125 |
@@ -170,7 +170,7 @@ Top 10 of 117 groups by peak tumor sample TPM.
 | 5 | ZACN | SCLC | 526.62 | 22.49 | 21.96 | 23.41 | 1 |
 | 6 | IL36B | SARC_UPS | 498.45 | 20.17 | 9.83 | 24.71 | 1 |
 | 7 | SRMS | NET_RECTAL | 463.74 | 12.05 | 39.04 | 38.47 | 0 |
-| 8 | CSAG3 | LUSC | 336.48 | 4.27 | 22.46 | 78.72 | 2 |
+| 8 | CSAG3 | LUSC | 336.48 | 4.27 | 22.46 | 78.72 | 401 |
 | 9 | DBX1 | SCLC | 297.51 | 0.78 | 1.65 | 297.51 | 74 |
 | 10 | HOXD12 | NBL | 279.91 | 6.2 | 17.97 | 45.12 | 15 |
 
@@ -210,7 +210,7 @@ Top 10 of 339 groups with complete baseline TPM (out of 1,062 total `Other` grou
 
 ### Worked edge cases
 
-**`CTAG2` (LAGE-1) → `CTA` (isoform-scoped clinical pMHC clearance, `#766`).** In peripheral bulk TPM, `CTAG2` clears both enrichment rules: its highest peripheral reference is **urinary bladder** at **6.92 TPM** (10× cutoff **69.25 TPM**), testis reaches **101.92 TPM** (**14.72×**), and ovarian cancer reaches **604.33 TPM** across **1** known patients at 10×. In donor-resolved single-cell atlases, **lung** (alveolar type 2 cells) and **brain** (cortical glutamatergic neurons) pass the multi-study donor-replication screen while sharing **50.9%** of transcript 31-mers across the closed `Xq28` `CTAG1A`/`CTAG1B`/`CTAG2` cluster (`0.0%` external `Unsafe` 31-mer overlap):
+**`CTAG2` (LAGE-1) → `CTA` (isoform-scoped clinical pMHC clearance, `#766`).** In peripheral bulk TPM, `CTAG2` clears both enrichment rules: its highest peripheral reference is **urinary bladder** at **6.92 TPM** (10× cutoff **69.25 TPM**), testis reaches **101.92 TPM** (**14.72×**), and ovarian cancer reaches **604.33 TPM** across **375** known patients at 10×. In donor-resolved single-cell atlases, **lung** (alveolar type 2 cells) and **brain** (cortical glutamatergic neurons) pass the multi-study donor-replication screen while sharing **50.9%** of transcript 31-mers across the closed `Xq28` `CTAG1A`/`CTAG1B`/`CTAG2` cluster (`0.0%` external `Unsafe` 31-mer overlap):
 
 | Organ | Strongest population | Independent studies | Donor IDs with signal (linked where known) | Cells with ≥2 molecules in top donor | Grading |
 | --- | --- | --- | --- | --- | --- |
@@ -256,7 +256,7 @@ Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</sp
 
 Because male and female reproductive organs are anatomically distinct, an antigen restricted to one sex's reproductive tract has no normal target organ in non-pregnant patients of the opposite sex. Oncology has no standard shorthand for this cross-sex distinction, so OncoRef partitions Reproductive Antigens (<span class="cat cat-ra">RA</span>) and their cancer intersection (<span class="cat cat-cta">CTA</span>) into four explicit sex-restriction classes under strict protection of all opposite-sex adult organs (including resting and lactating breast):
 
-- **Male-Restricted (`MRA`, `329` RAs · `CTA-M`, `225` CTAs — female-safe):** expressed in male reproductive organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`) and cleanly clearing every female adult reproductive and mammary organ (`XAGE1A/B`, `SPANXA1/2`, `MAGEA4`, `NY-ESO-1`, `VCY/1B`, `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`, plus male-accessory/prostate targets such as `TGM4`, `SEMG2`, `PRR23D1/2`, `SPAG11A`, `POTEH`, `EDDM3B`). Because **336 of 514** (`65.4%`) GTEx `Breast_Mammary_Tissue` biopsies come from male cadavers (`#776`), OncoRef stratifies `resting_breast` by biological donor sex (`XX` female vs. `XY` male) and masks stoichiometric `#764` testis/prostate flowcell bleed across opposite-sex GTEx shards (`TGM4` female GTEx breast max = `0.87 TPM` vs. `176.73 TPM` male; `SEMG2` = `0.18 TPM` vs. `117.35 TPM`; `CT83` = `2.10 TPM` vs. `16.65 TPM`). Relaxing female `resting_breast` protection widens `CTA-M` to **227** CTAs for the few male-germline antigens with genuine female mammary expression (`DKKL1`).
+- **Male-Restricted (`MRA`, `329` RAs · `CTA-M`, `225` CTAs — female-safe):** expressed in male reproductive organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`) and cleanly clearing every female adult reproductive and mammary organ (`XAGE1A/B`, `SPANXA1/2`, `MAGEA4`, `NY-ESO-1`, `VCY/1B`, `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`, plus male-accessory/prostate targets such as `TGM4`, `SEMG2`, `PRR23D1/2`, `SPAG11A`, `POTEH`, `EDDM3B`). Because **336 of 514** (`65.4%`) GTEx `Breast_Mammary_Tissue` biopsies come from male cadavers (`#776`), OncoRef stratifies `resting_breast` by biological donor sex (`XX` female vs. `XY` male) and masks stoichiometric `#764` testis/prostate flowcell bleed across opposite-sex GTEx shards (`TGM4` GTEx female breast max = `0.87 TPM` [`1.70 TPM` pooled GTEx + HPA v23 female mammary max] vs. `176.73 TPM` male; `SEMG2` = `0.18 TPM` GTEx female [`0.40 TPM` pooled female] vs. `117.35 TPM` male; `CT83` = `2.10 TPM` vs. `16.65 TPM`). Relaxing female `resting_breast` protection widens `CTA-M` to **227** CTAs for the few male-germline antigens with genuine female mammary expression (`DKKL1`).
 - **Embryo / Placenta-Only (`ERA`, `46` RAs · `CTA-E`, `39` CTAs — adult-absent in both sexes):** cleanly clear both all adult male and all non-pregnant adult female organs (`DUX4`, `TBXT`, `MBD3L2`, `SSU72L2`, `TRIM48`, `TRIM43B`). Although **155** RAs (**130** CTAs) reach ≥10× in embryo or placenta, most (`64` RAs / `57` CTAs, including `MAGEA4`, `VCY/1B`, `PAGE2`, and `GAGE1`) remain active in adult testis and therefore classify as `MRA`/`CTA-M`, while another `41` RAs (`33` CTAs) remain active in both male and female adult reproductive tissues; `ERA` retains only developmental factors silenced across every adult gonad and reproductive organ.
 - **Female-Restricted (`FRA`, `6` RAs · `CTA-F`, `3` CTAs — male-safe):** confined to female reproductive compartments (`ovary`, tract, `placenta`/`lactating_breast`) while cleanly clearing all male adult organs (`ERVV-1`, `ZP4`).
 - **Shared Male & Female (`SRA`, `83` RAs · `CTA-MF`, `64` CTAs):** expressed in adult reproductive or mammary compartments of both sexes (`PRAME`, `LALBA`, `SCGB1D4`, `CTAG2`, `DKKL1`).
@@ -269,7 +269,7 @@ The asymmetry is striking: **264** of **331** CTAs (`CTA-M + CTA-E`) clear every
 
 ![Male versus female reproductive-organ exposure across all CTAs](audits/target-selection-20261110/rebuild/summary/sex-restricted-landscape.png)
 
-*Figure 13.* Historical `2026-11-10` landscape of male versus female sex-organ RNA across CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). In that unstratified GTEx `resting_breast` snapshot (`336/514` male cadavers), ochre points in the lower-right (`TGM4`, `SEMG2`) appeared `≥4 TPM` in pooled `resting_breast`; under `#776` biological donor-sex stratification and `#764` stoichiometric bleed QC ([live CSV](antigen-whitepaper/sex-restricted-antigens.csv)), female mammary expression is `1.70 TPM` for `TGM4` and `0.40 TPM` for `SEMG2`, restoring both (`plus PRM1, SPATA19, CT83, ODF1, ADAM2`) to **`CTA-M`**, while genuine female-mammary genes (`DKKL1` at `41.96 TPM`) remain excluded from `CTA-M` when `resting_breast` is protected.
+*Figure 13.* Historical `2026-11-10` landscape of male versus female sex-organ RNA across CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). In that unstratified GTEx `resting_breast` snapshot (`336/514` male cadavers), ochre points in the lower-right (`TGM4`, `SEMG2`) appeared `≥4 TPM` in pooled `resting_breast`; under `#776` biological donor-sex stratification and `#764` stoichiometric bleed QC ([live CSV](antigen-whitepaper/sex-restricted-antigens.csv)), pooled GTEx + HPA v23 female mammary expression is `1.70 TPM` for `TGM4` (`0.87 TPM` GTEx female breast max) and `0.40 TPM` for `SEMG2` (`0.18 TPM` GTEx female breast max), restoring both (plus `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`) to **`CTA-M`**, while genuine female-mammary genes (`DKKL1` at `41.96 TPM`) remain excluded from `CTA-M` when `resting_breast` is protected.
 
 ## Methods: protein grouping, sources, and thresholds
 

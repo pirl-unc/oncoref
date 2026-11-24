@@ -362,8 +362,12 @@ def test_resting_breast_sex_stratification_in_host_context(rows):
         }
     }
     fem = hc.from_legacy("female-patient", protect_tissues=("resting_breast",))
+    fem_ooph = hc.from_legacy(
+        "female-patient", protect_tissues=("resting_breast",), absent_tissues=("ovary",)
+    )
     male = hc.from_legacy("male-patient", protect_tissues=("resting_breast",))
     unstrat = hc.HostContext(protect=("resting_breast",))
     assert hc.assess(rows, fem, evidence=ev).iloc[0].host_status == "eligible"
+    assert hc.assess(rows, fem_ooph, evidence=ev).iloc[0].host_status == "eligible"
     assert hc.assess(rows, male, evidence=ev).iloc[0].host_status == "excluded"
     assert hc.assess(rows, unstrat, evidence=ev).iloc[0].host_status == "excluded"

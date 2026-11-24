@@ -127,9 +127,9 @@ Unsafe under the tissue-tier policy. Antibody reliability, specificity, cell typ
 source scope remain part of each finding. Four explicit assay-boundary reconciliations (`oncoref.assay_boundary_adjudications`) prevent single-assay artifacts from misclassifying targets:
 
 1. **Non-admixed tumor witness requirement (`#713` Note `R` `TCGA-TGCT`):** `11` post-meiotic spermatid markers (`PRM2`, `CETN1`, `PGK2`, `BOD1L2`, `CCDC70`, `TSSK2`, `PRR30`, `ZNRF4`, `IQCF5`, `BPIFA3`, `CYLC2`) whose `≥ 10×` cancer signal rested solely on `library_qc` Note `R` seminiferous-parenchyma-admixed `TCGA-TGCT` biopsies reclassify to `Reproductive Antigen only`, whereas `PRM1` (`58.97 TPM` in female `BRCA`) and `SPATA19` (`13.28 TPM` in `#737` `cSCC`) retain independent somatic tumor witnesses and remain `CTA`.
-2. **RNA-zero single-antibody HPA IHC (`cta-ihc-unreliable.csv`):** Single-antibody staining contradicted by `100%` complete required somatic RNA silence (`< 0.5 TPM` and `< 0.5 nTPM`, e.g. `MAGEB6` at `0.012 TPM` somatic max) clears to `CTA`, whereas loci with somatic RNA (`NLRP9` at `2.32 TPM`) remain `Unsafe`.
+2. **RNA-zero single-antibody HPA IHC (`cta-ihc-unreliable.csv`):** Single-antibody staining contradicted by `100%` complete required somatic RNA silence (`< 0.5 TPM` and `< 1.0 nTPM`, e.g. `MAGEB6` at `0.012 TPM` somatic max) clears to `CTA`, whereas loci with somatic RNA (`NLRP9` at `2.32 TPM`) remain `Unsafe`.
 3. **Adult cornea (`GSE155683`) multi-UMI support floor:** Requires `≥ 10` adult corneal cells with `≥ 2` UMIs, matching the rare-cell screen's minimum support (`DKKL1` with `8 / 21,343` cells advances `Unsafe → CTA`; `INSL4`, `GPHB5`, `QRFP`, `C20orf202` with `24–64` cells stay `Unsafe`).
-4. **Protamine-diluted germline transcription factors:** Nuclear germ-cell regulators compressed below `10 TPM` in whole-testis bulk RNA by `> 100,000 TPM` late-spermatid protamines qualify on `RA` when somatic normal expression is silent (`≤ 0.5 TPM`), `≥ 2` GTEx Testis donors reach `≥ 3.0 TPM`, and HPA germ-cell `scRNA-seq` confirms germline lineage expression (`≥ 1.0 nTPM`), advancing `FOXR2`, `SPATA31A3`, and `PPP4R3C` from `CA only → CTA` (`CTA-M`). [Assay-boundary & 1-mm near-self audit](audits/assay-boundary-near-self-20261123/index.md).
+4. **Protamine-diluted germline transcription factors:** Nuclear germ-cell regulators compressed below `10 TPM` in whole-testis bulk RNA by `> 100,000 TPM` late-spermatid protamines qualify on `RA` when somatic normal expression is silent (`≤ 0.10 TPM`, `0.0 nTPM` somatic scRNA), germline bulk reaches `≥ 5.0 TPM` (`≥ 50×` over somatic) across `≥ 2` GTEx Testis donors `≥ 3.0 TPM`, and HPA germ-cell `scRNA-seq` confirms germline lineage expression (`≥ 1.0 nTPM`), advancing `FOXR2`, `SPATA31A3`, and `PPP4R3C` from `CA only → CTA` (`CTA-M`). [Assay-boundary & 1-mm near-self audit](audits/assay-boundary-near-self-20261123/index.md).
 
 ## Published normal expression
 
@@ -137,7 +137,7 @@ Reviewed gene-specific normal expression
 retains sources, adjudication and supersession history.
 [Literature rubric](audits/target-selection-20261110/rebuild/literature.md).
 
-## Home tissue the panels do not resolve (`#735`)
+## Home tissue the panels do not resolve
 
 Olfactory epithelium, nasal mucosa, taste buds, hair follicle, dental pulp and mineralized
 bone are not resolved by the standard GTEx/HPA bulk native-TPM panels. `oncoref.unmeasured_home_panels` integrates SHA-256-pinned adult human bulk TPM and donor-resolved single-cell UMI panels across these six tissues (`#735`): proteins exceeding their home-tissue injury-tier ceiling (`SP7` and `PANX3` in bone, `GFY` and `BPIFB3` in olfactory epithelium, `GLYATL3`) become `Unsafe`, proteins silent in sampled adult home panels clear to `CA only` (`48` proteins, incl. `TAS1R2`, `KRTAP*`) or `CTA` (`OR10J1`), and proteins whose sub-niche remains unmeasured (`DSPP` odontoblast process, `CALHM3` type II taste cells) stay in `Other:Unscreened tissue`. A protein with a documented home in an unmeasured niche can still qualify as `RA`.

@@ -119,16 +119,40 @@ def main():
         (pill(c), f"{int(counts[c]):,}", bar(int(counts[c]), total, COLORS[c])) for c in CATEGORIES
     ]
 
-    steps = pd.read_csv(FUNNEL)
+    live_funnel_steps = [
+        ("Normal-tissue safety exclusions", "Unsafe", int(measured.category.eq("Unsafe").sum())),
+        (
+            "Coverage, identity, or rare-cell review",
+            "Other:Review",
+            int(measured.classification.eq("Other:Review").sum()),
+        ),
+        (
+            "Nested, readthrough, or Unsafe 9-mer sequence",
+            "Other:Sequence",
+            int(measured.classification.eq("Other:Sequence").sum()),
+        ),
+        (
+            "Unscreened adult home sub-niche",
+            "Other:Unscreened tissue",
+            int(measured.classification.eq("Other:Unscreened tissue").sum()),
+        ),
+        (
+            "Below 10x enrichment or Disposable cap",
+            "Other:Expression",
+            int(measured.classification.eq("Other:Expression").sum()),
+        ),
+    ]
     funnel_rows = [("All proteins assessed", "", "", f"{total:,}", bar(total, total, "#5b6b75"))]
-    for r in steps.itertuples():
+    rem_total = total
+    for step_lbl, res_lbl, rem_n in live_funnel_steps:
+        rem_total -= rem_n
         funnel_rows.append(
             (
-                esc(r.step),
-                esc(r.result),
-                f"−{r.removed:,}",
-                f"{r.remaining:,}",
-                bar(r.remaining, total, "#5b6b75"),
+                esc(step_lbl),
+                esc(res_lbl),
+                f"−{rem_n:,}",
+                f"{rem_total:,}",
+                bar(rem_total, total, "#5b6b75"),
             )
         )
 

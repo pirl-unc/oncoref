@@ -208,17 +208,24 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 continue
             value = item.get("max_tpm")
             if tissue in {"resting_breast", "resting_mammary"} and host is not None:
-                if (
-                    "testis" in host.absent
-                    and "ovary" not in host.absent
-                    and item.get("female_max_tpm") is not None
-                ):
+                fem_tract = (
+                    "uterus",
+                    "uterine_horn",
+                    "vagina",
+                    "cervix",
+                    "endometrium",
+                    "fallopian tube",
+                )
+                is_female_host = ("testis" in host.absent and "ovary" not in host.absent) or (
+                    "prostate" in host.absent and any(c not in host.absent for c in fem_tract)
+                )
+                is_male_host = not is_female_host and (
+                    ("ovary" in host.absent and "testis" not in host.absent)
+                    or ("prostate" not in host.absent and any(c in host.absent for c in fem_tract))
+                )
+                if is_female_host and item.get("female_max_tpm") is not None:
                     value = item.get("female_max_tpm")
-                elif (
-                    "ovary" in host.absent
-                    and "testis" not in host.absent
-                    and item.get("male_max_tpm") is not None
-                ):
+                elif is_male_host and item.get("male_max_tpm") is not None:
                     value = item.get("male_max_tpm")
             if (
                 isinstance(value, bool)

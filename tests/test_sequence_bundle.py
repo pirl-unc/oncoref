@@ -98,7 +98,7 @@ def test_cached_current_bundle_enforces_target_selection_roles():
     except FileNotFoundError:
         pytest.skip("Current sequence bundle is not staged in local cache")
     loaded = bundle.load(path)
-    ts = target_selection._baseline_2026_11_20_frame()
+    ts = target_selection.results()
     unsafe_genes = {
         g
         for members in ts.loc[ts.category.eq("Unsafe"), "member_gene_ids"]
@@ -118,6 +118,16 @@ def test_cached_current_bundle_enforces_target_selection_roles():
                     covered_ca.update(occ["decision_ids"])
     assert cta_entities <= covered_cta
     assert ca_entities <= covered_ca
+    seq_tbl = loaded.to_sequences_table()
+    label_to_gid = {
+        row.protein_group_label: json.loads(row.member_gene_ids)[0]
+        for row in ts.itertuples(index=False)
+    }
+    roles_by_gid = seq_tbl.groupby("gene_id")["shared_sequence"].unique().to_dict()
+    for unsafe_lbl in ("SP7", "GFY", "DAZL"):
+        assert set(roles_by_gid[label_to_gid[unsafe_lbl]]) == {"exclude"}
+    for allow_lbl in ("PLAC1", "ZAN", "DKKL1", "MAGEB6", "CTAG2", "DUX4"):
+        assert "allow" in set(roles_by_gid[label_to_gid[allow_lbl]])
 
 
 def make_bundle(folder, *, role="allow", second=False):
