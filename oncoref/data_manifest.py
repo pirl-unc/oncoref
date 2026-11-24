@@ -475,6 +475,18 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "epitope-, HLA-, and Ensembl-115-isoform-scoped human TCR-T organ-safety clearances and Xq28 CTAG2 attribution (#766)",
     ),
+    "repeat-family-adjudications": (
+        "cta-evidence",
+        "Ensembl 115 closed repeat-family vs external paralog partitioning and symmetric multimapper adjudications (#767)",
+    ),
+    "closed-homolog-families": (
+        "cta-evidence",
+        "closed coding and repeat homolog family memberships and co-silenced sibling gene IDs for downstream peptide subtraction (#767)",
+    ),
+    "repeat-family-comparison-observations": (
+        "cta-evidence",
+        "symmetric family-summed normal, developmental/reproductive, and tumor TPM observations across closed repeat arrays (#767)",
+    ),
     "nose-skin-reference": (
         "cta-evidence",
         "normal nose and skin expression of each Target candidate: olfactory mucosa bulk RNA (Olender 2016) and adult nose, skin, scalp and tongue single cells (CELLxGENE Census), with the tissue recorded when several people or datasets agree",
@@ -862,6 +874,8 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "census-collection-compartments",
         "nuclear-spillover-adjudications",
         "cleared-candidate-comparison-observations",
+        "repeat-family-adjudications",
+        "repeat-family-comparison-observations",
         "mouse-target-selection",
         "mouse-host-exposure",
         "mouse-proteome-sequences",

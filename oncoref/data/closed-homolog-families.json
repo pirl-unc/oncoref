@@ -1,0 +1,7 @@
+{
+  "schema": "oncoref.closed-homolog-families.v1",
+  "policy_id": "oncoref.repeat-family-equivalence.2026-11-23.1",
+  "rows": 48,
+  "sha256": "d41cfa2cceb92b3de8f211817a0310aacf8d6e64f9a19bf6845957b62630f49a",
+  "family_count": 12
+}

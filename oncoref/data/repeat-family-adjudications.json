@@ -1,0 +1,12 @@
+{
+  "schema": "oncoref.repeat-family-adjudications.v1",
+  "policy_id": "oncoref.repeat-family-equivalence.2026-11-23.1",
+  "rows": 209,
+  "sha256": "6be9d97b288febe33c3d715026a46f2d224699bf1c2fd825f9bc0d491f18ffb3",
+  "cleared_count": 2,
+  "disposition_counts": {
+    "retained_external_unsafe_or_somatic_paralog": 128,
+    "retained_processed_pseudogene_or_host_partner": 79,
+    "closed_repeat_family_cleared": 2
+  }
+}
