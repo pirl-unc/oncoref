@@ -394,6 +394,19 @@ def _clean_and_sex_stratify_host_exposures(
         low_memory=False,
     )
     lactating_sids = set(rc.loc[rc["compartment"].eq("lactating_breast"), "sample_id"].astype(str))
+    # Separate coordinated multi-gene milk-operon induction (postpartum lactation in XX women and
+    # hyperprolactinemia / galactorrhea in 8/336 XY ICU/medicated cadaver donors) from resting_breast:
+    milk_sdf = gtex.sample_tpm(
+        "breast_mammary_tissue",
+        genes=sorted(milk_marker_gids),
+        qc="all",
+        cleanup="all",
+    )
+    milk_scols = [c for c in milk_sdf.columns if c not in ("Name", "Description")]
+    milk_mat = milk_sdf[milk_scols]
+    secretory_mammary_sids = lactating_sids | {
+        c for c in milk_scols if (milk_mat[c] >= 5.0).sum() >= 3 and milk_mat[c].max() >= 15.0
+    }
     gtex_he_by_comp: dict[str, dict[str, float]] = {}
     gtex_max_by_comp: dict[str, dict[str, float]] = {}
     for comp_lbl, site_lbl in (
@@ -417,13 +430,13 @@ def _clean_and_sex_stratify_host_exposures(
         for eid in (set(ecto_mx) | set(endo_mx))
     }
     gtex_rb_xx, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", exclude_samples=lactating_sids, sex_filter="XX"
+        "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XX"
     )
     gtex_rb_xy, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", exclude_samples=lactating_sids, sex_filter="XY"
+        "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XY"
     )
     gtex_lb_xx, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", include_samples=lactating_sids, sex_filter="XX"
+        "breast_mammary_tissue", include_samples=secretory_mammary_sids, sex_filter="XX"
     )
     large_gtex_comps = {"testis", "prostate", "ovary", "uterus", "vagina"}
 

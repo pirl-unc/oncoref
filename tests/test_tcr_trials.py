@@ -129,3 +129,59 @@ def test_protein_annotation_requires_all_member_loci():
     annotated = tcr_trials.annotate_proteins(facts)
     assert annotated.clinical_rna_credit.tolist() == [True, False]
     assert "clinical_rna_credit" not in facts
+
+
+def test_potency_proven_gold_standard_calibration_and_cli(capsys):
+    from oncoref.cli import main as cli_main
+
+    gs_all = tcr_trials.gold_standard(potency_proven_only=False)
+    gs_potent = tcr_trials.gold_standard(potency_proven_only=True)
+    assert len(gs_all) == 16
+    assert len(gs_potent) == 14
+    assert {"magea1_ima202", "ct83_kklc1_phase1"} == (
+        set(gs_all["benchmark_id"]) - set(gs_potent["benchmark_id"])
+    )
+
+    ev = tcr_trials.evaluate_against_gold_standard().set_index("benchmark_id")
+    assert ev.loc["magea1_ima202", "benchmark_alignment"] == "excluded_potency_unproven"
+    assert ev.loc["ct83_kklc1_phase1", "benchmark_alignment"] == "excluded_potency_unproven"
+    for bid in (
+        "ny_eso_1_1g4_c259",
+        "ctag2_lete_cel_c259",
+        "magea4_afami_cel",
+        "prame_ima203",
+        "magea10_adp_a2m10",
+    ):
+        assert ev.loc[bid, "oncoref_category"] == "CTA"
+        assert ev.loc[bid, "benchmark_alignment"] == "true_safe_cta"
+
+    for bid in (
+        "ceacam5_nci_tcr",
+        "mlana_dmf5_tcr",
+        "pmel_gp100_tcr_imm",
+        "tyr_til1383i_tcr",
+        "magea3_a2_neuro",
+        "magea3_a1_titin",
+    ):
+        assert bool(ev.loc[bid, "effective_oncoref_unsafe"]) is True
+        assert ev.loc[bid, "benchmark_alignment"] == "true_unsafe_toxic"
+
+    for bid in ("magea3_dp4_6f9", "afp_adp_a2afp", "wt1_ttcr_c4"):
+        assert ev.loc[bid, "oncoref_category"] == "Unsafe"
+        assert ev.loc[bid, "benchmark_alignment"] == "conservative_unsafe_epitope_tolerated"
+
+    summary = tcr_trials.gold_standard_summary()
+    assert summary["potency_proven_entries"] == 14
+    assert summary["severe_specificity_toxic_entries"] == 6
+    assert summary["severe_specificity_toxic_flagged_unsafe"] == 6
+    assert summary["false_safe_misses"] == 0
+    assert summary["sensitivity_to_clinical_toxicity"] == 1.0
+    assert summary["potency_proven_safe_cta_entries"] == 5
+    assert summary["potency_proven_safe_cta_retained"] == 5
+    assert summary["recall_on_safe_ctas"] == 1.0
+    assert set(summary["conservative_non_cta_targets"]) == {"AFP", "MAGEA3", "WT1"}
+
+    assert cli_main(["tcr-trials", "--table", "benchmark_summary"]) == 0
+    cli_payload = json.loads(capsys.readouterr().out)
+    assert cli_payload["false_safe_misses"] == 0
+    assert cli_payload["sensitivity_to_clinical_toxicity"] == 1.0

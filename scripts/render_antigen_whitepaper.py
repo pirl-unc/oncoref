@@ -21,14 +21,17 @@ from oncoref import (  # noqa: E402
     human,
     mouse,
     species_policies,
+    species_target_selection,
     target_filters,
     target_selection,
+    tcr_trials,
 )
 
 DOCS = ROOT / "docs"
 BUILD = DOCS / "audits/target-selection-20261110/rebuild"
 ASSETS = "antigen-whitepaper"
 NORMAL_PEAKS = DOCS / "audits/cta-selection-20261028/normal-peak-evidence.csv.gz"
+FEMALE_TUMOR_PEAKS = ROOT / "scripts/cta_evidence_assets/female-lineage-tumor-peaks.csv"
 TEMPLATE = ROOT / "scripts/cta_evidence_assets/antigen-whitepaper.md"
 SPECIES_TEMPLATE = ROOT / "scripts/cta_evidence_assets/species-antigen-whitepaper.md"
 PEAK = ["tumor_max_tpm", "protein_group_label", "entity_id"]
@@ -473,6 +476,624 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
     return template_vars, csv_outputs
 
 
+FEMALE_LINEAGE_PROGRAMS: list[tuple[str, list[str]]] = [
+    (
+        "Mammary & lactation",
+        [
+            "LALBA",
+            "CSN2",
+            "BTN1A1",
+            "CSN1S1",
+            "CSN3",
+            "SCGB2A2",
+            "SCGB1D2",
+            "SCGB2A1",
+            "SCGB1D4",
+            "PIP",
+            "MUCL1",
+            "ANKRD30A",
+            "ANKRD30B",
+            "PIGR",
+            "LTF",
+            "LPO",
+            "CEL",
+            "XDH",
+            "MFGE8",
+            "PRLR",
+            "OXTR",
+            "ELF5",
+            "TRPS1",
+            "GATA3",
+            "ESR1",
+            "PGR",
+            "VTCN1",
+            "FOLR1",
+            "SLC34A2",
+            "ROPN1",
+            "ROPN1B",
+            "CT83",
+        ],
+    ),
+    (
+        "Oocyte, ZP, SCMC & follicle",
+        [
+            "ZP1",
+            "ZP2",
+            "ZP3",
+            "ZP4",
+            "GDF9",
+            "BMP15",
+            "MOS",
+            "FIGLA",
+            "NOBOX",
+            "LHX8",
+            "SOHLH1",
+            "SOHLH2",
+            "FOXL2",
+            "AMH",
+            "AMHR2",
+            "FSHR",
+            "LHCGR",
+            "CYP19A1",
+            "ASTL",
+            "FETUB",
+            "H1-8",
+            "TUBB8",
+            "WEE2",
+            "PATL2",
+            "BTG4",
+            "PABPN1L",
+            "ZAR1",
+            "ZAR1L",
+            "NLRP5",
+            "OOEP",
+            "TLE6",
+            "KHDC3L",
+            "PADI6",
+            "NLRP2",
+            "NLRP4",
+            "NLRP7",
+            "NLRP8",
+            "NLRP9",
+            "NLRP11",
+            "NLRP13",
+            "NLRP14",
+            "OOSP1",
+            "OOSP2",
+            "OOSP4A",
+            "DPPA3",
+            "KPNA7",
+            "NPM2",
+            "ZBED3",
+            "TCL1B",
+        ],
+    ),
+    (
+        "Shared meiosis & germ cell",
+        [
+            "HORMAD1",
+            "HORMAD2",
+            "SPO11",
+            "SYCP1",
+            "SYCP2",
+            "SYCP3",
+            "SMC1B",
+            "STAG3",
+            "REC8",
+            "MEIOC",
+            "STRA8",
+            "DAZL",
+            "DDX4",
+            "MAEL",
+            "PIWIL1",
+            "PIWIL2",
+            "PIWIL3",
+            "PIWIL4",
+            "TDRD1",
+            "TDRD9",
+            "BOLL",
+        ],
+    ),
+    (
+        "Endometrium, oviduct & Müllerian",
+        [
+            "OVGP1",
+            "PAEP",
+            "MMP26",
+            "MMP7",
+            "MUC16",
+            "WFDC2",
+            "MSLN",
+            "PAX8",
+            "LEFTY2",
+            "PRL",
+            "IGFBP1",
+            "LIF",
+            "HOXA10",
+            "HOXA11",
+            "WNT7A",
+            "CLDN6",
+            "PRAME",
+            "TACSTD2",
+        ],
+    ),
+    (
+        "Placenta & trophoblast",
+        [
+            "ERVV-1",
+            "ERVV-2",
+            "ERVW-1",
+            "ERVFRD-1",
+            "PLAC1",
+            "PLAC8",
+            "PSG1",
+            "PSG2",
+            "PSG3",
+            "PSG4",
+            "PSG5",
+            "PSG6",
+            "PSG7",
+            "PSG8",
+            "PSG9",
+            "PSG11",
+            "CGB3/5/8",
+            "CGB1",
+            "CGB2",
+            "CGB7",
+            "CGA",
+            "CSHL1",
+            "GH2",
+            "GCM1",
+            "PAPPA",
+            "PAPPA2",
+            "KISS1",
+            "LGALS13",
+            "LGALS14",
+            "LGALS16",
+            "INSL4",
+            "ALPP",
+            "HLA-G",
+            "VGLL1",
+            "XAGE2",
+            "XAGE3",
+            "PAGE4",
+            "MAGEA10",
+            "HSD3B1",
+        ],
+    ),
+]
+
+FEMALE_HIGHLIGHT_SYMBOLS: tuple[str, ...] = (
+    "CSN2",
+    "BTN1A1",
+    "LALBA",
+    "CSN1S1",
+    "CSN3",
+    "SCGB2A2",
+    "PIP",
+    "MUCL1",
+    "ANKRD30A",
+    "ROPN1",
+    "ELF5",
+    "ZP4",
+    "ZP1",
+    "ZP2",
+    "ZP3",
+    "BMP15",
+    "WEE2",
+    "PABPN1L",
+    "KHDC3L",
+    "ZAR1L",
+    "FIGLA",
+    "PADI6",
+    "NLRP5",
+    "TUBB8",
+    "DPPA3",
+    "OOSP2",
+    "NLRP4",
+    "HORMAD1",
+    "SYCP1",
+    "SCGB1D4",
+    "PRAME",
+    "OVGP1",
+    "PAEP",
+    "MUC16",
+    "WFDC2",
+    "PAX8",
+    "FOLR1",
+    "SLC34A2",
+    "CLDN6",
+    "ERVV-1",
+    "ERVV-2",
+    "ERVW-1",
+    "PLAC1",
+    "CGA",
+    "CGB3/5/8",
+    "XAGE3",
+    "CT83",
+)
+
+
+def build_sex_restriction_interrogation(
+    data: pd.DataFrame, sex_table: pd.DataFrame
+) -> tuple[dict[str, str], pd.DataFrame]:
+    """Build symmetric RA-*/CTA-* tables and the 159-gene female-lineage audit."""
+    he = species_target_selection.packaged_species_host_exposure("human")
+    by_lbl = data.set_index("protein_group_label", drop=False)
+    sex_by_eid = sex_table.set_index("entity_id")
+
+    gyn_peaks_df = (
+        pd.read_csv(FEMALE_TUMOR_PEAKS).drop_duplicates("entity_id").set_index("entity_id")
+    )
+    gyn_col_map = {
+        "BRCA": "brca_max_tpm",
+        "BRCA_TNBC": "brca_tnbc_max_tpm",
+        "BRCA_Basal": "brca_basal_max_tpm",
+        "OV": "ov_max_tpm",
+        "UCEC": "ucec_max_tpm",
+        "UCS": "ucs_max_tpm",
+        "CESC": "cesc_max_tpm",
+    }
+
+    # Strongest Unsafe normal-tissue assay signal across all candidate member loci
+    by_gene = data.set_index("entity_id").member_gene_ids.map(json.loads).explode()
+    measurements = pd.read_csv(
+        NORMAL_PEAKS,
+        usecols=[
+            "gene_id",
+            "tissue",
+            "cell_type",
+            "source",
+            "unit",
+            "value",
+            "candidate_ceiling",
+            "selection_tier",
+            "category",
+            "taxonomy_id",
+            "stage",
+            "mapping_status",
+            "unsafe_evidence",
+            "assay",
+        ],
+        low_memory=False,
+    )
+    cand_eids = {
+        by_lbl.loc[g].iloc[0].entity_id
+        if isinstance(by_lbl.loc[g], pd.DataFrame)
+        else by_lbl.loc[g].entity_id
+        for _, genes in FEMALE_LINEAGE_PROGRAMS
+        for g in genes
+        if g in by_lbl.index
+    }
+    flags = data.loc[
+        data.entity_id.isin(cand_eids) & data.category.eq("Unsafe"), ["entity_id", "Unsafe_reasons"]
+    ]
+    measured = (
+        measurements.loc[
+            measurements.unsafe_evidence
+            & measurements.selection_tier.eq(cta_selection_policy.compartment_tiers(measurements))
+        ]
+        .merge(by_gene.rename("gene_id").reset_index(), on="gene_id", validate="many_to_one")
+        .merge(flags, on="entity_id", validate="many_to_one")
+    )
+    matched = measured.loc[
+        [r.assay in r.Unsafe_reasons.split(" | ") for r in measured.itertuples()]
+    ].copy()
+    matched["ceiling_ratio"] = matched.value / matched.candidate_ceiling
+    strongest = matched.sort_values(
+        ["ceiling_ratio", "source", "tissue", "cell_type"], ascending=[False, True, True, True]
+    ).drop_duplicates("entity_id")
+    strongest_hit_by_eid = {
+        r.entity_id: f"{r.tissue}/{r.cell_type}: {number(r.value)} {r.unit} (ceil {number(r.candidate_ceiling)})"
+        for r in strongest.itertuples()
+    }
+
+    # Build 159-gene audit rows + 5-program summary counts
+    audit_rows: list[dict] = []
+    prog_summary_rows: list[list] = []
+    for prog_name, genes in FEMALE_LINEAGE_PROGRAMS:
+        c_unsafe = c_other = c_m = c_mf = c_e = c_f = 0
+        f_names: list[str] = []
+        for sym in genes:
+            if sym not in by_lbl.index:
+                continue
+            r = by_lbl.loc[sym]
+            if isinstance(r, pd.DataFrame):
+                r = r.iloc[0]
+            eid = str(r.entity_id)
+            sr = sex_by_eid.loc[eid] if eid in sex_by_eid.index else None
+            sex_code = str(sr["sex_restriction_code"]) if sr is not None else ""
+            sex_class = str(sr["sex_restriction_class"]) if sr is not None else ""
+            e_he = he.get(eid, {})
+            rb = e_he.get("resting_breast", {})
+            rb_xx = rb.get("female_max_tpm")
+            rb_xy = rb.get("male_max_tpm")
+            testis_ntpm = e_he.get("testis", {}).get("max_ntpm")
+            ovary_ntpm = e_he.get("ovary", {}).get("max_ntpm")
+
+            if r.category == "Unsafe":
+                c_unsafe += 1
+            elif sr is None:
+                c_other += 1
+            elif sex_class == "Male-restricted":
+                c_m += 1
+            elif sex_class == "Shared male & female":
+                c_mf += 1
+            elif sex_class == "Embryo / placenta-only":
+                c_e += 1
+            else:
+                c_f += 1
+                f_names.append(f"`{sym}` ({sex_code})")
+
+            gyn_vals: dict[str, float] = {}
+            p_row = gyn_peaks_df.loc[eid] if eid in gyn_peaks_df.index else None
+            if p_row is not None:
+                for c_code, col_name in gyn_col_map.items():
+                    val = pd.to_numeric(p_row.get(col_name), errors="coerce")
+                    if pd.notna(val) and float(val) > 0:
+                        gyn_vals[c_code] = float(val)
+            pan_peak_val = (
+                float(r.tumor_max_tpm)
+                if pd.notna(r.tumor_max_tpm)
+                else (
+                    float(p_row["pan_max_tpm"])
+                    if p_row is not None and pd.notna(p_row["pan_max_tpm"])
+                    else float("nan")
+                )
+            )
+            pan_peak_cohort = (
+                str(r.tumor_top_cancer_code)
+                if pd.notna(r.tumor_max_tpm) and str(r.tumor_top_cancer_code)
+                else (
+                    str(p_row["pan_top_cohort"])
+                    if p_row is not None and pd.notna(p_row["pan_top_cohort"])
+                    else ""
+                )
+            )
+            top_gyn_str = ", ".join(
+                f"{k}:{number(v)}"
+                for k, v in sorted(gyn_vals.items(), key=lambda kv: kv[1], reverse=True)[:3]
+            )
+
+            if r.category == "Unsafe":
+                hit = strongest_hit_by_eid.get(eid, "")
+                if not hit and getattr(r, "rare_cell_status", "") == "established":
+                    hit = f"{r.finding_tissue}/{r.finding_top_cell_type}: {r.finding_top_multi_molecule_pct:.1f}% ≥2 UMI"
+                why = f"Unsafe ({r.Unsafe_reasons})" + (f" — {hit}" if hit else "")
+            elif sr is None:
+                if r.subtype == "Review" and getattr(r, "rare_cell_status", "") == "unresolved":
+                    why = f"{r.classification} — {r.finding_tissue}/{r.finding_top_cell_type} paralog/snRNA review"
+                else:
+                    why = f"{r.classification} — {r.decision_reason}"
+            elif sex_class == "Female-restricted":
+                if bool(r.is_cta):
+                    why = (
+                        f"Qualifies CTA-F via {r.reproductive_qualifying_compartments}; "
+                        f"male repro max {number(sr['male_sex_organ_max_tpm'])} TPM, "
+                        f"XY resting breast {number(rb_xy)} TPM (<4)"
+                    )
+                else:
+                    why = (
+                        f"RA-F-only via {r.reproductive_qualifying_compartments}; "
+                        f"no somatic tumor reaches 10× H₀ (peak {number(pan_peak_val)} TPM in {pan_peak_cohort or '—'})"
+                    )
+            elif sex_class == "Embryo / placenta-only":
+                if bool(r.is_cta):
+                    why = f"Adult-absent in both sexes (CTA-E via {r.reproductive_qualifying_compartments})"
+                else:
+                    why = (
+                        f"RA-E-only via {r.reproductive_qualifying_compartments}; "
+                        f"adult-absent, tumor peak {number(pan_peak_val)} TPM (<10× H₀)"
+                    )
+            elif sex_class == "Male-restricted":
+                why = (
+                    f"Active in male repro ({number(sr['male_sex_organ_max_tpm'])} TPM / "
+                    f"{number(testis_ntpm)} nTPM testis) while adult female <4 → {sex_code}"
+                )
+            else:
+                why = (
+                    f"Shared male ({number(sr['male_sex_organ_max_tpm'])} TPM / {number(testis_ntpm)} nTPM testis; "
+                    f"XY breast {number(rb_xy)} TPM) & female ({number(sr['female_sex_organ_max_tpm'])} TPM / "
+                    f"{number(ovary_ntpm)} nTPM ovary) → {sex_code}"
+                )
+
+            audit_rows.append(
+                {
+                    "program": prog_name,
+                    "gene_symbol": sym,
+                    "entity_id": eid,
+                    "classification": r.classification,
+                    "sex_restriction_code": sex_code,
+                    "normal_reference_tpm": r.normal_reference_tpm,
+                    "reproductive_supported_tpm": r.reproductive_supported_tpm,
+                    "reproductive_qualifying_compartments": r.reproductive_qualifying_compartments,
+                    "male_sex_organ_max_tpm": sr["male_sex_organ_max_tpm"]
+                    if sr is not None
+                    else float("nan"),
+                    "testis_sc_max_ntpm": testis_ntpm,
+                    "female_sex_organ_max_tpm": sr["female_sex_organ_max_tpm"]
+                    if sr is not None
+                    else float("nan"),
+                    "ovary_sc_max_ntpm": ovary_ntpm,
+                    "resting_breast_female_tpm": rb_xx,
+                    "resting_breast_male_tpm": rb_xy,
+                    "pan_tumor_max_tpm": pan_peak_val,
+                    "pan_tumor_top_cohort": pan_peak_cohort,
+                    "brca_max_tpm": gyn_vals.get("BRCA"),
+                    "brca_tnbc_max_tpm": gyn_vals.get("BRCA_TNBC"),
+                    "ov_max_tpm": gyn_vals.get("OV"),
+                    "ucec_max_tpm": gyn_vals.get("UCEC"),
+                    "ucs_max_tpm": gyn_vals.get("UCS"),
+                    "cesc_max_tpm": gyn_vals.get("CESC"),
+                    "top_brca_gyn_cohorts": top_gyn_str,
+                    "disposition_mechanism": why,
+                }
+            )
+
+        tot_p = c_unsafe + c_other + c_m + c_mf + c_e + c_f
+        prog_summary_rows.append(
+            [
+                f"**{prog_name}**",
+                tot_p,
+                f"{c_unsafe} ({100 * c_unsafe / max(tot_p, 1):.0f}%)",
+                c_other,
+                c_m,
+                c_mf,
+                c_e,
+                f"**{c_f}** ({', '.join(f_names) if f_names else 'none'})",
+            ]
+        )
+
+    audit_df = pd.DataFrame(audit_rows)
+
+    # 1. Symmetric 4x2 RA-* / CTA-* partition summary table
+    sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
+    sex_ra_only = sex_table[~sex_table["is_cta"].astype(bool)]
+    partition_rows = [
+        [
+            "**Male-restricted**",
+            f"`RA-M` (`MRA`): **{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}**",
+            f"`CTA-M`: **{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}**",
+            f"`RA-M-only`: **{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}**",
+            "Clears all female adult organs (`ovary`, female tract, `lactating_breast`, `XX resting_breast` < 4)",
+            "`NY-ESO-1`, `MAGEA4`, `XAGE1A/B`, `VCY/1B`, `CT83`, `TGM4`, `SEMG2`, `PLAC1`, `XAGE3`",
+        ],
+        [
+            "**Embryo / placenta-only**",
+            f"`RA-E` (`ERA`): **{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}**",
+            f"`CTA-E`: **{int(sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}**",
+            f"`RA-E-only`: **{int(sex_ra_only.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}**",
+            "Clears all adult reproductive and resting-mammary compartments in **both** sexes (< 4)",
+            "`DUX4`, `ERVV-2`, `TBXT`, `OR1N1`, `CER1`, `ACCSL`, `MBD3L2`, `PSG7` (`RA-E-only`), `BMP15` (`RA-E-only`)",
+        ],
+        [
+            "**Female-restricted**",
+            f"`RA-F` (`FRA`): **{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}**",
+            f"`CTA-F`: **{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}**",
+            f"`RA-F-only`: **{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}**",
+            "Clears all male adult organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`, non-secretory `XY resting_breast` < 4)",
+            "`CSN2`, `BTN1A1`, `KHDC3L`, `ERVV-1`, `ZP4`, `ZAR1L`, `PABPN1L` (`RA-F-only`), `WEE2` (`RA-F-only`), `NLRP8` (`RA-F-only`)",
+        ],
+        [
+            "**Shared male & female**",
+            f"`RA-MF` (`SRA`): **{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}**",
+            f"`CTA-MF`: **{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}**",
+            f"`RA-MF-only`: **{int(sex_ra_only.sex_restriction_class.eq('Shared male & female').sum()):,}**",
+            "≥ 4 TPM or ≥ 4 nTPM in adult organs of both sexes (or incomplete opposite-sex clearance)",
+            "`LALBA`, `PRAME`, `SCGB1D4`, `CTAG2`, `DPPA3`, `ACTL8`, `NLRP4`, `OOSP2`, `DKKL1`, `SYCP1`",
+        ],
+    ]
+
+    # 2. Complete table of all RA-F (CTA-F + RA-F-only) antigens
+    raf_rows = []
+    for r in sex_table[sex_table.sex_restriction_class.eq("Female-restricted")].itertuples():
+        cat_r = data.loc[data.entity_id.eq(r.entity_id)].iloc[0]
+        e_he = he.get(r.entity_id, {})
+        rb = e_he.get("resting_breast", {})
+        t_ntpm = e_he.get("testis", {}).get("max_ntpm")
+        raf_rows.append(
+            [
+                f"`{r.protein_group_label}`",
+                f"`{r.sex_restriction_code}`",
+                number(cat_r.normal_reference_tpm),
+                f"{number(cat_r.reproductive_supported_tpm)} · {r.reproductive_qualifying_compartments}",
+                f"{number(r.male_sex_organ_max_tpm)} TPM ({number(t_ntpm)} nTPM)",
+                number(rb.get("male_max_tpm")),
+                f"{number(r.tumor_max_tpm)} · `{r.tumor_top_cancer_code}`"
+                if pd.notna(r.tumor_max_tpm)
+                else "—",
+            ]
+        )
+
+    # 3. Highlighted gene-by-gene audit table across the 5 female biological programs
+    audit_by_sym = audit_df.set_index("gene_symbol")
+    highlight_rows = []
+    for sym in FEMALE_HIGHLIGHT_SYMBOLS:
+        if sym not in audit_by_sym.index:
+            continue
+        ar = audit_by_sym.loc[sym]
+        call_tag = (
+            f"`{ar['sex_restriction_code']}`"
+            if ar["sex_restriction_code"]
+            else f"`{ar['classification']}`"
+        )
+        pan_str = (
+            f"{number(ar['pan_tumor_max_tpm'])} (`{ar['pan_tumor_top_cohort']}`)"
+            if pd.notna(ar["pan_tumor_max_tpm"]) and ar["pan_tumor_top_cohort"]
+            else "—"
+        )
+        highlight_rows.append(
+            [
+                ar["program"],
+                f"`{sym}`",
+                call_tag,
+                ar["top_brca_gyn_cohorts"] or pan_str,
+                pan_str,
+                ar["disposition_mechanism"],
+            ]
+        )
+
+    extra_vars = {
+        "ra_m_n": f"{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}",
+        "ra_f_n": f"{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}",
+        "ra_e_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "ra_mf_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "ra_m_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}",
+        "ra_f_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}",
+        "ra_e_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "ra_mf_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "female_audit_n": f"{len(audit_df):,}",
+        "sex_partition_table": table(
+            [
+                "Sex-restriction class",
+                "All RAs (`RA-*`)",
+                "CTAs (`CTA-*`)",
+                "RA-only (`RA-*-only`)",
+                "Adult host-protection criterion",
+                "Representative proteins",
+            ],
+            partition_rows,
+        ),
+        "ra_f_all_table": table(
+            [
+                "Protein",
+                "Subset",
+                "Somatic N (TPM)",
+                "Qualifying RA peak (TPM) · compartments",
+                "Male repro max (testis scRNA)",
+                "XY resting breast (TPM)",
+                "Pan-cancer tumor peak",
+            ],
+            raf_rows,
+        ),
+        "female_audit_summary_table": table(
+            [
+                "Canonical female program",
+                "Genes",
+                "Stage 1 Unsafe",
+                "Other / CA-only",
+                "RA-M / CTA-M",
+                "RA-MF / CTA-MF",
+                "RA-E / CTA-E",
+                "RA-F (`CTA-F` / `RA-F-only`)",
+            ],
+            prog_summary_rows,
+        ),
+        "female_audit_highlights_table": table(
+            [
+                "Biological program",
+                "Gene",
+                "Call",
+                "Top BRCA / TNBC / Gyn cohorts (TPM)",
+                "Pan-cancer peak (TPM)",
+                "Quantitative disposition & gating measurement",
+            ],
+            highlight_rows,
+        ),
+    }
+    return extra_vars, audit_df
+
+
 def build():
     data = target_selection.results()
     meta = target_selection.metadata()["summary"]
@@ -813,7 +1434,7 @@ def build():
         "cta_mf_n": f"{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
         "cta_female_safe_n": f"{int(sex_cta.female_all_adult_eligible.sum()):,}",
         "cta_male_safe_n": f"{int(sex_cta.male_all_adult_eligible.sum()):,}",
-        "cta_m_sex_only_n": f"{int((sex_cta.female_sex_organ_only_eligible & ~sex_cta.male_sex_organ_only_eligible).sum()):,}",
+        "cta_m_sex_only_n": f"{int((sex_cta.female_sex_organ_only_eligible & ~sex_cta.male_all_adult_eligible).sum()):,}",
         "fold": f"{target_selection.ENRICHMENT_FOLD:g}",
         "floor": f"{target_selection.DETECTION_FLOOR:g}",
         "cap": f"{target_selection.DISPOSABLE_CAP:g}",
@@ -908,6 +1529,77 @@ def build():
         ),
     }
     values.update(ctag2_evidence(data))
+    sex_interrog_vars, female_audit_df = build_sex_restriction_interrogation(data, sex_table)
+    values.update(sex_interrog_vars)
+    outputs[f"{ASSETS}/female-lineage-audit.csv"] = female_audit_df.to_csv(
+        index=False, lineterminator="\n"
+    )
+    tcr_eval_df = tcr_trials.evaluate_against_gold_standard()
+    tcr_summary = tcr_trials.gold_standard_summary(data)
+    stratum_labels = {
+        "safe_cta_potency_proven": "Potent, safe CTA",
+        "toxic_on_target": "On-target organ toxicity",
+        "toxic_cross_reactivity": "Fatal cross-reactivity",
+        "conservative_gene_level_unsafe": "Tolerated non-CTA epitope",
+        "excluded_not_potency_proven": "Excluded (0% ORR / pending)",
+    }
+    values.update(
+        {
+            "tcr_gold_n": f"{tcr_summary['total_entries']:,}",
+            "tcr_potent_n": f"{tcr_summary['potency_proven_entries']:,}",
+            "tcr_nonpotent_n": f"{tcr_summary['excluded_non_potent_or_pending_entries']:,}",
+            "tcr_toxic_n": f"{tcr_summary['severe_specificity_toxic_entries']:,}",
+            "tcr_toxic_caught_n": f"{tcr_summary['severe_specificity_toxic_flagged_unsafe']:,}",
+            "tcr_safe_cta_n": f"{tcr_summary['potency_proven_safe_cta_entries']:,}",
+            "tcr_safe_cta_kept_n": f"{tcr_summary['potency_proven_safe_cta_retained']:,}",
+            "tcr_conservative_n": f"{tcr_summary['conservative_non_cta_unsafe_entries']:,}",
+            "tcr_gold_standard_table": table(
+                [
+                    "Target (cross-hit)",
+                    "Product · HLA · peptide",
+                    "Potency (n, ORR)",
+                    "Observed human clinical toxicity",
+                    "OncoRef call & strongest proxy signal",
+                    "Stratum",
+                ],
+                [
+                    [
+                        f"**{r.target_symbol}**"
+                        + (
+                            f" (`→ {r.cross_recognized_symbols}`)"
+                            if pd.notna(r.cross_recognized_symbols) and r.cross_recognized_symbols
+                            else ""
+                        ),
+                        f"{r.product_name} · `{r.hla_restriction}` · `{r.peptide}` "
+                        f"([{r.citation.split(';')[0]}]({r.source_url}))",
+                        (
+                            f"n={int(r.patients_treated)}, **{r.orr_pct:g}%** ORR"
+                            if pd.notna(r.patients_treated)
+                            and pd.notna(r.orr_pct)
+                            and r.orr_pct > 0
+                            else (
+                                f"n={int(r.patients_treated)}, lethal d4–5 lysis"
+                                if r.benchmark_id == "magea3_a1_titin"
+                                else (
+                                    f"n={int(r.patients_treated)}, **0%** ORR"
+                                    if pd.notna(r.patients_treated)
+                                    else "Phase 1 pending"
+                                )
+                            )
+                        ),
+                        r.observed_clinical_toxicities,
+                        f"`{r.oncoref_classification}` · {r.strongest_proxy_context} "
+                        f"(`{r.strongest_proxy_ratio:g}×`)",
+                        stratum_labels[r.clinical_stratum],
+                    ]
+                    for r in tcr_eval_df.itertuples(index=False)
+                ],
+            ),
+        }
+    )
+    outputs[f"{ASSETS}/clinical-tcr-gold-standard.csv"] = tcr_eval_df.to_csv(
+        index=False, lineterminator="\n"
+    )
     species_vars, species_csvs = build_species_sections()
     values.update(species_vars)
     outputs.update(species_csvs)

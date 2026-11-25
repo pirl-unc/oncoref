@@ -51,14 +51,19 @@ SEX_RESTRICTION_CLASSES = (
     "Shared male & female",
 )
 SEX_SETS: dict[str, tuple[str, bool]] = {
-    "MRA": ("Male-restricted", False),
-    "FRA": ("Female-restricted", False),
-    "ERA": ("Embryo / placenta-only", False),
-    "SRA": ("Shared male & female", False),
+    "RA-M": ("Male-restricted", False),
+    "RA-F": ("Female-restricted", False),
+    "RA-E": ("Embryo / placenta-only", False),
+    "RA-MF": ("Shared male & female", False),
     "CTA-M": ("Male-restricted", True),
     "CTA-F": ("Female-restricted", True),
     "CTA-E": ("Embryo / placenta-only", True),
     "CTA-MF": ("Shared male & female", True),
+    # Legacy shorthand aliases preserved for backward compatibility
+    "MRA": ("Male-restricted", False),
+    "FRA": ("Female-restricted", False),
+    "ERA": ("Embryo / placenta-only", False),
+    "SRA": ("Shared male & female", False),
 }
 
 
@@ -112,6 +117,9 @@ class SpeciesAnatomyProfile:
 
     @property
     def male_adult_protected_compartments(self) -> tuple[str, ...]:
+        if self.taxon_id == 10090:
+            # Fetal androgen regression at E14.5 ablates mammary buds in male Mus musculus.
+            return self.male_sex_compartments
         return (*self.male_sex_compartments, self.resting_mammary_compartment)
 
     @property
@@ -905,16 +913,16 @@ def classify_sex_restriction(
         ms_sex = bool(m_sex.at[eid, "host_status"] == "eligible")
         if fs_all and not ms_all:
             sex_class = "Male-restricted"
-            code = "CTA-M" if r.is_cta else "MRA-only"
+            code = "CTA-M" if r.is_cta else "RA-M-only"
         elif ms_all and not fs_all:
             sex_class = "Female-restricted"
-            code = "CTA-F" if r.is_cta else "FRA-only"
+            code = "CTA-F" if r.is_cta else "RA-F-only"
         elif fs_all and ms_all:
             sex_class = "Embryo / placenta-only"
-            code = "CTA-E" if r.is_cta else "ERA-only"
+            code = "CTA-E" if r.is_cta else "RA-E-only"
         else:
             sex_class = "Shared male & female"
-            code = "CTA-MF" if r.is_cta else "SRA-only"
+            code = "CTA-MF" if r.is_cta else "RA-MF-only"
         rows.append(
             {
                 "entity_id": eid,

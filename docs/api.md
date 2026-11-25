@@ -812,8 +812,9 @@ changes = target_selection.results(changed_only=True)
 cancer_only = target_selection.results(category="Cancer Antigen only")
 ctag2 = target_selection.results("CTAG2")  # Exact protein label or member Ensembl ID.
 
-# Cross-sex subsets (232 CTA-M, 44 CTA-E, 5 CTA-F, 51 CTA-MF) & mouse GRCm39 catalog (20 CTA)
+# Cross-sex subsets (232 CTA-M, 44 CTA-E, 6 CTA-F, 50 CTA-MF; RA-M/F/E/MF) & mouse GRCm39 catalog (20 CTA)
 cta_female_safe = antigen_sets.select("CTA-M").proteins()
+ra_female_only = antigen_sets.select("RA-F").proteins()
 mouse_ctas = mouse.target_selection(category="CTA")
 
 # Adjudication & QC ledgers (#764-#769)

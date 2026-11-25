@@ -111,13 +111,13 @@
       "Unsafe": 18495
     },
     "sex_restriction_codes": {
-      "CTA-F": 2,
+      "CTA-F": 3,
       "CTA-M": 3,
-      "CTA-MF": 15,
-      "ERA-only": 8,
-      "FRA-only": 15,
-      "MRA-only": 66,
-      "SRA-only": 207
+      "CTA-MF": 14,
+      "RA-E-only": 8,
+      "RA-F-only": 15,
+      "RA-M-only": 66,
+      "RA-MF-only": 207
     },
     "sex_restriction_classes": {
       "Embryo / placenta-only": 8,

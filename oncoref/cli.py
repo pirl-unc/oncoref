@@ -742,6 +742,11 @@ def _cmd_tcr_trials(args: argparse.Namespace) -> int:
 
     if args.table == "all":
         print(json.dumps(tcr_trials.evidence(), indent=2))
+    elif args.table == "benchmark":
+        frame = tcr_trials.evaluate_against_gold_standard()
+        print(frame.to_json(orient="records", indent=2))
+    elif args.table == "benchmark_summary":
+        print(json.dumps(tcr_trials.gold_standard_summary(), indent=2))
     else:
         frame = getattr(tcr_trials, args.table)()
         print(frame.to_json(orient="records", indent=2))
@@ -1139,10 +1144,21 @@ def _build_parser() -> argparse.ArgumentParser:
     p_cta.set_defaults(func=_cmd_cta)
 
     p_trials = sub.add_parser(
-        "tcr-trials", help="Reviewed CTA TCR-T cohorts, epitopes and serious events"
+        "tcr-trials",
+        help="Reviewed TCR-T/ImmTAC cohorts, gold-standard toxicity benchmark, and events",
     )
     p_trials.add_argument(
-        "--table", choices=["all", "products", "cohorts", "events"], default="products"
+        "--table",
+        choices=[
+            "all",
+            "products",
+            "cohorts",
+            "events",
+            "gold_standard",
+            "benchmark",
+            "benchmark_summary",
+        ],
+        default="products",
     )
     p_trials.set_defaults(func=_cmd_tcr_trials)
 

@@ -29,12 +29,12 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "fa52f5682be2c79e4332fdf567a489f2d0680baf5b88073d2ae440999a007fe8",
-  "data_bytes": 3718888,
+  "data_sha256": "5bbaf72be8dc2ddb41257033f4588f9fa9dee8de965b101a0bdbb93fa13bb50c",
+  "data_bytes": 3718997,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
-  "host_exposure_sha256": "a982e4bd0c4a2931b9d45030875fbecae888bac8041ecb6cd2560477bb8facf4",
-  "host_exposure_bytes": 213898,
+  "host_exposure_sha256": "7c5ebe2c3f87b35902795f0d7c0ec5d9cc89859f7785b703a5c2a6e52d1d1a05",
+  "host_exposure_bytes": 215011,
   "sequence_provider": "sequence_bundle",
   "symbol_index": "canonical-gene-space",
   "summary": {
@@ -59,19 +59,19 @@
     },
     "sex_restriction_codes": {
       "CTA-E": 44,
-      "CTA-F": 5,
+      "CTA-F": 6,
       "CTA-M": 232,
-      "CTA-MF": 51,
-      "ERA-only": 8,
-      "FRA-only": 5,
-      "MRA-only": 108,
-      "SRA-only": 12
+      "CTA-MF": 50,
+      "RA-E-only": 8,
+      "RA-F-only": 5,
+      "RA-M-only": 108,
+      "RA-MF-only": 12
     },
     "sex_restriction_classes": {
       "Embryo / placenta-only": 52,
-      "Female-restricted": 10,
+      "Female-restricted": 11,
       "Male-restricted": 340,
-      "Shared male & female": 63
+      "Shared male & female": 62
     }
   }
 }

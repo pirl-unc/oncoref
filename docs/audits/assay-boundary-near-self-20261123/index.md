@@ -13,7 +13,7 @@ Policy ID: `oncoref.assay-boundary-and-near-self.2026-11-23.1`
 4. **Protamine-diluted germline transcription-factor qualification:**
    **`FOXR2`** (`135` Testis donors `>= 3 TPM`, `5.2 nTPM` spermatogonia), **`SPATA31A3`** (`23` Testis donors `>= 3 TPM`, `1.2 nTPM` spermatids), and **`PPP4R3C`** (`230` Testis donors `>= 3 TPM`, `22.7 nTPM` germ cells) advance `Cancer Antigen only -> CTA`, while single-donor `DEFB125` (`1` donor) remains `Cancer Antigen only`.
 5. **Droplet ambient milk soup & `<= 100 kb` cis-chromatin spillover (`#779`):**
-   **`CSN2`** (`ENSG00000135222` on `4q13.3`; `breast c-3` macrophages `683.2 -> 0.0 nTPM` after `single_cell_tissues(qc="all", cleanup="all")`; `salivary gland` serous clusters `30.2 kb` from `STATH`/`HTN3`/`HTN1` at `321,577–896,409 nTPM` with spillover ratio `<= 0.000050 <= 1e-4`, HPA surgical salivary bulk `0.90 TPM < 1.0 TPM`, salivary IHC `Not detected`, `0` CELLxGENE rare-cell flags, `2.99 TPM` clean somatic normal max, `28,460.4 TPM` lactating breast, `99,761.8 TPM` `BRCA`) advances `Unsafe -> CTA` (`CTA-MF`), while `CSN1S1` (`16.9 nTPM` brain neurons), `CSN3` (`261.4 nTPM` + `395.9 TPM` bulk), `ANKRD30A` (`4.9 nTPM` brain neurons), and `MAGEA3` remain strictly `Unsafe`.
+   **`CSN2`** (`ENSG00000135222` on `4q13.3`; `breast c-3` macrophages `683.2 -> 0.0 nTPM` after `single_cell_tissues(qc="all", cleanup="all")`; `salivary gland` serous clusters `30.2 kb` from `STATH`/`HTN3`/`HTN1` at `321,577–896,409 nTPM` with spillover ratio `<= 0.000050 <= 1e-4`, HPA surgical salivary bulk `0.90 TPM < 1.0 TPM`, salivary IHC `Not detected`, `0` CELLxGENE rare-cell flags, `2.99 TPM` clean somatic normal max, `28,460.4 TPM` lactating breast, `99,761.8 TPM` `BRCA`, `987.6 TPM` `BRCA_TNBC`) advances `Unsafe -> CTA` (`CTA-F` once coordinated `XY` galactorrhea biopsies are separated from resting male breast), while `CSN1S1` (`16.9 nTPM` brain neurons), `CSN3` (`261.4 nTPM` + `395.9 TPM` bulk), `ANKRD30A` (`4.9 nTPM` brain neurons), and `MAGEA3` remain strictly `Unsafe`.
 
 ## 2. 1-Mismatch Hamming Near-Self & Tryptic-MS Paralog Audit (`#769`)
 
@@ -29,13 +29,13 @@ Policy ID: `oncoref.assay-boundary-and-near-self.2026-11-23.1`
 | `PLAC1` | `CTA` | `CTA-M` | `204` | `204` | `0.00%` | `0` | `#765` nuclear 5'-UTR intron & `PABIR2` readthrough cleared |
 | `DKKL1` | `CTA` | `CTA-MF` | `234` | `234` | `0.00%` | `0` | `#768` sparse adult cornea (`8 / 21,343` multi-UMI cells) cleared |
 | `MAGEB6` | `CTA` | `CTA-M` | `367` | `358` | `2.45%` | `0` | `#768` single-antibody IHC with `0.012 TPM` somatic RNA cleared |
-| `CSN2` | `CTA` | `CTA-MF` | `218` | `209` | `4.13%` | `0` | `#779` breast ambient milk soup + `4q13.3` SCPP cis-spillover cleared |
+| `CSN2` | `CTA` | `CTA-F` | `218` | `209` | `4.13%` | `0` | `#779` breast ambient milk soup + `4q13.3` SCPP cis-spillover + `XY` galactorrhea separated |
 | `CTAG2` | `CTA` | `CTA-MF` | `172` | `172` | `0.00%` | `0` | `#766` `LAGE-1a` (`ENST00000369585`) `SLLMWITQC` clinical clearance |
 | `DUX4` | `CTA` | `CTA-E` | `413` | `412` | `0.24%` | `0` | `#765 + #767` symmetric `D4Z4` repeat-array silence |
 | `FOXR2` | `CTA` | `CTA-M` | `303` | `303` | `0.00%` | `0` | `#768` protamine-diluted spermatogonial TF (`135` Testis donors) |
 | `SPATA31A3` | `CTA` | `CTA-M` | `1,303` | `1,254` | `3.76%` | `14` | `#768` germline TF; shares `14` tryptic peptides with `SPATA31C1/C2` |
 | `PRM1` | `CTA` | `CTA-M` | `43` | `43` | `0.00%` | `0` | `#764`/`#776` Thyroid & opposite-sex bleed cleaned (`5.71 TPM`); female `BRCA` `58.97 TPM` |
-| `PRM2` | `Reproductive Antigen only` | `MRA-only` | `94` | `94` | `0.00%` | `0` | `#768`/`#776` `TCGA-TGCT` Note `R` parenchymal admixture demoted; female-safe `MRA-only` |
+| `PRM2` | `Reproductive Antigen only` | `RA-M-only` | `94` | `94` | `0.00%` | `0` | `#768`/`#776` `TCGA-TGCT` Note `R` parenchymal admixture demoted; female-safe `RA-M-only` |
 | `SPATA19` | `CTA` | `CTA-M` | `159` | `159` | `0.00%` | `0` | `#768 + #737 + #776` somatic `cSCC` witness (`13.28 TPM`) + female breast `0.41 TPM` |
 | `MAGEA6` | `CTA` | `CTA-MF` | `86` | `16` | `81.40%` | `9` | `#769` high 1-mm cross-reactivity risk vs. `Unsafe` `MAGEA3`/`MAGEA12` |
 | `CTAGE1` | `CTA` | `CTA-M` | `539` | `520` | `3.53%` | `55` | `#769` `55/138` tryptic peptides shared with `Unsafe` `MIA2` |

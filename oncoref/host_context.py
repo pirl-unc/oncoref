@@ -134,7 +134,13 @@ def from_legacy(
     absent, accepted, protected, notes = set(), set(), set(protect), []
     if profile in {"male-patient", "female-patient"}:
         opposite = (
-            (*female_tract, "ovary") if profile == "male-patient" else (*male_accessory, "testis")
+            (
+                *female_tract,
+                "ovary",
+                *((anat.resting_mammary_compartment,) if anat.taxon_id == 10090 else ()),
+            )
+            if profile == "male-patient"
+            else (*male_accessory, "testis")
         )
         absent.update(opposite)
         notes.append(
@@ -269,7 +275,15 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 elif ntpm >= host.max_ntpm:
                     rejected.append(f"{tissue}: RNA {ntpm:g} nTPM >= {host.max_ntpm:g}")
             if item.get("protein_status") in {"positive", "unresolved"}:
-                unknown.append(tissue + ": protein finding requires host-specific review")
+                female_only_mammary_ihc = (
+                    tissue in {"resting_breast", "resting_mammary"}
+                    and is_male_host
+                    and item.get("protein_status") == "unresolved"
+                    and value < host.max_tpm
+                    and (ntpm is None or ntpm < host.max_ntpm)
+                )
+                if not female_only_mammary_ihc:
+                    unknown.append(tissue + ": protein finding requires host-specific review")
             if item.get("scope_complete") is not True:
                 unknown.append(tissue + ": sampled scope incomplete")
         maximum, limiting = max(observed, default=(0.0, ""))
