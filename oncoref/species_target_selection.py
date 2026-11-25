@@ -47,23 +47,26 @@ COMPARATIVE_COMPARISON_UNITS = ("TPM", "nTPM", "pTPM", "TMM-CPM")
 SEX_RESTRICTION_CLASSES = (
     "Male-restricted",
     "Female-restricted",
-    "Embryo / placenta-only",
+    "Embryo / peripartum-only",
     "Shared male & female",
 )
 SEX_SETS: dict[str, tuple[str, bool]] = {
     "RA-M": ("Male-restricted", False),
     "RA-F": ("Female-restricted", False),
-    "RA-E": ("Embryo / placenta-only", False),
+    "RA-E": ("Embryo / peripartum-only", False),
     "RA-MF": ("Shared male & female", False),
+    "RA-P": ("Peripartum", False),
     "CTA-M": ("Male-restricted", True),
     "CTA-F": ("Female-restricted", True),
-    "CTA-E": ("Embryo / placenta-only", True),
+    "CTA-E": ("Embryo / peripartum-only", True),
     "CTA-MF": ("Shared male & female", True),
+    "CTA-P": ("Peripartum", True),
     # Legacy shorthand aliases preserved for backward compatibility
     "MRA": ("Male-restricted", False),
     "FRA": ("Female-restricted", False),
-    "ERA": ("Embryo / placenta-only", False),
+    "ERA": ("Embryo / peripartum-only", False),
     "SRA": ("Shared male & female", False),
+    "PRA": ("Peripartum", False),
 }
 
 
@@ -113,7 +116,12 @@ class SpeciesAnatomyProfile:
     @property
     def female_sex_compartments(self) -> tuple[str, ...]:
         gonad = ("ovary",) if "ovary" in self.core_reproductive_compartments else ()
-        return (*gonad, *self.female_tract_compartments, self.lactating_mammary_compartment)
+        return (*gonad, *self.female_tract_compartments)
+
+    @property
+    def peripartum_compartments(self) -> tuple[str, ...]:
+        placenta = ("placenta",) if "placenta" in self.core_reproductive_compartments else ()
+        return (*placenta, self.lactating_mammary_compartment)
 
     @property
     def male_adult_protected_compartments(self) -> tuple[str, ...]:
@@ -172,6 +180,7 @@ class SpeciesAnatomyProfile:
             "reproductive_compartments": list(self.reproductive_compartments),
             "male_sex_compartments": list(self.male_sex_compartments),
             "female_sex_compartments": list(self.female_sex_compartments),
+            "peripartum_compartments": list(self.peripartum_compartments),
             "male_adult_protected_compartments": list(self.male_adult_protected_compartments),
             "female_adult_protected_compartments": list(self.female_adult_protected_compartments),
         }
@@ -801,15 +810,20 @@ def classify_sex_restriction(
     *,
     species: Species | str | int = "human",
     host_evidence: dict | None = None,
-    max_tpm: float = 4.0,
-    max_ntpm: float = 4.0,
+    max_tpm: float = 8.0,
+    max_ntpm: float = 8.0,
+    negative_ihc_multiplier: float | None = None,
 ) -> pd.DataFrame:
-    """Partition Reproductive Antigens (RA) and CTAs into MRA/FRA/ERA/SRA and CTA-* subsets.
+    """Partition Reproductive Antigens (RA) and CTAs into RA-{M,F,E,MF} and CTA-{M,F,E,MF}.
 
-    Uses the species' own comparative reproductive and mammary anatomy from
-    ``anatomy_for_species(species)``. Missing opposite-sex organ coverage fails
-    closed (never assuming an unmeasured female or male organ is silent).
+    Uses the species' own comparative non-pregnant, non-lactating adult reproductive
+    and mammary anatomy from ``anatomy_for_species(species)`` (moving ``placenta``
+    and ``lactating_mammary`` into developmental/peripartum ``E`` alongside ``RA-P`` /
+    ``CTA-P``). Missing opposite-sex organ coverage fails closed (never assuming an
+    unmeasured female or male organ is silent).
     """
+    from dataclasses import replace
+
     from . import host_context
 
     if table is None:
@@ -824,6 +838,12 @@ def classify_sex_restriction(
         resolved = resolve_species(inferred)
 
     anatomy = anatomy_for_species(resolved)
+    ref_host = host_context.HostContext(
+        max_tpm=max_tpm,
+        max_ntpm=max_ntpm,
+        negative_ihc_multiplier=negative_ihc_multiplier,
+        species=resolved,
+    )
     cols = [
         "entity_id",
         "protein_group_label",
@@ -853,13 +873,13 @@ def classify_sex_restriction(
     f_all_host = host_context.from_legacy(
         "female-patient",
         protect_tissues=anatomy.female_adult_protected_compartments,
-        lactating=True,
+        lactating=False,
         species=resolved,
     )
     f_sex_host = host_context.from_legacy(
         "female-patient",
         protect_tissues=anatomy.female_sex_compartments,
-        lactating=True,
+        lactating=False,
         species=resolved,
     )
     m_all_host = host_context.from_legacy(
@@ -872,13 +892,31 @@ def classify_sex_restriction(
         protect_tissues=anatomy.male_sex_compartments,
         species=resolved,
     )
-    if (max_tpm, max_ntpm) != (4.0, 4.0):
-        from dataclasses import replace
-
-        f_all_host = replace(f_all_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
-        f_sex_host = replace(f_sex_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
-        m_all_host = replace(m_all_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
-        m_sex_host = replace(m_sex_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
+    eff_ihc_mult = ref_host.negative_ihc_multiplier
+    f_all_host = replace(
+        f_all_host,
+        max_tpm=ref_host.max_tpm,
+        max_ntpm=ref_host.max_ntpm,
+        negative_ihc_multiplier=eff_ihc_mult,
+    )
+    f_sex_host = replace(
+        f_sex_host,
+        max_tpm=ref_host.max_tpm,
+        max_ntpm=ref_host.max_ntpm,
+        negative_ihc_multiplier=eff_ihc_mult,
+    )
+    m_all_host = replace(
+        m_all_host,
+        max_tpm=ref_host.max_tpm,
+        max_ntpm=ref_host.max_ntpm,
+        negative_ihc_multiplier=eff_ihc_mult,
+    )
+    m_sex_host = replace(
+        m_sex_host,
+        max_tpm=ref_host.max_tpm,
+        max_ntpm=ref_host.max_ntpm,
+        negative_ihc_multiplier=eff_ihc_mult,
+    )
 
     ra_idx = ra.set_index("entity_id", drop=False)
     f_all = host_context.assess(ra_idx, f_all_host, evidence=exposures)
@@ -904,6 +942,13 @@ def classify_sex_restriction(
                 vals.append(v)
         return float(max(vals)) if vals else float("nan")
 
+    dev_peri_comps = {
+        *(c for c in ("embryo", "placenta") if c in anatomy.core_reproductive_compartments),
+        anatomy.lactating_mammary_compartment,
+    }
+    male_adult_set = set(anatomy.male_adult_protected_compartments)
+    female_adult_set = set(anatomy.female_adult_protected_compartments)
+
     rows = []
     for r in ra.itertuples():
         eid = r.entity_id
@@ -911,6 +956,12 @@ def classify_sex_restriction(
         ms_all = bool(m_all.at[eid, "host_status"] == "eligible")
         fs_sex = bool(f_sex.at[eid, "host_status"] == "eligible")
         ms_sex = bool(m_sex.at[eid, "host_status"] == "eligible")
+        qraw = getattr(r, "reproductive_qualifying_compartments", "")
+        q_comps = (
+            {c.strip() for c in str(qraw).split("|") if c.strip()}
+            if pd.notna(qraw) and str(qraw).strip()
+            else set()
+        )
         if fs_all and not ms_all:
             sex_class = "Male-restricted"
             code = "CTA-M" if r.is_cta else "RA-M-only"
@@ -918,8 +969,39 @@ def classify_sex_restriction(
             sex_class = "Female-restricted"
             code = "CTA-F" if r.is_cta else "RA-F-only"
         elif fs_all and ms_all:
-            sex_class = "Embryo / placenta-only"
-            code = "CTA-E" if r.is_cta else "RA-E-only"
+            if not q_comps:
+                dev_mx = max_comp_tpm(eid, tuple(dev_peri_comps))
+                male_mx = max_comp_tpm(eid, anatomy.male_adult_protected_compartments)
+                female_mx = max_comp_tpm(eid, anatomy.female_adult_protected_compartments)
+                has_dev = np.isfinite(dev_mx) and dev_mx >= 1.0
+                has_male = np.isfinite(male_mx) and male_mx >= 1.0
+                has_female = np.isfinite(female_mx) and female_mx >= 1.0
+                if not has_dev and (has_male or has_female):
+                    if has_male and not has_female:
+                        sex_class = "Male-restricted"
+                        code = "CTA-M" if r.is_cta else "RA-M-only"
+                    elif has_female and not has_male:
+                        sex_class = "Female-restricted"
+                        code = "CTA-F" if r.is_cta else "RA-F-only"
+                    else:
+                        sex_class = "Shared male & female"
+                        code = "CTA-MF" if r.is_cta else "RA-MF-only"
+                else:
+                    sex_class = "Embryo / peripartum-only"
+                    code = "CTA-E" if r.is_cta else "RA-E-only"
+            elif not (q_comps & dev_peri_comps):
+                if q_comps <= male_adult_set:
+                    sex_class = "Male-restricted"
+                    code = "CTA-M" if r.is_cta else "RA-M-only"
+                elif q_comps <= female_adult_set:
+                    sex_class = "Female-restricted"
+                    code = "CTA-F" if r.is_cta else "RA-F-only"
+                else:
+                    sex_class = "Shared male & female"
+                    code = "CTA-MF" if r.is_cta else "RA-MF-only"
+            else:
+                sex_class = "Embryo / peripartum-only"
+                code = "CTA-E" if r.is_cta else "RA-E-only"
         else:
             sex_class = "Shared male & female"
             code = "CTA-MF" if r.is_cta else "RA-MF-only"
@@ -958,6 +1040,90 @@ def classify_sex_restriction(
     out.attrs["taxon_id"] = resolved.taxon_id
     out.attrs["species"] = resolved.name
     return out.reset_index(drop=True)
+
+
+def peripartum_antigen_ids(
+    table: pd.DataFrame | None = None,
+    *,
+    species: Species | str | int = "human",
+    host_evidence: dict | None = None,
+    max_tpm: float = 8.0,
+    max_ntpm: float = 8.0,
+    negative_ihc_multiplier: float | None = None,
+) -> frozenset[str]:
+    """Return entity_ids of Reproductive Antigens active in placenta or lactating mammary.
+
+    Unlike the mutually exclusive 4-way non-pregnant adult partition (``RA-M``,
+    ``RA-F``, ``RA-E``, ``RA-MF``), ``RA-P`` / ``CTA-P`` (legacy alias ``PRA``) is a
+    non-exclusive physiological selector identifying RAs and CTAs that qualify
+    ``>=10x`` in ``placenta`` or ``lactating_mammary`` (``lactating_breast``) or
+    exceed the calibrated ``HostContext`` ceiling in those compartments.
+    """
+    from . import host_context
+
+    if table is None:
+        resolved = resolve_species(species)
+        frame = packaged_species_results(resolved)
+    else:
+        frame = table.copy()
+        inferred = frame.attrs.get(
+            "species",
+            str(frame["species"].iloc[0]) if "species" in frame and len(frame) else species,
+        )
+        resolved = resolve_species(inferred)
+
+    ref_host = host_context.HostContext(
+        max_tpm=max_tpm,
+        max_ntpm=max_ntpm,
+        negative_ihc_multiplier=negative_ihc_multiplier,
+        species=resolved,
+    )
+    ra = frame[frame.is_reproductive_antigen.astype(bool)]
+    if ra.empty:
+        return frozenset()
+
+    anatomy = anatomy_for_species(resolved)
+    p_comps = anatomy.peripartum_compartments
+    p_set = set(p_comps)
+    exposures = packaged_species_host_exposure(resolved) if host_evidence is None else host_evidence
+    eff_ihc_mult = ref_host.negative_ihc_multiplier
+
+    matched: set[str] = set()
+    for r in ra.itertuples():
+        eid = str(r.entity_id)
+        qraw = getattr(r, "reproductive_qualifying_compartments", "")
+        q_comps = (
+            {c.strip() for c in str(qraw).split("|") if c.strip()}
+            if pd.notna(qraw) and str(qraw).strip()
+            else set()
+        )
+        if q_comps & p_set:
+            matched.add(eid)
+            continue
+        rec = exposures.get(eid, {})
+        for comp in p_comps:
+            item = rec.get(comp)
+            if not isinstance(item, dict) or item.get("coverage") != "measured":
+                continue
+            mult = eff_ihc_mult if item.get("protein_status") == "not_detected" else 1.0
+            val = item.get("max_tpm")
+            ntpm = item.get("max_ntpm")
+            tpm_hit = (
+                not isinstance(val, bool)
+                and isinstance(val, (int, float))
+                and np.isfinite(val)
+                and float(val) >= ref_host.max_tpm * mult
+            )
+            ntpm_hit = (
+                not isinstance(ntpm, bool)
+                and isinstance(ntpm, (int, float))
+                and np.isfinite(ntpm)
+                and float(ntpm) >= ref_host.max_ntpm * mult
+            )
+            if tpm_hit or ntpm_hit or item.get("protein_status") == "positive":
+                matched.add(eid)
+                break
+    return frozenset(matched)
 
 
 @dataclass(frozen=True)

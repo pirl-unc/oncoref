@@ -38,14 +38,14 @@
     "Other:Unscreened tissue": 28
   },
   "integrated_sex_restriction_codes": {
-    "CTA-M": 232,
-    "RA-M-only": 108,
-    "CTA-MF": 50,
-    "CTA-E": 44,
-    "RA-MF-only": 12,
-    "RA-E-only": 8,
-    "CTA-F": 6,
-    "RA-F-only": 5
+    "CTA-M": 245,
+    "RA-M-only": 113,
+    "CTA-E": 52,
+    "CTA-MF": 27,
+    "RA-E-only": 13,
+    "CTA-F": 8,
+    "RA-MF-only": 4,
+    "RA-F-only": 3
   },
   "changed_proteins": 94,
   "transition_counts": {
@@ -63,5 +63,5 @@
     "Reproductive Antigen only -> Other:Expression": 1,
     "Unsafe -> Other:Review": 1
   },
-  "sha256": "11053d1c0c8375467876edc99d7e844e8b6db29343187fa534745594faa00bb6"
+  "sha256": "be6a690bd99caecee862b557135195771ee24f345210c40b887a45c107c5b218"
 }

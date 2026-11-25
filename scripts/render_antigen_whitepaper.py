@@ -15,6 +15,7 @@ from scripts.build_target_filter_audit import FAMILIAR, lookup  # noqa: E402
 
 from oncoref import (  # noqa: E402
     antigen_data,
+    antigen_sets,
     canine,
     catalog,
     cta_selection_policy,
@@ -419,12 +420,14 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
             "mouse_unsafe_n": f"{int(m_cat.category.eq('Unsafe').sum()):,}",
             "mouse_mra_n": f"{int(m_sex.sex_restriction_class.eq('Male-restricted').sum()):,}",
             "mouse_fra_n": f"{int(m_sex.sex_restriction_class.eq('Female-restricted').sum()):,}",
-            "mouse_era_n": f"{int(m_sex.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+            "mouse_era_n": f"{int(m_sex.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
             "mouse_sra_n": f"{int(m_sex.sex_restriction_class.eq('Shared male & female').sum()):,}",
             "mouse_cta_m_n": f"{int(m_sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
             "mouse_cta_f_n": f"{int(m_sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
-            "mouse_cta_e_n": f"{int(m_sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+            "mouse_cta_e_n": f"{int(m_sex_cta.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
             "mouse_cta_mf_n": f"{int(m_sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
+            "mouse_cta_p_n": f"{len(antigen_sets.proteins('CTA-P', species='mouse')):,}",
+            "mouse_ra_p_n": f"{len(antigen_sets.proteins('RA-P', species='mouse')):,}",
             "mouse_p1a_call": p1a_row.classification,
             "mouse_cohorts_table": table(
                 ["Cohort", "Model", "Host strain (MHC)", "Accession", "Samples", "Quantification"],
@@ -819,7 +822,7 @@ def build_sex_restriction_interrogation(
                 c_m += 1
             elif sex_class == "Shared male & female":
                 c_mf += 1
-            elif sex_class == "Embryo / placenta-only":
+            elif sex_class == "Embryo / peripartum-only":
                 c_e += 1
             else:
                 c_f += 1
@@ -870,16 +873,16 @@ def build_sex_restriction_interrogation(
                     why = (
                         f"Qualifies CTA-F via {r.reproductive_qualifying_compartments}; "
                         f"male repro max {number(sr['male_sex_organ_max_tpm'])} TPM, "
-                        f"XY resting breast {number(rb_xy)} TPM (<4)"
+                        f"XY resting breast {number(rb_xy)} TPM (<8 / <16 IHC−)"
                     )
                 else:
                     why = (
                         f"RA-F-only via {r.reproductive_qualifying_compartments}; "
                         f"no somatic tumor reaches 10× H₀ (peak {number(pan_peak_val)} TPM in {pan_peak_cohort or '—'})"
                     )
-            elif sex_class == "Embryo / placenta-only":
+            elif sex_class == "Embryo / peripartum-only":
                 if bool(r.is_cta):
-                    why = f"Adult-absent in both sexes (CTA-E via {r.reproductive_qualifying_compartments})"
+                    why = f"Adult-absent in non-pregnant/non-lactating men & women (CTA-E via {r.reproductive_qualifying_compartments})"
                 else:
                     why = (
                         f"RA-E-only via {r.reproductive_qualifying_compartments}; "
@@ -888,7 +891,7 @@ def build_sex_restriction_interrogation(
             elif sex_class == "Male-restricted":
                 why = (
                     f"Active in male repro ({number(sr['male_sex_organ_max_tpm'])} TPM / "
-                    f"{number(testis_ntpm)} nTPM testis) while adult female <4 → {sex_code}"
+                    f"{number(testis_ntpm)} nTPM testis) while non-pregnant adult female <8 / <16 IHC− → {sex_code}"
                 )
             else:
                 why = (
@@ -946,41 +949,51 @@ def build_sex_restriction_interrogation(
 
     audit_df = pd.DataFrame(audit_rows)
 
-    # 1. Symmetric 4x2 RA-* / CTA-* partition summary table
+    # 1. Symmetric 4-way RA-* / CTA-* adult partition + non-exclusive peripartum RA-P / CTA-P
     sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
     sex_ra_only = sex_table[~sex_table["is_cta"].astype(bool)]
+    cta_p_df = antigen_sets.proteins("CTA-P")
+    ra_p_df = antigen_sets.proteins("RA-P")
     partition_rows = [
         [
             "**Male-restricted**",
             f"`RA-M` (`MRA`): **{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}**",
             f"`CTA-M`: **{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}**",
             f"`RA-M-only`: **{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}**",
-            "Clears all female adult organs (`ovary`, female tract, `lactating_breast`, `XX resting_breast` < 4)",
-            "`NY-ESO-1`, `MAGEA4`, `XAGE1A/B`, `VCY/1B`, `CT83`, `TGM4`, `SEMG2`, `PLAC1`, `XAGE3`",
+            "Clears all non-pregnant, non-lactating female adult organs (`ovary`, female tract, `XX resting_breast` < 8; < 16 with `IHC−`)",
+            "`NY-ESO-1`, `MAGEA4`, `XAGE1A/B`, `VCY/1B`, `CT83`, `TGM4`, `SEMG2`, `PLAC1`, `XAGE3`, `DKKL1`, `SYCP1`",
         ],
         [
-            "**Embryo / placenta-only**",
-            f"`RA-E` (`ERA`): **{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}**",
-            f"`CTA-E`: **{int(sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}**",
-            f"`RA-E-only`: **{int(sex_ra_only.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}**",
-            "Clears all adult reproductive and resting-mammary compartments in **both** sexes (< 4)",
-            "`DUX4`, `ERVV-2`, `TBXT`, `OR1N1`, `CER1`, `ACCSL`, `MBD3L2`, `PSG7` (`RA-E-only`), `BMP15` (`RA-E-only`)",
+            "**Embryo / peripartum-only**",
+            f"`RA-E` (`ERA`): **{int(sex_table.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}**",
+            f"`CTA-E`: **{int(sex_cta.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}**",
+            f"`RA-E-only`: **{int(sex_ra_only.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}**",
+            "Clears all non-pregnant, non-lactating adult reproductive and resting-mammary organs in **both** sexes (< 8; < 16 with `IHC−`)",
+            "`DUX4`, `ERVV-1`, `ERVV-2`, `LGALS16`, `BTN1A1`, `TBXT`, `OR1N1`, `CER1`, `PSG7` (`RA-E-only`), `BMP15` (`RA-E-only`)",
         ],
         [
             "**Female-restricted**",
             f"`RA-F` (`FRA`): **{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             f"`CTA-F`: **{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             f"`RA-F-only`: **{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}**",
-            "Clears all male adult organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`, non-secretory `XY resting_breast` < 4)",
-            "`CSN2`, `BTN1A1`, `KHDC3L`, `ERVV-1`, `ZP4`, `ZAR1L`, `PABPN1L` (`RA-F-only`), `WEE2` (`RA-F-only`), `NLRP8` (`RA-F-only`)",
+            "Clears all male adult organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`, non-secretory `XY resting_breast` < 8; < 16 with `IHC−`)",
+            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `PABPN1L` (`RA-F-only`), `WEE2` (`RA-F-only`), `TLE7` (`RA-F-only`)",
         ],
         [
             "**Shared male & female**",
             f"`RA-MF` (`SRA`): **{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}**",
             f"`CTA-MF`: **{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}**",
             f"`RA-MF-only`: **{int(sex_ra_only.sex_restriction_class.eq('Shared male & female').sum()):,}**",
-            "≥ 4 TPM or ≥ 4 nTPM in adult organs of both sexes (or incomplete opposite-sex clearance)",
-            "`LALBA`, `PRAME`, `SCGB1D4`, `CTAG2`, `DPPA3`, `ACTL8`, `NLRP4`, `OOSP2`, `DKKL1`, `SYCP1`",
+            "≥ 8 TPM/nTPM (or ≥ 16 with `IHC−`, or positive IHC) in adult organs of both sexes",
+            "`PRAME`, `SCGB1D4`, `CTAG2`, `ACTL8`, `NLRP4`, `OOSP2`, `PIWIL3`, `FOXR1`, `NLRP13` (`RA-MF-only`), `H1-8` (`RA-MF-only`)",
+        ],
+        [
+            "**Peripartum / lactation** *(non-exclusive)*",
+            f"`RA-P` (`PRA`): **{len(ra_p_df):,}**",
+            f"`CTA-P`: **{len(cta_p_df):,}**",
+            f"`RA-P \\ CTA-P`: **{len(ra_p_df) - len(cta_p_df):,}**",
+            "Qualifies ≥ 10× or crosses calibrated `HostContext` ceiling in `placenta` or `lactating_breast` across any adult class",
+            "`LALBA`, `CSN2` (`CTA-F`); `BTN1A1`, `ERVV-1/2`, `LGALS16` (`CTA-E`); `PLAC1`, `XAGE3`, `MAGEA4/8/10` (`CTA-M`); `CTAG2` (`CTA-MF`)",
         ],
     ]
 
@@ -1033,15 +1046,26 @@ def build_sex_restriction_interrogation(
             ]
         )
 
+    ra_m_cnt = int(sex_table.sex_restriction_class.eq("Male-restricted").sum())
+    ra_f_cnt = int(sex_table.sex_restriction_class.eq("Female-restricted").sum())
+    cta_m_cnt = int(sex_cta.sex_restriction_class.eq("Male-restricted").sum())
+    cta_f_cnt = int(sex_cta.sex_restriction_class.eq("Female-restricted").sum())
+    cta_e_cnt = int(sex_cta.sex_restriction_class.eq("Embryo / peripartum-only").sum())
     extra_vars = {
-        "ra_m_n": f"{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}",
-        "ra_f_n": f"{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "ra_e_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "ra_m_n": f"{ra_m_cnt:,}",
+        "ra_f_n": f"{ra_f_cnt:,}",
+        "ra_e_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
         "ra_mf_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "ra_p_n": f"{len(ra_p_df):,}",
+        "cta_p_n": f"{len(cta_p_df):,}",
         "ra_m_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "ra_f_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "ra_e_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "ra_e_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
         "ra_mf_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Shared male & female').sum()):,}",
+        "cta_female_safe_pct": f"{100.0 * (cta_m_cnt + cta_e_cnt) / max(len(sex_cta), 1):.1f}",
+        "cta_male_safe_pct": f"{100.0 * (cta_f_cnt + cta_e_cnt) / max(len(sex_cta), 1):.1f}",
+        "cta_m_f_ratio": f"{round(cta_m_cnt / max(cta_f_cnt, 1))}",
+        "ra_m_f_ratio": f"{round(ra_m_cnt / max(ra_f_cnt, 1))}",
         "female_audit_n": f"{len(audit_df):,}",
         "sex_partition_table": table(
             [
@@ -1426,14 +1450,14 @@ def build():
         "pregnant_excluded": f"{int(pregnant_profile.CTA_excluded):,}",
         "mra_n": f"{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "fra_n": f"{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "era_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "era_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
         "sra_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
         "cta_m_n": f"{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "cta_f_n": f"{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "cta_e_n": f"{int(sex_cta.sex_restriction_class.eq('Embryo / placenta-only').sum()):,}",
+        "cta_e_n": f"{int(sex_cta.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
         "cta_mf_n": f"{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
-        "cta_female_safe_n": f"{int(sex_cta.female_all_adult_eligible.sum()):,}",
-        "cta_male_safe_n": f"{int(sex_cta.male_all_adult_eligible.sum()):,}",
+        "cta_female_safe_n": f"{int(sex_cta.sex_restriction_code.isin(['CTA-M', 'CTA-E']).sum()):,}",
+        "cta_male_safe_n": f"{int(sex_cta.sex_restriction_code.isin(['CTA-F', 'CTA-E']).sum()):,}",
         "cta_m_sex_only_n": f"{int((sex_cta.female_sex_organ_only_eligible & ~sex_cta.male_all_adult_eligible).sum()):,}",
         "fold": f"{target_selection.ENRICHMENT_FOLD:g}",
         "floor": f"{target_selection.DETECTION_FLOOR:g}",
@@ -1538,7 +1562,11 @@ def build():
     ra_all_rows["has_ep"] = (
         ra_all_rows["reproductive_qualifying_compartments"]
         .fillna("")
-        .map(lambda s: bool({"embryo", "placenta"} & {c.strip() for c in str(s).split("|")}))
+        .map(
+            lambda s: bool(
+                {"embryo", "placenta", "lactating_breast"} & {c.strip() for c in str(s).split("|")}
+            )
+        )
     )
     ep_rows = ra_all_rows[ra_all_rows["has_ep"]]
     ep_cta_mask = ep_rows["is_cancer_antigen"].astype(bool)

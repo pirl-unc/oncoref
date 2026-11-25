@@ -111,19 +111,20 @@
       "Unsafe": 18495
     },
     "sex_restriction_codes": {
-      "CTA-F": 3,
-      "CTA-M": 3,
-      "CTA-MF": 14,
-      "RA-E-only": 8,
-      "RA-F-only": 15,
-      "RA-M-only": 66,
-      "RA-MF-only": 207
+      "CTA-E": 1,
+      "CTA-F": 5,
+      "CTA-M": 4,
+      "CTA-MF": 10,
+      "RA-E-only": 21,
+      "RA-F-only": 19,
+      "RA-M-only": 69,
+      "RA-MF-only": 187
     },
     "sex_restriction_classes": {
-      "Embryo / placenta-only": 8,
-      "Female-restricted": 17,
-      "Male-restricted": 69,
-      "Shared male & female": 222
+      "Embryo / peripartum-only": 22,
+      "Female-restricted": 24,
+      "Male-restricted": 73,
+      "Shared male & female": 197
     }
   }
 }

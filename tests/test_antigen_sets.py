@@ -100,7 +100,12 @@ def test_proteins_uniform_schema_and_cross_species_wiring():
 
     cta = antigen_sets.proteins("CTA")
     cta_male = antigen_sets.proteins("CTA-M")
-    assert list(cta.columns) == list(cta_male.columns)
+    cta_peri = antigen_sets.proteins("CTA-P")
+    ra_peri = antigen_sets.proteins("RA-P")
+    assert list(cta.columns) == list(cta_male.columns) == list(cta_peri.columns)
+    assert set(cta_peri.entity_id) <= set(cta.entity_id)
+    assert set(cta_peri.entity_id) <= set(ra_peri.entity_id)
+    assert set(ra_peri.entity_id) == set(antigen_sets.proteins("PRA").entity_id)
     assert "catalog_category" in cta.columns
     assert cta.attrs["set"] == "CTA"
 

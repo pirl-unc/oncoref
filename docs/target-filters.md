@@ -39,7 +39,8 @@ including the enlarged protected-host denominator when one is used.
 
 `HostContext` distinguishes `protect`, `absent` and `accept_loss`; unspecified
 compartments are not protected. Limits for explicitly protected tissues are
-**<4 native TPM and <4 nTPM**, independently.
+**<8 native TPM and <8 nTPM** independently (with **2×** = **<16** headroom in
+human compartments where routine IHC is `not_detected`).
 These are research cutoffs, not injury thresholds. A stricter `max_off_target_tpm`
 also applies. Missing coverage or unresolved protein findings prevents eligibility.
 
@@ -52,12 +53,12 @@ assumptions and specify protected or absent organs explicitly. `all` applies no 
 |---|---|---:|---:|---:|---:|
 | `all` | none | **332** | 117 | 133 | 582 |
 | `female-patient` | none | **332** | 117 | 133 | 582 |
-| `female-patient (protect ovary)` | ovary | **287** | 111 | 122 | 520 |
-| `female-patient (lactating)` | lactating_breast | **325** | 114 | 130 | 569 |
+| `female-patient (protect ovary)` | ovary | **302** | 114 | 128 | 544 |
+| `female-patient (lactating)` | lactating_breast | **328** | 116 | 132 | 576 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
 | `male-patient` | none | **332** | 117 | 133 | 582 |
-| `male-patient (protect testis)` | testis | **62** | 84 | 25 | 171 |
-| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **47** | 75 | 13 | 135 |
+| `male-patient (protect testis)` | testis | **75** | 90 | 28 | 193 |
+| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **58** | 79 | 16 | 153 |
 
 Counts are research-screen outputs. Pregnancy remains unresolved because early
 embryo measurements do not cover all fetal/developmental stages. Milk-program

@@ -39,7 +39,8 @@ including the enlarged protected-host denominator when one is used.
 
 `HostContext` distinguishes `protect`, `absent` and `accept_loss`; unspecified
 compartments are not protected. Limits for explicitly protected tissues are
-**<4 native TPM and <4 nTPM**, independently.
+**<8 native TPM and <8 nTPM** independently (with **2×** = **<16** headroom in
+human compartments where routine IHC is `not_detected`).
 These are research cutoffs, not injury thresholds. A stricter `max_off_target_tpm`
 also applies. Missing coverage or unresolved protein findings prevents eligibility.
 

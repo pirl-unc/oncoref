@@ -55,6 +55,7 @@ def test_declarative_species_policies_cover_all_eight_roles_and_comparative_anat
             "RA-F / CTA-F",
             "RA-E / CTA-E",
             "RA-MF / CTA-MF",
+            "RA-P / CTA-P",
         }
     matrix = role_comparison_table()
     assert len(matrix) == len(ROLE_IDS)
@@ -154,25 +155,48 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "SPAG11B",
         "LCN9",
         "RNASE12",
+        "DKKL1",
+        "SYCP1",
+        "CAPZA3",
+        "GAGE2A",
+        "PAGE1",
     ):
         assert by_lbl.loc[rescued_cta_m, "sex_restriction_code"] == "CTA-M"
-    for cta_e_lbl in ("DUX4", "OR1N1", "CER1", "ACCSL", "CIROP", "CXorf49/B"):
+    for cta_e_lbl in (
+        "DUX4",
+        "OR1N1",
+        "CER1",
+        "ACCSL",
+        "CIROP",
+        "CXorf49/B",
+        "BTN1A1",
+        "ERVV-1",
+        "ERVV-2",
+        "LGALS16",
+    ):
         assert by_lbl.loc[cta_e_lbl, "sex_restriction_code"] == "CTA-E"
-    for cta_f_lbl in ("CSN2", "BTN1A1", "KHDC3L", "ZAR1L", "ERVV-1", "ZP4"):
+    for cta_f_lbl in ("CSN2", "LALBA", "DPPA3", "KHDC3L", "ZAR1L", "ZP4", "VRTN", "PRR23E"):
         assert by_lbl.loc[cta_f_lbl, "sex_restriction_code"] == "CTA-F"
     assert by_lbl.loc["PSG7", "sex_restriction_code"] == "RA-E-only"
     assert by_lbl.loc["PABPN1L", "sex_restriction_code"] == "RA-F-only"
     for mra_only_lbl in ("PRM2", "CCDC70", "PGK2"):
         assert by_lbl.loc[mra_only_lbl, "sex_restriction_code"] == "RA-M-only"
     assert by_lbl.loc["NLRP13", "sex_restriction_code"] == "RA-MF-only"
-    for shared_cta_mf in ("PRAME", "LALBA", "SCGB1D4", "CTAG2", "DKKL1"):
+    for shared_cta_mf in ("PRAME", "SCGB1D4", "CTAG2", "ACTL8", "OOSP2"):
         assert by_lbl.loc[shared_cta_mf, "sex_restriction_code"] == "CTA-MF"
 
     cta_m = antigen_sets.proteins("CTA-M")
     cta_e = antigen_sets.proteins("CTA-E")
     cta_f = antigen_sets.proteins("CTA-F")
     cta_mf = antigen_sets.proteins("CTA-MF")
+    cta_p = antigen_sets.proteins("CTA-P")
+    ra_p = antigen_sets.proteins("RA-P")
     assert len(cta_m) + len(cta_e) + len(cta_f) + len(cta_mf) == len(antigen_sets.proteins("CTA"))
+    assert len(cta_p) == 16 and len(ra_p) == 19
+    assert {"LALBA", "CSN2", "BTN1A1", "ERVV-1", "ERVV-2", "PLAC1", "XAGE3"} <= set(
+        cta_p.protein_group_label
+    )
+    assert set(ra_p.entity_id) == set(antigen_sets.proteins("PRA").entity_id)
     assert set(cta_m.entity_id) == set(
         published.loc[published.sex_restriction_code.eq("CTA-M"), "entity_id"]
     )
@@ -186,7 +210,7 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
     for sym_set, legacy_set, cls_name in (
         ("RA-M", "MRA", "Male-restricted"),
         ("RA-F", "FRA", "Female-restricted"),
-        ("RA-E", "ERA", "Embryo / placenta-only"),
+        ("RA-E", "ERA", "Embryo / peripartum-only"),
         ("RA-MF", "SRA", "Shared male & female"),
     ):
         assert set(antigen_sets.proteins(sym_set).entity_id) == set(
@@ -198,6 +222,9 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
     assert cli.main(["antigens", "list", "--set", "RA-F", "--ids", "--format", "json"]) == 0
     cli_ra_f_ids = {r["gene_id"] for r in json.loads(capsys.readouterr().out)}
     assert cli_ra_f_ids == antigen_sets.gene_ids("RA-F") == antigen_sets.gene_ids("FRA")
+    assert cli.main(["antigens", "list", "--set", "CTA-P", "--ids", "--format", "json"]) == 0
+    cli_cta_p_ids = {r["gene_id"] for r in json.loads(capsys.readouterr().out)}
+    assert cli_cta_p_ids == antigen_sets.gene_ids("CTA-P")
     assert cli.main(["antigens", "list", "--set", "CTA-E", "--ids", "--format", "json"]) == 0
     cli_ids = {r["gene_id"] for r in json.loads(capsys.readouterr().out)}
     assert cli_ids == antigen_sets.gene_ids("CTA-E")
@@ -216,6 +243,48 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
     orch_male = host_context.HostContext(absent=("testis",), protect=("prostate", "resting_breast"))
     res_orch = host_context.assess(cat_sub, orch_male)
     assert not bool(res_orch.loc["TGM4", "pass_host"])
+
+    # Parameter validation and minimal-table fallback on classify_sex_restriction & peripartum_antigen_ids
+    from oncoref.species_target_selection import peripartum_antigen_ids
+
+    for bad_kw in (
+        {"max_tpm": -1},
+        {"max_tpm": float("nan")},
+        {"max_tpm": True},
+        {"negative_ihc_multiplier": 0.5},
+        {"negative_ihc_multiplier": True},
+    ):
+        with pytest.raises(ValueError):
+            classify_sex_restriction(**bad_kw)
+        with pytest.raises(ValueError):
+            peripartum_antigen_ids(**bad_kw)
+
+    min_df = pd.DataFrame(
+        [
+            {
+                "entity_id": "e_tf",
+                "protein_group_label": "SYN_TF",
+                "classification": "CTA",
+                "is_cta": True,
+                "is_reproductive_antigen": True,
+            }
+        ]
+    )
+    anat_h = anatomy_for_species("human")
+    syn_he = {
+        "e_tf": {
+            c: {
+                "coverage": "measured",
+                "max_tpm": 5.0 if c == "testis" else 0.0,
+                "max_ntpm": 0.0,
+                "protein_status": "not_detected",
+                "scope_complete": c != "embryo",
+            }
+            for c in anat_h.reproductive_compartments
+        }
+    }
+    syn_sex = classify_sex_restriction(min_df, species="human", host_evidence=syn_he)
+    assert syn_sex.iloc[0].sex_restriction_code == "CTA-M"
 
 
 def test_end_to_end_canine_pipeline_gates_sex_subsets_and_peptide_subtraction():
@@ -758,7 +827,7 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
     assert mouse_rows.iloc[0].classification in {"Other:Review", "Unsafe"}
     assert not mouse_rows.iloc[0].is_cta
     assert not mouse.target_selection(category="CTA").empty
-    for mouse_cta_f in ("Peg12", "Csf3"):
+    for mouse_cta_f in ("Csf3", "Cxcl2", "Gzmf"):
         assert mouse.target_selection(mouse_cta_f).iloc[0].sex_restriction_code == "CTA-F"
         assert (
             mouse.sex_restricted_antigens()
@@ -766,7 +835,8 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
             .loc[mouse_cta_f, "sex_restriction_code"]
             == "CTA-F"
         )
-    assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 3
+    assert mouse.target_selection("Peg12").iloc[0].sex_restriction_code == "CTA-E"
+    assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 5
 
     assert cli.main(["antigens", "funnel", "--species", "dog", "--format", "json"]) == 0
     funnel_rows = json.loads(capsys.readouterr().out)

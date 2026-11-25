@@ -1910,8 +1910,8 @@ def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
     class_specs = [
         ("Male-restricted", "Male-restricted (MRA / CTA-M · female-safe)", "#2a729e"),
         (
-            "Embryo / placenta-only",
-            "Embryo / placenta-only (ERA / CTA-E · adult-absent)",
+            "Embryo / peripartum-only",
+            "Embryo / peripartum-only (ERA / CTA-E · adult-absent)",
             "#3f8f6b",
         ),
         ("Female-restricted", "Female-restricted (FRA / CTA-F · male-safe)", "#9a4c7a"),
@@ -2000,7 +2000,7 @@ def sex_restricted_antigens(data, fig_counts_path, fig_scatter_path, csv_path):
     z_order = {
         "Shared male & female": 1,
         "Male-restricted": 2,
-        "Embryo / placenta-only": 3,
+        "Embryo / peripartum-only": 3,
         "Female-restricted": 4,
     }
     for key, label, color in class_specs:

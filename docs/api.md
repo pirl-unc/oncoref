@@ -812,9 +812,10 @@ changes = target_selection.results(changed_only=True)
 cancer_only = target_selection.results(category="Cancer Antigen only")
 ctag2 = target_selection.results("CTAG2")  # Exact protein label or member Ensembl ID.
 
-# Cross-sex subsets (232 CTA-M, 44 CTA-E, 6 CTA-F, 50 CTA-MF; RA-M/F/E/MF) & mouse GRCm39 catalog (20 CTA)
+# Cross-sex & peripartum subsets (245 CTA-M, 52 CTA-E, 8 CTA-F, 27 CTA-MF, 16 CTA-P; RA-M/F/E/MF/P) & mouse GRCm39 catalog (20 CTA)
 cta_female_safe = antigen_sets.select("CTA-M").proteins()
 ra_female_only = antigen_sets.select("RA-F").proteins()
+peripartum_ctas = antigen_sets.select("CTA-P").proteins()
 mouse_ctas = mouse.target_selection(category="CTA")
 
 # Adjudication & QC ledgers (#764-#769)
@@ -825,7 +826,7 @@ repeat_fams = repeat_family_equivalence.closed_homolog_families()
 near_self = assay_boundary_adjudications.candidate_near_self_1mm()
 ```
 
-`target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()` return Cancer Antigen and Reproductive Antigen memberships, their intersection (`CTA`), sex-restriction codes (`CTA-M`, `CTA-E`, `CTA-F`, `CTA-MF`), structured isoform/epitope clinical clearances (`clinical_clearance_*`, `#766`), closed homolog family sibling IDs (`closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, `#767`), and 1-mismatch Hamming near-self & tryptic-MS paralog metrics (`exact_unique_9mers`, `safe_2mm_9mers`, `unsafe_near_self_1mm_pct`, `unsafe_shared_tryptic_peptides`, `#769`). Reproducible single-rule ablations against the frozen `2026-11-20.2` baseline remain available via `human.evaluate_integrated_catalog(...)` (`oncoref.human_screening_inputs`). `cta_literature.attestations()` preserves paper links and claim scope independently of category.
+`target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()` return Cancer Antigen and Reproductive Antigen memberships, their intersection (`CTA`), sex-restriction codes (`CTA-M`, `CTA-E`, `CTA-F`, `CTA-MF`; plus non-exclusive peripartum `CTA-P`/`RA-P` selectors via `antigen_sets`), structured isoform/epitope clinical clearances (`clinical_clearance_*`, `#766`), closed homolog family sibling IDs (`closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, `#767`), and 1-mismatch Hamming near-self & tryptic-MS paralog metrics (`exact_unique_9mers`, `safe_2mm_9mers`, `unsafe_near_self_1mm_pct`, `unsafe_shared_tryptic_peptides`, `#769`). Reproducible single-rule ablations against the frozen `2026-11-20.2` baseline remain available via `human.evaluate_integrated_catalog(...)` (`oncoref.human_screening_inputs`). `cta_literature.attestations()` preserves paper links and claim scope independently of category.
 
 Paper occurrences include `publication_claims` (exact source-table records) and
 `nomination_gene_ids` (the supported member loci). Background-only rows retain their

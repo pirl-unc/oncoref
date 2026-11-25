@@ -123,18 +123,25 @@ def test_mouse_sixteen_compartment_host_context_and_sex_restricted_subsets():
     assert len(cta_m) + len(cta_e) + len(cta_f) + len(cta_mf) == len(total_cta)
     assert len(cta_m) > 0
 
-    # Protecting female adult organs keeps CTA-M eligible while protecting testis excludes testis-high CTAs
-    female_sel = antigen_sets.select(
-        "CTA",
+    # Pure HostContext protection of non-pregnant, non-lactating female adult organs keeps all CTA-M eligible,
+    # while TargetFilter additionally requires 10x tumor fold over max(H0, protected female TPM)
+    f_host = host_context.from_legacy(
+        "female-patient",
+        protect_tissues=anat.female_adult_protected_compartments,
+        lactating=False,
         species="mouse",
-        host=host_context.from_legacy(
-            "female-patient",
-            protect_tissues=anat.female_adult_protected_compartments,
-            lactating=True,
-            species="mouse",
-        ),
-    ).proteins()
-    assert set(cta_m.entity_id) <= set(female_sel.entity_id)
+    )
+    assert host_context.assess(cta_m, f_host, evidence=exp)["pass_host"].all()
+    female_sel = antigen_sets.select("CTA", species="mouse", host=f_host).proteins()
+    assert not female_sel.empty
+    assert set(female_sel.entity_id) <= (set(cta_m.entity_id) | set(cta_e.entity_id))
+
+    cta_p = antigen_sets.proteins("CTA-P", species="mouse")
+    ra_p = antigen_sets.proteins("RA-P", species="mouse")
+    assert len(cta_p) > 0
+    assert set(cta_p.entity_id) <= set(total_cta.entity_id)
+    assert set(cta_p.entity_id) <= set(ra_p.entity_id)
+    assert set(ra_p.entity_id) == set(antigen_sets.proteins("PRA", species="mouse").entity_id)
 
     protect_testis = antigen_sets.select(
         "CTA",

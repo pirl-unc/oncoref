@@ -15,7 +15,7 @@ import pandas as pd
 
 from . import target_selection as catalog
 
-POLICY_ID = "oncoref.host-selection.2026-11-18.2"
+POLICY_ID = "oncoref.host-selection.2026-11-25.1"
 COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
 
 
@@ -44,17 +44,32 @@ class HostContext:
 
     absent: tuple[str, ...] = ()
     accept_loss: tuple[str, ...] = ()
-    max_tpm: float = 4.0
-    max_ntpm: float = 4.0
+    max_tpm: float = 8.0
+    max_ntpm: float = 8.0
     assumptions: tuple[str, ...] = ()
     protect: tuple[str, ...] = ()
     species: str = "human"
+    negative_ihc_multiplier: float | None = None
 
     def __post_init__(self):
         from .species import resolve_species
 
         resolved_species = resolve_species(self.species)
         object.__setattr__(self, "species", resolved_species.name)
+        if self.negative_ihc_multiplier is None:
+            from .species_policies import species_policy
+
+            ihc_mult = species_policy(resolved_species).thresholds.host_negative_ihc_multiplier
+        else:
+            ihc_mult = self.negative_ihc_multiplier
+        if (
+            isinstance(ihc_mult, bool)
+            or not isinstance(ihc_mult, (int, float))
+            or not math.isfinite(ihc_mult)
+            or ihc_mult < 1.0
+        ):
+            raise ValueError("negative_ihc_multiplier must be finite and >= 1.0")
+        object.__setattr__(self, "negative_ihc_multiplier", float(ihc_mult))
         for field in ("absent", "accept_loss", "protect"):
             object.__setattr__(
                 self, field, normalize(getattr(self, field), species=resolved_species)
@@ -223,9 +238,12 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
         lact_comps = tuple(
             c for c in ("lactating_breast", "lactating_mammary") if c in species_comps
         )
+        declared_female = any(a.startswith("female-patient:") for a in host.assumptions)
+        declared_male = any(a.startswith("male-patient:") for a in host.assumptions)
         active_host_comps = set(host.protect) | set(host.accept_loss)
-        is_female_host = (
-            bool(male_all_comps)
+        is_female_host = declared_female or (
+            not declared_male
+            and bool(male_all_comps)
             and all(c in host.absent for c in male_all_comps)
             and not any(c in active_host_comps for c in male_all_comps)
             and (
@@ -233,14 +251,16 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 or any(c not in host.absent for c in fem_all_comps)
             )
         )
-        is_male_host = (
-            not is_female_host
-            and bool(fem_all_comps)
-            and all(c in host.absent for c in (*fem_all_comps, *lact_comps))
-            and not any(c in active_host_comps for c in (*fem_all_comps, *lact_comps))
-            and (
-                any(c in active_host_comps for c in male_all_comps)
-                or any(c not in host.absent for c in male_all_comps)
+        is_male_host = not is_female_host and (
+            declared_male
+            or (
+                bool(fem_all_comps)
+                and all(c in host.absent for c in (*fem_all_comps, *lact_comps))
+                and not any(c in active_host_comps for c in (*fem_all_comps, *lact_comps))
+                and (
+                    any(c in active_host_comps for c in male_all_comps)
+                    or any(c not in host.absent for c in male_all_comps)
+                )
             )
         )
     rows = []
@@ -266,8 +286,15 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 unknown.append(tissue)
                 continue
             observed.append((value, tissue))
-            if value >= host.max_tpm:
-                rejected.append(f"{tissue}: RNA {value:g} TPM >= {host.max_tpm:g}")
+            ihc_mult = (
+                float(host.negative_ihc_multiplier)
+                if item.get("protein_status") == "not_detected"
+                else 1.0
+            )
+            eff_max_tpm = host.max_tpm * ihc_mult
+            eff_max_ntpm = host.max_ntpm * ihc_mult
+            if value >= eff_max_tpm:
+                rejected.append(f"{tissue}: RNA {value:g} TPM >= {eff_max_tpm:g}")
             ntpm = item.get("max_ntpm")
             if tissue in {"resting_breast", "resting_mammary"} and host is not None:
                 if is_female_host and item.get("female_max_ntpm") is not None:
@@ -282,15 +309,15 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                     or ntpm < 0
                 ):
                     unknown.append(tissue)
-                elif ntpm >= host.max_ntpm:
-                    rejected.append(f"{tissue}: RNA {ntpm:g} nTPM >= {host.max_ntpm:g}")
+                elif ntpm >= eff_max_ntpm:
+                    rejected.append(f"{tissue}: RNA {ntpm:g} nTPM >= {eff_max_ntpm:g}")
             if item.get("protein_status") in {"positive", "unresolved"}:
                 female_only_mammary_ihc = (
                     tissue in {"resting_breast", "resting_mammary"}
                     and is_male_host
                     and item.get("protein_status") == "unresolved"
-                    and value < host.max_tpm
-                    and (ntpm is None or ntpm < host.max_ntpm)
+                    and value < eff_max_tpm
+                    and (ntpm is None or ntpm < eff_max_ntpm)
                 )
                 if not female_only_mammary_ihc:
                     unknown.append(tissue + ": protein finding requires host-specific review")

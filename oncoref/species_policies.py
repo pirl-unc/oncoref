@@ -98,8 +98,9 @@ class SpeciesThresholdConfig:
     rare_cell_replicate_studies: int = target_selection.RARE_CELL_REPLICATE_STUDIES
     rare_cell_replicate_donors: int = target_selection.RARE_CELL_REPLICATE_DONORS
     unsafe_ninemer_containment_pct: float = 95.0
-    host_protected_max_tpm: float = 4.0
-    host_protected_max_ntpm: float = 4.0
+    host_protected_max_tpm: float = 8.0
+    host_protected_max_ntpm: float = 8.0
+    host_negative_ihc_multiplier: float | None = None
 
     def __post_init__(self):
         if self.normal_rna_tier_ceilings is None:
@@ -115,6 +116,14 @@ class SpeciesThresholdConfig:
             )
         if self.negative_ihc_multipliers is None:
             object.__setattr__(self, "negative_ihc_multipliers", {})
+        if self.host_negative_ihc_multiplier is None:
+            object.__setattr__(
+                self,
+                "host_negative_ihc_multiplier",
+                min(self.negative_ihc_multipliers.values())
+                if self.negative_ihc_multipliers
+                else 1.0,
+            )
 
 
 @dataclass(frozen=True)
@@ -167,16 +176,19 @@ class SpeciesPolicy:
         return ReferenceIdentity.from_dict(reg["identity"])
 
     def sex_subset_compartments(self) -> dict[str, dict[str, tuple[str, ...]]]:
-        """Exact species-applicable compartment sets defining MRA/FRA/ERA/SRA and CTA-*."""
+        """Exact species-applicable compartment sets defining RA-{M,F,E,MF,P} and CTA-*."""
         a = self.anatomy
-        dev = tuple(c for c in ("embryo", "placenta") if c in a.core_reproductive_compartments)
+        dev = (
+            *(c for c in ("embryo", "placenta") if c in a.core_reproductive_compartments),
+            a.lactating_mammary_compartment,
+        )
         return {
             "RA-M / CTA-M": {
                 "expressed_in": a.male_sex_compartments,
                 "must_clear_protected": a.female_adult_protected_compartments,
             },
             "RA-F / CTA-F": {
-                "expressed_in": (*a.female_sex_compartments, *dev),
+                "expressed_in": (*a.female_sex_compartments, a.resting_mammary_compartment),
                 "must_clear_protected": a.male_adult_protected_compartments,
             },
             "RA-E / CTA-E": {
@@ -192,6 +204,10 @@ class SpeciesPolicy:
             },
             "RA-MF / CTA-MF": {
                 "expressed_in": a.reproductive_compartments,
+                "must_clear_protected": (),
+            },
+            "RA-P / CTA-P": {
+                "expressed_in": a.peripartum_compartments,
                 "must_clear_protected": (),
             },
         }
@@ -355,7 +371,7 @@ def _policies() -> dict[int, SpeciesPolicy]:
                 "GTEx/HPA adult reproductive samples & Petropoulos/Tyser/Molè embryos",
                 "TPM; UMI/staining context",
                 "active_in_catalog",
-                "RA qualifies at >=10 x H0 in adult reproductive samples or cell-supported embryo lineages; per-compartment maxima feed HostContext (<4 TPM / <4 nTPM)",
+                "RA qualifies at >=10 x H0 in adult reproductive samples or cell-supported embryo lineages; per-compartment maxima feed HostContext (<8 TPM / <8 nTPM, 2x with negative IHC)",
                 "Early embryo atlases do not cover mid/late fetal stages; pregnancy protection remains conservative.",
             ),
             SpeciesDatasetBinding(

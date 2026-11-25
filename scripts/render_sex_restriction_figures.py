@@ -253,7 +253,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
         ("Other / CA-only (review, seq, <10× RA)", C_OTHER),
         ("CTA-M / RA-M (testis-active, female-silent)", C_CTAM),
         ("CTA-MF / RA-MF (shared male & female)", C_CTAMF),
-        ("CTA-E / RA-E-only (embryo/placenta-only)", C_CTAE),
+        ("CTA-E / RA-E-only (embryo/peripartum-only)", C_CTAE),
         ("CTA-F / RA-F-only (female-restricted)", C_CTAF),
     ]
     prog_labels = [lbl for lbl, _ in FEMALE_LINEAGE_PROGRAMS]
@@ -277,7 +277,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
                     j = 2
                 elif sc == "Shared male & female":
                     j = 3
-                elif sc == "Embryo / placenta-only":
+                elif sc == "Embryo / peripartum-only":
                     j = 4
                 else:
                     j = 5
@@ -315,11 +315,11 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
 
     # Annotate exact CTA-F survivors on the right edge of each row
     ctaf_notes = [
-        "CSN2, BTN1A1 (2 CTA-F)",
-        "ZP4, KHDC3L, ZAR1L + 3 RA-F-only",
-        "0 CTA-F (SYCP1/PIWIL3 → CTA-MF)",
-        "0 CTA-F (PRAME/SCGB1D4 → CTA-MF)",
-        "ERVV-1 (1 CTA-F; ERVV-2 → CTA-E)",
+        "CSN2, LALBA (2 CTA-F; BTN1A1 → CTA-E/P)",
+        "ZP4, DPPA3, KHDC3L, ZAR1L + 2 RA-F-only",
+        "0 CTA-F (SYCP1 → CTA-M; PIWIL3 → CTA-MF)",
+        "0 CTA-F (PRAME, SCGB1D4 → CTA-MF)",
+        "0 CTA-F (ERVV-1/2, LGALS16 → CTA-E/P)",
     ]
     for yp, note in zip(y, ctaf_notes):
         ax_a.text(101.2, yp, note, va="center", ha="left", fontsize=8.0, color=C_INK)
@@ -380,19 +380,26 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
                 n_val = item.get("max_ntpm")
             if t_val is not None and np.isfinite(t_val):
                 vals.append(float(t_val))
-            # Reflect scRNA nTPM >= 4 ceiling crossings when bulk TPM is diluted (e.g., oocytes)
-            if n_val is not None and np.isfinite(n_val) and float(n_val) >= 4.0:
-                vals.append(max(float(t_val or 0.0), min(float(n_val), 25.0)))
+            # Reflect scRNA nTPM >= 8 ceiling crossings when bulk TPM is diluted (e.g., oocytes, XX breast)
+            if n_val is not None and np.isfinite(n_val) and float(n_val) >= 8.0:
+                vals.append(max(float(t_val or 0.0), min(float(n_val), 800.0)))
+            pstat = item.get("protein_status")
+            if pstat in {"positive", "unresolved"} and not (
+                c == "resting_breast" and side == "male" and pstat == "unresolved"
+            ):
+                vals.append(max(vals[-1], 20.0))
         return max(vals)
 
     ctas["male_eff"] = [_effective_adult_exposure(eid, "male") for eid in ctas["entity_id"]]
     ctas["female_eff"] = [_effective_adult_exposure(eid, "female") for eid in ctas["entity_id"]]
 
     # Shade CTA-F (top-left) and CTA-M (bottom-right) and CTA-E (bottom-left) quadrants
-    ax_b.axvspan(0.03, 4.0, ymin=0, ymax=1, color="#fdf2f8", alpha=0.35, zorder=0)
-    ax_b.axhspan(0.03, 4.0, xmin=0, xmax=1, color="#ebf8ff", alpha=0.35, zorder=0)
-    ax_b.axvline(4.0, color="#616e7c", linestyle="--", linewidth=1.1, zorder=2)
-    ax_b.axhline(4.0, color="#616e7c", linestyle="--", linewidth=1.1, zorder=2)
+    ax_b.axvspan(0.03, 8.0, ymin=0, ymax=1, color="#fdf2f8", alpha=0.35, zorder=0)
+    ax_b.axhspan(0.03, 8.0, xmin=0, xmax=1, color="#ebf8ff", alpha=0.35, zorder=0)
+    ax_b.axvline(8.0, color="#616e7c", linestyle="--", linewidth=1.1, zorder=2)
+    ax_b.axhline(8.0, color="#616e7c", linestyle="--", linewidth=1.1, zorder=2)
+    ax_b.axvline(16.0, color="#9aa5b1", linestyle=":", linewidth=0.95, zorder=2)
+    ax_b.axhline(16.0, color="#9aa5b1", linestyle=":", linewidth=0.95, zorder=2)
 
     code_meta = [
         ("CTA-M", C_CTAM, "o", 26),
@@ -427,21 +434,23 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
         )
 
     callouts = {
-        "CSN2": (-42, -20),
-        "BTN1A1": (-52, 7),
-        "ZP4": (-32, 8),
-        "KHDC3L": (-58, 7),
-        "ZAR1L": (-52, -16),
+        "LALBA": (-44, 10),
+        "DPPA3": (-44, 6),
+        "KHDC3L": (-56, 14),
+        "ZAR1L": (-52, -18),
+        "CSN2": (-48, -3),
+        "ZP4": (-30, -13),
+        "VRTN": (-38, -9),
+        "PRR23E": (-48, 4),
+        "BTN1A1": (-48, -4),
         "ERVV-1": (-48, 8),
-        "LALBA": (10, -4),
-        "SCGB1D4": (8, -10),
-        "PRAME": (8, 7),
-        "CTAG2": (8, -12),
-        "DPPA3": (-18, 12),
-        "DUX4": (10, 12),
-        "TGM4": (-16, 11),
-        "CT83": (-26, -15),
-        "NY-ESO-1": (-38, 10),
+        "DUX4": (14, -8),
+        "SCGB1D4": (8, -4),
+        "PRAME": (8, 8),
+        "CTAG2": (8, -10),
+        "DKKL1": (12, 6),
+        "CT83": (14, -14),
+        "NY-ESO-1": (12, 10),
     }
     ctas_by_lbl = ctas.set_index("protein_group_label")
     for sym, (dx, dy) in callouts.items():
@@ -457,9 +466,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
             xytext=(dx, dy),
             textcoords="offset points",
             fontsize=7.8,
-            fontweight="bold"
-            if r["sex_restriction_code"] == "CTA-F" or sym == "LALBA"
-            else "normal",
+            fontweight="bold" if r["sex_restriction_code"] == "CTA-F" else "normal",
             color=c_txt,
             arrowprops={"arrowstyle": "-", "color": "#9aa5b1", "lw": 0.65},
             zorder=6,
@@ -469,8 +476,8 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
     ax_b.set_yscale("log")
     ax_b.set_xlim(0.035, 110000)
     ax_b.set_ylim(0.035, 110000)
-    ticks = [0.05, 0.5, 4, 50, 1000, 50000]
-    tick_lbls = ["≤0.05", "0.5", "4", "50", "1k", "50k"]
+    ticks = [0.05, 0.5, 8, 16, 100, 1000, 50000]
+    tick_lbls = ["≤0.05", "0.5", "8", "16", "100", "1k", "50k"]
     ax_b.set_xticks(ticks)
     ax_b.set_xticklabels(tick_lbls)
     ax_b.set_yticks(ticks)
@@ -479,22 +486,30 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
     ax_b.text(
         0.048,
         68000,
-        "CTA-F quadrant\n(male-safe, <4)",
+        "CTA-F quadrant\n(male-safe, <8 / <16 IHC−)",
         fontsize=8.0,
         color=C_CTAF,
         fontweight="bold",
         va="top",
     )
     ax_b.text(
-        1400,
+        1100,
         0.065,
-        "CTA-M quadrant (female-safe, <4)",
+        "CTA-M quadrant (female-safe, <8 / <16 IHC−)",
         fontsize=8.0,
         color=C_CTAM,
         fontweight="bold",
         ha="left",
     )
-    ax_b.text(0.05, 0.065, "CTA-E\n(adult-absent)", fontsize=7.8, color=C_CTAE, fontweight="bold")
+    ax_b.text(
+        0.048,
+        5.8,
+        "CTA-E quadrant\n(embryo/peripartum)",
+        fontsize=7.6,
+        color=C_CTAE,
+        fontweight="bold",
+        va="top",
+    )
     ax_b.set_xlabel(
         "Max adult male organ exposure (TPM / ceiling-crossing nTPM)", fontsize=9.2, color=C_INK
     )
@@ -573,7 +588,7 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
 
     rng = np.random.default_rng(20261125)
     genes_show = ["LALBA", "CSN2", "BTN1A1"]
-    gene_colors = {"LALBA": C_CTAMF, "CSN2": C_CTAF, "BTN1A1": "#2b6cb0"}
+    gene_colors = {"LALBA": C_CTAF, "CSN2": "#7b2cbf", "BTN1A1": C_CTAE}
 
     # --- Panel A: GTEx Breast_Mammary_Tissue across XX/XY secretory vs resting states ---
     groups_a = [
@@ -584,8 +599,9 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
     ]
     x_base = np.arange(len(groups_a))
     offsets = [-0.24, 0.0, 0.24]
-    ax1.axhline(4.0, color="#616e7c", linestyle="--", linewidth=1.0, zorder=1)
-    ax1.text(3.42, 4.5, "4 TPM gate", fontsize=7.6, color=C_MUTED, ha="right")
+    ax1.axhline(8.0, color="#616e7c", linestyle="--", linewidth=1.0, zorder=1)
+    ax1.axhline(16.0, color="#9aa5b1", linestyle=":", linewidth=0.95, zorder=1)
+    ax1.text(3.42, 8.8, "8 TPM base", fontsize=7.4, color=C_MUTED, ha="right")
 
     for g_idx, sym in enumerate(genes_show):
         c = gene_colors[sym]
@@ -614,8 +630,8 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
     ax1.set_ylim(0.015, 90000)
     ax1.set_xticks(x_base)
     ax1.set_xticklabels([g[0] for g in groups_a], fontsize=8.3)
-    ax1.set_yticks([0.02, 0.2, 4, 50, 1000, 40000])
-    ax1.set_yticklabels(["≤0.02", "0.2", "4", "50", "1k", "40k"])
+    ax1.set_yticks([0.02, 0.2, 8, 50, 1000, 40000])
+    ax1.set_yticklabels(["≤0.02", "0.2", "8", "50", "1k", "40k"])
     ax1.set_ylabel("Deconvolved donor expression (TPM, bars = P99/max)", fontsize=9.0, color=C_INK)
     ax1.set_title(
         "A. GTEx Breast_Mammary_Tissue (514 XX & XY biopsies)",
@@ -629,9 +645,9 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
     _style_axes(ax1)
     ax1.legend(
         handles=[
-            Patch(facecolor=gene_colors["LALBA"], label="LALBA (CTA-MF)"),
-            Patch(facecolor=gene_colors["CSN2"], label="CSN2 (CTA-F)"),
-            Patch(facecolor=gene_colors["BTN1A1"], label="BTN1A1 (CTA-F)"),
+            Patch(facecolor=gene_colors["LALBA"], label="LALBA (CTA-F · CTA-P)"),
+            Patch(facecolor=gene_colors["CSN2"], label="CSN2 (CTA-F · CTA-P)"),
+            Patch(facecolor=gene_colors["BTN1A1"], label="BTN1A1 (CTA-E · CTA-P)"),
         ],
         loc="upper right",
         frameon=True,
@@ -653,8 +669,10 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
         (f"GTEx Prostate\n(n={m_prost.shape[1]})", m_prost, "TPM"),
     ]
     xb = np.arange(3)
-    ax2.axhline(4.0, color="#616e7c", linestyle="--", linewidth=1.0, zorder=1)
-    ax2.text(2.42, 4.35, "4 TPM / nTPM gate", fontsize=7.6, color=C_MUTED, ha="right")
+    ax2.axhline(8.0, color="#616e7c", linestyle="--", linewidth=1.0, zorder=1)
+    ax2.axhline(16.0, color="#9aa5b1", linestyle=":", linewidth=0.95, zorder=1)
+    ax2.text(2.42, 8.6, "8 Protected base", fontsize=7.2, color=C_MUTED, ha="right")
+    ax2.text(2.42, 17.5, "16 IHC− ceiling", fontsize=7.2, color=C_MUTED, ha="right")
 
     for g_idx, sym in enumerate(genes_show):
         c = gene_colors[sym]
@@ -701,21 +719,21 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
         )
 
     ax2.annotate(
-        "LALBA: 43/414 GTEx testes ≥4 TPM\n(P50=2.6, P95=4.9, max=9.2 TPM;\nIHC Enhanced: Not detected)",
-        xy=(xb[0] + offsets[0], 9.24),
-        xytext=(0.12, 22.0),
-        fontsize=7.5,
+        "LALBA → CTA-F (male-safe):\nTestis P50=2.6, P95=4.9, P99=7.8 TPM (<8)\n& Enhanced IHC: Not detected (<16)",
+        xy=(xb[0] + offsets[0], 7.76),
+        xytext=(0.06, 25.5),
+        fontsize=7.3,
         color=C_INK,
-        arrowprops={"arrowstyle": "->", "color": C_CTAMF, "lw": 0.9},
+        arrowprops={"arrowstyle": "->", "color": C_CTAF, "lw": 0.9},
         bbox={
             "boxstyle": "round,pad=0.25",
-            "facecolor": "#fffaf0",
-            "edgecolor": "#ecc94b",
+            "facecolor": "#fdf2f8",
+            "edgecolor": "#ed64a6",
             "lw": 0.8,
         },
     )
     ax2.set_yscale("log")
-    ax2.set_ylim(0.015, 65.0)
+    ax2.set_ylim(0.015, 85.0)
     ax2.set_xticks(xb)
     ax2.set_xticklabels(
         [
@@ -725,11 +743,11 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
         ],
         fontsize=8.3,
     )
-    ax2.set_yticks([0.02, 0.2, 1, 4, 10, 40])
-    ax2.set_yticklabels(["≤0.02", "0.2", "1", "4", "10", "40"])
+    ax2.set_yticks([0.02, 0.2, 1, 8, 16, 50])
+    ax2.set_yticklabels(["≤0.02", "0.2", "1", "8", "16", "50"])
     ax2.set_ylabel("Male reproductive RNA (TPM or peak cluster nTPM)", fontsize=9.0, color=C_INK)
     ax2.set_title(
-        "B. Male reproductive RNA & scRNA",
+        "B. Male reproductive RNA & IHC− Protected gate",
         loc="left",
         fontsize=10.2,
         fontweight="bold",
@@ -742,14 +760,14 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
     # --- Panel C: Breast & gynecologic tumor peaks vs. somatic-safety status ---
     peaks_df = pd.read_csv(TUMOR_PEAKS_CSV).drop_duplicates("gene_symbol").set_index("gene_symbol")
     panel_c_genes = [
-        ("CSN2", "CTA-F", C_CTAF, "Safe (male ≤2.1 TPM)"),
-        ("BTN1A1", "CTA-F", C_CTAF, "Safe (male ≤2.1 TPM)"),
-        ("ZP4", "CTA-F", C_CTAF, "Safe (male ≤0.1 TPM)"),
-        ("LALBA", "CTA-MF", C_CTAMF, "Testis RNA 7.8 TPM (IHC−)"),
+        ("CSN2", "CTA-F · CTA-P", C_CTAF, "Male ≤2.1 TPM · Lactation 99k"),
+        ("LALBA", "CTA-F · CTA-P", C_CTAF, "Testis P99 7.8 TPM (<8 · IHC−)"),
+        ("BTN1A1", "CTA-E · CTA-P", C_CTAE, "Adult ≤2.1 TPM · Lactation-only"),
+        ("ZP4", "CTA-F", C_CTAF, "Male ≤0.1 TPM · Oocyte zona"),
         ("SCGB1D4", "CTA-MF", C_CTAMF, "UCEC 3,576 · Epididymis 51"),
         ("PRAME", "CTA-MF", C_CTAMF, "UCEC/UCS · Testis + Ovary"),
-        ("CTAG2", "CTA-MF", C_CTAMF, "OV 604 · Testis + Vagina"),
-        ("XAGE3", "CTA-M", C_CTAM, "TNBC/UCEC · Female <3.3"),
+        ("CTAG2", "CTA-MF · CTA-P", C_CTAMF, "OV 604 · Testis + Vagina"),
+        ("XAGE3", "CTA-M · CTA-P", C_CTAM, "TNBC/UCEC · Female <3.3"),
         ("CT83", "CTA-M", C_CTAM, "CESC/TNBC · Female <2.2"),
         ("PIP", "Unsafe", C_UNSAFE, "Salivary 16,000 nTPM"),
         ("SCGB2A2", "Unsafe", C_UNSAFE, "Skin 690 nTPM"),

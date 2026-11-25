@@ -35,8 +35,8 @@ classifies **332 CTA, 117 Cancer Antigen only, 133 Reproductive Antigen only, 1,
    and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can
    safely lose. Downstream patient profiles (`--profile` / `target_filters`) mark reproductive compartments as
    <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or
-   <span class="cat cat-absent">Absent</span>—identifying **276** female-safe CTAs (`CTA-M + CTA-E`: `232 + 44`) and **50** male-safe
-   CTAs (`CTA-F + CTA-E`: `6 + 44`) under strict protection of all opposite-sex adult organs
+   <span class="cat cat-absent">Absent</span>—identifying **297** non-pregnant female-safe CTAs (`CTA-M + CTA-E`: `245 + 52`), **60** male-safe
+   CTAs (`CTA-F + CTA-E`: `8 + 52`), and **16** non-exclusive peripartum/lactation CTAs (`CTA-P`) under calibrated `Protected` + `IHC−` organ protection
    ([cross-sex CTAs](antigen-whitepaper.md#sex-restricted-reproductive-antigens-and-cross-sex-ctas),
    [rules and limits](host-selection.md)).
 

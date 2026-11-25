@@ -71,16 +71,28 @@ def rows(monkeypatch):
         (observation(float("inf")), "unresolved"),
         (observation(-1), "unresolved"),
         (observation(True), "unresolved"),
-        (observation(4), "excluded"),
+        (observation(7, protein_status="unassessed"), "eligible"),
+        (observation(8, protein_status="unassessed"), "excluded"),
+        (observation(12, protein_status="not_detected"), "eligible"),
+        (observation(16, protein_status="not_detected"), "excluded"),
         (observation(0, scope_complete=False), "unresolved"),
         (observation(0, protein_status="unresolved"), "unresolved"),
-        (observation(0, max_ntpm=5), "excluded"),
+        (observation(0, max_ntpm=9, protein_status="unassessed"), "excluded"),
+        (observation(0, max_ntpm=12, protein_status="not_detected"), "eligible"),
+        (observation(0, max_ntpm=16, protein_status="not_detected"), "excluded"),
     ],
 )
 def test_missing_is_not_zero_and_native_assays_remain_separate(rows, item, status):
     result = hc.assess(rows, context(), evidence={"a": {"ovary": item}}).iloc[0]
     assert result.host_status == status
     assert result.pass_host == (status == "eligible")
+    # Non-human species without routine cell-resolved IHC validation default to 1.0x multiplier
+    mouse_host = hc.HostContext(protect=("ovary",), species="mouse")
+    assert mouse_host.negative_ihc_multiplier == 1.0
+    mouse_res = hc.assess(
+        rows, mouse_host, evidence={"a": {"ovary": observation(9, protein_status="not_detected")}}
+    ).iloc[0]
+    assert mouse_res.host_status == "excluded"
 
 
 def test_anatomy_presets_leave_protection_opt_in():
@@ -117,7 +129,15 @@ def test_unprotected_default_needs_no_exposure_and_creates_no_background(rows, m
 
 @pytest.mark.parametrize(
     "kwargs",
-    [{"max_tpm": float("nan")}, {"max_ntpm": -1}, {"max_tpm": True}, {"absent": ["ovary"]}],
+    [
+        {"max_tpm": float("nan")},
+        {"max_ntpm": -1},
+        {"max_tpm": True},
+        {"absent": ["ovary"]},
+        {"negative_ihc_multiplier": 0.5},
+        {"negative_ihc_multiplier": float("nan")},
+        {"negative_ihc_multiplier": True},
+    ],
 )
 def test_invalid_contexts_fail(kwargs):
     with pytest.raises(ValueError):
@@ -126,7 +146,7 @@ def test_invalid_contexts_fail(kwargs):
 
 def test_host_protection_can_exclude_positive_control_without_relabeling(rows):
     d = tf.apply(
-        tf.TargetFilter(host=context()), rows, host_evidence={"a": {"ovary": observation(12.65)}}
+        tf.TargetFilter(host=context()), rows, host_evidence={"a": {"ovary": observation(18.65)}}
     )
     assert not d.keep.item() and d.host_status.item() == "excluded"
     assert d.category.item() == d.filtered_category.item() == "CTA"
@@ -148,11 +168,11 @@ def test_off_target_and_patient_thresholds_include_host_expression(rows):
 
 
 def test_protecting_more_tissues_or_lowering_limits_cannot_add_candidates(rows):
-    ev = {"a": {"ovary": observation(3), "testis": observation(10)}}
+    ev = {"a": {"ovary": observation(3), "testis": observation(18)}}
     permissive = tf.apply(tf.TargetFilter(host=context()), rows, host_evidence=ev)
     assert permissive.keep.item()
     assert not tf.apply(
-        tf.TargetFilter(host=context(max_tpm=2)), rows, host_evidence=ev
+        tf.TargetFilter(host=context(max_tpm=1)), rows, host_evidence=ev
     ).keep.item()
     assert not tf.apply(
         tf.TargetFilter(host=context(("ovary", "testis"))), rows, host_evidence=ev
@@ -176,7 +196,7 @@ def test_selection_views_and_host_background_share_one_decision(rows):
     selected = antigen_sets.select(
         host=context(),
         table=table,
-        host_evidence={"a": {"ovary": observation(0)}, "b": {"ovary": observation(5)}},
+        host_evidence={"a": {"ovary": observation(0)}, "b": {"ovary": observation(18)}},
     )
     proteins = selected.proteins()
     assert proteins.entity_id.tolist() == ["a"]
@@ -216,7 +236,7 @@ def test_selection_views_and_host_background_share_one_decision(rows):
     detached.loc[:, "keep"] = False
     meta = selected.metadata
     meta["host_context"]["max_tpm"] = 999
-    assert len(selected.proteins()) == 1 and selected.metadata["host_context"]["max_tpm"] == 4
+    assert len(selected.proteins()) == 1 and selected.metadata["host_context"]["max_tpm"] == 8
 
 
 def test_empty_selection_keeps_schema(rows):
@@ -303,7 +323,7 @@ def test_convenience_views_preserve_filter_host_choices(rows, monkeypatch):
         is None
     )
     monkeypatch.setattr(
-        hc, "_evidence", lambda: {"a": {c: observation(5) for c in hc.COMPARTMENTS}}
+        hc, "_evidence", lambda: {"a": {c: observation(18) for c in hc.COMPARTMENTS}}
     )
     assert antigen_sets.proteins(mode=f).empty
     assert not antigen_sets.gene_ids(mode=f)
@@ -365,17 +385,29 @@ def test_resting_breast_sex_stratification_in_host_context(rows):
     fem_ooph = hc.from_legacy(
         "female-patient", protect_tissues=("resting_breast",), absent_tissues=("ovary",)
     )
+    fem_all_absent = hc.from_legacy(
+        "female-patient",
+        protect_tissues=("resting_breast",),
+        absent_tissues=("ovary", "uterus", "vagina", "cervix", "endometrium", "fallopian tube"),
+    )
     male = hc.from_legacy("male-patient", protect_tissues=("resting_breast",))
     male_castrated = hc.from_legacy(
         "male-patient",
         protect_tissues=("resting_breast",),
         absent_tissues=("testis", "prostate"),
     )
+    male_all_absent = hc.from_legacy(
+        "male-patient",
+        protect_tissues=("resting_breast",),
+        absent_tissues=("testis", "prostate", "epididymis", "seminal vesicle"),
+    )
     bare_prostate_absent = hc.HostContext(absent=("prostate",), protect=("resting_breast",))
     unstrat = hc.HostContext(protect=("resting_breast",))
     assert hc.assess(rows, fem, evidence=ev).iloc[0].host_status == "eligible"
     assert hc.assess(rows, fem_ooph, evidence=ev).iloc[0].host_status == "eligible"
+    assert hc.assess(rows, fem_all_absent, evidence=ev).iloc[0].host_status == "eligible"
     assert hc.assess(rows, male, evidence=ev).iloc[0].host_status == "excluded"
     assert hc.assess(rows, male_castrated, evidence=ev).iloc[0].host_status == "excluded"
+    assert hc.assess(rows, male_all_absent, evidence=ev).iloc[0].host_status == "excluded"
     assert hc.assess(rows, bare_prostate_absent, evidence=ev).iloc[0].host_status == "excluded"
     assert hc.assess(rows, unstrat, evidence=ev).iloc[0].host_status == "excluded"

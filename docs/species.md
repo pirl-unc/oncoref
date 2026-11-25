@@ -390,7 +390,7 @@ sensitivity analyses, outside admitted normalized expression cohorts.
 See the [multi-species antigen whitepaper](species-antigen-whitepaper.md) for the
 complete per-species parameterization of human (`9606`), canine (`9615`), and
 murine (`10090`) datasets, comparative anatomy, symmetric sex-restricted subsets
-(`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-E`/`CTA-E`, `RA-MF`/`CTA-MF`; legacy aliases `MRA`/`FRA`/`ERA`/`SRA`), and native
+(`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-E`/`CTA-E`, `RA-MF`/`CTA-MF` plus non-exclusive peripartum `RA-P`/`CTA-P`; legacy aliases `MRA`/`FRA`/`ERA`/`SRA`/`PRA`), and native
 nomination ledgers.
 
 `oncoref.species_policies` and `oncoref.species_target_selection` harmonize the

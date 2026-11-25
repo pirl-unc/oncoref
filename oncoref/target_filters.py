@@ -471,8 +471,13 @@ def describe(f: TargetFilter | str) -> str:
         lines.append(
             f"Host: protect [{prot_text}]; absent [{absent_text}]; accept loss [{loss_text}]. "
             "Other compartments are not protected. "
-            f"Protected-tissue RNA limits: < {host.max_tpm:g} TPM and < {host.max_ntpm:g} nTPM. "
-            "Missing protected-tissue coverage and unresolved protein findings fail; membership stays biological."
+            f"Protected-tissue RNA limits: < {host.max_tpm:g} TPM and < {host.max_ntpm:g} nTPM"
+            + (
+                f" ({host.negative_ihc_multiplier:g}x when routine IHC is not detected)."
+                if host.negative_ihc_multiplier > 1.0
+                else "."
+            )
+            + " Missing protected-tissue coverage and unresolved protein findings fail; membership stays biological."
         )
     if f.min_tumor_fold > 10.0:
         lines.append(

@@ -27,8 +27,8 @@ from oncoref.host_context import HostContext
 # Illustrative declarations, not a patient recommendation.
 host = HostContext(
     protect=("ovary", "endometrium"),
-    max_tpm=4,
-    max_ntpm=4,
+    max_tpm=8,
+    max_ntpm=8,
 )
 selection = antigen_sets.select("CTA", mode="standard", host=host)
 proteins = selection.proteins()
@@ -63,7 +63,10 @@ For every protected compartment:
 
 1. Native-TPM coverage and the declared developmental/state scope must be present.
 2. TPM must be below `host.max_tpm`; available nTPM must separately be below
-   `host.max_ntpm`. Both default to 4. No TPM/nTPM conversion occurs.
+   `host.max_ntpm` (both default to 8, matching Stage 1 `Protected` organs, with
+   `2×` = `16` headroom in human compartments where routine IHC is `not_detected`;
+   non-human species without routine cell-resolved IHC validation default to `1×`).
+   No TPM/nTPM conversion occurs.
 3. Positive reliable HPA protein findings require host-specific attribution review.
    They remain unresolved here; they do not silently rewrite global Unsafe.
 4. For a CA meeting the requested cancer-evidence thresholds, cancer evidence must also satisfy the requested fold over

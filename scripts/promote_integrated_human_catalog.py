@@ -578,13 +578,20 @@ def main() -> None:
 
     from copy import deepcopy
 
+    orig_pkg_he = species_target_selection.packaged_species_host_exposure
+    orig_pkg_he_ref = species_target_selection._packaged_species_host_exposure_ref
+
     target_selection._baseline_2026_11_20_frame = lambda: base_df.copy()  # type: ignore[attr-defined]
     target_selection._baseline_2026_11_20_host_exposures = lambda: deepcopy(base_he_dict)  # type: ignore[attr-defined]
     species_target_selection.packaged_species_host_exposure = lambda species="human", **kw: (
         deepcopy(merged_he)
+        if species_target_selection.resolve_species(species).taxon_id == 9606
+        else orig_pkg_he(species, **kw)
     )  # type: ignore[assignment]
     species_target_selection._packaged_species_host_exposure_ref = lambda species="human", **kw: (
         merged_he
+        if species_target_selection.resolve_species(species).taxon_id == 9606
+        else orig_pkg_he_ref(species, **kw)
     )  # type: ignore[assignment]
 
     base_eval = human_screening_inputs.evaluate_human_catalog(
@@ -1198,6 +1205,7 @@ def main() -> None:
 
     # Update host-exposure.json
     new_he_meta = dict(base_he_meta)
+    new_he_meta["policy_id"] = host_context.POLICY_ID
     new_he_meta["catalog_policy_id"] = PROMOTED_POLICY_ID
     new_he_meta["catalog_data_sha256"] = ts_sha
     new_he_meta["sha256"] = he_sha

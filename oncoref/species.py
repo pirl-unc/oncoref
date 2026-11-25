@@ -252,7 +252,7 @@ class SpeciesDataGroup:
         return self.screening_policy().dataset_table(role=role, status=status)
 
     def sex_restricted_antigens(self) -> pd.DataFrame:
-        """Sex-restricted RA and CTA subsets (MRA/FRA/ERA/SRA, CTA-M/F/E/MF) for this species."""
+        """Sex-restricted RA and CTA subsets (RA-M/F/E/MF, CTA-M/F/E/MF; legacy MRA/FRA/ERA/SRA) for this species."""
         if self.name != "antigens":
             raise ValueError("sex_restricted_antigens() requires the antigens group")
         from .species_target_selection import classify_sex_restriction

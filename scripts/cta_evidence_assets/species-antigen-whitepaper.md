@@ -25,10 +25,11 @@ Within any species *S* with verified proteome reference `R_S`, comparative anato
 
 Male- and female-restricted subsets are defined by the **same `HostContext` protection algebra** in every species, parameterized by that species' actual reproductive, mammary, thymic, and disposable organs in `normal-tissue-taxonomy.yaml`:
 
-- **`RA-M` (`CTA-M` / `RA-M-only`, legacy alias `MRA` · Male-restricted, female-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every female adult reproductive and mammary compartment of species *S* (`< 4` native RNA units with measured coverage and resolved protein status), while expressed in male organs.
-- **`RA-F` (`CTA-F` / `RA-F-only`, legacy alias `FRA` · Female-restricted, male-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every male adult reproductive compartment (plus resting mammary tissue in species where adult males retain mammary ducts, `human` and `dog`; in `mouse`, fetal androgen regression at E14.5 ablates male mammary buds), while expressed in female or placental compartments.
-- **`RA-E` (`CTA-E` / `RA-E-only`, legacy alias `ERA` · Embryo / placenta-only, adult-absent in both sexes):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible under full adult organ protection in **both** sexes—expressed in embryo or placenta and silent across every adult male and non-pregnant female reproductive and mammary compartment.
-- **`RA-MF` (`CTA-MF` / `RA-MF-only`, legacy alias `SRA` · Shared male & female):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) expressed in adult reproductive/mammary organs of both sexes (or lacking measured opposite-sex clearance, failing closed).
+- **`RA-M` (`CTA-M` / `RA-M-only`, legacy alias `MRA` · Male-restricted, non-pregnant female-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every non-pregnant, non-lactating female adult reproductive and resting-mammary compartment of species *S* (`< 8` native RNA units—`< 16` in `human` where routine IHC is `not_detected`—with measured coverage and resolved protein status), while expressed in male organs.
+- **`RA-F` (`CTA-F` / `RA-F-only`, legacy alias `FRA` · Female-restricted, male-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every male adult reproductive compartment (plus resting mammary tissue in species where adult males retain mammary ducts, `human` and `dog`; in `mouse`, fetal androgen regression at E14.5 ablates male mammary buds), while expressed in non-pregnant female reproductive or resting-mammary compartments.
+- **`RA-E` (`CTA-E` / `RA-E-only`, legacy alias `ERA` · Embryo / peripartum-only, adult-absent across non-pregnant, non-lactating men & women):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible under full non-pregnant, non-lactating adult organ protection in **both** sexes—expressed in `embryo`, `placenta`, or `lactating_mammary` (`lactating_breast`) and silent across every adult male and non-pregnant, non-lactating female reproductive and resting-mammary compartment.
+- **`RA-MF` (`CTA-MF` / `RA-MF-only`, legacy alias `SRA` · Shared male & female):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) expressed in adult reproductive/resting-mammary organs of both sexes (or lacking measured opposite-sex clearance, failing closed).
+- **`RA-P` (`CTA-P`, legacy alias `PRA` · Peripartum / lactation, non-exclusive):** physiological selector spanning all <span class="cat cat-ra">RA</span>s (`$ra_p_n` human, `$mouse_ra_p_n` mouse) and <span class="cat cat-cta">CTA</span>s (`$cta_p_n` human, `$mouse_cta_p_n` mouse) qualifying ≥10× or exceeding the calibrated `HostContext` ceiling in `placenta` or `lactating_mammary` (`lactating_breast`) across any adult class.
 
 $comparative_anatomy_table
 
@@ -112,10 +113,11 @@ canine.screening_datasets()
 mouse.screening_datasets()
 role_comparison_table()
 
-# 2. Query biological sets and symmetric sex-restricted subsets (RA-M/F/E/MF, CTA-M/F/E/MF)
+# 2. Query biological sets, symmetric sex-restricted subsets (RA-M/F/E/MF, CTA-M/F/E/MF) & peripartum CTA-P
 cta_female_safe = antigen_sets.select("CTA-M")  # $cta_m_n male-restricted female-safe human CTAs
 ra_female_only = antigen_sets.select("RA-F")  # $ra_f_n female-restricted male-safe human RAs
-era_targets = antigen_sets.select("CTA-E")  # $cta_e_n adult-absent embryo/placenta CTAs
+era_targets = antigen_sets.select("CTA-E")  # $cta_e_n adult-absent embryo/peripartum CTAs
+peripartum_ctas = antigen_sets.select("CTA-P")  # $cta_p_n non-exclusive placental/lactation CTAs
 human.sex_restricted_antigens()
 
 # 3. Parameterize canine or murine HostContext and run full catalog evaluation on native panels
