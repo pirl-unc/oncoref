@@ -45,8 +45,8 @@ OLFACTORY_PATTERN = r"^OR\d+[A-Z]+\d+$"
 BACKGROUND_TPM = 5.0
 #: Fewer measured receptors than this cannot be judged.
 BACKGROUND_MIN_RECEPTORS = 100
-#: Fail when more than this share of measured receptors is at ``BACKGROUND_TPM``.
-BACKGROUND_MAX_SHARE = 0.20
+#: Fail when more than this share of measured receptors is at ``BACKGROUND_TPM`` (>9 of ~390 ORs).
+BACKGROUND_MAX_SHARE = 0.025
 #: Annotate a coordinated program; this ratio is not a normal-cell fraction.
 TESTIS_PROGRAM_NOTE_THRESHOLD = 0.001
 #: A non-testis tissue counts as present at this content...
@@ -57,7 +57,7 @@ NATIVE_TISSUE_MEDIAN = 0.0003
 UNRELATED_TISSUE_MAX = 4
 
 REASONS = {
-    "broad_background": "More than 20% of measured olfactory receptors at 5 TPM or more",
+    "broad_background": "More than 2.5% of measured olfactory receptors at 5 TPM or more",
     "several_unrelated_tissues": "Four or more unrelated tissues at 0.3% of their level or more",
 }
 NOTES = {
@@ -588,3 +588,22 @@ def apply_tumor_bulk_spec(
         "reproductive_cta_protected": True,
     }
     return out
+
+
+def tumor_gdna_background_deltas(*, only_applied: bool = False) -> pd.DataFrame:
+    """Return SHA-256-verified per-protein tumor witness adjustments under ``BACKGROUND_MAX_SHARE`` (2.5% ORs >= 5 TPM)."""
+    import hashlib
+    import json
+    from importlib.resources import files
+
+    data_root = files("oncoref").joinpath("data")
+    csv_res = data_root.joinpath("tumor-gdna-background-deltas.csv")
+    meta_res = data_root.joinpath("tumor-gdna-background-deltas.json")
+    raw_bytes = csv_res.read_bytes()
+    receipt = json.loads(meta_res.read_text(encoding="utf-8"))
+    if hashlib.sha256(raw_bytes).hexdigest() != receipt["sha256"]:
+        raise ValueError("tumor-gdna-background-deltas.csv does not match its SHA-256 receipt")
+    df = get_data("tumor-gdna-background-deltas")
+    if only_applied:
+        df = df[df["applied"].astype(bool)].reset_index(drop=True)
+    return df

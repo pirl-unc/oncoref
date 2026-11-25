@@ -525,12 +525,12 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "normal_bulk_and_immune_safety",
-                "bgee_v15_2_mouse_somatic + gse219045 + sarma1999",
-                "Bgee 15.2 somatic/leukocyte/marrow RNA, GSE219045 whole-blood/lymph-node/CNS & Sarma 1999 RT-PCR counterevidence",
+                "bgee_v15_2_mouse_somatic + gse219045 + immgen_gse109125_gse122108 + gse181223_bmdm + sarma1999",
+                "Bgee 15.2 somatic RNA, GSE219045 organ atlas, ImmGen sorted/activated immune (GSE109125, GSE122108), LPS-stimulated BMDMs (GSE181223) & Sarma 1999 RT-PCR counterevidence",
                 "TPM; qualitative RT-PCR/Southern",
                 "active_in_catalog",
-                "Quantitative panels apply Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers; Sarma 1999 somatic counterevidence holds Trap1a",
-                "Sorted murine T/B/NK subset atlases (ImmGen) are not yet stratified separately from leukocyte/marrow/spleen/lymph-node bulk.",
+                "Quantitative somatic & sorted/activated immune panels apply Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers; Sarma 1999 somatic counterevidence holds Trap1a",
+                "Sorted ULI FACS populations require >=2-replicate support (min(P95, second_highest)) to reject single-tube carryover.",
             ),
             SpeciesDatasetBinding(
                 "normal_cell_and_rare_umi",

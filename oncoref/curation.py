@@ -161,6 +161,9 @@ def write_receipt(root):
         "oncoref/data/rare-cell-attribution-reviews.json",
         "oncoref/tissue_tiers.py",
         "oncoref/normal_tissues.py",
+        "oncoref/data/tumor-gdna-background-deltas.csv",
+        "oncoref/data/tumor-gdna-background-deltas.json",
+        "oncoref/data/unmeasured-home-protein-adjudications.csv",
         "scripts/replay_cta_selection.py",
     }
     implementation.update(step["argv"][0] for step in spec["steps"].values())

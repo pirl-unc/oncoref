@@ -90,13 +90,13 @@ def test_background_boundary_and_minimum_coverage():
     row = pd.Series(
         {
             "olfactory_receptors_measured": 100,
-            "olfactory_share_ge5": 0.2,
+            "olfactory_share_ge5": 0.025,
             "testis_tissue_content": np.nan,
             "unrelated_tissues": "",
         }
     )
     assert not qc.reasons(row)
-    row.olfactory_share_ge5 = 0.21
+    row.olfactory_share_ge5 = 0.026
     assert qc.reasons(row) == ["broad_background"]
     row.olfactory_receptors_measured = 99
     row.unrelated_tissues = "liver;pancreas;brain;kidney"

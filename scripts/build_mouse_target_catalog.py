@@ -65,7 +65,7 @@ DEFAULT_INPUT_DIR = Path(
 )
 
 PRIMARY_CONTIGS = frozenset({*(str(i) for i in range(1, 20)), "X", "Y", "MT"})
-COMPARISON_ID = "oncoref.mouse-grcm39-tpm.2026-11-22.1"
+COMPARISON_ID = "oncoref.mouse-grcm39-tpm.2026-11-25.1"
 
 # 24 adult somatic contexts measured across the 41,233-gene Bgee 15.2 GRCm39 universe
 REQUIRED_BGEE_NORMAL_CONTEXTS = frozenset(
@@ -894,6 +894,8 @@ def load_bgee_and_normal_panels(
 
     # 3. Supplementary accessory reproductive & lactating mammary datasets (completing all 16 mouse compartments!)
     exonic_series = pd.Series(exonic_bp, dtype=float)
+    sym_universe = pd.Index(sorted(set(sym_to_ens.values())), name="_gid")
+    entrez_universe = pd.Index(sorted(set(entrez_to_ens.values())), name="_gid")
 
     # 3a. GSE295398 WT FVB/N ventral prostate (linear TPM via Entrez)
     p295 = input_dir / "GSE295398_TPM_all_samples.csv.gz"
@@ -919,6 +921,7 @@ def load_bgee_and_normal_panels(
         )
 
     # 3b. GSE287166 WT FVB anterior prostate (coagulating_gland) & ventral prostate
+    # Authors dropped all-zero symbol rows prior to GEO deposit; restore 0.0 across the mapped symbol universe.
     p287 = input_dir / "GSE287166_NormalizedCounts.csv.gz"
     source_rows.append(
         {
@@ -934,9 +937,10 @@ def load_bgee_and_normal_panels(
     df287 = pd.read_csv(p287, index_col=0)
     df287["_gid"] = df287.index.astype(str).map(sym_to_ens)
     df287 = df287.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
-    tpm287 = _counts_to_tpm(
-        df287[["FVB1A", "FVB2A", "FVB3A", "FVB1V", "FVB2V", "FVB3V"]], exonic_series
+    cnt287 = df287[["FVB1A", "FVB2A", "FVB3A", "FVB1V", "FVB2V", "FVB3V"]].reindex(
+        sym_universe, fill_value=0.0
     )
+    tpm287 = _counts_to_tpm(cnt287, exonic_series)
     peg287 = _project_peg_matrix(tpm287, groups_df)
     for c in ("FVB1A", "FVB2A", "FVB3A"):
         repro_records.append(
@@ -999,6 +1003,7 @@ def load_bgee_and_normal_panels(
         )
 
     # 3d. GSE324827 WT Pgrflox/flox oviduct (fallopian tube)
+    # Authors dropped all-zero symbol rows prior to GEO deposit; restore 0.0 across the mapped symbol universe.
     p324 = input_dir / "GSE324827_MyoPgrdd_RNAseq_RawCounts.csv.gz"
     source_rows.append(
         {
@@ -1014,7 +1019,8 @@ def load_bgee_and_normal_panels(
     df324 = pd.read_csv(p324)
     df324["_gid"] = df324["Gene Symbol"].astype(str).map(sym_to_ens)
     df324 = df324.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
-    tpm324 = _counts_to_tpm(df324[["PgrFlox1", "PgrFlox2", "PgrFlox3"]], exonic_series)
+    cnt324 = df324[["PgrFlox1", "PgrFlox2", "PgrFlox3"]].reindex(sym_universe, fill_value=0.0)
+    tpm324 = _counts_to_tpm(cnt324, exonic_series)
     peg324 = _project_peg_matrix(tpm324, groups_df)
     for c in ("PgrFlox1", "PgrFlox2", "PgrFlox3"):
         repro_records.append(
@@ -1101,6 +1107,7 @@ def load_bgee_and_normal_panels(
         )
 
     # 3h. GSE60450 WT FVB/N lactating & virgin mammary gland (EntrezGeneID + Length)
+    # Restore 0.0 across mapped Entrez loci omitted as unexpressed in the GEO featureCounts table.
     p604 = input_dir / "GSE60450_Lactation-GenewiseCounts.txt.gz"
     source_rows.append(
         {
@@ -1117,9 +1124,15 @@ def load_bgee_and_normal_panels(
     df604["_gid"] = df604["EntrezGeneID"].astype(str).map(entrez_to_ens)
     df604 = df604.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
     mam_cols = [c for c in df604.columns if c.startswith("MCL1-")]
-    tpm604 = _counts_to_tpm(df604[mam_cols], df604["Length"].astype(float))
+    len604 = df604["Length"].astype(float).reindex(entrez_universe).fillna(exonic_series)
+    cnt604 = df604[mam_cols].reindex(entrez_universe, fill_value=0.0)
+    tpm604 = _counts_to_tpm(cnt604, len604)
     peg604 = _project_peg_matrix(tpm604, groups_df)
-    # Virgin luminal (LA, LB) & basal (DG, DH); 2-day lactating luminal (LE, LF) & basal (DK, DL)
+    # Note: GSE60450 FACS-dissociated mammary populations underwent warm enzymatic collagenase
+    # digestion (inducing acute myeloid stress cytokines Csf3/Cxcl2/Fos 500-7,800 TPM). Intact
+    # flash-frozen resting_mammary is already covered by Bgee 15.2 and GSE219045; GSE60450 supplies
+    # virgin luminal/basal resting_mammary and 2-day lactating_mammary while sorted/activated immune
+    # panels (load_mouse_immune_panels) independently gate inducible myeloid/immune transcripts.
     for c in mam_cols:
         prefix = c.split("_", 1)[0]
         if prefix in {"MCL1-LA", "MCL1-LB", "MCL1-DG", "MCL1-DH"}:
@@ -1281,6 +1294,207 @@ def load_bgee_and_normal_panels(
         dict(confirmed_organs),
         source_rows,
     )
+
+
+def load_mouse_immune_panels(
+    input_dir: Path,
+    groups_df: pd.DataFrame,
+    exonic_bp: dict[str, int],
+    symbol_by_gene: dict[str, str],
+    sym_to_ens: dict[str, str],
+) -> tuple[pd.DataFrame, list[dict]]:
+    """Evaluate sorted & activated murine immune RNA panels (GSE109125, GSE122108, GSE181223).
+
+    Applies Protected <= 8 TPM across adult peripheral innate & adaptive immune subsets
+    (including LPS-, IL-4/LPS-, anti-CD3/CD40-, thioglycollate-, LCMV-, and injury-activated
+    macrophages, monocytes, neutrophils, DCs, microglia, mast cells, ILCs, NK cells, and T cells)
+    and Manageable (hold > 16 TPM, Unsafe > 128 TPM) across mature B-cell subsets, using the
+    replicated finite-sample P95 upper bound ``min(quantile(0.95), second_highest_replicate)``
+    across populations with >= 2 biological replicates so single-tube FACS splash outliers
+    never trigger false exclusions.
+    """
+    exonic_series = pd.Series(exonic_bp, dtype=float)
+    sym_universe = pd.Index(sorted(set(sym_to_ens.values())), name="_gid")
+    olfr_gids = {
+        gid
+        for gid, sym in symbol_by_gene.items()
+        if sym.startswith("Olfr") or re.match(r"^Or\d+[a-z]+\d+", sym, re.IGNORECASE)
+    }
+
+    p109 = input_dir / "GSE109125_Gene_count_table_GENCODE_vM25.csv.gz"
+    p122 = input_dir / "GSE122108_Gene_count_table_GENCODE_vM25.csv.gz"
+    p181 = input_dir / "GSE181223_mm_BMDM_RNAseq_EGR2WT_EGR2KO_IL4LPS_TPM_counts.txt.gz"
+    source_rows = [
+        {
+            "source_id": "immgen-uli-gse109125",
+            "pillar": "normal_bulk_and_immune_safety",
+            "filename": p109.name,
+            "unit": "TPM (from GENCODE vM25 sorted immune counts)",
+            "strain": "C57BL/6J (ImmGen ULI adult immune)",
+            "bytes": p109.stat().st_size,
+            "sha256": _sha256(p109),
+        },
+        {
+            "source_id": "immgen-mnp-gse122108",
+            "pillar": "normal_bulk_and_immune_safety",
+            "filename": p122.name,
+            "unit": "TPM (from GENCODE vM25 mononuclear phagocyte counts)",
+            "strain": "C57BL/6J (ImmGen MNP resident & inflamed)",
+            "bytes": p122.stat().st_size,
+            "sha256": _sha256(p122),
+        },
+        {
+            "source_id": "gse181223-bmdm-lps",
+            "pillar": "normal_bulk_and_immune_safety",
+            "filename": p181.name,
+            "unit": "TPM (Salmon native ENSMUSG)",
+            "strain": "C57BL/6 WT primary BMDM (CTRL, IL-4, LPS, IL-4+LPS)",
+            "bytes": p181.stat().st_size,
+            "sha256": _sha256(p181),
+        },
+    ]
+
+    def _replicated_p95(mat_cols: pd.DataFrame) -> pd.Series:
+        # Rows = entity_id, columns = >= 2 biological replicates of one sorted immune population.
+        arr = mat_cols.to_numpy(dtype=float)
+        has_obs = np.isfinite(arr).any(axis=1)
+        out = np.full(len(mat_cols), np.nan, dtype=float)
+        if not has_obs.any():
+            return pd.Series(out, index=mat_cols.index)
+        sub = arr[has_obs]
+        p95 = np.nanquantile(sub, 0.95, axis=1)
+        # Finite-sample replication guard: require >= 2 biological replicates to support the bound
+        sorted_arr = np.sort(np.where(np.isnan(sub), -np.inf, sub), axis=1)
+        second_hi = sorted_arr[:, -2]
+        second_hi = np.where(np.isneginf(second_hi), np.nan, second_hi)
+        out[has_obs] = np.minimum(p95, second_hi)
+        return pd.Series(out, index=mat_cols.index)
+
+    pop_summaries: dict[str, tuple[str, pd.Series]] = {}
+
+    # 1. GSE181223 WT primary BMDM across resting, IL-4, LPS, and IL-4+LPS conditions
+    df181 = pd.read_csv(p181, sep="\t")
+    df181["gene_id"] = df181["gene_id"].astype(str).str.split(".").str[0]
+    wt_cols = [c for c in df181.columns if c.startswith("WT_")]
+    mat181 = df181.groupby("gene_id", sort=False)[wt_cols].sum()
+    mat181 = mat181.loc[mat181.index.isin(exonic_bp)]
+    mat181 = mat181.div(mat181.sum(axis=0).replace(0.0, np.nan), axis=1) * 1e6
+    peg181 = _project_peg_matrix(mat181, groups_df)
+    for cond in ("WT_CTRL", "WT_IL4", "WT_LPS", "WT_IL4LPS"):
+        cs = [c for c in peg181.columns if c.startswith(f"{cond}_")]
+        if len(cs) >= 2:
+            pop_summaries[f"BMDM:{cond}"] = ("protected", _replicated_p95(peg181[cs]))
+
+    # 2. GSE109125 ImmGen ULI adult peripheral immune subsets
+    df109 = pd.read_csv(p109)
+    gid109 = df109["GeneSymbol"].astype(str).map(sym_to_ens)
+    skip_109 = (
+        ".Th",
+        "BEC.",
+        "LEC.",
+        "FRC.",
+        "Ep.",
+        "IAP.",
+        "LTHSC.",
+        "STHSC.",
+        "MMP",
+        "proB.",
+        "B.FrE.",
+    )
+    cols109 = [
+        c for c in df109.columns if c != "GeneSymbol" and not any(tok in c for tok in skip_109)
+    ]
+    sub109 = df109.loc[gid109.notna(), cols109].copy()
+    sub109.index = gid109[gid109.notna()].to_numpy()
+    sub109 = sub109[~sub109.index.duplicated(keep="first")].reindex(sym_universe, fill_value=0.0)
+    tot109 = sub109.sum(axis=0)
+    tpm109 = _counts_to_tpm(sub109, exonic_series)
+    olfr109 = (tpm109.loc[tpm109.index.isin(olfr_gids)] >= 5.0).mean(axis=0)
+    keep109 = [c for c in cols109 if tot109[c] >= 500_000 and olfr109[c] <= 0.025]
+    peg109 = _project_peg_matrix(tpm109[keep109], groups_df)
+    by_pop109: dict[str, list[str]] = defaultdict(list)
+    for c in keep109:
+        base = c.split("#", 1)[0] if "#" in c else c.rsplit(".", 1)[0]
+        by_pop109[base].append(c)
+    for pop, cs in sorted(by_pop109.items()):
+        if len(cs) < 2:
+            continue
+        tier = "manageable" if pop.startswith(("B.", "B1")) else "protected"
+        pop_summaries[f"ImmGen:{pop}"] = (tier, _replicated_p95(peg109[cs]))
+
+    # 3. GSE122108 ImmGen adult resident & inflammatory mononuclear phagocytes (exclude embryonic/neonatal & thymic)
+    df122 = pd.read_csv(p122)
+    gid122 = df122["GeneSymbol"].astype(str).map(sym_to_ens)
+    dev_or_thymic_pat = re.compile(
+        r"(?:\.E\d|\bYS\b|\.d\d+\.EB\b|\.EB\b|\.Neo\b|\.P\d+\b|Fetal|embryo|\.Th(?:\.|#|$))",
+        re.IGNORECASE,
+    )
+    cols122 = [c for c in df122.columns if c != "GeneSymbol" and not dev_or_thymic_pat.search(c)]
+    sub122 = df122.loc[gid122.notna(), cols122].copy()
+    sub122.index = gid122[gid122.notna()].to_numpy()
+    sub122 = sub122[~sub122.index.duplicated(keep="first")].reindex(sym_universe, fill_value=0.0)
+    tot122 = sub122.sum(axis=0)
+    tpm122 = _counts_to_tpm(sub122, exonic_series)
+    olfr122 = (tpm122.loc[tpm122.index.isin(olfr_gids)] >= 5.0).mean(axis=0)
+    keep122 = [c for c in cols122 if tot122[c] >= 500_000 and olfr122[c] <= 0.025]
+    peg122 = _project_peg_matrix(tpm122[keep122], groups_df)
+    by_pop122: dict[str, list[str]] = defaultdict(list)
+    for c in keep122:
+        base = c.split("#", 1)[0] if "#" in c else c.rsplit(".", 1)[0]
+        by_pop122[base].append(c)
+    for pop, cs in sorted(by_pop122.items()):
+        if len(cs) < 2:
+            continue
+        pop_summaries[f"ImmGenMNP:{pop}"] = ("protected", _replicated_p95(peg122[cs]))
+
+    prot_df = pd.DataFrame({k: s for k, (t, s) in pop_summaries.items() if t == "protected"})
+    man_df = pd.DataFrame({k: s for k, (t, s) in pop_summaries.items() if t == "manageable"})
+
+    gate_rows: list[dict] = []
+    if not prot_df.empty:
+        valid_p = prot_df.notna().any(axis=1)
+        p_sub = prot_df.loc[valid_p]
+        p_max = p_sub.max(axis=1)
+        p_top = p_sub.idxmax(axis=1)
+        for eid, val in p_max[p_max > 8.0].items():
+            gate_rows.append(
+                {
+                    "entity_id": eid,
+                    "layer": "Mouse sorted & activated immune RNA",
+                    "unsafe": True,
+                    "hold": False,
+                    "reason": f"{p_top.at[eid]} (protected immune): {float(val):.4g} TPM > 8",
+                }
+            )
+    if not man_df.empty:
+        valid_m = man_df.notna().any(axis=1)
+        m_sub = man_df.loc[valid_m]
+        m_max = m_sub.max(axis=1)
+        m_top = m_sub.idxmax(axis=1)
+        for eid, val in m_max[m_max > 128.0].items():
+            gate_rows.append(
+                {
+                    "entity_id": eid,
+                    "layer": "Mouse sorted & activated immune RNA",
+                    "unsafe": True,
+                    "hold": False,
+                    "reason": f"{m_top.at[eid]} (manageable B-cell): {float(val):.4g} TPM > 128",
+                }
+            )
+        for eid, val in m_max[(m_max > 16.0) & (m_max <= 128.0)].items():
+            gate_rows.append(
+                {
+                    "entity_id": eid,
+                    "layer": "Mouse sorted B-cell Manageable hold",
+                    "unsafe": False,
+                    "hold": True,
+                    "reason": f"{m_top.at[eid]} (manageable B-cell hold): {float(val):.4g} TPM > 16",
+                }
+            )
+
+    return pd.DataFrame(
+        gate_rows, columns=["entity_id", "layer", "unsafe", "hold", "reason"]
+    ), source_rows
 
 
 def load_mgi_gxd_protein_gates(
@@ -1668,6 +1882,7 @@ def load_mouse_tumor_cohorts(
     )
 
     # 6. KP_LUAD (C57BL/6 primary Kras;Trp53 lung adenocarcinoma GEMM, GSE277076, n=10 sgControl primary tumors)
+    sym_universe = pd.Index(sorted(set(sym_to_ens.values())), name="_gid")
     p_kp = input_dir / "GSE277076_202212051509_X_13772_I_raw.txt.gz"
     source_rows.append(
         {
@@ -1695,7 +1910,10 @@ def load_mouse_tumor_cohorts(
         "AS1712",
         "AU1855",
     ]
-    peg_kp = _project_peg_matrix(_counts_to_tpm(df_kp[kp_cols], exonic_series), groups_df)
+    peg_kp = _project_peg_matrix(
+        _counts_to_tpm(df_kp[kp_cols].reindex(sym_universe, fill_value=0.0), exonic_series),
+        groups_df,
+    )
     for c in kp_cols:
         per_sample_peg.append(("gse277076", f"KP_{c}", f"GSE277076:{c}", "KP_LUAD", peg_kp[c]))
     cohort_registry.append(
@@ -1717,7 +1935,10 @@ def load_mouse_tumor_cohorts(
     df_bmpc["_gid"] = df_bmpc.index.astype(str).map(sym_to_ens)
     df_bmpc = df_bmpc.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
     bmpc_cols = ["BMPC_Pri1", "BMPC_Pri2", "BMPC_Pri3", "BMPC_Met1", "BMPC_Met2", "BMPC_Met3"]
-    peg_bmpc = _project_peg_matrix(_counts_to_tpm(df_bmpc[bmpc_cols], exonic_series), groups_df)
+    peg_bmpc = _project_peg_matrix(
+        _counts_to_tpm(df_bmpc[bmpc_cols].reindex(sym_universe, fill_value=0.0), exonic_series),
+        groups_df,
+    )
     for c in bmpc_cols:
         per_sample_peg.append(("gse287166", c, f"GSE287166:{c}", "BMPC_PRAD", peg_bmpc[c]))
     cohort_registry.append(
@@ -1834,13 +2055,20 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
     )
 
     print(
-        "4/6 Evaluating MGI GXD TS28 protein assays & Tabula Muris 10x droplet UMI...", flush=True
+        "4/6 Evaluating ImmGen sorted/activated immune RNA, MGI GXD TS28 protein & Tabula Muris 10x UMI...",
+        flush=True,
+    )
+    imm_gates, imm_sources = load_mouse_immune_panels(
+        input_dir, groups_df, exonic_bp, symbol_by_gene, sym_to_ens
     )
     gxd_gates, gxd_sources = load_mgi_gxd_protein_gates(
         input_dir, groups_df, mgi_to_ens, confirmed_organs
     )
     umi_df, tm_sources = load_tabula_muris_rare_cell_umi(input_dir, sym_to_ens)
-    print(f"    gxd_gates={len(gxd_gates):,}, umi_rows={len(umi_df):,}", flush=True)
+    print(
+        f"    imm_gates={len(imm_gates):,}, gxd_gates={len(gxd_gates):,}, umi_rows={len(umi_df):,}",
+        flush=True,
+    )
 
     print("5/6 Loading 8 murine syngeneic & GEMM tumor cohorts...", flush=True)
     comp_tumors, cohort_df, tumor_sources = load_mouse_tumor_cohorts(
@@ -1852,13 +2080,13 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         "6/6 Running SpeciesScreeningSpec & 16-compartment HostContext sex-restriction...",
         flush=True,
     )
-    all_gates = pd.concat([rna_gates, gxd_gates], ignore_index=True)
+    all_gates = pd.concat([rna_gates, imm_gates, gxd_gates], ignore_index=True)
     spec = SpeciesScreeningSpec(
         species="mouse",
         reference=ref,
         policy_id=POLICY_SCHEMA_ID,
         comparison_id=COMPARISON_ID,
-        comparability_reference="oncoref.mouse-grcm39-panel.2026-11-22.1",
+        comparability_reference="oncoref.mouse-grcm39-panel.2026-11-25.1",
         comparison_unit="TPM",
         required_normal_contexts=REQUIRED_BGEE_NORMAL_CONTEXTS,
         anatomy=anatomy_for_species("mouse"),
@@ -1930,7 +2158,12 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
     mouse_dir.mkdir(parents=True, exist_ok=True)
 
     cat_path = data_dir / "mouse-target-selection.csv.gz"
-    cat.to_csv(cat_path, index=False, compression="gzip")
+    cat.to_csv(
+        cat_path,
+        index=False,
+        compression={"method": "gzip", "mtime": 0},
+        lineterminator="\n",
+    )
 
     exp_rows = pd.DataFrame(
         [
@@ -1944,7 +2177,12 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         ]
     )
     exp_path = data_dir / "mouse-host-exposure.csv.gz"
-    exp_rows.to_csv(exp_path, index=False, compression="gzip")
+    exp_rows.to_csv(
+        exp_path,
+        index=False,
+        compression={"method": "gzip", "mtime": 0},
+        lineterminator="\n",
+    )
 
     seq_out = res.sequences[
         [
@@ -1959,10 +2197,25 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         ]
     ].copy()
     seq_path = data_dir / "mouse-proteome-sequences.csv.gz"
-    seq_out.to_csv(seq_path, index=False, compression="gzip")
+    # Preserve existing mouse-proteome-sequences.csv.gz byte-for-byte when Ensembl 115 sequences are unchanged
+    write_seq = not seq_path.exists()
+    if not write_seq:
+        existing_seq = pd.read_csv(seq_path, compression="gzip", keep_default_na=False)
+        existing_seq["matches_representative_sequence"] = (
+            existing_seq["matches_representative_sequence"].astype(str).eq("True")
+        )
+        if not existing_seq.equals(seq_out.reset_index(drop=True)):
+            write_seq = True
+    if write_seq:
+        seq_out.to_csv(
+            seq_path,
+            index=False,
+            compression={"method": "gzip", "mtime": 0},
+            lineterminator="\n",
+        )
 
     all_sources_df = pd.DataFrame(
-        ens_sources + norm_sources + gxd_sources + tm_sources + tumor_sources
+        ens_sources + norm_sources + imm_sources + gxd_sources + tm_sources + tumor_sources
     ).drop_duplicates("source_id")
     all_sources_df.to_csv(mouse_dir / "screening-sources.csv", index=False, lineterminator="\n")
     cohort_df.to_csv(mouse_dir / "tumor-cohorts.csv", index=False, lineterminator="\n")

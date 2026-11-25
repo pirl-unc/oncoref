@@ -459,6 +459,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "per-protein GTEx donor-P95 normal-reference adjustments under stoichiometric multiplex-bleed QC (#764)",
     ),
+    "tumor-gdna-background-deltas": (
+        "cta-evidence",
+        "per-protein tumor witness adjustments excluding gDNA-contaminated libraries (>2.5% ORs >= 5 TPM)",
+    ),
     "census-collection-compartments": (
         "expression-qc",
         "CELLxGENE Census adult normal collection assay-compartment annotations (nucleus vs cell, #765)",
@@ -923,6 +927,7 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "human-integrated-policy-preview",
         "normal-multiplex-bleed-tissue-summary",
         "normal-multiplex-bleed-gene-deltas",
+        "tumor-gdna-background-deltas",
         "census-collection-compartments",
         "nuclear-spillover-adjudications",
         "cleared-candidate-comparison-observations",

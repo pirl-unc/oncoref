@@ -9,35 +9,35 @@
     "Hair-follicle normal-protein replay (#687)"
   ],
   "summary": {
-    "policy_id": "oncoref.target-selection.2026-11-23.1",
+    "policy_id": "oncoref.target-selection.2026-11-25.1",
     "proteins": 19893,
     "categories": {
       "Unsafe": 18249,
-      "Other": 1062,
-      "CTA": 332,
-      "Reproductive Antigen only": 133,
-      "Cancer Antigen only": 117
+      "Other": 1082,
+      "CTA": 323,
+      "Reproductive Antigen only": 142,
+      "Cancer Antigen only": 97
     },
     "classifications": {
       "Unsafe": 18249,
       "Other:Review": 731,
-      "CTA": 332,
-      "Other:Expression": 255,
-      "Reproductive Antigen only": 133,
-      "Cancer Antigen only": 117,
+      "CTA": 323,
+      "Other:Expression": 286,
+      "Reproductive Antigen only": 142,
+      "Cancer Antigen only": 97,
       "Other:Sequence": 48,
-      "Other:Unscreened tissue": 28
+      "Other:Unscreened tissue": 17
     },
     "memberships": {
-      "is_cancer_antigen": 449,
+      "is_cancer_antigen": 420,
       "is_reproductive_antigen": 465,
-      "is_cta": 332,
-      "is_target_candidate": 582
+      "is_cta": 323,
+      "is_target_candidate": 562
     },
     "cta_tiers": {
-      "core": 279,
-      "core_with_extended_exposure": 29,
-      "extended_only": 24
+      "core": 268,
+      "core_with_extended_exposure": 32,
+      "extended_only": 23
     },
     "changes": [
       {
@@ -189,10 +189,10 @@
     },
     "published_nomination_by_category": {
       "Unsafe": 1758,
-      "CTA": 254,
-      "Other": 103,
-      "Reproductive Antigen only": 84,
-      "Cancer Antigen only": 34
+      "CTA": 246,
+      "Other": 107,
+      "Reproductive Antigen only": 92,
+      "Cancer Antigen only": 30
     }
   },
   "comparison": {
@@ -947,8 +947,8 @@
     ],
     "tumor_matrix_cache_sha256": "8f0bb3074e1b3c3ccfe53a3037242f9cffc28dfb07828c562d28393e8b7eec4b"
   },
-  "data_sha256": "b3a66047b9660e895843807eb3e40c0077d291d4541e3ac04bcd3dcfcc5d35c0",
+  "data_sha256": "2a778334a46b906975e20994ff0d0138952781896b9143c83a9171d7ec43782a",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
-  "policy_id": "oncoref.target-selection.2026-11-23.1",
-  "data_bytes": 3718698
+  "policy_id": "oncoref.target-selection.2026-11-25.1",
+  "data_bytes": 3679560
 }

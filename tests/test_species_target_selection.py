@@ -157,7 +157,7 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "RNASE12",
         "DKKL1",
         "SYCP1",
-        "CAPZA3",
+        "KRTAP20-4",
         "GAGE2A",
         "PAGE1",
     ):
@@ -169,6 +169,7 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "ACCSL",
         "CIROP",
         "CXorf49/B",
+        "IZUMO1R",
         "BTN1A1",
         "ERVV-1",
         "ERVV-2",
@@ -179,7 +180,7 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         assert by_lbl.loc[cta_f_lbl, "sex_restriction_code"] == "CTA-F"
     assert by_lbl.loc["PSG7", "sex_restriction_code"] == "RA-E-only"
     assert by_lbl.loc["PABPN1L", "sex_restriction_code"] == "RA-F-only"
-    for mra_only_lbl in ("PRM2", "CCDC70", "PGK2"):
+    for mra_only_lbl in ("PRM2", "CCDC70", "PGK2", "TSSK2", "CAPZA3"):
         assert by_lbl.loc[mra_only_lbl, "sex_restriction_code"] == "RA-M-only"
     assert by_lbl.loc["NLRP13", "sex_restriction_code"] == "RA-MF-only"
     for shared_cta_mf in ("PRAME", "SCGB1D4", "CTAG2", "ACTL8", "OOSP2"):
@@ -827,7 +828,7 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
     assert mouse_rows.iloc[0].classification in {"Other:Review", "Unsafe"}
     assert not mouse_rows.iloc[0].is_cta
     assert not mouse.target_selection(category="CTA").empty
-    for mouse_cta_f in ("Csf3", "Cxcl2", "Gzmf"):
+    for mouse_cta_f in ("Gzmg", "Gzmd", "Gzmf"):
         assert mouse.target_selection(mouse_cta_f).iloc[0].sex_restriction_code == "CTA-F"
         assert (
             mouse.sex_restricted_antigens()
@@ -835,8 +836,13 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
             .loc[mouse_cta_f, "sex_restriction_code"]
             == "CTA-F"
         )
-    assert mouse.target_selection("Peg12").iloc[0].sex_restriction_code == "CTA-E"
-    assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 5
+    for mouse_cta_m in ("Pbsn", "Sbp", "Tex19.1", "Plac1"):
+        assert mouse.target_selection(mouse_cta_m).iloc[0].sex_restriction_code == "CTA-M"
+    for mouse_cta_e in ("Serpinb9e", "Pramel13"):
+        assert mouse.target_selection(mouse_cta_e).iloc[0].sex_restriction_code == "CTA-E"
+    for mouse_imm_unsafe in ("Csf3", "Cxcl2", "Peg12"):
+        assert mouse.target_selection(mouse_imm_unsafe).iloc[0].classification == "Unsafe"
+    assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 3
 
     assert cli.main(["antigens", "funnel", "--species", "dog", "--format", "json"]) == 0
     funnel_rows = json.loads(capsys.readouterr().out)

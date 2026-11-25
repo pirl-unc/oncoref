@@ -8,7 +8,7 @@ home-tissue panels, and #737 linear-TPM tumor cohorts (THYMCA, BCC, cSCC) direct
 
 Default packaged catalog calls (``target_selection.results()``, ``human.target_selection()``)
 and default ``evaluate_human_catalog()`` calls both evaluate the promoted integrated policy
-``oncoref.target-selection.2026-11-23.1``, while explicit ``include_*=False`` flags reproduce
+``oncoref.target-selection.2026-11-25.1``, while explicit ``include_*=False`` flags reproduce
 the frozen ``oncoref.target-selection.2026-11-20.2`` baseline and single-rule ablations.
 """
 
@@ -25,6 +25,7 @@ import pandas as pd
 from . import (
     assay_boundary_adjudications,
     clinical_organ_clearance,
+    library_qc,
     normal_adjudications,
     normal_library_qc,
     rare_cell_compartment_qc,
@@ -46,8 +47,8 @@ from .species_target_selection import (
 )
 
 HUMAN_BASELINE_COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
-HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-23.1"
-HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-23.1"
+HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-25.1"
+HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-25.1"
 
 REQUIRED_PERIPHERAL_CONTEXT = "peripheral_normal_reference"
 
@@ -66,6 +67,7 @@ def human_screening_spec(
     include_clinical_clearances: bool = True,
     include_repeat_family_equivalence: bool = True,
     include_assay_boundary_fixes: bool = True,
+    include_tumor_gdna_qc: bool | None = None,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -75,16 +77,7 @@ def human_screening_spec(
         if meta is not None
         else pol.primary_reference
     )
-    all_layers = (
-        include_home_panels
-        and include_737_cohorts
-        and include_multiplex_bleed_qc
-        and include_nuclear_spillover_qc
-        and include_clinical_clearances
-        and include_repeat_family_equivalence
-        and include_assay_boundary_fixes
-    )
-    any_layer = (
+    base_any = (
         include_home_panels
         or include_737_cohorts
         or include_multiplex_bleed_qc
@@ -93,6 +86,18 @@ def human_screening_spec(
         or include_repeat_family_equivalence
         or include_assay_boundary_fixes
     )
+    eff_gdna = base_any if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
+    all_layers = (
+        include_home_panels
+        and include_737_cohorts
+        and include_multiplex_bleed_qc
+        and include_nuclear_spillover_qc
+        and include_clinical_clearances
+        and include_repeat_family_equivalence
+        and include_assay_boundary_fixes
+        and eff_gdna
+    )
+    any_layer = base_any or eff_gdna
     if policy_id is not None:
         effective_policy = policy_id
     elif all_layers:
@@ -100,7 +105,7 @@ def human_screening_spec(
     elif not any_layer:
         effective_policy = target_selection.BASELINE_2026_11_20_POLICY_ID
     else:
-        effective_policy = "oncoref.human-integrated-ablation.2026-11-23.1"
+        effective_policy = "oncoref.human-integrated-ablation.2026-11-25.1"
     comp_id = HUMAN_INTEGRATED_COMPARISON_ID if any_layer else HUMAN_BASELINE_COMPARISON_ID
     notes = [
         "Evaluated through species_target_selection.evaluate_species_catalog (#755).",
@@ -131,6 +136,8 @@ def human_screening_spec(
         notes.append(
             "Includes #768 TGCT admixture witness, RNA-zero HPA IHC, adult cornea multi-UMI, and germline TF rules."
         )
+    if eff_gdna:
+        notes.append("Includes tightened tumor gDNA library QC (olfactory_share_ge5 <= 2.5%).")
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
         reference=ref,
@@ -173,10 +180,22 @@ def build_human_screening_inputs(
     include_clinical_clearances: bool = True,
     include_repeat_family_equivalence: bool = True,
     include_assay_boundary_fixes: bool = True,
+    include_tumor_gdna_qc: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
     """Materialize human screening inputs in ``evaluate_species_catalog`` format."""
+    base_any = (
+        include_home_panels
+        or include_737_cohorts
+        or include_multiplex_bleed_qc
+        or include_nuclear_spillover_qc
+        or include_clinical_clearances
+        or include_repeat_family_equivalence
+        or include_assay_boundary_fixes
+        or extra_tumor_observations is not None
+    )
+    eff_gdna = base_any if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
     spec = human_screening_spec(
         policy_id=policy_id,
         include_home_panels=include_home_panels,
@@ -186,6 +205,7 @@ def build_human_screening_inputs(
         include_clinical_clearances=include_clinical_clearances,
         include_repeat_family_equivalence=include_repeat_family_equivalence,
         include_assay_boundary_fixes=include_assay_boundary_fixes,
+        include_tumor_gdna_qc=eff_gdna,
     )
     ts = target_selection._baseline_2026_11_20_frame()
     exposures = (
@@ -442,6 +462,12 @@ def build_human_screening_inputs(
         for br in bleed_df.to_dict("records"):
             bleed_clean_by_eid[str(br["entity_id"])] = br
 
+    gdna_clean_by_eid: dict[str, dict] = {}
+    if eff_gdna:
+        gdna_df = library_qc.tumor_gdna_background_deltas(only_applied=True)
+        for gr in gdna_df.to_dict("records"):
+            gdna_clean_by_eid[str(gr["entity_id"])] = gr
+
     comp_id = spec.comparison_id
     unit = spec.comparison_unit
     normal_rows: list[dict] = []
@@ -484,21 +510,45 @@ def build_human_screening_inputs(
                         "identity_resolved": True,
                     }
                 )
-            for tobs in cpayload.get("top_tumor_observations", []):
-                tumor_rows.append(
-                    {
-                        "entity_id": eid,
-                        "source_id": str(tobs["source_id"]),
-                        "sample_id": str(tobs["sample_id"]),
-                        "participant_id": str(tobs.get("participant_id") or ""),
-                        "cancer_code": str(tobs.get("cancer_code") or ""),
-                        "value": float(tobs["value"]),
-                        "comparison_id": comp_id,
-                        "unit": unit,
-                        "qc_pass": True,
-                        "identity_resolved": True,
-                    }
-                )
+            if eid in gdna_clean_by_eid:
+                grec = gdna_clean_by_eid[eid]
+                c_tmax = float(grec["clean_tumor_max_tpm"])
+                if c_tmax > 0.0 and str(grec.get("clean_tumor_top_sample") or "").strip():
+                    c_tsmp = str(grec["clean_tumor_top_sample"]).strip()
+                    tumor_rows.append(
+                        {
+                            "entity_id": eid,
+                            "source_id": "oncoref_tumor_gdna_qc_20261125",
+                            "sample_id": c_tsmp,
+                            "participant_id": (
+                                f"clean:{c_tsmp}"
+                                if int(grec.get("clean_independent_patients_at_tenfold") or 0) > 0
+                                else ""
+                            ),
+                            "cancer_code": str(grec.get("clean_tumor_top_cancer_code") or ""),
+                            "value": c_tmax,
+                            "comparison_id": comp_id,
+                            "unit": unit,
+                            "qc_pass": True,
+                            "identity_resolved": True,
+                        }
+                    )
+            else:
+                for tobs in cpayload.get("top_tumor_observations", []):
+                    tumor_rows.append(
+                        {
+                            "entity_id": eid,
+                            "source_id": str(tobs["source_id"]),
+                            "sample_id": str(tobs["sample_id"]),
+                            "participant_id": str(tobs.get("participant_id") or ""),
+                            "cancer_code": str(tobs.get("cancer_code") or ""),
+                            "value": float(tobs["value"]),
+                            "comparison_id": comp_id,
+                            "unit": unit,
+                            "qc_pass": True,
+                            "identity_resolved": True,
+                        }
+                    )
             supp_val = cpayload.get("reproductive_supported_tpm")
             he_eid = exposures.get(eid, {})
             for citem in cpayload.get("reproductive_compartments", []):
@@ -633,7 +683,54 @@ def build_human_screening_inputs(
                 }
             )
 
-        if eid in admixture_non_tgct_map:
+        if eid in gdna_clean_by_eid and eid in admixture_non_tgct_map:
+            grec = gdna_clean_by_eid[eid]
+            c_tmax = float(grec["clean_non_tgct_max_tpm"])
+            c_tsmp = str(grec.get("clean_non_tgct_top_sample") or "").strip()
+            if c_tmax > 0.0 and c_tsmp:
+                tumor_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "oncoref_non_admixed_tumor_witness_768",
+                        "sample_id": c_tsmp,
+                        "participant_id": (
+                            f"somatic:{c_tsmp}"
+                            if int(grec.get("clean_non_tgct_independent_patients_at_tenfold") or 0)
+                            > 0
+                            else ""
+                        ),
+                        "cancer_code": str(grec.get("clean_non_tgct_top_cancer_code") or ""),
+                        "value": c_tmax,
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+        elif eid in gdna_clean_by_eid:
+            grec = gdna_clean_by_eid[eid]
+            c_tmax = float(grec["clean_tumor_max_tpm"])
+            c_tsmp = str(grec.get("clean_tumor_top_sample") or "").strip()
+            if c_tmax > 0.0 and c_tsmp:
+                tumor_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "oncoref_tumor_gdna_qc_20261125",
+                        "sample_id": c_tsmp,
+                        "participant_id": (
+                            f"clean:{c_tsmp}"
+                            if int(grec.get("clean_independent_patients_at_tenfold") or 0) > 0
+                            else ""
+                        ),
+                        "cancer_code": str(grec.get("clean_tumor_top_cancer_code") or ""),
+                        "value": c_tmax,
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+        elif eid in admixture_non_tgct_map:
             nt_val, nt_sample, nt_code = admixture_non_tgct_map[eid]
             if nt_val > 0 and nt_sample:
                 tumor_rows.append(
@@ -682,6 +779,7 @@ def build_human_screening_inputs(
             )
         if (
             bleed_rec is not None
+            and eid not in gdna_clean_by_eid
             and eid not in admixture_non_tgct_map
             and pd.notna(bleed_rec.get("max_non_tgct_tumor_tpm"))
             and float(bleed_rec["max_non_tgct_tumor_tpm"]) > 0
@@ -911,6 +1009,7 @@ def evaluate_human_catalog(
     include_clinical_clearances: bool = True,
     include_repeat_family_equivalence: bool = True,
     include_assay_boundary_fixes: bool = True,
+    include_tumor_gdna_qc: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -924,13 +1023,14 @@ def evaluate_human_catalog(
         include_clinical_clearances=include_clinical_clearances,
         include_repeat_family_equivalence=include_repeat_family_equivalence,
         include_assay_boundary_fixes=include_assay_boundary_fixes,
+        include_tumor_gdna_qc=include_tumor_gdna_qc,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
     spec = inputs.pop("spec")
     result = evaluate_species_catalog(spec, **inputs)
 
-    is_integrated = (
+    base_any_eval = (
         include_home_panels
         or include_737_cohorts
         or include_multiplex_bleed_qc
@@ -940,6 +1040,8 @@ def evaluate_human_catalog(
         or include_assay_boundary_fixes
         or extra_tumor_observations is not None
     )
+    eff_gdna_eval = base_any_eval if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
+    is_integrated = base_any_eval or eff_gdna_eval
     # Attach #711, #712, #735, #764-#769 adjudication & near-self provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)
@@ -1195,6 +1297,11 @@ def compute_next_policy_transitions(
             lambda df: df["attribution_status"].eq("confounder_rejected"), "entity_id"
         ]
     )
+    gdna_lost = set(
+        library_qc.tumor_gdna_background_deltas(only_applied=True).loc[
+            lambda df: ~df["qualifies_tenfold_clean"].astype(bool), "entity_id"
+        ]
+    )
     drivers = []
     for r in changed.itertuples(index=False):
         reasons = []
@@ -1221,6 +1328,8 @@ def compute_next_policy_transitions(
             "sc_soup_and_cis_spillover_cleared",
         }:
             reasons.append(f"#768:{r.assay_boundary_768_disposition}")
+        if r.entity_id in gdna_lost:
+            reasons.append("library_qc:tumor_gdna_background_excluded")
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (

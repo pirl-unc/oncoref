@@ -1,0 +1,21 @@
+{
+  "schema": "oncoref.tumor-gdna-background-deltas.v1",
+  "policy_id": "oncoref.tumor-gdna-background-qc.2026-11-25.1",
+  "background_tpm": 5.0,
+  "background_min_receptors": 100,
+  "background_max_share": 0.025,
+  "failed_samples_total": 92,
+  "failed_cohorts": {
+    "BL": 8,
+    "B_ALL": 1,
+    "HL": 1,
+    "LAML": 1,
+    "MCL": 2,
+    "NEC_MERKEL": 68,
+    "SARC_PEC": 10,
+    "T_ALL": 1
+  },
+  "affected_entities": 398,
+  "lost_tenfold_entities": 41,
+  "sha256": "b2c1a743ec11914b53cf10c96138ab8d647d223788bc891a171c773327037598"
+}

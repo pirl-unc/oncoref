@@ -174,7 +174,7 @@ def test_cached_bundle_bridges_antigen_sets_and_peptide_index_without_pyensembl(
     assert unsafe_bg.attrs["omitted_categories"] == ["Other"]
     assert both_bg.attrs["omitted_categories"] == []
     assert both_bg.attrs["cta_exemption_applied"] is False
-    assert len(both_bg.attrs["unmeasured_home_entity_ids"]) == 28
+    assert len(both_bg.attrs["unmeasured_home_entity_ids"]) == 17
     assert len(both_bg.attrs["review_hold_entity_ids"]) > 700
 
     # Protecting testis moves testis-expressed CTAs (e.g. MAGEA4 / CTAG1B) into the background!

@@ -10,7 +10,7 @@ MAGEA9/B,CTA,0.6655158,0.2,321.0,4,,✓,✓
 MAGEB1,CTA,0.4940771999999997,0.0,93.0,6,yes,✓,✓
 MAGEB16,CTA,0.042381,0.0,90.0,4,,✓,✓
 MAGEB17,Cancer Antigen only,7.7683849999999985,2.8,19.0,0,,off_target,off_target
-MAGEB18,CTA,0.0264,0.0,11.0,2,,✓,papers
+MAGEB18,Reproductive Antigen only,0.0264,0.0,6.0,2,,✓,sets
 MAGEB3,Reproductive Antigen only,0.2,0.3,8.0,3,,✓,sets
 MAGEB4,CTA,0.05782799999999999,0.0,29.0,1,,papers,papers
 MAGEB5,Reproductive Antigen only,0.209324,0.0,2.0,0,,papers,sets
