@@ -35,8 +35,8 @@
       "is_target_candidate": 582
     },
     "cta_tiers": {
-      "core": 278,
-      "core_with_extended_exposure": 30,
+      "core": 279,
+      "core_with_extended_exposure": 29,
       "extended_only": 24
     },
     "changes": [
@@ -947,8 +947,8 @@
     ],
     "tumor_matrix_cache_sha256": "8f0bb3074e1b3c3ccfe53a3037242f9cffc28dfb07828c562d28393e8b7eec4b"
   },
-  "data_sha256": "fa52f5682be2c79e4332fdf567a489f2d0680baf5b88073d2ae440999a007fe8",
+  "data_sha256": "7a1483fb3b6f9122e2e32bfdd7d1eafe1546c71de14d9e78aea6bdf88a4f13aa",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
   "policy_id": "oncoref.target-selection.2026-11-23.1",
-  "data_bytes": 3718888
+  "data_bytes": 3718647
 }

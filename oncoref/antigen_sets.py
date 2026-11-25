@@ -24,7 +24,20 @@ SETS = {
     "Other": None,
     "Unsafe|Other": None,
 }
-SEX_SETS = ("MRA", "FRA", "ERA", "SRA", "CTA-M", "CTA-F", "CTA-E", "CTA-MF")
+SEX_SETS = (
+    "RA-M",
+    "RA-F",
+    "RA-E",
+    "RA-MF",
+    "CTA-M",
+    "CTA-F",
+    "CTA-E",
+    "CTA-MF",
+    "MRA",
+    "FRA",
+    "ERA",
+    "SRA",
+)
 CANDIDATE_SETS = ("CTA", "CA", "RA", "CA|RA", *SEX_SETS)
 ALL_SETS = (*SETS, *SEX_SETS)
 EXCLUSION_CATEGORIES = {

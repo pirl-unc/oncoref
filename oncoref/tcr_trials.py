@@ -15,6 +15,7 @@ from importlib.resources import files
 import pandas as pd
 
 EVIDENCE_FILE = "tcr-trial-evidence.json"
+GOLD_STANDARD_FILE = "tcr-clinical-gold-standard.csv"
 SPECIFICITY_FINDINGS = {"none_identified", "suspected_or_confirmed", "unassessed"}
 SPECIFICITY_ATTRIBUTIONS = {
     "suspected",
@@ -23,6 +24,19 @@ SPECIFICITY_ATTRIBUTIONS = {
     "not_established",
     "unresolved",
     "unassessed",
+}
+CLINICAL_STRATA = {
+    "safe_cta_potency_proven",
+    "toxic_on_target",
+    "toxic_cross_reactivity",
+    "conservative_gene_level_unsafe",
+    "excluded_not_potency_proven",
+}
+TOXICITY_MECHANISMS = {
+    "none_attributed",
+    "on_target_off_tumor",
+    "paralog_or_off_target_cross_reactivity",
+    "unproven_potency",
 }
 
 
@@ -99,7 +113,9 @@ def _specificity_block(event: dict) -> bool:
 
 def evidence() -> dict:
     """Return a validated, detached snapshot with linked primary sources, offline."""
-    record = json.loads(files("oncoref").joinpath("data", EVIDENCE_FILE).read_text())
+    record = json.loads(
+        files("oncoref").joinpath("data", EVIDENCE_FILE).read_text(encoding="utf-8")
+    )
     validate(record)
     return record
 
@@ -225,3 +241,234 @@ def annotate_proteins(facts: pd.DataFrame) -> pd.DataFrame:
     d["clinical_cohort_ids"] = [";".join(c["cohort_ids"]) for c in credits]
     d["clinical_credit_scope"] = [c["scope"] for c in credits]
     return d
+
+
+def _parse_strict_bool_series(series: pd.Series, col_name: str) -> pd.Series:
+    parsed = []
+    for val in series.tolist():
+        if isinstance(val, bool) or type(val).__name__ == "bool_":
+            parsed.append(bool(val))
+        elif isinstance(val, str) and val.strip() in {"True", "False"}:
+            parsed.append(val.strip() == "True")
+        else:
+            raise ValueError(f"Column {col_name!r} requires strict booleans, got {val!r}")
+    return pd.Series(parsed, index=series.index, dtype=bool)
+
+
+def validate_gold_standard(df: pd.DataFrame) -> None:
+    """Validate the potency-proven clinical TCR-T / ImmTAC gold-standard benchmark."""
+    required = {
+        "benchmark_id",
+        "target_symbol",
+        "entity_id",
+        "ensembl_gene_ids",
+        "cross_recognized_gene_ids",
+        "product_name",
+        "linked_product_id",
+        "modality",
+        "hla_restriction",
+        "peptide",
+        "patients_treated",
+        "orr_pct",
+        "potency_proven",
+        "clinical_stratum",
+        "toxicity_mechanism",
+        "severe_specificity_toxicity",
+        "observed_clinical_toxicities",
+        "strongest_proxy_assay",
+        "strongest_proxy_ratio",
+        "citation",
+        "source_url",
+    }
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Gold-standard table missing required columns: {sorted(missing)}")
+    if not df["benchmark_id"].is_unique or df["benchmark_id"].isna().any():
+        raise ValueError("Duplicate or missing benchmark_id in clinical gold standard")
+    if not set(df["clinical_stratum"]) <= CLINICAL_STRATA:
+        raise ValueError("Unknown clinical_stratum in clinical gold standard")
+    if not set(df["toxicity_mechanism"]) <= TOXICITY_MECHANISMS:
+        raise ValueError("Unknown toxicity_mechanism in clinical gold standard")
+    for bcol in ("potency_proven", "severe_specificity_toxicity"):
+        for val in df[bcol].tolist():
+            if not (isinstance(val, bool) or type(val).__name__ == "bool_"):
+                raise ValueError(f"Column {bcol!r} must contain boolean values, got {val!r}")
+
+    toxic_strata = {"toxic_on_target", "toxic_cross_reactivity"}
+    known_products = {p["product_id"] for p in evidence()["products"]}
+    for r in df.itertuples(index=False):
+        if (
+            pd.notna(r.linked_product_id)
+            and str(r.linked_product_id).strip()
+            and str(r.linked_product_id) not in known_products
+        ):
+            raise ValueError(f"Unknown linked_product_id {r.linked_product_id!r}")
+        if bool(r.severe_specificity_toxicity) != (r.clinical_stratum in toxic_strata):
+            raise ValueError(
+                f"Row {r.benchmark_id!r} has inconsistent clinical_stratum={r.clinical_stratum!r} "
+                f"and severe_specificity_toxicity={r.severe_specificity_toxicity!r}"
+            )
+        if bool(r.potency_proven):
+            if r.clinical_stratum == "excluded_not_potency_proven":
+                raise ValueError(f"Potency-proven row {r.benchmark_id!r} cannot be excluded")
+            if pd.isna(r.patients_treated) or int(r.patients_treated) <= 0:
+                raise ValueError(
+                    f"Potency-proven row {r.benchmark_id!r} needs patients_treated > 0"
+                )
+            # Potency requires either objective clinical tumor responses (ORR > 0) or
+            # rapid lethal in vivo cytolysis that precluded radiologic staging (magea3_a3a).
+            has_orr = pd.notna(r.orr_pct) and float(r.orr_pct) > 0.0
+            if not has_orr and not bool(r.severe_specificity_toxicity):
+                raise ValueError(
+                    f"Row {r.benchmark_id!r} marked potency_proven without ORR > 0 or lethal in vivo lysis"
+                )
+        else:
+            if r.clinical_stratum != "excluded_not_potency_proven":
+                raise ValueError(
+                    f"Non-potency-proven row {r.benchmark_id!r} must use excluded_not_potency_proven"
+                )
+
+
+def gold_standard(*, potency_proven_only: bool = False) -> pd.DataFrame:
+    """Return curated endogenous-protein TCR-T / ImmTAC trials with response & toxicity outcomes.
+
+    Human clinical TCR trials with confirmed anti-tumor cytolytic potency (``ORR > 0%``
+    or rapid *in vivo* target-cell lysis) serve as the empirical toxicity gold standard
+    against which OncoRef's healthy-tissue RNA, single-cell, IHC, rare-cell UMI, and
+    1-mismatch sequence screens act as proxies. Trials with ``0% ORR`` (e.g. ``IMA202``)
+    or pending clinical readouts (e.g. ``CT83``) remain visible with
+    ``potency_proven == False`` and are excluded when ``potency_proven_only=True``.
+    """
+    from io import StringIO
+
+    raw = files("oncoref").joinpath("data", GOLD_STANDARD_FILE).read_text(encoding="utf-8")
+    df = pd.read_csv(
+        StringIO(raw), dtype={"potency_proven": object, "severe_specificity_toxicity": object}
+    )
+    df["potency_proven"] = _parse_strict_bool_series(df["potency_proven"], "potency_proven")
+    df["severe_specificity_toxicity"] = _parse_strict_bool_series(
+        df["severe_specificity_toxicity"], "severe_specificity_toxicity"
+    )
+    validate_gold_standard(df)
+    if potency_proven_only:
+        df = df[df["potency_proven"]].reset_index(drop=True)
+    return df
+
+
+def evaluate_against_gold_standard(
+    catalog_df: pd.DataFrame | None = None, *, potency_proven_only: bool = False
+) -> pd.DataFrame:
+    """Evaluate OncoRef's protein-level safety proxies against the clinical TCR gold standard."""
+    from . import target_selection
+
+    cat = target_selection.results() if catalog_df is None else catalog_df
+    by_eid = cat.set_index("entity_id", drop=False)
+    by_gid: dict[str, pd.Series] = {}
+    for row in cat.itertuples(index=False):
+        s = pd.Series(row._asdict())
+        for gid in json.loads(row.member_gene_ids):
+            by_gid[gid] = s
+
+    gs = gold_standard(potency_proven_only=potency_proven_only).copy()
+    cats, classes, normal_tpms, unsafe_reasons = [], [], [], []
+    primary_unsafe_col, cross_cats, cross_unsafe_col, any_unsafe, alignments = [], [], [], [], []
+
+    for r in gs.itertuples(index=False):
+        if r.entity_id not in by_eid.index:
+            raise ValueError(f"Benchmark entity_id {r.entity_id!r} missing from catalog")
+        prow = by_eid.loc[r.entity_id]
+        member_gids = set(json.loads(str(prow["member_gene_ids"])))
+        declared_gids = {g.strip() for g in str(r.ensembl_gene_ids).split(";") if g.strip()}
+        if not declared_gids or not (declared_gids <= member_gids):
+            raise ValueError(
+                f"Benchmark {r.benchmark_id!r} ensembl_gene_ids {declared_gids} mismatch {member_gids}"
+            )
+        cats.append(str(prow["category"]))
+        classes.append(str(prow["classification"]))
+        normal_tpms.append(
+            float(prow["normal_reference_tpm"])
+            if pd.notna(prow["normal_reference_tpm"])
+            else float("nan")
+        )
+        unsafe_reasons.append(
+            str(prow["Unsafe_reasons"]) if pd.notna(prow["Unsafe_reasons"]) else ""
+        )
+
+        x_gids = [
+            g.strip()
+            for g in (
+                str(r.cross_recognized_gene_ids) if pd.notna(r.cross_recognized_gene_ids) else ""
+            ).split(";")
+            if g.strip()
+        ]
+        unknown_xgids = [g for g in x_gids if g not in by_gid]
+        if unknown_xgids:
+            raise ValueError(
+                f"Benchmark {r.benchmark_id!r} unknown cross_recognized_gene_ids: {unknown_xgids}"
+            )
+        x_cat_list = [str(by_gid[g]["category"]) for g in x_gids]
+        cross_cats.append(";".join(x_cat_list))
+
+        prim_unsafe = str(prow["category"]) == "Unsafe"
+        x_unsafe = "Unsafe" in x_cat_list
+        flagged_unsafe = prim_unsafe or x_unsafe
+        primary_unsafe_col.append(prim_unsafe)
+        cross_unsafe_col.append(x_unsafe)
+        any_unsafe.append(flagged_unsafe)
+
+        if not bool(r.potency_proven):
+            alignments.append("excluded_potency_unproven")
+        elif bool(r.severe_specificity_toxicity):
+            alignments.append("true_unsafe_toxic" if flagged_unsafe else "false_safe_miss")
+        elif str(prow["category"]) == "CTA":
+            alignments.append("true_safe_cta")
+        elif flagged_unsafe:
+            alignments.append("conservative_unsafe_epitope_tolerated")
+        else:
+            alignments.append("other_held")
+
+    gs["oncoref_category"] = cats
+    gs["oncoref_classification"] = classes
+    gs["oncoref_normal_reference_tpm"] = normal_tpms
+    gs["oncoref_unsafe_reasons"] = unsafe_reasons
+    gs["primary_target_unsafe"] = primary_unsafe_col
+    gs["cross_recognized_categories"] = cross_cats
+    gs["cross_recognized_unsafe"] = cross_unsafe_col
+    gs["effective_oncoref_unsafe"] = any_unsafe
+    gs["benchmark_alignment"] = alignments
+    return gs
+
+
+def gold_standard_summary(catalog_df: pd.DataFrame | None = None) -> dict:
+    """Return quantitative proxy-calibration metrics against potency-proven human TCR trials."""
+    ev = evaluate_against_gold_standard(catalog_df=catalog_df, potency_proven_only=False)
+    potent = ev[ev["potency_proven"]]
+    toxic = potent[potent["severe_specificity_toxicity"]]
+    safe_cta = potent[potent["clinical_stratum"].eq("safe_cta_potency_proven")]
+    conservative = potent[potent["benchmark_alignment"].eq("conservative_unsafe_epitope_tolerated")]
+    excluded = ev[~ev["potency_proven"]]
+
+    n_toxic = len(toxic)
+    n_toxic_primary = int(toxic["primary_target_unsafe"].sum())
+    n_toxic_caught = int(toxic["effective_oncoref_unsafe"].sum())
+    n_safe_cta = len(safe_cta)
+    n_safe_cta_kept = int(safe_cta["oncoref_category"].eq("CTA").sum())
+
+    return {
+        "total_entries": len(ev),
+        "potency_proven_entries": len(potent),
+        "excluded_non_potent_or_pending_entries": len(excluded),
+        "severe_specificity_toxic_entries": n_toxic,
+        "severe_specificity_toxic_primary_unsafe": n_toxic_primary,
+        "severe_specificity_toxic_flagged_unsafe": n_toxic_caught,
+        "false_safe_misses": int((toxic["benchmark_alignment"] == "false_safe_miss").sum()),
+        "primary_target_sensitivity_to_toxicity": (n_toxic_primary / n_toxic) if n_toxic else 0.0,
+        "sensitivity_to_clinical_toxicity": (n_toxic_caught / n_toxic) if n_toxic else 0.0,
+        "potency_proven_safe_cta_entries": n_safe_cta,
+        "potency_proven_safe_cta_retained": n_safe_cta_kept,
+        "recall_on_safe_ctas": (n_safe_cta_kept / n_safe_cta) if n_safe_cta else 0.0,
+        "conservative_non_cta_unsafe_entries": len(conservative),
+        "conservative_non_cta_targets": sorted(set(conservative["target_symbol"].astype(str))),
+        "safe_cta_targets": sorted(set(safe_cta["target_symbol"].astype(str))),
+        "toxic_targets": sorted(set(toxic["target_symbol"].astype(str))),
+    }

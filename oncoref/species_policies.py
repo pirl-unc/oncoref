@@ -171,15 +171,15 @@ class SpeciesPolicy:
         a = self.anatomy
         dev = tuple(c for c in ("embryo", "placenta") if c in a.core_reproductive_compartments)
         return {
-            "MRA / CTA-M": {
+            "RA-M / CTA-M": {
                 "expressed_in": a.male_sex_compartments,
                 "must_clear_protected": a.female_adult_protected_compartments,
             },
-            "FRA / CTA-F": {
+            "RA-F / CTA-F": {
                 "expressed_in": (*a.female_sex_compartments, *dev),
                 "must_clear_protected": a.male_adult_protected_compartments,
             },
-            "ERA / CTA-E": {
+            "RA-E / CTA-E": {
                 "expressed_in": dev,
                 "must_clear_protected": tuple(
                     dict.fromkeys(
@@ -190,7 +190,7 @@ class SpeciesPolicy:
                     )
                 ),
             },
-            "SRA / CTA-MF": {
+            "RA-MF / CTA-MF": {
                 "expressed_in": a.reproductive_compartments,
                 "must_clear_protected": (),
             },

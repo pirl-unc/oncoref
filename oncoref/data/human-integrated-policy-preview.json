@@ -39,13 +39,13 @@
   },
   "integrated_sex_restriction_codes": {
     "CTA-M": 232,
-    "MRA-only": 108,
-    "CTA-MF": 51,
+    "RA-M-only": 108,
+    "CTA-MF": 50,
     "CTA-E": 44,
-    "SRA-only": 12,
-    "ERA-only": 8,
-    "CTA-F": 5,
-    "FRA-only": 5
+    "RA-MF-only": 12,
+    "RA-E-only": 8,
+    "CTA-F": 6,
+    "RA-F-only": 5
   },
   "changed_proteins": 94,
   "transition_counts": {
@@ -63,5 +63,5 @@
     "Reproductive Antigen only -> Other:Expression": 1,
     "Unsafe -> Other:Review": 1
   },
-  "sha256": "ec1dcfbdebbf79f8be661c5b58c244f0ae7cf30f836c60c05b65c4c013c63344"
+  "sha256": "11053d1c0c8375467876edc99d7e844e8b6db29343187fa534745594faa00bb6"
 }

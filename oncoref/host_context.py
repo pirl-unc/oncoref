@@ -134,7 +134,13 @@ def from_legacy(
     absent, accepted, protected, notes = set(), set(), set(protect), []
     if profile in {"male-patient", "female-patient"}:
         opposite = (
-            (*female_tract, "ovary") if profile == "male-patient" else (*male_accessory, "testis")
+            (
+                *female_tract,
+                "ovary",
+                *((anat.resting_mammary_compartment,) if anat.taxon_id == 10090 else ()),
+            )
+            if profile == "male-patient"
+            else (*male_accessory, "testis")
         )
         absent.update(opposite)
         notes.append(
@@ -212,19 +218,29 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
             for c in ("prostate", "epididymis", "seminal vesicle", "coagulating_gland")
             if c in species_comps
         )
-        all_male_absent = bool(male_tract) and all(c in host.absent for c in male_tract)
-        all_fem_absent = bool(fem_tract) and all(c in host.absent for c in fem_tract)
-        is_female_host = ("testis" in host.absent and "ovary" not in host.absent) or (
-            "testis" in host.absent
-            and all_male_absent
-            and any(c not in host.absent for c in fem_tract)
+        male_all_comps = tuple(c for c in ("testis", *male_tract) if c in species_comps)
+        fem_all_comps = tuple(c for c in ("ovary", *fem_tract) if c in species_comps)
+        lact_comps = tuple(
+            c for c in ("lactating_breast", "lactating_mammary") if c in species_comps
         )
-        is_male_host = not is_female_host and (
-            ("ovary" in host.absent and "testis" not in host.absent)
-            or (
-                "ovary" in host.absent
-                and all_fem_absent
-                and any(c not in host.absent for c in male_tract)
+        active_host_comps = set(host.protect) | set(host.accept_loss)
+        is_female_host = (
+            bool(male_all_comps)
+            and all(c in host.absent for c in male_all_comps)
+            and not any(c in active_host_comps for c in male_all_comps)
+            and (
+                any(c in active_host_comps for c in (*fem_all_comps, *lact_comps))
+                or any(c not in host.absent for c in fem_all_comps)
+            )
+        )
+        is_male_host = (
+            not is_female_host
+            and bool(fem_all_comps)
+            and all(c in host.absent for c in (*fem_all_comps, *lact_comps))
+            and not any(c in active_host_comps for c in (*fem_all_comps, *lact_comps))
+            and (
+                any(c in active_host_comps for c in male_all_comps)
+                or any(c not in host.absent for c in male_all_comps)
             )
         )
     rows = []
@@ -269,7 +285,15 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 elif ntpm >= host.max_ntpm:
                     rejected.append(f"{tissue}: RNA {ntpm:g} nTPM >= {host.max_ntpm:g}")
             if item.get("protein_status") in {"positive", "unresolved"}:
-                unknown.append(tissue + ": protein finding requires host-specific review")
+                female_only_mammary_ihc = (
+                    tissue in {"resting_breast", "resting_mammary"}
+                    and is_male_host
+                    and item.get("protein_status") == "unresolved"
+                    and value < host.max_tpm
+                    and (ntpm is None or ntpm < host.max_ntpm)
+                )
+                if not female_only_mammary_ihc:
+                    unknown.append(tissue + ": protein finding requires host-specific review")
             if item.get("scope_complete") is not True:
                 unknown.append(tissue + ": sampled scope incomplete")
         maximum, limiting = max(observed, default=(0.0, ""))

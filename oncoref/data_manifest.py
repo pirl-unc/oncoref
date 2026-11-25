@@ -475,6 +475,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "epitope-, HLA-, and Ensembl-115-isoform-scoped human TCR-T organ-safety clearances and Xq28 CTAG2 attribution (#766)",
     ),
+    "tcr-clinical-gold-standard": (
+        "cta-evidence",
+        "potency-proven human clinical TCR-T and ImmTAC target, response, and toxicity gold-standard curation for normal-tissue proxy calibration",
+    ),
     "repeat-family-adjudications": (
         "cta-evidence",
         "Ensembl 115 closed repeat-family vs external paralog partitioning and symmetric multimapper adjudications (#767)",

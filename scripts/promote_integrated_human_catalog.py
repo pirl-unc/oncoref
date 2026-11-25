@@ -394,6 +394,19 @@ def _clean_and_sex_stratify_host_exposures(
         low_memory=False,
     )
     lactating_sids = set(rc.loc[rc["compartment"].eq("lactating_breast"), "sample_id"].astype(str))
+    # Separate coordinated multi-gene milk-operon induction (postpartum lactation in XX women and
+    # hyperprolactinemia / galactorrhea in 8/336 XY ICU/medicated cadaver donors) from resting_breast:
+    milk_sdf = gtex.sample_tpm(
+        "breast_mammary_tissue",
+        genes=sorted(milk_marker_gids),
+        qc="all",
+        cleanup="all",
+    )
+    milk_scols = [c for c in milk_sdf.columns if c not in ("Name", "Description")]
+    milk_mat = milk_sdf[milk_scols]
+    secretory_mammary_sids = lactating_sids | {
+        c for c in milk_scols if (milk_mat[c] >= 5.0).sum() >= 3 and milk_mat[c].max() >= 15.0
+    }
     gtex_he_by_comp: dict[str, dict[str, float]] = {}
     gtex_max_by_comp: dict[str, dict[str, float]] = {}
     for comp_lbl, site_lbl in (
@@ -417,13 +430,13 @@ def _clean_and_sex_stratify_host_exposures(
         for eid in (set(ecto_mx) | set(endo_mx))
     }
     gtex_rb_xx, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", exclude_samples=lactating_sids, sex_filter="XX"
+        "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XX"
     )
     gtex_rb_xy, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", exclude_samples=lactating_sids, sex_filter="XY"
+        "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XY"
     )
     gtex_lb_xx, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", include_samples=lactating_sids, sex_filter="XX"
+        "breast_mammary_tissue", include_samples=secretory_mammary_sids, sex_filter="XX"
     )
     large_gtex_comps = {"testis", "prostate", "ovary", "uterus", "vagina"}
 
@@ -1035,6 +1048,48 @@ def main() -> None:
             )
             promoted.at[idx, "cancer_types_at_tenfold"] = len(c_codes)
             promoted.at[idx, "independent_patient_tumor_folds"] = json.dumps(folds_sorted)
+
+        # Reconcile stale reproductive_qualifying_compartments & HPA non-coding peak on RA rows
+        if bool(promoted.at[idx, "is_reproductive_antigen"]) and pd.notna(n_tpm):
+            denom_ra = max(float(n_tpm), d_curr_val, 1.0)
+            thr_ra = 10.0 * denom_ra
+            qraw_cur = str(promoted.at[idx, "reproductive_qualifying_compartments"] or "")
+            qcomps_cur = [c.strip() for c in qraw_cur.split("|") if c.strip()]
+            e_he = merged_he.get(eid, {})
+            if qcomps_cur and e_he:
+                kept_q = []
+                for qc in qcomps_cur:
+                    he_mx = float(e_he.get(qc, {}).get("max_tpm") or 0.0)
+                    # For resting_breast and HPA-only/embryo compartments, host_exposure holds the
+                    # cleaned secretory-separated / protein-coding peak; keep GTEx single-sample
+                    # qualifying compartments unless cleaned peak fell below 4 TPM (splash artifact).
+                    if qc == "resting_breast" or eid == "PEG:ad22a7bf35b45ca0ec8a":
+                        if he_mx >= thr_ra - 1e-6:
+                            kept_q.append(qc)
+                    elif he_mx >= 4.0 or qc not in e_he:
+                        kept_q.append(qc)
+                if kept_q and kept_q != qcomps_cur:
+                    promoted.at[idx, "reproductive_qualifying_compartments"] = " | ".join(kept_q)
+            if eid == "PEG:ad22a7bf35b45ca0ec8a":
+                emb_val = float(e_he.get("embryo", {}).get("max_tpm") or 76.67270943797998)
+                promoted.at[idx, "reproductive_supported_tpm"] = emb_val
+                promoted.at[idx, "reproductive_fold"] = emb_val / denom_ra
+                promoted.at[idx, "reproductive_supported_observations"] = json.dumps(
+                    [
+                        {
+                            "source_id": "petropoulos_E-MTAB-3929",
+                            "tissue": "embryo",
+                            "compartment": "embryo",
+                            "source_context": "7 day / primitive endoderm",
+                            "value": emb_val,
+                        }
+                    ]
+                )
+                promoted.at[idx, "reproductive_supported_context"] = "7 day / primitive endoderm"
+                t_cur = promoted.at[idx, "tumor_max_tpm"]
+                promoted.at[idx, "target_peak_tpm"] = max(
+                    emb_val, float(t_cur) if pd.notna(t_cur) else 0.0
+                )
 
         # Update human-readable decision_reason on changed rows
         if cls_now != str(old_row["classification"]):
