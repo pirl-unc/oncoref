@@ -851,9 +851,10 @@ def draw_clinical_tcr_gold_standard() -> Path:
     ax_a.axhline(3.5, color="#64748b", linestyle=":", linewidth=1.05, zorder=2)
 
     # Show how matched negative IHC moves PRAME from 3.0x (naive RNA) into <1.0x CTA territory
+    prame_y = float(ev.loc["prame_ima203", "orr_pct"])
     ax_a.scatter(
         [3.0],
-        [50.0],
+        [prame_y],
         s=58,
         facecolors="none",
         edgecolors="#2f855a",
@@ -863,14 +864,14 @@ def draw_clinical_tcr_gold_standard() -> Path:
     )
     ax_a.annotate(
         "",
-        xy=(0.82, 50.0),
-        xytext=(2.82, 50.0),
+        xy=(0.82, prame_y),
+        xytext=(2.82, prame_y),
         arrowprops={"arrowstyle": "->", "color": "#2f855a", "lw": 1.1, "ls": ":"},
         zorder=4,
     )
     ax_a.text(
-        2.10,
-        47.6,
+        2.55,
+        prame_y - 2.6,
         "IHC− credit\n(3.0×→0.75×)",
         fontsize=6.8,
         color="#276749",
@@ -878,119 +879,68 @@ def draw_clinical_tcr_gold_standard() -> Path:
         va="top",
     )
 
-    # Custom plotting coordinates & label offsets for zero overlap
-    # Note: magea3_a1_titin had fulminant lethal myocardial lysis on days 4-5 before scan (plotted at y=74 with *)
-    plot_specs = [
-        # (benchmark_id, x, y, color, marker, size, label, dx, dy)
-        ("magea4_afami_cel", 0.013, 36.5, C_CTAE, "o", 68, "MAGEA4 (afami-cel, 37%)", 7, -11),
-        ("ny_eso_1_1g4_c259", 0.062, 52.6, C_CTAE, "o", 72, "NY-ESO-1 (1G4/c259, 53%)", -38, 11),
-        ("magea10_adp_a2m10", 0.300, 9.1, C_CTAE, "o", 62, "MAGEA10 (ADP-A2M10, 9.1%)", -82, 9),
-        ("prame_ima203", 0.750, 50.0, C_CTAE, "o", 72, "PRAME (IMA203, 50%)", -102, -3),
-        (
-            "ctag2_lete_cel_c259",
-            0.778,
-            40.0,
-            C_CTAE,
-            "o",
-            68,
-            "CTAG2 LAGE-1a (c259, 40%)",
-            -120,
-            3,
-        ),
-        (
-            "ceacam5_nci_tcr",
-            562.9,
-            33.3,
-            C_UNSAFE,
-            "o",
-            70,
-            "CEACAM5 (33%; 3/3 colitis)",
-            7,
-            10,
-        ),
-        (
-            "mlana_dmf5_tcr",
-            451.3,
-            30.0,
-            C_UNSAFE,
-            "o",
-            70,
-            "MLANA (30%; uveitis/ear)",
-            8,
-            -4,
-        ),
-        (
-            "pmel_gp100_tcr_imm",
-            889.1,
-            18.8,
-            C_UNSAFE,
-            "o",
-            70,
-            "PMEL (19% TCR / 9% ImmTAC)",
-            7,
-            -3,
-        ),
-        ("tyr_til1383i_tcr", 75.25, 33.3, C_UNSAFE, "o", 64, "TYR (33%; vitiligo)", -62, 10),
+    # Bind coordinates directly to live tcr_trials.evaluate_against_gold_standard()
+    # (values <0.01x clipped to 0.01x floor; magea3_a1_titin d4-5 fulminant lysis plotted at y=74 with *)
+    label_specs = [
+        # (benchmark_id, color, marker, size, label, dx, dy, y_override)
+        ("magea4_afami_cel", C_CTAE, "o", 68, "MAGEA4 (afami-cel, 37%)", 7, 7, None),
+        ("ny_eso_1_1g4_c259", C_CTAE, "o", 72, "NY-ESO-1 (1G4/c259, 58%)", -38, 10, None),
+        ("magea10_adp_a2m10", C_CTAE, "o", 62, "MAGEA10 (ADP-A2M10, 9.1%)", -82, 9, None),
+        ("prame_ima203", C_CTAE, "o", 72, "PRAME (IMA203, 52.5%)", -98, -3, None),
+        ("ctag2_lete_cel_c259", C_CTAE, "o", 68, "CTAG2 LAGE-1a (c259, 30%)", -118, -4, None),
+        ("ceacam5_nci_tcr", C_UNSAFE, "o", 70, "CEACAM5 (33%; 3/3 colitis)", 7, 10, None),
+        ("mlana_dmf5_tcr", C_UNSAFE, "o", 70, "MLANA (30%; uveitis/ear)", 8, -4, None),
+        ("pmel_gp100_tcr_imm", C_UNSAFE, "o", 70, "PMEL (19% TCR / 9% ImmTAC)", 7, -3, None),
+        ("tyr_til1383i_tcr", C_UNSAFE, "o", 64, "TYR (33%; vitiligo)", -62, 10, None),
         (
             "magea3_a2_neuro",
-            13.28,
-            55.6,
             "#8b1e3f",
             "^",
             82,
             "MAGEA3→A12/EPS8L2 (56%; 2/9 fatal CNS)",
             8,
             4,
+            None,
         ),
         (
             "magea3_a1_titin",
-            13473.4,
-            74.0,
             "#8b1e3f",
             "^",
             86,
             "MAGEA3→TTN (a3a; 2/2 fatal heart*)",
             -156,
             5,
+            74.0,
         ),
         (
             "wt1_ttcr_c4",
-            9.91,
-            92.0,
             "#d69e2e",
             "D",
             64,
             "WT1 (TTCR-C4, 100% RFS; podocyte escape)",
             8,
-            -4,
+            -15,
+            None,
         ),
         (
             "magea3_dp4_6f9",
-            13.28,
-            23.5,
             "#d69e2e",
             "D",
             64,
             "MAGEA3 (DP4 6F9, 24% safe CD4)",
             -14,
             -15,
+            None,
         ),
-        ("afp_adp_a2afp", 98.25, 9.5, "#d69e2e", "D", 64, "AFP (ADP-A2AFP, 9.5% safe)", 8, -3),
-        ("magea1_ima202", 0.013, -3.8, "#64748b", "s", 50, "MAGEA1 (IMA202, 0% ORR)", 7, -3),
-        (
-            "ct83_kklc1_phase1",
-            0.325,
-            -10.2,
-            "#64748b",
-            "s",
-            50,
-            "CT83 (KK-LC-1 Ph1, pending)",
-            7,
-            -3,
-        ),
+        ("afp_adp_a2afp", "#d69e2e", "D", 64, "AFP (ADP-A2AFP, 9.5% safe)", 8, -3, None),
+        ("magea1_ima202", "#64748b", "s", 50, "MAGEA1 (IMA202, 0% ORR)", 7, -3, -3.8),
+        ("ct83_kklc1_phase1", "#64748b", "s", 50, "CT83 (KK-LC-1 Ph1, pending)", 7, -3, -10.2),
     ]
 
-    for _bid, xv, yv, col, mk, sz, lbl, dx, dy in plot_specs:
+    for bid, col, mk, sz, lbl, dx, dy, y_over in label_specs:
+        erow = ev.loc[bid]
+        xv = float(np.clip(float(erow["strongest_proxy_ratio"]), 0.01, 200000.0))
+        yv = float(y_over) if y_over is not None else float(erow["orr_pct"])
         ax_a.scatter(
             [xv],
             [yv],
@@ -1015,7 +965,7 @@ def draw_clinical_tcr_gold_standard() -> Path:
 
     ax_a.text(
         0.0055,
-        104.5,
+        110.0,
         "OncoRef Safe (<1×)\n5/5 potent CTAs kept\n0 toxic misses",
         fontsize=7.8,
         fontweight="bold",
@@ -1024,7 +974,7 @@ def draw_clinical_tcr_gold_standard() -> Path:
     )
     ax_a.text(
         180000.0,
-        104.5,
+        110.0,
         "OncoRef Unsafe (≥1× ceiling)\n6/6 human specificity toxicities flagged",
         fontsize=7.8,
         fontweight="bold",
@@ -1045,9 +995,9 @@ def draw_clinical_tcr_gold_standard() -> Path:
 
     ax_a.set_xscale("log")
     ax_a.set_xlim(0.0042, 240000.0)
-    ax_a.set_ylim(-14.5, 108.5)
+    ax_a.set_ylim(-14.5, 114.0)
     ax_a.set_xticks([0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0])
-    ax_a.set_xticklabels(["0.01×", "0.1×", "1× gate", "10×", "100×", "1,000×", "10,000×"])
+    ax_a.set_xticklabels(["≤0.01×", "0.1×", "1× gate", "10×", "100×", "1,000×", "10,000×"])
     ax_a.xaxis.set_minor_locator(matplotlib.ticker.NullLocator())
     ax_a.set_yticks([0, 20, 40, 60, 80, 100])
     ax_a.set_yticklabels(["0%", "20%", "40%", "60%", "80%", "100%"])

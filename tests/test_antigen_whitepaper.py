@@ -71,8 +71,6 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
         "summary/reproductive-enrichment.png",
         "summary/host-profiles-matrix.png",
         "summary/host-profiles-outcomes.png",
-        "summary/sex-restricted-ra-cta.png",
-        "summary/sex-restricted-landscape.png",
         "summary/venn.png",
         "summary/literature-sources-retention.png",
         "normal-rna/tpm-coverage-somatic.png",
@@ -80,6 +78,15 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
     ]:
         path = f"audits/target-selection-20261110/rebuild/{figure}"
         assert f"]({path})" in paper and (DOCS / path).is_file()
+    for wp_asset in [
+        "antigen-whitepaper/clinical-tcr-gold-standard.png",
+        "antigen-whitepaper/clinical-tcr-gold-standard.csv",
+        "antigen-whitepaper/sex-restriction-funnel-and-landscape.png",
+        "antigen-whitepaper/lalba-csn2-mammary-testis-interrogation.png",
+        "antigen-whitepaper/female-lineage-audit.csv",
+        "antigen-whitepaper/sex-restricted-antigens.csv",
+    ]:
+        assert f"]({wp_asset})" in paper and (DOCS / wp_asset).is_file()
     lit_csv = DOCS / "audits/target-selection-20261110/rebuild/summary/literature-sources.csv"
     assert lit_csv.is_file()
     lit = pd.read_csv(lit_csv)

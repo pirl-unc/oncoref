@@ -243,6 +243,18 @@ def annotate_proteins(facts: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
+def _parse_strict_bool_series(series: pd.Series, col_name: str) -> pd.Series:
+    parsed = []
+    for val in series.tolist():
+        if isinstance(val, bool) or type(val).__name__ == "bool_":
+            parsed.append(bool(val))
+        elif isinstance(val, str) and val.strip() in {"True", "False"}:
+            parsed.append(val.strip() == "True")
+        else:
+            raise ValueError(f"Column {col_name!r} requires strict booleans, got {val!r}")
+    return pd.Series(parsed, index=series.index, dtype=bool)
+
+
 def validate_gold_standard(df: pd.DataFrame) -> None:
     """Validate the potency-proven clinical TCR-T / ImmTAC gold-standard benchmark."""
     required = {
@@ -250,7 +262,9 @@ def validate_gold_standard(df: pd.DataFrame) -> None:
         "target_symbol",
         "entity_id",
         "ensembl_gene_ids",
+        "cross_recognized_gene_ids",
         "product_name",
+        "linked_product_id",
         "modality",
         "hla_restriction",
         "peptide",
@@ -275,7 +289,12 @@ def validate_gold_standard(df: pd.DataFrame) -> None:
         raise ValueError("Unknown clinical_stratum in clinical gold standard")
     if not set(df["toxicity_mechanism"]) <= TOXICITY_MECHANISMS:
         raise ValueError("Unknown toxicity_mechanism in clinical gold standard")
+    for bcol in ("potency_proven", "severe_specificity_toxicity"):
+        for val in df[bcol].tolist():
+            if not (isinstance(val, bool) or type(val).__name__ == "bool_"):
+                raise ValueError(f"Column {bcol!r} must contain boolean values, got {val!r}")
 
+    toxic_strata = {"toxic_on_target", "toxic_cross_reactivity"}
     known_products = {p["product_id"] for p in evidence()["products"]}
     for r in df.itertuples(index=False):
         if (
@@ -284,6 +303,11 @@ def validate_gold_standard(df: pd.DataFrame) -> None:
             and str(r.linked_product_id) not in known_products
         ):
             raise ValueError(f"Unknown linked_product_id {r.linked_product_id!r}")
+        if bool(r.severe_specificity_toxicity) != (r.clinical_stratum in toxic_strata):
+            raise ValueError(
+                f"Row {r.benchmark_id!r} has inconsistent clinical_stratum={r.clinical_stratum!r} "
+                f"and severe_specificity_toxicity={r.severe_specificity_toxicity!r}"
+            )
         if bool(r.potency_proven):
             if r.clinical_stratum == "excluded_not_potency_proven":
                 raise ValueError(f"Potency-proven row {r.benchmark_id!r} cannot be excluded")
@@ -303,10 +327,6 @@ def validate_gold_standard(df: pd.DataFrame) -> None:
                 raise ValueError(
                     f"Non-potency-proven row {r.benchmark_id!r} must use excluded_not_potency_proven"
                 )
-            if bool(r.severe_specificity_toxicity):
-                raise ValueError(
-                    f"Row {r.benchmark_id!r} has severe_specificity_toxicity but potency_proven=False"
-                )
 
 
 def gold_standard(*, potency_proven_only: bool = False) -> pd.DataFrame:
@@ -322,9 +342,13 @@ def gold_standard(*, potency_proven_only: bool = False) -> pd.DataFrame:
     from io import StringIO
 
     raw = files("oncoref").joinpath("data", GOLD_STANDARD_FILE).read_text(encoding="utf-8")
-    df = pd.read_csv(StringIO(raw))
-    df["potency_proven"] = df["potency_proven"].astype(bool)
-    df["severe_specificity_toxicity"] = df["severe_specificity_toxicity"].astype(bool)
+    df = pd.read_csv(
+        StringIO(raw), dtype={"potency_proven": object, "severe_specificity_toxicity": object}
+    )
+    df["potency_proven"] = _parse_strict_bool_series(df["potency_proven"], "potency_proven")
+    df["severe_specificity_toxicity"] = _parse_strict_bool_series(
+        df["severe_specificity_toxicity"], "severe_specificity_toxicity"
+    )
     validate_gold_standard(df)
     if potency_proven_only:
         df = df[df["potency_proven"]].reset_index(drop=True)
@@ -347,12 +371,18 @@ def evaluate_against_gold_standard(
 
     gs = gold_standard(potency_proven_only=potency_proven_only).copy()
     cats, classes, normal_tpms, unsafe_reasons = [], [], [], []
-    cross_cats, any_unsafe, alignments = [], [], []
+    primary_unsafe_col, cross_cats, cross_unsafe_col, any_unsafe, alignments = [], [], [], [], []
 
     for r in gs.itertuples(index=False):
         if r.entity_id not in by_eid.index:
             raise ValueError(f"Benchmark entity_id {r.entity_id!r} missing from catalog")
         prow = by_eid.loc[r.entity_id]
+        member_gids = set(json.loads(str(prow["member_gene_ids"])))
+        declared_gids = {g.strip() for g in str(r.ensembl_gene_ids).split(";") if g.strip()}
+        if not declared_gids or not (declared_gids <= member_gids):
+            raise ValueError(
+                f"Benchmark {r.benchmark_id!r} ensembl_gene_ids {declared_gids} mismatch {member_gids}"
+            )
         cats.append(str(prow["category"]))
         classes.append(str(prow["classification"]))
         normal_tpms.append(
@@ -371,10 +401,19 @@ def evaluate_against_gold_standard(
             ).split(";")
             if g.strip()
         ]
-        x_cat_list = [str(by_gid[g]["category"]) for g in x_gids if g in by_gid]
+        unknown_xgids = [g for g in x_gids if g not in by_gid]
+        if unknown_xgids:
+            raise ValueError(
+                f"Benchmark {r.benchmark_id!r} unknown cross_recognized_gene_ids: {unknown_xgids}"
+            )
+        x_cat_list = [str(by_gid[g]["category"]) for g in x_gids]
         cross_cats.append(";".join(x_cat_list))
 
-        flagged_unsafe = str(prow["category"]) == "Unsafe" or ("Unsafe" in x_cat_list)
+        prim_unsafe = str(prow["category"]) == "Unsafe"
+        x_unsafe = "Unsafe" in x_cat_list
+        flagged_unsafe = prim_unsafe or x_unsafe
+        primary_unsafe_col.append(prim_unsafe)
+        cross_unsafe_col.append(x_unsafe)
         any_unsafe.append(flagged_unsafe)
 
         if not bool(r.potency_proven):
@@ -392,7 +431,9 @@ def evaluate_against_gold_standard(
     gs["oncoref_classification"] = classes
     gs["oncoref_normal_reference_tpm"] = normal_tpms
     gs["oncoref_unsafe_reasons"] = unsafe_reasons
+    gs["primary_target_unsafe"] = primary_unsafe_col
     gs["cross_recognized_categories"] = cross_cats
+    gs["cross_recognized_unsafe"] = cross_unsafe_col
     gs["effective_oncoref_unsafe"] = any_unsafe
     gs["benchmark_alignment"] = alignments
     return gs
@@ -408,6 +449,7 @@ def gold_standard_summary(catalog_df: pd.DataFrame | None = None) -> dict:
     excluded = ev[~ev["potency_proven"]]
 
     n_toxic = len(toxic)
+    n_toxic_primary = int(toxic["primary_target_unsafe"].sum())
     n_toxic_caught = int(toxic["effective_oncoref_unsafe"].sum())
     n_safe_cta = len(safe_cta)
     n_safe_cta_kept = int(safe_cta["oncoref_category"].eq("CTA").sum())
@@ -417,8 +459,10 @@ def gold_standard_summary(catalog_df: pd.DataFrame | None = None) -> dict:
         "potency_proven_entries": len(potent),
         "excluded_non_potent_or_pending_entries": len(excluded),
         "severe_specificity_toxic_entries": n_toxic,
+        "severe_specificity_toxic_primary_unsafe": n_toxic_primary,
         "severe_specificity_toxic_flagged_unsafe": n_toxic_caught,
         "false_safe_misses": int((toxic["benchmark_alignment"] == "false_safe_miss").sum()),
+        "primary_target_sensitivity_to_toxicity": (n_toxic_primary / n_toxic) if n_toxic else 0.0,
         "sensitivity_to_clinical_toxicity": (n_toxic_caught / n_toxic) if n_toxic else 0.0,
         "potency_proven_safe_cta_entries": n_safe_cta,
         "potency_proven_safe_cta_retained": n_safe_cta_kept,

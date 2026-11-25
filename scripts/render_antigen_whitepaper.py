@@ -1534,6 +1534,26 @@ def build():
     outputs[f"{ASSETS}/female-lineage-audit.csv"] = female_audit_df.to_csv(
         index=False, lineterminator="\n"
     )
+    ra_all_rows = data[data.is_reproductive_antigen.astype(bool)].copy()
+    ra_all_rows["has_ep"] = (
+        ra_all_rows["reproductive_qualifying_compartments"]
+        .fillna("")
+        .map(lambda s: bool({"embryo", "placenta"} & {c.strip() for c in str(s).split("|")}))
+    )
+    ep_rows = ra_all_rows[ra_all_rows["has_ep"]]
+    ep_cta_mask = ep_rows["is_cancer_antigen"].astype(bool)
+    values.update(
+        {
+            "ep_ra_n": f"{len(ep_rows):,}",
+            "ep_cta_n": f"{int(ep_cta_mask.sum()):,}",
+            "ep_m_ra_n": f"{int(ep_rows['sex_restriction_class'].eq('Male-restricted').sum()):,}",
+            "ep_m_cta_n": f"{int((ep_rows['sex_restriction_class'].eq('Male-restricted') & ep_cta_mask).sum()):,}",
+            "ep_mf_ra_n": f"{int(ep_rows['sex_restriction_class'].eq('Shared male & female').sum()):,}",
+            "ep_mf_cta_n": f"{int((ep_rows['sex_restriction_class'].eq('Shared male & female') & ep_cta_mask).sum()):,}",
+            "ep_f_ra_n": f"{int(ep_rows['sex_restriction_class'].eq('Female-restricted').sum()):,}",
+            "ep_f_cta_n": f"{int((ep_rows['sex_restriction_class'].eq('Female-restricted') & ep_cta_mask).sum()):,}",
+        }
+    )
     tcr_eval_df = tcr_trials.evaluate_against_gold_standard()
     tcr_summary = tcr_trials.gold_standard_summary(data)
     stratum_labels = {
@@ -1557,7 +1577,7 @@ def build():
                 [
                     "Target (cross-hit)",
                     "Product · HLA · peptide",
-                    "Potency (n, ORR)",
+                    "Potency (n, response)",
                     "Observed human clinical toxicity",
                     "OncoRef call & strongest proxy signal",
                     "Stratum",
@@ -1573,17 +1593,21 @@ def build():
                         f"{r.product_name} · `{r.hla_restriction}` · `{r.peptide}` "
                         f"([{r.citation.split(';')[0]}]({r.source_url}))",
                         (
-                            f"n={int(r.patients_treated)}, **{r.orr_pct:g}%** ORR"
-                            if pd.notna(r.patients_treated)
-                            and pd.notna(r.orr_pct)
-                            and r.orr_pct > 0
+                            f"n={int(r.patients_treated)}, **100%** RFS (44 mo)"
+                            if r.benchmark_id == "wt1_ttcr_c4"
                             else (
-                                f"n={int(r.patients_treated)}, lethal d4–5 lysis"
-                                if r.benchmark_id == "magea3_a1_titin"
+                                f"n={int(r.patients_treated)}, **{r.orr_pct:g}%** ORR"
+                                if pd.notna(r.patients_treated)
+                                and pd.notna(r.orr_pct)
+                                and r.orr_pct > 0
                                 else (
-                                    f"n={int(r.patients_treated)}, **0%** ORR"
-                                    if pd.notna(r.patients_treated)
-                                    else "Phase 1 pending"
+                                    f"n={int(r.patients_treated)}, lethal d4–5 lysis"
+                                    if r.benchmark_id == "magea3_a1_titin"
+                                    else (
+                                        f"n={int(r.patients_treated)}, **0%** ORR"
+                                        if pd.notna(r.patients_treated)
+                                        else "Phase 1 pending"
+                                    )
                                 )
                             )
                         ),

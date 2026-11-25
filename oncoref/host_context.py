@@ -218,19 +218,29 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
             for c in ("prostate", "epididymis", "seminal vesicle", "coagulating_gland")
             if c in species_comps
         )
-        all_male_absent = bool(male_tract) and all(c in host.absent for c in male_tract)
-        all_fem_absent = bool(fem_tract) and all(c in host.absent for c in fem_tract)
-        is_female_host = ("testis" in host.absent and "ovary" not in host.absent) or (
-            "testis" in host.absent
-            and all_male_absent
-            and any(c not in host.absent for c in fem_tract)
+        male_all_comps = tuple(c for c in ("testis", *male_tract) if c in species_comps)
+        fem_all_comps = tuple(c for c in ("ovary", *fem_tract) if c in species_comps)
+        lact_comps = tuple(
+            c for c in ("lactating_breast", "lactating_mammary") if c in species_comps
         )
-        is_male_host = not is_female_host and (
-            ("ovary" in host.absent and "testis" not in host.absent)
-            or (
-                "ovary" in host.absent
-                and all_fem_absent
-                and any(c not in host.absent for c in male_tract)
+        active_host_comps = set(host.protect) | set(host.accept_loss)
+        is_female_host = (
+            bool(male_all_comps)
+            and all(c in host.absent for c in male_all_comps)
+            and not any(c in active_host_comps for c in male_all_comps)
+            and (
+                any(c in active_host_comps for c in (*fem_all_comps, *lact_comps))
+                or any(c not in host.absent for c in fem_all_comps)
+            )
+        )
+        is_male_host = (
+            not is_female_host
+            and bool(fem_all_comps)
+            and all(c in host.absent for c in (*fem_all_comps, *lact_comps))
+            and not any(c in active_host_comps for c in (*fem_all_comps, *lact_comps))
+            and (
+                any(c in active_host_comps for c in male_all_comps)
+                or any(c not in host.absent for c in male_all_comps)
             )
         )
     rows = []

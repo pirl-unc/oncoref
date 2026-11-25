@@ -173,13 +173,26 @@ def test_potency_proven_gold_standard_calibration_and_cli(capsys):
     summary = tcr_trials.gold_standard_summary()
     assert summary["potency_proven_entries"] == 14
     assert summary["severe_specificity_toxic_entries"] == 6
+    assert summary["severe_specificity_toxic_primary_unsafe"] == 6
     assert summary["severe_specificity_toxic_flagged_unsafe"] == 6
     assert summary["false_safe_misses"] == 0
+    assert summary["primary_target_sensitivity_to_toxicity"] == 1.0
     assert summary["sensitivity_to_clinical_toxicity"] == 1.0
     assert summary["potency_proven_safe_cta_entries"] == 5
     assert summary["potency_proven_safe_cta_retained"] == 5
     assert summary["recall_on_safe_ctas"] == 1.0
     assert set(summary["conservative_non_cta_targets"]) == {"AFP", "MAGEA3", "WT1"}
+
+    # Guard against string-bool coercion or contradicting stratum/toxicity flags
+    bad_bool = gs_all.copy()
+    bad_bool["potency_proven"] = bad_bool["potency_proven"].astype(str)
+    with pytest.raises(ValueError, match="boolean"):
+        tcr_trials.validate_gold_standard(bad_bool)
+
+    bad_stratum = gs_all.copy()
+    bad_stratum.loc[0, "severe_specificity_toxicity"] = True
+    with pytest.raises(ValueError, match="inconsistent"):
+        tcr_trials.validate_gold_standard(bad_stratum)
 
     assert cli_main(["tcr-trials", "--table", "benchmark_summary"]) == 0
     cli_payload = json.loads(capsys.readouterr().out)

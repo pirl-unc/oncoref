@@ -202,6 +202,21 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
     cli_ids = {r["gene_id"] for r in json.loads(capsys.readouterr().out)}
     assert cli_ids == antigen_sets.gene_ids("CTA-E")
 
+    # Regression guard: oophorectomized female or orchiectomized male HostContext
+    # without full opposite-sex absent tuple must never flip resting_breast sex inference.
+    from oncoref import host_context
+
+    cat_sub = target_selection.results().set_index("protein_group_label", drop=False)
+    cat_sub = cat_sub.loc[["CSN2", "LALBA", "TGM4"]]
+    ooph_female = host_context.HostContext(absent=("ovary",), protect=("uterus", "resting_breast"))
+    res_ooph = host_context.assess(cat_sub, ooph_female)
+    assert not bool(res_ooph.loc["CSN2", "pass_host"])
+    assert not bool(res_ooph.loc["LALBA", "pass_host"])
+
+    orch_male = host_context.HostContext(absent=("testis",), protect=("prostate", "resting_breast"))
+    res_orch = host_context.assess(cat_sub, orch_male)
+    assert not bool(res_orch.loc["TGM4", "pass_host"])
+
 
 def test_end_to_end_canine_pipeline_gates_sex_subsets_and_peptide_subtraction():
     dog_pol = canine.screening_policy()
