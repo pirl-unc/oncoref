@@ -57,7 +57,7 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     assert (~unsafe.cancer_antigen_candidate).all()
 
     ctas = dispositions[dispositions.category.eq("CTA")]
-    assert len(ctas) == 331
+    assert len(ctas) == 332
     assert (ctas.shared_sequence == "allow").all()
     assert ctas.direct_target_candidate.all()
     assert ctas.cancer_antigen_candidate.all()
@@ -83,7 +83,17 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
         assert (sub.shared_sequence == "review").all()
 
     by_label = dispositions.set_index("protein_group_label")
-    for rescued in ("MAGEC2", "CSAG1", "PLAC1", "DKKL1", "CTAG2", "DUX4", "MAGEB6", "FOXR2"):
+    for rescued in (
+        "MAGEC2",
+        "CSAG1",
+        "PLAC1",
+        "DKKL1",
+        "CTAG2",
+        "DUX4",
+        "MAGEB6",
+        "FOXR2",
+        "CSN2",
+    ):
         assert by_label.loc[rescued, "shared_sequence"] == "allow"
         assert bool(by_label.loc[rescued, "direct_target_candidate"])
     for newly_unsafe in ("OBP2A", "SLCO6A1", "SPATA45", "COX7B2", "SP7", "GFY", "DAZL"):

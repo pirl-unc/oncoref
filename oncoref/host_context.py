@@ -253,6 +253,11 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
             if value >= host.max_tpm:
                 rejected.append(f"{tissue}: RNA {value:g} TPM >= {host.max_tpm:g}")
             ntpm = item.get("max_ntpm")
+            if tissue in {"resting_breast", "resting_mammary"} and host is not None:
+                if is_female_host and item.get("female_max_ntpm") is not None:
+                    ntpm = item.get("female_max_ntpm")
+                elif is_male_host and item.get("male_max_ntpm") is not None:
+                    ntpm = item.get("male_max_ntpm")
             if ntpm is not None:
                 if (
                     isinstance(ntpm, bool)

@@ -76,6 +76,10 @@ GERMLINE_TF_MIN_BULK_TPM = 5.0
 GERMLINE_TF_MIN_FOLD = 50.0
 GERMLINE_TF_MIN_DONORS_GE3 = 2
 GERMLINE_TF_MIN_SC_NTPM = 1.0
+SC_CIS_SPILLOVER_MAX_DIST_BP = 100_000
+SC_CIS_SPILLOVER_MIN_NEIGHBOR_NTPM = 100_000.0
+SC_CIS_SPILLOVER_MAX_RATIO = 1e-4
+SC_CIS_SPILLOVER_MAX_SOMATIC_BULK_TPM = 1.0
 
 NEAR_SELF_1MM_COLUMNS: tuple[str, ...] = (
     "exact_unique_9mers",
@@ -93,6 +97,8 @@ ASSAY_BOUNDARY_DISPOSITIONS_768: tuple[str, ...] = (
     "retained_unsafe_adult_cornea_multi_umi",
     "germline_tf_protamine_diluted_qualified",
     "retained_ca_only_germline_guard_failed",
+    "sc_soup_and_cis_spillover_cleared",
+    "retained_unsafe_sc_cluster",
 )
 
 
@@ -243,6 +249,38 @@ def evaluate_germline_tf_qualification(
     }
 
 
+def evaluate_sc_cluster_soup_and_spillover(
+    *,
+    sole_sc_cluster_unsafe_gate: bool,
+    rare_cell_established: bool,
+    unexplained_somatic_clusters_above_ceiling: int,
+    max_cis_spillover_ratio: float,
+    flagged_organ_hpa_bulk_tpm: float,
+    flagged_organ_ihc_positive: bool,
+    raw_somatic_clusters_above_ceiling: int = 1,
+    soup_cleared_clusters: int = 0,
+) -> dict:
+    """Evaluate droplet ambient-soup & <=100 kb cis-chromatin spillover reconciliation (#779)."""
+    if (
+        bool(sole_sc_cluster_unsafe_gate)
+        and not bool(rare_cell_established)
+        and int(raw_somatic_clusters_above_ceiling) >= 1
+        and int(unexplained_somatic_clusters_above_ceiling) == 0
+        and (int(soup_cleared_clusters) >= 1 or float(max_cis_spillover_ratio) > 0.0)
+        and float(max_cis_spillover_ratio) <= SC_CIS_SPILLOVER_MAX_RATIO
+        and float(flagged_organ_hpa_bulk_tpm) < SC_CIS_SPILLOVER_MAX_SOMATIC_BULK_TPM
+        and not bool(flagged_organ_ihc_positive)
+    ):
+        return {
+            "cleared": True,
+            "disposition": "sc_soup_and_cis_spillover_cleared",
+        }
+    return {
+        "cleared": False,
+        "disposition": "retained_unsafe_sc_cluster",
+    }
+
+
 def assay_boundary_adjudications() -> pd.DataFrame:
     """Return SHA-256-verified ``#768`` assay-boundary adjudications."""
     _verify_csv_receipt("assay-boundary-adjudications")
@@ -344,6 +382,10 @@ __all__ = [
     "IHC_RECONCILE_MAX_SOMATIC_NTPM",
     "IHC_RECONCILE_MAX_SOMATIC_TPM",
     "NEAR_SELF_1MM_COLUMNS",
+    "SC_CIS_SPILLOVER_MAX_DIST_BP",
+    "SC_CIS_SPILLOVER_MAX_RATIO",
+    "SC_CIS_SPILLOVER_MAX_SOMATIC_BULK_TPM",
+    "SC_CIS_SPILLOVER_MIN_NEIGHBOR_NTPM",
     "annotate_catalog",
     "assay_boundary_adjudications",
     "assay_boundary_comparison_observations",
@@ -352,6 +394,7 @@ __all__ = [
     "evaluate_germline_tf_qualification",
     "evaluate_ihc_rna_reconciliation",
     "evaluate_non_admixed_tumor_witness",
+    "evaluate_sc_cluster_soup_and_spillover",
     "hamming_1mm_policy",
     "tryptic_ms_paralog_audit",
     "tryptic_peptides",

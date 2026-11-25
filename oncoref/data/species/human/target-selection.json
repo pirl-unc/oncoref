@@ -29,28 +29,28 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "7c53f8a39bc00f703633bbbac25c633f1b34ffff217ee4d33b8ed0fb1affa2b9",
-  "data_bytes": 3715324,
+  "data_sha256": "fa52f5682be2c79e4332fdf567a489f2d0680baf5b88073d2ae440999a007fe8",
+  "data_bytes": 3718888,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
-  "host_exposure_sha256": "34d476dec15dd5205fb8649412132e0370c3925f17f4421e7a558abd39fca908",
-  "host_exposure_bytes": 164442,
+  "host_exposure_sha256": "a982e4bd0c4a2931b9d45030875fbecae888bac8041ecb6cd2560477bb8facf4",
+  "host_exposure_bytes": 213898,
   "sequence_provider": "sequence_bundle",
   "symbol_index": "canonical-gene-space",
   "summary": {
     "proteins": 19893,
     "loci": 20099,
     "categories": {
-      "Unsafe": 18250,
+      "Unsafe": 18249,
       "Other": 1062,
-      "CTA": 331,
+      "CTA": 332,
       "Reproductive Antigen only": 133,
       "Cancer Antigen only": 117
     },
     "classifications": {
-      "Unsafe": 18250,
+      "Unsafe": 18249,
       "Other:Review": 731,
-      "CTA": 331,
+      "CTA": 332,
       "Other:Expression": 255,
       "Reproductive Antigen only": 133,
       "Cancer Antigen only": 117,
@@ -58,20 +58,20 @@
       "Other:Unscreened tissue": 28
     },
     "sex_restriction_codes": {
-      "CTA-E": 39,
-      "CTA-F": 3,
-      "CTA-M": 225,
-      "CTA-MF": 64,
-      "ERA-only": 7,
-      "FRA-only": 3,
-      "MRA-only": 104,
-      "SRA-only": 19
+      "CTA-E": 44,
+      "CTA-F": 5,
+      "CTA-M": 232,
+      "CTA-MF": 51,
+      "ERA-only": 8,
+      "FRA-only": 5,
+      "MRA-only": 108,
+      "SRA-only": 12
     },
     "sex_restriction_classes": {
-      "Embryo / placenta-only": 46,
-      "Female-restricted": 6,
-      "Male-restricted": 329,
-      "Shared male & female": 83
+      "Embryo / placenta-only": 52,
+      "Female-restricted": 10,
+      "Male-restricted": 340,
+      "Shared male & female": 63
     }
   }
 }

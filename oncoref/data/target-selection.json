@@ -12,16 +12,16 @@
     "policy_id": "oncoref.target-selection.2026-11-23.1",
     "proteins": 19893,
     "categories": {
-      "Unsafe": 18250,
+      "Unsafe": 18249,
       "Other": 1062,
-      "CTA": 331,
+      "CTA": 332,
       "Reproductive Antigen only": 133,
       "Cancer Antigen only": 117
     },
     "classifications": {
-      "Unsafe": 18250,
+      "Unsafe": 18249,
       "Other:Review": 731,
-      "CTA": 331,
+      "CTA": 332,
       "Other:Expression": 255,
       "Reproductive Antigen only": 133,
       "Cancer Antigen only": 117,
@@ -29,15 +29,15 @@
       "Other:Unscreened tissue": 28
     },
     "memberships": {
-      "is_cancer_antigen": 448,
-      "is_reproductive_antigen": 464,
-      "is_cta": 331,
-      "is_target_candidate": 581
+      "is_cancer_antigen": 449,
+      "is_reproductive_antigen": 465,
+      "is_cta": 332,
+      "is_target_candidate": 582
     },
     "cta_tiers": {
-      "core": 228,
-      "core_with_extended_exposure": 80,
-      "extended_only": 23
+      "core": 278,
+      "core_with_extended_exposure": 30,
+      "extended_only": 24
     },
     "changes": [
       {
@@ -111,8 +111,8 @@
         "proteins": 18170
       }
     ],
-    "shared_eligible": 845,
-    "assessed_for_cancer_evidence": 920,
+    "shared_eligible": 846,
+    "assessed_for_cancer_evidence": 921,
     "unsafe_changes": {
       "released_unsafe_now_other": 89,
       "newly_unsafe": 79
@@ -188,8 +188,8 @@
       "does_not_qualify": 395
     },
     "published_nomination_by_category": {
-      "Unsafe": 1759,
-      "CTA": 253,
+      "Unsafe": 1758,
+      "CTA": 254,
       "Other": 103,
       "Reproductive Antigen only": 84,
       "Cancer Antigen only": 34
@@ -947,8 +947,8 @@
     ],
     "tumor_matrix_cache_sha256": "8f0bb3074e1b3c3ccfe53a3037242f9cffc28dfb07828c562d28393e8b7eec4b"
   },
-  "data_sha256": "7c53f8a39bc00f703633bbbac25c633f1b34ffff217ee4d33b8ed0fb1affa2b9",
+  "data_sha256": "fa52f5682be2c79e4332fdf567a489f2d0680baf5b88073d2ae440999a007fe8",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
   "policy_id": "oncoref.target-selection.2026-11-23.1",
-  "data_bytes": 3715324
+  "data_bytes": 3718888
 }

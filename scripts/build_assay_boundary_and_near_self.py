@@ -173,8 +173,13 @@ def _developmental_samples_readonly(sub_facts: pd.DataFrame) -> pd.DataFrame:
 
 
 def main() -> None:
-    with gzip.open(DATA_DIR / "target-selection.csv.gz", "rt") as fh:
-        ts = pd.read_csv(fh, low_memory=False)
+    frozen_ts_path = (
+        ROOT / "tests/fixtures/release-1.50-inputs/oncoref/data/target-selection.csv.gz"
+    )
+    if frozen_ts_path.is_file():
+        ts = pd.read_csv(frozen_ts_path, compression="gzip", low_memory=False)
+    else:
+        ts = target_selection._baseline_2026_11_20_frame()
     ts_by_eid = ts.set_index("entity_id")
     facts = shared_facts()
     facts_by_eid = facts.set_index("entity_id")
@@ -323,9 +328,211 @@ def main() -> None:
         )
 
     # ------------------------------------------------------------------
+    # Rule E (#779): Droplet ambient milk soup & <=100 kb SCPP cis-spillover
+    # ------------------------------------------------------------------
+    from pyensembl import EnsemblRelease
+
+    from oncoref import (
+        cta_selection_policy,
+        gtex,
+        human_protein_atlas,
+        normal_tissues,
+        tissue_tiers,
+    )
+
+    ens115 = EnsemblRelease(115)
+    sc_raw_full = human_protein_atlas.single_cell_tissues(qc=None, cleanup=None)
+    sc_clean = human_protein_atlas.single_cell_tissues(qc="all", cleanup="all")
+    hpa_bulk_clean = human_protein_atlas.rna_tissue_hpa(qc="splash", cleanup="all")
+    hpa_ihc_all = human_protein_atlas.normal_tissue()
+
+    repro_sc_only = {"testis", "ovary", "placenta", "endometrium"}
+
+    def _filter_somatic_sc(df_sc: pd.DataFrame) -> pd.DataFrame:
+        return df_sc[
+            ~df_sc["Tissue"].str.lower().isin(repro_sc_only)
+            & ~(
+                df_sc["Tissue"].str.lower().eq("breast")
+                & df_sc["Cell type"].str.contains("breast", case=False, na=False)
+            )
+        ]
+
+    somatic_sc_raw = _filter_somatic_sc(sc_raw_full)
+    somatic_sc_all = _filter_somatic_sc(sc_clean)
+    dom_sc_rows = somatic_sc_all[somatic_sc_all["nTPM"] >= ab.SC_CIS_SPILLOVER_MIN_NEIGHBOR_NTPM]
+    dom_by_tc: dict[tuple[str, str], list[tuple[str, int, int, float, str]]] = {}
+    for d_tis, d_cl, d_gid, d_sym, d_ntpm in zip(
+        dom_sc_rows["Tissue"],
+        dom_sc_rows["Cluster"],
+        dom_sc_rows["Gene"],
+        dom_sc_rows["Gene name"],
+        dom_sc_rows["nTPM"],
+    ):
+        try:
+            dg = ens115.gene_by_id(str(d_gid))
+            dom_by_tc.setdefault((str(d_tis), str(d_cl)), []).append(
+                (str(dg.contig), int(dg.start), int(dg.end), float(d_ntpm), str(d_sym))
+            )
+        except Exception:
+            pass
+
+    sc_raw_by_gene = {str(g): grp for g, grp in somatic_sc_raw.groupby("Gene", sort=False)}
+    sc_clean_by_gene = {str(g): grp for g, grp in somatic_sc_all.groupby("Gene", sort=False)}
+    hpa_bulk_by_gene = {
+        (str(r.Gene), str(r.Tissue).lower()): float(r.TPM)
+        for r in hpa_bulk_clean.itertuples(index=False)
+        if pd.notna(r.TPM)
+    }
+    pos_ihc_gt = set()
+    pos_ihc_mask = hpa_ihc_all["Level"].isin(["Low", "Medium", "High"]) & hpa_ihc_all[
+        "Reliability"
+    ].isin(["Approved", "Supported", "Enhanced"])
+    for ir in hpa_ihc_all.loc[pos_ihc_mask].itertuples(index=False):
+        pos_ihc_gt.add((str(ir.Gene), str(ir.Tissue).lower()))
+
+    tier_cache: dict[tuple[str, str], float] = {}
+
+    def _cluster_base_ceiling(tissue_lbl: str, cell_lbl: str) -> float:
+        key = (tissue_lbl.lower(), cell_lbl.lower())
+        if key not in tier_cache:
+            ann = normal_tissues.resolve_normal_tissue(
+                tissue_lbl, species="human", source_id="hpa_single_cell_tissue", context="normal"
+            )
+            organ = (ann.concept_id or tissue_lbl.lower()).replace("_", " ")
+            tier = tissue_tiers.consequences(
+                organ, cell_lbl.lower(), stage="adult", resolution="cell"
+            )["tier"]
+            tier_cache[key] = float(
+                cta_selection_policy.TIER_BASES.get(
+                    tier, cta_selection_policy.MANAGEABLE_UNSAFE_FLOOR
+                )
+            )
+        return tier_cache[key]
+
+    sc_cleared_eids: list[str] = []
+    audit_sc_controls = {"CSN2", "CSN1S1", "CSN3", "ANKRD30A", "MAGEA3"}
+    for eid, sfr in facts_by_eid.iterrows():
+        mr = ts_by_eid.loc[eid]
+        if mr["category"] != "Unsafe":
+            continue
+        lbl = str(mr["protein_group_label"])
+        fired = [c for c in kept_unsafe_cols if bool(sfr[c])]
+        sole_sc = fired == ["unsafe:HPA tissue clusters"]
+        rc_est = str(mr["rare_cell_status"]) == "established"
+        if not sole_sc and lbl not in audit_sc_controls:
+            continue
+
+        mems = json.loads(str(mr["member_gene_ids"]))
+        raw_parts = [sc_raw_by_gene[g] for g in mems if g in sc_raw_by_gene]
+        if raw_parts:
+            grp_raw = (
+                pd.concat(raw_parts, ignore_index=True)
+                .groupby(["Tissue", "Cluster", "Cell type"], as_index=False)["nTPM"]
+                .sum()
+            )
+        else:
+            grp_raw = pd.DataFrame(columns=["Tissue", "Cluster", "Cell type", "nTPM"])
+
+        sub_parts = [sc_clean_by_gene[g] for g in mems if g in sc_clean_by_gene]
+        if sub_parts:
+            grp_sc = (
+                pd.concat(sub_parts, ignore_index=True)
+                .groupby(["Tissue", "Cluster", "Cell type"], as_index=False)["nTPM"]
+                .sum()
+            )
+        else:
+            grp_sc = pd.DataFrame(columns=["Tissue", "Cluster", "Cell type", "nTPM"])
+
+        raw_above_keys: set[tuple[str, str]] = set()
+        for r_tis, r_cl, r_ct, r_ntpm in zip(
+            grp_raw["Tissue"], grp_raw["Cluster"], grp_raw["Cell type"], grp_raw["nTPM"]
+        ):
+            if float(r_ntpm) >= _cluster_base_ceiling(str(r_tis), str(r_ct)):
+                raw_above_keys.add((str(r_tis), str(r_cl)))
+
+        clean_above_keys: set[tuple[str, str]] = set()
+        unexplained = 0
+        max_ratio = 0.0
+        max_bulk_tpm = 0.0
+        any_ihc_pos = False
+        flagged_organs: set[str] = set()
+        mem_coords = []
+        for g in mems:
+            try:
+                mg = ens115.gene_by_id(g)
+                mem_coords.append((str(mg.contig), int(mg.start), int(mg.end)))
+            except Exception:
+                pass
+
+        for s_tis, s_cl, s_ct, s_ntpm in zip(
+            grp_sc["Tissue"], grp_sc["Cluster"], grp_sc["Cell type"], grp_sc["nTPM"]
+        ):
+            ceil = _cluster_base_ceiling(str(s_tis), str(s_ct))
+            if float(s_ntpm) < ceil:
+                continue
+            clean_above_keys.add((str(s_tis), str(s_cl)))
+            t_low = str(s_tis).lower()
+            flagged_organs.add(t_low)
+            dom_list = dom_by_tc.get((str(s_tis), str(s_cl)), [])
+            cis_sum = 0.0
+            for d_chr, d_st, d_en, d_nt, _ in dom_list:
+                if any(
+                    c_chr == d_chr
+                    and max(0, max(c_st - d_en, d_st - c_en)) <= ab.SC_CIS_SPILLOVER_MAX_DIST_BP
+                    for c_chr, c_st, c_en in mem_coords
+                ):
+                    cis_sum += d_nt
+            if cis_sum >= ab.SC_CIS_SPILLOVER_MIN_NEIGHBOR_NTPM:
+                rat = float(s_ntpm) / cis_sum
+                max_ratio = max(max_ratio, rat)
+                if rat > ab.SC_CIS_SPILLOVER_MAX_RATIO:
+                    unexplained += 1
+            else:
+                unexplained += 1
+
+        soup_cleared = len(raw_above_keys - clean_above_keys)
+        flagged_organs |= {t.lower() for t, _ in raw_above_keys if t.lower() != "breast"}
+        for org in flagged_organs:
+            b_sum = sum(hpa_bulk_by_gene.get((g, org), 0.0) for g in mems)
+            max_bulk_tpm = max(max_bulk_tpm, b_sum)
+            if any((g, org) in pos_ihc_gt for g in mems):
+                any_ihc_pos = True
+
+        ev_sc = ab.evaluate_sc_cluster_soup_and_spillover(
+            sole_sc_cluster_unsafe_gate=sole_sc,
+            rare_cell_established=rc_est,
+            unexplained_somatic_clusters_above_ceiling=unexplained,
+            max_cis_spillover_ratio=max_ratio,
+            flagged_organ_hpa_bulk_tpm=max_bulk_tpm,
+            flagged_organ_ihc_positive=any_ihc_pos,
+            raw_somatic_clusters_above_ceiling=len(raw_above_keys),
+            soup_cleared_clusters=soup_cleared,
+        )
+        if ev_sc["cleared"]:
+            sc_cleared_eids.append(str(eid))
+        if ev_sc["cleared"] or lbl in audit_sc_controls:
+            adj_rows.append(
+                {
+                    "entity_id": str(eid),
+                    "protein_group_label": lbl,
+                    "rule_family": "sc_cluster_soup_and_cis_spillover",
+                    "baseline_classification": "Unsafe",
+                    "metric_primary": float(unexplained),
+                    "metric_secondary": round(float(max_ratio), 8),
+                    "evidence_detail": (
+                        f"fired={fired}; flagged_organs={sorted(flagged_organs)}; "
+                        f"unexplained_clusters={unexplained}; max_cis_ratio={max_ratio:.6f}; "
+                        f"hpa_bulk_tpm={max_bulk_tpm:.4f}; ihc_pos={any_ihc_pos}"
+                    ),
+                    "action_applied": bool(ev_sc["cleared"]),
+                    "disposition": ev_sc["disposition"],
+                }
+            )
+
+    # ------------------------------------------------------------------
     # Extract exact native-TPM comparison observations for former-Unsafe candidates
     # ------------------------------------------------------------------
-    check_unsafe_eids = sorted(set(ihc_cand_eids) | set(cornea_cleared_eids))
+    check_unsafe_eids = sorted(set(ihc_cand_eids) | set(cornea_cleared_eids) | set(sc_cleared_eids))
     sub_facts = facts[facts["entity_id"].isin(check_unsafe_eids)].copy()
 
     ninemers = cta_sequence_overlap.group_ninemers(facts.member_gene_ids)
@@ -338,6 +545,32 @@ def main() -> None:
     normal_obs, required_contexts = normal_panel(
         sub_facts, write=False, include_individual_samples=True, normal_stat="p95"
     )
+    if sc_cleared_eids:
+        sc_facts = sub_facts[sub_facts["entity_id"].isin(sc_cleared_eids)]
+        sc_gids = sorted({g for s in sc_facts["member_gene_ids"] for g in json.loads(s)})
+        clean_gtex_p95 = gtex.tissue_summary(
+            genes=sc_gids, stat="p95", qc="all", cleanup="all"
+        ).copy()
+        clean_gtex_p95["gid"] = clean_gtex_p95["Name"].astype(str).str.split(".").str[0]
+        clean_gtex_by_gid = clean_gtex_p95.set_index("gid")
+        site_cols_p95 = [
+            c for c in clean_gtex_p95.columns if c not in ("Name", "Description", "gid")
+        ]
+        for sc_r in sc_facts.itertuples(index=False):
+            sc_eid = str(sc_r.entity_id)
+            sc_mems = json.loads(str(sc_r.member_gene_ids))
+            if not all(g in clean_gtex_by_gid.index for g in sc_mems):
+                continue
+            sum_by_site = clean_gtex_by_gid.loc[sc_mems, site_cols_p95].sum(axis=0)
+            mask_p95 = (
+                normal_obs["entity_id"].eq(sc_eid)
+                & normal_obs["source_id"].eq("gtex_donor_p95:v11")
+                & normal_obs["scope"].isin(["normal", "disposable"])
+            )
+            for idx_n in normal_obs.index[mask_p95]:
+                st_key = str(normal_obs.at[idx_n, "source_context"]).lower()
+                if st_key in sum_by_site.index and pd.notna(sum_by_site[st_key]):
+                    normal_obs.at[idx_n, "value"] = float(sum_by_site[st_key])
     dev_obs = _developmental_samples_readonly(sub_facts)
     repro_obs = pd.concat(
         [normal_obs[normal_obs.scope.eq("reproductive") & normal_obs.sample_id.ne("")], dev_obs],
@@ -847,11 +1080,11 @@ def main() -> None:
     AUDIT_DIR.mkdir(parents=True, exist_ok=True)
     ns_idx = ns_df.set_index("protein_group_label")
     ms_idx = ms_df.set_index("protein_group_label")
-    audit_md = f"""# Assay-Boundary Adjudications & 1-Mismatch Near-Self Audit (#768, #769)
+    audit_md = f"""# Assay-Boundary Adjudications & 1-Mismatch Near-Self Audit (#768, #769, #779)
 
 Policy ID: `{ab.ASSAY_BOUNDARY_POLICY_ID}`
 
-## 1. Assay-Boundary Adjudications (`#768`)
+## 1. Assay-Boundary Adjudications (`#768`, `#779`)
 
 1. **`#713` Non-admixed tumor witness gating (`TCGA-TGCT` Note `R` libraries):**
    `11` post-meiotic spermatid markers whose `>= 10x` tumor evidence rested solely on `library_qc` Note `R` parenchymal-admixture `TCGA-TGCT` libraries (`CETN1`, `PGK2`, `PRM2`, `BOD1L2`, `CCDC70`, `TSSK2`, `PRR30`, `ZNRF4`, `IQCF5`, `BPIFA3`, `CYLC2`) reclassify from `CTA -> Reproductive Antigen only`, whereas **`PRM1` stays `CTA`** via its independent female `BRCA` witness (`58.97 TPM >= 57.11 TPM` under `#764` bleed QC) and **`SPATA19` stays `CTA`** via its `#737` `cSCC` somatic tumor witness (`GSM3567709 = 13.28 TPM >= 10.0 TPM`, matching `CANCER_ONLY` MS evidence).
@@ -861,6 +1094,8 @@ Policy ID: `{ab.ASSAY_BOUNDARY_POLICY_ID}`
    **`DKKL1`** (`8` multi-UMI cells across `21,343` adult cornea cells; `3.39 TPM` normal max, `1,346.2 TPM` Testis, `61.62 TPM` `BRCA`) advances `Unsafe -> CTA`, while `INSL4` (`64`), `GPHB5` (`24`), `QRFP` (`40`), and `C20orf202` (`42`) remain `Unsafe`.
 4. **Protamine-diluted germline transcription-factor qualification:**
    **`FOXR2`** (`135` Testis donors `>= 3 TPM`, `5.2 nTPM` spermatogonia), **`SPATA31A3`** (`23` Testis donors `>= 3 TPM`, `1.2 nTPM` spermatids), and **`PPP4R3C`** (`230` Testis donors `>= 3 TPM`, `22.7 nTPM` germ cells) advance `Cancer Antigen only -> CTA`, while single-donor `DEFB125` (`1` donor) remains `Cancer Antigen only`.
+5. **Droplet ambient milk soup & `<= 100 kb` cis-chromatin spillover (`#779`):**
+   **`CSN2`** (`ENSG00000135222` on `4q13.3`; `breast c-3` macrophages `683.2 -> 0.0 nTPM` after `single_cell_tissues(qc="all", cleanup="all")`; `salivary gland` serous clusters `30.2 kb` from `STATH`/`HTN3`/`HTN1` at `321,577–896,409 nTPM` with spillover ratio `<= 0.000050 <= 1e-4`, HPA surgical salivary bulk `0.90 TPM < 1.0 TPM`, salivary IHC `Not detected`, `0` CELLxGENE rare-cell flags, `2.99 TPM` clean somatic normal max, `28,460.4 TPM` lactating breast, `99,761.8 TPM` `BRCA`) advances `Unsafe -> CTA` (`CTA-MF`), while `CSN1S1` (`16.9 nTPM` brain neurons), `CSN3` (`261.4 nTPM` + `395.9 TPM` bulk), `ANKRD30A` (`4.9 nTPM` brain neurons), and `MAGEA3` remain strictly `Unsafe`.
 
 ## 2. 1-Mismatch Hamming Near-Self & Tryptic-MS Paralog Audit (`#769`)
 
@@ -868,6 +1103,35 @@ Policy ID: `{ab.ASSAY_BOUNDARY_POLICY_ID}`
 - **`MAGEA2/B`:** `{int(ns_idx.loc["MAGEA2/B", "total_9mers"])}` total -> `{int(ns_idx.loc["MAGEA2/B", "exact_unique_9mers"])}` exact-unique -> **`{int(ns_idx.loc["MAGEA2/B", "safe_2mm_9mers"])}` safe `>= 2-mm`** (`{ns_idx.loc["MAGEA2/B", "unsafe_near_self_1mm_pct"]:.2f}%` 1-mm near-self).
 - **`PAGE2`:** `{int(ns_idx.loc["PAGE2", "total_9mers"])}` total -> `{int(ns_idx.loc["PAGE2", "exact_unique_9mers"])}` exact-unique -> **`{int(ns_idx.loc["PAGE2", "safe_2mm_9mers"])}` safe `>= 2-mm`** (`{ns_idx.loc["PAGE2", "unsafe_near_self_1mm_pct"]:.2f}%` 1-mm near-self).
 - **`CTAGE1` (`ENSG00000212710`) vs. `MIA2` (`ENSG00000150527`):** `{int(ms_idx.loc["CTAGE1", "unsafe_shared_tryptic_peptides"])} / {int(ms_idx.loc["CTAGE1", "total_tryptic_peptides"])}` (`{ms_idx.loc["CTAGE1", "unsafe_shared_tryptic_pct"]:.2f}%`) canonical tryptic peptides (`I == L`) are shared directly with ubiquitous `Unsafe` `{ms_idx.loc["CTAGE1", "top_unsafe_ms_paralogs"]}`, explaining healthy multi-organ bottom-up MS attributions without requiring `CTAGE1`-specific translation.
+
+### Summary of Controversial Target Dispositions & Near-Self Footprints
+
+| Protein | Promoted Category | Sex Subset | Exact Unique 9-mers | Safe `>= 2-mm` 9-mers | `1-mm` Near-Self % | Shared `Unsafe` Tryptic Peptides | Key Rule / Note |
+|---|---|---|---:|---:|---:|---:|---|
+| `PLAC1` | `CTA` | `CTA-M` | `{int(ns_idx.loc["PLAC1", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["PLAC1", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["PLAC1", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["PLAC1", "unsafe_shared_tryptic_peptides_integrated"])}` | `#765` nuclear 5'-UTR intron & `PABIR2` readthrough cleared |
+| `DKKL1` | `CTA` | `CTA-MF` | `{int(ns_idx.loc["DKKL1", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["DKKL1", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["DKKL1", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["DKKL1", "unsafe_shared_tryptic_peptides_integrated"])}` | `#768` sparse adult cornea (`8 / 21,343` multi-UMI cells) cleared |
+| `MAGEB6` | `CTA` | `CTA-M` | `{int(ns_idx.loc["MAGEB6", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["MAGEB6", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["MAGEB6", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["MAGEB6", "unsafe_shared_tryptic_peptides_integrated"])}` | `#768` single-antibody IHC with `0.012 TPM` somatic RNA cleared |
+| `CSN2` | `CTA` | `CTA-MF` | `{int(ns_idx.loc["CSN2", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["CSN2", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["CSN2", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["CSN2", "unsafe_shared_tryptic_peptides_integrated"])}` | `#779` breast ambient milk soup + `4q13.3` SCPP cis-spillover cleared |
+| `CTAG2` | `CTA` | `CTA-MF` | `{int(ns_idx.loc["CTAG2", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["CTAG2", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["CTAG2", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["CTAG2", "unsafe_shared_tryptic_peptides_integrated"])}` | `#766` `LAGE-1a` (`ENST00000369585`) `SLLMWITQC` clinical clearance |
+| `DUX4` | `CTA` | `CTA-E` | `{int(ns_idx.loc["DUX4", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["DUX4", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["DUX4", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["DUX4", "unsafe_shared_tryptic_peptides_integrated"])}` | `#765 + #767` symmetric `D4Z4` repeat-array silence |
+| `FOXR2` | `CTA` | `CTA-M` | `{int(ns_idx.loc["FOXR2", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["FOXR2", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["FOXR2", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["FOXR2", "unsafe_shared_tryptic_peptides_integrated"])}` | `#768` protamine-diluted spermatogonial TF (`135` Testis donors) |
+| `SPATA31A3` | `CTA` | `CTA-M` | `{int(ns_idx.loc["SPATA31A3", "exact_unique_9mers_integrated"]):,}` | `{int(ns_idx.loc["SPATA31A3", "safe_2mm_9mers_integrated"]):,}` | `{ns_idx.loc["SPATA31A3", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["SPATA31A3", "unsafe_shared_tryptic_peptides_integrated"])}` | `#768` germline TF; shares `14` tryptic peptides with `SPATA31C1/C2` |
+| `PRM1` | `CTA` | `CTA-M` | `{int(ns_idx.loc["PRM1", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["PRM1", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["PRM1", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["PRM1", "unsafe_shared_tryptic_peptides_integrated"])}` | `#764`/`#776` Thyroid & opposite-sex bleed cleaned (`5.71 TPM`); female `BRCA` `58.97 TPM` |
+| `PRM2` | `Reproductive Antigen only` | `MRA-only` | `{int(ns_idx.loc["PRM2", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["PRM2", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["PRM2", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["PRM2", "unsafe_shared_tryptic_peptides_integrated"])}` | `#768`/`#776` `TCGA-TGCT` Note `R` parenchymal admixture demoted; female-safe `MRA-only` |
+| `SPATA19` | `CTA` | `CTA-M` | `{int(ns_idx.loc["SPATA19", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["SPATA19", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["SPATA19", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["SPATA19", "unsafe_shared_tryptic_peptides_integrated"])}` | `#768 + #737 + #776` somatic `cSCC` witness (`13.28 TPM`) + female breast `0.41 TPM` |
+| `MAGEA6` | `CTA` | `CTA-MF` | `{int(ns_idx.loc["MAGEA6", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["MAGEA6", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["MAGEA6", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["MAGEA6", "unsafe_shared_tryptic_peptides_integrated"])}` | `#769` high 1-mm cross-reactivity risk vs. `Unsafe` `MAGEA3`/`MAGEA12` |
+| `CTAGE1` | `CTA` | `CTA-M` | `{int(ns_idx.loc["CTAGE1", "exact_unique_9mers_integrated"])}` | `{int(ns_idx.loc["CTAGE1", "safe_2mm_9mers_integrated"])}` | `{ns_idx.loc["CTAGE1", "unsafe_near_self_1mm_pct_integrated"]:.2f}%` | `{int(ns_idx.loc["CTAGE1", "unsafe_shared_tryptic_peptides_integrated"])}` | `#769` `55/138` tryptic peptides shared with `Unsafe` `MIA2` |
+
+## Programmatic Inspection
+
+```python
+from oncoref import assay_boundary_adjudications, peptide_subtraction, target_selection
+
+adj = assay_boundary_adjudications.assay_boundary_adjudications()
+near_self = assay_boundary_adjudications.candidate_near_self_1mm()
+ms_audit = assay_boundary_adjudications.tryptic_ms_paralog_audit()
+policy_1mm = assay_boundary_adjudications.hamming_1mm_policy()
+```
 """
     (AUDIT_DIR / "index.md").write_text(audit_md, encoding="utf-8")
     print(

@@ -12,11 +12,11 @@ OncoRef screens the human coding proteome—**20,099** Ensembl 115 coding loci c
 
 Every protein group lands in one of five mutually exclusive categories:
 
-- <span class="cat cat-unsafe">Unsafe</span> (`18,250`): confirmed expression in vital, protected, or high-expression manageable adult somatic tissues. Normal-tissue expression always takes precedence over tumor expression.
+- <span class="cat cat-unsafe">Unsafe</span> (`18,249`): confirmed expression in vital, protected, or high-expression manageable adult somatic tissues. Normal-tissue expression always takes precedence over tumor expression.
 - <span class="cat cat-other">Other</span> (`1,062`): kept out of the candidate sets without being confirmed <span class="cat cat-unsafe">Unsafe</span>—either because required evidence is incomplete or ambiguous (missing normal-tissue coverage, unresolved paralog attribution in single-cell data `Other:Review`, or sequence overlap with <span class="cat cat-unsafe">Unsafe</span> proteins `Other:Sequence`), or because tumor and reproductive expression do not qualify (below the 10× threshold `Other:Expression`, or an adult normal organ missing from bulk panels `Other:Unscreened tissue`).
-- <span class="cat cat-ca">Cancer Antigens (CA)</span> (`448`): passes the safety and eligibility screens and reaches **≥10×** the non-thymic healthy adult baseline in at least one QC-passing tumor sample.
-- <span class="cat cat-ra">Reproductive Antigens (RA)</span> (`464`): passes the same safety and eligibility screens and reaches **≥10×** the identical healthy baseline in an adult reproductive tissue sample or supported early-embryo lineage.
-- <span class="cat cat-cta">Cancer–Testis Antigens (CTA)</span> (`331`): the intersection `CA ∩ RA`, clearing both cancer and reproductive/developmental enrichment while staying silent across healthy somatic organs. The union `CA ∪ RA` contains **581** candidate targets (`331` <span class="cat cat-cta">CTA</span>, `117` <span class="cat cat-ca">CA only</span>, `133` <span class="cat cat-ra">RA only</span>).
+- <span class="cat cat-ca">Cancer Antigens (CA)</span> (`449`): passes the safety and eligibility screens and reaches **≥10×** the non-thymic healthy adult baseline in at least one QC-passing tumor sample.
+- <span class="cat cat-ra">Reproductive Antigens (RA)</span> (`465`): passes the same safety and eligibility screens and reaches **≥10×** the identical healthy baseline in an adult reproductive tissue sample or supported early-embryo lineage.
+- <span class="cat cat-cta">Cancer–Testis Antigens (CTA)</span> (`332`): the intersection `CA ∩ RA`, clearing both cancer and reproductive/developmental enrichment while staying silent across healthy somatic organs. The union `CA ∪ RA` contains **582** candidate targets (`332` <span class="cat cat-cta">CTA</span>, `117` <span class="cat cat-ca">CA only</span>, `133` <span class="cat cat-ra">RA only</span>).
 
 ![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/classification-overview.png)
 
@@ -38,11 +38,11 @@ No single assay catches every normal-tissue risk. Each modality in OncoRef cover
 
 ![Unsafe proteins caught beyond bulk tissue RNA](audits/target-selection-20261110/rebuild/summary/normal-evidence-layers.png)
 
-*Figure 2.* `Unsafe` proteins passing bulk tissue RNA ceilings that are caught by single-cell clusters, sorted immune subsets, normal IHC, donor-replicated rare-cell UMI counts, curated literature, or adult cornea scRNA. Bulk tissue RNA alone flags **17,507** `Unsafe` proteins; these six assays add **743** more (bars overlap where multiple non-bulk assays agree).
+*Figure 2.* `Unsafe` proteins passing bulk tissue RNA ceilings that are caught by single-cell clusters, sorted immune subsets, normal IHC, donor-replicated rare-cell UMI counts, curated literature, or adult cornea scRNA. Bulk tissue RNA alone flags **17,507** `Unsafe` proteins; these six assays add **742** more (bars overlap where multiple non-bulk assays agree).
 
 ## Decision tree, attrition, and the 10× enrichment rule
 
-Every protein group follows a deterministic decision tree with strict precedence—normal-tissue safety first, then coverage and sequence eligibility, and finally symmetric **10×** enrichment in tumors and reproductive/embryonic compartments—narrowing **19,893** protein groups to **845** safety- and coverage-eligible proteins and **581** retained candidates (`CA ∪ RA`).
+Every protein group follows a deterministic decision tree with strict precedence—normal-tissue safety first, then coverage and sequence eligibility, and finally symmetric **10×** enrichment in tumors and reproductive/embryonic compartments—narrowing **19,893** protein groups to **846** safety- and coverage-eligible proteins and **582** retained candidates (`CA ∪ RA`).
 
 ![OncoRef classification decision tree](audits/target-selection-20261110/rebuild/summary/decision-tree.png)
 
@@ -50,13 +50,13 @@ Every protein group follows a deterministic decision tree with strict precedence
 
 ![Proteome-wide attrition across screening gates](audits/target-selection-20261110/rebuild/summary/funnel-all.png)
 
-*Figure 4.* Sequential attrition from **19,893** protein groups to **581** retained candidates, assigning each excluded protein once at its first failing gate. The broken x-axis above 3,000 keeps post-bulk filters readable. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-all.csv).
+*Figure 4.* Sequential attrition from **19,893** protein groups to **582** retained candidates, assigning each excluded protein once at its first failing gate. The broken x-axis above 3,000 keeps post-bulk filters readable. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-all.csv).
 
-Both enrichment routes apply the same threshold—**≥10×** above **H₀ = max(Normal N, Disposable D, 1 TPM)**—across **920** protein groups with complete healthy-panel TPM (**845** shared-eligible groups plus **75** ineligible `Other` groups with complete bulk panels). Points above the dotted line in `Other` clear the fold cutoff numerically while remaining held for locus-specific single-cell attribution or unmeasured anatomical sub-niches (`TBATA`, `DSPP`, `CAGE1`).
+Both enrichment routes apply the same threshold—**≥10×** above **H₀ = max(Normal N, Disposable D, 1 TPM)**—across **921** protein groups with complete healthy-panel TPM (**846** shared-eligible groups plus **75** ineligible `Other` groups with complete bulk panels). Points above the dotted line in `Other` clear the fold cutoff numerically while remaining held for locus-specific single-cell attribution or unmeasured anatomical sub-niches (`TBATA`, `DSPP`, `CAGE1`).
 
 ![Cancer enrichment relative to the healthy adult baseline](audits/target-selection-20261110/rebuild/summary/cancer-enrichment.png)
 
-*Figure 5.* Cancer enrichment (<span class="cat cat-ca">CA</span>) across all **920** compared protein groups (values below 0.05 TPM clipped to the axis floor).
+*Figure 5.* Cancer enrichment (<span class="cat cat-ca">CA</span>) across all **921** compared protein groups (values below 0.05 TPM clipped to the axis floor).
 
 ![Reproductive and developmental enrichment relative to the healthy adult baseline](audits/target-selection-20261110/rebuild/summary/reproductive-enrichment.png)
 
@@ -66,14 +66,14 @@ Exclusive category and locus counts across the coding proteome:
 
 | Exclusive category | Protein records | Member loci |
 | --- | --- | --- |
-| CTA | 331 | 363 |
+| CTA | 332 | 364 |
 | Cancer Antigen only | 117 | 123 |
 | Other:Expression | 255 | 262 |
 | Other:Review | 731 | 732 |
 | Other:Sequence | 48 | 50 |
 | Other:Unscreened tissue | 28 | 28 |
 | Reproductive Antigen only | 133 | 134 |
-| Unsafe | 18,250 | 18,407 |
+| Unsafe | 18,249 | 18,406 |
 
 ## Published CTA, oncofetal, and placental lists
 
@@ -85,15 +85,15 @@ Retention tracks how strictly each paper screened healthy tissues. Focused moder
 
 *Figure 7.* Share of mapped protein groups (`n` shown per study) retained as <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA only</span>, or <span class="cat cat-ra">RA only</span> versus assigned to <span class="cat cat-other">Other</span> or <span class="cat cat-unsafe">Unsafe</span>. [Full 149-source table (CSV)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv).
 
-Of **2,233** published CTA or oncofetal nominations, **371** survive into the candidate union (`CA ∪ RA`)—including **253** of our **331** CTAs—while **78** CTAs are newly identified by the expression rules and **1,862** nominations fail normal-tissue, eligibility, or enrichment screens.
+Of **2,233** published CTA or oncofetal nominations, **372** survive into the candidate union (`CA ∪ RA`)—including **254** of our **332** CTAs—while **78** CTAs are newly identified by the expression rules and **1,861** nominations fail normal-tissue, eligibility, or enrichment screens.
 
 ![Overlap between rule-derived sets and published nominations](audits/target-selection-20261110/rebuild/summary/venn.png)
 
-*Figure 8.* Overlap between rule-derived Cancer Antigens (**448**), Reproductive Antigens (**464**), and published CTA/oncofetal nominations (**2,233**).
+*Figure 8.* Overlap between rule-derived Cancer Antigens (**449**), Reproductive Antigens (**465**), and published CTA/oncofetal nominations (**2,233**).
 
 ![Attrition of published CTA and oncofetal nominations](audits/target-selection-20261110/rebuild/summary/funnel-published.png)
 
-*Figure 9.* Sequential attrition of **2,233** published CTA/oncofetal nominations through the same gates, leaving **371** candidates. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-published.csv).
+*Figure 9.* Sequential attrition of **2,233** published CTA/oncofetal nominations through the same gates, leaving **372** candidates. [Step counts (CSV)](audits/target-selection-20261110/rebuild/summary/funnel-published.csv).
 
 ### Most-nominated individual proteins
 
@@ -136,26 +136,26 @@ Of **58** protein groups in the familiar or clinical reference panels, **28** la
 
 ## Peak tumor expression and edge cases
 
-Across the **581** candidate union, **167** protein groups reach **≥100 TPM** in at least one QC-passing tumor sample, **28** reach **≥1,000 TPM**, and **134** have **≥10 known independent patients** crossing the 10× cutoff. Median peak tumor expression is **73.68 TPM** for `CTA` and **39.77 TPM** for `CA only`.
+Across the **582** candidate union, **168** protein groups reach **≥100 TPM** in at least one QC-passing tumor sample, **29** reach **≥1,000 TPM**, and **135** have **≥10 known independent patients** crossing the 10× cutoff. Median peak tumor expression is **74.02 TPM** for `CTA` and **39.77 TPM** for `CA only`.
 
-Each table below ranks the top ten protein groups in its category by peak QC-passing tumor TPM ([all 581 candidates](antigen-whitepaper/tumor-ranks.csv)); `Unsafe` proteins (`18,250`) exit in Stage 1 before tumor comparison. Because `Tumor fold` divides by `max(N, D, 1 TPM)`, fold equals `Tumor TPM` whenever both `N` and `D` are below 1 TPM (`LALBA`, `SCGB1D4`, `VCY/1B`). In `Other`, high tumor peaks (`TBATA`, `DSPP`, `CAGE1`) reflect unresolved single-cell or unmeasured sub-niche reviews rather than low expression. Peak TPM measures single-library abundance, not the fraction of malignant cells expressing the protein.
+Each table below ranks the top ten protein groups in its category by peak QC-passing tumor TPM ([all 582 candidates](antigen-whitepaper/tumor-ranks.csv)); `Unsafe` proteins (`18,249`) exit in Stage 1 before tumor comparison. Because `Tumor fold` divides by `max(N, D, 1 TPM)`, fold equals `Tumor TPM` whenever both `N` and `D` are below 1 TPM (`LALBA`, `SCGB1D4`, `VCY/1B`). In `Other`, high tumor peaks (`TBATA`, `DSPP`, `CAGE1`) reflect unresolved single-cell or unmeasured sub-niche reviews rather than low expression. Peak TPM measures single-library abundance, not the fraction of malignant cells expressing the protein.
 
 ### CTA
 
-Top 10 of 331 groups by peak tumor sample TPM.
+Top 10 of 332 groups by peak tumor sample TPM.
 
 | Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | LALBA | BRCA | 79,700.44 | 0.78 | 45,625.2 | 79,700.44 | 25 |
-| 2 | TGM4 | PRAD | 17,629.45 | 5.67 | 22,106.5 | 3,107.11 | 94 |
-| 3 | XAGE1A/B | BRCA | 4,068.64 | 5.74 | 362.73 | 709.23 | 988 |
-| 4 | SPANXA1/2 | ESCA | 3,700.06 | 3 | 77.07 | 1,233.35 | 61 |
-| 5 | PRAME | SCLC | 3,692.46 | 10.93 | 310.91 | 337.97 | 1,206 |
-| 6 | SCGB1D4 | UCEC | 3,576.17 | 0.42 | 1,383.54 | 3,576.17 | 49 |
-| 7 | MAGEA4 | SCLC | 3,201.68 | 2.95 | 327.97 | 1,083.95 | 745 |
-| 8 | RLN1 | PRAD | 3,039.25 | 5.85 | 268.82 | 519.47 | 127 |
-| 9 | SEMG2 | PRAD | 3,033.78 | 9.52 | 26,737.9 | 318.52 | 7 |
-| 10 | VCY/1B | SKCM | 2,858.58 | 0.1 | 269.66 | 2,858.58 | 125 |
+| 1 | CSN2 | BRCA | 99,761.81 | 2.99 | 28,460.4 | 33,398.2 | 23 |
+| 2 | LALBA | BRCA | 79,700.44 | 0.78 | 45,625.2 | 79,700.44 | 25 |
+| 3 | TGM4 | PRAD | 17,629.45 | 5.67 | 22,106.5 | 3,107.11 | 94 |
+| 4 | XAGE1A/B | BRCA | 4,068.64 | 5.74 | 362.73 | 709.23 | 988 |
+| 5 | SPANXA1/2 | ESCA | 3,700.06 | 3 | 77.07 | 1,233.35 | 61 |
+| 6 | PRAME | SCLC | 3,692.46 | 10.93 | 310.91 | 337.97 | 1,206 |
+| 7 | SCGB1D4 | UCEC | 3,576.17 | 0.42 | 1,383.54 | 3,576.17 | 49 |
+| 8 | MAGEA4 | SCLC | 3,201.68 | 2.95 | 327.97 | 1,083.95 | 745 |
+| 9 | RLN1 | PRAD | 3,039.25 | 5.85 | 268.82 | 519.47 | 127 |
+| 10 | SEMG2 | PRAD | 3,033.78 | 9.52 | 26,737.9 | 318.52 | 7 |
 
 ### CA only
 
@@ -163,16 +163,16 @@ Top 10 of 117 groups by peak tumor sample TPM.
 
 | Rank | Protein | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Tumor fold | Known patients at 10× |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | AMELX | RT | 1,696.17 | 1.9 | 2.29 | 892.72 | 30 |
-| 2 | HOXC12 | WILMS | 1,559.28 | 11.6 | 5.51 | 134.47 | 9 |
-| 3 | RPS4Y2 | B_ALL | 1,394.88 | 12.19 | 12.74 | 114.4 | 50 |
-| 4 | GALP | SARC_DSRCT | 1,332.56 | 1.02 | 1.05 | 1,308.13 | 22 |
-| 5 | ZACN | SCLC | 526.62 | 22.49 | 21.96 | 23.41 | 1 |
-| 6 | IL36B | SARC_UPS | 498.45 | 20.17 | 9.83 | 24.71 | 1 |
-| 7 | SRMS | NET_RECTAL | 463.74 | 12.05 | 39.04 | 38.47 | 0 |
-| 8 | CSAG3 | LUSC | 336.48 | 4.27 | 22.46 | 78.72 | 401 |
-| 9 | DBX1 | SCLC | 297.51 | 0.78 | 1.65 | 297.51 | 74 |
-| 10 | HOXD12 | NBL | 279.91 | 6.2 | 17.97 | 45.12 | 15 |
+| 1 | AMELX | RT | 1,696.17 | 1.9 | 1.53 | 892.72 | 30 |
+| 2 | HOXC12 | WILMS | 1,559.28 | 11.6 | 2.93 | 134.47 | 9 |
+| 3 | RPS4Y2 | B_ALL | 1,394.88 | 12.19 | 9.96 | 114.4 | 50 |
+| 4 | GALP | SARC_DSRCT | 1,332.56 | 1.02 | 0.85 | 1,308.13 | 22 |
+| 5 | ZACN | SCLC | 526.62 | 22.49 | 9.23 | 23.41 | 1 |
+| 6 | IL36B | SARC_UPS | 498.45 | 20.17 | 7.59 | 24.71 | 1 |
+| 7 | SRMS | NET_RECTAL | 463.74 | 12.05 | 27.14 | 38.47 | 0 |
+| 8 | CSAG3 | LUSC | 336.48 | 4.27 | 5.79 | 78.72 | 401 |
+| 9 | DBX1 | SCLC | 297.51 | 0.78 | 1.47 | 297.51 | 74 |
+| 10 | HOXD12 | NBL | 279.91 | 6.2 | 11.78 | 45.12 | 15 |
 
 ### RA only
 
@@ -199,13 +199,13 @@ Top 10 of 339 groups with complete baseline TPM (out of 1,062 total `Other` grou
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | TBATA | THYM | 2,250.3 | 6.26 | 116.44 | 359.45 | 101 |
 | 2 | KRT9 | PCPG | 1,865.83 | 8.65 | 7.03 | 215.65 | 16 |
-| 3 | DSPP | HEPB | 1,695.58 | 0.6 | 0.21 | 1,695.58 | 1 |
+| 3 | DSPP | HEPB | 1,695.58 | 0.6 | 0.17 | 1,695.58 | 1 |
 | 4 | RIPPLY3 | RT | 450.15 | 2.36 | 10.02 | 190.41 | 29 |
 | 5 | VCX3B | BRCA | 420.74 | 1.33 | 181.54 | 316.01 | 87 |
 | 6 | PSG3 | LUAD | 326.38 | 17.41 | 1,155.62 | 18.74 | 1 |
 | 7 | GSX2 | LAML_ELNint | 287.56 | 5.09 | 8.6 | 56.48 | 8 |
 | 8 | RGPD3 | T_ALL | 284.71 | 1.91 | 20.78 | 149.32 | 44 |
-| 9 | LCE3C | HNSC | 284.56 | 4.57 | 13.98 | 5.43 | 0 |
+| 9 | LCE3C | HNSC | 284.56 | 4.57 | 6.87 | 5.43 | 0 |
 | 10 | PSMB11 | THYM | 274.75 | 2.39 | 3.36 | 115.13 | 74 |
 
 ### Worked edge cases
@@ -242,7 +242,7 @@ Adult whole thymus is rated `Disposable` under the organ-loss hierarchy, while d
 
 ### Biological membership versus patient-specific filtering
 
-Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</span>, and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can safely lose. Default biological sets leave reproductive tissues unprotected until you opt in. Downstream patient profiles (`female-patient`, `male-patient`, lactation, pregnancy, or custom overrides) mark each compartment as <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or <span class="cat cat-absent">Absent</span> ([rules and limits](host-selection.md)). Protecting testis narrows the **331** biological CTAs to **57** retained candidates; pregnancy leaves **0** retained (**125** unresolved due to incomplete developmental coverage, **206** excluded by expression in a protected organ).
+Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</span>, and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can safely lose. Default biological sets leave reproductive tissues unprotected until you opt in. Downstream patient profiles (`female-patient`, `male-patient`, lactation, pregnancy, or custom overrides) mark each compartment as <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or <span class="cat cat-absent">Absent</span> ([rules and limits](host-selection.md)). Protecting testis narrows the **332** biological CTAs to **62** retained candidates; pregnancy leaves **0** retained (**125** unresolved due to incomplete developmental coverage, **207** excluded by expression in a protected organ).
 
 ![Patient anatomy and organ-loss choices across profiles](audits/target-selection-20261110/rebuild/summary/host-profiles-matrix.png)
 
@@ -250,26 +250,26 @@ Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</sp
 
 ![Patient-profile screening outcomes for biological CTAs](audits/target-selection-20261110/rebuild/summary/host-profiles-outcomes.png)
 
-*Figure 11.* Downstream screening outcomes across all **331** biological CTAs under each patient profile. Filtering a candidate out for one patient narrows the target list and expands the peptide-subtraction background without relabeling its biological <span class="cat cat-cta">CTA</span> identity.
+*Figure 11.* Downstream screening outcomes across all **332** biological CTAs under each patient profile. Filtering a candidate out for one patient narrows the target list and expands the peptide-subtraction background without relabeling its biological <span class="cat cat-cta">CTA</span> identity.
 
 ### Sex-restricted reproductive antigens and cross-sex CTAs
 
 Because male and female reproductive organs are anatomically distinct, an antigen restricted to one sex's reproductive tract has no normal target organ in non-pregnant patients of the opposite sex. Oncology has no standard shorthand for this cross-sex distinction, so OncoRef partitions Reproductive Antigens (<span class="cat cat-ra">RA</span>) and their cancer intersection (<span class="cat cat-cta">CTA</span>) into four explicit sex-restriction classes under strict protection of all opposite-sex adult organs (including resting and lactating breast):
 
-- **Male-Restricted (`MRA`, `329` RAs · `CTA-M`, `225` CTAs — female-safe):** expressed in male reproductive organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`) and cleanly clearing every female adult reproductive and mammary organ (`XAGE1A/B`, `SPANXA1/2`, `MAGEA4`, `NY-ESO-1`, `VCY/1B`, `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`, plus male-accessory/prostate targets such as `TGM4`, `SEMG2`, `PRR23D1/2`, `SPAG11A`, `POTEH`, `EDDM3B`). Because **336 of 514** (`65.4%`) GTEx `Breast_Mammary_Tissue` biopsies come from male cadavers (`#776`), OncoRef stratifies `resting_breast` by biological donor sex (`XX` female vs. `XY` male) and masks stoichiometric `#764` testis/prostate flowcell bleed across opposite-sex GTEx shards (`TGM4` GTEx female breast max = `0.87 TPM` [`1.70 TPM` pooled GTEx + HPA v23 female mammary max] vs. `176.73 TPM` male; `SEMG2` = `0.18 TPM` GTEx female [`0.40 TPM` pooled female] vs. `117.35 TPM` male; `CT83` = `2.10 TPM` vs. `16.65 TPM`). Relaxing female `resting_breast` protection widens `CTA-M` to **227** CTAs for the few male-germline antigens with genuine female mammary expression (`DKKL1`).
-- **Embryo / Placenta-Only (`ERA`, `46` RAs · `CTA-E`, `39` CTAs — adult-absent in both sexes):** cleanly clear both all adult male and all non-pregnant adult female organs (`DUX4`, `TBXT`, `MBD3L2`, `SSU72L2`, `TRIM48`, `TRIM43B`). Although **155** RAs (**130** CTAs) reach ≥10× in embryo or placenta, most (`64` RAs / `57` CTAs, including `MAGEA4`, `VCY/1B`, `PAGE2`, and `GAGE1`) remain active in adult testis and therefore classify as `MRA`/`CTA-M`, while another `41` RAs (`33` CTAs) remain active in both male and female adult reproductive tissues; `ERA` retains only developmental factors silenced across every adult gonad and reproductive organ.
-- **Female-Restricted (`FRA`, `6` RAs · `CTA-F`, `3` CTAs — male-safe):** confined to female reproductive compartments (`ovary`, tract, `placenta`/`lactating_breast`) while cleanly clearing all male adult organs (`ERVV-1`, `ZP4`).
-- **Shared Male & Female (`SRA`, `83` RAs · `CTA-MF`, `64` CTAs):** expressed in adult reproductive or mammary compartments of both sexes (`PRAME`, `LALBA`, `SCGB1D4`, `CTAG2`, `DKKL1`).
+- **Male-Restricted (`MRA`, `340` RAs · `CTA-M`, `232` CTAs — female-safe):** expressed in male reproductive organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`) and cleanly clearing every female adult reproductive and mammary organ (`XAGE1A/B`, `SPANXA1/2`, `MAGEA4`, `NY-ESO-1`, `VCY/1B`, `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`, plus male-accessory/prostate targets such as `TGM4`, `SEMG2`, `PRR23D1/2`, `SPAG11A`, `POTEH`, `EDDM3B`). Because **336 of 514** (`65.4%`) GTEx `Breast_Mammary_Tissue` biopsies come from male cadavers (`#776`, `#779`), OncoRef stratifies `resting_breast` by biological donor sex (`XX` female vs. `XY` male) on deconvolved GTEx v11 and ambient-soup-cleaned HPA breast `scRNA-seq` (`TGM4` female `resting_breast` `host_exposure` = `0.67 TPM` vs. `13.76 TPM` male; `SEMG2` = `0.11 TPM` female vs. `9.09 TPM` male; `CT83` = `1.89 TPM` female vs. `0.82 TPM` male). Relaxing female `resting_breast` protection widens `CTA-M` to **233** CTAs for the single male-germline CTA with genuine female resting-mammary expression (`CAPZA3` at `8.26 TPM`).
+- **Embryo / Placenta-Only (`ERA`, `52` RAs · `CTA-E`, `44` CTAs — adult-absent in both sexes):** cleanly clear both all adult male and all non-pregnant adult female organs (`DUX4`, `TBXT`, `MBD3L2`, `SSU72L2`, `TRIM48`, `TRIM43B`, `OR1N1`, `CER1`). Although **157** RAs (**134** CTAs) reach ≥10× in embryo or placenta, most (`70` RAs / `64` CTAs, including `MAGEA4`, `VCY/1B`, `PAGE2`, and `GAGE1`) remain active in adult testis and therefore classify as `MRA`/`CTA-M`, while another `27` RAs (`22` CTAs) remain active across both male and female adult reproductive tissues (`SRA`/`CTA-MF`) and `8` RAs (`4` CTAs) are confined to female/placental compartments (`FRA`/`CTA-F`); `ERA` retains only the `52` developmental factors (`44` `CTA-E`) silenced across every adult gonad and reproductive organ.
+- **Female-Restricted (`FRA`, `10` RAs · `CTA-F`, `5` CTAs — male-safe):** confined to female reproductive or lactating-mammary compartments (`ovary`, female tract, `lactating_breast`) while cleanly clearing all male adult organs including male `resting_breast` (`BTN1A1`, `KHDC3L`, `ZAR1L`, `ERVV-1`, `ZP4`).
+- **Shared Male & Female (`SRA`, `63` RAs · `CTA-MF`, `51` CTAs):** expressed in adult reproductive or mammary compartments of both sexes (`PRAME`, `LALBA`, `CSN2`, `SCGB1D4`, `CTAG2`, `DKKL1`).
 
-The asymmetry is striking: **264** of **331** CTAs (`CTA-M + CTA-E`) clear every adult female organ in non-pregnant women, whereas only **42** (`CTA-F + CTA-E`) clear every adult male organ, because transcriptional scanning in adult testis expresses nearly the entire ovarian, uterine, and mammary repertoire.
+The asymmetry is striking: **276** of **332** CTAs (`CTA-M + CTA-E`) clear every adult female organ in non-pregnant women, whereas only **49** (`CTA-F + CTA-E`) clear every adult male organ, because transcriptional scanning in adult testis expresses nearly the entire ovarian, uterine, and mammary repertoire.
 
 ![Sex-restricted Reproductive Antigens and cross-sex CTA subsets](audits/target-selection-20261110/rebuild/summary/sex-restricted-ra-cta.png)
 
-*Figure 12.* Historical `2026-11-10` partition snapshot; see the [live promoted sex-restriction table (`sex-restricted-antigens.csv`)](antigen-whitepaper/sex-restricted-antigens.csv) for all **464** Reproductive Antigens, **331** CTAs (`225` `CTA-M`, `39` `CTA-E`, `3` `CTA-F`, `64` `CTA-MF`), and **133** RA-only proteins under `#775`/`#776`.
+*Figure 12.* Historical `2026-11-10` partition snapshot; see the [live promoted sex-restriction table (`sex-restricted-antigens.csv`)](antigen-whitepaper/sex-restricted-antigens.csv) for all **465** Reproductive Antigens, **332** CTAs (`232` `CTA-M`, `44` `CTA-E`, `5` `CTA-F`, `51` `CTA-MF`), and **133** RA-only proteins under `#775`/`#776`/`#779`.
 
 ![Male versus female reproductive-organ exposure across all CTAs](audits/target-selection-20261110/rebuild/summary/sex-restricted-landscape.png)
 
-*Figure 13.* Historical `2026-11-10` landscape of male versus female sex-organ RNA across CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). In that unstratified GTEx `resting_breast` snapshot (`336/514` male cadavers), ochre points in the lower-right (`TGM4`, `SEMG2`) appeared `≥4 TPM` in pooled `resting_breast`; under `#776` biological donor-sex stratification and `#764` stoichiometric bleed QC ([live CSV](antigen-whitepaper/sex-restricted-antigens.csv)), pooled GTEx + HPA v23 female mammary expression is `1.70 TPM` for `TGM4` (`0.87 TPM` GTEx female breast max) and `0.40 TPM` for `SEMG2` (`0.18 TPM` GTEx female breast max), restoring both (plus `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`) to **`CTA-M`**, while genuine female-mammary genes (`DKKL1` at `41.96 TPM`) remain excluded from `CTA-M` when `resting_breast` is protected.
+*Figure 13.* Historical `2026-11-10` landscape of male versus female sex-organ RNA across CTAs (dotted lines mark the 4 TPM protected-organ screening threshold). In that unstratified GTEx `resting_breast` snapshot (`336/514` male cadavers), ochre points in the lower-right (`TGM4`, `SEMG2`) appeared `≥4 TPM` in pooled `resting_breast`; under `#776`/`#779` biological donor-sex stratification and 52-shard GTEx deconvolution ([live CSV](antigen-whitepaper/sex-restricted-antigens.csv)), female `resting_breast` `host_exposure` is `0.67 TPM` for `TGM4` (vs. `13.76 TPM` male) and `0.11 TPM` for `SEMG2` (vs. `9.09 TPM` male), restoring both (plus `PRM1`, `SPATA19`, `CT83`, `ODF1`, `ADAM2`, `TMEM270`, `MAGEB4`, `FSCN3`, `TEX55`, `SPAG11B`) to **`CTA-M`**, while genuine female-mammary or ovarian genes (`CAPZA3` at `8.26 TPM` female `resting_breast`; `DKKL1` at `5.5 nTPM` `ovary`) remain excluded from `CTA-M` when female organs are protected.
 
 ## Methods: protein grouping, sources, and thresholds
 
@@ -344,13 +344,13 @@ OncoRef applies one mathematical definition of <span class="cat cat-ca">CA</span
 
 | Species (taxon) | Pinned references | Comparison unit(s) | Evidence pillars | Packaged catalog status |
 | --- | --- | --- | --- | --- |
-| Homo sapiens (`human`, 9606) | `ensembl115` | `TPM` | 8/8 active | 331 CTA · 117 CA only · 133 RA only · 1,062 Other · 18,250 Unsafe |
+| Homo sapiens (`human`, 9606) | `ensembl115` | `TPM` | 8/8 active | 332 CTA · 117 CA only · 133 RA only · 1,062 Other · 18,249 Unsafe |
 | Canis lupus familiaris (`dog`, 9615) | `refseq106`, `ensembl98` | `TPM`, `TMM-CPM` | 1/8 active | 14 native nominations in Other:Review (pending_reconciled_panels) |
 | Mus musculus (`mouse`, 10090) | `ensembl115` | `TPM` | 8/8 active | 20 CTA · 29 CA only · 296 RA only · 2,593 Other · 18,495 Unsafe |
 
 ### *Homo sapiens* (taxon 9606)
 
-All eight screening pillars are active across **19,893** Ensembl 115 protein groups (**20,099** coding loci), combining GTEx v11 and HPA v23 donor P95 baselines, HPA/DICE/Monaco immune panels, consortium-deduplicated CELLxGENE and Siletti rare-cell UMI atlases, HPA immunohistochemistry, Petropoulos/Tyser/Molè embryos, and **130** QC-passing tumor cohorts. Male- versus female-safe classification uses `testis`, `epididymis`, `prostate`, and `seminal vesicle` on the male axis and `ovary`, `fallopian tube`, `uterus`, `endometrium`, `cervix`, `vagina`, and `lactating_breast` (plus `resting_breast`) on the female axis (`225` `CTA-M`, `39` `CTA-E`, `3` `CTA-F`, `64` `CTA-MF`).
+All eight screening pillars are active across **19,893** Ensembl 115 protein groups (**20,099** coding loci), combining GTEx v11 and HPA v23 donor P95 baselines, HPA/DICE/Monaco immune panels, consortium-deduplicated CELLxGENE and Siletti rare-cell UMI atlases, HPA immunohistochemistry, Petropoulos/Tyser/Molè embryos, and **130** QC-passing tumor cohorts. Male- versus female-safe classification uses `testis`, `epididymis`, `prostate`, and `seminal vesicle` on the male axis and `ovary`, `fallopian tube`, `uterus`, `endometrium`, `cervix`, `vagina`, and `lactating_breast` (plus `resting_breast`) on the female axis (`232` `CTA-M`, `44` `CTA-E`, `5` `CTA-F`, `51` `CTA-MF`).
 
 ### *Canis lupus familiaris* (taxon 9615)
 
@@ -392,7 +392,7 @@ Cross-cohort tumor matrices come from distinct studies and processing pipelines;
 | [Sequence API and peptide subtraction](antigen-sequences.md) · [Data download API](antigen-data.md) | Ensembl 115 reference translations, k-mer subtraction, and programmatic dataset retrieval |
 | [Registered file inventory (`sources.csv`)](antigen-whitepaper/sources.csv) | All **324** pinned source files, catalog selectors, and SHA-256 digests |
 | [Studied CTA dispositions (`studied-proteins.csv`)](antigen-whitepaper/studied-proteins.csv) | Full measurements and exclusion reasons for all **2,238** published or clinical anchor proteins |
-| [Candidate tumor rankings (`tumor-ranks.csv`)](antigen-whitepaper/tumor-ranks.csv) | Peak tumor TPM, folds, cohort/sample IDs, and patient counts for all **581** candidates |
+| [Candidate tumor rankings (`tumor-ranks.csv`)](antigen-whitepaper/tumor-ranks.csv) | Peak tumor TPM, folds, cohort/sample IDs, and patient counts for all **582** candidates |
 | [Curated literature sources (`literature-sources.csv`)](audits/target-selection-20261110/rebuild/summary/literature-sources.csv) | Disposition counts across all **149** catalog-mapped papers grouped by antigen class |
 | [Sex-restricted antigens (`sex-restricted-antigens.csv`)](antigen-whitepaper/sex-restricted-antigens.csv) | Male-restricted (`MRA`/`CTA-M`), female-restricted (`FRA`/`CTA-F`), embryo/placenta-only (`ERA`/`CTA-E`), and shared (`SRA`/`CTA-MF`) calls with organ TPMs |
 | [Normal RNA coverage](audits/target-selection-20261110/rebuild/normal-rna/index.md) · [Tumor coverage ledger](audits/target-selection-20261110/rebuild/tumor-source-coverage.csv) · [Literature adjudication](audits/target-selection-20261110/rebuild/literature.md) | Audit ledgers for healthy panels, tumor cohorts, and literature reviews |

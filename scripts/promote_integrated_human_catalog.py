@@ -6,11 +6,11 @@ Builds:
   reconstruction of the 129-column ``2026-11-20.2`` baseline in ``human_screening_inputs``
   and ablation tests without duplicating a 3.7 MB CSV in the PyPI wheel),
 - ``oncoref/data/target-selection.csv.gz`` and ``oncoref/data/target-selection.json``
-  (``oncoref.target-selection.2026-11-23.1``: 331 CTA, 117 CA only, 133 RA only,
-  1,062 Other, 18,250 Unsafe),
+  (``oncoref.target-selection.2026-11-23.1``: 332 CTA, 117 CA only, 133 RA only,
+  1,062 Other, 18,249 Unsafe),
 - ``oncoref/data/host-exposure.csv.gz`` and ``oncoref/data/host-exposure.json``
   (adding verified 14-compartment reproductive/embryonic + HPA scRNA/IHC exposures
-  for newly cleared ``PLAC1``, ``ZAN``, ``DUX4``, ``DKKL1``, and ``MAGEB6``),
+  for newly cleared ``PLAC1``, ``ZAN``, ``DUX4``, ``DKKL1``, ``MAGEB6``, and ``CSN2``),
 - ``oncoref/data/species/human/target-selection.json``,
 - ``oncoref/data/antigen-source-inventory.csv`` SHA-256 entries, and
 - ``oncoref/data/human-integrated-policy-preview.{csv,json}``.
@@ -18,7 +18,6 @@ Builds:
 
 from __future__ import annotations
 
-import gzip
 import hashlib
 import json
 import math
@@ -41,7 +40,6 @@ from oncoref import (  # noqa: E402
     human_screening_inputs,
     normal_library_qc,
     rare_cell_compartment_qc,
-    reference_data,
     repeat_family_equivalence,
     species_target_selection,
     target_selection,
@@ -161,10 +159,31 @@ def _build_cleared_host_exposures(
         out[eid] = exp_map
 
     references = curation.manifest()["reference_inputs"]
+    milk_marker_gids = {
+        "ENSG00000167531",  # LALBA
+        "ENSG00000126545",  # CSN1S1
+        "ENSG00000135222",  # CSN2
+        "ENSG00000171209",  # CSN3
+    }
+    from oncoref import human_protein_atlas
+
+    sc_clean_full = human_protein_atlas.single_cell_tissues(qc="all", cleanup="all")
+    breast_milk = sc_clean_full[
+        sc_clean_full["Tissue"].eq("breast")
+        & sc_clean_full["Gene"].isin(milk_marker_gids)
+        & (sc_clean_full["nTPM"] >= 100.0)
+    ]
+    lactating_sc_clusters = set(
+        breast_milk.groupby("Cluster")["Gene"].nunique().loc[lambda s: s >= 3].index.astype(str)
+    )
+
     for role in ("host_cell_rna", "host_protein"):
         source, version = references[role]["source"], references[role]["version"]
-        path = curation.reference_input(role)
-        data = pd.read_csv(path, sep="\t", low_memory=False)
+        if role == "host_cell_rna":
+            data = sc_clean_full.copy()
+        else:
+            path = curation.reference_input(role)
+            data = pd.read_csv(path, sep="\t", low_memory=False)
         data["entity_id"] = data["Gene"].map(lookup).map(gene_to_eid)
         data = data[data["entity_id"].isin(out)]
         if data.empty:
@@ -181,14 +200,22 @@ def _build_cleared_host_exposures(
             if source == "hpa_normal_tissue":
                 item.update(protein_evidence(rows))
             else:
+                if compartment == "resting_breast" and rows["Tissue"].eq("breast").any():
+                    rows = rows[~rows["Cluster"].astype(str).isin(lactating_sc_clusters)]
                 keys = [c for c in ("Tissue", "Cluster", "Cell type") if c in rows]
                 grouped = rows.groupby(keys).agg(
                     total=("nTPM", "sum"), measured=("Gene", "nunique")
                 )
                 complete = grouped["measured"].eq(sizes[entity])
                 if complete.any():
-                    item["max_ntpm"] = float(grouped.loc[complete, "total"].max())
-                if not complete.all():
+                    comp_tot = grouped.loc[complete, "total"]
+                    item["max_ntpm"] = float(comp_tot.max())
+                    if compartment == "resting_breast":
+                        item["female_max_ntpm"] = float(comp_tot.max())
+                        non_gland = ["breast" not in str(idx[-1]).lower() for idx in comp_tot.index]
+                        male_tot = comp_tot[non_gland]
+                        item["male_max_ntpm"] = float(male_tot.max()) if not male_tot.empty else 0.0
+                if not complete.all() and not grouped.empty:
                     item["scope_complete"] = False
                 item["cell_rna_scope"] = (
                     "unlocalized mammary state"
@@ -203,63 +230,13 @@ def _clean_and_sex_stratify_host_exposures(
     base_df: pd.DataFrame,
     cleared_obs_by_eid: dict[str, dict],
 ) -> dict[str, dict]:
-    """Stratify GTEx resting_breast by donor sex and mask #764 bleed on opposite-sex shards (#776)."""
+    """Apply deconvolved GTEx host_exposure, sex-scoped breast scRNA/TPM, & RNA-zero IHC reconciliation (#776, #779)."""
     from copy import deepcopy
 
     from pyensembl import EnsemblRelease
 
-    med = pd.read_csv(reference_data.pinned_path("gtex_tissue_rna", "v11"), sep="\t", skiprows=2)
-    med["gene_id"] = med["Name"].astype(str).str.split(".").str[0]
-    sentinel_ref = normal_library_qc.stoichiometric_sentinel_reference(
-        med, panels=normal_library_qc.HOST_EXPOSURE_SENTINEL_PANELS
-    )
-
-    sex_y = ["ENSG00000129824", "ENSG00000067048", "ENSG00000183878", "ENSG00000012817"]
-    wanted_bytes = {g.encode("ascii") for g in (set(sentinel_ref["gene_id"]) | set(sex_y))}
-
-    def _load_gct(pin_key: str) -> pd.DataFrame:
-        p = reference_data.pinned_path("gtex_individual_tissue_tpm", pin_key)
-        vals: dict[str, np.ndarray] = {}
-        with gzip.open(p, "rb") as fh:
-            fh.readline()
-            fh.readline()
-            samples = pd.Index(
-                fh.readline().decode("utf-8").rstrip("\n").split("\t")[2:], name="sample_id"
-            )
-            for line in fh:
-                rn, _, rest = line.partition(b"\t")
-                bid = rn.split(b".", 1)[0]
-                if bid in wanted_bytes:
-                    gid = bid.decode("ascii")
-                    vals[gid] = vals.get(gid, 0.0) + np.asarray(
-                        rest.partition(b"\t")[2].split(), dtype=float
-                    )
-        return pd.DataFrame.from_dict(vals, orient="index", columns=samples)
-
-    pins = [
-        k
-        for k in reference_data.REFERENCE_SOURCES["gtex_individual_tissue_tpm"]["pins"]
-        if any(
-            x in k
-            for x in ("breast", "ovary", "uterus", "vagina", "cervix", "fallopian", "prostate")
-        )
-    ]
-    male_xy_samples: set[str] = set()
-    tp_bleed_samples: set[str] = set()
-    for pk in sorted(pins):
-        mat = _load_gct(pk)
-        y_sum = mat.reindex(sex_y).fillna(0.0).sum(axis=0)
-        if "prostate" not in pk:
-            male_xy_samples |= set(y_sum[y_sum >= 5.0].index)
-        fl = normal_library_qc.detect_stoichiometric_multiplex_bleed(
-            mat,
-            site=pk.removeprefix("v11-"),
-            sentinel_reference=sentinel_ref,
-            max_bleed_fraction=0.05,
-        )
-        tp_bleed_samples |= set(
-            fl[fl["source_key"].isin(["testis", "testis_chromatin", "prostate"])]["sample_id"]
-        )
+    from oncoref import bulk_qc, gtex, human_protein_atlas
+    from oncoref.gtex import deconvolution as gtex_deconv
 
     ens115 = EnsemblRelease(115)
     coding_tx = {t.id for t in ens115.transcripts() if t.biotype == "protein_coding"}
@@ -272,31 +249,6 @@ def _clean_and_sex_stratify_host_exposures(
     members_by_eid = {
         str(r.entity_id): json.loads(r.member_gene_ids) for r in base_df.itertuples(index=False)
     }
-    ab_tf_eids = set(
-        assay_boundary_adjudications.assay_boundary_adjudications()
-        .loc[
-            lambda d: d["disposition"].eq("germline_tf_protamine_diluted_qualified"),
-            "entity_id",
-        ]
-        .astype(str)
-    )
-    male_origin_eids = ab_tf_eids | {
-        str(r.entity_id)
-        for r in base_df.itertuples(index=False)
-        if {
-            c.strip()
-            for c in str(r.reproductive_qualifying_compartments or "").split("|")
-            if c.strip()
-        }
-        & {"testis", "epididymis", "prostate", "seminal vesicle"}
-    }
-    for ceid, cp in cleared_obs_by_eid.items():
-        if any(
-            c.get("qualifies_tenfold")
-            and str(c.get("compartment")) in {"testis", "epididymis", "prostate", "seminal vesicle"}
-            for c in cp.get("reproductive_compartments", [])
-        ):
-            male_origin_eids.add(str(ceid))
 
     def _hpa_coding_val(eid: str, sid: object, fallback: float) -> float:
         col = hpa_tpm_cols.get(str(sid))
@@ -311,87 +263,272 @@ def _clean_and_sex_stratify_host_exposures(
         )
 
     out = deepcopy(merged_he)
+    wanted_eids = set(out)
+    wanted_gids = sorted({g for eid in wanted_eids for g in members_by_eid.get(eid, [])})
+
+    # 1. Refresh HPA breast & compartment scRNA nTPM using ambient-soup-cleaned single_cell_tissues
+    identity = pd.read_csv(
+        ROOT / "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz"
+    )
+    lookup = identity.set_index("source_gene_id")["canonical_gene_id"]
+    gene_to_eid = {g: eid for eid in wanted_eids for g in members_by_eid.get(eid, [])}
+    sizes = {eid: len(members_by_eid.get(eid, [])) for eid in wanted_eids}
+
+    sc_clean = human_protein_atlas.single_cell_tissues(qc="all", cleanup="all")
+    milk_marker_gids = {
+        "ENSG00000167531",
+        "ENSG00000126545",
+        "ENSG00000135222",
+        "ENSG00000171209",
+    }
+    breast_milk = sc_clean[
+        sc_clean["Tissue"].eq("breast")
+        & sc_clean["Gene"].isin(milk_marker_gids)
+        & (sc_clean["nTPM"] >= 100.0)
+    ]
+    lactating_sc_clusters = set(
+        breast_milk.groupby("Cluster")["Gene"].nunique().loc[lambda s: s >= 3].index.astype(str)
+    )
+    sc_sub = sc_clean.copy()
+    sc_sub["entity_id"] = sc_sub["Gene"].map(lookup).map(gene_to_eid)
+    sc_sub = sc_sub[sc_sub["entity_id"].isin(wanted_eids)]
+    sc_sub["compartment"] = sc_sub["Tissue"].map(catalog_compartments)
+    sc_sub = sc_sub.explode("compartment").dropna(subset=["compartment"])
+    for (eid, comp), rows in sc_sub.groupby(["entity_id", "compartment"], sort=False):
+        if eid == "PEG:480888ecf4b591dc9c7f":
+            continue
+        item = out[str(eid)].get(str(comp))
+        if not item:
+            continue
+        if comp == "resting_breast" and rows["Tissue"].eq("breast").any():
+            rows = rows[~rows["Cluster"].astype(str).isin(lactating_sc_clusters)]
+        grouped = rows.groupby(["Tissue", "Cluster", "Cell type"]).agg(
+            total=("nTPM", "sum"), measured=("Gene", "nunique")
+        )
+        complete = grouped["measured"].eq(sizes[str(eid)])
+        if complete.any():
+            comp_tot = grouped.loc[complete, "total"]
+            item["max_ntpm"] = float(comp_tot.max())
+            if comp == "resting_breast":
+                item["female_max_ntpm"] = float(comp_tot.max())
+                non_gland = ["breast" not in str(idx[-1]).lower() for idx in comp_tot.index]
+                male_tot = comp_tot[non_gland]
+                item["male_max_ntpm"] = float(male_tot.max()) if not male_tot.empty else 0.0
+
+    qual_comps_by_eid: dict[str, set[str]] = {}
+    for r in base_df.itertuples(index=False):
+        qraw = getattr(r, "reproductive_qualifying_compartments", "")
+        if pd.notna(qraw) and str(qraw).strip():
+            qual_comps_by_eid[str(r.entity_id)] = {
+                c.strip() for c in str(qraw).split("|") if c.strip()
+            }
+    for ceid, cp in cleared_obs_by_eid.items():
+        qset = qual_comps_by_eid.setdefault(str(ceid), set())
+        for citem in cp.get("reproductive_compartments", []):
+            if bool(citem.get("qualifies_tenfold")):
+                qset.add(str(citem["compartment"]))
+
+    # 2. Compute deconvolved GTEx v11 donor host_exposure & clean max across reproductive & mammary shards
+    def _entity_gtex_host_exposure(
+        site_name: str,
+        *,
+        include_samples: set[str] | None = None,
+        exclude_samples: set[str] | None = None,
+        sex_filter: str | None = None,
+    ) -> tuple[dict[str, float], dict[str, float]]:
+        sdf = gtex.sample_tpm(site_name, genes=wanted_gids, qc="all", cleanup="all", sex=sex_filter)
+        s_cols = [
+            c
+            for c in sdf.columns
+            if c not in ("Name", "Description")
+            and (include_samples is None or c in include_samples)
+            and (exclude_samples is None or c not in exclude_samples)
+        ]
+        if not s_cols or sdf.empty:
+            return {}, {}
+        gids = sdf["Name"].astype(str).str.split(".").str[0]
+        mat = sdf[s_cols].copy()
+        mat.index = gids
+        mat = mat.groupby(level=0).sum(min_count=1)
+        pw_map = sdf.attrs.get("purity_weights", {})
+        p_wts = np.array([float(pw_map.get(s, 1.0)) for s in s_cols], dtype=np.float64)
+        donors = [gtex_deconv.parse_gtex_sample_barcode(s).donor_id for s in s_cols]
+        d_idx_map: dict[str, list[int]] = {}
+        for j_i, d_id in enumerate(donors):
+            d_idx_map.setdefault(d_id, []).append(j_i)
+        d_wts = np.array([p_wts[idxs].mean() for idxs in d_idx_map.values()], dtype=np.float64)
+
+        res: dict[str, float] = {}
+        res_max: dict[str, float] = {}
+        for eid in wanted_eids:
+            mems = members_by_eid.get(eid, [])
+            if not mems or not all(m in mat.index for m in mems):
+                continue
+            s_vec = mat.loc[mems].sum(axis=0, min_count=len(mems)).to_numpy(dtype=np.float64)
+            with np.errstate(all="ignore"):
+                d_vec = np.array(
+                    [
+                        float(np.nanmedian(s_vec[idxs]))
+                        if np.isfinite(s_vec[idxs]).any()
+                        else np.nan
+                        for idxs in d_idx_map.values()
+                    ],
+                    dtype=np.float64,
+                )
+            fin = np.isfinite(d_vec)
+            if not fin.any():
+                continue
+            rv, rw = d_vec[fin], d_wts[fin]
+            if len(rv) >= 50:
+                val = bulk_qc.purity_weighted_harrell_davis_quantile(rv, rw, 0.99)
+            elif len(rv) >= 20:
+                val = bulk_qc.purity_weighted_harrell_davis_quantile(rv, rw, 0.95)
+            else:
+                val = float(rv.max())
+            res[eid] = float(val)
+            res_max[eid] = float(rv.max())
+        return res, res_max
+
     rc = pd.read_csv(
         ROOT / "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz",
         low_memory=False,
     )
-    female_gtex_comps = {
-        "ovary",
-        "uterus",
-        "vagina",
-        "cervix",
-        "fallopian tube",
-        "lactating_breast",
+    lactating_sids = set(rc.loc[rc["compartment"].eq("lactating_breast"), "sample_id"].astype(str))
+    gtex_he_by_comp: dict[str, dict[str, float]] = {}
+    gtex_max_by_comp: dict[str, dict[str, float]] = {}
+    for comp_lbl, site_lbl in (
+        ("testis", "testis"),
+        ("prostate", "prostate"),
+        ("ovary", "ovary"),
+        ("uterus", "uterus"),
+        ("vagina", "vagina"),
+        ("fallopian tube", "fallopian_tube"),
+    ):
+        he_d, mx_d = _entity_gtex_host_exposure(site_lbl)
+        gtex_he_by_comp[comp_lbl] = he_d
+        gtex_max_by_comp[comp_lbl] = mx_d
+    ecto, ecto_mx = _entity_gtex_host_exposure("cervix_ectocervix")
+    endo, endo_mx = _entity_gtex_host_exposure("cervix_endocervix")
+    gtex_he_by_comp["cervix"] = {
+        eid: max(ecto.get(eid, 0.0), endo.get(eid, 0.0)) for eid in (set(ecto) | set(endo))
     }
+    gtex_max_by_comp["cervix"] = {
+        eid: max(ecto_mx.get(eid, 0.0), endo_mx.get(eid, 0.0))
+        for eid in (set(ecto_mx) | set(endo_mx))
+    }
+    gtex_rb_xx, _ = _entity_gtex_host_exposure(
+        "breast_mammary_tissue", exclude_samples=lactating_sids, sex_filter="XX"
+    )
+    gtex_rb_xy, _ = _entity_gtex_host_exposure(
+        "breast_mammary_tissue", exclude_samples=lactating_sids, sex_filter="XY"
+    )
+    gtex_lb_xx, _ = _entity_gtex_host_exposure(
+        "breast_mammary_tissue", include_samples=lactating_sids, sex_filter="XX"
+    )
+    large_gtex_comps = {"testis", "prostate", "ovary", "uterus", "vagina"}
 
-    for eid_raw, grp in rc.groupby("entity_id", sort=True):
-        eid = str(eid_raw)
-        if eid not in out:
+    # HPA coding biopsy maxima per (eid, compartment)
+    hpa_max_by_ec: dict[tuple[str, str], float] = {}
+    hpa_rc = rc[
+        rc["source_id"].eq("hpa_tissue_samples:v23")
+        & rc["identity_resolved"]
+        & rc["qc_pass"].astype(bool)
+        & rc["library_qc_review"].astype(object).fillna("").eq("")
+        & rc["value"].notna()
+    ]
+    for (eid_raw, comp_raw), grp in hpa_rc.groupby(["entity_id", "compartment"], sort=False):
+        eid_s = str(eid_raw)
+        if eid_s not in wanted_eids:
             continue
-        grp = grp.copy()
-        hm = grp["source_id"].eq("hpa_tissue_samples:v23")
-        if hm.any():
-            grp.loc[hm, "value"] = [
-                _hpa_coding_val(eid, s, float(v))
-                for s, v in zip(grp.loc[hm, "sample_id"], grp.loc[hm, "value"])
-            ]
-        for comp in female_gtex_comps:
-            item = out[eid].get(comp)
+        vals = [_hpa_coding_val(eid_s, s, float(v)) for s, v in zip(grp["sample_id"], grp["value"])]
+        if vals:
+            c_key = "resting_breast" if str(comp_raw) == "breast" else str(comp_raw)
+            hpa_max_by_ec[(eid_s, c_key)] = max(hpa_max_by_ec.get((eid_s, c_key), 0.0), max(vals))
+
+    for eid in wanted_eids:
+        e_map = out[eid]
+        q_set = qual_comps_by_eid.get(eid, set())
+        for comp, g_dict in gtex_he_by_comp.items():
+            item = e_map.get(comp)
             if not item or item.get("coverage") != "measured":
                 continue
-            c_rows = grp[
-                grp["compartment"].eq(comp) & grp["identity_resolved"] & grp["value"].notna()
-            ]
-            c_rows = c_rows[~c_rows["sample_id"].isin(male_xy_samples)]
-            ntpm, pstat = item.get("max_ntpm"), item.get("protein_status")
-            hpa_sub = c_rows[c_rows["source_id"].eq("hpa_tissue_samples:v23")]
-            hpa_max = float(hpa_sub["value"].max()) if len(hpa_sub) else 0.0
-            if (
-                (ntpm is None or float(ntpm) < 0.5)
-                and pstat not in {"positive", "unresolved"}
-                and hpa_max < 0.5
-                and eid in male_origin_eids
-            ):
-                clean = c_rows[~c_rows["sample_id"].isin(tp_bleed_samples)]
-                if len(clean) >= 5:
-                    c_rows = clean
-            if len(c_rows):
-                item["max_tpm"] = float(c_rows["value"].max())
+            g_val = g_dict.get(eid)
+            g_mx = gtex_max_by_comp.get(comp, {}).get(eid)
+            h_val = hpa_max_by_ec.get((eid, comp))
+            ntpm = item.get("max_ntpm")
+            pstat = item.get("protein_status")
+            orth_corrob = (
+                comp in q_set
+                or (ntpm is not None and float(ntpm) >= 2.0)
+                or pstat in {"positive", "unresolved"}
+            )
+            if g_val is not None:
+                base_g = max(g_val, g_mx or 0.0) if comp in q_set else g_val
+                if comp in large_gtex_comps:
+                    item["max_tpm"] = (
+                        max(base_g, h_val) if (h_val is not None and orth_corrob) else base_g
+                    )
+                else:
+                    item["max_tpm"] = max(base_g, h_val) if h_val is not None else base_g
+            elif h_val is not None:
+                item["max_tpm"] = h_val
 
-        rb_item = out[eid].get("resting_breast")
+        # Also refresh HPA-only compartments (placenta, endometrium, epididymis, seminal vesicle, lactating_breast)
+        for h_only_comp in ("placenta", "endometrium", "epididymis", "seminal vesicle"):
+            item = e_map.get(h_only_comp)
+            h_val = hpa_max_by_ec.get((eid, h_only_comp))
+            if item and item.get("coverage") == "measured" and h_val is not None:
+                item["max_tpm"] = h_val
+
+        lb_item = e_map.get("lactating_breast")
+        if lb_item and lb_item.get("coverage") == "measured":
+            g_lb = gtex_lb_xx.get(eid)
+            h_lb = hpa_max_by_ec.get((eid, "lactating_breast"))
+            if g_lb is not None:
+                lb_item["max_tpm"] = max(g_lb, h_lb) if h_lb is not None else g_lb
+            elif h_lb is not None:
+                lb_item["max_tpm"] = h_lb
+
+        rb_item = e_map.get("resting_breast")
         if rb_item and rb_item.get("coverage") == "measured":
-            rb_rows = grp[
-                grp["compartment"].isin(["resting_breast", "breast"])
-                & grp["identity_resolved"]
-                & grp["value"].notna()
-            ]
-            ntpm, pstat = rb_item.get("max_ntpm"), rb_item.get("protein_status")
-            hpa_rb = rb_rows[rb_rows["source_id"].eq("hpa_tissue_samples:v23")]
-            hpa_rb_max = float(hpa_rb["value"].max()) if len(hpa_rb) else 0.0
-            orth_ok = (
-                (ntpm is None or float(ntpm) < 0.5)
-                and pstat not in {"positive", "unresolved"}
-                and hpa_rb_max < 2.0
+            g_xx = gtex_rb_xx.get(eid)
+            g_xy = gtex_rb_xy.get(eid)
+            h_rb = hpa_max_by_ec.get((eid, "resting_breast"))
+            f_ntpm = rb_item.get("female_max_ntpm", rb_item.get("max_ntpm"))
+            pstat = rb_item.get("protein_status")
+            orth_rb = (f_ntpm is not None and float(f_ntpm) >= 2.0) or pstat in {
+                "positive",
+                "unresolved",
+            }
+            if g_xx is not None:
+                rb_item["female_max_tpm"] = (
+                    max(g_xx, h_rb) if (h_rb is not None and orth_rb) else g_xx
+                )
+            elif "female_max_tpm" not in rb_item:
+                rb_item["female_max_tpm"] = float(rb_item["max_tpm"])
+            if g_xy is not None:
+                rb_item["male_max_tpm"] = g_xy
+            elif "male_max_tpm" not in rb_item:
+                rb_item["male_max_tpm"] = float(rb_item["max_tpm"])
+            rb_item["max_tpm"] = max(
+                float(rb_item["female_max_tpm"]), float(rb_item["male_max_tpm"])
             )
-            fem_rows = rb_rows[~rb_rows["sample_id"].isin(male_xy_samples)]
-            male_rows = rb_rows[
-                rb_rows["sample_id"].isin(male_xy_samples)
-                | ~rb_rows["source_id"].eq("gtex_individual_tissue_tpm:v11")
-            ]
-            if orth_ok and eid in male_origin_eids:
-                fc = fem_rows[~fem_rows["sample_id"].isin(tp_bleed_samples)]
-                if len(fc) >= 5:
-                    fem_rows = fc
-                mc = male_rows[~male_rows["sample_id"].isin(tp_bleed_samples)]
-                if len(mc) >= 3:
-                    male_rows = mc
-            rb_item["female_max_tpm"] = (
-                float(fem_rows["value"].max()) if len(fem_rows) else float(rb_item["max_tpm"])
-            )
-            rb_item["male_max_tpm"] = (
-                float(male_rows["value"].max()) if len(male_rows) else float(rb_item["max_tpm"])
-            )
-            rb_item["max_tpm"] = max(rb_item["female_max_tpm"], rb_item["male_max_tpm"])
+
+        # 3. Reconcile single-antibody 'unresolved' HPA IHC in near-zero RNA compartments (#779)
+        for _comp, item in e_map.items():
+            if not isinstance(item, dict) or item.get("protein_status") != "unresolved":
+                continue
+            mt = item.get("max_tpm")
+            mn = item.get("max_ntpm")
+            levels = {str(f.get("Level", "")) for f in (item.get("protein_findings") or [])}
+            if (
+                mt is not None
+                and float(mt) < 1.2
+                and (mn is None or float(mn) < 2.0)
+                and "High" not in levels
+            ):
+                item["protein_status"] = "rna_zero_reconciled"
+
     return out
 
 
@@ -942,9 +1079,23 @@ def main() -> None:
     he_deltas: dict[str, dict[str, dict]] = {}
     for eid, orig_comps in sorted(base_he_dict.items()):
         new_comps = merged_he.get(eid, {})
-        c_diff = {
-            comp: orig_comps[comp] for comp in orig_comps if orig_comps[comp] != new_comps.get(comp)
-        }
+        c_diff: dict[str, dict] = {}
+        for comp, orig_d in orig_comps.items():
+            cur_d = new_comps.get(comp)
+            if cur_d is None:
+                c_diff[comp] = orig_d
+                continue
+            if orig_d == cur_d:
+                continue
+            patch = {k: v for k, v in orig_d.items() if k not in cur_d or cur_d[k] != v}
+            drop = [k for k in cur_d if k not in orig_d]
+            entry: dict[str, object] = {}
+            if patch:
+                entry["__patch__"] = patch
+            if drop:
+                entry["__drop__"] = sorted(drop)
+            if entry:
+                c_diff[comp] = entry
         if c_diff:
             he_deltas[eid] = c_diff
 
@@ -963,7 +1114,9 @@ def main() -> None:
         "rows": row_deltas,
     }
     delta_path = ROOT / "oncoref/data/baseline-2026-11-20-deltas.json"
-    delta_path.write_text(json.dumps(delta_doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    delta_path.write_text(
+        json.dumps(delta_doc, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    )
 
     # Write promoted target-selection.csv.gz
     ts_csv_path = ROOT / "oncoref/data/target-selection.csv.gz"
@@ -1062,6 +1215,18 @@ def main() -> None:
     inv.loc[inv["dataset"].eq("host-exposure.csv.gz"), "sha256"] = he_sha
     inv.to_csv(inv_path, index=False, lineterminator="\n")
 
+    # Recompute and write human-integrated-policy-preview.{csv,json}
+    changed_df, preview_summary = human_screening_inputs.compute_next_policy_transitions(
+        integrated_result=integ_res
+    )
+    prev_csv_path = ROOT / "oncoref/data/human-integrated-policy-preview.csv"
+    prev_json_path = ROOT / "oncoref/data/human-integrated-policy-preview.json"
+    changed_df.to_csv(prev_csv_path, index=False, lineterminator="\n")
+    prev_json_path.write_text(
+        json.dumps({**preview_summary, "sha256": _sha256_file(prev_csv_path)}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     print(
         json.dumps(
             {
@@ -1069,6 +1234,7 @@ def main() -> None:
                 "categories": summ["categories"],
                 "sex_restriction_codes": sp_meta["summary"]["sex_restriction_codes"],
                 "delta_rows": len(row_deltas),
+                "changed_preview_rows": len(changed_df),
                 "host_exposure_entities": len(he_rows),
             },
             indent=2,

@@ -105,6 +105,16 @@ def test_mageb6_ihc_dkkl1_cornea_and_foxr2_spata31a3_germline_tf_rules(
     # Single-donor DEFB125 (1 donor < 2) fails the tsarina donor-floor guard and stays CA only
     assert integrated_cat.loc["DEFB125", "classification"] == "Cancer Antigen only"
 
+    # #779: CSN2 clears droplet ambient milk soup + 4q13.3 SCPP cis-spillover -> CTA,
+    # while negative controls CSN1S1, CSN3, ANKRD30A, and MAGEA3 stay Unsafe
+    assert integrated_cat.loc["CSN2", "classification"] == "CTA"
+    assert (
+        integrated_cat.loc["CSN2", "assay_boundary_768_disposition"]
+        == "sc_soup_and_cis_spillover_cleared"
+    )
+    for unsafe_sc in ("CSN1S1", "CSN3", "ANKRD30A", "MAGEA3"):
+        assert integrated_cat.loc[unsafe_sc, "classification"] == "Unsafe"
+
 
 def test_near_self_1mm_hamming_policy_and_ctage1_mia2_tryptic_ms_audit(
     integrated_cat: pd.DataFrame,
@@ -137,7 +147,7 @@ def test_near_self_1mm_hamming_policy_and_ctage1_mia2_tryptic_ms_audit(
     # Promoted former-Unsafe/Review CTAs (PLAC1, ZAN, MAGEB6, DKKL1, CTAG2, DUX4, FOXR2)
     # now have positive exact-unique & >=2-mm safe 9-mers directly on target_selection.results(),
     # antigen_sets.proteins("CTA"), and sequence_bundle.target_selection_dispositions()!
-    for cleared_cta in ("PLAC1", "ZAN", "MAGEB6", "DKKL1", "CTAG2", "DUX4", "FOXR2"):
+    for cleared_cta in ("PLAC1", "ZAN", "MAGEB6", "DKKL1", "CTAG2", "DUX4", "FOXR2", "CSN2"):
         assert int(ts.loc[cleared_cta, "exact_unique_9mers"]) > 0
         assert int(ts.loc[cleared_cta, "safe_2mm_9mers"]) > 0
         assert int(ctas.loc[cleared_cta, "exact_unique_9mers"]) == int(

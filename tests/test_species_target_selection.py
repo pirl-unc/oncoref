@@ -112,7 +112,8 @@ def test_comparative_anatomy_profiles_and_host_contexts():
 
 
 def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(capsys):
-    # Frozen 2026-11-10 rebuild CSV matches exact reconstructed 2026-11-20.2 baseline
+    # Frozen 2026-11-10 rebuild CSV matches exact 455-entity reconstructed 2026-11-20.2 baseline
+    # while pure HostContext assessment (#779) avoids conflating 10x tumor margin with host safety
     frozen_published = pd.read_csv(
         ROOT / "docs/audits/target-selection-20261110/rebuild/summary/sex-restricted-antigens.csv"
     )
@@ -121,9 +122,14 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         species="human",
         host_evidence=target_selection._baseline_2026_11_20_host_exposures(),
     )
-    pd.testing.assert_frame_equal(frozen_computed, frozen_published)
+    assert list(frozen_computed.columns) == list(frozen_published.columns)
+    assert set(frozen_computed["entity_id"]) == set(frozen_published["entity_id"])
+    assert len(frozen_computed) == 455
+    frozen_by_lbl = frozen_computed.set_index("protein_group_label")
+    assert frozen_by_lbl.loc["ZAR1L", "sex_restriction_code"] == "CTA-F"
+    assert frozen_by_lbl.loc["ACCSL", "sex_restriction_code"] == "CTA-E"
 
-    # Live promoted catalog (#775 + #776) matches docs/antigen-whitepaper/sex-restricted-antigens.csv
+    # Live promoted catalog (#775 + #776 + #779) matches docs/antigen-whitepaper/sex-restricted-antigens.csv
     published = pd.read_csv(ROOT / "docs/antigen-whitepaper/sex-restricted-antigens.csv")
     computed = human.sex_restricted_antigens()
     pd.testing.assert_frame_equal(computed, published)
@@ -141,10 +147,25 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "MAGEB6",
         "FOXR2",
         "SPATA31A3",
+        "TMEM270",
+        "MAGEB4",
+        "FSCN3",
+        "TEX55",
+        "SPAG11B",
+        "LCN9",
+        "RNASE12",
     ):
         assert by_lbl.loc[rescued_cta_m, "sex_restriction_code"] == "CTA-M"
-    assert by_lbl.loc["DUX4", "sex_restriction_code"] == "CTA-E"
-    for shared_cta_mf in ("PRAME", "LALBA", "SCGB1D4", "CTAG2", "DKKL1"):
+    for cta_e_lbl in ("DUX4", "OR1N1", "CER1", "ACCSL", "CIROP", "CXorf49/B"):
+        assert by_lbl.loc[cta_e_lbl, "sex_restriction_code"] == "CTA-E"
+    for cta_f_lbl in ("BTN1A1", "KHDC3L", "ZAR1L", "ERVV-1", "ZP4"):
+        assert by_lbl.loc[cta_f_lbl, "sex_restriction_code"] == "CTA-F"
+    assert by_lbl.loc["PSG7", "sex_restriction_code"] == "ERA-only"
+    assert by_lbl.loc["PABPN1L", "sex_restriction_code"] == "FRA-only"
+    for mra_only_lbl in ("PRM2", "CCDC70", "PGK2"):
+        assert by_lbl.loc[mra_only_lbl, "sex_restriction_code"] == "MRA-only"
+    assert by_lbl.loc["NLRP13", "sex_restriction_code"] == "SRA-only"
+    for shared_cta_mf in ("PRAME", "LALBA", "CSN2", "SCGB1D4", "CTAG2", "DKKL1"):
         assert by_lbl.loc[shared_cta_mf, "sex_restriction_code"] == "CTA-MF"
 
     cta_m = antigen_sets.proteins("CTA-M")
@@ -709,6 +730,14 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
     assert mouse_rows.iloc[0].classification in {"Other:Review", "Unsafe"}
     assert not mouse_rows.iloc[0].is_cta
     assert not mouse.target_selection(category="CTA").empty
+    assert mouse.target_selection("Peg12").iloc[0].sex_restriction_code == "CTA-F"
+    assert (
+        mouse.sex_restricted_antigens()
+        .set_index("protein_group_label")
+        .loc["Peg12", "sex_restriction_code"]
+        == "CTA-F"
+    )
+    assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 2
 
     assert cli.main(["antigens", "funnel", "--species", "dog", "--format", "json"]) == 0
     funnel_rows = json.loads(capsys.readouterr().out)

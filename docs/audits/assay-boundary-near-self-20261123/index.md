@@ -1,8 +1,8 @@
-# Assay-Boundary Adjudications & 1-Mismatch Near-Self Audit (#768, #769)
+# Assay-Boundary Adjudications & 1-Mismatch Near-Self Audit (#768, #769, #779)
 
 Policy ID: `oncoref.assay-boundary-and-near-self.2026-11-23.1`
 
-## 1. Assay-Boundary Adjudications (`#768`)
+## 1. Assay-Boundary Adjudications (`#768`, `#779`)
 
 1. **`#713` Non-admixed tumor witness gating (`TCGA-TGCT` Note `R` libraries):**
    `11` post-meiotic spermatid markers whose `>= 10x` tumor evidence rested solely on `library_qc` Note `R` parenchymal-admixture `TCGA-TGCT` libraries (`CETN1`, `PGK2`, `PRM2`, `BOD1L2`, `CCDC70`, `TSSK2`, `PRR30`, `ZNRF4`, `IQCF5`, `BPIFA3`, `CYLC2`) reclassify from `CTA -> Reproductive Antigen only`, whereas **`PRM1` stays `CTA`** via its independent female `BRCA` witness (`58.97 TPM >= 57.11 TPM` under `#764` bleed QC) and **`SPATA19` stays `CTA`** via its `#737` `cSCC` somatic tumor witness (`GSM3567709 = 13.28 TPM >= 10.0 TPM`, matching `CANCER_ONLY` MS evidence).
@@ -12,6 +12,8 @@ Policy ID: `oncoref.assay-boundary-and-near-self.2026-11-23.1`
    **`DKKL1`** (`8` multi-UMI cells across `21,343` adult cornea cells; `3.39 TPM` normal max, `1,346.2 TPM` Testis, `61.62 TPM` `BRCA`) advances `Unsafe -> CTA`, while `INSL4` (`64`), `GPHB5` (`24`), `QRFP` (`40`), and `C20orf202` (`42`) remain `Unsafe`.
 4. **Protamine-diluted germline transcription-factor qualification:**
    **`FOXR2`** (`135` Testis donors `>= 3 TPM`, `5.2 nTPM` spermatogonia), **`SPATA31A3`** (`23` Testis donors `>= 3 TPM`, `1.2 nTPM` spermatids), and **`PPP4R3C`** (`230` Testis donors `>= 3 TPM`, `22.7 nTPM` germ cells) advance `Cancer Antigen only -> CTA`, while single-donor `DEFB125` (`1` donor) remains `Cancer Antigen only`.
+5. **Droplet ambient milk soup & `<= 100 kb` cis-chromatin spillover (`#779`):**
+   **`CSN2`** (`ENSG00000135222` on `4q13.3`; `breast c-3` macrophages `683.2 -> 0.0 nTPM` after `single_cell_tissues(qc="all", cleanup="all")`; `salivary gland` serous clusters `30.2 kb` from `STATH`/`HTN3`/`HTN1` at `321,577–896,409 nTPM` with spillover ratio `<= 0.000050 <= 1e-4`, HPA surgical salivary bulk `0.90 TPM < 1.0 TPM`, salivary IHC `Not detected`, `0` CELLxGENE rare-cell flags, `2.99 TPM` clean somatic normal max, `28,460.4 TPM` lactating breast, `99,761.8 TPM` `BRCA`) advances `Unsafe -> CTA` (`CTA-MF`), while `CSN1S1` (`16.9 nTPM` brain neurons), `CSN3` (`261.4 nTPM` + `395.9 TPM` bulk), `ANKRD30A` (`4.9 nTPM` brain neurons), and `MAGEA3` remain strictly `Unsafe`.
 
 ## 2. 1-Mismatch Hamming Near-Self & Tryptic-MS Paralog Audit (`#769`)
 
@@ -27,6 +29,7 @@ Policy ID: `oncoref.assay-boundary-and-near-self.2026-11-23.1`
 | `PLAC1` | `CTA` | `CTA-M` | `204` | `204` | `0.00%` | `0` | `#765` nuclear 5'-UTR intron & `PABIR2` readthrough cleared |
 | `DKKL1` | `CTA` | `CTA-MF` | `234` | `234` | `0.00%` | `0` | `#768` sparse adult cornea (`8 / 21,343` multi-UMI cells) cleared |
 | `MAGEB6` | `CTA` | `CTA-M` | `367` | `358` | `2.45%` | `0` | `#768` single-antibody IHC with `0.012 TPM` somatic RNA cleared |
+| `CSN2` | `CTA` | `CTA-MF` | `218` | `209` | `4.13%` | `0` | `#779` breast ambient milk soup + `4q13.3` SCPP cis-spillover cleared |
 | `CTAG2` | `CTA` | `CTA-MF` | `172` | `172` | `0.00%` | `0` | `#766` `LAGE-1a` (`ENST00000369585`) `SLLMWITQC` clinical clearance |
 | `DUX4` | `CTA` | `CTA-E` | `413` | `412` | `0.24%` | `0` | `#765 + #767` symmetric `D4Z4` repeat-array silence |
 | `FOXR2` | `CTA` | `CTA-M` | `303` | `303` | `0.00%` | `0` | `#768` protamine-diluted spermatogonial TF (`135` Testis donors) |
