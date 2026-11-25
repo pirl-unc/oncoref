@@ -1,9 +1,9 @@
 {
   "schema": "oncoref.host-exposure.v1",
   "policy_id": "oncoref.host-selection.2026-11-25.1",
-  "catalog_policy_id": "oncoref.target-selection.2026-11-23.1",
-  "catalog_data_sha256": "b3a66047b9660e895843807eb3e40c0077d291d4541e3ac04bcd3dcfcc5d35c0",
-  "sha256": "7c5ebe2c3f87b35902795f0d7c0ec5d9cc89859f7785b703a5c2a6e52d1d1a05",
+  "catalog_policy_id": "oncoref.target-selection.2026-11-25.1",
+  "catalog_data_sha256": "350ffd33831837ef5d8ea0174bd868cf34ffb36b92a195b4abd2877a469f20e4",
+  "sha256": "8cc187407a239a93fbc1d8a0b747ce9c88a4e1a04b42da3975b8b11b371883d8",
   "inputs": {
     "docs/audits/target-selection-20261110/rebuild/reproductive-comparison.csv.gz": "7d5a856c718f323155e62ba512d4cc5c59c79fd7882a127165f077071e93d4ac",
     "docs/audits/cta-selection-20261028/hpa_rna_consensus-accepted-identities.csv.gz": "1220745efe2441e091101ff5635d3a9d02b8fed0f04528e56cb57448573f38e6",

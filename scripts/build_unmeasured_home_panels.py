@@ -469,9 +469,29 @@ def adjudicate_row(row: pd.Series) -> str:
     )
 
     if tissue == "hair follicle":
-        # Disposable compartment: somatic skin bulk already passed in target-selection
+        # Disposable compartment (DISPOSABLE_CAP = 32.0 TPM):
+        # 1) Direct single-cell hair-follicle UMI confirmation across GSE129611/GSE193269:
         if sc_donors_ge2 >= 1:
             return "home_disposable_follicle_expressed_tenfold"
+        # 2) Assayed across 8 scalp hair-follicle scRNA donors (0 multi-UMI donors) AND
+        #    bounded near-zero across all 1,405 GTEx hair-bearing leg & suprapubic skin biopsies
+        #    (P99 <= 0.50 TPM and max < 4.0 TPM, bounding any 1-3% follicular sub-compartment
+        #    well below the 32.0 TPM Disposable cap) with >=10x clean tumor enrichment:
+        skin_p99 = float(row.get("hair_bearing_skin_p99_tpm", np.nan))
+        skin_max = float(row.get("hair_bearing_skin_max_tpm", np.nan))
+        norm_ref_hf = (
+            float(row["normal_reference_tpm"]) if pd.notna(row["normal_reference_tpm"]) else 0.0
+        )
+        tum_max_hf = float(row["tumor_max_tpm"]) if pd.notna(row["tumor_max_tpm"]) else 0.0
+        if (
+            bool(row["home_sc_measured"])
+            and pd.notna(skin_p99)
+            and skin_p99 <= 0.50
+            and pd.notna(skin_max)
+            and skin_max < 4.0
+            and tum_max_hf >= 10.0 * max(norm_ref_hf, 1.0)
+        ):
+            return "home_cleared_panel_passes_tenfold"
         return "home_undetected_in_sampled_panel"
 
     # Non-disposable home tissue or cross-panel non-disposable violation:
@@ -859,10 +879,62 @@ def build_all(raw_dir: Path, nose_skin_dir: Path, durante_xlsx: Path) -> dict:
 
 def build_protein_adjudications(gw: pd.DataFrame) -> dict:
     """Adjudicate all 568 home_tissue protein groups from the genome-wide panel matrix."""
+    from oncoref import gtex, library_qc
+
     gw_path = DATA_DIR / "unmeasured-home-gene-expression.csv.gz"
+    base_ts = target_selection._baseline_2026_11_20_frame()
     ts = pd.read_csv(DATA_DIR / "target-selection.csv.gz", low_memory=False)
+    base_by_eid = base_ts.set_index("entity_id")
     ht = ts[ts["home_tissue"].fillna("").ne("")].copy()
     gw_by_gene = gw.set_index("gene_id")
+
+    # Clean tumor maxima under tightened gDNA library QC (if built)
+    gdna_path = DATA_DIR / "tumor-gdna-background-deltas.csv"
+    gdna_by_eid = (
+        library_qc.tumor_gdna_background_deltas(only_applied=True)
+        .set_index("entity_id")
+        .to_dict("index")
+        if gdna_path.exists()
+        else {}
+    )
+
+    # Hair-bearing GTEx v11 skin P99 and max across Lower Leg + Suprapubic biopsies for hair-follicle genes
+    hf_rows = ht[ht["home_tissue"].eq("hair follicle")]
+    hf_gids = sorted({g for m in hf_rows["member_gene_ids"] for g in json.loads(m)})
+    skin_p99_by_eid: dict[str, float] = {}
+    skin_max_by_eid: dict[str, float] = {}
+    if hf_gids:
+        leg_df = gtex.sample_tpm(
+            "skin_sun_exposed_lower_leg", genes=hf_gids, qc="all", cleanup="all"
+        )
+        pub_df = gtex.sample_tpm(
+            "skin_not_sun_exposed_suprapubic", genes=hf_gids, qc="all", cleanup="all"
+        )
+        leg_mat = (
+            leg_df.drop(columns=["Description"])
+            .assign(Name=lambda d: d["Name"].astype(str).str.split(".").str[0])
+            .groupby("Name")
+            .sum(min_count=1)
+        )
+        pub_mat = (
+            pub_df.drop(columns=["Description"])
+            .assign(Name=lambda d: d["Name"].astype(str).str.split(".").str[0])
+            .groupby("Name")
+            .sum(min_count=1)
+        )
+        for hr in hf_rows.itertuples(index=False):
+            mems = json.loads(hr.member_gene_ids)
+            p99_vals = []
+            max_vals = []
+            for smat in (leg_mat, pub_mat):
+                if all(m in smat.index for m in mems):
+                    svec = smat.loc[mems].sum(axis=0, min_count=len(mems)).dropna()
+                    if not svec.empty:
+                        p99_vals.append(float(svec.quantile(0.99)))
+                        max_vals.append(float(svec.max()))
+            if p99_vals:
+                skin_p99_by_eid[str(hr.entity_id)] = max(p99_vals)
+                skin_max_by_eid[str(hr.entity_id)] = max(max_vals)
 
     tissue_spec = {
         "olfactory epithelium": (
@@ -942,13 +1014,24 @@ def build_protein_adjudications(gw: pd.DataFrame) -> dict:
             rfpkm = float(sub["nasal_respiratory_fpkm"].max())
             aux = f"Olender2016 nasal respiratory bulk={rfpkm:.2f} FPKM"
 
-        s10x = int(r.samples_at_tenfold) if pd.notna(r.samples_at_tenfold) else 0
+        brow = base_by_eid.loc[r.entity_id]
+        base_s10x = int(brow["samples_at_tenfold"]) if pd.notna(brow["samples_at_tenfold"]) else 0
         is_gated = bool(
-            r.classification == "Other:Unscreened tissue"
-            or (r.classification == "Reproductive Antigen only" and s10x >= 1)
+            brow["classification"] == "Other:Unscreened tissue"
+            or (brow["classification"] == "Reproductive Antigen only" and base_s10x >= 1)
         )
-        tum_max = float(r.tumor_max_tpm) if pd.notna(r.tumor_max_tpm) else np.nan
-        norm_ref = float(r.normal_reference_tpm) if pd.notna(r.normal_reference_tpm) else 0.0
+        gdna_r = gdna_by_eid.get(str(r.entity_id))
+        if gdna_r is not None:
+            tum_max = float(gdna_r["clean_tumor_max_tpm"])
+            top_cc = str(gdna_r["clean_tumor_top_cancer_code"] or "")
+            s10x = int(gdna_r["clean_samples_at_tenfold"])
+        else:
+            tum_max = float(r.tumor_max_tpm) if pd.notna(r.tumor_max_tpm) else np.nan
+            top_cc = str(r.tumor_top_cancer_code) if pd.notna(r.tumor_top_cancer_code) else ""
+            s10x = int(r.samples_at_tenfold) if pd.notna(r.samples_at_tenfold) else 0
+        norm_ref = (
+            float(brow["normal_reference_tpm"]) if pd.notna(brow["normal_reference_tpm"]) else 0.0
+        )
         fold_vs_home = (
             round(tum_max / max(norm_ref, b_p95, 1.0), 3)
             if (b_meas and pd.notna(tum_max))
@@ -987,9 +1070,7 @@ def build_protein_adjudications(gw: pd.DataFrame) -> dict:
                 round(float(r.disposable_max_tpm), 4) if pd.notna(r.disposable_max_tpm) else np.nan
             ),
             "tumor_max_tpm": round(tum_max, 4) if pd.notna(tum_max) else np.nan,
-            "tumor_top_cancer_code": r.tumor_top_cancer_code
-            if pd.notna(r.tumor_top_cancer_code)
-            else "",
+            "tumor_top_cancer_code": top_cc,
             "samples_at_tenfold": s10x,
             "home_bulk_panel_id": b_id,
             "home_bulk_measured": b_meas,
@@ -1011,7 +1092,14 @@ def build_protein_adjudications(gw: pd.DataFrame) -> dict:
             "cross_panel_ceiling_violation": "; ".join(cross_violations),
             "auxiliary_assay_summary": aux,
         }
-        rec["home_panel_disposition"] = adjudicate_row(pd.Series(rec))
+        eval_series = pd.Series(
+            {
+                **rec,
+                "hair_bearing_skin_p99_tpm": skin_p99_by_eid.get(str(r.entity_id), np.nan),
+                "hair_bearing_skin_max_tpm": skin_max_by_eid.get(str(r.entity_id), np.nan),
+            }
+        )
+        rec["home_panel_disposition"] = adjudicate_row(eval_series)
         adj_rows.append(rec)
 
     adj_df = pd.DataFrame(adj_rows).sort_values(

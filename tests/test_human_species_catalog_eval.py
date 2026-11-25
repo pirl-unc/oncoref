@@ -23,14 +23,14 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert cat_default["is_reproductive_antigen"].equals(
         promoted["is_reproductive_antigen"].astype(bool)
     )
-    assert int(promoted["is_cta"].sum()) == 332
+    assert int(promoted["is_cta"].sum()) == 324
 
     # Exact sex-restriction subset parity across all 465 human RA/CTA proteins
     expected_sex = human.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     got_sex = res_default.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     pd.testing.assert_series_equal(got_sex.sort_index(), expected_sex.sort_index())
 
-    # Disabling all 2026-11-23 integrated layers reproduces the frozen 2026-11-20.2 baseline (327 CTA)
+    # Disabling all integrated layers reproduces the frozen 2026-11-20.2 baseline (327 CTA)
     baseline_20261120 = target_selection._baseline_2026_11_20_frame()
     res_base = human.evaluate_integrated_catalog(
         include_home_panels=False,
@@ -45,9 +45,9 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert res_base.catalog["classification"].equals(baseline_20261120["classification"])
     assert int(res_base.catalog["is_cta"].sum()) == 327
 
-    # Pinned default human catalog matches promoted policy_id (332 CTA)
+    # Pinned default human catalog matches promoted policy_id (324 CTA)
     assert human.target_selection().attrs["policy_id"] == target_selection.POLICY_ID
-    assert int(human.target_selection()["is_cta"].sum()) == 332
+    assert int(human.target_selection()["is_cta"].sum()) == 324
 
 
 def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
@@ -85,11 +85,18 @@ def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
             in by_label.loc[unsafe_lbl, "transition_driver"]
         )
 
-    # #735 cleared home panels admit TAS1R2 / KRTAP21-2 / KRTAP9-7 to Cancer Antigen only
-    # and promote reproductive-positive OR10J1 from Reproductive Antigen only to CTA
-    for ca_lbl in ("TAS1R2", "KRTAP21-2", "KRTAP9-7"):
+    # #735 cleared home panels admit TAS1R2 / KRTAP21-2 / KRTAP20-3 to Cancer Antigen only,
+    # promote reproductive-positive OR10J1 & KRTAP20-4 to CTA, while tumor gDNA QC demotes
+    # KRTAP9-7 to Other:Expression and CAPZA3 to Reproductive Antigen only
+    for ca_lbl in ("TAS1R2", "KRTAP21-2", "KRTAP20-3"):
         assert by_label.loc[ca_lbl, "classification_integrated"] == "Cancer Antigen only"
     assert by_label.loc["OR10J1", "classification_integrated"] == "CTA"
+    assert by_label.loc["KRTAP20-4", "classification_integrated"] == "CTA"
+    assert by_label.loc["KRTAP9-7", "classification_integrated"] == "Other:Expression"
+    assert by_label.loc["CAPZA3", "classification_integrated"] == "Reproductive Antigen only"
+    assert (
+        "library_qc:tumor_gdna_background_excluded" in by_label.loc["CAPZA3", "transition_driver"]
+    )
 
     # #737 linear-TPM cohorts admit BPY2/B/C (cSCC) and promote DEFB107A/B (BCC) to CTA
     assert by_label.loc["BPY2/B/C", "classification_integrated"] == "Cancer Antigen only"

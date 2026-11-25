@@ -81,9 +81,12 @@ def test_unmeasured_home_protein_adjudications_matches_catalog_and_key_outcomes(
     )
     assert set(disp_hf["protein_group_label"]) == {"KRTAP21-2", "KRTAP9-7"}
 
-    # Cleared below ceiling and >=10x tumor fold
+    # Cleared below ceiling and >=10x tumor fold (including hair-bearing skin P99<=0.50 & max<4.0 KRTAP20-4)
     assert by_label.loc["TAS1R2", "home_panel_disposition"] == "home_cleared_panel_passes_tenfold"
     assert by_label.loc["OR10J1", "home_panel_disposition"] == "home_cleared_panel_passes_tenfold"
+    assert (
+        by_label.loc["KRTAP20-4", "home_panel_disposition"] == "home_cleared_panel_passes_tenfold"
+    )
 
     # Mineralized odontoblast-front DSPP remains explicitly undetected in soft pulp biopsies
     assert by_label.loc["DSPP", "home_panel_disposition"] == "home_undetected_in_sampled_panel"

@@ -57,7 +57,7 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     assert (~unsafe.cancer_antigen_candidate).all()
 
     ctas = dispositions[dispositions.category.eq("CTA")]
-    assert len(ctas) == 332
+    assert len(ctas) == 324
     assert (ctas.shared_sequence == "allow").all()
     assert ctas.direct_target_candidate.all()
     assert ctas.cancer_antigen_candidate.all()
@@ -65,14 +65,14 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     assert ctas.representative_sequence_sha256s.map(bool).all()
 
     ca_only = dispositions[dispositions.category.eq("Cancer Antigen only")]
-    assert len(ca_only) == 117
+    assert len(ca_only) == 100
     assert (ca_only.shared_sequence == "allow").all()
     assert (~ca_only.direct_target_candidate).all()
     assert ca_only.cancer_antigen_candidate.all()
     assert ca_only.representative_sequence_sha256s.map(bool).all()
 
     ra_only = dispositions[dispositions.category.eq("Reproductive Antigen only")]
-    assert len(ra_only) == 133
+    assert len(ra_only) == 141
     assert (ra_only.shared_sequence == "allow").all()
     assert (~ra_only.direct_target_candidate).all()
     assert ra_only.reproductive_antigen_candidate.all()

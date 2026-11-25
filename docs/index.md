@@ -18,7 +18,7 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 ## Antigen Classification
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), OncoRef
-classifies **332 CTA, 117 Cancer Antigen only, 133 Reproductive Antigen only, 1,062 Other and
+classifies **324 CTA, 100 Cancer Antigen only, 141 Reproductive Antigen only, 1,079 Other and
 18,249 Unsafe**:
 
 1. **Normal-tissue safety screen:** Bulk RNA (GTEx v11, HPA v23), sorted immune subsets (HPA, DICE, Monaco),

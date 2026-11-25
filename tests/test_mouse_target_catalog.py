@@ -121,7 +121,30 @@ def test_mouse_sixteen_compartment_host_context_and_sex_restricted_subsets():
     cta_mf = antigen_sets.proteins("CTA-MF", species="mouse")
     total_cta = antigen_sets.proteins("CTA", species="mouse")
     assert len(cta_m) + len(cta_e) + len(cta_f) + len(cta_mf) == len(total_cta)
-    assert len(cta_m) > 0
+    assert {"Pbsn", "Sbp", "Tex19.1", "Plac1"} <= set(cta_m.protein_group_label)
+    assert {"Serpinb9e", "Pramel13"} <= set(cta_e.protein_group_label)
+    assert {"Gzmf", "Gzmg", "Gzmd"} <= set(cta_f.protein_group_label)
+
+    # Sorted & activated immune gates (ImmGen ULI/MNP + LPS BMDM) exclude cytokines & myeloid markers
+    by_lbl = mouse.target_selection().set_index("protein_group_label")
+    for imm_unsafe in (
+        "Csf3",
+        "Cxcl2",
+        "Il23a",
+        "Acod1",
+        "Il10",
+        "Tnfsf4",
+        "Tnfsf8",
+        "Zfp658",
+        "Glrp1",
+        "Utf1",
+        "Peg12",
+        "Cpvl",
+        "Dppa2",
+        "Qrfp",
+        "Otos",
+    ):
+        assert by_lbl.loc[imm_unsafe, "classification"] == "Unsafe"
 
     # Pure HostContext protection of non-pregnant, non-lactating female adult organs keeps all CTA-M eligible,
     # while TargetFilter additionally requires 10x tumor fold over max(H0, protected female TPM)
@@ -210,7 +233,7 @@ def test_mouse_heavy_tables_are_externalized_and_pinned_in_reference_releases():
         assert not bool(audit.loc[stem, "shipped_in_wheel"])
         prov = reference_data.provenance(stem)
         assert prov["sha256"] == expected_sha
-        assert "reference-mouse-20261122" in prov["url"]
+        assert "reference-mouse-20261125" in prov["url"]
         p = data_dir / f"{stem}.csv.gz"
         if p.exists():
             assert hashlib.sha256(p.read_bytes()).hexdigest() == expected_sha

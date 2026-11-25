@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-23.1",
+  "policy_id": "oncoref.target-selection.2026-11-25.1",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -170,6 +170,7 @@
     "clinical_organ_clearance_766": "oncoref/data/clinical-organ-clearances.json",
     "closed_repeat_family_equivalence_767": "oncoref/data/repeat-family-adjudications.csv",
     "assay_boundary_adjudications_768": "oncoref/data/assay-boundary-adjudications.csv",
-    "near_self_1mm_and_ms_audit_769": "oncoref/data/candidate-near-self-1mm.csv"
+    "near_self_1mm_and_ms_audit_769": "oncoref/data/candidate-near-self-1mm.csv",
+    "tumor_gdna_background_qc_785": "oncoref/data/tumor-gdna-background-deltas.csv"
   }
 }

@@ -38,8 +38,10 @@ from oncoref import (  # noqa: E402
     curation,
     host_context,
     human_screening_inputs,
+    library_qc,
     normal_library_qc,
     rare_cell_compartment_qc,
+    reference_data,
     repeat_family_equivalence,
     species_target_selection,
     target_selection,
@@ -47,8 +49,8 @@ from oncoref import (  # noqa: E402
     unmeasured_home_panels,
 )
 
-PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-23.1"
-PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-23.1"
+PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-25.1"
+PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-25.1"
 FROZEN_150_DIR = ROOT / "tests/fixtures/release-1.50-inputs"
 
 
@@ -458,6 +460,30 @@ def _clean_and_sex_stratify_host_exposures(
             c_key = "resting_breast" if str(comp_raw) == "breast" else str(comp_raw)
             hpa_max_by_ec[(eid_s, c_key)] = max(hpa_max_by_ec.get((eid_s, c_key), 0.0), max(vals))
 
+    # Pinned rna_tissue_gtex:v23 (vagina/endometrium) & HPA smooth-muscle coding maxima for GTEx-v11-missing loci (TSSK2)
+    gtex_v23_df = pd.read_csv(
+        reference_data.pinned_path("rna_tissue_gtex", "v23"), sep="\t", low_memory=False
+    )
+    gtex_v23_df["canon_gid"] = gtex_v23_df["Gene"].map(lookup).fillna(gtex_v23_df["Gene"])
+    gtex_v23_vagina = (
+        gtex_v23_df[gtex_v23_df["Tissue"].eq("vagina")].groupby("canon_gid")["TPM"].max().to_dict()
+    )
+    gtex_v23_endometrium = (
+        gtex_v23_df[gtex_v23_df["Tissue"].eq("endometrium")]
+        .groupby("canon_gid")["TPM"]
+        .max()
+        .to_dict()
+    )
+    sm_cols = [c for c in hpa_coding.columns if c.startswith("TPM.smooth muscle")]
+    hpa_smooth_muscle_by_eid: dict[str, float] = {}
+    if sm_cols:
+        for eid_s in wanted_eids:
+            mems = members_by_eid.get(eid_s, [])
+            if mems and all(m in hpa_coding.index for m in mems):
+                hpa_smooth_muscle_by_eid[eid_s] = float(
+                    hpa_coding.loc[mems, sm_cols].sum(axis=0).max()
+                )
+
     for eid in wanted_eids:
         e_map = out[eid]
         q_set = qual_comps_by_eid.get(eid, set())
@@ -527,7 +553,44 @@ def _clean_and_sex_stratify_host_exposures(
                 float(rb_item["female_max_tpm"]), float(rb_item["male_max_tpm"])
             )
 
-        # 3. Reconcile single-antibody 'unresolved' HPA IHC in near-zero RNA compartments (#779)
+        # 3. Backfill GTEx-v11-missing female tract compartments (uterus, vagina) when measured
+        # in pinned HPA/GTEx v23 references (e.g. TSSK2 ENSG00000206203 lacking GENCODE v47 entry)
+        mems = members_by_eid.get(eid, [])
+        if mems:
+            vag_item = e_map.get("vagina")
+            if (
+                vag_item
+                and vag_item.get("coverage") == "missing"
+                and all(m in gtex_v23_vagina for m in mems)
+            ):
+                vag_val = float(sum(gtex_v23_vagina[m] for m in mems))
+                vag_item["coverage"] = "measured"
+                vag_item["max_tpm"] = vag_val
+                vag_item["measured_observations"] = 1
+                vag_item["scope_complete"] = True
+                vag_item["sources"] = ["rna_tissue_gtex:v23"]
+                if vag_item.get("protein_status") in (None, "unassessed"):
+                    vag_item["protein_status"] = "not_assessed"
+            ut_item = e_map.get("uterus")
+            if ut_item and ut_item.get("coverage") == "missing":
+                h_endo = hpa_max_by_ec.get((eid, "endometrium"))
+                h_sm = hpa_smooth_muscle_by_eid.get(eid)
+                g_endo = (
+                    float(sum(gtex_v23_endometrium[m] for m in mems))
+                    if all(m in gtex_v23_endometrium for m in mems)
+                    else None
+                )
+                ut_candidates = [x for x in (h_endo, h_sm, g_endo) if x is not None]
+                if ut_candidates:
+                    ut_item["coverage"] = "measured"
+                    ut_item["max_tpm"] = float(max(ut_candidates))
+                    ut_item["measured_observations"] = 1
+                    ut_item["scope_complete"] = True
+                    ut_item["sources"] = ["hpa_tissue_samples:v23", "rna_tissue_gtex:v23"]
+                    if ut_item.get("protein_status") in (None, "unassessed"):
+                        ut_item["protein_status"] = "not_assessed"
+
+        # 4. Reconcile single-antibody 'unresolved' HPA IHC in near-zero RNA compartments (#779)
         for _comp, item in e_map.items():
             if not isinstance(item, dict) or item.get("protein_status") != "unresolved":
                 continue
@@ -690,6 +753,11 @@ def main() -> None:
     )
     uh_by_eid = (
         unmeasured_home_panels.unmeasured_home_protein_adjudications(only_ca_cta_gated=True)
+        .set_index("entity_id")
+        .to_dict("index")
+    )
+    gdna_by_eid = (
+        library_qc.tumor_gdna_background_deltas(only_applied=True)
         .set_index("entity_id")
         .to_dict("index")
     )
@@ -909,7 +977,8 @@ def main() -> None:
             float(old_row["disposable_max_tpm"]) if pd.notna(old_row["disposable_max_tpm"]) else 0.0
         )
         needs_witness_recompute = pd.notna(n_tpm) and (
-            eid in obs_737_by_eid
+            eid in gdna_by_eid
+            or eid in obs_737_by_eid
             or eid in tgct_restr
             or eid in bleed_by_eid
             or eid in cleared_obs_by_eid
@@ -917,7 +986,31 @@ def main() -> None:
             or abs(float(n_tpm) - float(old_row["normal_reference_tpm"])) > 1e-9
             or abs(d_curr_val - d_old_val) > 1e-9
         )
-        if needs_witness_recompute:
+        if eid in gdna_by_eid and pd.notna(n_tpm):
+            grec = gdna_by_eid[eid]
+            denom = max(float(n_tpm), d_curr_val, 1.0)
+            c_max = float(grec["clean_tumor_max_tpm"])
+            promoted.at[idx, "tumor_max_tpm"] = c_max
+            promoted.at[idx, "tumor_fold"] = c_max / denom
+            promoted.at[idx, "tumor_top_sample"] = str(grec["clean_tumor_top_sample"] or "")
+            promoted.at[idx, "tumor_top_cancer_code"] = str(
+                grec["clean_tumor_top_cancer_code"] or ""
+            )
+            r_curr = promoted.at[idx, "reproductive_supported_tpm"]
+            promoted.at[idx, "target_peak_tpm"] = max(
+                c_max, float(r_curr) if pd.notna(r_curr) else 0.0
+            )
+            n_pat = int(grec["clean_independent_patients_at_tenfold"])
+            n_anon = int(grec["clean_anonymous_samples_at_tenfold"])
+            promoted.at[idx, "samples_at_tenfold"] = int(grec["clean_samples_at_tenfold"])
+            promoted.at[idx, "independent_patients_at_tenfold"] = n_pat
+            promoted.at[idx, "anonymous_samples_at_tenfold"] = n_anon
+            promoted.at[idx, "patient_or_sample_witnesses_at_tenfold"] = n_pat + n_anon
+            promoted.at[idx, "cancer_types_at_tenfold"] = int(grec["clean_cancer_types_at_tenfold"])
+            promoted.at[idx, "independent_patient_tumor_folds"] = str(
+                grec["clean_patient_folds_json"]
+            )
+        elif needs_witness_recompute:
             denom = max(float(n_tpm), d_curr_val, 1.0)
             thr = 10.0 * denom
             merged_obs: dict[str, tuple[str, set[str], float]] = {}
@@ -1276,6 +1369,11 @@ def main() -> None:
     inv = pd.read_csv(inv_path, keep_default_na=False)
     inv.loc[inv["dataset"].eq("target-selection.csv.gz"), "sha256"] = ts_sha
     inv.loc[inv["dataset"].eq("host-exposure.csv.gz"), "sha256"] = he_sha
+    uh_adj_path = ROOT / "oncoref/data/unmeasured-home-protein-adjudications.csv"
+    if uh_adj_path.exists() and inv["dataset"].eq("unmeasured-home-protein-adjudications").any():
+        inv.loc[inv["dataset"].eq("unmeasured-home-protein-adjudications"), "sha256"] = (
+            _sha256_file(uh_adj_path)
+        )
     inv.to_csv(inv_path, index=False, lineterminator="\n")
 
     # Recompute and write human-integrated-policy-preview.{csv,json}

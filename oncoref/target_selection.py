@@ -20,7 +20,7 @@ import pandas as pd
 
 from .load_dataset import _register_derived_cache
 
-POLICY_ID = "oncoref.target-selection.2026-11-23.1"
+POLICY_ID = "oncoref.target-selection.2026-11-25.1"
 BASELINE_2026_11_20_POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
@@ -382,6 +382,7 @@ def definition() -> dict:
             "closed_repeat_family_equivalence_767": "oncoref/data/repeat-family-adjudications.csv",
             "assay_boundary_adjudications_768": "oncoref/data/assay-boundary-adjudications.csv",
             "near_self_1mm_and_ms_audit_769": "oncoref/data/candidate-near-self-1mm.csv",
+            "tumor_gdna_background_qc_785": "oncoref/data/tumor-gdna-background-deltas.csv",
         },
     }
 

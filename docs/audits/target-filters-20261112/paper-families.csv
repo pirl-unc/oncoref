@@ -1,7 +1,7 @@
 family,source_id,candidates,citation,kind,scope
 cta,10.1002/cam4.2223,250,Chang et al. (2019),historical_catalog,Testis-specific coding gene expressed in at least 1% of TGCT; no broad somatic-cancer claim
 cta,10.1038/ncomms10499,250,Wang et al. (2016),historical_catalog,Cancer-associated RNA nomination; no antigen validation asserted
-cta,10.18632/oncotarget.21715,240,da Silva et al. (2017),historical_catalog,At least 90% normal-tissue RNA attributable to testis; tumor positivity not required; Gene-labelled tumor proteomics; unique-locus peptide assignment is not established; RSEM >1 in at least 10% of samples in a tumor type; RNA nomination
+cta,10.18632/oncotarget.21715,238,da Silva et al. (2017),historical_catalog,At least 90% normal-tissue RNA attributable to testis; tumor positivity not required; Gene-labelled tumor proteomics; unique-locus peptide assignment is not established; RSEM >1 in at least 10% of samples in a tumor type; RNA nomination
 cta,10.1371/journal.pgen.1011734,78,Loriot et al. (2025),historical_catalog,Cancer-germline RNA nomination; strict and preferential classes remain distinct
 cta,10.1136/jitc-2023-007935,50,Carter et al. (2023),historical_catalog,Final CT-expression set without detectable thymic expression; functional vaccination evidence is not assigned to every gene
 cta,10.1002/1878-0261.12900,32,Jamin et al. (2021),historical_catalog,CT-pattern microarray nomination; tumor upregulation with no corresponding normal-tissue detection; Core CT annotation; underlying microarray probes may recognize several loci
@@ -9,7 +9,7 @@ cta,10.1038/s41388-018-0357-2,14,Bruggeman et al. (2018),historical_catalog,GC R
 cta,10.1186/s12967-024-04918-0,11,Seager et al. (2024),historical_catalog,Member of the published 17-target CTA profiling panel; includes differentiation antigen MLANA
 cta,10.1038/s41467-020-19141-w,1,Bradley et al. (2020),historical_catalog,CPA expression nominations; HLA peptide and antigen-specific T-cell validation for VGLL1
 cta,10.1186/s40425-019-0678-x,1,,,
-oncofetal,10.1016/j.celrep.2023.113114,29,"Smith et al., 2023",program_catalog,Single-cell RNA sequencing of KLE and SUSA cancer cell lines using published zygotic gene activation and eight-cell-like gene sets.
+oncofetal,10.1016/j.celrep.2023.113114,28,"Smith et al., 2023",program_catalog,Single-cell RNA sequencing of KLE and SUSA cancer cell lines using published zygotic gene activation and eight-cell-like gene sets.
 oncofetal,10.1016/j.devcel.2019.06.011,22,"Chew et al., 2019",program_catalog,DUX4-induced gene program evaluated in human cancers; target definition also used induced myoblast experiments.
 reproductive,10.1038/s41467-021-22695-y,316,Gong et al. (2021),historical_catalog,Normal reproductive-tissue enrichment; no tumor validation; Placental RNA enrichment; no tumor-antigen validation
 reproductive,10.1371/journal.pone.0144155,7,Hirbo et al. (2015),historical_catalog,HPA v13 placenta-enriched nominations; 30/86 fast-evolving subset retained as metadata; not tumor validation
