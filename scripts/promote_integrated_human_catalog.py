@@ -6,8 +6,7 @@ Builds:
   reconstruction of the 129-column ``2026-11-20.2`` baseline in ``human_screening_inputs``
   and ablation tests without duplicating a 3.7 MB CSV in the PyPI wheel),
 - ``oncoref/data/target-selection.csv.gz`` and ``oncoref/data/target-selection.json``
-  (``oncoref.target-selection.2026-11-23.1``: 332 CTA, 117 CA only, 133 RA only,
-  1,062 Other, 18,249 Unsafe),
+  (``oncoref.target-selection.2026-11-25.1``),
 - ``oncoref/data/host-exposure.csv.gz`` and ``oncoref/data/host-exposure.json``
   (adding verified 14-compartment reproductive/embryonic + HPA scRNA/IHC exposures
   for newly cleared ``PLAC1``, ``ZAN``, ``DUX4``, ``DKKL1``, ``MAGEB6``, and ``CSN2``),
@@ -896,7 +895,7 @@ def main() -> None:
             promoted.at[idx, "normal_reference_contexts"] = json.dumps(
                 [
                     {
-                        "source_id": "human_normal_reference_20261123",
+                        "source_id": "human_normal_reference_20261125",
                         "tissue": "peripheral_normal_reference",
                         "source_context": "peripheral_normal_reference",
                         "value": float(n_tpm),
@@ -989,26 +988,32 @@ def main() -> None:
         if eid in gdna_by_eid and pd.notna(n_tpm):
             grec = gdna_by_eid[eid]
             denom = max(float(n_tpm), d_curr_val, 1.0)
-            c_max = float(grec["clean_tumor_max_tpm"])
+            pfx = "clean_non_tgct_" if eid in tgct_restr else "clean_"
+            t_key = "clean_non_tgct_max_tpm" if eid in tgct_restr else "clean_tumor_max_tpm"
+            s_key = "clean_non_tgct_top_sample" if eid in tgct_restr else "clean_tumor_top_sample"
+            c_key = (
+                "clean_non_tgct_top_cancer_code"
+                if eid in tgct_restr
+                else "clean_tumor_top_cancer_code"
+            )
+            c_max = float(grec[t_key])
             promoted.at[idx, "tumor_max_tpm"] = c_max
             promoted.at[idx, "tumor_fold"] = c_max / denom
-            promoted.at[idx, "tumor_top_sample"] = str(grec["clean_tumor_top_sample"] or "")
-            promoted.at[idx, "tumor_top_cancer_code"] = str(
-                grec["clean_tumor_top_cancer_code"] or ""
-            )
+            promoted.at[idx, "tumor_top_sample"] = str(grec[s_key] or "")
+            promoted.at[idx, "tumor_top_cancer_code"] = str(grec[c_key] or "")
             r_curr = promoted.at[idx, "reproductive_supported_tpm"]
             promoted.at[idx, "target_peak_tpm"] = max(
                 c_max, float(r_curr) if pd.notna(r_curr) else 0.0
             )
-            n_pat = int(grec["clean_independent_patients_at_tenfold"])
-            n_anon = int(grec["clean_anonymous_samples_at_tenfold"])
-            promoted.at[idx, "samples_at_tenfold"] = int(grec["clean_samples_at_tenfold"])
+            n_pat = int(grec[f"{pfx}independent_patients_at_tenfold"])
+            n_anon = int(grec[f"{pfx}anonymous_samples_at_tenfold"])
+            promoted.at[idx, "samples_at_tenfold"] = int(grec[f"{pfx}samples_at_tenfold"])
             promoted.at[idx, "independent_patients_at_tenfold"] = n_pat
             promoted.at[idx, "anonymous_samples_at_tenfold"] = n_anon
             promoted.at[idx, "patient_or_sample_witnesses_at_tenfold"] = n_pat + n_anon
-            promoted.at[idx, "cancer_types_at_tenfold"] = int(grec["clean_cancer_types_at_tenfold"])
+            promoted.at[idx, "cancer_types_at_tenfold"] = int(grec[f"{pfx}cancer_types_at_tenfold"])
             promoted.at[idx, "independent_patient_tumor_folds"] = str(
-                grec["clean_patient_folds_json"]
+                grec[f"{pfx}patient_folds_json"]
             )
         elif needs_witness_recompute:
             denom = max(float(n_tpm), d_curr_val, 1.0)
@@ -1195,7 +1200,7 @@ def main() -> None:
         if cls_now != str(old_row["classification"]):
             if cls_now == "CTA":
                 promoted.at[idx, "decision_reason"] = (
-                    "Qualifies both cancer and reproductive/developmental 10x routes under integrated 2026-11-23 policy"
+                    "Qualifies both cancer and reproductive/developmental 10x routes under integrated 2026-11-25 policy"
                 )
             elif cls_now == "Cancer Antigen only":
                 promoted.at[idx, "decision_reason"] = (
@@ -1370,10 +1375,17 @@ def main() -> None:
     inv.loc[inv["dataset"].eq("target-selection.csv.gz"), "sha256"] = ts_sha
     inv.loc[inv["dataset"].eq("host-exposure.csv.gz"), "sha256"] = he_sha
     uh_adj_path = ROOT / "oncoref/data/unmeasured-home-protein-adjudications.csv"
-    if uh_adj_path.exists() and inv["dataset"].eq("unmeasured-home-protein-adjudications").any():
-        inv.loc[inv["dataset"].eq("unmeasured-home-protein-adjudications"), "sha256"] = (
-            _sha256_file(uh_adj_path)
-        )
+    if uh_adj_path.exists():
+        uh_df = pd.read_csv(uh_adj_path, keep_default_na=False)
+        cat_by_eid = promoted.set_index("entity_id")["category"].to_dict()
+        cls_by_eid = promoted.set_index("entity_id")["classification"].to_dict()
+        uh_df["active_category"] = uh_df["entity_id"].map(lambda e: cat_by_eid.get(e, ""))
+        uh_df["active_classification"] = uh_df["entity_id"].map(lambda e: cls_by_eid.get(e, ""))
+        uh_df.to_csv(uh_adj_path, index=False, lineterminator="\n")
+        if inv["dataset"].eq("unmeasured-home-protein-adjudications").any():
+            inv.loc[inv["dataset"].eq("unmeasured-home-protein-adjudications"), "sha256"] = (
+                _sha256_file(uh_adj_path)
+            )
     inv.to_csv(inv_path, index=False, lineterminator="\n")
 
     # Recompute and write human-integrated-policy-preview.{csv,json}

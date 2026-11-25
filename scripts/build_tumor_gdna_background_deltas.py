@@ -2,11 +2,12 @@
 # Licensed under the Apache License, Version 2.0.
 """Build per-protein clean tumor witness deltas under tightened gDNA library QC (olfactory_share_ge5 <= 0.025).
 
-Scans all eligible human per-sample linear-TPM tumor cohorts in ``oncoref.source_matrices``,
-identifies libraries failing ``library_qc.BACKGROUND_MAX_SHARE`` (> 2.5% of measured olfactory
-receptors at >= 5 TPM), and recomputes exact QC-passing tumor peak TPM, top sample, top cancer
-code, and >= 10x witness counts for every non-Unsafe human catalog entity whose peak sample or
-witness set included a failed library.
+Scans all baseline-admitted (`qc_pass == True` & `identity_resolved == True`) tumor samples across
+eligible human per-sample linear-TPM cohorts in ``oncoref.source_matrices``, identifies libraries
+newly failing ``library_qc.BACKGROUND_MAX_SHARE`` (> 2.5% of measured olfactory receptors at
+>= 5 TPM), and recomputes exact QC-passing tumor peak TPM, top sample, top cancer code, and >= 10x
+witness counts (both overall and non-admixed non-TGCT for `#768` ablation orthogonality) for every
+non-Unsafe human catalog entity whose peak sample or witness set included a failed library.
 """
 
 from __future__ import annotations
@@ -40,8 +41,86 @@ def _sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def _summarize_obs(
+    obs_map: dict[str, tuple[str, set[str], float]], denom: float, thr: float
+) -> dict[str, object]:
+    if obs_map:
+        best_skey, (_, best_ccs, clean_max) = max(obs_map.items(), key=lambda kv: (kv[1][2], kv[0]))
+        best_cc = sorted(best_ccs)[0] if best_ccs else ""
+    else:
+        best_skey, best_cc, clean_max = "", "", 0.0
+
+    passing = [v for v in obs_map.values() if v[2] >= thr]
+    by_pat: dict[str, float] = {}
+    anon_n = 0
+    pass_ccs: set[str] = set()
+    for part_id, obs_ccs, val_f in passing:
+        pass_ccs |= obs_ccs
+        if part_id:
+            by_pat[part_id] = max(by_pat.get(part_id, 0.0), val_f / denom)
+        else:
+            anon_n += 1
+
+    return {
+        "max_tpm": round(clean_max, 6),
+        "top_sample": best_skey,
+        "top_cancer_code": best_cc,
+        "qualifies_tenfold": bool(clean_max >= thr),
+        "samples_at_tenfold": len(passing),
+        "independent_patients_at_tenfold": len(by_pat),
+        "anonymous_samples_at_tenfold": anon_n,
+        "cancer_types_at_tenfold": len(pass_ccs),
+        "patient_folds_json": json.dumps(
+            [round(x, 6) for x in sorted(by_pat.values(), reverse=True)]
+        ),
+    }
+
+
 def main() -> int:
-    # 1. Scan all cached linear-TPM cohorts in source_matrices for broad_background (> 2.5% ORs >= 5 TPM)
+    # 1. Load baseline-admitted tumor sample universe (`tumor-samples.csv.gz` & `library-qc.csv.gz` with empty `reasons`)
+    # so upstream-quarantined/duplicate/unrelated-tissue/already-failed columns never leak into clean_cohort_gene_mats.
+    lqc_df = pd.read_csv(
+        ROOT / "docs/audits/target-selection-20261110/rebuild/library-qc.csv.gz",
+        keep_default_na=False,
+    )
+    lqc_pass_pairs = {
+        (str(r.cancer_code), str(r.sample_id))
+        for r in lqc_df.itertuples(index=False)
+        if str(r.reasons).strip() == ""
+    }
+    tsamp_df = pd.read_csv(
+        ROOT / "docs/audits/target-selection-20261110/rebuild/tumor-samples.csv.gz",
+        keep_default_na=False,
+    )
+    codes_by_key: dict[str, set[str]] = {}
+    pid_by_key: dict[str, str] = {}
+    sample_by_bare_id: dict[str, tuple[str, str, set[str]]] = {}
+    valid_sids_by_cohort: dict[str, set[str]] = {}
+    for r in tsamp_df.itertuples(index=False):
+        sc = str(r.source_cohort)
+        ns = str(r.namespace)
+        sid = str(r.sample_id)
+        skey = str(r.sample_key) or f"{ns}:{sid}"
+        cc = str(r.cancer_code)
+        pid = str(r.participant_id).strip()
+        is_valid = (cc, sid) in lqc_pass_pairs
+        if is_valid and sid:
+            if sc:
+                valid_sids_by_cohort.setdefault(sc, set()).add(sid)
+            if cc:
+                valid_sids_by_cohort.setdefault(cc, set()).add(sid)
+        for k in (skey, f"{sc}:{sid}", f"{ns}:{sid}"):
+            if cc:
+                codes_by_key.setdefault(k, set()).add(cc)
+            if pid:
+                pid_by_key[k] = pid
+        if sid and is_valid:
+            prev_ns, prev_pid, prev_ccs = sample_by_bare_id.get(sid, (ns or sc, pid, set()))
+            if cc:
+                prev_ccs.add(cc)
+            sample_by_bare_id[sid] = (prev_ns, prev_pid or pid, prev_ccs)
+
+    # 2. Scan all cached linear-TPM cohorts in source_matrices restricted to valid_sids_by_cohort
     cov = pd.read_csv(
         ROOT / "docs/audits/target-selection-20261110/rebuild/tumor-source-coverage.csv",
         keep_default_na=False,
@@ -57,13 +136,20 @@ def main() -> int:
 
     for row in reg.itertuples(index=False):
         code = str(row.cancer_code)
-        if code in excluded_scale_codes:
+        if code in excluded_scale_codes or code == "NUTM":
+            continue
+        allowed_sids = valid_sids_by_cohort.get(code, set())
+        if not allowed_sids:
             continue
         p = source_matrices.local_path(code)
         if p is None or not Path(p).is_file():
             continue
         mat = pd.read_parquet(p)
-        num_cols = [c for c in mat.columns if pd.api.types.is_numeric_dtype(mat[c])]
+        num_cols = [
+            c
+            for c in mat.columns
+            if pd.api.types.is_numeric_dtype(mat[c]) and str(c) in allowed_sids
+        ]
         if not num_cols:
             continue
         sig = library_qc.signatures(mat, num_cols)
@@ -83,7 +169,7 @@ def main() -> int:
         ]
         failed_bare_sids.update(fail_rows.index.astype(str))
         keep_cols = [c for c in num_cols if c not in fail_rows.index]
-        if keep_cols and code != "NUTM":
+        if keep_cols:
             gmat = mat[keep_cols].apply(pd.to_numeric, errors="coerce")
             gmat.index = mat["Ensembl_Gene_ID"].astype(str).str.split(".").str[0]
             clean_cohort_gene_mats[code] = (
@@ -91,7 +177,7 @@ def main() -> int:
                 gmat.groupby(level=0).sum(min_count=1),
             )
 
-    # 2. Load frozen 2026-11-20.2 baseline + integrated normal N adjustments + witness ledgers
+    # 3. Load frozen 2026-11-20.2 baseline + integrated normal N adjustments + witness ledgers
     base_df = pd.read_csv(
         ROOT / "tests/fixtures/release-1.50-inputs/oncoref/data/target-selection.csv.gz",
         compression="gzip",
@@ -125,31 +211,6 @@ def main() -> int:
     tgct_r_samples = set(
         tgct_localization.tgct_reproductive_localization_audit(r_only=True)["sample_id"].astype(str)
     )
-
-    tsamp_df = pd.read_csv(
-        ROOT / "docs/audits/target-selection-20261110/rebuild/tumor-samples.csv.gz",
-        keep_default_na=False,
-    )
-    codes_by_key: dict[str, set[str]] = {}
-    pid_by_key: dict[str, str] = {}
-    sample_by_bare_id: dict[str, tuple[str, str, set[str]]] = {}
-    for r in tsamp_df.itertuples(index=False):
-        sc = str(r.source_cohort)
-        ns = str(r.namespace)
-        sid = str(r.sample_id)
-        skey = str(r.sample_key) or f"{ns}:{sid}"
-        cc = str(r.cancer_code)
-        pid = str(r.participant_id).strip()
-        for k in (skey, f"{sc}:{sid}", f"{ns}:{sid}"):
-            if cc:
-                codes_by_key.setdefault(k, set()).add(cc)
-            if pid:
-                pid_by_key[k] = pid
-        if sid:
-            prev_ns, prev_pid, prev_ccs = sample_by_bare_id.get(sid, (ns or sc, pid, set()))
-            if cc:
-                prev_ccs.add(cc)
-            sample_by_bare_id[sid] = (prev_ns, prev_pid or pid, prev_ccs)
 
     tw_df = pd.read_csv(
         ROOT / "docs/audits/target-selection-20261110/rebuild/tumor-witnesses.csv.gz",
@@ -190,7 +251,6 @@ def main() -> int:
         if not is_cleared and (r.category == "Unsafe" or not bool(r.required_coverage_complete)):
             continue
 
-        # Determine effective normal_reference_tpm & disposable_max_tpm
         if is_cleared:
             cp = cleared_obs[eid]
             if not bool(cp.get("required_coverage_complete")):
@@ -222,7 +282,6 @@ def main() -> int:
         denom = max(float(n_val), float(d_val), float(target_selection.DETECTION_FLOOR))
         thr = float(target_selection.ENRICHMENT_FOLD) * denom
 
-        # Check whether any witness / top sample for this entity belongs to failed_bare_sids
         old_top_s = str(r.tumor_top_sample).strip() if pd.notna(r.tumor_top_sample) else ""
         old_bare_s = old_top_s.split(":", 1)[-1] if old_top_s else ""
         tw_list = tw_all_by_eid.get(eid, [])
@@ -251,15 +310,17 @@ def main() -> int:
         ):
             continue
 
-        # Assemble all clean observations for this entity
-        clean_obs: dict[str, tuple[str, set[str], float]] = {}
+        # Track both (a) pure gDNA-clean observations (preserving TGCT for orthogonal #768 ablations)
+        # and (b) non-admixed non-TGCT gDNA-clean observations (for #768 + gDNA QC joint evaluation).
+        clean_obs_all: dict[str, tuple[str, set[str], float]] = {}
+        clean_obs_non_tgct: dict[str, tuple[str, set[str], float]] = {}
 
-        def _rec(
+        def _rec_into(
+            target_map: dict[str, tuple[str, set[str], float]],
             skey: str,
             pid: str,
             ccs: set[str],
             val_f: float,
-            target_map: dict[str, tuple[str, set[str], float]] = clean_obs,
         ) -> None:
             if skey in target_map:
                 p_prev, c_prev, v_prev = target_map[skey]
@@ -271,18 +332,29 @@ def main() -> int:
             else:
                 target_map[skey] = (pid, {c for c in ccs if c}, val_f)
 
+        def _rec(
+            skey: str,
+            pid: str,
+            ccs: set[str],
+            val_f: float,
+            *,
+            is_tgct_note_r: bool = False,
+            _all: dict[str, tuple[str, set[str], float]] = clean_obs_all,
+            _non_tgct: dict[str, tuple[str, set[str], float]] = clean_obs_non_tgct,
+            _is_tgct_restr: bool = eid in tgct_restr,
+        ) -> None:
+            _rec_into(_all, skey, pid, ccs, val_f)
+            if not (_is_tgct_restr and is_tgct_note_r):
+                _rec_into(_non_tgct, skey, pid, ccs, val_f)
+
         for src_id, samp_id, part_id, ccs_tup, val_f in tw_list:
             if samp_id in failed_bare_sids:
                 continue
-            if eid in tgct_restr and (
-                samp_id in tgct_r_samples or "TGCT" in ccs_tup or "TGCT" in src_id
-            ):
-                continue
-            _rec(f"{src_id}:{samp_id}", part_id, set(ccs_tup), val_f)
+            is_tgct_r = samp_id in tgct_r_samples or "TGCT" in ccs_tup or "TGCT" in src_id
+            _rec(f"{src_id}:{samp_id}", part_id, set(ccs_tup), val_f, is_tgct_note_r=is_tgct_r)
 
         if (
             not is_cleared
-            and eid not in tgct_restr
             and old_bare_s
             and old_bare_s not in failed_bare_sids
             and pd.notna(r.tumor_max_tpm)
@@ -291,7 +363,14 @@ def main() -> int:
             old_ccs = set(codes_by_key.get(skey_old, set()))
             if pd.notna(r.tumor_top_cancer_code) and str(r.tumor_top_cancer_code).strip():
                 old_ccs.add(str(r.tumor_top_cancer_code).strip())
-            _rec(skey_old, pid_by_key.get(skey_old, ""), old_ccs, float(r.tumor_max_tpm))
+            is_old_tgct_r = old_bare_s in tgct_r_samples or "TGCT" in old_ccs or "TGCT" in skey_old
+            _rec(
+                skey_old,
+                pid_by_key.get(skey_old, ""),
+                old_ccs,
+                float(r.tumor_max_tpm),
+                is_tgct_note_r=is_old_tgct_r,
+            )
 
         if eid in tgct_restr and eid in tgct_sup_by_eid and not had_bad_tgct_sup:
             tr_sup = tgct_sup_by_eid[eid]
@@ -315,6 +394,7 @@ def main() -> int:
                     pid_by_key.get(skey_nt, f"somatic:{nt_raw}"),
                     {nt_cc} if nt_cc else set(),
                     nt_val,
+                    is_tgct_note_r=False,
                 )
 
         for r737 in obs_737_by_eid.get(eid, []):
@@ -335,51 +415,30 @@ def main() -> int:
                 ct_ccs = set(codes_by_key.get(skey_ct, set()))
                 if ct.get("cancer_code"):
                     ct_ccs.add(str(ct["cancer_code"]))
-                _rec(skey_ct, pct, ct_ccs, float(ct["value"]))
+                is_ct_tgct = ct_sid in tgct_r_samples or "TGCT" in ct_ccs
+                _rec(skey_ct, pct, ct_ccs, float(ct["value"]), is_tgct_note_r=is_ct_tgct)
 
-        # Also directly inspect clean samples of the affected cohorts so sub-threshold clean maxima are exact!
+        # Inspect baseline-admitted clean samples of affected cohorts so sub-threshold clean maxima are exact
         gids = json.loads(r.member_gene_ids)
         for c_code, (_src_name, gmat) in clean_cohort_gene_mats.items():
-            if c_code == "TGCT" and eid in tgct_restr:
-                continue
             if not all(g in gmat.index for g in gids):
                 continue
             summed = gmat.loc[gids].sum(axis=0, min_count=len(gids)).dropna()
             if summed.empty:
                 continue
-            # Record top sample in this cohort + any >= thr samples
             best_sid = str(summed.idxmax())
             candidates_sids = set(summed[summed >= thr].index.astype(str)) | {best_sid}
             for c_sid in candidates_sids:
                 v_c = float(summed.at[c_sid])
-                if v_c <= 0.0:
+                if v_c <= 0.0 or c_sid not in sample_by_bare_id:
                     continue
-                if c_sid in sample_by_bare_id:
-                    ns_c, pid_c, ccs_c = sample_by_bare_id[c_sid]
-                    skey_c = f"{ns_c}:{c_sid}"
-                    _rec(skey_c, pid_c, set(ccs_c) | {c_code}, v_c)
-                else:
-                    _rec(f"{c_code}:{c_sid}", "", {c_code}, v_c)
+                ns_c, pid_c, ccs_c = sample_by_bare_id[c_sid]
+                skey_c = f"{ns_c}:{c_sid}"
+                is_c_tgct = c_code == "TGCT" or c_sid in tgct_r_samples or "TGCT" in ccs_c
+                _rec(skey_c, pid_c, set(ccs_c) | {c_code}, v_c, is_tgct_note_r=is_c_tgct)
 
-        if clean_obs:
-            best_skey, (_, best_ccs, clean_max) = max(
-                clean_obs.items(), key=lambda kv: (kv[1][2], kv[0])
-            )
-            best_cc = sorted(best_ccs)[0] if best_ccs else ""
-        else:
-            best_skey, best_cc, clean_max = "", "", 0.0
-
-        passing = [v for v in clean_obs.values() if v[2] >= thr]
-        by_pat: dict[str, float] = {}
-        anon_n = 0
-        pass_ccs: set[str] = set()
-        for part_id, obs_ccs, val_f in passing:
-            pass_ccs |= obs_ccs
-            if part_id:
-                by_pat[part_id] = max(by_pat.get(part_id, 0.0), val_f / denom)
-            else:
-                anon_n += 1
-
+        s_all = _summarize_obs(clean_obs_all, denom, thr)
+        s_ntgct = _summarize_obs(clean_obs_non_tgct, denom, thr)
         old_max = float(r.tumor_max_tpm) if pd.notna(r.tumor_max_tpm) else 0.0
         delta_rows.append(
             {
@@ -391,18 +450,28 @@ def main() -> int:
                 "previous_tumor_top_cancer_code": (
                     str(r.tumor_top_cancer_code) if pd.notna(r.tumor_top_cancer_code) else ""
                 ),
-                "clean_tumor_max_tpm": round(clean_max, 6),
-                "clean_tumor_top_sample": best_skey,
-                "clean_tumor_top_cancer_code": best_cc,
+                "clean_tumor_max_tpm": s_all["max_tpm"],
+                "clean_tumor_top_sample": s_all["top_sample"],
+                "clean_tumor_top_cancer_code": s_all["top_cancer_code"],
                 "single_tumor_threshold_tpm": round(thr, 6),
-                "qualifies_tenfold_clean": bool(clean_max >= thr),
-                "clean_samples_at_tenfold": len(passing),
-                "clean_independent_patients_at_tenfold": len(by_pat),
-                "clean_anonymous_samples_at_tenfold": anon_n,
-                "clean_cancer_types_at_tenfold": len(pass_ccs),
-                "clean_patient_folds_json": json.dumps(
-                    [round(x, 6) for x in sorted(by_pat.values(), reverse=True)]
-                ),
+                "qualifies_tenfold_clean": s_all["qualifies_tenfold"],
+                "clean_samples_at_tenfold": s_all["samples_at_tenfold"],
+                "clean_independent_patients_at_tenfold": s_all["independent_patients_at_tenfold"],
+                "clean_anonymous_samples_at_tenfold": s_all["anonymous_samples_at_tenfold"],
+                "clean_cancer_types_at_tenfold": s_all["cancer_types_at_tenfold"],
+                "clean_patient_folds_json": s_all["patient_folds_json"],
+                "clean_non_tgct_max_tpm": s_ntgct["max_tpm"],
+                "clean_non_tgct_top_sample": s_ntgct["top_sample"],
+                "clean_non_tgct_top_cancer_code": s_ntgct["top_cancer_code"],
+                "clean_non_tgct_samples_at_tenfold": s_ntgct["samples_at_tenfold"],
+                "clean_non_tgct_independent_patients_at_tenfold": s_ntgct[
+                    "independent_patients_at_tenfold"
+                ],
+                "clean_non_tgct_anonymous_samples_at_tenfold": s_ntgct[
+                    "anonymous_samples_at_tenfold"
+                ],
+                "clean_non_tgct_cancer_types_at_tenfold": s_ntgct["cancer_types_at_tenfold"],
+                "clean_non_tgct_patient_folds_json": s_ntgct["patient_folds_json"],
             }
         )
 

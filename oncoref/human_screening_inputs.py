@@ -8,7 +8,7 @@ home-tissue panels, and #737 linear-TPM tumor cohorts (THYMCA, BCC, cSCC) direct
 
 Default packaged catalog calls (``target_selection.results()``, ``human.target_selection()``)
 and default ``evaluate_human_catalog()`` calls both evaluate the promoted integrated policy
-``oncoref.target-selection.2026-11-23.1``, while explicit ``include_*=False`` flags reproduce
+``oncoref.target-selection.2026-11-25.1``, while explicit ``include_*=False`` flags reproduce
 the frozen ``oncoref.target-selection.2026-11-20.2`` baseline and single-rule ablations.
 """
 
@@ -683,7 +683,31 @@ def build_human_screening_inputs(
                 }
             )
 
-        if eid in gdna_clean_by_eid:
+        if eid in gdna_clean_by_eid and eid in admixture_non_tgct_map:
+            grec = gdna_clean_by_eid[eid]
+            c_tmax = float(grec["clean_non_tgct_max_tpm"])
+            c_tsmp = str(grec.get("clean_non_tgct_top_sample") or "").strip()
+            if c_tmax > 0.0 and c_tsmp:
+                tumor_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "oncoref_non_admixed_tumor_witness_768",
+                        "sample_id": c_tsmp,
+                        "participant_id": (
+                            f"somatic:{c_tsmp}"
+                            if int(grec.get("clean_non_tgct_independent_patients_at_tenfold") or 0)
+                            > 0
+                            else ""
+                        ),
+                        "cancer_code": str(grec.get("clean_non_tgct_top_cancer_code") or ""),
+                        "value": c_tmax,
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+        elif eid in gdna_clean_by_eid:
             grec = gdna_clean_by_eid[eid]
             c_tmax = float(grec["clean_tumor_max_tpm"])
             c_tsmp = str(grec.get("clean_tumor_top_sample") or "").strip()
@@ -1006,7 +1030,7 @@ def evaluate_human_catalog(
     spec = inputs.pop("spec")
     result = evaluate_species_catalog(spec, **inputs)
 
-    is_integrated = (
+    base_any_eval = (
         include_home_panels
         or include_737_cohorts
         or include_multiplex_bleed_qc
@@ -1016,6 +1040,8 @@ def evaluate_human_catalog(
         or include_assay_boundary_fixes
         or extra_tumor_observations is not None
     )
+    eff_gdna_eval = base_any_eval if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
+    is_integrated = base_any_eval or eff_gdna_eval
     # Attach #711, #712, #735, #764-#769 adjudication & near-self provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)

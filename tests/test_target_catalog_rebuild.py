@@ -377,10 +377,10 @@ def test_promoted_integrated_catalog_invariants_and_metadata():
     assert len(live) == 19893 and live.entity_id.is_unique
     assert live.category.value_counts().to_dict() == {
         "Unsafe": 18249,
-        "Other": 1079,
-        "CTA": 324,
-        "Reproductive Antigen only": 141,
-        "Cancer Antigen only": 100,
+        "Other": 1082,
+        "CTA": 323,
+        "Reproductive Antigen only": 142,
+        "Cancer Antigen only": 97,
     }
     assert live.is_cta.equals(live.is_cancer_antigen & live.is_reproductive_antigen)
     assert live.is_target_candidate.equals(live.is_cancer_antigen | live.is_reproductive_antigen)

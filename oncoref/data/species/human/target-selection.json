@@ -29,8 +29,8 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "350ffd33831837ef5d8ea0174bd868cf34ffb36b92a195b4abd2877a469f20e4",
-  "data_bytes": 3679624,
+  "data_sha256": "2a778334a46b906975e20994ff0d0138952781896b9143c83a9171d7ec43782a",
+  "data_bytes": 3679560,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
   "host_exposure_sha256": "8cc187407a239a93fbc1d8a0b747ce9c88a4e1a04b42da3975b8b11b371883d8",
@@ -42,27 +42,27 @@
     "loci": 20099,
     "categories": {
       "Unsafe": 18249,
-      "Other": 1079,
-      "CTA": 324,
-      "Reproductive Antigen only": 141,
-      "Cancer Antigen only": 100
+      "Other": 1082,
+      "CTA": 323,
+      "Reproductive Antigen only": 142,
+      "Cancer Antigen only": 97
     },
     "classifications": {
       "Unsafe": 18249,
       "Other:Review": 731,
-      "CTA": 324,
-      "Other:Expression": 282,
-      "Reproductive Antigen only": 141,
-      "Cancer Antigen only": 100,
+      "CTA": 323,
+      "Other:Expression": 286,
+      "Reproductive Antigen only": 142,
+      "Cancer Antigen only": 97,
       "Other:Sequence": 48,
-      "Other:Unscreened tissue": 18
+      "Other:Unscreened tissue": 17
     },
     "sex_restriction_codes": {
-      "CTA-E": 53,
+      "CTA-E": 52,
       "CTA-F": 8,
       "CTA-M": 236,
       "CTA-MF": 27,
-      "RA-E-only": 12,
+      "RA-E-only": 13,
       "RA-F-only": 3,
       "RA-M-only": 123,
       "RA-MF-only": 3

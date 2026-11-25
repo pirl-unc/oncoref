@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-25.1`: **324 CTA** · **100 Cancer Antigen only** · **141 Reproductive Antigen only** · **1,079 Other** · **18,249 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-25.1`: **323 CTA** · **97 Cancer Antigen only** · **142 Reproductive Antigen only** · **1,082 Other** · **18,249 Unsafe**.
 
 [Antigen whitepaper](antigen-whitepaper.md) ·
 [Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) ·
@@ -29,10 +29,10 @@ Both CA and RA independently require **≥10 × H₀**, where
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
-| CA | At least one QC-passing tumor sample ≥10 × H₀ | 424 |
+| CA | At least one QC-passing tumor sample ≥10 × H₀ | 420 |
 | RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 465 |
-| CTA | Both routes | 324 |
-| CA∪RA | Either route | 565 |
+| CTA | Both routes | 323 |
+| CA∪RA | Either route | 562 |
 
 The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 
@@ -102,7 +102,7 @@ Cleared loci that lack unresolved paralog ambiguity enter normal native-TPM eval
 
 ## Stoichiometric multiplex index-hopping vs. boundary carryover (`#764`, `#776`)
 
-On patterned Illumina flowcells, hyper-abundant reproductive transcripts (`≥ 1,000 TPM`, such as `PRM1` at `58,751 TPM` and `PRM2` at `50,821 TPM` in testis or `KLK3`/`MSMB`/`ACP3` in prostate) hop into co-sequenced somatic and opposite-sex GTEx libraries at `10⁻⁵` to `5 × 10⁻³` of source abundance. `oncoref.normal_library_qc` flags a non-source GTEx biopsy for cross-sample bleed **only** when `≥ 3` source sentinels co-occur at `≥ 0.25 TPM` in stoichiometric proportion (`IQR(log₁₀ α) ≤ 0.5`) **and** orthogonal HPA v23 single-cell clusters, HPA normal IHC, and non-GTEx HPA bulk biopsies confirm absence in that organ. Flagged biopsies are **dropped from the `gtex_donor_p95` denominator** rather than zero-filled (cleaning `PRM1` Thyroid bleed from `8.05` to `5.71 TPM`), whereas anatomic boundary carryover in adjacent pelvic/urogenital organs (`SEMG2` and `TGM4` in `Bladder`) is distinguished and never masked in somatic `N`. In downstream `host-exposure` (`#776`, `#779`), GTEx `Breast_Mammary_Tissue` (`336/514` XY male cadaver biopsies vs. `178` XX female biopsies) is stratified by biological donor sex and secretory state (`female_max_tpm` vs. `male_max_tpm`), GTEx-v11-missing `vagina` and `uterus` loci (`TSSK2`, `IZUMO1R`) are backfilled from pinned `rna_tissue_gtex:v23` and `hpa_tissue_samples:v23`, and `classify_sex_restriction` evaluates `Protected` (`< 8 TPM / < 8 nTPM`) + negative-IHC (`2×` = `< 16`) `HostContext` organ eligibility across symmetric `RA-{M,E,F,MF}` / `CTA-{M,E,F,MF}` sets plus non-exclusive peripartum `RA-P` / `CTA-P` (`236 CTA-M · 53 CTA-E · 8 CTA-F · 27 CTA-MF`, `16 CTA-P`). [Multiplex bleed QC audit](audits/multiplex-bleed-qc-20261123/index.md).
+On patterned Illumina flowcells, hyper-abundant reproductive transcripts (`≥ 1,000 TPM`, such as `PRM1` at `58,751 TPM` and `PRM2` at `50,821 TPM` in testis or `KLK3`/`MSMB`/`ACP3` in prostate) hop into co-sequenced somatic and opposite-sex GTEx libraries at `10⁻⁵` to `5 × 10⁻³` of source abundance. `oncoref.normal_library_qc` flags a non-source GTEx biopsy for cross-sample bleed **only** when `≥ 3` source sentinels co-occur at `≥ 0.25 TPM` in stoichiometric proportion (`IQR(log₁₀ α) ≤ 0.5`) **and** orthogonal HPA v23 single-cell clusters, HPA normal IHC, and non-GTEx HPA bulk biopsies confirm absence in that organ. Flagged biopsies are **dropped from the `gtex_donor_p95` denominator** rather than zero-filled (cleaning `PRM1` Thyroid bleed from `8.05` to `5.71 TPM`), whereas anatomic boundary carryover in adjacent pelvic/urogenital organs (`SEMG2` and `TGM4` in `Bladder`) is distinguished and never masked in somatic `N`. In downstream `host-exposure` (`#776`, `#779`), GTEx `Breast_Mammary_Tissue` (`336/514` XY male cadaver biopsies vs. `178` XX female biopsies) is stratified by biological donor sex and secretory state (`female_max_tpm` vs. `male_max_tpm`), GTEx-v11-missing `vagina` and `uterus` measurements (`TSSK2`) are backfilled from pinned `rna_tissue_gtex:v23` and `hpa_tissue_samples:v23`, and `classify_sex_restriction` evaluates `Protected` (`< 8 TPM / < 8 nTPM`) + negative-IHC (`2×` = `< 16`) `HostContext` organ eligibility across symmetric `RA-{M,E,F,MF}` / `CTA-{M,E,F,MF}` sets plus non-exclusive peripartum `RA-P` / `CTA-P` (`236 CTA-M · 52 CTA-E · 8 CTA-F · 27 CTA-MF`, `16 CTA-P`). [Multiplex bleed QC audit](audits/multiplex-bleed-qc-20261123/index.md).
 
 ## Isoform- & epitope-scoped clinical pMHC organ clearance (`#766`)
 
@@ -140,11 +140,11 @@ retains sources, adjudication and supersession history.
 ## Home tissue the panels do not resolve
 
 Olfactory epithelium, nasal mucosa, taste buds, hair follicle, dental pulp and mineralized
-bone are not resolved by the standard GTEx/HPA bulk native-TPM panels. `oncoref.unmeasured_home_panels` integrates SHA-256-pinned adult human bulk TPM and donor-resolved single-cell UMI panels across these six tissues (`#735`): proteins exceeding their home-tissue injury-tier ceiling (`SP7` and `PANX3` in bone, `GFY` and `BPIFB3` in olfactory epithelium, `GLYATL3`) become `Unsafe`, proteins silent across sampled adult home panels (including hair-follicle loci bounded near-zero across 8 scalp scRNA donors and 1,405 GTEx hair-bearing leg/suprapubic skin biopsies at `P99 ≤ 0.50 TPM` and `max < 4.0 TPM`) clear to `CA only` (`36` proteins under clean tumor QC, incl. `TAS1R2`, `KRTAP20-3`, `KRTAP21-2`, `KRTAP21-3`, `KRTAP6-2`) or `CTA` (`OR10J1`, `KRTAP20-4`), and proteins whose sub-niche remains unmeasured (`DSPP` odontoblast process, `CALHM3` type II taste cells) stay in `Other:Unscreened tissue`. A protein with a documented home in an unmeasured niche can still qualify as `RA`.
+bone are not resolved by the standard GTEx/HPA bulk native-TPM panels. `oncoref.unmeasured_home_panels` integrates SHA-256-pinned adult human bulk TPM and donor-resolved single-cell UMI panels across these six tissues (`#735`): proteins exceeding their home-tissue injury-tier ceiling (`SP7` and `PANX3` in bone, `GFY` and `BPIFB3` in olfactory epithelium, `GLYATL3`) become `Unsafe`, proteins clearing adult home panels or Disposable follicle bounds (`33` proteins in `CA only` under clean tumor QC, incl. `TAS1R2`, `KRTAP20-3`, `KRTAP21-2`, `KRTAP21-3`, `KRTAP6-2`, plus `OR10J1` and `KRTAP20-4` promoted to `CTA`) enter the candidate sets, and proteins whose sub-niche remains unmeasured (`DSPP` odontoblast process, `CALHM3` type II taste cells) stay in `Other:Unscreened tissue`. A protein with a documented home in an unmeasured niche can still qualify as `RA`.
 
 ## Tumor quality and replication
 
-Library QC enforces the olfactory-receptor genomic-DNA background ceiling (`≤ 2.5%` of measured olfactory receptors at `≥ 5 TPM`, excluding `94` gDNA-contaminated tumor libraries across `NEC_MERKEL`, `SARC_PEC`, `BL`, `HL`, `MCL`, `B_ALL`, `LAML`, and `T_ALL`) and unrelated-tissue screens.
+Library QC enforces the olfactory-receptor genomic-DNA background ceiling (`≤ 2.5%` of measured olfactory receptors at `≥ 5 TPM`, newly excluding `92` baseline-admitted gDNA-contaminated tumor libraries across `NEC_MERKEL`, `SARC_PEC`, `BL`, `MCL`, `HL`, `B_ALL`, `LAML`, and `T_ALL`) and unrelated-tissue screens.
 Coordinated late-spermatid RNA is an **advisory note only**: normal reproductive
 specificity does not establish absence from cancer or prove normal-cell admixture.
 These notes never change sample QC status or remove tumor or reproductive evidence,

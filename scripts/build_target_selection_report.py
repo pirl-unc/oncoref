@@ -246,17 +246,37 @@ def write_guide(definition):
         f"**{summary['categories'][name]:,} {name}**" for name in target_selection.CATEGORIES
     )
     counts = summary["categories"]
+    union_n = summary["memberships"]["is_target_candidate"]
+    from oncoref import antigen_sets, human
+
+    sex_codes = human.sex_restricted_antigens()["sex_restriction_code"].value_counts()
+    cta_m_n = int(sex_codes.get("CTA-M", 0))
+    cta_e_n = int(sex_codes.get("CTA-E", 0))
+    cta_f_n = int(sex_codes.get("CTA-F", 0))
+    cta_p_n = len(antigen_sets.proteins("CTA-P"))
     for index_path in [ROOT / "docs/index.md", ROOT / "README.md"]:
-        index_path.write_text(
-            re.sub(
-                r"\*\*[\d,]+ CTA, [\d,]+ Cancer Antigen only, [\d,]+ Reproductive Antigen only, [\d,]+ Other and\s+[\d,]+ Unsafe\*\*",
-                f"**{counts['CTA']:,} CTA, {counts['Cancer Antigen only']:,} Cancer Antigen only, "
-                f"{counts['Reproductive Antigen only']:,} Reproductive Antigen only, {counts['Other']:,} Other and\n"
-                f"{counts['Unsafe']:,} Unsafe**",
-                index_path.read_text(),
-                count=1,
-            )
+        txt = re.sub(
+            r"\*\*[\d,]+ CTA, [\d,]+ Cancer Antigen only, [\d,]+ Reproductive Antigen only, [\d,]+ Other and\s+[\d,]+ Unsafe\*\*",
+            f"**{counts['CTA']:,} CTA, {counts['Cancer Antigen only']:,} Cancer Antigen only, "
+            f"{counts['Reproductive Antigen only']:,} Reproductive Antigen only, {counts['Other']:,} Other and\n"
+            f"{counts['Unsafe']:,} Unsafe**",
+            index_path.read_text(),
+            count=1,
         )
+        txt = re.sub(
+            r"the candidate union `CA ∪ RA` contains \*\*[\d,]+\*\* protein groups",
+            f"the candidate union `CA ∪ RA` contains **{union_n:,}** protein groups",
+            txt,
+            count=1,
+        )
+        txt = re.sub(
+            r"\*\*[\d,]+\*\* non-pregnant female-safe CTAs \(`CTA-M \+ CTA-E`: `\d+ \+ \d+`\), \*\*[\d,]+\*\* male-safe\s+CTAs \(`CTA-F \+ CTA-E`: `\d+ \+ \d+`\), and \*\*[\d,]+\*\* non-exclusive peripartum/lactation CTAs \(`CTA-P`\)",
+            f"**{cta_m_n + cta_e_n:,}** non-pregnant female-safe CTAs (`CTA-M + CTA-E`: `{cta_m_n} + {cta_e_n}`), **{cta_f_n + cta_e_n:,}** male-safe\n"
+            f"   CTAs (`CTA-F + CTA-E`: `{cta_f_n} + {cta_e_n}`), and **{cta_p_n:,}** non-exclusive peripartum/lactation CTAs (`CTA-P`)",
+            txt,
+            count=1,
+        )
+        index_path.write_text(txt)
     from string import Template
 
     from oncoref.library_qc import NOTES

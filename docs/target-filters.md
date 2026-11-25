@@ -51,14 +51,14 @@ assumptions and specify protected or absent organs explicitly. `all` applies no 
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
-| `all` | none | **324** | 100 | 141 | 565 |
-| `female-patient` | none | **324** | 100 | 141 | 565 |
-| `female-patient (protect ovary)` | ovary | **294** | 98 | 136 | 528 |
-| `female-patient (lactating)` | lactating_breast | **320** | 99 | 140 | 559 |
+| `all` | none | **323** | 97 | 142 | 562 |
+| `female-patient` | none | **323** | 97 | 142 | 562 |
+| `female-patient (protect ovary)` | ovary | **293** | 95 | 137 | 525 |
+| `female-patient (lactating)` | lactating_breast | **319** | 96 | 141 | 556 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
-| `male-patient` | none | **324** | 100 | 141 | 565 |
-| `male-patient (protect testis)` | testis | **75** | 75 | 28 | 178 |
-| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **59** | 65 | 15 | 139 |
+| `male-patient` | none | **323** | 97 | 142 | 562 |
+| `male-patient (protect testis)` | testis | **74** | 73 | 29 | 176 |
+| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **58** | 63 | 16 | 137 |
 
 Counts are research-screen outputs. Pregnancy remains unresolved because early
 embryo measurements do not cover all fetal/developmental stages. Milk-program
@@ -68,8 +68,8 @@ state labels are inferred and do not prove expression absence in other hosts.
 
 | Mode | Retained proteins without a host context | Changes |
 |---|---:|---|
-| `all` | 565 | `{}` |
-| `loose` | 398 | `{'min_papers': 1}` |
+| `all` | 562 | `{}` |
+| `loose` | 396 | `{'min_papers': 1}` |
 | `standard` | 253 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
 | `strict` | 112 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 

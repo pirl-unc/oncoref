@@ -13,29 +13,29 @@
     "proteins": 19893,
     "categories": {
       "Unsafe": 18249,
-      "Other": 1079,
-      "CTA": 324,
-      "Reproductive Antigen only": 141,
-      "Cancer Antigen only": 100
+      "Other": 1082,
+      "CTA": 323,
+      "Reproductive Antigen only": 142,
+      "Cancer Antigen only": 97
     },
     "classifications": {
       "Unsafe": 18249,
       "Other:Review": 731,
-      "CTA": 324,
-      "Other:Expression": 282,
-      "Reproductive Antigen only": 141,
-      "Cancer Antigen only": 100,
+      "CTA": 323,
+      "Other:Expression": 286,
+      "Reproductive Antigen only": 142,
+      "Cancer Antigen only": 97,
       "Other:Sequence": 48,
-      "Other:Unscreened tissue": 18
+      "Other:Unscreened tissue": 17
     },
     "memberships": {
-      "is_cancer_antigen": 424,
+      "is_cancer_antigen": 420,
       "is_reproductive_antigen": 465,
-      "is_cta": 324,
-      "is_target_candidate": 565
+      "is_cta": 323,
+      "is_target_candidate": 562
     },
     "cta_tiers": {
-      "core": 269,
+      "core": 268,
       "core_with_extended_exposure": 32,
       "extended_only": 23
     },
@@ -190,9 +190,9 @@
     "published_nomination_by_category": {
       "Unsafe": 1758,
       "CTA": 246,
-      "Other": 105,
+      "Other": 107,
       "Reproductive Antigen only": 92,
-      "Cancer Antigen only": 32
+      "Cancer Antigen only": 30
     }
   },
   "comparison": {
@@ -947,8 +947,8 @@
     ],
     "tumor_matrix_cache_sha256": "8f0bb3074e1b3c3ccfe53a3037242f9cffc28dfb07828c562d28393e8b7eec4b"
   },
-  "data_sha256": "350ffd33831837ef5d8ea0174bd868cf34ffb36b92a195b4abd2877a469f20e4",
+  "data_sha256": "2a778334a46b906975e20994ff0d0138952781896b9143c83a9171d7ec43782a",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
   "policy_id": "oncoref.target-selection.2026-11-25.1",
-  "data_bytes": 3679624
+  "data_bytes": 3679560
 }
