@@ -483,6 +483,96 @@ def ensure(code: str, version: str | None = None) -> Path:
     return dest if dest.exists() else fetch(code, version=version)
 
 
+def read(
+    code: str,
+    *,
+    version: str | None = None,
+    auto_fetch: bool = True,
+    qc=None,
+    cleanup=None,
+    normalize: str | None = None,
+    use_cache: bool = True,
+) -> pd.DataFrame:
+    """Load a cohort's per-sample bulk TPM matrix under ``(qc=, cleanup=, normalize=)`` (#780).
+
+    - ``qc``: ``("broad_background", "unrelated_tissues", "normal_swaps")``, ``"all"``, or ``None``.
+      Drops technically corrupted or gross foreign-organ swap libraries while strictly retaining
+      coordinated reproductive/CTA tumor expression (``library_qc`` Note ``R``).
+    - ``cleanup``: ``("index_hopping", "adjacent_normal_stroma")``, ``"all"``, or ``None``.
+      Subtracts stoichiometric lane bleed and off-lineage somatic normal spillover while
+      mathematically protecting all reproductive, oncofetal, and CTA genes from subtraction.
+    - ``normalize``: ``None`` (native linear TPM) or ``"clean_tpm"`` (16/9/75 compartment scale).
+    """
+    from . import bulk_qc, library_qc
+
+    qc_set = bulk_qc.expand_ops(
+        qc,
+        allowed=library_qc.ALL_TUMOR_QC,
+        aliases=library_qc.TUMOR_QC_ALIASES,
+        param_name="qc",
+        domain_label="tumor bulk",
+    )
+    cleanup_set = bulk_qc.expand_ops(
+        cleanup,
+        allowed=library_qc.ALL_TUMOR_CLEANUP,
+        aliases=library_qc.TUMOR_CLEANUP_ALIASES,
+        param_name="cleanup",
+        domain_label="tumor bulk",
+    )
+    norm = bulk_qc.resolve_normalize_option(normalize, domain_label="tumor bulk")
+
+    resolved = _resolve(code)
+    resolved_ver = resolve_version(resolved, version)
+    if auto_fetch:
+        path = ensure(resolved, version=resolved_ver)
+    else:
+        path = local_path(resolved, version=resolved_ver)
+        if not path.exists():
+            raise FileNotFoundError(
+                f"per-sample matrix for {resolved!r} not cached at {path}. "
+                f"Run source_matrices.fetch({resolved!r}) to download it."
+            )
+
+    if not qc_set and not cleanup_set and norm is None:
+        raw_df = pd.read_parquet(path)
+        raw_df.attrs["bulk_spec"] = {
+            "cancer_code": resolved,
+            "version": resolved_ver,
+            "qc": [],
+            "cleanup": [],
+            "normalize": None,
+            "dropped_samples": [],
+            "reproductive_cta_protected": True,
+        }
+        return raw_df
+
+    stat = path.stat()
+    spec = bulk_qc.BulkProcessingSpec(
+        domain="tumor_bulk",
+        source_id=resolved,
+        source_version=resolved_ver,
+        qc=qc_set,
+        cleanup=cleanup_set,
+        normalize=norm,
+        extra=(("size_bytes", int(stat.st_size)), ("mtime_ns", int(stat.st_mtime_ns))),
+    )
+    proc_dir = cache_root() / "processed"
+    return bulk_qc.read_or_compute_cached_parquet(
+        proc_dir,
+        spec.cache_key(),
+        spec.manifest(),
+        lambda: library_qc.apply_tumor_bulk_spec(
+            pd.read_parquet(path),
+            cancer_code=resolved,
+            qc=qc_set,
+            cleanup=cleanup_set,
+            normalize=norm,
+        ),
+        use_cache=use_cache,
+        spec_attr_name="bulk_spec",
+    )
+
+
 def sample_qc(
     code: str,
     *,

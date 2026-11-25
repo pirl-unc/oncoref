@@ -7,14 +7,22 @@ import copy
 import hashlib
 import json
 import os
+import re
 import tempfile
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from . import bulk_qc
 from ._table_io import read_csv
-from .expression_contract import ExpressionContract, validate_expression_join
+from .expression_contract import (
+    ExpressionContract,
+    ExpressionMeasurement,
+    MeasurementTransform,
+    validate_expression_join,
+)
 from .expression_records import RECORD_KINDS, ExpressionRecords
 from .expression_registry import (
     expression_source,
@@ -24,6 +32,155 @@ from .expression_registry import (
 from .reference_identity import _identity
 from .species import resolve_species
 from .species_assets import DEFAULT_MAX_BYTES, ensure_asset, species_asset
+
+ALL_SPECIES_BULK_QC: tuple[str, ...] = (
+    "pooled_libraries",
+    "broad_background",
+    "swaps",
+    "splash",
+)
+
+SPECIES_BULK_QC_ALIASES: dict[str, frozenset[str]] = {
+    "all": frozenset(ALL_SPECIES_BULK_QC),
+    "none": frozenset(),
+    "raw": frozenset(),
+}
+
+ALL_SPECIES_BULK_CLEANUP: tuple[str, ...] = (
+    "index_hopping",
+    "deconvolution",
+)
+
+SPECIES_BULK_CLEANUP_ALIASES: dict[str, frozenset[str]] = {
+    "all": frozenset(ALL_SPECIES_BULK_CLEANUP),
+    "none": frozenset(),
+    "raw": frozenset(),
+}
+
+_SPECIES_OR_RE = re.compile(r"^(?:OR\d+[A-Z]+\d+|OLFR\d+)$", re.IGNORECASE)
+
+
+def _tissue_to_species_panels(tissue_label: object) -> frozenset[str]:
+    if tissue_label is None or pd.isna(tissue_label):
+        return frozenset()
+    low = str(tissue_label).strip().lower().replace("_", " ")
+    matched: set[str] = set()
+    if "liver" in low or "gallbladder" in low or "hepat" in low:
+        matched.add("liver")
+    if "pancrea" in low or "islet" in low:
+        matched.add("pancreas")
+    if "lung" in low or "bronch" in low or "trachea" in low:
+        matched.add("lung")
+    if "adrenal" in low or "suprarenal" in low:
+        matched.add("adrenal_gland")
+    elif "kidney" in low or re.search(r"\brenal\b", low):
+        matched.add("kidney")
+    if "thyroid" in low or "parathyroid" in low:
+        matched.add("thyroid")
+    if "pituitary" in low or "hypophys" in low:
+        matched.add("pituitary")
+    if (
+        any(
+            k in low
+            for k in (
+                "brain",
+                "cerebell",
+                "cortex",
+                "hippocamp",
+                "hypothalam",
+                "amygdala",
+                "spinal",
+                "retina",
+                "nerve",
+            )
+        )
+        and "kidney" not in low
+        and not re.search(r"\brenal\b", low)
+        and "adrenal" not in low
+        and "suprarenal" not in low
+    ):
+        matched.add("brain")
+    if (
+        any(k in low for k in ("muscle", "heart", "myocard", "ventricle", "atrium", "tongue"))
+        and "smooth" not in low
+    ):
+        matched.add("striated_muscle")
+    if "stomach" in low or "gastric" in low or "duodenum" in low:
+        matched.add("stomach")
+    if "salivary" in low or "parotid" in low or "submandibular" in low:
+        matched.add("salivary_gland")
+    if any(k in low for k in ("skin", "esophag", "mucosa", "tongue", "cervix", "vagina", "tonsil")):
+        matched.add("squamous_epithelium")
+    if "testis" in low or "testes" in low or "epididym" in low:
+        matched.add("testis")
+    if "ovary" in low or "ovaries" in low or "oviduct" in low or "fallopian" in low:
+        matched.add("ovary")
+    if "placenta" in low or "trophoblast" in low:
+        matched.add("placenta")
+    return frozenset(matched)
+
+
+def _feature_symbols(features: pd.DataFrame, values_index: pd.Index) -> pd.Series:
+    for col in ("GeneSymbol", "symbol", "gene_symbol", "Gene name", "gene_name"):
+        if col in features.columns:
+            s = features[col].reindex(values_index).fillna("").astype(str)
+            return s.where(
+                s.str.strip().ne(""), pd.Series(values_index.astype(str), index=values_index)
+            )
+    return pd.Series(values_index.astype(str), index=values_index)
+
+
+def _species_native_organ_panels(
+    values: pd.DataFrame,
+    features: pd.DataFrame,
+    samples: pd.DataFrame,
+) -> tuple[dict[str, pd.Series], pd.DataFrame, dict[str, frozenset[str]]]:
+    """Construct within-dataset species-native organ reference panels & profiles.
+
+    Never borrows human expression numbers; derives reference medians exclusively
+    from samples labeled with each organ inside ``(values, samples)``. When symbol
+    columns are absent (e.g. Ensembl-ID-only Bgee tables), falls back to empirical
+    within-dataset organ-restricted markers (median >= 50 and >= 20x off-organ P95).
+    """
+    syms = _feature_symbols(features, values.index).str.strip().str.upper()
+    native_map = {
+        str(sid): _tissue_to_species_panels(samples.loc[sid, "tissue"]) for sid in samples.index
+    }
+    panels: dict[str, pd.Series] = {}
+    prof_cols: dict[str, pd.Series] = {}
+    all_panel_names = sorted(bulk_qc.VERTEBRATE_ORGAN_ANCHOR_SYMBOLS)
+    organ_medians: dict[str, pd.Series] = {}
+    for pname in all_panel_names:
+        native_samps = [
+            sid for sid, pset in native_map.items() if pname in pset and sid in values.columns
+        ]
+        if native_samps:
+            organ_medians[pname] = values.loc[:, native_samps].median(axis=1)
+
+    for pname, organ_med in organ_medians.items():
+        anchor_syms = bulk_qc.VERTEBRATE_ORGAN_ANCHOR_SYMBOLS[pname]
+        anchor_mask = syms.isin({a.upper() for a in anchor_syms})
+        cand = organ_med[anchor_mask & (organ_med >= 5.0)]
+        if cand.empty:
+            other_samps = [
+                sid for sid in values.columns if pname not in native_map.get(str(sid), frozenset())
+            ]
+            if other_samps:
+                off_p95 = values.loc[:, other_samps].quantile(0.95, axis=1).fillna(0.0)
+                emp = organ_med[
+                    (organ_med >= 50.0) & (organ_med >= 20.0 * np.maximum(off_p95, 1.0))
+                ]
+                cand = emp.sort_values(ascending=False).head(8)
+        if cand.empty:
+            continue
+        panels[pname] = cand.astype(float)
+        prof_cols[pname] = organ_med.fillna(0.0).clip(lower=0.0).astype(float)
+    prof_df = (
+        pd.DataFrame(prof_cols, index=values.index).fillna(0.0)
+        if prof_cols
+        else pd.DataFrame(index=values.index)
+    )
+    return panels, prof_df, native_map
 
 
 def _sha256(path):
@@ -198,15 +355,238 @@ class ExpressionDataset:
         ]
         return pd.DataFrame(records, index=self._samples.index.copy())
 
-    def tissue_summary(self):
+    def process(
+        self,
+        *,
+        qc=None,
+        cleanup=None,
+        normalize: str | None = None,
+    ) -> ExpressionDataset:
+        """Apply unified ``(qc=, cleanup=, normalize=)`` bulk operations in native feature space (#780).
+
+        - ``qc``: ``("pooled_libraries", "broad_background", "swaps", "splash")``, ``"all"``, or ``None``.
+          Rejects pooled/corrupted/swapped libraries or ``NaN``-masks splashed ``(feature, sample)``
+          cells without altering surviving observed values.
+        - ``cleanup``: ``("index_hopping", "deconvolution")``, ``"all"``, or ``None``.
+          Subtracts stoichiometric lane bleed and off-lineage necropsy shadow derived strictly from
+          within-dataset species-native organ medians (protecting reproductive programs when
+          ``contract.context == 'tumor'``).
+        - ``normalize``: ``None`` (native unit) or ``"clean_tpm"`` (species-native 16/9/75 scale).
+        """
+        qc_set = bulk_qc.expand_ops(
+            qc,
+            allowed=ALL_SPECIES_BULK_QC,
+            aliases=SPECIES_BULK_QC_ALIASES,
+            param_name="qc",
+            domain_label="species bulk",
+        )
+        cleanup_set = bulk_qc.expand_ops(
+            cleanup,
+            allowed=ALL_SPECIES_BULK_CLEANUP,
+            aliases=SPECIES_BULK_CLEANUP_ALIASES,
+            param_name="cleanup",
+            domain_label="species bulk",
+        )
+        norm = bulk_qc.resolve_normalize_option(normalize, domain_label="species bulk")
+        if not qc_set and not cleanup_set and norm is None:
+            return ExpressionDataset(
+                self.values, self.features, self.samples, self.contract, records=self._records
+            )
+
+        rna_linear_ops = bool(
+            cleanup_set or norm == "clean_tpm" or (qc_set & {"broad_background", "swaps", "splash"})
+        )
+        if rna_linear_ops and (
+            self._contract.measurement.feature_level not in {"gene", "transcript"}
+            or self._contract.measurement.scale != "linear"
+            or self._contract.measurement.unit
+            not in {
+                "TPM",
+                "TMM-CPM",
+                "CPM",
+                "FPKM",
+            }
+        ):
+            raise ValueError(
+                f"Bulk RNA processing requires raw linear gene/transcript RNA measurement semantics; "
+                f"got feature_level={self._contract.measurement.feature_level!r}, "
+                f"unit={self._contract.measurement.unit!r}, scale={self._contract.measurement.scale!r}"
+            )
+        if norm == "clean_tpm" and self._contract.measurement.unit not in {
+            "TPM",
+            "TMM-CPM",
+            "CPM",
+        }:
+            raise ValueError(
+                f"normalize='clean_tpm' requires native linear TPM/CPM measurement semantics; "
+                f"got unit={self._contract.measurement.unit!r}"
+            )
+
+        vals = self.values
+        feats = self.features
+        samps = self.samples
+        syms = _feature_symbols(feats, vals.index)
+        prot_panels = (
+            bulk_qc.REPRODUCTIVE_ORGAN_PANELS if self._contract.context == "tumor" else frozenset()
+        )
+
+        keep_samps = list(samps.index)
+        if "pooled_libraries" in qc_set:
+            keep_samps = [sid for sid in keep_samps if samps.loc[sid, "pooling"] != "pooled"]
+        if "broad_background" in qc_set and keep_samps:
+            or_mask = syms.map(lambda s: bool(_SPECIES_OR_RE.match(s.strip()))).to_numpy()
+            if or_mask.any():
+                or_sub = vals.loc[or_mask, keep_samps]
+                meas = or_sub.notna().sum(axis=0)
+                share = or_sub.ge(5.0).sum(axis=0) / meas.replace(0, np.nan)
+                keep_samps = [
+                    sid
+                    for sid in keep_samps
+                    if not (int(meas.loc[sid]) >= 20 and float(share.loc[sid]) > 0.20)
+                ]
+
+        panels, prof_df, native_map = _species_native_organ_panels(
+            vals.loc[:, keep_samps], feats, samps.loc[keep_samps]
+        )
+
+        if "swaps" in qc_set and keep_samps and panels:
+            basis_genes = sorted({g for p in panels for g in panels[p].index if g in vals.index})
+            if basis_genes:
+                basis = prof_df.reindex(index=basis_genes, columns=sorted(panels)).fillna(0.0)
+                w_mat = bulk_qc.solve_nonnegative_archetype_mixture(
+                    basis, vals.loc[basis_genes, keep_samps]
+                )
+                surviving: list[str] = []
+                for sid in keep_samps:
+                    nat_p = native_map.get(sid, frozenset())
+                    foreign_p = [p for p in w_mat.index if p not in nat_p and p not in prot_panels]
+                    f_max = float(w_mat.loc[foreign_p, sid].max()) if foreign_p else 0.0
+                    n_max = (
+                        float(w_mat.loc[list(nat_p & set(w_mat.index)), sid].max())
+                        if (nat_p & set(w_mat.index))
+                        else 0.0
+                    )
+                    if f_max >= 0.35 and f_max >= 2.0 * max(n_max, 1e-6):
+                        continue
+                    surviving.append(sid)
+                keep_samps = surviving
+                panels, prof_df, native_map = _species_native_organ_panels(
+                    vals.loc[:, keep_samps], feats, samps.loc[keep_samps]
+                )
+
+        vals = vals.loc[:, keep_samps]
+        samps = samps.loc[keep_samps]
+        sub_native = {sid: native_map.get(sid, frozenset()) for sid in keep_samps}
+
+        splash_modified = False
+        if "splash" in qc_set and not vals.empty and panels:
+            pre_na = vals.isna().to_numpy()
+            vals = bulk_qc.mask_panel_splash_cells(
+                vals,
+                panels,
+                sample_native_panels=sub_native,
+                protected_panels=prot_panels,
+                full_profiles=prof_df,
+            )
+            splash_modified = not np.array_equal(pre_na, vals.isna().to_numpy())
+
+        transforms = list(self._contract.measurement.transformations)
+        curr_unit = str(self._contract.measurement.unit)
+        n_feat = len(vals.index)
+
+        if cleanup_set and not vals.empty and panels:
+            if "index_hopping" in cleanup_set:
+                vals = bulk_qc.subtract_panel_index_hopping(
+                    vals,
+                    panels,
+                    sample_native_panels=sub_native,
+                    protected_panels=prot_panels,
+                    full_profiles=prof_df,
+                )
+            if "deconvolution" in cleanup_set:
+                vals = bulk_qc.deconvolve_panel_admixture(
+                    vals,
+                    panels,
+                    sample_native_panels=sub_native,
+                    protected_panels=prot_panels,
+                    full_profiles=prof_df,
+                )
+            transforms.append(
+                MeasurementTransform(
+                    operation="bulk_cleanup:" + "+".join(sorted(cleanup_set)),
+                    input_unit=curr_unit,
+                    output_unit=curr_unit,
+                    assumptions=(
+                        "within-dataset species-native organ anchor panels",
+                        "non-negative residual clamp preserving missingness",
+                    ),
+                    input_features=n_feat,
+                    output_features=n_feat,
+                )
+            )
+
+        is_proxy = self._contract.measurement.is_proxy
+        unfilled_attrs = None
+        if norm == "clean_tpm":
+            if not vals.empty:
+                vals = bulk_qc.species_compartment_clean_scale(vals, symbols=syms)
+                unfilled_attrs = vals.attrs.get("unfilled_compartments")
+            else:
+                # Validate identifiable compartments even when 0 columns survive QC
+                bulk_qc.species_compartment_clean_scale(
+                    pd.DataFrame({"_check": np.ones(len(vals.index))}, index=vals.index),
+                    symbols=syms,
+                )
+            out_unit = "clean-TPM" if "TPM" in curr_unit else "clean-CPM"
+            transforms.append(
+                MeasurementTransform(
+                    operation="species_compartment_clean_scale",
+                    input_unit=curr_unit,
+                    output_unit=out_unit,
+                    assumptions=(
+                        "16% ribosomal / 9% technical / 75% biological compartment scale",
+                        "conserved symbol-classified compartments without human ID mapping",
+                    ),
+                    input_features=n_feat,
+                    output_features=n_feat,
+                )
+            )
+            curr_unit = out_unit
+
+        new_contract = self._contract
+        if transforms != list(self._contract.measurement.transformations):
+            new_meas = ExpressionMeasurement(
+                feature_level=self._contract.measurement.feature_level,
+                unit=curr_unit,
+                scale=self._contract.measurement.scale,
+                is_proxy=is_proxy,
+                transformations=tuple(transforms),
+            )
+            new_contract = replace(self._contract, measurement=new_meas)
+
+        untouched_records = (
+            self._records
+            if (
+                keep_samps == list(self._samples.index)
+                and not splash_modified
+                and not cleanup_set
+                and norm is None
+            )
+            else None
+        )
+        ds = ExpressionDataset(vals, feats, samps, new_contract, records=untouched_records)
+        if unfilled_attrs:
+            ds._values.attrs["unfilled_compartments"] = dict(unfilled_attrs)
+        return ds
+
+    def tissue_summary(self, *, qc=None, cleanup=None, normalize: str | None = None):
         """Within-source native values; measured libraries and donor coverage remain separate.
 
-        This does not allocate gene totals to isoforms or pool incompatible sources.
-        Unknown tissues are retained. Developmental stages are grouped separately
-        when supplied; embryonic and adult samples never share an organ summary.
-        Pooled/unknown-pooling samples cannot supply
-        independent-donor counts. Missing values never become zero observations.
+        Optional ``(qc=, cleanup=, normalize=)`` arguments run :meth:`process` prior to
+        summarizing (#780). When omitted, summarizes the untouched native dataset.
         """
+        if qc is not None or cleanup is not None or normalize is not None:
+            return self.process(qc=qc, cleanup=cleanup, normalize=normalize).tissue_summary()
         rows = []
         group_columns = ["tissue", "stage"] if "stage" in self._samples else ["tissue"]
         for keys, metadata in self._samples.groupby(group_columns, dropna=False, sort=False):
@@ -236,7 +616,18 @@ class ExpressionDataset:
                 }
             )
             rows.append(summary)
-        result = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame()
+        empty_cols = [
+            "feature_id",
+            *group_columns,
+            "native_mean",
+            "native_max",
+            "measured_libraries",
+            "total_libraries",
+            "known_individual_donors_measured",
+            "libraries_with_unresolved_or_pooled_donors",
+            "unit",
+        ]
+        result = pd.concat(rows, ignore_index=True) if rows else pd.DataFrame(columns=empty_cols)
         result.attrs["expression_contract"] = self.contract.as_dict()
         return result
 
@@ -325,9 +716,22 @@ class ExpressionDataset:
                 or _sha256(path) != info["sha256"]
             ):
                 raise ValueError(f"Expression artifact checksum mismatch: {name}")
-        samples = pd.DataFrame(json.loads((directory / "samples.json").read_text())).set_index(
-            "sample_id"
-        )
+        raw_samples = json.loads((directory / "samples.json").read_text())
+        if raw_samples:
+            samples = pd.DataFrame(raw_samples).set_index("sample_id")
+        else:
+            samples = pd.DataFrame(
+                columns=[
+                    "sample_id",
+                    "taxon_id",
+                    "library_id",
+                    "run_ids",
+                    "donor_id",
+                    "donor_scope",
+                    "pooling",
+                    "tissue",
+                ]
+            ).set_index("sample_id")
         return cls(
             pd.read_parquet(directory / "values.parquet"),
             pd.read_parquet(directory / "features.parquet")
@@ -366,8 +770,27 @@ def read_species_expression(
     cache_root=None,
     local_overrides=None,
     max_bytes=DEFAULT_MAX_BYTES,
+    qc=None,
+    cleanup=None,
+    normalize: str | None = None,
 ):
-    """Load a registered source in its native space; never apply human canonicalization."""
+    """Load a registered source in its native space; optional ``(qc=, cleanup=, normalize=)`` (#780)."""
+    qc_set = bulk_qc.expand_ops(
+        qc,
+        allowed=ALL_SPECIES_BULK_QC,
+        aliases=SPECIES_BULK_QC_ALIASES,
+        param_name="qc",
+        domain_label="species bulk",
+    )
+    cleanup_set = bulk_qc.expand_ops(
+        cleanup,
+        allowed=ALL_SPECIES_BULK_CLEANUP,
+        aliases=SPECIES_BULK_CLEANUP_ALIASES,
+        param_name="cleanup",
+        domain_label="species bulk",
+    )
+    norm = bulk_qc.resolve_normalize_option(normalize, domain_label="species bulk")
+
     selected = resolve_species(species)
     source = expression_source(source_id, species=selected)
     if source is None:
@@ -413,7 +836,7 @@ def read_species_expression(
     if adapter == "orfdata":
         from .managed_expression import read_managed_expression
 
-        return read_managed_expression(
+        ds = read_managed_expression(
             entry,
             samples,
             contract,
@@ -422,6 +845,9 @@ def read_species_expression(
             local_overrides=local_overrides,
             max_bytes=max_bytes,
         )
+        if qc_set or cleanup_set or norm is not None:
+            return ds.process(qc=qc_set, cleanup=cleanup_set, normalize=norm)
+        return ds
     asset = species_asset(entry["matrix_asset"], species=selected)
     if asset.sha256 != contract.content_provenance["matrix"]:
         raise ValueError("Matrix asset and expression contract disagree")
@@ -464,7 +890,10 @@ def read_species_expression(
     samples = samples.loc[values.columns]
     values.index.name = features.index.name = "feature_id"
     values.columns.name = samples.index.name = "sample_id"
-    return ExpressionDataset(values, features, samples, contract)
+    ds = ExpressionDataset(values, features, samples, contract)
+    if qc_set or cleanup_set or norm is not None:
+        return ds.process(qc=qc_set, cleanup=cleanup_set, normalize=norm)
+    return ds
 
 
 def combine_expression(datasets):

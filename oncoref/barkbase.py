@@ -29,8 +29,11 @@ def read(
     cache_root=None,
     local_overrides=None,
     max_bytes: int = DEFAULT_MAX_BYTES,
+    qc=None,
+    cleanup=None,
+    normalize: str | None = None,
 ) -> ExpressionDataset:
-    """All source StringTie features in native TMM-CPM.
+    """All source StringTie features in native TMM-CPM; supports ``(qc=, cleanup=, normalize=)``.
 
     Assets use the shared verified cache or taxon-qualified local overrides.
     """
@@ -41,4 +44,7 @@ def read(
         cache_root=cache_root,
         local_overrides=local_overrides,
         max_bytes=max_bytes,
+        qc=qc,
+        cleanup=cleanup,
+        normalize=normalize,
     )

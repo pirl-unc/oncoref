@@ -102,3 +102,19 @@ clean_p95 = gtex.tissue_summary(
 gtex.cached_specs()
 gtex.clear_derived_cache()
 ```
+
+---
+
+## 7. Harmonized Bulk `(qc=, cleanup=, normalize=)` Across Human Normal, Non-Human Species, & Tumor Cohorts
+
+The same three-axis algebra in `oncoref.bulk_qc` (`qc=` sample/cell rejection, `cleanup=` continuous background subtraction & NNLS mixture adjustment, `normalize=` `None | "clean_tpm"`) and `"all"` alias contract extend across all bulk RNA loaders in `oncoref`:
+
+| Bulk surface | `qc=` (`"all"` alias) | `cleanup=` (`"all"` alias) | `normalize=` | Key biological guardrails |
+| :--- | :--- | :--- | :--- | :--- |
+| **`oncoref.gtex`** (`tissue_summary`, `sample_tpm`, `tissue_rna`) | `("cell_lines", "swaps", "splash")` | `("index_hopping", "deconvolution")` | `None` or `"clean_tpm"` | Preserves anatomical urogenital/gastric boundary zones (`MSMB`/`KLK3` in bladder) and `100%` of endogenous `ACTB`/`GAPDH`/`SOX9` testis donors. |
+| **HPA normal bulk** (`human_protein_atlas.rna_consensus`, `rna_tissue_hpa`) | `("duplicate_gtex_tissues", "splash")` | `("index_hopping", "deconvolution")` | `None` or `"clean_tpm"` (`TPM` tables) | `duplicate_gtex_tissues` drops HPA's `rna_tissue_gtex` duplicate tissues while retaining unique HPA surgical tissues (`placenta`, `choroid plexus`, `appendix`, `lymph node`, `thymus`, etc.) and EyeGEx `retina`. |
+| **Sorted immune bulk** (`human_protein_atlas.immune_cells`) | `("ex_vivo_stimulated", "low_purity_sort")` | `("sort_carryover", "index_hopping")` | `None` or `"clean_tpm"` (`TPM` tables) | Drops *ex vivo* activated libraries, unfractionated mixtures (`total PBMC`), and `>= 4%` platelet sort failures while subtracting platelet (`PPBP`, `PF4`, `GP9`, `ITGA2B`, `TUBB1`, `GP1BA`) and reticulocyte (`HBB`, `HBA2`, `HBA1`, `HBD`, `ALAS2`, `SLC4A1`) carryover without discarding FACS-sorted B-cell subsets or touching monocyte `NRGN`. |
+| **HPA tissue scRNA** (`human_protein_atlas.single_cell_tissues`) | `("misannotated_erythroid",)` | `("ambient_soup",)` | `None` | Drops misannotated hemoglobin-dominated clusters (`breast c-24`, `HBB = 597,120 nTPM`) and subtracts within-tissue parenchymal droplet soup (`>= 50,000 nTPM` dominators) from co-captured immune/stromal/adipocyte clusters. |
+| **Non-human species** (`ExpressionDataset.process`, `barkbase.read`, `bgee_*.read`, `pfizer_canine_rna.read`, `doga.read`, `gse304066.read`, `species_expression.read_species_expression`) | `("pooled_libraries", "broad_background", "swaps", "splash")` | `("index_hopping", "deconvolution")` | `None` or `"clean_tpm"` | Derives organ panels strictly from within-dataset species-native medians (zero cross-species borrowing) and records explicit `MeasurementTransform` provenance on `ExpressionContract`. |
+| **Bulk tumor cohorts** (`source_matrices.read`, `library_qc.apply_tumor_bulk_spec`) | `("broad_background", "unrelated_tissues", "normal_swaps")` | `("index_hopping", "adjacent_normal_stroma")` | `None` or `"clean_tpm"` | **Reproductive / CTA / oncofetal programs are strictly protected**: coordinated testis RNA (`library_qc` Note `R`) never rejects a tumor library, and CTA/reproductive genes are never subtracted during tumor `cleanup`. |
+

@@ -29,6 +29,9 @@ def read(
     cache_root=None,
     local_overrides=None,
     max_bytes: int = DEFAULT_MAX_BYTES,
+    qc=None,
+    cleanup=None,
+    normalize: str | None = None,
 ) -> ExpressionDataset:
     """Raises with the recorded integration gap before downloading.
 
@@ -41,4 +44,7 @@ def read(
         cache_root=cache_root,
         local_overrides=local_overrides,
         max_bytes=max_bytes,
+        qc=qc,
+        cleanup=cleanup,
+        normalize=normalize,
     )
