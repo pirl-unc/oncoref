@@ -259,7 +259,11 @@ def build_human_screening_inputs(
         for ab_row in ab_df.itertuples(index=False):
             ab_eid = str(ab_row.entity_id)
             disp = str(ab_row.disposition)
-            if disp in {"ihc_rna_zero_cleared", "adult_cornea_sparse_umi_cleared"}:
+            if disp in {
+                "ihc_rna_zero_cleared",
+                "adult_cornea_sparse_umi_cleared",
+                "sc_soup_and_cis_spillover_cleared",
+            }:
                 cleared_rare_eids.add(ab_eid)
                 if ab_eid in ab_obs:
                     cleared_obs_map[ab_eid] = ab_obs[ab_eid]
@@ -502,9 +506,11 @@ def build_human_screening_inputs(
                 he_comp = he_eid.get(comp, {})
                 is_emb = citem.get("scope") == "developmental" or comp == "embryo"
                 cqual = bool(citem.get("qualifies_tenfold", False))
-                cval = float(
-                    he_comp["max_tpm"] if he_comp.get("max_tpm") is not None else citem["max_tpm"]
+                raw_cval = float(citem["max_tpm"])
+                he_cval = float(
+                    he_comp["max_tpm"] if he_comp.get("max_tpm") is not None else raw_cval
                 )
+                cval = max(raw_cval, he_cval) if cqual else he_cval
                 c_ntpm = he_comp.get("max_ntpm") if "max_ntpm" in he_comp else citem.get("max_ntpm")
                 c_prot = (
                     he_comp.get("protein_status")
@@ -525,6 +531,7 @@ def build_human_screening_inputs(
                             "cells": 25 if cqual else 20,
                             "positive_cells": 10 if cqual else 1,
                             "value": cval,
+                            "host_max_tpm": he_cval,
                             "compartment_qualifying_value": (
                                 float(supp_val) if cqual and supp_val is not None else 0.0
                             ),
@@ -551,9 +558,12 @@ def build_human_screening_inputs(
                             "cells": 0,
                             "positive_cells": 0,
                             "value": cval,
+                            "host_max_tpm": he_cval,
                             "compartment_qualifying_value": cval if cqual else min(cval, 0.0),
                             "female_max_tpm": he_comp.get("female_max_tpm"),
                             "male_max_tpm": he_comp.get("male_max_tpm"),
+                            "female_max_ntpm": he_comp.get("female_max_ntpm"),
+                            "male_max_ntpm": he_comp.get("male_max_ntpm"),
                             "max_ntpm": c_ntpm,
                             "protein_status": c_prot,
                             "scope_complete": True,
@@ -675,17 +685,19 @@ def build_human_screening_inputs(
             and eid not in admixture_non_tgct_map
             and pd.notna(bleed_rec.get("max_non_tgct_tumor_tpm"))
             and float(bleed_rec["max_non_tgct_tumor_tpm"]) > 0
-            and str(bleed_rec.get("top_non_tgct_sample") or "")
+            and pd.notna(bleed_rec.get("top_non_tgct_sample"))
+            and str(bleed_rec.get("top_non_tgct_sample")).strip()
         ):
-            nt_sample = str(bleed_rec["top_non_tgct_sample"])
+            nt_sample = str(bleed_rec["top_non_tgct_sample"]).strip()
             if nt_sample != (str(r.tumor_top_sample) if pd.notna(r.tumor_top_sample) else ""):
+                nt_cc_raw = bleed_rec.get("top_non_tgct_cancer_code")
                 tumor_rows.append(
                     {
                         "entity_id": eid,
                         "source_id": "oncoref_somatic_tumor_witness_764",
                         "sample_id": nt_sample,
                         "participant_id": f"somatic:{nt_sample}",
-                        "cancer_code": str(bleed_rec.get("top_non_tgct_cancer_code") or ""),
+                        "cancer_code": str(nt_cc_raw).strip() if pd.notna(nt_cc_raw) else "",
                         "value": float(bleed_rec["max_non_tgct_tumor_tpm"]),
                         "comparison_id": comp_id,
                         "unit": unit,
@@ -694,11 +706,12 @@ def build_human_screening_inputs(
                     }
                 )
 
-        qual_comps = {
-            c.strip()
-            for c in str(r.reproductive_qualifying_compartments or "").split("|")
-            if c.strip()
-        }
+        q_raw_val = r.reproductive_qualifying_compartments
+        qual_comps = (
+            {c.strip() for c in str(q_raw_val).split("|") if c.strip()}
+            if pd.notna(q_raw_val) and str(q_raw_val).strip()
+            else set()
+        )
         rec_exp = exposures.get(eid, {})
         supp_tpm = (
             float(r.reproductive_supported_tpm)
@@ -742,6 +755,16 @@ def build_human_screening_inputs(
                     }
                 )
             else:
+                raw_val = float(val)
+                peak_val = (
+                    max(raw_val, supp_tpm) if (comp_qualifies and pd.notna(supp_tpm)) else raw_val
+                )
+                if (
+                    eid in germline_tf_eids
+                    and comp == "testis"
+                    and pd.notna(r.reproductive_max_sample_tpm)
+                ):
+                    peak_val = max(peak_val, float(r.reproductive_max_sample_tpm))
                 repro_rows.append(
                     {
                         "entity_id": eid,
@@ -754,15 +777,18 @@ def build_human_screening_inputs(
                         "developmental_stage": "adult",
                         "cells": 0,
                         "positive_cells": 0,
-                        "value": float(val),
+                        "value": peak_val,
+                        "host_max_tpm": raw_val,
                         "compartment_qualifying_value": (
-                            float(val) if comp_qualifies else min(float(val), 0.0)
+                            peak_val if comp_qualifies else min(raw_val, 0.0)
                         ),
                         "germline_protamine_diluted_qualified": bool(
                             eid in germline_tf_eids and comp == "testis"
                         ),
                         "female_max_tpm": item.get("female_max_tpm"),
                         "male_max_tpm": item.get("male_max_tpm"),
+                        "female_max_ntpm": item.get("female_max_ntpm"),
+                        "male_max_ntpm": item.get("male_max_ntpm"),
                         "max_ntpm": item.get("max_ntpm"),
                         "protein_status": item.get("protein_status", "not_assessed"),
                         "scope_complete": bool(item.get("scope_complete", True)),
@@ -1192,6 +1218,7 @@ def compute_next_policy_transitions(
             "ihc_rna_zero_cleared",
             "adult_cornea_sparse_umi_cleared",
             "germline_tf_protamine_diluted_qualified",
+            "sc_soup_and_cis_spillover_cleared",
         }:
             reasons.append(f"#768:{r.assay_boundary_768_disposition}")
         if (

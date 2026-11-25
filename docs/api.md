@@ -790,7 +790,7 @@ Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
 
-The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-23.1`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **331 CTA, 117 Cancer Antigen only, 133 Reproductive Antigen only, 1,062 Other and 18,250 Unsafe** (`581` candidate union `CA ∪ RA`):
+The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-23.1`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **332 CTA, 117 Cancer Antigen only, 133 Reproductive Antigen only, 1,062 Other and 18,249 Unsafe** (`582` candidate union `CA ∪ RA`):
 
 ```python
 from oncoref import (
@@ -812,7 +812,7 @@ changes = target_selection.results(changed_only=True)
 cancer_only = target_selection.results(category="Cancer Antigen only")
 ctag2 = target_selection.results("CTAG2")  # Exact protein label or member Ensembl ID.
 
-# Cross-sex subsets (225 CTA-M, 39 CTA-E, 3 CTA-F, 64 CTA-MF) & mouse GRCm39 catalog (20 CTA)
+# Cross-sex subsets (232 CTA-M, 44 CTA-E, 5 CTA-F, 51 CTA-MF) & mouse GRCm39 catalog (20 CTA)
 cta_female_safe = antigen_sets.select("CTA-M").proteins()
 mouse_ctas = mouse.target_selection(category="CTA")
 
@@ -846,7 +846,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-That human `1.36.0` compatibility snapshot (`human.cta_selection()`) selects **607 proteins / 655 loci**, distinct from the active multi-species catalogs (`human.target_selection()` with **331 CTAs**, `mouse.target_selection()` evaluated genome-wide across **21,433 Ensembl 115 GRCm39 protein groups** with **20 CTAs, 29 CA only, and 296 RA only**, and `canine.target_selection()` holding **14** native canine nominations in `Other:Review`; see [Multi-species whitepaper](species-antigen-whitepaper.md)). The
+That human `1.36.0` compatibility snapshot (`human.cta_selection()`) selects **607 proteins / 655 loci**, distinct from the active multi-species catalogs (`human.target_selection()` with **332 CTAs**, `mouse.target_selection()` evaluated genome-wide across **21,433 Ensembl 115 GRCm39 protein groups** with **20 CTAs, 29 CA only, and 296 RA only**, and `canine.target_selection()` holding **14** native canine nominations in `Other:Review`; see [Multi-species whitepaper](species-antigen-whitepaper.md)). The
 [selection guide](cta-selection.md) documents common fields, native units,
 source categories, identity gaps and the independent sequence-background policy.
 The [four assessments](cta-evidence-axes.md) separate normal safety, one qualifying

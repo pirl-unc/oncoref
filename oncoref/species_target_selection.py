@@ -802,7 +802,7 @@ def classify_sex_restriction(
     ``anatomy_for_species(species)``. Missing opposite-sex organ coverage fails
     closed (never assuming an unmeasured female or male organ is silent).
     """
-    from . import host_context, target_filters
+    from . import host_context
 
     if table is None:
         resolved = resolve_species(species)
@@ -872,18 +872,11 @@ def classify_sex_restriction(
         m_all_host = replace(m_all_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
         m_sex_host = replace(m_sex_host, max_tpm=max_tpm, max_ntpm=max_ntpm)
 
-    f_all = target_filters.apply(
-        target_filters.TargetFilter(host=f_all_host), ra, host_evidence=exposures
-    ).set_index("entity_id")
-    f_sex = target_filters.apply(
-        target_filters.TargetFilter(host=f_sex_host), ra, host_evidence=exposures
-    ).set_index("entity_id")
-    m_all = target_filters.apply(
-        target_filters.TargetFilter(host=m_all_host), ra, host_evidence=exposures
-    ).set_index("entity_id")
-    m_sex = target_filters.apply(
-        target_filters.TargetFilter(host=m_sex_host), ra, host_evidence=exposures
-    ).set_index("entity_id")
+    ra_idx = ra.set_index("entity_id", drop=False)
+    f_all = host_context.assess(ra_idx, f_all_host, evidence=exposures)
+    f_sex = host_context.assess(ra_idx, f_sex_host, evidence=exposures)
+    m_all = host_context.assess(ra_idx, m_all_host, evidence=exposures)
+    m_sex = host_context.assess(ra_idx, m_sex_host, evidence=exposures)
 
     def max_comp_tpm(
         eid: str, compartments: tuple[str, ...], *, prefer_sex_key: str = "female_max_tpm"
@@ -1432,14 +1425,25 @@ def evaluate_species_catalog(
                     else pd.Series(dtype=float)
                 )
                 qual_val = float(supp_vals.max()) if not supp_vals.empty else cmax
+                he_max_tpm = (
+                    float(cgroup["host_max_tpm"].dropna().max())
+                    if "host_max_tpm" in cgroup.columns
+                    and not cgroup["host_max_tpm"].dropna().empty
+                    else cmax
+                )
                 he_entry: dict[str, object] = {
                     "coverage": "measured",
-                    "max_tpm": cmax,
+                    "max_tpm": he_max_tpm,
                     "max_ntpm": c_ntpm,
                     "protein_status": c_prot,
                     "scope_complete": c_scope,
                 }
-                for sex_key in ("female_max_tpm", "male_max_tpm"):
+                for sex_key in (
+                    "female_max_tpm",
+                    "male_max_tpm",
+                    "female_max_ntpm",
+                    "male_max_ntpm",
+                ):
                     if sex_key in cgroup.columns:
                         s_vals = cgroup[sex_key].dropna()
                         if not s_vals.empty:
@@ -1453,16 +1457,20 @@ def evaluate_species_catalog(
                 ):
                     qual_comps.append(str(comp))
 
-        germline_diluted_ok = (
-            not valid_r.empty
-            and "germline_protamine_diluted_qualified" in valid_r.columns
-            and bool(valid_r["germline_protamine_diluted_qualified"].fillna(False).any())
-            and n_max <= 0.10
-            and pd.notna(r_peak)
-            and r_peak >= 5.0
+        germ_vals = (
+            valid_r.loc[
+                valid_r["germline_protamine_diluted_qualified"].fillna(False).astype(bool),
+                "value",
+            ].dropna()
+            if not valid_r.empty and "germline_protamine_diluted_qualified" in valid_r.columns
+            else pd.Series(dtype=float)
         )
-        if germline_diluted_ok and (r_supp is None or pd.isna(r_supp) or float(r_supp) < r_peak):
-            r_supp = r_peak
+        germ_peak = float(germ_vals.max()) if not germ_vals.empty else np.nan
+        germline_diluted_ok = (
+            not germ_vals.empty and n_max <= 0.10 and pd.notna(germ_peak) and germ_peak >= 5.0
+        )
+        if germline_diluted_ok and (r_supp is None or pd.isna(r_supp) or float(r_supp) < germ_peak):
+            r_supp = germ_peak
             r_ratio = float(r_supp) / denom
 
         dev_mean = getattr(row, "developmental_mean_tpm", np.nan)
@@ -1744,6 +1752,25 @@ def _load_packaged_species_catalog_cached(
     df = clinical_organ_clearance.annotate_catalog(df, enabled=is_human)
     df = repeat_family_equivalence.annotate_catalog(df, enabled=is_human)
     df = assay_boundary_adjudications.annotate_catalog(df, enabled=is_human)
+    if (
+        not is_human
+        and "is_reproductive_antigen" in df.columns
+        and df["is_reproductive_antigen"].any()
+    ):
+        try:
+            he_ref = _packaged_species_host_exposure_ref(resolved, allow_download=allow_download)
+            if he_ref:
+                sex_df = classify_sex_restriction(df, species=resolved, host_evidence=he_ref)
+                sclass_map = sex_df.set_index("entity_id")["sex_restriction_class"].to_dict()
+                scode_map = sex_df.set_index("entity_id")["sex_restriction_code"].to_dict()
+                df["sex_restriction_class"] = [
+                    sclass_map.get(str(eid), "") for eid in df["entity_id"]
+                ]
+                df["sex_restriction_code"] = [
+                    scode_map.get(str(eid), "") for eid in df["entity_id"]
+                ]
+        except (FileNotFoundError, reference_data.ReferenceDataError):
+            pass
     df.attrs.update(
         taxon_id=resolved.taxon_id,
         species=resolved.name,

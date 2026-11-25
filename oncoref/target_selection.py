@@ -468,7 +468,14 @@ def _baseline_2026_11_20_host_exposures_cached() -> dict[str, dict]:
         if eid not in out:
             continue
         for comp, orig_comp_dict in comp_deltas.items():
-            out[eid][comp] = deepcopy(orig_comp_dict)
+            if "__patch__" in orig_comp_dict or "__drop__" in orig_comp_dict:
+                cur_c = out[eid].setdefault(comp, {})
+                for dk in orig_comp_dict.get("__drop__", ()):
+                    cur_c.pop(dk, None)
+                for pk, pv in orig_comp_dict.get("__patch__", {}).items():
+                    cur_c[pk] = deepcopy(pv)
+            else:
+                out[eid][comp] = deepcopy(orig_comp_dict)
     return out
 
 

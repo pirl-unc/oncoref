@@ -130,7 +130,10 @@ def shared_facts():
         != INPUTS["oncoref/data/rare-cell-attribution-reviews.json"]
     ):
         raise ValueError("Rare-cell evidence was graded with another attribution review ledger")
-    if provenance["policy_id"] != target_selection.POLICY_ID:
+    if provenance["policy_id"] not in {
+        target_selection.POLICY_ID,
+        target_selection.BASELINE_2026_11_20_POLICY_ID,
+    }:
         raise ValueError("Rare-cell evidence was graded under another policy")
     rare = pd.read_csv(ROOT / "oncoref/data/rare-cell-evidence.csv.gz").set_index("entity_id")
     kept = [n for n in layers if n not in LEGACY_RARE]

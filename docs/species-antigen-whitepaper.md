@@ -25,7 +25,7 @@ Within any species *S* with verified proteome reference `R_S`, comparative anato
 
 Male- and female-restricted subsets are defined by the **same `HostContext` protection algebra** in every species, parameterized by that species' actual reproductive, mammary, thymic, and disposable organs in `normal-tissue-taxonomy.yaml`:
 
-- **`MRA` (`CTA-M` / `MRA-only`, Male-restricted · female-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every female adult reproductive and mammary compartment of species *S* (`< 4` native RNA units with measured coverage, maintaining ≥10× tumor margin over protected host organs for `CTA-M`), while expressed in male organs.
+- **`MRA` (`CTA-M` / `MRA-only`, Male-restricted · female-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every female adult reproductive and mammary compartment of species *S* (`< 4` native RNA units with measured coverage and resolved protein status), while expressed in male organs.
 - **`FRA` (`CTA-F` / `FRA-only`, Female-restricted · male-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every male adult reproductive compartment plus resting mammary tissue of species *S*, while expressed in female or placental compartments.
 - **`ERA` (`CTA-E` / `ERA-only`, Embryo / placenta-only · adult-absent in both sexes):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible under full adult organ protection in **both** sexes—expressed in embryo or placenta and silent across every adult male and non-pregnant female reproductive and mammary compartment.
 - **`SRA` (`CTA-MF` / `SRA-only`, Shared male & female):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) expressed in adult reproductive/mammary organs of both sexes (or lacking measured opposite-sex clearance, failing closed).
@@ -59,7 +59,7 @@ The table below aligns all eight canonical screening roles across human, dog, an
 
 ## *Homo sapiens* (human · taxon 9606)
 
-Human target selection is fully evaluated across **19,893** protein-equivalence groups (**20,099** Ensembl 115 coding loci) under policy `oncoref.target-selection.2026-11-23.1`: **331** <span class="cat cat-cta">CTA</span>, **117** <span class="cat cat-ca">CA only</span>, **133** <span class="cat cat-ra">RA only</span> (**581** total candidates), **1,062** <span class="cat cat-other">Other</span>, and **18,250** <span class="cat cat-unsafe">Unsafe</span>. Across the **464** Reproductive Antigens (**331** CTAs), sex-restriction partitioning yields **329** `MRA` (**225** `CTA-M`), **46** `ERA` (**39** `CTA-E`), **6** `FRA` (**3** `CTA-F`), and **83** `SRA` (**64** `CTA-MF`). See the [main antigen whitepaper](antigen-whitepaper.md) for full human figures, clinical anchor tables, and edge-case audits.
+Human target selection is fully evaluated across **19,893** protein-equivalence groups (**20,099** Ensembl 115 coding loci) under policy `oncoref.target-selection.2026-11-23.1`: **332** <span class="cat cat-cta">CTA</span>, **117** <span class="cat cat-ca">CA only</span>, **133** <span class="cat cat-ra">RA only</span> (**582** total candidates), **1,062** <span class="cat cat-other">Other</span>, and **18,249** <span class="cat cat-unsafe">Unsafe</span>. Across the **465** Reproductive Antigens (**332** CTAs), sex-restriction partitioning yields **340** `MRA` (**232** `CTA-M`), **52** `ERA` (**44** `CTA-E`), **10** `FRA` (**5** `CTA-F`), and **63** `SRA` (**51** `CTA-MF`). See the [main antigen whitepaper](antigen-whitepaper.md) for full human figures, clinical anchor tables, and edge-case audits.
 
 | Canonical role | Dataset(s) | Native unit | Status | Threshold / screening rule |
 | --- | --- | --- | --- | --- |
@@ -118,7 +118,7 @@ Key canine methodological rules enforced in code (`oncoref.canine`, `oncoref.spe
 
 Preclinical vaccine, TCR, and bispecific studies in mice require host-proteome peptide subtraction and endogenous normal-tissue screening on mouse-native coordinates rather than human-to-mouse symbol projection—especially across X-linked CTA families (`Magea`, `Mageb`, `Xlr`, `Trap1a`, `Pramef`) where copy number and tissue regulation diverge sharply from primates.
 
-Murine target selection is evaluated genome-wide across **21,433** Ensembl 115 `GRCm39` protein-equivalence groups (**21,760** primary-assembly coding loci, **8/8** evidence pillars active): **20** <span class="cat cat-cta">CTA</span>, **29** <span class="cat cat-ca">CA only</span>, **296** <span class="cat cat-ra">RA only</span> (**345** total candidates), **2,593** <span class="cat cat-other">Other</span>, and **18,495** <span class="cat cat-unsafe">Unsafe</span>. Across the **316** murine Reproductive Antigens (**20** CTAs), 16-compartment `HostContext` sex-restriction partitioning yields **69** `MRA` (**3** `CTA-M`), **8** `ERA` (**0** `CTA-E`), **16** `FRA` (**1** `CTA-F`), and **223** `SRA` (**16** `CTA-MF`).
+Murine target selection is evaluated genome-wide across **21,433** Ensembl 115 `GRCm39` protein-equivalence groups (**21,760** primary-assembly coding loci, **8/8** evidence pillars active): **20** <span class="cat cat-cta">CTA</span>, **29** <span class="cat cat-ca">CA only</span>, **296** <span class="cat cat-ra">RA only</span> (**345** total candidates), **2,593** <span class="cat cat-other">Other</span>, and **18,495** <span class="cat cat-unsafe">Unsafe</span>. Across the **316** murine Reproductive Antigens (**20** CTAs), 16-compartment `HostContext` sex-restriction partitioning yields **69** `MRA` (**3** `CTA-M`), **8** `ERA` (**0** `CTA-E`), **17** `FRA` (**2** `CTA-F`), and **222** `SRA` (**15** `CTA-MF`).
 
 ### Murine dataset and threshold parameterization
 
@@ -190,8 +190,8 @@ mouse.screening_datasets()
 role_comparison_table()
 
 # 2. Query biological sets and sex-restricted subsets (MRA/FRA/ERA/SRA, CTA-M/F/E/MF)
-cta_female_safe = antigen_sets.select("CTA-M")          # 225 male-restricted female-safe human CTAs
-era_targets = antigen_sets.select("CTA-E")              # 39 adult-absent embryo/placenta CTAs
+cta_female_safe = antigen_sets.select("CTA-M")          # 232 male-restricted female-safe human CTAs
+era_targets = antigen_sets.select("CTA-E")              # 44 adult-absent embryo/placenta CTAs
 human.sex_restricted_antigens()
 
 # 3. Parameterize canine or murine HostContext and run full catalog evaluation on native panels

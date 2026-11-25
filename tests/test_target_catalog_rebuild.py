@@ -376,9 +376,9 @@ def test_promoted_integrated_catalog_invariants_and_metadata():
     assert live.policy.eq(policy.POLICY_ID).all()
     assert len(live) == 19893 and live.entity_id.is_unique
     assert live.category.value_counts().to_dict() == {
-        "Unsafe": 18250,
+        "Unsafe": 18249,
         "Other": 1062,
-        "CTA": 331,
+        "CTA": 332,
         "Reproductive Antigen only": 133,
         "Cancer Antigen only": 117,
     }
@@ -394,6 +394,7 @@ def test_promoted_integrated_catalog_invariants_and_metadata():
         "DUX4",
         "MAGEB6",
         "DKKL1",
+        "CSN2",
         "FOXR2",
         "SPATA31A3",
         "PPP4R3C",

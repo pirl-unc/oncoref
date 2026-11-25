@@ -23,9 +23,9 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert cat_default["is_reproductive_antigen"].equals(
         promoted["is_reproductive_antigen"].astype(bool)
     )
-    assert int(promoted["is_cta"].sum()) == 331
+    assert int(promoted["is_cta"].sum()) == 332
 
-    # Exact sex-restriction subset parity across all 464 human RA/CTA proteins
+    # Exact sex-restriction subset parity across all 465 human RA/CTA proteins
     expected_sex = human.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     got_sex = res_default.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     pd.testing.assert_series_equal(got_sex.sort_index(), expected_sex.sort_index())
@@ -45,9 +45,9 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert res_base.catalog["classification"].equals(baseline_20261120["classification"])
     assert int(res_base.catalog["is_cta"].sum()) == 327
 
-    # Pinned default human catalog matches promoted policy_id (331 CTA)
+    # Pinned default human catalog matches promoted policy_id (332 CTA)
     assert human.target_selection().attrs["policy_id"] == target_selection.POLICY_ID
-    assert int(human.target_selection()["is_cta"].sum()) == 331
+    assert int(human.target_selection()["is_cta"].sum()) == 332
 
 
 def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
@@ -96,6 +96,10 @@ def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
     assert "#737:cSCC" in by_label.loc["BPY2/B/C", "transition_driver"]
     assert by_label.loc["DEFB107A/B", "classification_integrated"] == "CTA"
     assert "#737:BCC" in by_label.loc["DEFB107A/B", "transition_driver"]
+
+    # #779 droplet ambient-soup & <=100 kb SCPP cis-spillover clears CSN2 from Unsafe to CTA
+    assert by_label.loc["CSN2", "classification_integrated"] == "CTA"
+    assert "#768:sc_soup_and_cis_spillover_cleared" in by_label.loc["CSN2", "transition_driver"]
 
     # #711 confounder-rejected DAZL transitions from Other:Review to Unsafe
     assert by_label.loc["DAZL", "classification_integrated"] == "Unsafe"

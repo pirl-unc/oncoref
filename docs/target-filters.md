@@ -50,14 +50,14 @@ assumptions and specify protected or absent organs explicitly. `all` applies no 
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
-| `all` | none | **331** | 117 | 133 | 581 |
-| `female-patient` | none | **331** | 117 | 133 | 581 |
-| `female-patient (protect ovary)` | ovary | **282** | 111 | 120 | 513 |
-| `female-patient (lactating)` | lactating_breast | **325** | 114 | 129 | 568 |
+| `all` | none | **332** | 117 | 133 | 582 |
+| `female-patient` | none | **332** | 117 | 133 | 582 |
+| `female-patient (protect ovary)` | ovary | **287** | 111 | 122 | 520 |
+| `female-patient (lactating)` | lactating_breast | **325** | 114 | 130 | 569 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
-| `male-patient` | none | **331** | 117 | 133 | 581 |
-| `male-patient (protect testis)` | testis | **57** | 74 | 22 | 153 |
-| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **42** | 66 | 10 | 118 |
+| `male-patient` | none | **332** | 117 | 133 | 582 |
+| `male-patient (protect testis)` | testis | **62** | 84 | 25 | 171 |
+| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **47** | 75 | 13 | 135 |
 
 Counts are research-screen outputs. Pregnancy remains unresolved because early
 embryo measurements do not cover all fetal/developmental stages. Milk-program
@@ -67,8 +67,8 @@ state labels are inferred and do not prove expression absence in other hosts.
 
 | Mode | Retained proteins without a host context | Changes |
 |---|---:|---|
-| `all` | 581 | `{}` |
-| `loose` | 400 | `{'min_papers': 1}` |
+| `all` | 582 | `{}` |
+| `loose` | 401 | `{'min_papers': 1}` |
 | `standard` | 253 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
 | `strict` | 113 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 
