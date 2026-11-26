@@ -21,7 +21,7 @@
     "oncoref/antigen_cli.py": "01526a77eb2dc2c0633b37340e6c5e35a7841b7b1f2e87f9b1448fca9cbc59b4",
     "oncoref/antigen_data.py": "3a78d73290bff910d49820ee3425abcfe44933ddec6672fec8e490ace6656647",
     "oncoref/antigen_sets.py": "fdec823de6fda66bb2133d9e4803ec0da964aed226ccd082a44810a56338d58a",
-    "oncoref/catalog.py": "dfb2fb63be7dea9e6d44cb97cccd1c0fa2495b8e36d38afa18e077149200db86",
+    "oncoref/catalog.py": "5207af812fdb3ef74879cd0b67f1b30c88b96f97af2b538bd0d31734b517d551",
     "oncoref/cta_literature.py": "45d937b7d7d0d06753d8dcbaa376af416a77878c8c75adcb8ea69fe389eaf68a",
     "oncoref/curation.py": "b866d5e295e5e86ea3a987fa0ee90d6a3e86fd9d26308624a9f9caef3e36393c",
     "oncoref/data/antigen-source-inventory.csv": "4a354d3d83a7fc3ebdaa2195707c2db40d5c675486bf17da0e0f9efca368de72",

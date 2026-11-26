@@ -260,7 +260,10 @@ def _wheel_path(name: str) -> Path:
     root = Path(__file__).parent / "data"
     candidates = [
         root / name,
-        *(root / (name + suffix) for suffix in (".csv", ".csv.gz", ".json", ".yaml", ".yml")),
+        *(
+            root / (name + suffix)
+            for suffix in (".csv", ".csv.gz", ".json", ".json.gz", ".yaml", ".yml")
+        ),
     ]
     matches = [path for path in candidates if path.is_file()]
     if not matches:

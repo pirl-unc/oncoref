@@ -49,7 +49,8 @@ def test_classification_only_covers_known_pirlygenes_data():
 
 def _wheel_file_exists(name: str) -> bool:
     return any(
-        (_DATA_DIR / f"{name}{ext}").exists() for ext in (".csv", ".csv.gz", ".yaml", ".json")
+        (_DATA_DIR / f"{name}{ext}").exists()
+        for ext in (".csv", ".csv.gz", ".yaml", ".json", ".json.gz")
     )
 
 
