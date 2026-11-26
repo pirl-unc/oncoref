@@ -1,5 +1,5 @@
 {
-  "policy_id": "oncoref.target-selection.2026-11-26.1",
+  "policy_id": "oncoref.target-selection.2026-11-26.2",
   "status": "research_catalog_rebuilt",
   "species": "human",
   "categories": [
@@ -45,7 +45,7 @@
       "dental pulp",
       "bone"
     ],
-    "recorded_by": "A family rule, a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference.",
+    "recorded_by": "A family rule (including monogenic chemosensory GPCRs OR*, TAAR*, TAS1R*, TAS2R*, VN1R* diluted below bulk/droplet statistical power), a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference.",
     "effect": "Insufficient home-tissue coverage blocks cancer admission. Reproductive enrichment can independently qualify RA."
   },
   "published_normal_expression": {

@@ -70,6 +70,95 @@ SEX_SETS: dict[str, tuple[str, bool]] = {
     "SRA": ("Shared male & female", False),
 }
 
+TUMOR_ACTIVATION_MODES = (
+    "",
+    "ectopic",
+    "lineage_retained",
+    "ectopic_and_lineage_retained",
+)
+
+HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT: dict[str, frozenset[str]] = {
+    "testis": frozenset({"TGCT"}),
+    "embryo": frozenset({"TGCT"}),
+    "placenta": frozenset({"TGCT"}),
+    "ovary": frozenset({"OV"}),
+    "fallopian tube": frozenset({"OV"}),
+    "uterus": frozenset({"UCEC", "UCS"}),
+    "uterine_horn": frozenset({"UCEC", "UCS"}),
+    "endometrium": frozenset({"UCEC", "UCS"}),
+    "cervix": frozenset({"CESC"}),
+    "vagina": frozenset(),
+    "epididymis": frozenset(),
+    "seminal vesicle": frozenset(),
+    "prostate": frozenset({"PRAD", "BMPC_PRAD", "RM1"}),
+    "coagulating_gland": frozenset({"BMPC_PRAD", "RM1"}),
+    "resting_breast": frozenset(
+        {
+            "BRCA",
+            "BRCA_Basal",
+            "BRCA_Her2",
+            "BRCA_LumA",
+            "BRCA_LumB",
+            "BRCA_Normal",
+            "BRCA_TNBC",
+        }
+    ),
+    "lactating_breast": frozenset(
+        {
+            "BRCA",
+            "BRCA_Basal",
+            "BRCA_Her2",
+            "BRCA_LumA",
+            "BRCA_LumB",
+            "BRCA_Normal",
+            "BRCA_TNBC",
+        }
+    ),
+    "resting_mammary": frozenset({"CMT", "EMT6", "4T1", "EO771"}),
+    "lactating_mammary": frozenset({"CMT", "EMT6", "4T1", "EO771"}),
+    "cutaneous_melanocyte": frozenset({"SKCM", "UVM", "B16F10", "B78_MEL"}),
+    "thyroid gland": frozenset({"THCA"}),
+}
+
+
+def classify_tumor_activation_mode(
+    *,
+    is_cancer_antigen: bool,
+    qualifying_cancer_codes: Iterable[str],
+    reproductive_qualifying_compartments: str = "",
+    home_tissue: str = "",
+) -> str:
+    """Classify a qualified CA/CTA as ectopic, lineage_retained, or ectopic_and_lineage_retained.
+
+    Preserves ``CTA = CA & RA`` while distinguishing pure ectopic reactivation across
+    non-homologous somatic malignancies from homologous native-organ lineage retention
+    (e.g. ``Pbsn`` in ``BMPC_PRAD``, ``CSN3`` in ``CMT``, ``TGCT``-only germ-cell factors).
+    """
+    if not is_cancer_antigen:
+        return ""
+    codes = {str(c).strip() for c in qualifying_cancer_codes if c and str(c).strip()}
+    comps = {
+        c.strip() for c in str(reproductive_qualifying_compartments or "").split("|") if c.strip()
+    }
+    homes = {
+        h.strip()
+        for chunk in str(home_tissue or "").split(";")
+        for h in chunk.split("|")
+        if h.strip()
+    }
+    homologous = set().union(
+        *(HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT.get(c, frozenset()) for c in (comps | homes))
+    )
+    if not codes:
+        return "ectopic"
+    has_homologous = bool(codes & homologous)
+    has_ectopic = bool(codes - homologous)
+    if has_ectopic and has_homologous:
+        return "ectopic_and_lineage_retained"
+    if has_homologous:
+        return "lineage_retained"
+    return "ectopic"
+
 
 def _default_nonhuman_rare_cell_provenance(source_id: str, donor_id: str) -> tuple[str, str]:
     return source_id, f"{source_id}:{donor_id}"
@@ -1255,6 +1344,7 @@ def evaluate_species_catalog(
     comparison_normals: pd.DataFrame | None = None,
     comparison_tumors: pd.DataFrame | None = None,
     comparison_reproductive: pd.DataFrame | None = None,
+    comparison_cell_lines: pd.DataFrame | None = None,
 ) -> SpeciesScreeningResult:
     """Run the 3-stage OncoRef target-selection process for any species."""
     required_cols = {
@@ -1438,6 +1528,11 @@ def evaluate_species_catalog(
         if comparison_reproductive is not None and not comparison_reproductive.empty
         else {}
     )
+    cl_by_entity = (
+        dict(iter(comparison_cell_lines.groupby("entity_id")))
+        if comparison_cell_lines is not None and not comparison_cell_lines.empty
+        else {}
+    )
 
     empty_tumor = pd.DataFrame(
         columns=[
@@ -1466,6 +1561,8 @@ def evaluate_species_catalog(
         [],
         [],
     )
+    tum_qual_codes_by_eid: dict[str, set[str]] = {}
+    cl_max_tpm, cl_top_model, cl_qual_models = [], [], []
     rep_max, rep_supp, rep_fold, rep_qual_comps = [], [], [], []
     bounds_pass = []
     host_exposure: dict[str, dict[str, dict]] = {}
@@ -1505,6 +1602,9 @@ def evaluate_species_catalog(
             samples_10x.append(0)
             patients_10x.append(0)
             patient_folds_json.append("[]")
+            cl_max_tpm.append(np.nan)
+            cl_top_model.append("")
+            cl_qual_models.append("")
             rep_max.append(np.nan)
             rep_supp.append(np.nan)
             rep_fold.append(np.nan)
@@ -1530,6 +1630,9 @@ def evaluate_species_catalog(
             samples_10x.append(0)
             patients_10x.append(0)
             patient_folds_json.append("[]")
+            cl_max_tpm.append(np.nan)
+            cl_top_model.append("")
+            cl_qual_models.append("")
             rep_max.append(np.nan)
             rep_supp.append(np.nan)
             rep_fold.append(np.nan)
@@ -1602,6 +1705,46 @@ def evaluate_species_catalog(
             else ""
         )
         t_ratio = t_peak / denom if pd.notna(t_peak) else np.nan
+        t_threshold = spec.enrichment_fold * denom
+        if not valid_t.empty and "cancer_code" in valid_t.columns:
+            tum_qual_codes_by_eid[eid] = {
+                str(cc).strip()
+                for cc in valid_t.loc[valid_t["value"] >= t_threshold, "cancer_code"]
+                if pd.notna(cc) and str(cc).strip()
+            }
+
+        cl_df = cl_by_entity.get(eid)
+        if cl_df is not None and not cl_df.empty:
+            valid_cl = cl_df[cl_df.qc_pass & cl_df.identity_resolved & cl_df.value.notna()]
+            if not valid_cl.empty:
+                cl_peak = float(valid_cl.value.max())
+                m_col = "model_id" if "model_id" in valid_cl.columns else "cancer_code"
+                top_cl_row = valid_cl.sort_values(
+                    ["value", "sample_id"], ascending=[False, True]
+                ).iloc[0]
+                cl_top = str(top_cl_row.get(m_col, "") or "")
+                qual_cls = (
+                    sorted(
+                        {
+                            str(m).strip()
+                            for m in valid_cl.loc[valid_cl["value"] >= t_threshold, m_col]
+                            if pd.notna(m) and str(m).strip()
+                        }
+                    )
+                    if m_col in valid_cl.columns
+                    else []
+                )
+                cl_max_tpm.append(cl_peak)
+                cl_top_model.append(cl_top)
+                cl_qual_models.append(" | ".join(qual_cls))
+            else:
+                cl_max_tpm.append(np.nan)
+                cl_top_model.append("")
+                cl_qual_models.append("")
+        else:
+            cl_max_tpm.append(np.nan)
+            cl_top_model.append("")
+            cl_qual_models.append("")
 
         valid_r = (
             r_df[r_df.qc_pass & r_df.identity_resolved & r_df.value.notna()]
@@ -1765,6 +1908,9 @@ def evaluate_species_catalog(
     d["samples_at_tenfold"] = samples_10x
     d["independent_patients_at_tenfold"] = patients_10x
     d["independent_patient_tumor_folds"] = patient_folds_json
+    d["cell_line_max_tpm"] = cl_max_tpm
+    d["cell_line_top_model"] = cl_top_model
+    d["qualifying_cell_lines"] = cl_qual_models
     d["reproductive_max_sample_tpm"] = rep_max
     d["reproductive_supported_tpm"] = rep_supp
     d["reproductive_fold"] = rep_fold
@@ -1773,6 +1919,15 @@ def evaluate_species_catalog(
     classified = target_selection.classify(d)
     classified["policy"] = spec.policy_id
     classified["target_policy_id"] = spec.policy_id
+    classified["tumor_activation_mode"] = [
+        classify_tumor_activation_mode(
+            is_cancer_antigen=bool(r.is_cancer_antigen),
+            qualifying_cancer_codes=tum_qual_codes_by_eid.get(r.entity_id, set()),
+            reproductive_qualifying_compartments=str(r.reproductive_qualifying_compartments or ""),
+            home_tissue=str(r.home_tissue or ""),
+        )
+        for r in classified.itertuples(index=False)
+    ]
 
     core_set = set(spec.anatomy.core_reproductive_compartments)
     ext_set = set(spec.anatomy.extended_reproductive_compartments)
@@ -1856,6 +2011,9 @@ def evaluate_species_catalog(
             .value_counts()
             .to_dict()
         ),
+        "cta_activation_modes": (
+            classified.loc[classified.is_cta, "tumor_activation_mode"].value_counts().to_dict()
+        ),
     }
     return SpeciesScreeningResult(
         spec=spec,
@@ -1937,6 +2095,9 @@ def _load_packaged_species_catalog_cached(
         "reproductive_qualifying_compartments",
         "sex_restriction_class",
         "sex_restriction_code",
+        "tumor_activation_mode",
+        "cell_line_top_model",
+        "qualifying_cell_lines",
         "cta_tier",
         "tumor_top_sample",
         "rare_cell_basis",
@@ -2162,6 +2323,29 @@ def packaged_species_tumor_cohorts(species: Species | str | int = "mouse") -> pd
                 "cancer_code",
                 "label",
                 "model_kind",
+                "strain",
+                "mhc_haplotype",
+                "source_accession",
+                "n_samples",
+                "native_feature_space",
+                "quantification",
+            ]
+        )
+    return pd.read_csv(path)
+
+
+def packaged_species_cell_lines(species: Species | str | int = "mouse") -> pd.DataFrame:
+    """Return the pure in-vitro cancer cell-line model registry for an evaluated species."""
+    from importlib.resources import files
+
+    resolved = resolve_species(species)
+    path = files("oncoref").joinpath(f"data/species/{resolved.name}/cell-lines.csv")
+    if not path.is_file():
+        return pd.DataFrame(
+            columns=[
+                "model_id",
+                "cancer_code",
+                "label",
                 "strain",
                 "mhc_haplotype",
                 "source_accession",

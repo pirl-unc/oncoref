@@ -5,7 +5,7 @@
   "scientific_name": "Mus musculus",
   "selection_status": "evaluated",
   "policy_id": "oncoref.species-screening-policy.2026-11-21.1",
-  "comparison_id": "oncoref.mouse-grcm39-tpm.2026-11-26.1",
+  "comparison_id": "oncoref.mouse-grcm39-tpm.2026-11-26.2",
   "comparison_unit": "TPM",
   "reference": {
     "schema": "openvax.reference",
@@ -28,8 +28,8 @@
     },
     "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b"
   },
-  "data_sha256": "aed60f484818da8d2f55fc90f9365ce3a269b53460546f78b68d6480b9cef461",
-  "data_bytes": 3332061,
+  "data_sha256": "747fa0ac72205a35259251bc8ffdf7ade7ab0e13d729a3fe1de7a8d4d88f067c",
+  "data_bytes": 3361887,
   "host_exposure_sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
   "host_exposure_bytes": 2535039,
   "sequences_sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
@@ -83,48 +83,69 @@
     "B16F10",
     "CT26",
     "LLC",
-    "4T1",
     "KP_LUAD",
     "BMPC_PRAD",
-    "P815"
+    "EMT6",
+    "RM1",
+    "B78_MEL",
+    "GL261_TUMOR",
+    "CT2A_TUMOR",
+    "SB28_TUMOR",
+    "MADR_GLIOMA",
+    "DEN_HCC"
   ],
-  "tumor_samples": 36,
+  "tumor_samples": 57,
+  "cell_line_models": [
+    "4T1",
+    "P815",
+    "EO771",
+    "Hepa1-6",
+    "ID8",
+    "GL261_LINE",
+    "MB49",
+    "MOC1",
+    "MOC22"
+  ],
+  "cell_line_samples": 30,
   "summary": {
     "proteins": 21433,
     "loci": 21760,
     "sequences": 66037,
     "categories": {
-      "CTA": 12,
-      "Cancer Antigen only": 24,
-      "Reproductive Antigen only": 305,
-      "Other": 2541,
-      "Unsafe": 18551
+      "CTA": 8,
+      "Cancer Antigen only": 30,
+      "Reproductive Antigen only": 303,
+      "Other": 2514,
+      "Unsafe": 18578
     },
     "classifications": {
-      "CTA": 12,
-      "Cancer Antigen only": 24,
-      "Other:Expression": 2046,
-      "Other:Review": 393,
-      "Other:Sequence": 94,
-      "Other:Unscreened tissue": 8,
-      "Reproductive Antigen only": 305,
-      "Unsafe": 18551
+      "CTA": 8,
+      "Cancer Antigen only": 30,
+      "Other:Expression": 2032,
+      "Other:Review": 383,
+      "Other:Sequence": 90,
+      "Other:Unscreened tissue": 9,
+      "Reproductive Antigen only": 303,
+      "Unsafe": 18578
     },
     "sex_restriction_codes": {
-      "CTA-F": 3,
       "CTA-M": 5,
-      "CTA-MF": 2,
+      "CTA-MF": 1,
       "CTA-P": 2,
       "RA-F-only": 26,
-      "RA-M-only": 155,
+      "RA-M-only": 154,
       "RA-MF-only": 49,
-      "RA-P-only": 75
+      "RA-P-only": 74
     },
     "sex_restriction_classes": {
-      "Female-restricted": 29,
-      "Male-restricted": 160,
-      "Pregnancy / peripartum-only": 77,
-      "Shared male & female": 51
+      "Female-restricted": 26,
+      "Male-restricted": 159,
+      "Pregnancy / peripartum-only": 76,
+      "Shared male & female": 50
+    },
+    "cta_activation_modes": {
+      "ectopic": 6,
+      "lineage_retained": 2
     }
   }
 }

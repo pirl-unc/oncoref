@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from string import Template
@@ -404,11 +405,13 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
     d_ca = d_cat.is_cancer_antigen.astype(bool)
     d_ra = d_cat.is_reproductive_antigen.astype(bool)
     d_cohorts = canine.tumor_cohorts()
+    d_cell_lines = canine.cell_lines()
+    d_cta_df = d_cat[d_ca & d_ra]
+    d_ca_only_df = d_cat[d_ca & ~d_ra]
     d_top_cta = (
-        d_cat[d_ca & d_ra]
-        .dropna(subset=["tumor_max_tpm"])
+        d_cta_df.dropna(subset=["tumor_max_tpm"])
         .sort_values(PEAK, ascending=[False, True, True])
-        .head(12)
+        .head(15)
     )
     prame_dog = canine.target_selection("PRAME").iloc[0]
 
@@ -419,13 +422,46 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
     m_ca = m_cat.is_cancer_antigen.astype(bool)
     m_ra = m_cat.is_reproductive_antigen.astype(bool)
     m_cohorts = mouse.tumor_cohorts()
+    m_cell_lines = mouse.cell_lines()
+    m_cta_df = m_cat[m_ca & m_ra]
+    m_ca_only_df = m_cat[m_ca & ~m_ra]
     m_top_cta = (
-        m_cat[m_ca & m_ra]
-        .dropna(subset=["tumor_max_tpm"])
+        m_cta_df.dropna(subset=["tumor_max_tpm"])
         .sort_values(PEAK, ascending=[False, True, True])
-        .head(10)
+        .head(15)
     )
     p1a_row = mouse.target_selection("P1A").iloc[0]
+
+    def _fmt_qcl(raw_qcl: object) -> str:
+        if pd.isna(raw_qcl) or not str(raw_qcl).strip():
+            return "—"
+        items = [x.strip() for x in str(raw_qcl).split("|") if x.strip()]
+        if not items:
+            return "—"
+        shown = ", ".join(f"`{x}`" for x in items[:3])
+        return shown + (f" (+{len(items) - 3})" if len(items) > 3 else "")
+
+    def _mode_vars(prefix: str, cta_sub: pd.DataFrame, ca_only_sub: pd.DataFrame) -> dict[str, str]:
+        ect = int(cta_sub["tumor_activation_mode"].eq("ectopic").sum())
+        both = int(cta_sub["tumor_activation_mode"].eq("ectopic_and_lineage_retained").sum())
+        lin = int(cta_sub["tumor_activation_mode"].eq("lineage_retained").sum())
+        any_ect = ect + both
+        tot = max(len(cta_sub), 1)
+        ca_ect = int(
+            ca_only_sub["tumor_activation_mode"]
+            .isin(["ectopic", "ectopic_and_lineage_retained"])
+            .sum()
+        )
+        ca_lin = int(ca_only_sub["tumor_activation_mode"].eq("lineage_retained").sum())
+        return {
+            f"{prefix}cta_ectopic_n": f"{ect:,}",
+            f"{prefix}cta_both_mode_n": f"{both:,}",
+            f"{prefix}cta_ectopic_any_n": f"{any_ect:,}",
+            f"{prefix}cta_ectopic_any_pct": f"{100.0 * any_ect / tot:.1f}",
+            f"{prefix}cta_lineage_only_n": f"{lin:,}",
+            f"{prefix}ca_only_ectopic_n": f"{ca_ect:,}",
+            f"{prefix}ca_only_lineage_n": f"{ca_lin:,}",
+        }
 
     # Build complete cross-species ortholog concordance ledger across 100% of human, dog, and mouse CTAs
     import re
@@ -599,6 +635,11 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
             "dog_cta_p_n": f"{int(d_sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "dog_ra_p_n": f"{int(d_sex.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "dog_prame_call": prame_dog.classification,
+            "dog_cohorts_n": f"{len(d_cohorts):,}",
+            "dog_tumor_samples_n": f"{int(d_cohorts['n_samples'].sum()):,}",
+            "dog_cell_lines_n": f"{len(d_cell_lines):,}",
+            "dog_cta_in_cell_lines_n": f"{int(d_cta_df['qualifying_cell_lines'].fillna('').astype(str).str.strip().ne('').sum()):,}",
+            **_mode_vars("dog_", d_cta_df, d_ca_only_df),
             "dog_cohorts_table": table(
                 ["Cohort", "Model", "Breeds / DLA", "Accession", "Samples", "Quantification"],
                 [
@@ -613,15 +654,38 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                     for r in d_cohorts.itertuples(index=False)
                 ],
             ),
+            "dog_cell_lines_table": table(
+                [
+                    "Cell line",
+                    "Histology",
+                    "Origin / breed",
+                    "Accession",
+                    "Samples",
+                    "Quantification",
+                ],
+                [
+                    [
+                        f"`{r.model_id}` — {r.label}",
+                        f"`{r.cancer_code}`",
+                        f"{r.strain} (`{r.mhc_haplotype}`)",
+                        f"`{r.source_accession}`",
+                        r.n_samples,
+                        r.quantification,
+                    ]
+                    for r in d_cell_lines.itertuples(index=False)
+                ],
+            ),
             "dog_top_cta_table": table(
                 [
                     "Rank",
                     "Protein",
                     "Sex subset",
+                    "Mode",
                     "Peak cohort",
                     "Tumor TPM",
                     "N TPM",
-                    "Reproductive peak TPM",
+                    "RA peak TPM",
+                    "Cell lines ≥10×",
                     "Qualifying reproductive compartments",
                 ],
                 [
@@ -629,10 +693,12 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                         i,
                         f"`{r.protein_group_label}`",
                         f"`{r.sex_restriction_code}`",
+                        f"`{r.tumor_activation_mode}`",
                         f"`{r.tumor_top_cancer_code}`",
                         number(r.tumor_max_tpm),
                         number(r.normal_reference_tpm),
                         number(r.reproductive_supported_tpm),
+                        _fmt_qcl(r.qualifying_cell_lines),
                         r.reproductive_qualifying_compartments,
                     ]
                     for i, r in enumerate(d_top_cta.itertuples(index=False), 1)
@@ -658,6 +724,11 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
             "mouse_cta_p_n": f"{int(m_sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "mouse_ra_p_n": f"{int(m_sex.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "mouse_p1a_call": p1a_row.classification,
+            "mouse_cohorts_n": f"{len(m_cohorts):,}",
+            "mouse_tumor_samples_n": f"{int(m_cohorts['n_samples'].sum()):,}",
+            "mouse_cell_lines_n": f"{len(m_cell_lines):,}",
+            "mouse_cta_in_cell_lines_n": f"{int(m_cta_df['qualifying_cell_lines'].fillna('').astype(str).str.strip().ne('').sum()):,}",
+            **_mode_vars("mouse_", m_cta_df, m_ca_only_df),
             "mouse_cohorts_table": table(
                 ["Cohort", "Model", "Host strain (MHC)", "Accession", "Samples", "Quantification"],
                 [
@@ -672,15 +743,38 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                     for r in m_cohorts.itertuples(index=False)
                 ],
             ),
+            "mouse_cell_lines_table": table(
+                [
+                    "Cell line",
+                    "Histology",
+                    "Strain (MHC)",
+                    "Accession",
+                    "Samples",
+                    "Quantification",
+                ],
+                [
+                    [
+                        f"`{r.model_id}` — {r.label}",
+                        f"`{r.cancer_code}`",
+                        f"{r.strain} (`{r.mhc_haplotype}`)",
+                        f"`{r.source_accession}`",
+                        r.n_samples,
+                        r.quantification,
+                    ]
+                    for r in m_cell_lines.itertuples(index=False)
+                ],
+            ),
             "mouse_top_cta_table": table(
                 [
                     "Rank",
                     "Protein",
                     "Sex subset",
+                    "Mode",
                     "Peak cohort",
                     "Tumor TPM",
                     "N TPM",
-                    "Reproductive peak TPM",
+                    "RA peak TPM",
+                    "Cell lines ≥10×",
                     "Qualifying reproductive compartments",
                 ],
                 [
@@ -688,10 +782,12 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                         i,
                         f"`{r.protein_group_label}`",
                         f"`{r.sex_restriction_code}`",
+                        f"`{r.tumor_activation_mode}`",
                         f"`{r.tumor_top_cancer_code}`",
                         number(r.tumor_max_tpm),
                         number(r.normal_reference_tpm),
                         number(r.reproductive_supported_tpm),
+                        _fmt_qcl(r.qualifying_cell_lines),
                         r.reproductive_qualifying_compartments,
                     ]
                     for i, r in enumerate(m_top_cta.itertuples(index=False), 1)
@@ -740,7 +836,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                             .eq("Lineage-specific / no 1:1 symbol ortholog")
                             .sum()
                         ),
-                        "Primate-amplified CT-X/subtelomeric families (`NY-ESO-1`, `SPANX*`, `VCX/Y`, `GAGE*`, `XAGE*`, `CT45A*`, `CT47A*`, `PRAMEF*`, `DUX4`), canine-specific loci, or murine `Gm*`/`Gzmd-g`/`Pbsn`/`Sbp` expansions",
+                        "Primate-amplified CT-X/subtelomeric families (`NY-ESO-1`, `SPANX*`, `VCX/Y`, `GAGE*`, `XAGE*`, `CT45A*`, `CT47A*`, `PRAMEF*`, `DUX4`), canine-specific loci, or murine `Gm*`/`Pramel*`/`Mageb*`/`Pbsn`/`Sbp` expansions",
                     ],
                 ],
             ),
@@ -1290,7 +1386,7 @@ def build_sex_restriction_interrogation(
             f"`CTA-F`: **{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             f"`RA-F-only`: **{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             "Clears all male adult organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`, non-secretory `XY resting_breast` < 8; < 16 with `IHC−`)",
-            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `CPSF4L`, `IZUMO1R`, `ACCSL`, `OR1N1`, `TBXT`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `BMP15` (`RA-F-only`), `WEE2` (`RA-F-only`), `PABPN1L` (`RA-F-only`)",
+            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `CPSF4L`, `IZUMO1R`, `ACCSL`, `TBXT`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `BMP15` (`RA-F-only`), `WEE2` (`RA-F-only`), `PABPN1L` (`RA-F-only`)",
         ],
         [
             "**Shared male & female**",
@@ -1862,6 +1958,51 @@ def build():
             ].itertuples(index=False, name=None),
         ),
     }
+    h_cta_df = data[ca & ra]
+    h_ca_only_df = data[ca & ~ra]
+    h_ect = int(h_cta_df["tumor_activation_mode"].eq("ectopic").sum())
+    h_both = int(h_cta_df["tumor_activation_mode"].eq("ectopic_and_lineage_retained").sum())
+    h_lin = int(h_cta_df["tumor_activation_mode"].eq("lineage_retained").sum())
+    h_any_ect = h_ect + h_both
+    h_ca_ect = int(
+        h_ca_only_df["tumor_activation_mode"]
+        .isin(["ectopic", "ectopic_and_lineage_retained"])
+        .sum()
+    )
+    h_ca_lin = int(h_ca_only_df["tumor_activation_mode"].eq("lineage_retained").sum())
+    h_cta_lin_rows = h_cta_df[h_cta_df["tumor_activation_mode"].eq("lineage_retained")].sort_values(
+        ["tumor_max_tpm", "protein_group_label"], ascending=[False, True]
+    )
+    h_gpcr_rx = re.compile(r"^(?:OR\d+[A-Z]+\d+P?|TAAR\d+P?|TAS1R\d+|TAS2R\d+|VN1R\d+)$")
+    d_gpcr_rx = re.compile(
+        r"^(?:COR\d+|OR\d+[A-Z]*\d*|TAAR\d+|TAS1R\d+|TAS2R\d+|VN1R\d+)$", re.IGNORECASE
+    )
+    m_gpcr_rx = re.compile(
+        r"^(?:Olfr\d+|Or\d+[a-z]+\d+|Taar\d+[a-z]*|Tas1r\d+|Tas2r\d+|Vmn1r\d+|Vmn2r\d+)$",
+        re.IGNORECASE,
+    )
+    d_cat_full = canine.target_selection()
+    m_cat_full = mouse.target_selection()
+    values.update(
+        {
+            "total_cohorts": "135",
+            "baseline_cohorts": "132",
+            "cta_ectopic_n": f"{h_ect:,}",
+            "cta_both_mode_n": f"{h_both:,}",
+            "cta_ectopic_any_n": f"{h_any_ect:,}",
+            "cta_ectopic_any_pct": f"{100.0 * h_any_ect / max(len(h_cta_df), 1):.1f}",
+            "cta_lineage_only_n": f"{h_lin:,}",
+            "cta_lineage_only_genes": ", ".join(
+                f"`{lbl}`" for lbl in h_cta_lin_rows["protein_group_label"].astype(str)
+            ),
+            "ca_only_ectopic_n": f"{h_ca_ect:,}",
+            "ca_only_lineage_n": f"{h_ca_lin:,}",
+            "unscreened_n": f"{int(data.classification.eq('Other:Unscreened tissue').sum()):,}",
+            "human_gpcr_n": f"{int(data['protein_group_label'].astype(str).map(lambda x: bool(h_gpcr_rx.match(x.split('/')[0]))).sum()):,}",
+            "dog_gpcr_n": f"{int(d_cat_full['protein_group_label'].astype(str).map(lambda x: bool(d_gpcr_rx.match(x.split('/')[0]))).sum()):,}",
+            "mouse_gpcr_n": f"{int(m_cat_full['protein_group_label'].astype(str).map(lambda x: bool(m_gpcr_rx.match(x.split('/')[0]))).sum()):,}",
+        }
+    )
     values.update(ctag2_evidence(data))
     sex_interrog_vars, female_audit_df = build_sex_restriction_interrogation(data, sex_table)
     values.update(sex_interrog_vars)

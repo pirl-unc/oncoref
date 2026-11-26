@@ -1,6 +1,6 @@
 # Patient profiles and candidate filters
 
-Catalog `oncoref.target-selection.2026-11-26.1`; filter policy `oncoref.target-filters.2026-11-17.5`.
+Catalog `oncoref.target-selection.2026-11-26.2`; filter policy `oncoref.target-filters.2026-11-17.5`.
 Filters narrow the biological candidate sets (`CA`, `RA`, `CTA`) across six explicit layers, while patient-anatomy constraints evaluate reproductive and mammary exposure independently without relabeling biological categories. [Antigen whitepaper](antigen-whitepaper.md) · [Interactive catalog](audits/target-selection-20261110/rebuild/report.html) · [Filter sweep tables](audits/target-filters-20261112/index.md).
 
 ```python
@@ -51,14 +51,14 @@ assumptions and specify protected or absent organs explicitly. `all` applies no 
 
 | Scenario | Protected compartments | Retained CTA | CA only | RA only | Union |
 |---|---|---:|---:|---:|---:|
-| `all` | none | **325** | 95 | 143 | 563 |
-| `female-patient` | none | **325** | 95 | 143 | 563 |
-| `female-patient (protect ovary)` | ovary | **269** | 93 | 131 | 493 |
-| `female-patient (lactating)` | lactating_breast | **321** | 94 | 142 | 557 |
+| `all` | none | **322** | 66 | 146 | 534 |
+| `female-patient` | none | **322** | 66 | 146 | 534 |
+| `female-patient (protect ovary)` | ovary | **267** | 66 | 133 | 466 |
+| `female-patient (lactating)` | lactating_breast | **318** | 65 | 145 | 528 |
 | `female-patient (pregnant)` | embryo, placenta, lactating_breast | **0** | 0 | 0 | 0 |
-| `male-patient` | none | **325** | 95 | 143 | 563 |
-| `male-patient (protect testis)` | testis | **75** | 72 | 30 | 177 |
-| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **59** | 62 | 17 | 138 |
+| `male-patient` | none | **322** | 66 | 146 | 534 |
+| `male-patient (protect testis)` | testis | **74** | 43 | 31 | 148 |
+| `male-patient (protect adult tissues)` | testis, epididymis, prostate, seminal vesicle, resting_breast | **58** | 34 | 18 | 110 |
 
 Counts are research-screen outputs. Pregnancy remains unresolved because early
 embryo measurements do not cover all fetal/developmental stages. Milk-program
@@ -68,8 +68,8 @@ state labels are inferred and do not prove expression absence in other hosts.
 
 | Mode | Retained proteins without a host context | Changes |
 |---|---:|---|
-| `all` | 563 | `{}` |
-| `loose` | 397 | `{'min_papers': 1}` |
+| `all` | 534 | `{}` |
+| `loose` | 392 | `{'min_papers': 1}` |
 | `standard` | 253 | `{'max_off_target_tpm': 5.0, 'normal_function': 'no_vital', 'min_papers': 2}` |
 | `strict` | 112 | `{'max_off_target_tpm': 4.0, 'normal_function': 'no_protected', 'membership': 'cta', 'min_papers': 3, 'exclude_prefixes': ('MAGE',), 'except_labels': ('MAGEA4',)}` |
 

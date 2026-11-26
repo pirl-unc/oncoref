@@ -1,0 +1,10 @@
+model_id,cancer_code,label,strain,mhc_haplotype,source_accession,n_samples,native_feature_space,quantification
+4T1,MAMMARY,4T1 triple-negative mammary carcinoma cell line,BALB/c,H-2d,GSE332912,3,Ensembl gene (ENSMUSG),author linear TPM
+P815,MAST,P815 mastocytoma cell line (native DBA/2 source of P1A/Trap1a),DBA/2,H-2d,GSE181773,3,Ensembl gene (ENSMUSG),within-sample linear TPM from FPKM
+EO771,MAMMARY,EO771 mammary adenocarcinoma cell line (WT untreated),C57BL/6,H-2b,GSE309307,6,Ensembl gene (ENSMUSG),linear TPM from raw counts and Ensembl 115 exonic_bp
+Hepa1-6,HCC,Hepa1-6 hepatocellular carcinoma cell line (DMSO controls),C57BL/6L,H-2b,GSE329164,3,Ensembl gene (ENSMUSG),linear TPM from raw counts and Ensembl 115 exonic_bp
+ID8,OV,ID8 ovarian surface epithelial carcinoma cell line (vehicle),C57BL/6,H-2b,GSE349387,3,Ensembl gene (ENSMUSG),linear TPM from expected counts and Ensembl 115 exonic_bp
+GL261_LINE,GLIOMA,GL261 glioma cell line (in-vitro untreated controls),C57BL/6,H-2b,GSE349688,3,Ensembl gene (ENSMUSG),author linear TPM
+MB49,BLCA,MB49 urothelial bladder carcinoma cell line (control medium),C57BL/6,H-2b,GSE350232,3,Ensembl gene (ENSMUSG),author linear TPM
+MOC1,HNSCC,MOC1 indolent immunogenic oral squamous carcinoma cell line,C57BL/6,H-2b,GSE326892,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from HTSeq raw counts and Ensembl 115 exonic_bp
+MOC22,HNSCC,MOC22 aggressive oral squamous carcinoma cell line,C57BL/6,H-2b,GSE326892,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from HTSeq raw counts and Ensembl 115 exonic_bp

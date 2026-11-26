@@ -4,8 +4,8 @@
   "species": "human",
   "scientific_name": "Homo sapiens",
   "selection_status": "evaluated",
-  "policy_id": "oncoref.target-selection.2026-11-26.1",
-  "comparison_id": "oncoref.human-grch38-integrated-tpm.2026-11-26.1",
+  "policy_id": "oncoref.target-selection.2026-11-26.2",
+  "comparison_id": "oncoref.human-grch38-integrated-tpm.2026-11-26.2",
   "comparison_unit": "TPM",
   "reference": {
     "schema": "openvax.reference",
@@ -29,8 +29,8 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "c0cc6d7dbd64174ec693d85cf36f4ae26f999264e387f3def927fc782284ef6e",
-  "data_bytes": 3679229,
+  "data_sha256": "3563d8b2d3a815417d0c389d72dc7593e607aab1a45112facb7530ae773f6a28",
+  "data_bytes": 3682864,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
   "host_exposure_sha256": "ce265e7a01b180aff496943d6a906fb35fab94356cd9a035e453ee7a0941ce25",
@@ -42,28 +42,28 @@
     "loci": 20099,
     "categories": {
       "Unsafe": 18249,
-      "Other": 1081,
-      "CTA": 325,
-      "Reproductive Antigen only": 143,
-      "Cancer Antigen only": 95
+      "Other": 1110,
+      "CTA": 322,
+      "Reproductive Antigen only": 146,
+      "Cancer Antigen only": 66
     },
     "classifications": {
       "Unsafe": 18249,
       "Other:Review": 731,
-      "CTA": 325,
+      "CTA": 322,
       "Other:Expression": 285,
-      "Reproductive Antigen only": 143,
-      "Cancer Antigen only": 95,
+      "Reproductive Antigen only": 146,
+      "Cancer Antigen only": 66,
       "Other:Sequence": 48,
-      "Other:Unscreened tissue": 17
+      "Other:Unscreened tissue": 46
     },
     "sex_restriction_codes": {
-      "CTA-F": 13,
-      "CTA-M": 224,
+      "CTA-F": 12,
+      "CTA-M": 222,
       "CTA-MF": 40,
       "CTA-P": 48,
-      "RA-F-only": 5,
-      "RA-M-only": 118,
+      "RA-F-only": 6,
+      "RA-M-only": 120,
       "RA-MF-only": 8,
       "RA-P-only": 12
     },
@@ -72,6 +72,11 @@
       "Male-restricted": 342,
       "Pregnancy / peripartum-only": 60,
       "Shared male & female": 48
+    },
+    "cta_activation_modes": {
+      "ectopic": 214,
+      "ectopic_and_lineage_retained": 97,
+      "lineage_retained": 11
     }
   }
 }

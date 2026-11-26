@@ -64,9 +64,12 @@ DEFAULT_ENS_DIR = Path(
 DEFAULT_INPUT_DIR = Path(
     os.environ.get("ONCOREF_MOUSE_INPUTS_DIR", str(ROOT / "tmp" / "mouse_catalog_inputs"))
 )
+DEFAULT_EXTRA_DIR = Path(
+    os.environ.get("ONCOREF_MOUSE_EXTRA_DIR", str(DEFAULT_INPUT_DIR.parent / "mouse_153_extra"))
+)
 
 PRIMARY_CONTIGS = frozenset({*(str(i) for i in range(1, 20)), "X", "Y", "MT"})
-COMPARISON_ID = "oncoref.mouse-grcm39-tpm.2026-11-26.1"
+COMPARISON_ID = "oncoref.mouse-grcm39-tpm.2026-11-26.2"
 
 # 24 adult somatic contexts measured across the 41,233-gene Bgee 15.2 GRCm39 universe
 REQUIRED_BGEE_NORMAL_CONTEXTS = frozenset(
@@ -331,7 +334,10 @@ HAIR_FOLLICLE_KERATINS = frozenset(
         *(f"Krt{i}" for i in range(71, 87)),
     }
 )
-DENTAL_HOME_SYMBOLS = frozenset({"Amelx", "Ambn", "Enam", "Dspp", "Mmp20", "Klk4", "Odaph"})
+DENTAL_HOME_SYMBOLS = frozenset(
+    {"Amelx", "Ambn", "Enam", "Dspp", "Mmp20", "Klk4", "Odaph", "Odam", "Amtn"}
+)
+TASTE_HOME_SYMBOLS = frozenset({"Otop1"})
 
 
 def _sha256(path: Path) -> str:
@@ -534,8 +540,12 @@ def load_ensembl115_mouse_reference(
                 homes.append("hair follicle")
             elif sym in DENTAL_HOME_SYMBOLS:
                 homes.append("dental pulp")
-            elif sym.startswith(("Tas1r", "Tas2r")):
+            elif sym.startswith(("Tas1r", "Tas2r")) or sym in TASTE_HOME_SYMBOLS:
                 homes.append("taste bud")
+            elif sym.startswith(("Olfr", "Vmn1r", "Vmn2r")) or re.match(
+                r"^(?:Or\d+[a-z]+\d+|Taar\d+[a-z]*)$", sym, re.IGNORECASE
+            ):
+                homes.append("olfactory epithelium")
         if homes:
             home_by_entity[row.entity_id] = "; ".join(dict.fromkeys(homes))
     groups_df["home_tissue"] = groups_df["entity_id"].map(home_by_entity).fillna("")
@@ -768,6 +778,7 @@ def _olfr_share_ge5(gene_tpm: pd.DataFrame, olfr_gids: set[str]) -> pd.Series:
 
 def load_bgee_and_normal_panels(
     input_dir: Path,
+    extra_dir: Path,
     groups_df: pd.DataFrame,
     exonic_bp: dict[str, int],
     symbol_by_gene: dict[str, str],
@@ -952,6 +963,32 @@ def load_bgee_and_normal_panels(
                     g219_peg[col_name],
                 )
             )
+
+    # 2b. GSE322844 untreated WT murine liver controls (Control1..5, ENSMUSG FPKM -> exact linear TPM)
+    p322_ctrl = extra_dir / "GSE322844_Control_FPKM.csv.gz"
+    if p322_ctrl.is_file():
+        source_rows.append(
+            {
+                "source_id": "gse322844-wt-liver",
+                "pillar": "healthy_baseline_rna",
+                "filename": p322_ctrl.name,
+                "unit": "TPM (from native ENSMUSG FPKM)",
+                "strain": "untreated wild-type C57BL/6 liver (n=5)",
+                "bytes": p322_ctrl.stat().st_size,
+                "sha256": _sha256(p322_ctrl),
+            }
+        )
+        df322_c = pd.read_csv(p322_ctrl, sep=";")
+        df322_c["gene_id"] = df322_c["gene_id"].astype(str).str.split(".").str[0]
+        ctrl_cols_322 = [c for c in df322_c.columns if c.startswith("Control")]
+        df322_c = df322_c.groupby("gene_id", sort=False)[ctrl_cols_322].sum()
+        tpm322_c = _fpkm_to_tpm(df322_c)
+        olfr322_c = _olfr_share_ge5(tpm322_c, olfr_gids)
+        qc322_c = [c for c in ctrl_cols_322 if float(olfr322_c.get(c, 0.0)) <= 0.025]
+        if qc322_c:
+            peg322_c = _project_peg_matrix(tpm322_c[qc322_c], groups_df)
+            for c in qc322_c:
+                somatic_peg_cols["liver"][f"gse322844:{c}"] = peg322_c[c]
 
     # 3. Supplementary accessory reproductive & lactating mammary datasets (completing all 16 mouse compartments!)
     exonic_series = pd.Series(exonic_bp, dtype=float)
@@ -1359,6 +1396,7 @@ def load_bgee_and_normal_panels(
 
 def load_mouse_immune_panels(
     input_dir: Path,
+    extra_dir: Path,
     groups_df: pd.DataFrame,
     exonic_bp: dict[str, int],
     symbol_by_gene: dict[str, str],
@@ -1507,6 +1545,151 @@ def load_mouse_immune_panels(
         if len(cs) < 2:
             continue
         pop_summaries[f"ImmGenMNP:{pop}"] = ("protected", _replicated_p95(peg122[cs]))
+
+    if extra_dir.is_dir():
+        # 4. GSE287306 WT splenic naive & IL-15-stimulated NK cells (ENSMUSG expected counts -> TPM)
+        p287_nk = extra_dir / "GSE287306_Khanna_-_Rajiv_RNASeq.genes.ExpectedCounts.csv.gz"
+        if p287_nk.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse287306-splenic-il15-nk",
+                    "pillar": "normal_bulk_and_immune_safety",
+                    "filename": p287_nk.name,
+                    "unit": "TPM (from native ENSMUSG expected counts)",
+                    "strain": "C57BL/6 WT splenic naive & IL-15-treated NK cells",
+                    "bytes": p287_nk.stat().st_size,
+                    "sha256": _sha256(p287_nk),
+                }
+            )
+            df287_nk = pd.read_csv(p287_nk)
+            df287_nk["Ensembl Gene ID"] = (
+                df287_nk["Ensembl Gene ID"].astype(str).str.split(".").str[0]
+            )
+            nk_cols = [c for c in df287_nk.columns if c.startswith(("naiveNK", "IL15NK"))]
+            df287_nk = df287_nk.drop_duplicates("Ensembl Gene ID").set_index("Ensembl Gene ID")
+            tpm287_nk = _counts_to_tpm(df287_nk[nk_cols], exonic_series)
+            olfr287_nk = _olfr_share_ge5(tpm287_nk, olfr_gids)
+            qc287_nk = [c for c in nk_cols if float(olfr287_nk.get(c, 0.0)) <= 0.025]
+            if qc287_nk:
+                peg287_nk = _project_peg_matrix(tpm287_nk[qc287_nk], groups_df)
+                for pfx_nk in ("naiveNK", "IL15NK"):
+                    cs_nk = [c for c in qc287_nk if c.startswith(pfx_nk)]
+                    if len(cs_nk) >= 2:
+                        pop_summaries[f"GSE287306:{pfx_nk}"] = (
+                            "protected",
+                            _replicated_p95(peg287_nk[cs_nk]),
+                        )
+
+        # 5. GSE336796 WT splenic & vehicle/ionomycin-stimulated NK cells (ENSMUSG linear TPM)
+        p336_sp = extra_dir / "GSE336796_tpm_table_with_symbol.csv.gz"
+        if p336_sp.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse336796-splenic-nk",
+                    "pillar": "normal_bulk_and_immune_safety",
+                    "filename": p336_sp.name,
+                    "unit": "TPM (native ENSMUSG)",
+                    "strain": "C57BL/6 WT splenic NK subsets",
+                    "bytes": p336_sp.stat().st_size,
+                    "sha256": _sha256(p336_sp),
+                }
+            )
+            df336_sp = pd.read_csv(p336_sp)
+            df336_sp["X"] = df336_sp["X"].astype(str).str.split(".").str[0]
+            wt_sp_cols = ["WT1_SP", "WT2_SP", "WT3_SP"]
+            df336_sp = df336_sp.drop_duplicates("X").set_index("X")
+            tpm336_sp = df336_sp[wt_sp_cols].astype(float)
+            olfr336_sp = _olfr_share_ge5(tpm336_sp, olfr_gids)
+            qc336_sp = [c for c in wt_sp_cols if float(olfr336_sp.get(c, 0.0)) <= 0.025]
+            if len(qc336_sp) >= 2:
+                peg336_sp = _project_peg_matrix(tpm336_sp[qc336_sp], groups_df)
+                pop_summaries["GSE336796:WT_SP_NK"] = (
+                    "protected",
+                    _replicated_p95(peg336_sp[qc336_sp]),
+                )
+
+        p336_io = extra_dir / "GSE336796_vehicle_vs_iono_TPM.csv.gz"
+        if p336_io.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse336796-iono-nk",
+                    "pillar": "normal_bulk_and_immune_safety",
+                    "filename": p336_io.name,
+                    "unit": "TPM (native ENSMUSG)",
+                    "strain": "C57BL/6 WT vehicle & ionomycin-activated NK cells",
+                    "bytes": p336_io.stat().st_size,
+                    "sha256": _sha256(p336_io),
+                }
+            )
+            df336_io = pd.read_csv(p336_io)
+            df336_io["gene_id"] = df336_io["gene_id"].astype(str).str.split(".").str[0]
+            io_cols = ["V1", "V2", "V3", "I1", "I2", "I3"]
+            df336_io = df336_io.drop_duplicates("gene_id").set_index("gene_id")
+            tpm336_io = df336_io[io_cols].astype(float)
+            olfr336_io = _olfr_share_ge5(tpm336_io, olfr_gids)
+            qc336_io = [c for c in io_cols if float(olfr336_io.get(c, 0.0)) <= 0.025]
+            peg336_io = _project_peg_matrix(tpm336_io[qc336_io], groups_df)
+            for lbl_io, cs_io in (
+                ("WT_Vehicle_NK", [c for c in qc336_io if c.startswith("V")]),
+                ("WT_Iono_NK", [c for c in qc336_io if c.startswith("I")]),
+            ):
+                if len(cs_io) >= 2:
+                    pop_summaries[f"GSE336796:{lbl_io}"] = (
+                        "protected",
+                        _replicated_p95(peg336_io[cs_io]),
+                    )
+
+        # 6. GSE302070 WT splenic PBS & IL-2-IC-stimulated Tregs, NK cells & B cells
+        p302 = extra_dir / "GSE302070_Genes_count_table.tsv.gz"
+        if p302.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse302070-il2-splenic-subsets",
+                    "pillar": "normal_bulk_and_immune_safety",
+                    "filename": p302.name,
+                    "unit": "TPM (from sorted splenic raw counts)",
+                    "strain": "Foxp3-GFP C57BL/6 splenic Tregs, NK & B cells (PBS & IL-2-IC)",
+                    "bytes": p302.stat().st_size,
+                    "sha256": _sha256(p302),
+                }
+            )
+            df302 = pd.read_csv(p302, sep="\t")
+            gid302 = df302["GeneSymbol"].astype(str).map(sym_to_ens)
+            cols302 = [
+                c
+                for c in df302.columns
+                if c != "GeneSymbol"
+                and c.startswith(
+                    (
+                        "24hPBSTreg",
+                        "24hPBSNK",
+                        "24hrPBSBcell",
+                        "24hrHF10Treg",
+                        "24hrHF10NK",
+                        "24hrHF10Bcell",
+                    )
+                )
+            ]
+            sub302 = df302.loc[gid302.notna(), cols302].copy()
+            sub302.index = gid302[gid302.notna()].to_numpy()
+            sub302 = sub302[~sub302.index.duplicated(keep="first")].reindex(
+                sym_universe, fill_value=0.0
+            )
+            tpm302 = _counts_to_tpm(sub302, exonic_series)
+            olfr302 = _olfr_share_ge5(tpm302, olfr_gids)
+            qc302 = [c for c in cols302 if float(olfr302.get(c, 0.0)) <= 0.025]
+            if qc302:
+                peg302 = _project_peg_matrix(tpm302[qc302], groups_df)
+                by_p302: dict[str, list[str]] = defaultdict(list)
+                for c in qc302:
+                    by_p302[c.rsplit("_", 1)[0]].append(c)
+                for pop_k, cs_k in sorted(by_p302.items()):
+                    if len(cs_k) >= 2:
+                        tier_k = "manageable" if "Bcell" in pop_k else "protected"
+                        pop_summaries[f"GSE302070:{pop_k}"] = (
+                            tier_k,
+                            _replicated_p95(peg302[cs_k]),
+                        )
 
     prot_df = pd.DataFrame({k: s for k, (t, s) in pop_summaries.items() if t == "protected"})
     man_df = pd.DataFrame({k: s for k, (t, s) in pop_summaries.items() if t == "manageable"})
@@ -1658,6 +1841,23 @@ def load_mgi_gxd_protein_gates(
                 "reason": "Sarma 1999 (PMID:10049945) BALB/c lung, spleen, liver endogenous RT-PCR/Southern positive",
             }
         )
+
+    # Exclude IL-2/IL-12/IL-18-inducible murine LAK & uterine/decidual NK cytolytic effector granzymes
+    # (Jenne et al. 1988/1989; Revell et al. 2005; verified 0-2 TPM in pure cancer lines & 1000x induced with Prf1/Gzmb in GSE334005)
+    lak_granzymes = {"Gzmd", "Gzme", "Gzmf", "Gzmg"}
+    for r_g in groups_df.itertuples(index=False):
+        lbl_parts = {p.strip() for p in str(r_g.protein_group_label).split("/") if p.strip()}
+        hit_gzm = sorted(lbl_parts & lak_granzymes)
+        if hit_gzm:
+            gate_rows.append(
+                {
+                    "entity_id": str(r_g.entity_id),
+                    "layer": "Curated murine activated NK/LAK cytolytic effector safety",
+                    "unsafe": True,
+                    "hold": False,
+                    "reason": f"Essential IL-2/IL-12/IL-18 LAK & NK cytolytic granzyme ({', '.join(hit_gzm)})",
+                }
+            )
 
     return pd.DataFrame(
         gate_rows, columns=["entity_id", "layer", "unsafe", "hold", "reason"]
@@ -1821,19 +2021,24 @@ def load_tabula_muris_rare_cell_umi(
 
 def load_mouse_tumor_cohorts(
     input_dir: Path,
+    extra_dir: Path,
     groups_df: pd.DataFrame,
     exonic_bp: dict[str, int],
     symbol_by_gene: dict[str, str],
     entrez_to_ens: dict[str, str],
     sym_to_ens: dict[str, str],
-) -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
-    """Load 8 strain-explicit murine syngeneic & GEMM tumor cohorts in linear TPM."""
+    risk_gids: set[str],
+    unsafe_eids: set[str],
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, list[dict]]:
+    """Load 14 strain-explicit in-vivo murine tumor cohorts + 9 pure in-vitro cancer cell lines in linear TPM."""
     exonic_series = pd.Series(exonic_bp, dtype=float)
+    sym_universe = pd.Index(sorted(set(sym_to_ens.values())), name="_gid")
     olfr_gids = _mouse_olfr_gene_ids(symbol_by_gene)
-    cohort_registry = []
-    source_rows = []
-    per_sample_peg: list[tuple[str, str, str, str, pd.Series]] = []
-    # tuple: (source_id, sample_id, participant_id, cancer_code, peg_series)
+    cohort_registry: list[dict] = []
+    cell_line_registry: list[dict] = []
+    source_rows: list[dict] = []
+    cohort_matrices: list[tuple[str, str, list[str], list[str], pd.DataFrame]] = []
+    cell_line_matrices: list[tuple[str, str, str, list[str], pd.DataFrame]] = []
 
     def _qc_cols(tpm_frame: pd.DataFrame, cols: list[str]) -> list[str]:
         sh = _olfr_share_ge5(tpm_frame[cols], olfr_gids)
@@ -1860,8 +2065,11 @@ def load_mouse_tumor_cohorts(
     )
     mc38_cols = _qc_cols(tpm_mc38, ["A1", "A2", "A3", "A4"])
     peg_mc38 = _project_peg_matrix(tpm_mc38[mc38_cols], groups_df)
-    for c in mc38_cols:
-        per_sample_peg.append(("gse355313", f"MC38_{c}", f"GSE355313:{c}", "MC38", peg_mc38[c]))
+    mc38_sids = [f"MC38_{c}" for c in mc38_cols]
+    peg_mc38.columns = mc38_sids
+    cohort_matrices.append(
+        ("gse355313", "MC38", mc38_sids, [f"GSE355313:{c}" for c in mc38_cols], peg_mc38)
+    )
     cohort_registry.append(
         {
             "cancer_code": "MC38",
@@ -1902,8 +2110,9 @@ def load_mouse_tumor_cohorts(
         ("LLC", "LLC_PBS_", "C57BL/6", "H-2b", "Lewis lung carcinoma (LLC) subcutaneous graft"),
     ]:
         c_sub = [c for c in pbs_cols if c.startswith(prefix)]
-        for c in c_sub:
-            per_sample_peg.append(("gse334005", c, f"GSE334005:{c}", code, peg_334[c]))
+        cohort_matrices.append(
+            ("gse334005", code, c_sub, [f"GSE334005:{c}" for c in c_sub], peg_334[c_sub])
+        )
         cohort_registry.append(
             {
                 "cancer_code": code,
@@ -1918,43 +2127,7 @@ def load_mouse_tumor_cohorts(
             }
         )
 
-    # 5. 4T1 (BALB/c mammary carcinoma, GSE332912, n=3 WT control XW1..XW3, native ENSMUSG TPM)
-    p_4t1 = input_dir / "GSE332912_TPM_values.csv.gz"
-    source_rows.append(
-        {
-            "source_id": "gse332912-4t1",
-            "pillar": "tumor_rna",
-            "filename": p_4t1.name,
-            "unit": "TPM",
-            "strain": "BALB/c (H-2d)",
-            "bytes": p_4t1.stat().st_size,
-            "sha256": _sha256(p_4t1),
-        }
-    )
-    df_4t1 = pd.read_csv(p_4t1)
-    df_4t1["ID"] = df_4t1["ID"].astype(str).str.split(".").str[0]
-    df_4t1 = df_4t1.drop_duplicates("ID").set_index("ID")
-    tpm_4t1 = df_4t1[["XW1", "XW2", "XW3"]].astype(float)
-    cols_4t1 = _qc_cols(tpm_4t1, ["XW1", "XW2", "XW3"])
-    peg_4t1 = _project_peg_matrix(tpm_4t1[cols_4t1], groups_df)
-    for c in cols_4t1:
-        per_sample_peg.append(("gse332912", f"4T1_{c}", f"GSE332912:{c}", "4T1", peg_4t1[c]))
-    cohort_registry.append(
-        {
-            "cancer_code": "4T1",
-            "label": "4T1 triple-negative mammary carcinoma",
-            "model_kind": "syngeneic_line",
-            "strain": "BALB/c",
-            "mhc_haplotype": "H-2d",
-            "source_accession": "GSE332912",
-            "n_samples": len(cols_4t1),
-            "native_feature_space": "Ensembl gene (ENSMUSG)",
-            "quantification": "author linear TPM",
-        }
-    )
-
-    # 6. KP_LUAD (C57BL/6 primary Kras;Trp53 lung adenocarcinoma GEMM, GSE277076, n=10 sgControl primary tumors)
-    sym_universe = pd.Index(sorted(set(sym_to_ens.values())), name="_gid")
+    # 5. KP_LUAD (C57BL/6 primary Kras;Trp53 lung adenocarcinoma GEMM, GSE277076, n=10 sgControl primary tumors)
     p_kp = input_dir / "GSE277076_202212051509_X_13772_I_raw.txt.gz"
     source_rows.append(
         {
@@ -1985,8 +2158,11 @@ def load_mouse_tumor_cohorts(
     tpm_kp = _counts_to_tpm(df_kp[kp_raw_cols].reindex(sym_universe, fill_value=0.0), exonic_series)
     kp_cols = _qc_cols(tpm_kp, kp_raw_cols)
     peg_kp = _project_peg_matrix(tpm_kp[kp_cols], groups_df)
-    for c in kp_cols:
-        per_sample_peg.append(("gse277076", f"KP_{c}", f"GSE277076:{c}", "KP_LUAD", peg_kp[c]))
+    kp_sids = [f"KP_{c}" for c in kp_cols]
+    peg_kp.columns = kp_sids
+    cohort_matrices.append(
+        ("gse277076", "KP_LUAD", kp_sids, [f"GSE277076:{c}" for c in kp_cols], peg_kp)
+    )
     cohort_registry.append(
         {
             "cancer_code": "KP_LUAD",
@@ -2001,7 +2177,7 @@ def load_mouse_tumor_cohorts(
         }
     )
 
-    # 7. BMPC_PRAD (FVB primary & metastatic MYC;Pten prostate adenocarcinoma GEMM, GSE287166, n=6)
+    # 6. BMPC_PRAD (FVB primary & metastatic MYC;Pten prostate adenocarcinoma GEMM, GSE287166, n=6)
     df_bmpc = pd.read_csv(input_dir / "GSE287166_NormalizedCounts.csv.gz", index_col=0)
     df_bmpc["_gid"] = df_bmpc.index.astype(str).map(sym_to_ens)
     df_bmpc = df_bmpc.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
@@ -2011,8 +2187,9 @@ def load_mouse_tumor_cohorts(
     )
     bmpc_cols = _qc_cols(tpm_bmpc, bmpc_raw_cols)
     peg_bmpc = _project_peg_matrix(tpm_bmpc[bmpc_cols], groups_df)
-    for c in bmpc_cols:
-        per_sample_peg.append(("gse287166", c, f"GSE287166:{c}", "BMPC_PRAD", peg_bmpc[c]))
+    cohort_matrices.append(
+        ("gse287166", "BMPC_PRAD", bmpc_cols, [f"GSE287166:{c}" for c in bmpc_cols], peg_bmpc)
+    )
     cohort_registry.append(
         {
             "cancer_code": "BMPC_PRAD",
@@ -2027,7 +2204,40 @@ def load_mouse_tumor_cohorts(
         }
     )
 
-    # 8. P815 (DBA/2 mastocytoma, GSE181773, n=3 negative-control NC_1..3, native ENSMUSG FPKM -> exact TPM)
+    # Pure in-vitro cell lines moved out of in-vivo CA admission: 4T1 & P815
+    p_4t1 = input_dir / "GSE332912_TPM_values.csv.gz"
+    source_rows.append(
+        {
+            "source_id": "gse332912-4t1",
+            "pillar": "tumor_rna",
+            "filename": p_4t1.name,
+            "unit": "TPM",
+            "strain": "BALB/c (H-2d, 4T1 mammary carcinoma cell line)",
+            "bytes": p_4t1.stat().st_size,
+            "sha256": _sha256(p_4t1),
+        }
+    )
+    df_4t1 = pd.read_csv(p_4t1)
+    df_4t1["ID"] = df_4t1["ID"].astype(str).str.split(".").str[0]
+    df_4t1 = df_4t1.drop_duplicates("ID").set_index("ID")
+    tpm_4t1 = df_4t1[["XW1", "XW2", "XW3"]].astype(float)
+    cols_4t1 = _qc_cols(tpm_4t1, ["XW1", "XW2", "XW3"])
+    peg_4t1 = _project_peg_matrix(tpm_4t1[cols_4t1], groups_df)
+    cell_line_matrices.append(("gse332912", "4T1", "MAMMARY", cols_4t1, peg_4t1))
+    cell_line_registry.append(
+        {
+            "model_id": "4T1",
+            "cancer_code": "MAMMARY",
+            "label": "4T1 triple-negative mammary carcinoma cell line",
+            "strain": "BALB/c",
+            "mhc_haplotype": "H-2d",
+            "source_accession": "GSE332912",
+            "n_samples": len(cols_4t1),
+            "native_feature_space": "Ensembl gene (ENSMUSG)",
+            "quantification": "author linear TPM",
+        }
+    )
+
     p_p815 = input_dir / "GSE181773_gene_fpkm.txt.gz"
     source_rows.append(
         {
@@ -2035,7 +2245,7 @@ def load_mouse_tumor_cohorts(
             "pillar": "tumor_rna",
             "filename": p_p815.name,
             "unit": "TPM (from native ENSMUSG FPKM)",
-            "strain": "DBA/2 (H-2d)",
+            "strain": "DBA/2 (H-2d, P815 mastocytoma cell line)",
             "bytes": p_p815.stat().st_size,
             "sha256": _sha256(p_p815),
         }
@@ -2050,14 +2260,12 @@ def load_mouse_tumor_cohorts(
     tpm_p815 = _fpkm_to_tpm(df_p815)
     p815_cols = _qc_cols(tpm_p815, ["FPKM.NC_1", "FPKM.NC_2", "FPKM.NC_3"])
     peg_p815 = _project_peg_matrix(tpm_p815[p815_cols], groups_df)
-    for i, c in enumerate(p815_cols, start=1):
-        # Cell-line replicates of P815 share one biological DBA/2 mastocytoma donor!
-        per_sample_peg.append(("gse181773", f"P815_NC_{i}", "DBA2:P815", "P815", peg_p815[c]))
-    cohort_registry.append(
+    cell_line_matrices.append(("gse181773", "P815", "MAST", p815_cols, peg_p815))
+    cell_line_registry.append(
         {
-            "cancer_code": "P815",
-            "label": "P815 mastocytoma (native DBA/2 source of P1A/Trap1a)",
-            "model_kind": "syngeneic_line",
+            "model_id": "P815",
+            "cancer_code": "MAST",
+            "label": "P815 mastocytoma cell line (native DBA/2 source of P1A/Trap1a)",
             "strain": "DBA/2",
             "mhc_haplotype": "H-2d",
             "source_accession": "GSE181773",
@@ -2067,17 +2275,513 @@ def load_mouse_tumor_cohorts(
         }
     )
 
-    # Note: cell-line replicates of 4T1 also originate from one BALB/c tumor line; deduplicate donor IDs honestly!
-    fixed_per_sample = []
-    for src_id, smp_id, part_id, code, ser in per_sample_peg:
-        if code == "4T1":
-            part_id = "BALBc:4T1"
-        fixed_per_sample.append((src_id, smp_id, part_id, code, ser))
+    if extra_dir.is_dir():
+        # 7-8. EMT6 (BALB/c mammary graft) & RM1 (C57BL/6 prostate graft) in-vivo PBS tumors (GSE334006)
+        p334_6 = extra_dir / "GSE334006_RNAseq_RM1_EMT6_tpm.tsv.gz"
+        if p334_6.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse334006-rm1-emt6-tpm",
+                    "pillar": "tumor_rna",
+                    "filename": p334_6.name,
+                    "unit": "TPM",
+                    "strain": "C57BL/6 (RM1) & BALB/c (EMT6) in-vivo grafts",
+                    "bytes": p334_6.stat().st_size,
+                    "sha256": _sha256(p334_6),
+                }
+            )
+            df334_6 = pd.read_csv(p334_6, sep="\t")
+            df334_6["_gid"] = df334_6["gene_id"].astype(str).map(entrez_to_ens)
+            df334_6 = df334_6.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
+            pbs334_6 = [c for c in df334_6.columns if "_PBS_" in c]
+            tpm334_6 = df334_6[pbs334_6].astype(float)
+            qc334_6 = _qc_cols(tpm334_6, pbs334_6)
+            peg334_6 = _project_peg_matrix(tpm334_6[qc334_6], groups_df)
+            for code, pfx, strain, hap, lbl in (
+                ("EMT6", "EMT6_PBS_", "BALB/c", "H-2d", "EMT6 mammary carcinoma in-vivo graft"),
+                ("RM1", "RM1_PBS_", "C57BL/6", "H-2b", "RM1 prostate carcinoma in-vivo graft"),
+            ):
+                cs_sub = [c for c in qc334_6 if c.startswith(pfx)]
+                if cs_sub:
+                    cohort_matrices.append(
+                        (
+                            "gse334006",
+                            code,
+                            cs_sub,
+                            [f"GSE334006:{c}" for c in cs_sub],
+                            peg334_6[cs_sub],
+                        )
+                    )
+                    cohort_registry.append(
+                        {
+                            "cancer_code": code,
+                            "label": lbl,
+                            "model_kind": "syngeneic_graft",
+                            "strain": strain,
+                            "mhc_haplotype": hap,
+                            "source_accession": "GSE334006",
+                            "n_samples": len(cs_sub),
+                            "native_feature_space": "NCBI Entrez GeneID -> MGI -> ENSMUSG",
+                            "quantification": "author linear TPM",
+                        }
+                    )
 
-    tumor_rows = []
-    for src_id, smp_id, part_id, code, ser in fixed_per_sample:
-        valid = ser.dropna()
-        for eid, val in valid.items():
+        # 9. B78_MEL (GSE304809, C57BL/6 B78 melanoma in-vivo PBS grafts Sam3, Sam4, Sam5)
+        p304 = extra_dir / "GSE304809_raw_counts_all_samples.tsv.gz"
+        if p304.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse304809-b78-melanoma",
+                    "pillar": "tumor_rna",
+                    "filename": p304.name,
+                    "unit": "TPM (from RSEM raw counts)",
+                    "strain": "C57BL/6 (H-2b, B78 melanoma in-vivo PBS grafts)",
+                    "bytes": p304.stat().st_size,
+                    "sha256": _sha256(p304),
+                }
+            )
+            df304 = pd.read_csv(p304, sep="\t")
+            df304["_gid"] = df304["Gene"].astype(str).map(sym_to_ens)
+            df304 = df304.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
+            b78_raw = ["Sam3", "Sam4", "Sam5"]
+            tpm304 = _counts_to_tpm(
+                df304[b78_raw].reindex(sym_universe, fill_value=0.0), exonic_series
+            )
+            b78_cols = _qc_cols(tpm304, b78_raw)
+            if b78_cols:
+                peg304 = _project_peg_matrix(tpm304[b78_cols], groups_df)
+                b78_sids = [f"B78_{c}" for c in b78_cols]
+                peg304.columns = b78_sids
+                cohort_matrices.append(
+                    (
+                        "gse304809",
+                        "B78_MEL",
+                        b78_sids,
+                        [f"GSE304809:{c}" for c in b78_cols],
+                        peg304,
+                    )
+                )
+                cohort_registry.append(
+                    {
+                        "cancer_code": "B78_MEL",
+                        "label": "B78 amelanotic melanoma subcutaneous graft",
+                        "model_kind": "syngeneic_graft",
+                        "strain": "C57BL/6",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE304809",
+                        "n_samples": len(b78_cols),
+                        "native_feature_space": "MGI/Ensembl official symbol -> ENSMUSG",
+                        "quantification": "linear TPM from raw counts and Ensembl 115 exonic_bp",
+                    }
+                )
+
+        # 10-13. Orthotopic & autochthonous murine gliomas (GSE341165: GL261, CT-2A, SB28, MADR PBS tumors)
+        p341 = extra_dir / "GSE341165_MurineGliomaBulkRNAseq_STAR_GeneCounts.GEO.txt.gz"
+        if p341.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse341165-murine-glioma-tumors",
+                    "pillar": "tumor_rna",
+                    "filename": p341.name,
+                    "unit": "TPM (from STAR gene counts)",
+                    "strain": "C57BL/6 orthotopic & autochthonous gliomas (GL261, CT2A, SB28, MADR)",
+                    "bytes": p341.stat().st_size,
+                    "sha256": _sha256(p341),
+                }
+            )
+            df341 = pd.read_csv(p341, sep="\t")
+            df341["_gid"] = df341["Sample"].astype(str).map(sym_to_ens)
+            df341 = df341.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
+            gli_pbs_cols = [c for c in df341.columns if c != "Sample" and "-PBS-" in c]
+            tpm341 = _counts_to_tpm(
+                df341[gli_pbs_cols].reindex(sym_universe, fill_value=0.0), exonic_series
+            )
+            qc341 = _qc_cols(tpm341, gli_pbs_cols)
+            peg341 = _project_peg_matrix(tpm341[qc341], groups_df)
+            for code, tok, mkind, lbl in (
+                (
+                    "GL261_TUMOR",
+                    "-GL261-PBS-",
+                    "syngeneic_graft",
+                    "GL261 orthotopic intracranial glioma",
+                ),
+                (
+                    "CT2A_TUMOR",
+                    "-CT2A-PBS-",
+                    "syngeneic_graft",
+                    "CT-2A orthotopic high-grade astrocytoma",
+                ),
+                (
+                    "SB28_TUMOR",
+                    "-SB28-PBS-",
+                    "syngeneic_graft",
+                    "SB28 orthotopic poorly immunogenic glioblastoma",
+                ),
+                (
+                    "MADR_GLIOMA",
+                    "-MADR-GBO-PBS-",
+                    "primary_gemm",
+                    "MADR-mEGFRvIII autochthonous glioma",
+                ),
+            ):
+                cs_g = [c for c in qc341 if tok in c]
+                if cs_g:
+                    cohort_matrices.append(
+                        (
+                            "gse341165",
+                            code,
+                            cs_g,
+                            [f"GSE341165:{c}" for c in cs_g],
+                            peg341[cs_g],
+                        )
+                    )
+                    cohort_registry.append(
+                        {
+                            "cancer_code": code,
+                            "label": lbl,
+                            "model_kind": mkind,
+                            "strain": "C57BL/6",
+                            "mhc_haplotype": "H-2b",
+                            "source_accession": "GSE341165",
+                            "n_samples": len(cs_g),
+                            "native_feature_space": "MGI/Ensembl official symbol -> ENSMUSG",
+                            "quantification": "linear TPM from STAR raw counts and Ensembl 115 exonic_bp",
+                        }
+                    )
+
+        # 14. DEN_HCC (GSE322844, carcinogen-induced primary murine hepatocellular carcinoma DEN1..6)
+        p322_den = extra_dir / "GSE322844_DEN_FPKM.csv.gz"
+        if p322_den.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse322844-den-hcc",
+                    "pillar": "tumor_rna",
+                    "filename": p322_den.name,
+                    "unit": "TPM (from native ENSMUSG FPKM)",
+                    "strain": "C57BL/6 diethylnitrosamine-induced primary HCC",
+                    "bytes": p322_den.stat().st_size,
+                    "sha256": _sha256(p322_den),
+                }
+            )
+            df322_d = pd.read_csv(p322_den, sep=";")
+            df322_d["gene_id"] = df322_d["gene_id"].astype(str).str.split(".").str[0]
+            den_raw = [c for c in df322_d.columns if c.startswith("DEN")]
+            df322_d = df322_d.groupby("gene_id", sort=False)[den_raw].sum()
+            tpm322_d = _fpkm_to_tpm(df322_d)
+            den_cols = _qc_cols(tpm322_d, den_raw)
+            if den_cols:
+                tpm322_t = tpm322_d[den_cols].copy()
+                tpm322_t.loc[tpm322_t.index.isin(risk_gids)] = np.nan
+                peg322_d = _project_peg_matrix(tpm322_t, groups_df)
+                cohort_matrices.append(
+                    (
+                        "gse322844",
+                        "DEN_HCC",
+                        den_cols,
+                        [f"GSE322844:{c}" for c in den_cols],
+                        peg322_d,
+                    )
+                )
+                cohort_registry.append(
+                    {
+                        "cancer_code": "DEN_HCC",
+                        "label": "Diethylnitrosamine (DEN) carcinogen-induced primary hepatocellular carcinoma",
+                        "model_kind": "carcinogen_primary",
+                        "strain": "C57BL/6",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE322844",
+                        "n_samples": len(den_cols),
+                        "native_feature_space": "Ensembl gene (ENSMUSG)",
+                        "quantification": "within-sample linear TPM from FPKM",
+                    }
+                )
+
+        # Additional pure in-vitro murine cancer cell lines: EO771, Hepa1-6, ID8, GL261_LINE, MB49, MOC1, MOC22
+        p309 = extra_dir / "GSE309307_raw_counts-mouse.txt.gz"
+        if p309.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse309307-eo771-line",
+                    "pillar": "tumor_rna",
+                    "filename": p309.name,
+                    "unit": "TPM (from native ENSMUSG raw counts)",
+                    "strain": "C57BL/6 (H-2b, EO771 mammary carcinoma line WT untreated)",
+                    "bytes": p309.stat().st_size,
+                    "sha256": _sha256(p309),
+                }
+            )
+            df309 = pd.read_csv(p309, sep="\t")
+            df309.index = df309.index.astype(str).str.split(".").str[0]
+            df309 = df309[~df309.index.duplicated(keep="first")]
+            eo_raw = [c for c in df309.columns if str(c).startswith("WT_") and "_T" not in str(c)]
+            tpm309 = _counts_to_tpm(df309[eo_raw], exonic_series)
+            eo_qc = _qc_cols(tpm309, eo_raw)
+            if eo_qc:
+                peg309 = _project_peg_matrix(tpm309[eo_qc], groups_df)
+                cell_line_matrices.append(("gse309307", "EO771", "MAMMARY", eo_qc, peg309))
+                cell_line_registry.append(
+                    {
+                        "model_id": "EO771",
+                        "cancer_code": "MAMMARY",
+                        "label": "EO771 mammary adenocarcinoma cell line (WT untreated)",
+                        "strain": "C57BL/6",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE309307",
+                        "n_samples": len(eo_qc),
+                        "native_feature_space": "Ensembl gene (ENSMUSG)",
+                        "quantification": "linear TPM from raw counts and Ensembl 115 exonic_bp",
+                    }
+                )
+
+        p329 = extra_dir / "GSE329164_gene.count.matrix.annotation.csv.gz"
+        if p329.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse329164-hepa16-line",
+                    "pillar": "tumor_rna",
+                    "filename": p329.name,
+                    "unit": "TPM (from native ENSMUSG raw counts)",
+                    "strain": "C57BL/6L (H-2b, Hepa1-6 hepatoma cell line DMSO vehicle)",
+                    "bytes": p329.stat().st_size,
+                    "sha256": _sha256(p329),
+                }
+            )
+            df329 = pd.read_csv(p329, usecols=["Gene id", "Control1", "Control2", "Control3"])
+            df329["Gene id"] = df329["Gene id"].astype(str).str.split(".").str[0]
+            df329 = df329.drop_duplicates("Gene id").set_index("Gene id")
+            hepa_raw = ["Control1", "Control2", "Control3"]
+            tpm329 = _counts_to_tpm(df329[hepa_raw], exonic_series)
+            hepa_qc = _qc_cols(tpm329, hepa_raw)
+            if hepa_qc:
+                peg329 = _project_peg_matrix(tpm329[hepa_qc], groups_df)
+                cell_line_matrices.append(("gse329164", "Hepa1-6", "HCC", hepa_qc, peg329))
+                cell_line_registry.append(
+                    {
+                        "model_id": "Hepa1-6",
+                        "cancer_code": "HCC",
+                        "label": "Hepa1-6 hepatocellular carcinoma cell line (DMSO controls)",
+                        "strain": "C57BL/6L",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE329164",
+                        "n_samples": len(hepa_qc),
+                        "native_feature_space": "Ensembl gene (ENSMUSG)",
+                        "quantification": "linear TPM from raw counts and Ensembl 115 exonic_bp",
+                    }
+                )
+
+        p349_3 = extra_dir / "GSE349387_OVCAR5_OVCAR8_ID8_Vehicle_NDNB25_expression_matrix.tsv.gz"
+        if p349_3.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse349387-id8-line",
+                    "pillar": "tumor_rna",
+                    "filename": p349_3.name,
+                    "unit": "TPM (from native ENSMUSG counts)",
+                    "strain": "C57BL/6 (H-2b, ID8 ovarian carcinoma cell line vehicle)",
+                    "bytes": p349_3.stat().st_size,
+                    "sha256": _sha256(p349_3),
+                }
+            )
+            id8_raw = [
+                "ID8_Vehicle_Rep1_count",
+                "ID8_Vehicle_Rep2_count",
+                "ID8_Vehicle_Rep3_count",
+            ]
+            df349_3 = pd.read_csv(p349_3, sep="\t", usecols=["gene_id", *id8_raw])
+            df349_3 = df349_3[df349_3["gene_id"].astype(str).str.startswith("ENSMUSG")].copy()
+            df349_3["gene_id"] = df349_3["gene_id"].astype(str).str.split(".").str[0]
+            df349_3 = df349_3.drop_duplicates("gene_id").set_index("gene_id")
+            tpm349_3 = _counts_to_tpm(df349_3[id8_raw], exonic_series)
+            id8_qc = _qc_cols(tpm349_3, id8_raw)
+            if id8_qc:
+                peg349_3 = _project_peg_matrix(tpm349_3[id8_qc], groups_df)
+                cell_line_matrices.append(("gse349387", "ID8", "OV", id8_qc, peg349_3))
+                cell_line_registry.append(
+                    {
+                        "model_id": "ID8",
+                        "cancer_code": "OV",
+                        "label": "ID8 ovarian surface epithelial carcinoma cell line (vehicle)",
+                        "strain": "C57BL/6",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE349387",
+                        "n_samples": len(id8_qc),
+                        "native_feature_space": "Ensembl gene (ENSMUSG)",
+                        "quantification": "linear TPM from expected counts and Ensembl 115 exonic_bp",
+                    }
+                )
+
+        p349_6 = extra_dir / "GSE349688_Processed-Data-File.txt.gz"
+        if p349_6.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse349688-gl261-line",
+                    "pillar": "tumor_rna",
+                    "filename": p349_6.name,
+                    "unit": "TPM (native ENSMUSG)",
+                    "strain": "C57BL/6 (H-2b, GL261 glioma cell line untreated controls)",
+                    "bytes": p349_6.stat().st_size,
+                    "sha256": _sha256(p349_6),
+                }
+            )
+            gl_cl_raw = ["TPM (Control-1)", "TPM (Control-2)", "TPM (Control-3)"]
+            df349_6 = pd.read_csv(
+                p349_6,
+                sep="\t",
+                encoding="utf-16",
+                comment="#",
+                usecols=["Gene ID", *gl_cl_raw],
+            )
+            df349_6["Gene ID"] = df349_6["Gene ID"].astype(str).str.split(".").str[0]
+            df349_6 = df349_6.drop_duplicates("Gene ID").set_index("Gene ID")
+            tpm349_6 = df349_6[gl_cl_raw].astype(float)
+            gl_cl_qc = _qc_cols(tpm349_6, gl_cl_raw)
+            if gl_cl_qc:
+                peg349_6 = _project_peg_matrix(tpm349_6[gl_cl_qc], groups_df)
+                cell_line_matrices.append(("gse349688", "GL261_LINE", "GLIOMA", gl_cl_qc, peg349_6))
+                cell_line_registry.append(
+                    {
+                        "model_id": "GL261_LINE",
+                        "cancer_code": "GLIOMA",
+                        "label": "GL261 glioma cell line (in-vitro untreated controls)",
+                        "strain": "C57BL/6",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE349688",
+                        "n_samples": len(gl_cl_qc),
+                        "native_feature_space": "Ensembl gene (ENSMUSG)",
+                        "quantification": "author linear TPM",
+                    }
+                )
+
+        p350 = extra_dir / "GSE350232_tpm.txt.gz"
+        if p350.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse350232-mb49-line",
+                    "pillar": "tumor_rna",
+                    "filename": p350.name,
+                    "unit": "TPM (native ENSMUSG)",
+                    "strain": "C57BL/6 (H-2b, MB49 bladder carcinoma cell line controls)",
+                    "bytes": p350.stat().st_size,
+                    "sha256": _sha256(p350),
+                }
+            )
+            mb_raw = ["C_2", "C_3", "C_4"]
+            df350 = pd.read_csv(p350, sep="\t", usecols=["GeneID", *mb_raw])
+            df350["GeneID"] = df350["GeneID"].astype(str).str.split(".").str[0]
+            df350 = df350.drop_duplicates("GeneID").set_index("GeneID")
+            tpm350 = df350[mb_raw].astype(float)
+            mb_qc = _qc_cols(tpm350, mb_raw)
+            if mb_qc:
+                peg350 = _project_peg_matrix(tpm350[mb_qc], groups_df)
+                cell_line_matrices.append(("gse350232", "MB49", "BLCA", mb_qc, peg350))
+                cell_line_registry.append(
+                    {
+                        "model_id": "MB49",
+                        "cancer_code": "BLCA",
+                        "label": "MB49 urothelial bladder carcinoma cell line (control medium)",
+                        "strain": "C57BL/6",
+                        "mhc_haplotype": "H-2b",
+                        "source_accession": "GSE350232",
+                        "n_samples": len(mb_qc),
+                        "native_feature_space": "Ensembl gene (ENSMUSG)",
+                        "quantification": "author linear TPM",
+                    }
+                )
+
+        for moc_fn, moc_id, moc_cols_raw, moc_lbl in (
+            (
+                "GSE326892_MOC1expression.txt.gz",
+                "MOC1",
+                ["A1", "A2", "A3"],
+                "MOC1 indolent immunogenic oral squamous carcinoma cell line",
+            ),
+            (
+                "GSE326892_MOC22expression.txt.gz",
+                "MOC22",
+                ["A7", "A8", "A9"],
+                "MOC22 aggressive oral squamous carcinoma cell line",
+            ),
+        ):
+            p_moc = extra_dir / moc_fn
+            if p_moc.is_file():
+                source_rows.append(
+                    {
+                        "source_id": f"gse326892-{moc_id.lower()}-line",
+                        "pillar": "tumor_rna",
+                        "filename": p_moc.name,
+                        "unit": "TPM (from log2(count+1) raw counts)",
+                        "strain": f"C57BL/6 (H-2b, {moc_id} oral cancer cell line controls)",
+                        "bytes": p_moc.stat().st_size,
+                        "sha256": _sha256(p_moc),
+                    }
+                )
+                df_moc = pd.read_csv(p_moc, sep="\t")
+                df_moc["_gid"] = df_moc["id"].astype(str).map(sym_to_ens)
+                df_moc = df_moc.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
+                cnt_moc = np.round(np.power(2.0, df_moc[moc_cols_raw].astype(float)) - 1.0).clip(
+                    lower=0.0
+                )
+                tpm_moc = _counts_to_tpm(
+                    cnt_moc.reindex(sym_universe, fill_value=0.0), exonic_series
+                )
+                moc_qc = _qc_cols(tpm_moc, moc_cols_raw)
+                if moc_qc:
+                    peg_moc = _project_peg_matrix(tpm_moc[moc_qc], groups_df)
+                    cell_line_matrices.append(("gse326892", moc_id, "HNSCC", moc_qc, peg_moc))
+                    cell_line_registry.append(
+                        {
+                            "model_id": moc_id,
+                            "cancer_code": "HNSCC",
+                            "label": moc_lbl,
+                            "strain": "C57BL/6",
+                            "mhc_haplotype": "H-2b",
+                            "source_accession": "GSE326892",
+                            "n_samples": len(moc_qc),
+                            "native_feature_space": "MGI/Ensembl official symbol -> ENSMUSG",
+                            "quantification": "linear TPM from HTSeq raw counts and Ensembl 115 exonic_bp",
+                        }
+                    )
+
+    eids_list = groups_df["entity_id"].tolist()
+    non_unsafe_mask = np.array([eid not in unsafe_eids for eid in eids_list], dtype=bool)
+    best_below10: dict[str, tuple[float, str, str, str, str]] = {}
+    tumor_rows: list[dict] = []
+
+    for src_id, code, s_cols, p_ids, peg_mat in cohort_matrices:
+        if not s_cols:
+            continue
+        arr = peg_mat[s_cols].to_numpy(dtype=np.float64)
+        r_idxs, c_idxs = np.where(non_unsafe_mask[:, None] & np.isfinite(arr) & (arr >= 10.0))
+        for ri, ci in zip(r_idxs.tolist(), c_idxs.tolist()):
+            tumor_rows.append(
+                {
+                    "entity_id": eids_list[ri],
+                    "source_id": src_id,
+                    "sample_id": s_cols[ci],
+                    "participant_id": p_ids[ci],
+                    "cancer_code": code,
+                    "value": float(arr[ri, ci]),
+                    "comparison_id": COMPARISON_ID,
+                    "unit": "TPM",
+                    "qc_pass": True,
+                    "identity_resolved": True,
+                }
+            )
+        safe_arr = np.where(np.isfinite(arr), arr, -np.inf)
+        row_max = np.max(safe_arr, axis=1)
+        row_arg = np.argmax(safe_arr, axis=1)
+        for ri, mx in enumerate(row_max.tolist()):
+            if not non_unsafe_mask[ri] or not np.isfinite(mx) or mx >= 10.0:
+                continue
+            eid = eids_list[ri]
+            prev = best_below10.get(eid)
+            if prev is None or mx > prev[0]:
+                ci = int(row_arg[ri])
+                best_below10[eid] = (mx, src_id, s_cols[ci], p_ids[ci], code)
+
+    has_ge10 = {r["entity_id"] for r in tumor_rows}
+    for eid, (mx, src_id, smp_id, part_id, code) in best_below10.items():
+        if eid not in has_ge10:
             tumor_rows.append(
                 {
                     "entity_id": eid,
@@ -2085,7 +2789,7 @@ def load_mouse_tumor_cohorts(
                     "sample_id": smp_id,
                     "participant_id": part_id,
                     "cancer_code": code,
-                    "value": float(val),
+                    "value": float(mx),
                     "comparison_id": COMPARISON_ID,
                     "unit": "TPM",
                     "qc_pass": True,
@@ -2093,15 +2797,79 @@ def load_mouse_tumor_cohorts(
                 }
             )
 
-    return pd.DataFrame(tumor_rows), pd.DataFrame(cohort_registry), source_rows
+    cl_best_below10: dict[str, tuple[float, str, str, str, str]] = {}
+    cl_rows: list[dict] = []
+    for src_id, m_id, code, s_cols, peg_mat in cell_line_matrices:
+        if not s_cols:
+            continue
+        arr_cl = peg_mat[s_cols].to_numpy(dtype=np.float64)
+        r_idxs, c_idxs = np.where(non_unsafe_mask[:, None] & np.isfinite(arr_cl) & (arr_cl >= 10.0))
+        for ri, ci in zip(r_idxs.tolist(), c_idxs.tolist()):
+            cl_rows.append(
+                {
+                    "entity_id": eids_list[ri],
+                    "source_id": src_id,
+                    "sample_id": f"{m_id}:{s_cols[ci]}",
+                    "model_id": m_id,
+                    "cancer_code": code,
+                    "value": float(arr_cl[ri, ci]),
+                    "comparison_id": COMPARISON_ID,
+                    "unit": "TPM",
+                    "qc_pass": True,
+                    "identity_resolved": True,
+                }
+            )
+        safe_cl = np.where(np.isfinite(arr_cl), arr_cl, -np.inf)
+        cl_max = np.max(safe_cl, axis=1)
+        cl_arg = np.argmax(safe_cl, axis=1)
+        for ri, mx in enumerate(cl_max.tolist()):
+            if not non_unsafe_mask[ri] or not np.isfinite(mx) or mx >= 10.0:
+                continue
+            eid = eids_list[ri]
+            prev = cl_best_below10.get(eid)
+            if prev is None or mx > prev[0]:
+                ci = int(cl_arg[ri])
+                cl_best_below10[eid] = (mx, src_id, f"{m_id}:{s_cols[ci]}", m_id, code)
+
+    cl_has_ge10 = {r["entity_id"] for r in cl_rows}
+    for eid, (mx, src_id, smp_id, m_id, code) in cl_best_below10.items():
+        if eid not in cl_has_ge10:
+            cl_rows.append(
+                {
+                    "entity_id": eid,
+                    "source_id": src_id,
+                    "sample_id": smp_id,
+                    "model_id": m_id,
+                    "cancer_code": code,
+                    "value": float(mx),
+                    "comparison_id": COMPARISON_ID,
+                    "unit": "TPM",
+                    "qc_pass": True,
+                    "identity_resolved": True,
+                }
+            )
+
+    return (
+        pd.DataFrame(tumor_rows),
+        pd.DataFrame(cl_rows),
+        pd.DataFrame(cohort_registry),
+        pd.DataFrame(cell_line_registry),
+        source_rows,
+    )
 
 
-def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
+def build_all(
+    ens_dir: Path, input_dir: Path, out_root: Path, extra_dir: Path | None = None
+) -> dict:
+    eff_extra = extra_dir if extra_dir is not None else DEFAULT_EXTRA_DIR
     print("1/6 Qualifying Ensembl 115 GRCm39 proteome & 31-mer cDNA mapping risk...", flush=True)
     ref, groups_df, seq_df, exonic_bp, symbol_by_gene, mapping_risk_df, ens_sources = (
         load_ensembl115_mouse_reference(ens_dir)
     )
     coding_genes = set(symbol_by_gene)
+    risk_gids = set(
+        mapping_risk_df.loc[mapping_risk_df["mapping_risk"].astype(bool), "gene_id"].astype(str)
+    )
     print(
         f"    PEGs={len(groups_df):,}, sequences={len(seq_df):,}, coding_genes={len(coding_genes):,}",
         flush=True,
@@ -2117,12 +2885,12 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
     )
 
     print(
-        "3/6 Aggregating Bgee 15.2, GSE219045 & 16-compartment reproductive/embryo TPM panels...",
+        "3/6 Aggregating Bgee 15.2, GSE219045, WT liver & 16-compartment reproductive/embryo TPM panels...",
         flush=True,
     )
     comp_normals, comp_repro, rna_gates, confirmed_organs, norm_sources = (
         load_bgee_and_normal_panels(
-            input_dir, groups_df, exonic_bp, symbol_by_gene, entrez_to_ens, sym_to_ens
+            input_dir, eff_extra, groups_df, exonic_bp, symbol_by_gene, entrez_to_ens, sym_to_ens
         )
     )
     print(
@@ -2131,11 +2899,11 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
     )
 
     print(
-        "4/6 Evaluating ImmGen sorted/activated immune RNA, MGI GXD TS28 protein & Tabula Muris 10x UMI...",
+        "4/6 Evaluating ImmGen/splenic/IL-15/IL-2 immune RNA, MGI GXD TS28 protein & Tabula Muris 10x UMI...",
         flush=True,
     )
     imm_gates, imm_sources = load_mouse_immune_panels(
-        input_dir, groups_df, exonic_bp, symbol_by_gene, sym_to_ens
+        input_dir, eff_extra, groups_df, exonic_bp, symbol_by_gene, sym_to_ens
     )
     gxd_gates, gxd_sources = load_mgi_gxd_protein_gates(
         input_dir, groups_df, mgi_to_ens, confirmed_organs
@@ -2146,23 +2914,36 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         flush=True,
     )
 
-    print("5/6 Loading 8 murine syngeneic & GEMM tumor cohorts...", flush=True)
-    comp_tumors, cohort_df, tumor_sources = load_mouse_tumor_cohorts(
-        input_dir, groups_df, exonic_bp, symbol_by_gene, entrez_to_ens, sym_to_ens
+    all_gates = pd.concat([rna_gates, imm_gates, gxd_gates], ignore_index=True)
+    unsafe_eids = set(all_gates.loc[all_gates["unsafe"].astype(bool), "entity_id"].astype(str))
+
+    print("5/6 Loading 14 in-vivo murine tumor cohorts & 9 pure cancer cell lines...", flush=True)
+    comp_tumors, comp_cell_lines, cohort_df, cell_line_df, tumor_sources = load_mouse_tumor_cohorts(
+        input_dir,
+        eff_extra,
+        groups_df,
+        exonic_bp,
+        symbol_by_gene,
+        entrez_to_ens,
+        sym_to_ens,
+        risk_gids,
+        unsafe_eids,
     )
-    print(f"    tumor_obs={len(comp_tumors):,}, cohorts={len(cohort_df)}", flush=True)
+    print(
+        f"    tumor_obs={len(comp_tumors):,}, cohorts={len(cohort_df)} ({int(cohort_df['n_samples'].sum())} in-vivo samples), cell_lines={len(cell_line_df)}",
+        flush=True,
+    )
 
     print(
         "6/6 Running SpeciesScreeningSpec & 16-compartment HostContext sex-restriction...",
         flush=True,
     )
-    all_gates = pd.concat([rna_gates, imm_gates, gxd_gates], ignore_index=True)
     spec = SpeciesScreeningSpec(
         species="mouse",
         reference=ref,
         policy_id=POLICY_SCHEMA_ID,
         comparison_id=COMPARISON_ID,
-        comparability_reference="oncoref.mouse-grcm39-panel.2026-11-26.1",
+        comparability_reference="oncoref.mouse-grcm39-panel.2026-11-26.2",
         comparison_unit="TPM",
         required_normal_contexts=REQUIRED_BGEE_NORMAL_CONTEXTS,
         anatomy=anatomy_for_species("mouse"),
@@ -2178,6 +2959,7 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         comparison_normals=comp_normals,
         comparison_reproductive=comp_repro,
         comparison_tumors=comp_tumors,
+        comparison_cell_lines=comp_cell_lines if not comp_cell_lines.empty else None,
     )
 
     cat = res.catalog.copy()
@@ -2295,6 +3077,7 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
     ).drop_duplicates("source_id")
     all_sources_df.to_csv(mouse_dir / "screening-sources.csv", index=False, lineterminator="\n")
     cohort_df.to_csv(mouse_dir / "tumor-cohorts.csv", index=False, lineterminator="\n")
+    cell_line_df.to_csv(mouse_dir / "cell-lines.csv", index=False, lineterminator="\n")
 
     cat_sha = _sha256(cat_path)
     exp_sha = _sha256(exp_path)
@@ -2323,6 +3106,8 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         ),
         "tumor_cohorts": cohort_df["cancer_code"].tolist(),
         "tumor_samples": int(cohort_df["n_samples"].sum()),
+        "cell_line_models": cell_line_df["model_id"].tolist(),
+        "cell_line_samples": int(cell_line_df["n_samples"].sum()),
         "summary": {
             "proteins": len(cat),
             "loci": loci_count,
@@ -2349,6 +3134,13 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
                 if not sex_df.empty
                 else {}
             ),
+            "cta_activation_modes": {
+                k: int(v)
+                for k, v in cat.loc[cat["is_cta"].astype(bool), "tumor_activation_mode"]
+                .value_counts()
+                .sort_index()
+                .items()
+            },
         },
     }
     (mouse_dir / "target-selection.json").write_text(json.dumps(summary_payload, indent=2) + "\n")
@@ -2360,9 +3152,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ens-dir", type=Path, default=DEFAULT_ENS_DIR)
     parser.add_argument("--input-dir", type=Path, default=DEFAULT_INPUT_DIR)
+    parser.add_argument("--extra-dir", type=Path, default=DEFAULT_EXTRA_DIR)
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
-    build_all(args.ens_dir, args.input_dir, args.root)
+    build_all(args.ens_dir, args.input_dir, args.root, args.extra_dir)
     return 0
 
 

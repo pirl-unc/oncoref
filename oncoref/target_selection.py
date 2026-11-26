@@ -21,7 +21,7 @@ import pandas as pd
 
 from .load_dataset import _register_derived_cache
 
-POLICY_ID = "oncoref.target-selection.2026-11-26.1"
+POLICY_ID = "oncoref.target-selection.2026-11-26.2"
 BASELINE_2026_11_20_POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
@@ -170,7 +170,8 @@ def definition() -> dict:
         "home_tissue": {
             "unmeasured_tissues": list(UNMEASURED_HOME_TISSUES),
             "recorded_by": (
-                "A family rule, a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference."
+                "A family rule (including monogenic chemosensory GPCRs OR*, TAAR*, TAS1R*, TAS2R*, VN1R* diluted below bulk/droplet statistical power), "
+                "a recorded literature finding, a scoped adult normal home in the publication registry, or the nose and skin reference."
             ),
             "effect": (
                 "Insufficient home-tissue coverage blocks cancer admission. "
@@ -408,9 +409,15 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
 
     with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
         base = pd.read_csv(handle, compression="gzip", low_memory=False)
-    for _sex_col in ("sex_restriction_class", "sex_restriction_code"):
-        if _sex_col in base.columns:
-            base[_sex_col] = base[_sex_col].astype("object").fillna("").astype(str)
+    for _str_col in (
+        "sex_restriction_class",
+        "sex_restriction_code",
+        "tumor_activation_mode",
+        "cell_line_top_model",
+        "qualifying_cell_lines",
+    ):
+        if _str_col in base.columns:
+            base[_str_col] = base[_str_col].astype("object").fillna("").astype(str)
     base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
     base = repeat_family_equivalence.annotate_catalog(base, enabled=True)
     base = assay_boundary_adjudications.annotate_catalog(base, enabled=True, integrated=True)

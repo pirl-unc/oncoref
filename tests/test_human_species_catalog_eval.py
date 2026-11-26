@@ -23,12 +23,16 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert cat_default["is_reproductive_antigen"].equals(
         promoted["is_reproductive_antigen"].astype(bool)
     )
-    assert int(promoted["is_cta"].sum()) == 325
+    assert int(promoted["is_cta"].sum()) == 322
 
     # Exact sex-restriction subset parity across all 468 human RA/CTA proteins
     expected_sex = human.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     got_sex = res_default.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     pd.testing.assert_series_equal(got_sex.sort_index(), expected_sex.sort_index())
+
+    # Orthogonal single-rule ablation turning off chemosensory GPCR guard restores 325 CTA (2026-11-26.1)
+    res_no_gpcr = human.evaluate_integrated_catalog(include_chemosensory_gpcr_guard=False)
+    assert int(res_no_gpcr.catalog["is_cta"].sum()) == 325
 
     # Disabling all integrated layers reproduces the frozen 2026-11-20.2 baseline (327 CTA)
     baseline_20261120 = target_selection._baseline_2026_11_20_frame()
@@ -45,9 +49,21 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert res_base.catalog["classification"].equals(baseline_20261120["classification"])
     assert int(res_base.catalog["is_cta"].sum()) == 327
 
-    # Pinned default human catalog matches promoted policy_id (325 CTA)
+    # Pinned default human catalog matches promoted policy_id (322 CTA)
     assert human.target_selection().attrs["policy_id"] == target_selection.POLICY_ID
-    assert int(human.target_selection()["is_cta"].sum()) == 325
+    assert int(human.target_selection()["is_cta"].sum()) == 322
+    assert set(promoted.loc[promoted["is_cta"], "tumor_activation_mode"]) == {
+        "ectopic",
+        "ectopic_and_lineage_retained",
+        "lineage_retained",
+    }
+    by_prom = promoted.set_index("protein_group_label")
+    assert by_prom.loc["SEMG2", "tumor_activation_mode"] == "lineage_retained"
+    assert by_prom.loc["CSN2", "tumor_activation_mode"] == "ectopic_and_lineage_retained"
+    assert by_prom.loc["PRAME", "tumor_activation_mode"] == "ectopic_and_lineage_retained"
+    assert by_prom.loc["NY-ESO-1", "tumor_activation_mode"] == "ectopic_and_lineage_retained"
+    assert cat_default["tumor_activation_mode"].equals(promoted["tumor_activation_mode"])
+    assert hasattr(human, "tumor_cohorts") and hasattr(human, "cell_lines")
 
     # Orthogonal #768 TGCT Note-R single-rule ablation keeps TGCT-witnessed RAs as CTA
     res_no_768 = human.evaluate_integrated_catalog(include_assay_boundary_fixes=False).catalog
@@ -91,12 +107,19 @@ def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
             in by_label.loc[unsafe_lbl, "transition_driver"]
         )
 
-    # #735 cleared home panels admit TAS1R2 / KRTAP21-2 / KRTAP20-3 to Cancer Antigen only,
-    # promote reproductive-positive OR10J1 & KRTAP20-4 to CTA, while tumor gDNA QC demotes
-    # KRTAP9-7 to Other:Expression and CAPZA3 to Reproductive Antigen only
-    for ca_lbl in ("TAS1R2", "KRTAP21-2", "KRTAP20-3"):
+    # #735 cleared home panels admit KRTAP21-2 / KRTAP20-3 to Cancer Antigen only and promote
+    # reproductive-positive KRTAP20-4 to CTA, while monogenic chemosensory GPCRs (OR*, TAS1R*,
+    # TAS2R*, VN1R*) stay out of CA/CTA (matching 2026-11-20 Other:Unscreened tissue / RA only,
+    # with OR52D1 transitioning Other:Unscreened tissue -> Reproductive Antigen only via GSE107746)
+    for ca_lbl in ("KRTAP21-2", "KRTAP20-3"):
         assert by_label.loc[ca_lbl, "classification_integrated"] == "Cancer Antigen only"
-    assert by_label.loc["OR10J1", "classification_integrated"] == "CTA"
+    for unchanged_vs_20261120 in ("TAS1R2", "OR2B6", "OR51E2", "OR10J1", "OR1N1", "OR4M2"):
+        assert unchanged_vs_20261120 not in by_label.index
+    assert by_label.loc["OR52D1", "classification_integrated"] == "Reproductive Antigen only"
+    assert (
+        "chemosensory_gpcr:unscreened_monogenic_sensory_neuron"
+        in by_label.loc["OR52D1", "transition_driver"]
+    )
     assert by_label.loc["KRTAP20-4", "classification_integrated"] == "CTA"
     assert by_label.loc["KRTAP9-7", "classification_integrated"] == "Other:Expression"
     assert by_label.loc["CAPZA3", "classification_integrated"] == "Reproductive Antigen only"
@@ -118,15 +141,20 @@ def test_upgraded_737_tumor_observations_and_integrated_policy_preview():
     assert by_label.loc["DAZL", "classification_integrated"] == "Unsafe"
     assert "#711:confounder_rejected" in by_label.loc["DAZL", "transition_driver"]
 
-    # #735 insufficient 10x fold over home moves OR11A1 and PABPC3 to Other:Expression
+    # #735 insufficient 10x fold over home moves OR11A1 and PABPC3 to Other:Expression,
+    # while high-fold chemosensory GPCRs sit in Other:Unscreened tissue / RA only on integrated_cat
     assert by_label.loc["OR11A1", "classification_integrated"] == "Other:Expression"
     assert by_label.loc["PABPC3", "classification_integrated"] == "Other:Expression"
 
     # #735 incomplete anatomical sub-niche (DSPP soft dental pulp) stays conservatively unchanged
     assert "DSPP" not in by_label.index
 
-    # #711 and #712 provenance annotations are populated on the integrated catalog
+    # #711, #712, and chemosensory GPCR guard annotations are populated on the integrated catalog
     integrated_cat = integrated_res.catalog.set_index("protein_group_label")
+    for gpcr_unscreened in ("TAS1R2", "OR7C2", "OR2D2"):
+        assert integrated_cat.loc[gpcr_unscreened, "classification"] == "Other:Unscreened tissue"
+    for gpcr_ra_only in ("OR1N1", "OR4M2", "OR10J1"):
+        assert integrated_cat.loc[gpcr_ra_only, "classification"] == "Reproductive Antigen only"
     assert integrated_cat.loc["CAGE1", "classification"] == "Other:Review"
     assert (
         integrated_cat.loc["CAGE1", "rare_cell_711_requirement"]

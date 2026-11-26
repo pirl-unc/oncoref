@@ -49,6 +49,7 @@ sex_restricted_antigens = antigens.sex_restricted_antigens
 target_selection = antigens.target_selection
 target_selection_coverage = antigens.target_selection_coverage
 tumor_cohorts = cancer.tumor_cohorts
+cell_lines = cancer.cell_lines
 
 datasets = (
     bgee_srp009687,
@@ -66,6 +67,7 @@ __all__ = [
     "bgee_srp009687",
     "bgee_srp181218",
     "cancer",
+    "cell_lines",
     "cta_candidates",
     "cta_evidence",
     "cta_gene_ids",

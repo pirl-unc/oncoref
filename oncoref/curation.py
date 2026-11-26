@@ -137,6 +137,8 @@ def write_receipt(root):
         "scripts/cta_evidence_assets/female-lineage-tumor-peaks.csv",
         "scripts/cta_evidence_assets/species-antigen-whitepaper.md",
         "scripts/render_sex_restriction_figures.py",
+        "scripts/render_comparative_species_figures.py",
+        "oncoref/human_screening_inputs.py",
         "oncoref/tcr_trials.py",
         "oncoref/data/tcr-clinical-gold-standard.csv",
         "oncoref/species_policies.py",

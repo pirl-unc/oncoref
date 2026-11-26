@@ -22,12 +22,15 @@ UU_Cfam_GSD_1.0) through the unified 3-stage OncoRef target-selection architectu
      molar ppm with 10% same-plex reproductive TMT co-isolation bleed subtraction;
      Vital > 25 ppm Unsafe / 10-25 ppm hold; Protected > 50 ppm Unsafe / 20-50 ppm
      hold).
-   - Curated somatic RT-PCR counterevidence holds from nemec2019 / hindriks2025.
+   - Healthy companion-dog circulating leukocyte 10x scRNA-seq (GSE225599, 7
+     healthy donors H_1..H_7 across T/NK, monocyte, neutrophil, and platelet
+     lineages), alveolar macrophages (GSE283373), activated-TIL checkpoint/cytokine
+     gates, and somatic RT-PCR counterevidence holds (nemec2019 / hindriks2025).
 3. Symmetric 10 x max(N, D, 1 TPM) Cancer Antigen (CA), Reproductive Antigen
-   (RA), and CTA = CA & RA enrichment across 8 spontaneous canine patient tumor
-   cohorts (OSA_NCI, OSA_COTC030, OSA_CCOGC, CMT, HSA, LYM, DLBCL, GLIOMA) and
-   comparative canine reproductive, bicornuate-tract, mammary, placental, and
-   d33-d44 embryonic compartments.
+   (RA), and CTA = CA & RA enrichment across 19 spontaneous canine patient tumor
+   cohorts (935 primary tumors; 12 pure canine cancer cell lines segregated in a
+   non-promoting purity/model-selection sidecar) and comparative canine reproductive,
+   bicornuate-tract, mammary, placental, and d33-d44 embryonic compartments.
 """
 
 from __future__ import annotations
@@ -64,7 +67,10 @@ from oncoref.species_target_selection import (  # noqa: E402
 DEFAULT_SCRATCH_DIR = Path(
     os.environ.get("ONCOREF_DOG_INPUTS_DIR", str(ROOT / "tmp" / "dog_catalog_inputs"))
 )
-COMPARISON_ID = "oncoref.dog-canfam31-tpm.2026-11-26.1"
+DEFAULT_EXTRA_DIR = Path(
+    os.environ.get("ONCOREF_DOG_EXTRA_DIR", str(DEFAULT_SCRATCH_DIR.parent / "dog_153_extra"))
+)
+COMPARISON_ID = "oncoref.dog-canfam31-tpm.2026-11-26.2"
 
 # 22 adult somatic contexts measured across both Bgee 15.2 & GSE219045 on CanFam3.1
 REQUIRED_DOG_NORMAL_CONTEXTS = frozenset(
@@ -330,7 +336,10 @@ PFIZER_CONDITION_MAP: dict[str, tuple[str, str]] = {
     "Breast/Mammary": ("reproductive", "resting_mammary"),
 }
 
-DENTAL_HOME_SYMBOLS = frozenset({"AMELX", "AMBN", "ENAM", "DSPP", "MMP20", "KLK4", "ODAPH"})
+DENTAL_HOME_SYMBOLS = frozenset(
+    {"AMELX", "AMBN", "ENAM", "DSPP", "MMP20", "KLK4", "ODAPH", "ODAM", "AMTN"}
+)
+TASTE_HOME_SYMBOLS = frozenset({"OTOP1"})
 HAIR_FOLLICLE_KERATINS = frozenset(
     {*(f"KRT{i}" for i in range(25, 41)), *(f"KRT{i}" for i in range(71, 87))}
 )
@@ -354,6 +363,21 @@ CURATED_NOMINATION_TO_ENSCAFG: dict[str, tuple[str, ...]] = {
 }
 CURATED_SOMATIC_COUNTEREVIDENCE_NOMS = frozenset(
     {"AKR1E2", "CTCFL", "DDX53", "IGF2BP3", "NT5C1B", "SPECC1", "TPX2"}
+)
+# Essential canine activated-TIL checkpoints & effector cytokines (100% Unsafe in Human)
+CURATED_CANINE_ACTIVATED_IMMUNE_SYMBOLS = frozenset(
+    {
+        "PDCD1",
+        "TNFRSF4",
+        "TNFSF4",
+        "IFNG",
+        "IFNB1",
+        "IL17A",
+        "IL17F",
+        "CD70",
+        "TNFRSF8",
+        "SIGLEC15",
+    }
 )
 
 
@@ -670,13 +694,17 @@ def load_ensembl98_dog_reference(
             if su in DENTAL_HOME_SYMBOLS:
                 homes.append("dental pulp")
                 unmeas = True
-            elif su.startswith(("TAS1R", "TAS2R")):
+            elif su.startswith(("TAS1R", "TAS2R")) or su in TASTE_HOME_SYMBOLS:
                 homes.append("taste bud")
+                unmeas = True
+            elif su.startswith("VN1R") or re.match(r"^TAAR\d+$", su):
+                homes.append("olfactory epithelium")
                 unmeas = True
             elif su.startswith("KRTAP") or su in HAIR_FOLLICLE_KERATINS:
                 homes.append("hair follicle")
             elif g in or_gids:
                 homes.append("olfactory epithelium")
+                unmeas = True
         if homes:
             home_by_eid[row.entity_id] = "; ".join(dict.fromkeys(homes))
         unmeasured_by_eid[row.entity_id] = unmeas
@@ -835,7 +863,10 @@ def load_ensembl98_dog_reference(
 def load_dog_normal_and_repro_panels(
     scratch_dir: Path,
     dog_in: Path,
+    extra_dir: Path,
     groups_df: pd.DataFrame,
+    exonic_bp: dict[str, int],
+    symbol_by_gene: dict[str, str],
     or_gids: set[str],
     risk_gids: set[str],
 ) -> tuple[
@@ -1113,6 +1144,146 @@ def load_dog_normal_and_repro_panels(
         ms_q = target_selection.summarize_normal_tissue_tpm(ms_mat, method="p95")
         male_skin_p95 = {str(k): float(v) for k, v in ms_q.items() if pd.notna(v)}
 
+    # 4. Supplementary companion-dog normal organ & primary macrophage RNA controls (<=2.5% OR gDNA QC)
+    exonic_series_norm = pd.Series(exonic_bp, dtype=float)
+    extra_immune_gate_rows: list[dict] = []
+    if extra_dir.is_dir():
+        # 4a. GSE196108 healthy canine adrenal cortex (NAC1..NAC10)
+        p196_n = extra_dir / "GSE196108_Sanders_raw_counts.txt.gz"
+        if p196_n.is_file():
+            df196_n = pd.read_csv(p196_n, sep="\t")
+            df196_n["gene"] = df196_n["gene"].astype(str).str.split(".").str[0]
+            df196_n = df196_n.drop_duplicates("gene").set_index("gene")
+            nac_cols = [c for c in df196_n.columns if c.startswith("NAC")]
+            tpm196_n = _counts_to_tpm(df196_n[nac_cols], exonic_series_norm)
+            or196_n = _or_share_ge5(tpm196_n, or_gids)
+            qc_nac = [c for c in nac_cols if float(or196_n.get(c, 0.0)) <= 0.025]
+            if qc_nac:
+                peg196_n = _project_peg_matrix(tpm196_n[qc_nac], groups_df)
+                for c in qc_nac:
+                    somatic_peg_cols["adrenal gland"][f"gse196108:{c}"] = peg196_n[c]
+
+        # 4b. GSE345838 normal canine peripheral blood (BL1..BL10) & bone marrow (BM1..BM5)
+        p345_n = extra_dir / "GSE345838_Canine_Acute_Leukemia_featurecounts_raw_counts.txt.gz"
+        if p345_n.is_file():
+            df345_n = pd.read_csv(p345_n, sep="\t", comment="#")
+            df345_n["Geneid"] = df345_n["Geneid"].astype(str).str.split(".").str[0]
+            df345_n = df345_n.drop_duplicates("Geneid").set_index("Geneid")
+            bl_bm_cols = [c for c in df345_n.columns if c.startswith(("BL", "BM"))]
+            tpm345_n = _counts_to_tpm(df345_n[bl_bm_cols], df345_n["Length"].astype(float))
+            or345_n = _or_share_ge5(tpm345_n, or_gids)
+            qc_bl_bm = [c for c in bl_bm_cols if float(or345_n.get(c, 0.0)) <= 0.025]
+            if qc_bl_bm:
+                peg345_n = _project_peg_matrix(tpm345_n[qc_bl_bm], groups_df)
+                for c in qc_bl_bm:
+                    ctx_345 = "blood" if c.startswith("BL") else "bone marrow"
+                    somatic_peg_cols[ctx_345][f"gse345838:{c}"] = peg345_n[c]
+
+        # 4c. GSE317244 normal canine gingiva (Gingiva-*, buccal mucosa)
+        p317_n = extra_dir / "GSE317244_DS1_rawCounts.txt.gz"
+        if p317_n.is_file():
+            df317_n = pd.read_csv(p317_n, sep="\t", index_col=0)
+            df317_n.index = df317_n.index.astype(str).str.split(".").str[0]
+            df317_n = df317_n[~df317_n.index.duplicated(keep="first")]
+            ging_cols = [c for c in df317_n.columns if str(c).startswith("Gingiva-")]
+            tpm317_n = _counts_to_tpm(df317_n[ging_cols], exonic_series_norm)
+            or317_n = _or_share_ge5(tpm317_n, or_gids)
+            qc_ging = [c for c in ging_cols if float(or317_n.get(c, 0.0)) <= 0.025]
+            if qc_ging:
+                peg317_n = _project_peg_matrix(tpm317_n[qc_ging], groups_df)
+                for c in qc_ging:
+                    somatic_peg_cols["buccal mucosa"][f"gse317244:{c}"] = peg317_n[c]
+
+        # 4d. GSE288068 unaffected canine blood, liver, lung, spleen controls
+        p288_n = extra_dir / "GSE288068_HS_MSU_RNAseq_Analysis_rawCounts.txt.gz"
+        if p288_n.is_file():
+            df288_n = pd.read_csv(p288_n, sep="\t")
+            df288_n["Symbol"] = df288_n["Symbol"].astype(str).str.split(".").str[0]
+            df288_n = df288_n.drop_duplicates("Symbol").set_index("Symbol")
+            norm_288_map = {
+                "HT5GWDSXX_18927780_S54": "blood",
+                "HT5GWDSXX_18927782_S66": "blood",
+                "HT5GWDSXX_18927808_S53": "blood",
+                "HVTWLDSXX_18937521_S79": "liver",
+                "HVTWLDSXX_18937523_S80": "lung",
+                "HVTWLDSXX_18936778_S54": "spleen",
+            }
+            n288_cols = [c for c in norm_288_map if c in df288_n.columns]
+            tpm288_n = _counts_to_tpm(df288_n[n288_cols], exonic_series_norm)
+            or288_n = _or_share_ge5(tpm288_n, or_gids)
+            qc_288 = [c for c in n288_cols if float(or288_n.get(c, 0.0)) <= 0.025]
+            if qc_288:
+                peg288_n = _project_peg_matrix(tpm288_n[qc_288], groups_df)
+                for c in qc_288:
+                    somatic_peg_cols[norm_288_map[c]][f"gse288068:{c}"] = peg288_n[c]
+
+        # 4e. GSE160124 fresh-frozen healthy canine brain controls (*_FF_control.bam)
+        p160_n = extra_dir / "GSE160124_FCresult.txt.gz"
+        if p160_n.is_file():
+            df160_n = pd.read_csv(p160_n, sep="\t", comment="#")
+            df160_n["Geneid"] = df160_n["Geneid"].astype(str).str.split(".").str[0]
+            df160_n = df160_n.drop_duplicates("Geneid").set_index("Geneid")
+            ff_ctrl = [c for c in df160_n.columns if str(c).endswith("_FF_control.bam")]
+            tpm160_n = _counts_to_tpm(df160_n[ff_ctrl], df160_n["Length"].astype(float))
+            or160_n = _or_share_ge5(tpm160_n, or_gids)
+            qc_160 = [c for c in ff_ctrl if float(or160_n.get(c, 0.0)) <= 0.025]
+            if qc_160:
+                peg160_n = _project_peg_matrix(tpm160_n[qc_160], groups_df)
+                for c in qc_160:
+                    somatic_peg_cols["brain"][f"gse160124:{c.split('_')[0]}"] = peg160_n[c]
+
+        # 4f. GSE283373 mock primary canine alveolar macrophages (Protected <= 8 TPM replicated P95)
+        p283 = extra_dir / "GSE283373_RawCountsAnnotated.xlsx"
+        if p283.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse283373-alveolar-macrophage",
+                    "pillar": "normal_bulk_and_immune_safety",
+                    "filename": p283.name,
+                    "unit": "TPM (from primary canine alveolar macrophage raw counts)",
+                    "strain": "healthy canine mock primary alveolar macrophages (n=4)",
+                    "bytes": p283.stat().st_size,
+                    "sha256": _sha256(p283),
+                }
+            )
+            sym_cands_n: dict[str, list[str]] = defaultdict(list)
+            for gid_s, sym_s in symbol_by_gene.items():
+                if sym_s and not sym_s.startswith("ENSCAFG"):
+                    sym_cands_n[sym_s.upper()].append(gid_s)
+            sym_to_ens_n = {k: v[0] for k, v in sym_cands_n.items() if len(v) == 1}
+            df283 = pd.read_excel(p283, sheet_name="Sheet 1", engine="openpyxl")
+            df283["_gid"] = df283["SYMBOL"].astype(str).str.upper().map(sym_to_ens_n)
+            df283 = df283.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
+            am_cols = ["140_non", "43_non", "45_non", "48_non"]
+            tpm283 = _counts_to_tpm(df283[am_cols].astype(float), exonic_series_norm)
+            or283 = _or_share_ge5(tpm283, or_gids)
+            qc_am = [c for c in am_cols if float(or283.get(c, 0.0)) <= 0.025]
+            if len(qc_am) >= 2:
+                peg283 = _project_peg_matrix(tpm283[qc_am], groups_df)
+                arr283 = np.sort(
+                    np.where(
+                        np.isnan(peg283.to_numpy(dtype=float)),
+                        -np.inf,
+                        peg283.to_numpy(dtype=float),
+                    ),
+                    axis=1,
+                )
+                sec_hi = arr283[:, -2]
+                p95_283 = peg283.quantile(0.95, axis=1)
+                for ri, eid in enumerate(peg283.index):
+                    if np.isfinite(sec_hi[ri]) and pd.notna(p95_283.iat[ri]):
+                        bound_v = min(float(p95_283.iat[ri]), float(sec_hi[ri]))
+                        if bound_v > 8.0:
+                            extra_immune_gate_rows.append(
+                                {
+                                    "entity_id": str(eid),
+                                    "layer": "Canine sorted primary macrophage RNA",
+                                    "unsafe": True,
+                                    "hold": False,
+                                    "reason": f"alveolar macrophage (protected immune): {bound_v:.4g} TPM > 8",
+                                }
+                            )
+
     # Summarize somatic normal contexts by donor P95 -> comparison_normals + normal_gates
     normal_rows = []
     rna_gate_rows = []
@@ -1268,11 +1439,209 @@ def load_dog_normal_and_repro_panels(
     return (
         pd.DataFrame(normal_rows),
         pd.DataFrame(repro_rows),
-        pd.DataFrame(rna_gate_rows, columns=["entity_id", "layer", "unsafe", "hold", "reason"]),
+        pd.DataFrame(
+            rna_gate_rows + extra_immune_gate_rows,
+            columns=["entity_id", "layer", "unsafe", "hold", "reason"],
+        ),
         dict(confirmed_organs),
         male_skin_p95,
         source_rows,
     )
+
+
+def load_dog_healthy_pbmc_scrna_umi(
+    extra_dir: Path,
+    coding_genes: set[str],
+) -> tuple[pd.DataFrame, list[dict]]:
+    """Parse GSE225599 10x single-cell UMI matrices across 7 healthy companion dogs (H_1..H_7).
+
+    Evaluates donor-resolved circulating T/NK lymphocytes, monocytes, neutrophils (Protected)
+    and platelets (Vital) on native CanFam3.1 ENSCAFG IDs through assess_rare_cell_rna,
+    excluding the 10 osteosarcoma dogs (OS_1..OS_10) and Manageable B lymphocytes.
+    """
+    tar_path = extra_dir / "GSE225599_RAW.tar"
+    if not tar_path.is_file():
+        return pd.DataFrame(), []
+    source_rows = [
+        {
+            "source_id": "gse225599-healthy-dog-pbmc-10x",
+            "pillar": "normal_cell_and_rare_umi",
+            "filename": tar_path.name,
+            "unit": "UMI counts",
+            "strain": "healthy companion dogs (7 donors H_1..H_7 circulating leukocytes)",
+            "bytes": tar_path.stat().st_size,
+            "sha256": _sha256(tar_path),
+        }
+    ]
+
+    tnk_gids = {
+        "ENSCAFG00000012802",  # CD3E
+        "ENSCAFG00000031719",  # CD3D
+        "ENSCAFG00000041713",  # CD4
+        "ENSCAFG00000007464",  # CD8A
+        "ENSCAFG00000023787",  # NCR1
+        "ENSCAFG00000014071",  # PRF1
+        "ENSCAFG00000025287",  # GZMB
+    }
+    b_gids = {
+        "ENSCAFG00000010381",  # MS4A1
+        "ENSCAFG00000017303",  # CD19
+        "ENSCAFG00000004980",  # CD79A
+    }
+    mono_gids = {
+        "ENSCAFG00000000426",  # LYZ
+        "ENSCAFG00000018219",  # CSF1R
+    }
+    neut_gids = {
+        "ENSCAFG00000017557",  # S100A8
+        "ENSCAFG00000023324",  # S100A12
+    }
+    plt_gids = {
+        "ENSCAFG00000031174",  # PPBP
+        "ENSCAFG00000014145",  # ITGA2B
+    }
+
+    pop_n_cells: dict[tuple[str, str, str, str], int] = defaultdict(int)
+    pos_counts: dict[tuple[str, str, str, str, str], int] = defaultdict(int)
+    multi_counts: dict[tuple[str, str, str, str, str], int] = defaultdict(int)
+    assayed_genes: set[str] = set()
+
+    from scipy.io import mmread
+
+    with tarfile.open(tar_path) as tf:
+        for i in range(7):
+            donor_id = f"H_{i + 1}"
+            prefix = f"GSM70509{8 + i:02d}_H_{i + 1}"
+            with gzip.open(
+                tf.extractfile(f"{prefix}_features.tsv.gz"), "rt", encoding="utf-8"
+            ) as ffh:
+                feat_gids = [ln.split("\t", 1)[0].split(".")[0] for ln in ffh]
+            with gzip.open(tf.extractfile(f"{prefix}_matrix.mtx.gz"), "rb") as mfh:
+                mat = mmread(mfh).tocsc()
+
+            n_genes_per_cell = np.diff(mat.indptr)
+            tot_umi_per_cell = np.asarray(mat.sum(axis=0)).ravel()
+            gid_to_row = {g: r_i for r_i, g in enumerate(feat_gids)}
+            for g in feat_gids:
+                if g in coding_genes:
+                    assayed_genes.add(g)
+
+            def _score(
+                marker_set: set[str], _g2r: dict[str, int] = gid_to_row, _m=mat
+            ) -> np.ndarray:
+                r_idxs = [_g2r[g] for g in marker_set if g in _g2r]
+                if not r_idxs:
+                    return np.zeros(_m.shape[1], dtype=np.float64)
+                return np.asarray(_m[r_idxs, :].sum(axis=0)).ravel()
+
+            s_tnk = _score(tnk_gids)
+            s_b = _score(b_gids)
+            s_mono = _score(mono_gids)
+            s_neut = _score(neut_gids)
+            s_plt = _score(plt_gids)
+
+            # Standard droplet QC (>=200 genes & >=500 UMIs for nucleated leukocytes; >=50 genes & >=3 marker UMIs for anucleate platelets)
+            qc_nuc = (n_genes_per_cell >= 200) & (tot_umi_per_cell >= 500)
+            is_b = qc_nuc & (s_b >= 2) & (s_b >= s_tnk) & (s_b >= s_mono)
+            is_plt = (
+                (s_plt >= 3)
+                & (n_genes_per_cell >= 50)
+                & (n_genes_per_cell < 1200)
+                & (s_tnk == 0)
+                & (s_b == 0)
+            )
+            is_neut = (
+                qc_nuc
+                & (~is_b)
+                & (~is_plt)
+                & (s_neut >= 5)
+                & (s_neut > 2.0 * s_mono)
+                & (s_tnk <= 1)
+            )
+            is_mono = (
+                qc_nuc
+                & (~is_b)
+                & (~is_plt)
+                & (~is_neut)
+                & ((s_mono >= 2) | (s_neut >= 2))
+                & (s_mono + s_neut > s_tnk)
+            )
+            is_tnk = qc_nuc & (~is_b) & (~is_plt) & (~is_neut) & (~is_mono) & (s_tnk >= 1)
+
+            lineage_masks = [
+                ("T/NK lymphocyte", "protected", is_tnk),
+                ("monocyte", "protected", is_mono),
+                ("neutrophil", "protected", is_neut),
+                ("platelet", "vital", is_plt),
+            ]
+            mat_csr = mat.tocsr()
+            coding_rows = [(r_i, g) for r_i, g in enumerate(feat_gids) if g in coding_genes]
+            for cell_type, tier, mask in lineage_masks:
+                n_c = int(mask.sum())
+                if n_c < 10:
+                    continue
+                pop = (donor_id, "blood", tier, cell_type)
+                pop_n_cells[pop] = n_c
+                sub_csr = mat_csr[:, mask]
+                indptr = sub_csr.indptr
+                data = sub_csr.data
+                for r_i, gid in coding_rows:
+                    s_idx, e_idx = indptr[r_i], indptr[r_i + 1]
+                    if e_idx == s_idx:
+                        continue
+                    row_vals = data[s_idx:e_idx]
+                    n_pos = int((row_vals >= 1).sum())
+                    if n_pos > 0:
+                        n_mul = int((row_vals >= 2).sum())
+                        pos_counts[(gid, *pop)] = n_pos
+                        if n_mul > 0:
+                            multi_counts[(gid, *pop)] = n_mul
+
+    valid_pops = {pop: n for pop, n in pop_n_cells.items() if n >= 10}
+    if not valid_pops:
+        return pd.DataFrame(), source_rows
+    sample_pop = next(iter(sorted(valid_pops)))
+    sample_n = valid_pops[sample_pop]
+
+    umi_rows = []
+    genes_with_multi: set[str] = set()
+    for (gid, donor_id, organ, tier, cell_type), n_pos in pos_counts.items():
+        pop = (donor_id, organ, tier, cell_type)
+        n_cells = valid_pops.get(pop)
+        if n_cells is None:
+            continue
+        n_mul = multi_counts.get((gid, donor_id, organ, tier, cell_type), 0)
+        if n_mul > 0:
+            genes_with_multi.add(gid)
+            umi_rows.append(
+                {
+                    "gene_id": gid,
+                    "source_id": "gse225599_healthy_dog_pbmc",
+                    "donor_id": donor_id,
+                    "tissue": organ,
+                    "cell_type": cell_type,
+                    "tier": tier,
+                    "n_cells": n_cells,
+                    "n_positive": n_pos,
+                    "n_multi": n_mul,
+                }
+            )
+    s_donor, s_organ, s_tier, s_ct = sample_pop
+    for gid in sorted(assayed_genes - genes_with_multi):
+        umi_rows.append(
+            {
+                "gene_id": gid,
+                "source_id": "gse225599_healthy_dog_pbmc",
+                "donor_id": s_donor,
+                "tissue": s_organ,
+                "cell_type": s_ct,
+                "tier": s_tier,
+                "n_cells": sample_n,
+                "n_positive": 0,
+                "n_multi": 0,
+            }
+        )
+    return pd.DataFrame(umi_rows), source_rows
 
 
 def load_pfizer_dog_proteomics_gates(
@@ -1510,6 +1879,23 @@ def load_pfizer_dog_proteomics_gates(
                     }
                 )
 
+    # Exclude essential activated canine T/NK/Th17/myeloid checkpoint & cytokine effectors
+    for r_g in groups_df.itertuples(index=False):
+        lbl_parts = {
+            p.strip().upper() for p in str(r_g.protein_group_label).split("/") if p.strip()
+        }
+        hit_syms = sorted(lbl_parts & CURATED_CANINE_ACTIVATED_IMMUNE_SYMBOLS)
+        if hit_syms:
+            gate_rows.append(
+                {
+                    "entity_id": str(r_g.entity_id),
+                    "layer": "Curated canine activated T/NK/myeloid effector safety",
+                    "unsafe": True,
+                    "hold": False,
+                    "reason": f"Essential canine activated immune checkpoint/cytokine ({', '.join(hit_syms)})",
+                }
+            )
+
     return (
         pd.DataFrame(gate_rows, columns=["entity_id", "layer", "unsafe", "hold", "reason"]),
         repro_prot_status,
@@ -1519,14 +1905,15 @@ def load_pfizer_dog_proteomics_gates(
 
 def load_dog_tumor_cohorts(
     dog_in: Path,
+    extra_dir: Path,
     groups_df: pd.DataFrame,
     exonic_bp: dict[str, int],
     symbol_by_gene: dict[str, str],
     or_gids: set[str],
     risk_gids: set[str],
     unsafe_eids: set[str],
-) -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
-    """Load 8 canine tumor cohorts (7 spontaneous patient cohorts + CLBL-1 DLBCL line) in linear TPM on CanFam3.1."""
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, list[dict]]:
+    """Load 19 spontaneous canine patient tumor cohorts + 12 pure canine cancer cell lines on CanFam3.1."""
     exonic_series = pd.Series(exonic_bp, dtype=float)
     sym_candidates: dict[str, list[str]] = defaultdict(list)
     for gid, sym in symbol_by_gene.items():
@@ -1535,9 +1922,11 @@ def load_dog_tumor_cohorts(
     sym_to_ens = {k: v[0] for k, v in sym_candidates.items() if len(v) == 1}
 
     cohort_registry: list[dict] = []
+    cell_line_registry: list[dict] = []
     source_rows: list[dict] = []
     # Store compactly: (source_id, cancer_code, sample_ids, participant_ids, peg_matrix)
     cohort_matrices: list[tuple[str, str, list[str], list[str], pd.DataFrame]] = []
+    cell_line_matrices: list[tuple[str, str, str, list[str], pd.DataFrame]] = []
 
     def _qc_cols(tpm_frame: pd.DataFrame, cols: list[str]) -> list[str]:
         sh = _or_share_ge5(tpm_frame[cols], or_gids)
@@ -1790,7 +2179,7 @@ def load_dog_tumor_cohorts(
         }
     )
 
-    # 7. DLBCL (GSE287971, canine diffuse large B-cell lymphoma CLBL-1 untreated DMSO controls, ENSCAFG counts -> TPM)
+    # 7. CLBL-1 DLBCL cell line (GSE287971, moved to pure in-vitro cell-line track)
     p287 = dog_in / "GSE287971_CountTable.tsv.gz"
     source_rows.append(
         {
@@ -1798,7 +2187,7 @@ def load_dog_tumor_cohorts(
             "pillar": "tumor_rna",
             "filename": p287.name,
             "unit": "TPM (from native ENSCAFG raw counts)",
-            "strain": "German Shepherd (CLBL-1 DLBCL)",
+            "strain": "German Shepherd (CLBL-1 DLBCL cell line)",
             "bytes": p287.stat().st_size,
             "sha256": _sha256(p287),
         }
@@ -1812,14 +2201,12 @@ def load_dog_tumor_cohorts(
     tpm287 = _counts_to_tpm(cnt287[dmso_raw].astype(float), exonic_series)
     dmso_cols = _qc_cols(tpm287, dmso_raw)
     peg287 = _project_peg_matrix(tpm287[dmso_cols], groups_df)
-    cohort_matrices.append(
-        ("gse287971", "DLBCL", dmso_cols, ["CLBL1:DLBCL"] * len(dmso_cols), peg287)
-    )
-    cohort_registry.append(
+    cell_line_matrices.append(("gse287971", "CLBL-1", "DLBCL", dmso_cols, peg287))
+    cell_line_registry.append(
         {
+            "model_id": "CLBL-1",
             "cancer_code": "DLBCL",
-            "label": "Canine diffuse large B-cell lymphoma (CLBL-1 vehicle controls)",
-            "model_kind": "canine_tumor_line",
+            "label": "Canine diffuse large B-cell lymphoma line CLBL-1 (vehicle controls)",
             "strain": "German Shepherd",
             "mhc_haplotype": "DLA-88",
             "source_accession": "GSE287971",
@@ -1865,6 +2252,536 @@ def load_dog_tumor_cohorts(
             "quantification": "linear TPM from raw counts and CanFam3.1 exonic_bp",
         }
     )
+
+    if extra_dir.is_dir():
+        # 9. LYM_CHOP (GSE130874, 25 de novo multicentric canine B/T-cell lymphomas, ENSCAFG raw counts)
+        p130 = extra_dir / "GSE130874_read_count_matrix.tsv.gz"
+        if p130.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse130874-lym-chop",
+                    "pillar": "tumor_rna",
+                    "filename": p130.name,
+                    "unit": "TPM (from native ENSCAFG raw counts)",
+                    "strain": "multi-breed companion dogs (de novo multicentric lymphoma)",
+                    "bytes": p130.stat().st_size,
+                    "sha256": _sha256(p130),
+                }
+            )
+            df130 = pd.read_csv(p130, sep="\t", index_col=0)
+            df130.index = df130.index.astype(str).str.split(".").str[0]
+            df130 = df130[~df130.index.duplicated(keep="first")]
+            lym130_raw = list(df130.columns)
+            tpm130 = _counts_to_tpm(df130[lym130_raw], exonic_series)
+            lym130_cols = _qc_cols(tpm130, lym130_raw)
+            peg130 = _project_peg_matrix(tpm130[lym130_cols], groups_df)
+            cohort_matrices.append(
+                (
+                    "gse130874",
+                    "LYM_CHOP",
+                    lym130_cols,
+                    [f"GSE130874:{c.split('_')[0]}" for c in lym130_cols],
+                    peg130,
+                )
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "LYM_CHOP",
+                    "label": "Spontaneous de novo multicentric B- and T-cell lymphoma (CHOP cohort)",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE130874",
+                    "n_samples": len(lym130_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from raw counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        # 10. GLIOMA_G23 (GSE160124, spontaneous Grade II/III canine oligodendroglioma; deduplicate FF vs FFPE per dog)
+        p160 = extra_dir / "GSE160124_FCresult.txt.gz"
+        if p160.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse160124-glioma-g23",
+                    "pillar": "tumor_rna",
+                    "filename": p160.name,
+                    "unit": "TPM (from native ENSCAFG featureCounts)",
+                    "strain": "Boxer, French Bulldog & multi-breed companion dogs",
+                    "bytes": p160.stat().st_size,
+                    "sha256": _sha256(p160),
+                }
+            )
+            df160 = pd.read_csv(p160, sep="\t", comment="#")
+            df160["Geneid"] = df160["Geneid"].astype(str).str.split(".").str[0]
+            df160 = df160.drop_duplicates("Geneid").set_index("Geneid")
+            od_all = [c for c in df160.columns[5:] if str(c).endswith("_od.bam")]
+            ff_dogs = {c.split("_")[0] for c in od_all if "_FF_od.bam" in c}
+            od_dedup = [
+                c for c in od_all if ("_FF_od.bam" in c) or (c.split("_")[0] not in ff_dogs)
+            ]
+            tpm160 = _counts_to_tpm(df160[od_dedup], df160["Length"].astype(float))
+            od_cols = _qc_cols(tpm160, od_dedup)
+            peg160 = _project_peg_matrix(tpm160[od_cols], groups_df)
+            cohort_matrices.append(
+                (
+                    "gse160124",
+                    "GLIOMA_G23",
+                    od_cols,
+                    [f"GSE160124:{c.split('_')[0]}" for c in od_cols],
+                    peg160,
+                )
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "GLIOMA_G23",
+                    "label": "Spontaneous Grade II/III oligodendroglioma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "Boxer, French Bulldog & companion breeds",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE160124",
+                    "n_samples": len(od_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from featureCounts and Length",
+                }
+            )
+
+        # 11. URO (GSE199292, spontaneous invasive bladder urothelial carcinoma, ENSCAFG expected counts)
+        p199 = extra_dir / "GSE199292_All_Samples_Raw_Counts.txt.gz"
+        if p199.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse199292-uro",
+                    "pillar": "tumor_rna",
+                    "filename": p199.name,
+                    "unit": "TPM (from native ENSCAFG counts)",
+                    "strain": "spontaneous companion dogs (invasive bladder urothelial carcinoma)",
+                    "bytes": p199.stat().st_size,
+                    "sha256": _sha256(p199),
+                }
+            )
+            df199 = pd.read_csv(p199, sep="\t")
+            df199["Gene_ID"] = df199["Gene_ID"].astype(str).str.split(".").str[0]
+            df199 = df199.drop_duplicates("Gene_ID").set_index("Gene_ID")
+            uro_raw = list(df199.columns)
+            tpm199 = _counts_to_tpm(df199[uro_raw], exonic_series)
+            uro_cols = _qc_cols(tpm199, uro_raw)
+            peg199 = _project_peg_matrix(tpm199[uro_cols], groups_df)
+            cohort_matrices.append(
+                ("gse199292", "URO", uro_cols, [f"GSE199292:{c}" for c in uro_cols], peg199)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "URO",
+                    "label": "Spontaneous invasive urinary bladder urothelial carcinoma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE199292",
+                    "n_samples": len(uro_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from raw/expected counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        # 12. STS (GSE214154, 29 spontaneous subcutaneous/oral soft-tissue sarcomas, ENSCAFG raw counts)
+        p214 = extra_dir / "GSE214154_Canine_SoftTissueSarcoma_RNAseq_Raw_CountData.csv.gz"
+        if p214.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse214154-sts",
+                    "pillar": "tumor_rna",
+                    "filename": p214.name,
+                    "unit": "TPM (from native ENSCAFG raw counts)",
+                    "strain": "multi-breed companion dogs",
+                    "bytes": p214.stat().st_size,
+                    "sha256": _sha256(p214),
+                }
+            )
+            df214 = pd.read_csv(p214)
+            df214["ensembl_gene_id"] = df214["ensembl_gene_id"].astype(str).str.split(".").str[0]
+            df214 = df214.drop_duplicates("ensembl_gene_id").set_index("ensembl_gene_id")
+            sts_raw = [c for c in df214.columns if c != "Hugo_Symbol"]
+            tpm214 = _counts_to_tpm(df214[sts_raw], exonic_series)
+            sts_cols = _qc_cols(tpm214, sts_raw)
+            peg214 = _project_peg_matrix(tpm214[sts_cols], groups_df)
+            cohort_matrices.append(
+                ("gse214154", "STS", sts_cols, [f"GSE214154:{c}" for c in sts_cols], peg214)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "STS",
+                    "label": "Spontaneous subcutaneous & oral soft-tissue sarcoma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE214154",
+                    "n_samples": len(sts_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from raw counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        # 13. STS_SUB (GSE208664, spontaneous fibrosarcoma, PNST & perivascular wall tumor; deduplicate T1..T3 per dog)
+        p208 = extra_dir / "GSE208664_cSTS_HTSeq_counts.csv.gz"
+        if p208.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse208664-sts-sub",
+                    "pillar": "tumor_rna",
+                    "filename": p208.name,
+                    "unit": "TPM (from HTSeq raw counts)",
+                    "strain": "multi-breed companion dogs (fibrosarcoma, PNST, PWT)",
+                    "bytes": p208.stat().st_size,
+                    "sha256": _sha256(p208),
+                }
+            )
+            df208 = pd.read_csv(p208, index_col=0)
+            df208["_gid"] = (
+                df208.index.astype(str).str.removeprefix("gene-").str.upper().map(sym_to_ens)
+            )
+            df208 = df208.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
+            sts208_raw = list(df208.columns)
+            tpm208 = _counts_to_tpm(df208[sts208_raw], exonic_series)
+            sts208_cols = _qc_cols(tpm208, sts208_raw)
+            peg208 = _project_peg_matrix(tpm208[sts208_cols], groups_df)
+            sts208_pids = ["GSE208664:" + re.sub(r"-T\d+$", "", str(c)) for c in sts208_cols]
+            cohort_matrices.append(("gse208664", "STS_SUB", sts208_cols, sts208_pids, peg208))
+            cohort_registry.append(
+                {
+                    "cancer_code": "STS_SUB",
+                    "label": "Spontaneous fibrosarcoma, peripheral nerve sheath & perivascular wall sarcoma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs (16 patients)",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE208664",
+                    "n_samples": len(sts208_cols),
+                    "native_feature_space": "Canine gene-<SYMBOL> -> ENSCAFG",
+                    "quantification": "linear TPM from HTSeq raw counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        # 14-15. COSCC & CAA (GSE317244, spontaneous oral squamous cell carcinoma & acanthomatous ameloblastoma)
+        p317 = extra_dir / "GSE317244_DS1_rawCounts.txt.gz"
+        if p317.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse317244-oral-tumors",
+                    "pillar": "tumor_rna",
+                    "filename": p317.name,
+                    "unit": "TPM (from native ENSCAFG raw counts)",
+                    "strain": "multi-breed companion dogs (oral tumors & gingiva)",
+                    "bytes": p317.stat().st_size,
+                    "sha256": _sha256(p317),
+                }
+            )
+            df317 = pd.read_csv(p317, sep="\t", index_col=0)
+            df317.index = df317.index.astype(str).str.split(".").str[0]
+            df317 = df317[~df317.index.duplicated(keep="first")]
+            for o_code, o_pfx, o_lbl in (
+                ("COSCC", "COSCC-", "Spontaneous canine oral squamous cell carcinoma"),
+                ("CAA", "CAA-", "Spontaneous canine oral acanthomatous ameloblastoma"),
+            ):
+                o_raw = [c for c in df317.columns if str(c).startswith(o_pfx)]
+                tpm317 = _counts_to_tpm(df317[o_raw], exonic_series)
+                o_cols = _qc_cols(tpm317, o_raw)
+                peg317 = _project_peg_matrix(tpm317[o_cols], groups_df)
+                cohort_matrices.append(
+                    ("gse317244", o_code, o_cols, [f"GSE317244:{c}" for c in o_cols], peg317)
+                )
+                cohort_registry.append(
+                    {
+                        "cancer_code": o_code,
+                        "label": o_lbl,
+                        "model_kind": "spontaneous_patient_tumor",
+                        "strain": "multi-breed companion dogs",
+                        "mhc_haplotype": "diverse DLA",
+                        "source_accession": "GSE317244",
+                        "n_samples": len(o_cols),
+                        "native_feature_space": "Ensembl gene (ENSCAFG)",
+                        "quantification": "linear TPM from raw counts and CanFam3.1 exonic_bp",
+                    }
+                )
+
+        # 16. HS (GSE288068, 18 spontaneous histiocytic sarcoma primary tumors + 3 HS cell lines BD/OD/PJ)
+        p288 = extra_dir / "GSE288068_HS_MSU_RNAseq_Analysis_rawCounts.txt.gz"
+        if p288.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse288068-hs-tumors",
+                    "pillar": "tumor_rna",
+                    "filename": p288.name,
+                    "unit": "TPM (from native ENSCAFG HTSeq raw counts)",
+                    "strain": "Bernese Mountain Dog (spontaneous histiocytic sarcoma)",
+                    "bytes": p288.stat().st_size,
+                    "sha256": _sha256(p288),
+                }
+            )
+            df288 = pd.read_csv(p288, sep="\t")
+            df288["Symbol"] = df288["Symbol"].astype(str).str.split(".").str[0]
+            df288 = df288.drop_duplicates("Symbol").set_index("Symbol")
+            norm_288_set = {
+                "HT5GWDSXX_18927780_S54",
+                "HT5GWDSXX_18927782_S66",
+                "HT5GWDSXX_18927808_S53",
+                "HVTWLDSXX_18937521_S79",
+                "HVTWLDSXX_18937523_S80",
+                "HVTWLDSXX_18936778_S54",
+            }
+            hs_raw = [c for c in df288.columns if c not in norm_288_set]
+            tpm288 = _counts_to_tpm(df288[hs_raw], exonic_series)
+            hs_cols = _qc_cols(tpm288, hs_raw)
+            peg288 = _project_peg_matrix(tpm288[hs_cols], groups_df)
+            cohort_matrices.append(
+                ("gse288068", "HS", hs_cols, [f"GSE288068:{c}" for c in hs_cols], peg288)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "HS",
+                    "label": "Spontaneous disseminated & hemophagocytic histiocytic sarcoma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "Bernese Mountain Dog",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE288068",
+                    "n_samples": len(hs_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from HTSeq raw counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        p288_cl = extra_dir / "GSE288068_HS_BD_OD_PJ_RNAseq_rawCounts.txt.gz"
+        if p288_cl.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse288068-hs-lines",
+                    "pillar": "tumor_rna",
+                    "filename": p288_cl.name,
+                    "unit": "TPM (from native ENSCAFG HTSeq raw counts)",
+                    "strain": "Bernese Mountain Dog & Rottweiler HS cell lines (BD, OD, PJ)",
+                    "bytes": p288_cl.stat().st_size,
+                    "sha256": _sha256(p288_cl),
+                }
+            )
+            df288_cl = pd.read_csv(p288_cl, sep="\t")
+            df288_cl["Symbol"] = df288_cl["Symbol"].astype(str).str.split(".").str[0]
+            df288_cl = df288_cl.drop_duplicates("Symbol").set_index("Symbol")
+            hs_cl_raw = ["BD cells", "OD cells", "PJ cells"]
+            tpm288_cl = _counts_to_tpm(df288_cl[hs_cl_raw], exonic_series)
+            hs_cl_qc = _qc_cols(tpm288_cl, hs_cl_raw)
+            peg288_cl = _project_peg_matrix(tpm288_cl[hs_cl_qc], groups_df)
+            for c_cl, m_id, breed_cl in (
+                ("BD cells", "HS_BD", "Bernese Mountain Dog"),
+                ("OD cells", "HS_OD", "Bernese Mountain Dog"),
+                ("PJ cells", "HS_PJ", "Rottweiler"),
+            ):
+                if c_cl in hs_cl_qc:
+                    cell_line_matrices.append(("gse288068", m_id, "HS", [c_cl], peg288_cl[[c_cl]]))
+                    cell_line_registry.append(
+                        {
+                            "model_id": m_id,
+                            "cancer_code": "HS",
+                            "label": f"Canine histiocytic sarcoma cell line {m_id}",
+                            "strain": breed_cl,
+                            "mhc_haplotype": "DLA",
+                            "source_accession": "GSE288068",
+                            "n_samples": 1,
+                            "native_feature_space": "Ensembl gene (ENSCAFG)",
+                            "quantification": "linear TPM from HTSeq raw counts and CanFam3.1 exonic_bp",
+                        }
+                    )
+
+        # 17. MNG (GSE250310, 62 spontaneous canine meningiomas, ENSCAFG featureCounts + Length)
+        p250 = extra_dir / "GSE250310_counts.txt.gz"
+        if p250.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse250310-meningioma",
+                    "pillar": "tumor_rna",
+                    "filename": p250.name,
+                    "unit": "TPM (from native ENSCAFG featureCounts)",
+                    "strain": "Golden Retriever, Boxer & multi-breed companion dogs",
+                    "bytes": p250.stat().st_size,
+                    "sha256": _sha256(p250),
+                }
+            )
+            df250 = pd.read_csv(p250, sep="\t", comment="#")
+            df250["Geneid"] = df250["Geneid"].astype(str).str.split(".").str[0]
+            df250 = df250.drop_duplicates("Geneid").set_index("Geneid")
+            mng_raw = list(df250.columns[5:])
+            tpm250 = _counts_to_tpm(df250[mng_raw], df250["Length"].astype(float))
+            mng_cols = _qc_cols(tpm250, mng_raw)
+            peg250 = _project_peg_matrix(tpm250[mng_cols], groups_df)
+            mng_sids = [c.split("_R1_")[0] for c in mng_cols]
+            peg250.columns = mng_sids
+            cohort_matrices.append(
+                ("gse250310", "MNG", mng_sids, [f"GSE250310:{s}" for s in mng_sids], peg250)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "MNG",
+                    "label": "Spontaneous intracranial & spinal meningioma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE250310",
+                    "n_samples": len(mng_sids),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from featureCounts and Length",
+                }
+            )
+
+        # 18. ACC (GSE196108, 49 spontaneous cortisol-secreting adrenocortical tumors ACT1..49)
+        p196 = extra_dir / "GSE196108_Sanders_raw_counts.txt.gz"
+        if p196.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse196108-acc",
+                    "pillar": "tumor_rna",
+                    "filename": p196.name,
+                    "unit": "TPM (from native ENSCAFG raw counts)",
+                    "strain": "spontaneous companion dogs (cortisol-secreting adrenocortical tumors)",
+                    "bytes": p196.stat().st_size,
+                    "sha256": _sha256(p196),
+                }
+            )
+            df196 = pd.read_csv(p196, sep="\t")
+            df196["gene"] = df196["gene"].astype(str).str.split(".").str[0]
+            df196 = df196.drop_duplicates("gene").set_index("gene")
+            acc_raw = [c for c in df196.columns if c.startswith("ACT")]
+            tpm196 = _counts_to_tpm(df196[acc_raw], exonic_series)
+            acc_cols = _qc_cols(tpm196, acc_raw)
+            peg196 = _project_peg_matrix(tpm196[acc_cols], groups_df)
+            cohort_matrices.append(
+                ("gse196108", "ACC", acc_cols, [f"GSE196108:{c}" for c in acc_cols], peg196)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "ACC",
+                    "label": "Spontaneous functional adrenocortical adenoma & carcinoma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE196108",
+                    "n_samples": len(acc_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from raw counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        # 19. THCA (GSE289443, 30 spontaneous canine thyroid carcinomas TC*)
+        p289 = extra_dir / "GSE289443_Canine_Thyroid_Carcinoma_Raw_CountData.csv.gz"
+        if p289.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse289443-thca",
+                    "pillar": "tumor_rna",
+                    "filename": p289.name,
+                    "unit": "TPM (from native ENSCAFG raw counts)",
+                    "strain": "multi-breed companion dogs (thyroid carcinoma)",
+                    "bytes": p289.stat().st_size,
+                    "sha256": _sha256(p289),
+                }
+            )
+            df289 = pd.read_csv(p289)
+            df289["ensembl_gene_id"] = df289["ensembl_gene_id"].astype(str).str.split(".").str[0]
+            df289 = df289.drop_duplicates("ensembl_gene_id").set_index("ensembl_gene_id")
+            thca_raw = [c for c in df289.columns if c != "Hugo_Symbol"]
+            tpm289 = _counts_to_tpm(df289[thca_raw], exonic_series)
+            thca_cols = _qc_cols(tpm289, thca_raw)
+            peg289 = _project_peg_matrix(tpm289[thca_cols], groups_df)
+            cohort_matrices.append(
+                ("gse289443", "THCA", thca_cols, [f"GSE289443:{c}" for c in thca_cols], peg289)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "THCA",
+                    "label": "Spontaneous follicular & compact thyroid gland carcinoma",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE289443",
+                    "n_samples": len(thca_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from raw counts and CanFam3.1 exonic_bp",
+                }
+            )
+
+        # 20. LEUK (GSE345838, ~110 spontaneous canine acute leukemias AL*, ENSCAFG featureCounts + Length)
+        p345 = extra_dir / "GSE345838_Canine_Acute_Leukemia_featurecounts_raw_counts.txt.gz"
+        if p345.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse345838-acute-leukemia",
+                    "pillar": "tumor_rna",
+                    "filename": p345.name,
+                    "unit": "TPM (from native ENSCAFG featureCounts)",
+                    "strain": "multi-breed companion dogs (acute leukemia + BL/BM controls)",
+                    "bytes": p345.stat().st_size,
+                    "sha256": _sha256(p345),
+                }
+            )
+            df345 = pd.read_csv(p345, sep="\t", comment="#")
+            df345["Geneid"] = df345["Geneid"].astype(str).str.split(".").str[0]
+            df345 = df345.drop_duplicates("Geneid").set_index("Geneid")
+            al_raw = [c for c in df345.columns[5:] if str(c).startswith("AL")]
+            tpm345 = _counts_to_tpm(df345[al_raw], df345["Length"].astype(float))
+            al_cols = _qc_cols(tpm345, al_raw)
+            peg345 = _project_peg_matrix(tpm345[al_cols], groups_df)
+            cohort_matrices.append(
+                ("gse345838", "LEUK", al_cols, [f"GSE345838:{c}" for c in al_cols], peg345)
+            )
+            cohort_registry.append(
+                {
+                    "cancer_code": "LEUK",
+                    "label": "Spontaneous canine acute myeloid & lymphoid leukemia",
+                    "model_kind": "spontaneous_patient_tumor",
+                    "strain": "multi-breed companion dogs",
+                    "mhc_haplotype": "diverse DLA",
+                    "source_accession": "GSE345838",
+                    "n_samples": len(al_cols),
+                    "native_feature_space": "Ensembl gene (ENSCAFG)",
+                    "quantification": "linear TPM from featureCounts and Length",
+                }
+            )
+
+        # Pure in-vitro mammary tumor cell lines (GSE230271, 8 MGT lines; exclude MDCK & TP53 K/O fibroblast)
+        p230 = extra_dir / "GSE230271_MGT_10S_FPKM.csv.gz"
+        if p230.is_file():
+            source_rows.append(
+                {
+                    "source_id": "gse230271-mgt-lines",
+                    "pillar": "tumor_rna",
+                    "filename": p230.name,
+                    "unit": "TPM (from native ENSCAFG FPKM)",
+                    "strain": "canine mammary carcinoma cell lines (MGT 122..703#2)",
+                    "bytes": p230.stat().st_size,
+                    "sha256": _sha256(p230),
+                }
+            )
+            df230 = pd.read_csv(p230, index_col=0)
+            df230.index = df230.index.astype(str).str.split(".").str[0]
+            mgt_raw = [c for c in df230.columns if str(c).startswith("MGT")]
+            tpm230 = _fpkm_to_tpm(df230[mgt_raw])
+            mgt_qc = _qc_cols(tpm230, mgt_raw)
+            tpm230_t = tpm230[mgt_qc].copy()
+            tpm230_t.loc[tpm230_t.index.isin(risk_gids)] = np.nan
+            peg230 = _project_peg_matrix(tpm230_t, groups_df)
+            for c_mgt in mgt_qc:
+                m_id = c_mgt.replace(" ", "_").split("#")[0]
+                cell_line_matrices.append(("gse230271", m_id, "CMT", [c_mgt], peg230[[c_mgt]]))
+                cell_line_registry.append(
+                    {
+                        "model_id": m_id,
+                        "cancer_code": "CMT",
+                        "label": f"Canine mammary gland tumor cell line {c_mgt}",
+                        "strain": "companion dog mammary line",
+                        "mhc_haplotype": "DLA",
+                        "source_accession": "GSE230271",
+                        "n_samples": 1,
+                        "native_feature_space": "Ensembl gene (ENSCAFG)",
+                        "quantification": "within-sample linear TPM from FPKM",
+                    }
+                )
 
     # Emit exact comparison_tumors concisely for non-Unsafe PEGs: every sample observation >= 10.0 TPM
     # PLUS the global peak sample per PEG when max < 10.0 TPM (Unsafe PEGs exit in Stage 1 before tumor comparison).
@@ -1925,12 +2842,71 @@ def load_dog_tumor_cohorts(
                 }
             )
 
-    return pd.DataFrame(tumor_rows), pd.DataFrame(cohort_registry), source_rows
+    cl_best_below10: dict[str, tuple[float, str, str, str, str]] = {}
+    cl_rows: list[dict] = []
+    for src_id, m_id, code, s_cols, peg_mat in cell_line_matrices:
+        if not s_cols:
+            continue
+        arr_cl = peg_mat[s_cols].to_numpy(dtype=np.float64)
+        r_idxs, c_idxs = np.where(non_unsafe_mask[:, None] & np.isfinite(arr_cl) & (arr_cl >= 10.0))
+        for ri, ci in zip(r_idxs.tolist(), c_idxs.tolist()):
+            cl_rows.append(
+                {
+                    "entity_id": eids_list[ri],
+                    "source_id": src_id,
+                    "sample_id": f"{m_id}:{s_cols[ci]}",
+                    "model_id": m_id,
+                    "cancer_code": code,
+                    "value": float(arr_cl[ri, ci]),
+                    "comparison_id": COMPARISON_ID,
+                    "unit": "TPM",
+                    "qc_pass": True,
+                    "identity_resolved": True,
+                }
+            )
+        safe_cl = np.where(np.isfinite(arr_cl), arr_cl, -np.inf)
+        cl_max = np.max(safe_cl, axis=1)
+        cl_arg = np.argmax(safe_cl, axis=1)
+        for ri, mx in enumerate(cl_max.tolist()):
+            if not non_unsafe_mask[ri] or not np.isfinite(mx) or mx >= 10.0:
+                continue
+            eid = eids_list[ri]
+            prev = cl_best_below10.get(eid)
+            if prev is None or mx > prev[0]:
+                ci = int(cl_arg[ri])
+                cl_best_below10[eid] = (mx, src_id, f"{m_id}:{s_cols[ci]}", m_id, code)
+
+    cl_has_ge10 = {r["entity_id"] for r in cl_rows}
+    for eid, (mx, src_id, smp_id, m_id, code) in cl_best_below10.items():
+        if eid not in cl_has_ge10:
+            cl_rows.append(
+                {
+                    "entity_id": eid,
+                    "source_id": src_id,
+                    "sample_id": smp_id,
+                    "model_id": m_id,
+                    "cancer_code": code,
+                    "value": float(mx),
+                    "comparison_id": COMPARISON_ID,
+                    "unit": "TPM",
+                    "qc_pass": True,
+                    "identity_resolved": True,
+                }
+            )
+
+    return (
+        pd.DataFrame(tumor_rows),
+        pd.DataFrame(cl_rows),
+        pd.DataFrame(cohort_registry),
+        pd.DataFrame(cell_line_registry),
+        source_rows,
+    )
 
 
-def build_all(scratch_dir: Path, out_root: Path) -> dict:
+def build_all(scratch_dir: Path, out_root: Path, extra_dir: Path | None = None) -> dict:
     dog_in = scratch_dir / "dog_inputs"
-    print("1/5 Qualifying Ensembl 98 CanFam3.1 proteome & 31-mer cDNA mapping risk...", flush=True)
+    eff_extra = extra_dir if extra_dir is not None else DEFAULT_EXTRA_DIR
+    print("1/6 Qualifying Ensembl 98 CanFam3.1 proteome & 31-mer cDNA mapping risk...", flush=True)
     (
         ref,
         groups_df,
@@ -1952,11 +2928,13 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
         mapping_risk_df.loc[mapping_risk_df["mapping_risk"].astype(bool), "gene_id"].astype(str)
     )
     print(
-        "2/5 Aggregating Bgee 15.2, GSE219045 & GSE119810 normal/reproductive TPM panels...",
+        "2/6 Aggregating Bgee 15.2, GSE219045 & companion-dog normal/reproductive TPM panels...",
         flush=True,
     )
     comp_normals, comp_repro, rna_gates, confirmed_organs, _male_skin_p95, norm_sources = (
-        load_dog_normal_and_repro_panels(scratch_dir, dog_in, groups_df, or_gids, risk_gids)
+        load_dog_normal_and_repro_panels(
+            scratch_dir, dog_in, eff_extra, groups_df, exonic_bp, symbol_by_gene, or_gids, risk_gids
+        )
     )
     print(
         f"    normal_obs={len(comp_normals):,}, repro_obs={len(comp_repro):,}, rna_gates={len(rna_gates):,}",
@@ -1964,14 +2942,15 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
     )
 
     print(
-        "3/5 Evaluating Pfizer 38-tissue quantitative canine proteomics (MSV000099744)...",
+        "3/6 Evaluating Pfizer 38-tissue proteomics & GSE225599 healthy canine PBMC 10x scRNA-seq...",
         flush=True,
     )
     prot_gates, repro_prot_status, prot_sources = load_pfizer_dog_proteomics_gates(
         dog_in, groups_df, seq_df, confirmed_organs
     )
+    umi_df, umi_sources = load_dog_healthy_pbmc_scrna_umi(eff_extra, set(symbol_by_gene))
     print(
-        f"    prot_gates={len(prot_gates):,}, repro_prot_positives={len(repro_prot_status):,}",
+        f"    prot_gates={len(prot_gates):,}, repro_prot_positives={len(repro_prot_status):,}, umi_rows={len(umi_df):,}",
         flush=True,
     )
 
@@ -1979,7 +2958,7 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
     unsafe_eids = set(all_gates.loc[all_gates["unsafe"].astype(bool), "entity_id"].astype(str))
 
     # Also mask single-exon intronless retrogenes sharing >=50% 9-mers with Unsafe proteins
-    # on Cufflinks mismatch-tolerant FPKM cohorts (GSE119810, GSE95183, GSE95184)
+    # on Cufflinks mismatch-tolerant FPKM cohorts (GSE119810, GSE95183, GSE95184, GSE230271)
     unsafe_9mers: set[str] = set()
     for useq in seq_df.loc[seq_df["entity_id"].isin(unsafe_eids), "sequence"].astype(str):
         if len(useq) >= 9:
@@ -2007,6 +2986,19 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
             single_exon_unsafe50_gids.update(m_gids)
             single_exon_unsafe50_eids.add(eid_s)
     if single_exon_unsafe50_eids:
+        retro_holds = pd.DataFrame(
+            [
+                {
+                    "entity_id": eid_r,
+                    "layer": "CanFam3.1 intronless Unsafe-paralog retrocopy review",
+                    "unsafe": False,
+                    "hold": True,
+                    "reason": "Single-exon locus sharing >=50% 9-mers with Unsafe somatic paralog (processed retrocopy risk)",
+                }
+                for eid_r in sorted(single_exon_unsafe50_eids)
+            ]
+        )
+        all_gates = pd.concat([all_gates, retro_holds], ignore_index=True)
         comp_repro = comp_repro[
             ~(
                 comp_repro["entity_id"].isin(single_exon_unsafe50_eids)
@@ -2015,22 +3007,29 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
         ].reset_index(drop=True)
     cufflinks_mask_gids = risk_gids | single_exon_unsafe50_gids
 
-    print("4/5 Loading 8 canine tumor cohorts (7 spontaneous + CLBL-1 DLBCL)...", flush=True)
-    comp_tumors, cohort_df, tumor_sources = load_dog_tumor_cohorts(
-        dog_in, groups_df, exonic_bp, symbol_by_gene, or_gids, cufflinks_mask_gids, unsafe_eids
+    print("4/6 Loading spontaneous canine patient tumor cohorts & cancer cell lines...", flush=True)
+    comp_tumors, comp_cell_lines, cohort_df, cell_line_df, tumor_sources = load_dog_tumor_cohorts(
+        dog_in,
+        eff_extra,
+        groups_df,
+        exonic_bp,
+        symbol_by_gene,
+        or_gids,
+        cufflinks_mask_gids,
+        unsafe_eids,
     )
     print(
-        f"    tumor_obs={len(comp_tumors):,}, cohorts={len(cohort_df)}, total_tumor_samples={int(cohort_df['n_samples'].sum())}",
+        f"    tumor_obs={len(comp_tumors):,}, cohorts={len(cohort_df)} ({int(cohort_df['n_samples'].sum())} patient samples), cell_lines={len(cell_line_df)}",
         flush=True,
     )
 
-    print("5/5 Running SpeciesScreeningSpec & canine HostContext sex-restriction...", flush=True)
+    print("5/6 Running SpeciesScreeningSpec & canine HostContext sex-restriction...", flush=True)
     spec = SpeciesScreeningSpec(
         species="dog",
         reference=ref,
         policy_id=POLICY_SCHEMA_ID,
         comparison_id=COMPARISON_ID,
-        comparability_reference="oncoref.dog-canfam31-panel.2026-11-26.1",
+        comparability_reference="oncoref.dog-canfam31-panel.2026-11-26.2",
         comparison_unit="TPM",
         required_normal_contexts=REQUIRED_DOG_NORMAL_CONTEXTS,
         anatomy=anatomy_for_species("dog"),
@@ -2040,11 +3039,13 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
         groups_df,
         sequences=seq_df,
         normal_gates=all_gates,
+        rare_cell_counts=umi_df if not umi_df.empty else None,
         mapping_risk=mapping_risk_df,
         confirmed_rare_cell_organs=confirmed_organs,
         comparison_normals=comp_normals,
         comparison_reproductive=comp_repro,
         comparison_tumors=comp_tumors,
+        comparison_cell_lines=comp_cell_lines if not comp_cell_lines.empty else None,
     )
 
     cat = res.catalog.copy()
@@ -2172,10 +3173,11 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
     )
 
     all_sources_df = pd.DataFrame(
-        ens_sources + norm_sources + prot_sources + tumor_sources
+        ens_sources + norm_sources + prot_sources + umi_sources + tumor_sources
     ).drop_duplicates("source_id")
     all_sources_df.to_csv(dog_dir / "screening-sources.csv", index=False, lineterminator="\n")
     cohort_df.to_csv(dog_dir / "tumor-cohorts.csv", index=False, lineterminator="\n")
+    cell_line_df.to_csv(dog_dir / "cell-lines.csv", index=False, lineterminator="\n")
 
     cat_sha = _sha256(cat_path)
     exp_sha = _sha256(exp_path)
@@ -2206,6 +3208,8 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
         "proteome_only_reproductive_compartments": ["fallopian tube"],
         "tumor_cohorts": cohort_df["cancer_code"].tolist(),
         "tumor_samples": int(cohort_df["n_samples"].sum()),
+        "cell_line_models": cell_line_df["model_id"].tolist(),
+        "cell_line_samples": int(cell_line_df["n_samples"].sum()),
         "summary": {
             "proteins": len(cat),
             "loci": loci_count,
@@ -2232,6 +3236,13 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
                 if not sex_df.empty
                 else {}
             ),
+            "cta_activation_modes": {
+                k: int(v)
+                for k, v in cat.loc[cat["is_cta"].astype(bool), "tumor_activation_mode"]
+                .value_counts()
+                .sort_index()
+                .items()
+            },
         },
     }
     (dog_dir / "target-selection.json").write_text(json.dumps(summary_payload, indent=2) + "\n")
@@ -2242,9 +3253,10 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scratch-dir", type=Path, default=DEFAULT_SCRATCH_DIR)
+    parser.add_argument("--extra-dir", type=Path, default=DEFAULT_EXTRA_DIR)
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
-    build_all(args.scratch_dir, args.root)
+    build_all(args.scratch_dir, args.root, args.extra_dir)
     return 0
 
 

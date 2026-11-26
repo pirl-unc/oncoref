@@ -44,7 +44,7 @@ def test_unmeasured_home_protein_adjudications_matches_catalog_and_key_outcomes(
     ts = target_selection.results()
     expected_home = ts[ts["home_tissue"].fillna("").ne("")]
     adj = oncoref.unmeasured_home_protein_adjudications()
-    assert len(adj) == len(expected_home) == 568
+    assert len(adj) == len(expected_home) == 571
     assert set(adj["entity_id"]) == set(expected_home["entity_id"])
     assert set(adj["home_panel_disposition"]) <= set(
         unmeasured_home_panels.HOME_PANEL_DISPOSITIONS_735
@@ -113,5 +113,5 @@ def test_unmeasured_home_gene_expression_markers_and_externalized_registration()
 
     summary = oncoref.unmeasured_home_tissue_summary()
     assert len(summary) == 6
-    assert int(summary["total_home_proteins"].sum()) == 568
+    assert int(summary["total_home_proteins"].sum()) == 571
     assert int(summary["ca_cta_gated_proteins"].sum()) == 95

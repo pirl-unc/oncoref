@@ -11,6 +11,6 @@ taxon_id,species,candidate_id,label,gene_ids,mapping_status,mapping_complete,nom
 9615,dog,PAGE3-like,PAGE3-like,119868444,unique,True,hindriks2025,22,Unsafe,complete_tissue_panel; independent_sample_total; independent_donor_total; quantification_reference
 9615,dog,PRAME,PRAME,477552,unique,True,hindriks2025,22,CTA,complete_tissue_panel; independent_sample_total; independent_donor_total; quantification_reference
 9615,dog,SPECC1,SPECC1,489524,unique,True,nemec2019,2,Unsafe,complete_tissue_panel; independent_sample_total; independent_donor_total; measured_negative_or_censored_observations; reproductive_observations; quantification_reference
-9615,dog,SSX6,SSX6,612524,unique,True,hindriks2025,22,Reproductive Antigen only,complete_tissue_panel; independent_sample_total; independent_donor_total; quantification_reference
+9615,dog,SSX6,SSX6,612524,unique,True,hindriks2025,22,CTA,complete_tissue_panel; independent_sample_total; independent_donor_total; quantification_reference
 9615,dog,TPX2,TPX2,477186,unique,True,nemec2019,2,Unsafe,complete_tissue_panel; independent_sample_total; independent_donor_total; measured_negative_or_censored_observations; reproductive_observations; quantification_reference
 10090,mouse,P1A,P1A (Trap1a),ENSMUSG00000051257,unique,True,vandeneynde1991|sarma1999,6,Other:Review,complete_tissue_panel; independent_sample_total; independent_donor_total; measured_negative_or_censored_observations; quantification_reference

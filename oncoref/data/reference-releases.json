@@ -1945,7 +1945,7 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "cta",
-      "default_version": "2026-11-26",
+      "default_version": "2026-11-26.2",
       "versions": {
         "2026-11-22": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-target-selection.csv.gz",
@@ -1967,6 +1967,13 @@
           "archive_sha256": "aed60f484818da8d2f55fc90f9365ce3a269b53460546f78b68d6480b9cef461",
           "bytes": 3332061,
           "taxon_id": 10090
+        },
+        "2026-11-26.2": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126-2/mouse-target-selection.csv.gz",
+          "sha256": "747fa0ac72205a35259251bc8ffdf7ade7ab0e13d729a3fe1de7a8d4d88f067c",
+          "archive_sha256": "747fa0ac72205a35259251bc8ffdf7ade7ab0e13d729a3fe1de7a8d4d88f067c",
+          "bytes": 3361887,
+          "taxon_id": 10090
         }
       }
     },
@@ -1976,7 +1983,7 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "cta-evidence",
-      "default_version": "2026-11-26",
+      "default_version": "2026-11-26.2",
       "versions": {
         "2026-11-22": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-host-exposure.csv.gz",
@@ -1998,6 +2005,13 @@
           "archive_sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
           "bytes": 2535039,
           "taxon_id": 10090
+        },
+        "2026-11-26.2": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126-2/mouse-host-exposure.csv.gz",
+          "sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
+          "archive_sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
+          "bytes": 2535039,
+          "taxon_id": 10090
         }
       }
     },
@@ -2007,7 +2021,7 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "protein",
-      "default_version": "2026-11-26",
+      "default_version": "2026-11-26.2",
       "versions": {
         "2026-11-22": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-proteome-sequences.csv.gz",
@@ -2029,6 +2043,13 @@
           "archive_sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
           "bytes": 11560752,
           "taxon_id": 10090
+        },
+        "2026-11-26.2": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126-2/mouse-proteome-sequences.csv.gz",
+          "sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
+          "archive_sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
+          "bytes": 11560752,
+          "taxon_id": 10090
         }
       }
     },
@@ -2038,13 +2059,20 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "cta",
-      "default_version": "2026-11-26",
+      "default_version": "2026-11-26.2",
       "versions": {
         "2026-11-26": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-target-selection.csv.gz",
           "sha256": "5857e69388cd057963579837f551de9181ccf38a8d6de91939ad4e76a4617cfa",
           "archive_sha256": "5857e69388cd057963579837f551de9181ccf38a8d6de91939ad4e76a4617cfa",
           "bytes": 3563927,
+          "taxon_id": 9615
+        },
+        "2026-11-26.2": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126-2/dog-target-selection.csv.gz",
+          "sha256": "00e26878b0ea5c76ec15538d3dee591c3b32af87f051323707df502df4d46e15",
+          "archive_sha256": "00e26878b0ea5c76ec15538d3dee591c3b32af87f051323707df502df4d46e15",
+          "bytes": 3651714,
           "taxon_id": 9615
         }
       }
@@ -2055,13 +2083,20 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "cta-evidence",
-      "default_version": "2026-11-26",
+      "default_version": "2026-11-26.2",
       "versions": {
         "2026-11-26": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-host-exposure.csv.gz",
           "sha256": "b12514b0d0a07043d85d7ef582df67212579d245d5dbe7375868cc436926e82d",
           "archive_sha256": "b12514b0d0a07043d85d7ef582df67212579d245d5dbe7375868cc436926e82d",
           "bytes": 1848194,
+          "taxon_id": 9615
+        },
+        "2026-11-26.2": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126-2/dog-host-exposure.csv.gz",
+          "sha256": "b85ad5ce5b88d46f20f5fa9788f286ccd849388b2e4cbb73e885ab48e5cd7886",
+          "archive_sha256": "b85ad5ce5b88d46f20f5fa9788f286ccd849388b2e4cbb73e885ab48e5cd7886",
+          "bytes": 1848200,
           "taxon_id": 9615
         }
       }
@@ -2072,10 +2107,17 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "protein",
-      "default_version": "2026-11-26",
+      "default_version": "2026-11-26.2",
       "versions": {
         "2026-11-26": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-proteome-sequences.csv.gz",
+          "sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
+          "archive_sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
+          "bytes": 10609284,
+          "taxon_id": 9615
+        },
+        "2026-11-26.2": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126-2/dog-proteome-sequences.csv.gz",
           "sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
           "archive_sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
           "bytes": 10609284,

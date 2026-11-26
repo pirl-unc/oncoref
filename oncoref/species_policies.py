@@ -373,12 +373,12 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "tumor_rna",
-                "oncoref_tumor_union_132_cohorts",
-                "132 QC-passing per-sample human tumor cohorts (TCGA, TARGET, BEAT-AML, Treehouse, GEO)",
+                "oncoref_tumor_union_135_cohorts",
+                "135 QC-passing per-sample in-vivo human tumor cohorts (TCGA, TARGET, BEAT-AML, Treehouse, GEO)",
                 "TPM",
                 "active_in_catalog",
-                "CA qualifies when >=1 QC-passing library reaches >=10 x H0; known-patient counts deduplicate samples per donor",
-                "Cross-study cohorts use library QC and nonnegative linear TPM checks rather than batch correction.",
+                "CA qualifies when >=1 QC-passing in-vivo tumor library reaches >=10 x H0; tags ectopic vs lineage_retained activation",
+                "Cross-study cohorts use library gDNA QC and nonnegative linear TPM checks rather than batch correction.",
             ),
             SpeciesDatasetBinding(
                 "curated_literature_and_clinical",
@@ -386,7 +386,7 @@ def _policies() -> dict[int, SpeciesPolicy]:
                 "Reviewed normal-tissue literature, #711 Ensembl 115 attribution ledger & 149 CTA/oncofetal papers",
                 "curated verdicts & citations",
                 "active_in_catalog",
-                "Verified adult Vital/Protected expression -> Unsafe; unscreened adult home (olfactory, taste bud, bone, dental pulp, hair follicle) -> Other:Unscreened tissue",
+                "Verified adult Vital/Protected expression -> Unsafe; unscreened adult home (olfactory/chemosensory GPCRs, taste bud, bone, dental pulp, hair follicle) -> Other:Unscreened tissue",
                 "Published CTA nominations are provenance only and never override normal-tissue counterevidence.",
             ),
         ),
@@ -404,12 +404,13 @@ def _policies() -> dict[int, SpeciesPolicy]:
             cornea_cp10k_scale=None,
         ),
         overview=(
-            "Genome-wide quantitative canine oncology evaluation across the SHA-256-pinned "
-            "Ensembl 98 CanFam3.1 host proteome (20,199 coding genes), 24 required (36 evaluated) "
-            "adult somatic normal contexts (Bgee 15.2 + GSE219045 sex-stratified multi-organ atlas), "
-            "Pfizer 38-tissue quantitative TMT proteomics (MSV000099744), comparative canine "
-            "reproductive/embryonic compartments, and 8 canine tumor cohorts (7 spontaneous patient "
-            "cohorts + CLBL-1 DLBCL line)."
+            "Complete 8-pillar genome-wide quantitative canine oncology evaluation across the "
+            "SHA-256-pinned Ensembl 98 CanFam3.1 host proteome (20,199 coding genes), 24 required "
+            "(36 evaluated) adult somatic normal contexts, GSE225599 healthy companion-dog "
+            "circulating leukocyte 10x scRNA-seq (7 donors), Pfizer 38-tissue quantitative TMT "
+            "proteomics (MSV000099744), comparative canine reproductive/embryonic compartments, "
+            "19 spontaneous canine patient tumor cohorts across 13 histologies, and 12 canine "
+            "cancer cell lines."
         ),
         datasets=(
             SpeciesDatasetBinding(
@@ -423,30 +424,30 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "healthy_baseline_rna",
-                "bgee_v15_2_dog_25exps + gse219045_dog_atlas",
-                "Bgee 15.2 adult canine multi-organ RNA-seq (SRA-deduplicated) & GSE219045 300-sample sex-stratified organ atlas",
+                "bgee_v15_2_dog_25exps + gse219045_dog_atlas + companion_normal_5gse",
+                "Bgee 15.2 adult canine multi-organ RNA-seq, GSE219045 300-sample organ atlas & healthy companion-dog adrenal/blood/marrow/gingiva/brain/liver/lung/spleen controls",
                 "TPM",
                 "active_in_catalog",
                 "Within-organ donor P95 across 24 required (36 evaluated) non-thymic adult somatic contexts sets N and canine Disposable D (gallbladder, tonsil, hair follicle); <=2.5% ectopic OR gDNA QC",
-                "Unmeasured canine dental-pulp and taste-bud home loci remain Other:Unscreened tissue.",
+                "Unvalidated monogenic chemosensory GPCRs, dental-pulp and taste-bud home loci remain Other:Unscreened tissue.",
             ),
             SpeciesDatasetBinding(
                 "normal_bulk_and_immune_safety",
-                "bgee_v15_2_dog_somatic + gse219045_dog_atlas",
-                "Bgee 15.2 adult canine somatic/leukocyte RNA & GSE219045 multi-organ whole-blood/marrow/lymph-node atlas",
+                "bgee_v15_2_dog_somatic + gse219045_dog_atlas + gse283373_alveolar_mac",
+                "Bgee 15.2 adult canine somatic/leukocyte RNA, GSE219045 whole-blood/marrow/lymph-node atlas & GSE283373 primary canine alveolar macrophages",
                 "TPM",
                 "active_in_catalog",
-                "Tiered somatic ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers",
-                "Sorted activated canine immune subset panels are narrower than human DICE/Monaco and murine ImmGen.",
+                "Tiered somatic & macrophage ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers",
+                "Sorted activated canine T/NK cytokine subsets remain narrower than human DICE/Monaco and murine ImmGen.",
             ),
             SpeciesDatasetBinding(
                 "normal_cell_and_rare_umi",
-                "canine_normal_scrna_gap",
-                "Donor-resolved canine normal single-cell UMI atlases",
+                "gse225599_healthy_dog_pbmc_10x",
+                "GSE225599 healthy companion-dog circulating leukocyte 10x single-cell UMI atlas (7 healthy donors H_1..H_7)",
                 "UMI counts",
-                "identified_analog",
-                "Same assess_rare_cell_rna contract (>=10 cells, >=1% >=2-UMI across >=2 canine studies, 2x in Protected) when multi-organ single-cell atlases are ingested",
-                "No multi-organ adult canine normal single-cell UMI atlas is currently bundled; rare-cell status stays unassessed.",
+                "active_in_catalog",
+                "Evaluates donor-resolved circulating T/NK lymphocytes, monocytes, neutrophils (Protected) and platelets (Vital) on native CanFam3.1 ENSCAFG IDs via assess_rare_cell_rna",
+                "Covers circulating hematopoietic & platelet populations; solid-organ adult canine normal scRNA atlases remain future additions.",
             ),
             SpeciesDatasetBinding(
                 "normal_protein",
@@ -468,20 +469,20 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "tumor_rna",
-                "dog_8_tumor_cohorts",
-                "8 canine tumor cohorts (7 spontaneous patient cohorts + 1 DLBCL line): OSA_NCI (GSE238110), OSA_COTC030 (GSE304066), OSA_CCOGC (GSE239948), CMT (GSE119810), HSA (GSE95183), LYM (GSE95184), DLBCL (GSE287971 CLBL-1), GLIOMA (GSE284559)",
+                "dog_19_spontaneous_cohorts_plus_12_cell_lines",
+                "19 spontaneous companion-dog patient tumor cohorts across 13 histologies (OSA, CMT, HSA, LYM, GLIOMA, URO, STS, COSCC, CAA, HS, MNG, ACC, THCA, LEUK) + 12 canine cancer cell lines (CLBL-1, 8 MGT, 3 HS)",
                 "TPM",
                 "active_in_catalog",
-                "CA qualifies when >=1 QC-passing (<=2.5% OR gDNA) canine tumor reaches >=10 x H0 on CanFam3.1 linear TPM; replicate tumor samples deduplicate per dog",
-                "Spontaneous oral melanoma and urothelial carcinoma linear-TPM cohorts remain priority expansion targets.",
+                "CA qualifies strictly in >=1 QC-passing (<=2.5% OR gDNA) spontaneous in-vivo patient tumor at >=10 x H0; cell lines populate cell_line_* model-selection sidecar only",
+                "Spontaneous oral melanoma linear-TPM patient cohorts remain a priority future histology.",
             ),
             SpeciesDatasetBinding(
                 "curated_literature_and_clinical",
-                "hindriks2025 + nemec2019",
-                "Curated canine CTA nominations and normal/tumor RT-qPCR observations (14 candidates)",
+                "hindriks2025 + nemec2019 + canine_til_effector_gates",
+                "Curated canine CTA nominations (14 candidates), somatic RT-qPCR holds & essential canine activated-TIL checkpoint/cytokine exclusions",
                 "curated RT-qPCR & cross-reference index",
                 "active_in_catalog",
-                "Reconciles all 14 published canine nominations onto CanFam3.1 while enforcing somatic RT-PCR counterevidence holds and zero cross-species CTA transfer",
+                "Reconciles all 14 published canine nominations onto CanFam3.1, holds somatic RT-PCR positives, excludes essential TIL checkpoints/cytokines, and enforces zero cross-species CTA transfer",
                 "Human CTA labels are never transferred to canine orthologs.",
             ),
         ),
@@ -499,10 +500,12 @@ def _policies() -> dict[int, SpeciesPolicy]:
             cornea_cp10k_scale=None,
         ),
         overview=(
-            "Complete genome-wide murine evaluation across the SHA-256-pinned Ensembl 115 "
-            "GRCm39 host proteome (66,668 proteins), 30 adult somatic normal contexts, "
-            "Tabula Muris 10x single-cell UMI, MGI GXD 6.27 adult protein staining, all 16 "
-            "murine reproductive/embryonic compartments, and 8 strain-explicit tumor cohorts."
+            "Complete 8-pillar genome-wide murine evaluation across the SHA-256-pinned Ensembl 115 "
+            "GRCm39 host proteome (66,668 proteins), 30 adult somatic normal contexts, ImmGen + "
+            "IL-15/IL-2/ionomycin NK & Treg sorted immune gates, Tabula Muris 10x single-cell UMI, "
+            "MGI GXD 6.27 adult protein staining, all 16 murine reproductive/embryonic compartments, "
+            "14 in-vivo syngeneic/GEMM/carcinogen tumor cohorts across 9 histologies, and 9 pure "
+            "in-vitro cancer cell lines."
         ),
         datasets=(
             SpeciesDatasetBinding(
@@ -516,20 +519,20 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "healthy_baseline_rna",
-                "bgee_v15_2_mouse_12exps + gse219045_mouse_atlas",
-                "Bgee 15.2 adult murine multi-organ RNA-seq (12 experiments) & GSE219045 sex-stratified preclinical organ atlas",
+                "bgee_v15_2_mouse_12exps + gse219045_mouse_atlas + gse322844_wt_liver",
+                "Bgee 15.2 adult murine multi-organ RNA-seq (12 experiments), GSE219045 sex-stratified preclinical organ atlas & GSE322844 WT liver",
                 "TPM",
                 "active_in_catalog",
                 "Within-organ donor P95 across 30 non-thymic adult somatic contexts sets N; H0 = max(N, D, 1 TPM); thymus stays in thymic scope",
-                "Unmeasured murine hair-follicle, dental-pulp and taste-bud home loci remain Other:Unscreened tissue.",
+                "Unvalidated monogenic chemosensory GPCRs, hair-follicle, dental-pulp and taste-bud home loci remain Other:Unscreened tissue.",
             ),
             SpeciesDatasetBinding(
                 "normal_bulk_and_immune_safety",
-                "bgee_v15_2_mouse_somatic + gse219045 + immgen_gse109125_gse122108 + gse181223_bmdm + sarma1999",
-                "Bgee 15.2 somatic RNA, GSE219045 organ atlas, ImmGen sorted/activated immune (GSE109125, GSE122108), LPS-stimulated BMDMs (GSE181223) & Sarma 1999 RT-PCR counterevidence",
+                "bgee_v15_2_mouse_somatic + gse219045 + immgen_gse109125_gse122108 + gse181223_bmdm + gse287306_gse336796_gse302070_nk_treg + sarma1999",
+                "Bgee 15.2 somatic RNA, GSE219045 organ atlas, ImmGen sorted/activated immune, LPS BMDMs, splenic/IL-15/IL-2/ionomycin NK & Treg panels & LAK granzyme/Sarma 1999 gates",
                 "TPM; qualitative RT-PCR/Southern",
                 "active_in_catalog",
-                "Quantitative somatic & sorted/activated immune panels apply Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers; Sarma 1999 somatic counterevidence holds Trap1a",
+                "Quantitative somatic & sorted/activated immune panels apply Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers; excludes LAK cytolytic granzymes Gzmd/e/f/g and holds Trap1a",
                 "Sorted ULI FACS populations require >=2-replicate support (min(P95, second_highest)) to reject single-tube carryover.",
             ),
             SpeciesDatasetBinding(
@@ -561,20 +564,20 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "tumor_rna",
-                "mouse_8_cohorts_syngeneic_gemm",
-                "8 strain-explicit murine tumor cohorts: MC38, B16F10, LLC, KP_LUAD (C57BL/6); CT26, 4T1 (BALB/c); BMPC_PRAD (FVB); P815 (DBA/2)",
+                "mouse_14_invivo_cohorts_plus_9_cell_lines",
+                "14 strain-explicit in-vivo murine tumor cohorts (MC38, CT26, B16F10, B78_MEL, LLC, EMT6, RM1, GL261_TUMOR, CT2A_TUMOR, SB28_TUMOR, MADR_GLIOMA, KP_LUAD, BMPC_PRAD, DEN_HCC) + 9 pure cancer cell lines (4T1, P815, EO771, Hepa1-6, ID8, GL261_LINE, MB49, MOC1, MOC22)",
                 "TPM",
                 "active_in_catalog",
-                "CA qualifies when >=1 QC-passing control tumor sample reaches >=10 x H0 on Ensembl 115 TPM; cell-line replicates deduplicate donor counts per line",
-                "Covers 8 widely used syngeneic/GEMM models (36 control samples); spontaneous/chemical murine tumor diversity remains broader.",
+                "CA qualifies strictly in >=1 QC-passing in-vivo tumor sample at >=10 x H0 on Ensembl 115 TPM; pure cell lines populate cell_line_* purity/model-selection sidecar only",
+                "Covers 14 widely used syngeneic, orthotopic, primary GEMM, and carcinogen-induced models across C57BL/6, BALB/c, and FVB.",
             ),
             SpeciesDatasetBinding(
                 "curated_literature_and_clinical",
-                "vandeneynde1991 + sarma1999",
-                "Van den Eynde 1991 (P1A DBA/2 P815 clone 211) & Sarma 1999 endogenous normal-tissue follow-up",
+                "vandeneynde1991 + sarma1999 + lak_granzyme_counterevidence",
+                "Van den Eynde 1991 (P1A DBA/2 P815 clone 211), Sarma 1999 normal-tissue follow-up & IL-2/IL-12/IL-18 LAK granzyme counterevidence",
                 "curated primary-source XMLs & GenBank records",
                 "active_in_catalog",
-                "Preserves exact 224-aa AAA40475.1 / ENSMUSP00000059448.4 protein equivalence alongside BALB/c lung/spleen/liver/thymus counterevidence",
+                "Preserves exact 224-aa AAA40475.1 / ENSMUSP00000059448.4 protein equivalence alongside BALB/c somatic counterevidence and host TIL granzyme exclusions",
                 "Transgenic tolerance experiments are excluded from endogenous normal-expression claims.",
             ),
         ),

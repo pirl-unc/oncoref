@@ -66,13 +66,33 @@ def test_mouse_sources_and_strain_explicit_tumor_cohorts():
         "B16F10",
         "CT26",
         "LLC",
-        "4T1",
         "KP_LUAD",
         "BMPC_PRAD",
-        "P815",
+        "EMT6",
+        "RM1",
+        "B78_MEL",
+        "GL261_TUMOR",
+        "CT2A_TUMOR",
+        "SB28_TUMOR",
+        "MADR_GLIOMA",
+        "DEN_HCC",
     }
-    assert set(cohorts.strain) == {"C57BL/6", "BALB/c", "FVB", "DBA/2"}
-    assert int(cohorts.n_samples.sum()) == 36
+    assert set(cohorts.strain) == {"C57BL/6", "BALB/c", "FVB"}
+    assert int(cohorts.n_samples.sum()) == 57
+
+    cell_lines = mouse.cell_lines()
+    assert set(cell_lines.model_id) == {
+        "4T1",
+        "P815",
+        "EO771",
+        "Hepa1-6",
+        "ID8",
+        "GL261_LINE",
+        "MB49",
+        "MOC1",
+        "MOC22",
+    }
+    assert int(cell_lines.n_samples.sum()) == 30
 
 
 def test_p1a_trap1a_alias_resolution_and_legacy_cta_snapshot_continuity():
@@ -120,12 +140,12 @@ def test_mouse_sixteen_compartment_host_context_and_sex_restricted_subsets():
     cta_f = antigen_sets.proteins("CTA-F", species="mouse")
     cta_mf = antigen_sets.proteins("CTA-MF", species="mouse")
     total_cta = antigen_sets.proteins("CTA", species="mouse")
-    assert len(cta_m) + len(cta_e) + len(cta_f) + len(cta_mf) == len(total_cta)
-    assert {"Pbsn", "Sbp", "Tex19.1", "Plac1"} <= set(cta_m.protein_group_label)
+    assert len(cta_m) + len(cta_e) + len(cta_f) + len(cta_mf) == len(total_cta) == 8
+    assert {"Pbsn", "Sbp", "Tex19.1"} <= set(cta_m.protein_group_label)
     assert {"Serpinb9e", "Pramel13"} <= set(cta_e.protein_group_label)
-    assert {"Gzmf", "Gzmg", "Gzmd"} <= set(cta_f.protein_group_label)
 
-    # Sorted & activated immune gates (ImmGen ULI/MNP + LPS BMDM) exclude cytokines & myeloid markers
+    # Sorted & activated immune gates (ImmGen ULI/MNP + LPS BMDM + IL-15/IL-2/LAK NK) exclude
+    # cytokines, myeloid markers, and host LAK/NK granzymes Gzmd/e/f/g
     by_lbl = mouse.target_selection().set_index("protein_group_label")
     for imm_unsafe in (
         "Csf3",
@@ -143,6 +163,10 @@ def test_mouse_sixteen_compartment_host_context_and_sex_restricted_subsets():
         "Dppa2",
         "Qrfp",
         "Otos",
+        "Gzmd",
+        "Gzme",
+        "Gzmf",
+        "Gzmg",
     ):
         assert by_lbl.loc[imm_unsafe, "classification"] == "Unsafe"
 
@@ -233,7 +257,7 @@ def test_mouse_heavy_tables_are_externalized_and_pinned_in_reference_releases():
         assert not bool(audit.loc[stem, "shipped_in_wheel"])
         prov = reference_data.provenance(stem)
         assert prov["sha256"] == expected_sha
-        assert "reference-mouse-20261126" in prov["url"]
+        assert "reference-mouse-20261126-2" in prov["url"]
         p = data_dir / f"{stem}.csv.gz"
         if p.exists():
             assert hashlib.sha256(p.read_bytes()).hexdigest() == expected_sha

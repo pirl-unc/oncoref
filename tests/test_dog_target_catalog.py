@@ -20,19 +20,19 @@ from oncoref import (
 from oncoref.species_policies import ROLE_IDS
 
 
-def test_dog_catalog_genome_wide_partition_and_seven_active_pillars():
+def test_dog_catalog_genome_wide_partition_and_eight_active_pillars():
     cov = canine.target_selection_coverage()
     assert cov["taxon_id"] == 9615
     assert cov["species"] == "dog"
     assert cov["selection_status"] == "evaluated"
     assert cov["comparison_unit"] == "TPM"
     assert cov["thresholds"]["negative_ihc_multipliers"] == {}
-    assert len(set(cov["populated_inputs"])) == 7
-    assert any("canine_normal_scrna_gap" in m for m in cov["missing_inputs"])
+    assert set(cov["populated_inputs"]) == set(ROLE_IDS)
+    assert cov["missing_inputs"] == []
 
     ds = canine.screening_datasets()
     assert set(ds.role) == set(ROLE_IDS)
-    assert int(ds.status.eq("active_in_catalog").sum()) >= 7
+    assert int(ds.status.eq("active_in_catalog").sum()) >= 8
 
     cat = canine.target_selection()
     assert len(cat) == 20082
@@ -48,11 +48,16 @@ def test_dog_catalog_genome_wide_partition_and_seven_active_pillars():
     cand = cat.is_target_candidate.astype(bool)
     assert (ca & ra).equals(cta)
     assert (ca | ra).equals(cand)
-    assert int(cta.sum()) >= 30
-    assert int((ca & ~ra).sum()) >= 50
-    assert int((ra & ~ca).sum()) >= 200
-    assert int(cat.category.eq("Unsafe").sum()) > 15000
+    assert int(cta.sum()) == 118
+    assert int((ca & ~ra).sum()) == 127
+    assert int((ra & ~ca).sum()) == 313
+    assert int(cat.category.eq("Unsafe").sum()) == 17323
     assert {c: int(cat.category.eq(c).sum()) for c in target_selection.CATEGORIES} == cov["counts"]
+    assert set(cat.loc[cta, "tumor_activation_mode"]) == {
+        "ectopic",
+        "ectopic_and_lineage_retained",
+        "lineage_retained",
+    }
 
 
 def test_dog_sources_cohorts_and_all_fourteen_curated_nominations_resolve():
@@ -63,6 +68,7 @@ def test_dog_sources_cohorts_and_all_fourteen_curated_nominations_resolve():
     assert (sources["bytes"] > 0).all()
 
     cohorts = canine.tumor_cohorts()
+    assert len(cohorts) == 19
     assert set(cohorts.cancer_code) == {
         "OSA_NCI",
         "OSA_COTC030",
@@ -70,10 +76,26 @@ def test_dog_sources_cohorts_and_all_fourteen_curated_nominations_resolve():
         "CMT",
         "HSA",
         "LYM",
-        "DLBCL",
+        "LYM_CHOP",
         "GLIOMA",
+        "GLIOMA_G23",
+        "URO",
+        "STS",
+        "STS_SUB",
+        "COSCC",
+        "CAA",
+        "HS",
+        "MNG",
+        "ACC",
+        "THCA",
+        "LEUK",
     }
-    assert int(cohorts.n_samples.sum()) > 500
+    assert (cohorts.model_kind == "spontaneous_patient_tumor").all()
+    assert int(cohorts.n_samples.sum()) == 935
+
+    cell_lines = canine.cell_lines()
+    assert len(cell_lines) == 12
+    assert {"CLBL-1", "HS_BD", "MGT_122"} <= set(cell_lines.model_id)
 
     # Frozen legacy cta_selection() surface remains unchanged while target_selection(cand) resolves all 14
     legacy = canine.cta_selection()
@@ -86,8 +108,8 @@ def test_dog_sources_cohorts_and_all_fourteen_curated_nominations_resolve():
         assert resolved["published_nomination"].any()
 
     assert canine.target_selection("PRAME").iloc[0].classification == "CTA"
+    assert canine.target_selection("SSX6").iloc[0].classification == "CTA"
     assert canine.target_selection("MAGEB10").iloc[0].classification == "Reproductive Antigen only"
-    assert canine.target_selection("SSX6").iloc[0].classification == "Reproductive Antigen only"
     for unsafe_nom in ("AKR1E2", "IGF2BP3", "NT5C1B", "PAGE3-like", "SPECC1", "TPX2"):
         assert canine.target_selection(unsafe_nom).iloc[0].classification == "Unsafe"
     for retro_or_unsafe in (
@@ -128,11 +150,28 @@ def test_dog_comparative_anatomy_host_context_and_four_way_sex_subsets(capsys):
     cta_mf = antigen_sets.proteins("CTA-MF", species="dog")
     ra_f = antigen_sets.proteins("RA-F", species="dog")
     total_cta = antigen_sets.proteins("CTA", species="dog")
-    assert len(cta_m) + len(cta_p) + len(cta_f) + len(cta_mf) == len(total_cta) == 54
-    assert {"PRAME", "NAA11", "PLD6", "PSMA8"} <= set(cta_m.protein_group_label)
+    assert len(cta_m) + len(cta_p) + len(cta_f) + len(cta_mf) == len(total_cta)
+    assert {"PRAME", "SSX6", "PLD6", "PSMA8", "FKBP6", "DAZL"} <= set(cta_m.protein_group_label)
+    # NAA11 is excluded by healthy canine buccal mucosa (GSE272909 > 8 TPM), while pure cell-line
+    # expression never promotes non-in-vivo genes (ENSCAFG00000031216 -> Other:Expression) and
+    # annotates genuine canine CTAs (DDX43 -> CLBL-1; HORMAD1 -> HS_PJ) on qualifying_cell_lines
+    assert canine.target_selection("NAA11").iloc[0].classification == "Unsafe"
+    cl_only = canine.target_selection("ENSCAFG00000031216").iloc[0]
+    assert cl_only.classification == "Other:Expression"
+    assert "HS_BD" in str(cl_only.qualifying_cell_lines)
+    assert "CLBL-1" in str(canine.target_selection("DDX43").iloc[0].qualifying_cell_lines)
     assert {"CSN2", "CSN3"} <= set(cta_mf.protein_group_label)
+    assert {"BMP15"} <= set(cta_f.protein_group_label)
     assert {"BMP15", "ZP3", "KPNA7"} <= set(ra_f.protein_group_label)
-    assert {"IGF2BP1", "GPR50"} <= set(cta_p.protein_group_label)
+    assert {"IGF2BP1", "GPR50", "CHRNG"} <= set(cta_p.protein_group_label)
+    # Activated canine TIL markers (PDCD1, TNFRSF4, IFNG) are excluded from CTA/CA, and
+    # unscreened dental/taste markers (ODAM, AMTN, OTOP1) are held in Other:Unscreened tissue
+    for til_gene in ("PDCD1", "TNFRSF4", "IFNG"):
+        assert canine.target_selection(til_gene).iloc[0].classification == "Unsafe"
+    for unmeas_gene in ("ODAM", "AMTN", "OTOP1"):
+        assert (
+            canine.target_selection(unmeas_gene).iloc[0].classification == "Other:Unscreened tissue"
+        )
     assert set(cta_p.entity_id) == set(antigen_sets.proteins("CTA-E", species="dog").entity_id)
 
     # Spayed female dog HostContext retains male-restricted and pregnancy-only CTAs
@@ -191,7 +230,7 @@ def test_dog_heavy_tables_are_externalized_and_pinned_in_reference_releases():
         assert not bool(audit.loc[stem, "shipped_in_wheel"])
         prov = reference_data.provenance(stem)
         assert prov["sha256"] == expected_sha
-        assert "reference-dog-20261126" in prov["url"]
+        assert "reference-dog-20261126-2" in prov["url"]
         p = data_dir / f"{stem}.csv.gz"
         if p.exists():
             assert hashlib.sha256(p.read_bytes()).hexdigest() == expected_sha
