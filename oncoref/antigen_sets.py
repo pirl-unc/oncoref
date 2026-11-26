@@ -221,24 +221,33 @@ def select(
     resolved = resolve_species(species)
     if group not in CANDIDATE_SETS:
         raise ValueError(f"Select a candidate set: {', '.join(CANDIDATE_SETS)}")
-    if table is None or host_evidence is None:
+    used_default_table = table is None
+    used_default_host_ev = host_evidence is None
+    if used_default_table or used_default_host_ev:
         from .species_target_selection import (
-            packaged_species_host_exposure,
+            _packaged_species_host_exposure_ref,
             packaged_species_results,
         )
 
-        if table is None:
+        if used_default_table:
             table = packaged_species_results(resolved)
-        if host_evidence is None:
-            host_evidence = packaged_species_host_exposure(resolved)
+        if used_default_host_ev:
+            host_evidence = _packaged_species_host_exposure_ref(resolved)
     sex_ids: frozenset[str] | None = None
     if group in SEX_SETS:
         from .species_target_selection import SEX_SETS as _SEX_SPEC
-        from .species_target_selection import classify_sex_restriction, peripartum_antigen_ids
+        from .species_target_selection import classify_sex_restriction
 
         sex_class, _ = _SEX_SPEC[group]
-        if sex_class == "Peripartum":
-            sex_ids = peripartum_antigen_ids(table, species=resolved, host_evidence=host_evidence)
+        if (
+            used_default_table
+            and used_default_host_ev
+            and "sex_restriction_class" in table.columns
+            and table["sex_restriction_class"].astype("object").fillna("").astype(str).ne("").any()
+        ):
+            sex_ids = frozenset(
+                table.loc[table["sex_restriction_class"].eq(sex_class), "entity_id"].astype(str)
+            )
         else:
             sex_df = classify_sex_restriction(table, species=resolved, host_evidence=host_evidence)
             sex_ids = frozenset(sex_df.loc[sex_df.sex_restriction_class.eq(sex_class), "entity_id"])

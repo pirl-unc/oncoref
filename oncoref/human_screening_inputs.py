@@ -8,7 +8,7 @@ home-tissue panels, and #737 linear-TPM tumor cohorts (THYMCA, BCC, cSCC) direct
 
 Default packaged catalog calls (``target_selection.results()``, ``human.target_selection()``)
 and default ``evaluate_human_catalog()`` calls both evaluate the promoted integrated policy
-``oncoref.target-selection.2026-11-25.1``, while explicit ``include_*=False`` flags reproduce
+``oncoref.target-selection.2026-11-26.1``, while explicit ``include_*=False`` flags reproduce
 the frozen ``oncoref.target-selection.2026-11-20.2`` baseline and single-rule ablations.
 """
 
@@ -30,6 +30,7 @@ from . import (
     normal_library_qc,
     rare_cell_compartment_qc,
     repeat_family_equivalence,
+    reproductive_age_female,
     species_target_selection,
     target_selection,
     tgct_localization,
@@ -47,8 +48,8 @@ from .species_target_selection import (
 )
 
 HUMAN_BASELINE_COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
-HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-25.1"
-HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-25.1"
+HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.1"
+HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-26.1"
 
 REQUIRED_PERIPHERAL_CONTEXT = "peripheral_normal_reference"
 
@@ -68,6 +69,7 @@ def human_screening_spec(
     include_repeat_family_equivalence: bool = True,
     include_assay_boundary_fixes: bool = True,
     include_tumor_gdna_qc: bool | None = None,
+    include_reproductive_age_female: bool | None = None,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -87,6 +89,11 @@ def human_screening_spec(
         or include_assay_boundary_fixes
     )
     eff_gdna = base_any if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
+    eff_repro_f = (
+        base_any
+        if include_reproductive_age_female is None
+        else bool(include_reproductive_age_female)
+    )
     all_layers = (
         include_home_panels
         and include_737_cohorts
@@ -96,8 +103,9 @@ def human_screening_spec(
         and include_repeat_family_equivalence
         and include_assay_boundary_fixes
         and eff_gdna
+        and eff_repro_f
     )
-    any_layer = base_any or eff_gdna
+    any_layer = base_any or eff_gdna or eff_repro_f
     if policy_id is not None:
         effective_policy = policy_id
     elif all_layers:
@@ -105,7 +113,7 @@ def human_screening_spec(
     elif not any_layer:
         effective_policy = target_selection.BASELINE_2026_11_20_POLICY_ID
     else:
-        effective_policy = "oncoref.human-integrated-ablation.2026-11-25.1"
+        effective_policy = "oncoref.human-integrated-ablation.2026-11-26.1"
     comp_id = HUMAN_INTEGRATED_COMPARISON_ID if any_layer else HUMAN_BASELINE_COMPARISON_ID
     notes = [
         "Evaluated through species_target_selection.evaluate_species_catalog (#755).",
@@ -138,6 +146,10 @@ def human_screening_spec(
         )
     if eff_gdna:
         notes.append("Includes tightened tumor gDNA library QC (olfactory_share_ge5 <= 2.5%).")
+    if eff_repro_f:
+        notes.append(
+            "Includes reproductive-age female GTEx (20-49) & GSE107746 adult human follicle/oocyte RNA."
+        )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
         reference=ref,
@@ -181,6 +193,7 @@ def build_human_screening_inputs(
     include_repeat_family_equivalence: bool = True,
     include_assay_boundary_fixes: bool = True,
     include_tumor_gdna_qc: bool | None = None,
+    include_reproductive_age_female: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -196,6 +209,11 @@ def build_human_screening_inputs(
         or extra_tumor_observations is not None
     )
     eff_gdna = base_any if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
+    eff_repro_f = (
+        base_any
+        if include_reproductive_age_female is None
+        else bool(include_reproductive_age_female)
+    )
     spec = human_screening_spec(
         policy_id=policy_id,
         include_home_panels=include_home_panels,
@@ -206,6 +224,7 @@ def build_human_screening_inputs(
         include_repeat_family_equivalence=include_repeat_family_equivalence,
         include_assay_boundary_fixes=include_assay_boundary_fixes,
         include_tumor_gdna_qc=eff_gdna,
+        include_reproductive_age_female=eff_repro_f,
     )
     ts = target_selection._baseline_2026_11_20_frame()
     exposures = (
@@ -467,6 +486,11 @@ def build_human_screening_inputs(
         gdna_df = library_qc.tumor_gdna_background_deltas(only_applied=True)
         for gr in gdna_df.to_dict("records"):
             gdna_clean_by_eid[str(gr["entity_id"])] = gr
+
+    follicle_by_eid: dict[str, dict] = {}
+    if eff_repro_f:
+        for fr in reproductive_age_female.adult_oocyte_follicle_rna().to_dict("records"):
+            follicle_by_eid[str(fr["entity_id"])] = fr
 
     comp_id = spec.comparison_id
     unit = spec.comparison_unit
@@ -820,7 +844,14 @@ def build_human_screening_inputs(
         for comp, item in sorted(rec_exp.items()):
             if not isinstance(item, dict) or item.get("coverage") != "measured":
                 continue
-            val = item.get("max_tpm")
+            val = (
+                item.get(
+                    "unstratified_max_tpm",
+                    item.get("adult_bulk_max_tpm", item.get("max_tpm")),
+                )
+                if not eff_repro_f
+                else item.get("max_tpm")
+            )
             if val is None or not np.isfinite(val):
                 continue
             added_comps.add(comp)
@@ -883,12 +914,23 @@ def build_human_screening_inputs(
                         "germline_protamine_diluted_qualified": bool(
                             eid in germline_tf_eids and comp == "testis"
                         ),
-                        "female_max_tpm": item.get("female_max_tpm"),
+                        "female_max_tpm": (
+                            item.get("unstratified_female_max_tpm", item.get("female_max_tpm"))
+                            if not eff_repro_f
+                            else item.get("female_max_tpm")
+                        ),
                         "male_max_tpm": item.get("male_max_tpm"),
                         "female_max_ntpm": item.get("female_max_ntpm"),
                         "male_max_ntpm": item.get("male_max_ntpm"),
                         "max_ntpm": item.get("max_ntpm"),
-                        "protein_status": item.get("protein_status", "not_assessed"),
+                        "protein_status": (
+                            item.get(
+                                "unstratified_protein_status",
+                                item.get("protein_status", "not_assessed"),
+                            )
+                            if not eff_repro_f
+                            else item.get("protein_status", "not_assessed")
+                        ),
                         "scope_complete": bool(item.get("scope_complete", True)),
                         "comparison_id": comp_id,
                         "unit": unit,
@@ -927,6 +969,42 @@ def build_human_screening_inputs(
                         "identity_resolved": True,
                     }
                 )
+        if eid in follicle_by_eid:
+            frec = follicle_by_eid[eid]
+            f_supp = float(frec["adult_follicle_supported_tpm"])
+            if f_supp >= 1.0:
+                d_val_e = float(r.disposable_max_tpm) if pd.notna(r.disposable_max_tpm) else 0.0
+                n_val_e = float(norm_val) if pd.notna(norm_val) else 0.0
+                denom_e = max(n_val_e, d_val_e, 1.0)
+                f_qual = f_supp >= 10.0 * denom_e
+                repro_rows.append(
+                    {
+                        "entity_id": eid,
+                        "source_id": "gse107746_adult_human_follicle",
+                        "sample_id": (
+                            f"gse107746:{frec['dominant_compartment_cell']}:"
+                            f"{frec['dominant_follicle_stage']}"
+                        ),
+                        "participant_id": f"gse107746:{frec['dominant_follicle_stage']}",
+                        "scope": "reproductive",
+                        "compartment": "ovary",
+                        "source_context": "ovary",
+                        "developmental_stage": "adult",
+                        "cells": 0,
+                        "positive_cells": 0,
+                        "value": f_supp,
+                        "host_max_tpm": f_supp,
+                        "compartment_qualifying_value": f_supp if f_qual else 0.0,
+                        "max_ntpm": None,
+                        "protein_status": None if "ovary" in added_comps else "unassessed",
+                        "scope_complete": True,
+                        "comparison_id": comp_id,
+                        "unit": unit,
+                        "qc_pass": True,
+                        "identity_resolved": True,
+                    }
+                )
+                added_comps.add("ovary")
         # Ensure any qualifying compartment lacking a host_exposure entry is still represented
         for comp in sorted(qual_comps - added_comps):
             if pd.notna(supp_tpm):
@@ -1010,6 +1088,7 @@ def evaluate_human_catalog(
     include_repeat_family_equivalence: bool = True,
     include_assay_boundary_fixes: bool = True,
     include_tumor_gdna_qc: bool | None = None,
+    include_reproductive_age_female: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -1024,6 +1103,7 @@ def evaluate_human_catalog(
         include_repeat_family_equivalence=include_repeat_family_equivalence,
         include_assay_boundary_fixes=include_assay_boundary_fixes,
         include_tumor_gdna_qc=include_tumor_gdna_qc,
+        include_reproductive_age_female=include_reproductive_age_female,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
@@ -1041,7 +1121,12 @@ def evaluate_human_catalog(
         or extra_tumor_observations is not None
     )
     eff_gdna_eval = base_any_eval if include_tumor_gdna_qc is None else bool(include_tumor_gdna_qc)
-    is_integrated = base_any_eval or eff_gdna_eval
+    eff_repro_f_eval = (
+        base_any_eval
+        if include_reproductive_age_female is None
+        else bool(include_reproductive_age_female)
+    )
+    is_integrated = base_any_eval or eff_gdna_eval or eff_repro_f_eval
     # Attach #711, #712, #735, #764-#769 adjudication & near-self provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)
@@ -1302,6 +1387,9 @@ def compute_next_policy_transitions(
             lambda df: ~df["qualifies_tenfold_clean"].astype(bool), "entity_id"
         ]
     )
+    foll_by_eid = (
+        reproductive_age_female.adult_oocyte_follicle_rna().set_index("entity_id").to_dict("index")
+    )
     drivers = []
     for r in changed.itertuples(index=False):
         reasons = []
@@ -1330,6 +1418,15 @@ def compute_next_policy_transitions(
             reasons.append(f"#768:{r.assay_boundary_768_disposition}")
         if r.entity_id in gdna_lost:
             reasons.append("library_qc:tumor_gdna_background_excluded")
+        if (
+            r.entity_id in foll_by_eid
+            and r.classification_2026_11_20 in {"Cancer Antigen only", "Other:Expression"}
+            and r.classification_integrated in {"CTA", "Reproductive Antigen only"}
+        ):
+            frec = foll_by_eid[r.entity_id]
+            reasons.append(
+                f"gse107746:adult_{frec['dominant_compartment_cell']}_{frec['dominant_follicle_stage']}_10x"
+            )
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (

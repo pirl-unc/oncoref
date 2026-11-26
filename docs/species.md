@@ -12,8 +12,8 @@ import oncoref
 dog = oncoref.canine
 dog.references.datasets()
 dog.expression.sources(context="normal")
-dog.antigens.coverage()  # partial: curated canine CTA candidate evidence
-dog.cta_candidates()    # same API on oncoref.human and oncoref.mouse
+dog.target_selection_coverage()  # evaluated genome-wide CanFam3.1 catalog (20,082 PEGs)
+dog.cta_candidates()    # 14 curated canine literature nominations (also on human and mouse)
 human = oncoref.human
 human.expression.sources()  # existing human registry
 
@@ -389,14 +389,14 @@ sensitivity analyses, outside admitted normalized expression cohorts.
 
 See the [multi-species antigen whitepaper](species-antigen-whitepaper.md) for the
 complete per-species parameterization of human (`9606`), canine (`9615`), and
-murine (`10090`) datasets, comparative anatomy, symmetric sex-restricted subsets
-(`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-E`/`CTA-E`, `RA-MF`/`CTA-MF` plus non-exclusive peripartum `RA-P`/`CTA-P`; legacy aliases `MRA`/`FRA`/`ERA`/`SRA`/`PRA`), and native
-nomination ledgers.
+murine (`10090`) datasets, comparative anatomy, the mutually exclusive 4-way
+sex-restriction partition (`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-P`/`CTA-P`, `RA-MF`/`CTA-MF`; legacy aliases `MRA`/`FRA`/`ERA`/`PRA`/`SRA`/`CTA-E`/`RA-E`),
+cross-species ortholog concordance, and native nomination ledgers.
 
 `oncoref.species_policies` and `oncoref.species_target_selection` harmonize the
-three-stage target-selection process across **human (`9606`)**, **dog (`9615`)**
-and **mouse (`10090`)** without transferring human expression, safety verdicts or
-threshold calibrations by orthology:
+three-stage target-selection process across **human (`9606`, `19,893` PEGs, `325` CTAs)**,
+**dog (`9615`, `20,082` PEGs, `54` CTAs)** and **mouse (`10090`, `21,433` PEGs, `12` CTAs)**
+without transferring human expression, safety verdicts or threshold calibrations by orthology:
 
 1. **Reference proteome & protein-equivalence grouping (`group_reference_proteins`, `group_proteome`):**
    Collapses identical qualified amino-acid translations within one verified
@@ -418,19 +418,18 @@ threshold calibrations by orthology:
    `coagulating_gland` and `uterine_horn` and lacks appendix and palatine tonsil).
 
 ```python
-from oncoref import canine, host_context, human, mouse
+from oncoref import antigen_sets, canine, host_context, human, mouse
 
 human.target_selection_coverage()
-canine.target_selection_coverage()  # pending_reconciled_panels + missing_inputs
+canine.target_selection_coverage()
 mouse.target_selection_coverage()
 
 dog_host = host_context.HostContext(protect=("testis", "uterus"), species="dog")
-# Evaluate a species catalog when reconciled normal/tumor panels are supplied:
-# result = canine.evaluate_target_catalog(spec, proteins, sequences=seqs, ...)
-# index = result.select("CTA", host=dog_host).background_index("Unsafe|Other")
+dog_ctas = antigen_sets.select("CTA", species="dog", host=dog_host)
+dog_bg = dog_ctas.background_index("Unsafe|Other")
 ```
 
 On the CLI, `oncoref antigens list`, `explain`, and `funnel` accept `--species`
-(`human`, `dog`/`canine`, or `mouse`). Where canine or murine expression panels
-lack reference/unit reconciliation in the packaged wheel, packaged nominations
-remain explicitly `Other:Review` rather than silently inheriting human calls.
+(`human`, `dog`/`canine`, or `mouse`). All three species evaluate native genome-wide
+catalogs (`target-selection.csv.gz`, `dog-target-selection.csv.gz`, `mouse-target-selection.csv.gz`)
+without borrowing expression or safety calls across species.

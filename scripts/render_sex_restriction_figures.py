@@ -253,7 +253,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
         ("Other / CA-only (review, seq, <10× RA)", C_OTHER),
         ("CTA-M / RA-M (testis-active, female-silent)", C_CTAM),
         ("CTA-MF / RA-MF (shared male & female)", C_CTAMF),
-        ("CTA-E / RA-E-only (embryo/peripartum-only)", C_CTAE),
+        ("CTA-P / RA-P-only (pregnancy/peripartum-only)", C_CTAE),
         ("CTA-F / RA-F-only (female-restricted)", C_CTAF),
     ]
     prog_labels = [lbl for lbl, _ in FEMALE_LINEAGE_PROGRAMS]
@@ -277,7 +277,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
                     j = 2
                 elif sc == "Shared male & female":
                     j = 3
-                elif sc == "Embryo / peripartum-only":
+                elif sc == "Pregnancy / peripartum-only":
                     j = 4
                 else:
                     j = 5
@@ -315,11 +315,11 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
 
     # Annotate exact CTA-F survivors on the right edge of each row
     ctaf_notes = [
-        "CSN2, LALBA (2 CTA-F; BTN1A1 → CTA-E/P)",
-        "ZP4, DPPA3, KHDC3L, ZAR1L + 2 RA-F-only",
-        "0 CTA-F (SYCP1 → CTA-M; PIWIL3 → CTA-MF)",
+        "CSN2, LALBA (2 CTA-F; BTN1A1 → CTA-P)",
+        "ZP4, DPPA3, KHDC3L, ZAR1L + 4 RA-F-only",
+        "0 CTA-F (SYCP1 → CTA-M; MOS, SPO11 → CTA-MF)",
         "0 CTA-F (PRAME, SCGB1D4 → CTA-MF)",
-        "0 CTA-F (ERVV-1/2, LGALS16 → CTA-E/P)",
+        "0 CTA-F (ERVV-1/2, LGALS16 → CTA-P)",
     ]
     for yp, note in zip(y, ctaf_notes):
         ax_a.text(101.2, yp, note, va="center", ha="left", fontsize=8.0, color=C_INK)
@@ -403,7 +403,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
 
     code_meta = [
         ("CTA-M", C_CTAM, "o", 26),
-        ("CTA-E", C_CTAE, "s", 30),
+        ("CTA-P", C_CTAE, "s", 30),
         ("CTA-MF", C_CTAMF, "^", 34),
         ("CTA-F", C_CTAF, "D", 56),
     ]
@@ -440,11 +440,14 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
         "ZAR1L": (-52, -18),
         "CSN2": (-48, -3),
         "ZP4": (-30, -13),
+        "CPSF4L": (-48, 8),
+        "IZUMO1R": (-54, -8),
         "VRTN": (-38, -9),
         "PRR23E": (-48, 4),
         "BTN1A1": (-48, -4),
         "ERVV-1": (-48, 8),
         "DUX4": (14, -8),
+        "MOS": (8, 8),
         "SCGB1D4": (8, -4),
         "PRAME": (8, 8),
         "CTAG2": (8, -10),
@@ -504,7 +507,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
     ax_b.text(
         0.048,
         5.8,
-        "CTA-E quadrant\n(embryo/peripartum)",
+        "CTA-P quadrant\n(pregnancy/peripartum)",
         fontsize=7.6,
         color=C_CTAE,
         fontweight="bold",
@@ -645,9 +648,9 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
     _style_axes(ax1)
     ax1.legend(
         handles=[
-            Patch(facecolor=gene_colors["LALBA"], label="LALBA (CTA-F · CTA-P)"),
-            Patch(facecolor=gene_colors["CSN2"], label="CSN2 (CTA-F · CTA-P)"),
-            Patch(facecolor=gene_colors["BTN1A1"], label="BTN1A1 (CTA-E · CTA-P)"),
+            Patch(facecolor=gene_colors["LALBA"], label="LALBA (CTA-F)"),
+            Patch(facecolor=gene_colors["CSN2"], label="CSN2 (CTA-F)"),
+            Patch(facecolor=gene_colors["BTN1A1"], label="BTN1A1 (CTA-P)"),
         ],
         loc="upper right",
         frameon=True,
@@ -760,14 +763,14 @@ def draw_lalba_csn2_interrogation(cat: pd.DataFrame) -> Path:
     # --- Panel C: Breast & gynecologic tumor peaks vs. somatic-safety status ---
     peaks_df = pd.read_csv(TUMOR_PEAKS_CSV).drop_duplicates("gene_symbol").set_index("gene_symbol")
     panel_c_genes = [
-        ("CSN2", "CTA-F · CTA-P", C_CTAF, "Male ≤2.1 TPM · Lactation 99k"),
-        ("LALBA", "CTA-F · CTA-P", C_CTAF, "Testis P99 7.8 TPM (<8 · IHC−)"),
-        ("BTN1A1", "CTA-E · CTA-P", C_CTAE, "Adult ≤2.1 TPM · Lactation-only"),
+        ("CSN2", "CTA-F", C_CTAF, "Male ≤2.1 TPM · Lactation 99k"),
+        ("LALBA", "CTA-F", C_CTAF, "Testis P99 7.8 TPM (<8 · IHC−)"),
+        ("BTN1A1", "CTA-P", C_CTAE, "Adult ≤2.1 TPM · Lactation-only"),
         ("ZP4", "CTA-F", C_CTAF, "Male ≤0.1 TPM · Oocyte zona"),
         ("SCGB1D4", "CTA-MF", C_CTAMF, "UCEC 3,576 · Epididymis 51"),
         ("PRAME", "CTA-MF", C_CTAMF, "UCEC/UCS · Testis + Ovary"),
-        ("CTAG2", "CTA-MF · CTA-P", C_CTAMF, "OV 604 · Testis + Vagina"),
-        ("XAGE3", "CTA-M · CTA-P", C_CTAM, "TNBC/UCEC · Female <3.3"),
+        ("CTAG2", "CTA-MF", C_CTAMF, "OV 604 · Testis + Vagina"),
+        ("XAGE3", "CTA-M", C_CTAM, "TNBC/UCEC · Female <3.3"),
         ("CT83", "CTA-M", C_CTAM, "CESC/TNBC · Female <2.2"),
         ("PIP", "Unsafe", C_UNSAFE, "Salivary 16,000 nTPM"),
         ("SCGB2A2", "Unsafe", C_UNSAFE, "Skin 690 nTPM"),

@@ -1,0 +1,9 @@
+cancer_code,label,model_kind,strain,mhc_haplotype,source_accession,n_samples,native_feature_space,quantification
+OSA_NCI,Spontaneous primary & metastatic appendicular osteosarcoma (NCI COTC021/022),spontaneous_patient_tumor,multi-breed companion dogs,diverse DLA,GSE238110,196,CanFam3 symbol -> ENSCAFG,linear TPM from raw integer counts and CanFam3.1 exonic_bp
+OSA_COTC030,Spontaneous primary appendicular osteosarcoma (NCI COTC030 trial),spontaneous_patient_tumor,multi-breed companion dogs,diverse DLA,GSE304066,26,Canine symbol -> ENSCAFG,linear TPM from verified raw integer counts and CanFam3.1 exonic_bp
+OSA_CCOGC,Canine Comparative Oncology & Genomics Consortium (CCOGC) osteosarcoma,spontaneous_patient_tumor,"Labrador, Greyhound, Rottweiler, Golden Retriever & mixed",diverse DLA,GSE239948,43,CanFam3.1 symbol -> ENSCAFG,linear TPM from expected counts and CanFam3.1 exonic_bp
+CMT,Spontaneous canine mammary gland carcinoma,spontaneous_patient_tumor,multi-breed female companion dogs,diverse DLA,GSE119810,158,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+HSA,Spontaneous canine visceral hemangiosarcoma,spontaneous_patient_tumor,multi-breed companion dogs,diverse DLA,GSE95183,45,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+LYM,Spontaneous canine multicentric B- and T-cell lymphoma,spontaneous_patient_tumor,multi-breed companion dogs,diverse DLA,GSE95184,76,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+DLBCL,Canine diffuse large B-cell lymphoma (CLBL-1 vehicle controls),canine_tumor_line,German Shepherd,DLA-88,GSE287971,9,Ensembl gene (ENSCAFG),linear TPM from raw counts and CanFam3.1 exonic_bp
+GLIOMA,Spontaneous prosencephalic high-grade oligodendroglioma,spontaneous_patient_tumor,"French Bulldog, Boxer & Boston Terrier",diverse DLA,GSE284559,18,Ensembl gene (ENSCAFG),linear TPM from raw counts and CanFam3.1 exonic_bp

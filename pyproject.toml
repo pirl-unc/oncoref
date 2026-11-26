@@ -91,6 +91,7 @@ oncoref = [
     "data/*.yaml",
     "data/*.json",
     "data/species/*/*.csv",
+    "data/species/*/*.csv.gz",
     "data/species/*/*.yaml",
     "data/species/*/*.json",
     "data/species/*/*.json.gz",
@@ -108,6 +109,7 @@ oncoref = [
     "data/gene-knowledge.json",
     "data/gene-knowledge-updates.json",
     "data/cancer-only-audit.json.gz",
+    "data/baseline-2026-11-20-deltas.json.gz",
     "data/translation-qualification.json",
     "data/transcript-selection.json",
     "data/transcript-evidence.json",
@@ -155,6 +157,9 @@ oncoref = [
     "data/mouse-target-selection.csv.gz",
     "data/mouse-host-exposure.csv.gz",
     "data/mouse-proteome-sequences.csv.gz",
+    "data/dog-target-selection.csv.gz",
+    "data/dog-host-exposure.csv.gz",
+    "data/dog-proteome-sequences.csv.gz",
 ]
 
 [tool.ruff]

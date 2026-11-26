@@ -379,6 +379,29 @@ def donor_sex() -> pd.DataFrame:
     return gtex_deconvolution.gtex_donor_sex()
 
 
+def donor_age(*, reproductive_age_only: bool = False, sex: str | None = None) -> pd.DataFrame:
+    """Return open-access GTEx v11 donor age brackets (``20-29``..``70-79``) and ``is_reproductive_age`` (``20–49``)."""
+    from ..load_dataset import get_data
+
+    df = get_data("gtex-donor-age").copy()
+    df["is_reproductive_age"] = df["is_reproductive_age"].astype(bool)
+    if sex is not None:
+        s_norm = sex.strip().upper()
+        if s_norm in {"XX", "XY"}:
+            df = df[df["chromosomal_sex"].eq(s_norm)]
+        elif s_norm in {"F", "FEMALE"}:
+            df = df[df["reported_sex"].eq("female")]
+        elif s_norm in {"M", "MALE"}:
+            df = df[df["reported_sex"].eq("male")]
+        else:
+            raise ValueError(
+                f"Unknown sex filter {sex!r}; expected 'XX', 'XY', 'female', or 'male'"
+            )
+    if reproductive_age_only:
+        df = df[df["is_reproductive_age"]]
+    return df.reset_index(drop=True)
+
+
 def coverage_grid(*, category: str | None = None, missing_from_gtex: bool = False) -> pd.DataFrame:
     """Return the comprehensive human normal-tissue x source coverage grid (#778)."""
     return normal_tissues.normal_tissue_source_grid(
@@ -1010,6 +1033,7 @@ def tissue_summary(
 __all__ = [
     "apply_summary_spec",
     "coverage_grid",
+    "donor_age",
     "donor_sex",
     "sample_tpm",
     "tissue_rna",

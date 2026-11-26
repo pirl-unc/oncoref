@@ -140,7 +140,7 @@ def test_dux4_joint_765_and_767_dependency_and_symmetric_fshd_muscle_silence():
     ).catalog.set_index("protein_group_label")
     assert res_joint.loc["DUX4", "classification"] == "CTA"
     assert res_joint.loc["DUX4", "category"] == "CTA"
-    assert res_joint.loc["DUX4", "sex_restriction_code"] == "CTA-E"
+    assert res_joint.loc["DUX4", "sex_restriction_code"] == "CTA-P"
     assert res_joint.loc["DUX4", "rare_cell_status"] == "nuclear_only"
     assert res_joint.loc["DUX4", "repeat_family_767_disposition"] == "closed_repeat_family_cleared"
 

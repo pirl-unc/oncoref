@@ -18,7 +18,7 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 ## Antigen Classification
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), OncoRef
-classifies **323 CTA, 97 Cancer Antigen only, 142 Reproductive Antigen only, 1,082 Other and
+classifies **325 CTA, 95 Cancer Antigen only, 143 Reproductive Antigen only, 1,081 Other and
 18,249 Unsafe**:
 
 1. **Normal-tissue safety screen:** Bulk RNA (GTEx v11, HPA v23), sorted immune subsets (HPA, DICE, Monaco),
@@ -35,9 +35,11 @@ classifies **323 CTA, 97 Cancer Antigen only, 142 Reproductive Antigen only, 1,0
    and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can
    safely lose. Downstream patient profiles (`--profile` / `target_filters`) mark reproductive compartments as
    <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or
-   <span class="cat cat-absent">Absent</span>—identifying **288** non-pregnant female-safe CTAs (`CTA-M + CTA-E`: `236 + 52`), **60** male-safe
-   CTAs (`CTA-F + CTA-E`: `8 + 52`), and **16** non-exclusive peripartum/lactation CTAs (`CTA-P`) under calibrated `Protected` + `IHC−` organ protection
+   <span class="cat cat-absent">Absent</span>—partitioning all **325** human CTAs into four mutually exclusive host-physiology classes:
+   **224** `CTA-M` (`272` non-pregnant female-safe `CTA-M + CTA-P`), **13** `CTA-F` (`61` male-safe `CTA-F + CTA-P`),
+   **48** adult-absent pregnancy/peripartum `CTA-P`, and **40** shared `CTA-MF` under calibrated `Protected` + `IHC−` organ protection
    ([cross-sex CTAs](antigen-whitepaper.md#sex-restricted-reproductive-antigens-and-cross-sex-ctas),
+   [multi-species whitepaper](species-antigen-whitepaper.md),
    [rules and limits](host-selection.md)).
 
 ![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
@@ -87,4 +89,4 @@ ici_response.best_available_ici_response("COAD_MSI")
 | Cancer vocabulary | `oncoref.cancer_ontology`, `oncoref.cohorts` | Registry records, aliases, hierarchy, subtype axes, MMR/MSI status, cohort IDs, matched normal tissues |
 | Expression & QC | `oncoref.expression`, `oncoref.normalization`, `oncoref.library_qc`, `oncoref.samples` | Source-matrix ingestion, percentiles, clean TPM, housekeeping normalization, library-contamination screens, patient/donor deduplication |
 | Burden & ICI response | `oncoref.ici_response`, `oncoref.tmb`, `oncoref.incidence`, `oncoref.fusions` | Anti-PD-1 and broader ICI response estimates, TMB, incidence/mortality, defining fusions |
-| Genes, species & cache | `oncoref.gene_matching`, `oncoref.gene_ids`, `oncoref.human`, `oncoref.canine`, `oncoref.catalog`, `oncoref.reference_data` | Canonical Ensembl identities, species-scoped datasets, SHA-256-verified reference caches |
+| Genes, species & cache | `oncoref.gene_matching`, `oncoref.gene_ids`, `oncoref.human`, `oncoref.canine`, `oncoref.mouse`, `oncoref.catalog`, `oncoref.reference_data` | Canonical Ensembl identities, evaluated human/canine/murine antigen catalogs, SHA-256-verified reference caches |

@@ -378,8 +378,13 @@ def load(path=None, *, expected_id=None, require_current=True) -> SequenceBundle
         raise ValueError("Missing or unexpected sequence bundle payload")
     if pin:
         baseline_deps: dict[str, str] = {}
+        delta_gz = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json.gz")
         delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
-        if delta_res.is_file():
+        if delta_gz.is_file():
+            delta_doc = json.loads(gzip.decompress(delta_gz.read_bytes()).decode("utf-8"))
+            if manifest.get("selection_policy_id") == delta_doc.get("baseline_policy_id"):
+                baseline_deps = dict(delta_doc.get("baseline_package_dependencies_sha256", {}))
+        elif delta_res.is_file():
             delta_doc = json.loads(delta_res.read_text(encoding="utf-8"))
             if manifest.get("selection_policy_id") == delta_doc.get("baseline_policy_id"):
                 baseline_deps = dict(delta_doc.get("baseline_package_dependencies_sha256", {}))

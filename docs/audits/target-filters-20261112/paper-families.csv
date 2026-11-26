@@ -1,7 +1,7 @@
 family,source_id,candidates,citation,kind,scope
 cta,10.1002/cam4.2223,250,Chang et al. (2019),historical_catalog,Testis-specific coding gene expressed in at least 1% of TGCT; no broad somatic-cancer claim
 cta,10.1038/ncomms10499,250,Wang et al. (2016),historical_catalog,Cancer-associated RNA nomination; no antigen validation asserted
-cta,10.18632/oncotarget.21715,236,da Silva et al. (2017),historical_catalog,At least 90% normal-tissue RNA attributable to testis; tumor positivity not required; Gene-labelled tumor proteomics; unique-locus peptide assignment is not established; RSEM >1 in at least 10% of samples in a tumor type; RNA nomination
+cta,10.18632/oncotarget.21715,237,da Silva et al. (2017),historical_catalog,At least 90% normal-tissue RNA attributable to testis; tumor positivity not required; Gene-labelled tumor proteomics; unique-locus peptide assignment is not established; RSEM >1 in at least 10% of samples in a tumor type; RNA nomination
 cta,10.1371/journal.pgen.1011734,78,Loriot et al. (2025),historical_catalog,Cancer-germline RNA nomination; strict and preferential classes remain distinct
 cta,10.1136/jitc-2023-007935,50,Carter et al. (2023),historical_catalog,Final CT-expression set without detectable thymic expression; functional vaccination evidence is not assigned to every gene
 cta,10.1002/1878-0261.12900,32,Jamin et al. (2021),historical_catalog,CT-pattern microarray nomination; tumor upregulation with no corresponding normal-tissue detection; Core CT annotation; underlying microarray probes may recognize several loci

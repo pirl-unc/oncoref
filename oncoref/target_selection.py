@@ -8,6 +8,7 @@ reproductive flags are not substitutes for the new evidence checks.
 
 from __future__ import annotations
 
+import gzip
 import json
 import re
 from collections.abc import Callable
@@ -20,7 +21,7 @@ import pandas as pd
 
 from .load_dataset import _register_derived_cache
 
-POLICY_ID = "oncoref.target-selection.2026-11-25.1"
+POLICY_ID = "oncoref.target-selection.2026-11-26.1"
 BASELINE_2026_11_20_POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.
@@ -407,6 +408,9 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
 
     with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
         base = pd.read_csv(handle, compression="gzip", low_memory=False)
+    for _sex_col in ("sex_restriction_class", "sex_restriction_code"):
+        if _sex_col in base.columns:
+            base[_sex_col] = base[_sex_col].astype("object").fillna("").astype(str)
     base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
     base = repeat_family_equivalence.annotate_catalog(base, enabled=True)
     base = assay_boundary_adjudications.annotate_catalog(base, enabled=True, integrated=True)
@@ -420,13 +424,23 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
 
 
 @lru_cache(maxsize=1)
+def _load_baseline_2026_11_20_deltas() -> dict | None:
+    delta_gz = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json.gz")
+    if delta_gz.is_file():
+        return json.loads(gzip.decompress(delta_gz.read_bytes()).decode("utf-8"))
+    delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
+    if delta_res.is_file():
+        return json.loads(delta_res.read_text(encoding="utf-8"))
+    return None
+
+
+@lru_cache(maxsize=1)
 def _baseline_2026_11_20_frame_cached() -> pd.DataFrame:
     with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
         df = pd.read_csv(handle, compression="gzip", low_memory=False)
-    delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
-    if not delta_res.is_file():
+    doc = _load_baseline_2026_11_20_deltas()
+    if doc is None:
         return df
-    doc = json.loads(delta_res.read_text(encoding="utf-8"))
     drop_cols = [c for c in doc.get("added_columns", []) if c in df.columns]
     if drop_cols:
         df = df.drop(columns=drop_cols)
@@ -459,10 +473,9 @@ def _baseline_2026_11_20_host_exposures_cached() -> dict[str, dict]:
     from .species_target_selection import packaged_species_host_exposure
 
     full = packaged_species_host_exposure("human")
-    delta_res = files("oncoref").joinpath("data/baseline-2026-11-20-deltas.json")
-    if not delta_res.is_file():
+    doc = _load_baseline_2026_11_20_deltas()
+    if doc is None:
         return full
-    doc = json.loads(delta_res.read_text(encoding="utf-8"))
     allowed = set(doc.get("baseline_host_exposure_entity_ids", []))
     out = {k: deepcopy(v) for k, v in full.items() if k in allowed} if allowed else deepcopy(full)
     for eid, comp_deltas in doc.get("baseline_host_exposure_deltas", {}).items():

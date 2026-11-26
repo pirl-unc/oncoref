@@ -110,7 +110,8 @@ def test_proteins_uniform_schema_and_cross_species_wiring():
     assert cta.attrs["set"] == "CTA"
 
     dog_ras = antigen_sets.proteins("RA", species="canine")
-    assert dog_ras.empty and "catalog_category" in dog_ras.columns
+    assert len(dog_ras) == 475 and "catalog_category" in dog_ras.columns
+    assert len(antigen_sets.proteins("CTA", species="canine")) == 54
     assert antigen_sets.proteins("Unsafe", species="canine").attrs["species"] == "dog"
     assert not antigen_sets.proteins("Other", species="canine").empty
     assert antigen_sets.gene_ids("Other", species="canine")

@@ -1,0 +1,383 @@
+ortholog_key,cta_species,human_symbol,human_classification,human_sex_code,dog_symbol,dog_classification,dog_sex_code,mouse_symbol,mouse_classification,mouse_sex_code,concordance_regime
+ACCSL,human,ACCSL,CTA,CTA-F,,absent,,Accsl,Unsafe,,Divergent somatic / review gate
+ACTL7A,human,ACTL7A,CTA,CTA-M,ACTL7A,Unsafe,,Actl7a,Unsafe,,Divergent somatic / review gate
+ACTL7B,human,ACTL7B,CTA,CTA-MF,ACTL7B,Unsafe,,Actl7b,Unsafe,,Divergent somatic / review gate
+ACTL8,human,ACTL8,CTA,CTA-MF,ACTL8,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+ACTL9,human,ACTL9,CTA,CTA-M,ACTL9,Reproductive Antigen only,RA-M-only,Actl9,Unsafe,,CTA + conserved RA-only ortholog
+ACTRT2,human,ACTRT2,CTA,CTA-M,ACTRT2,Reproductive Antigen only,RA-M-only,Actrt2,Unsafe,,CTA + conserved RA-only ortholog
+ADAD1,human,ADAD1,CTA,CTA-MF,ADAD1,Reproductive Antigen only,RA-MF-only,Adad1,Unsafe,,CTA + conserved RA-only ortholog
+ADAD2,dog,ADAD2,Unsafe,,ADAD2,CTA,CTA-M,Adad2,Unsafe,,Divergent somatic / review gate
+ADAM18,human,ADAM18,CTA,CTA-M,ADAM18,Other:Review,,Adam18,Unsafe,,Divergent somatic / review gate
+ADAM2,human,ADAM2,CTA,CTA-M,ADAM2,Reproductive Antigen only,RA-M-only,Adam2,Unsafe,,CTA + conserved RA-only ortholog
+AKAP4,human,AKAP4,CTA,CTA-M,AKAP4,Reproductive Antigen only,RA-M-only,Akap4,Unsafe,,CTA + conserved RA-only ortholog
+ANHX,human,ANHX,CTA,CTA-M,ANHX,Other:Expression,,,absent,,Divergent somatic / review gate
+ANKRD60,human,ANKRD60,CTA,CTA-MF,,absent,,Ankrd60,Unsafe,,Divergent somatic / review gate
+ANTXRL,human|dog,ANTXRL,CTA,CTA-M,ANTXRL,CTA,CTA-M,Antxrl,Unsafe,,Conserved multi-species CTA
+ASZ1,dog,ASZ1,Unsafe,,ASZ1,CTA,CTA-M,Asz1,Unsafe,,Divergent somatic / review gate
+BTN1A1,human,BTN1A1,CTA,CTA-P,BTN1A1,Unsafe,,Btn1a1,Unsafe,,Divergent somatic / review gate
+C10ORF120,human,C10orf120,CTA,CTA-M,C28H10orf120,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+C12ORF50,human,C12orf50,CTA,CTA-M,C15H12orf50,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+C16ORF82,human,C16orf82,CTA,CTA-M,C6H16orf82,Unsafe,,,absent,,Divergent somatic / review gate
+C16ORF90,human,C16orf90,CTA,CTA-M,C6H16orf90,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+C19ORF67,human,C19orf67,CTA,CTA-MF,C20H19orf67,Unsafe,,,absent,,Divergent somatic / review gate
+C1ORF202,human,C1orf202,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+C20ORF141,human,C20orf141,CTA,CTA-MF,C24H20orf141,Other:Expression,,,absent,,Divergent somatic / review gate
+C20ORF144,human,C20orf144,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+C2ORF78,human,C2orf78,CTA,CTA-M,C17H2orf78,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+C3ORF22,human,C3orf22,CTA,CTA-M,C20H3orf22,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+CALR3,human,CALR3,CTA,CTA-M,CALR3,Unsafe,,Calr3,Unsafe,,Divergent somatic / review gate
+CBLL2,human,CBLL2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CBY2,human,CBY2,CTA,CTA-MF,,absent,,Cby2,Unsafe,,Divergent somatic / review gate
+CCDC116,human,CCDC116,CTA,CTA-M,CCDC116,Reproductive Antigen only,RA-M-only,Ccdc116,Unsafe,,CTA + conserved RA-only ortholog
+CCDC166,human,CCDC166,CTA,CTA-M,CCDC166,Reproductive Antigen only,RA-M-only,Ccdc166,Unsafe,,CTA + conserved RA-only ortholog
+CCDC178,dog,CCDC178,Unsafe,,CCDC178,CTA,CTA-M,Ccdc178,Unsafe,,Divergent somatic / review gate
+CCDC179,human,CCDC179,CTA,CTA-M,CCDC179,Reproductive Antigen only,RA-M-only,Ccdc179,Unsafe,,CTA + conserved RA-only ortholog
+CCDC182,human,CCDC182,CTA,CTA-M,CCDC182,Reproductive Antigen only,RA-M-only,Ccdc182,Unsafe,,CTA + conserved RA-only ortholog
+CCDC185,human,CCDC185,CTA,CTA-M,,absent,,Ccdc185,Unsafe,,Divergent somatic / review gate
+CCDC27,human,CCDC27,CTA,CTA-MF,CCDC27,Reproductive Antigen only,RA-M-only,Ccdc27,Unsafe,,CTA + conserved RA-only ortholog
+CCDC42,human,CCDC42,CTA,CTA-MF,CCDC42,Unsafe,,Ccdc42,Unsafe,,Divergent somatic / review gate
+CCDC63,human,CCDC63,CTA,CTA-MF,CCDC63,Reproductive Antigen only,RA-M-only,Ccdc63,Unsafe,,CTA + conserved RA-only ortholog
+CCER1,human,CCER1,CTA,CTA-M,,absent,,Ccer1,Unsafe,,Divergent somatic / review gate
+CCT8L2,human,CCT8L2,CTA,CTA-M,CCT8L2,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+CER1,human,CER1,CTA,CTA-P,CER1,Other:Expression,,Cer1,Reproductive Antigen only,RA-P-only,CTA + conserved RA-only ortholog
+CFAP97D1,dog,CFAP97D1,Unsafe,,CFAP97D1,CTA,CTA-M,Cfap97d1,Unsafe,,Divergent somatic / review gate
+CHCT1,human,CHCT1,CTA,CTA-M,C9H17orf64,Unsafe,,Chct1,Unsafe,,Divergent somatic / review gate
+CHRNG,dog,CHRNG,Unsafe,,CHRNG,CTA,CTA-P,Chrng,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+CIMAP1A,human,CIMAP1A,CTA,CTA-M,ODF3,Unsafe,,Cimap1a,Unsafe,,Divergent somatic / review gate
+CIMIP2A,human,CIMIP2A,CTA,CTA-MF,FAM166A,Unsafe,,Cimip2a,Unsafe,,Divergent somatic / review gate
+CIMIP4,human,CIMIP4,CTA,CTA-M,TEX33,Reproductive Antigen only,RA-M-only,Cimip4,Unsafe,,CTA + conserved RA-only ortholog
+CIROP,human,CIROP,CTA,CTA-P,LMLN2,Other:Review,,Cirop,Other:Expression,,Divergent somatic / review gate
+CPSF4L,human,CPSF4L,CTA,CTA-F,,absent,,Cpsf4l,Unsafe,,Divergent somatic / review gate
+CRIPTO3,human,CRIPTO3,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CRISP1,human,CRISP1,CTA,CTA-M,,absent,,Crisp1,Unsafe,,Divergent somatic / review gate
+CSAG1,human,CSAG1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CSN1S1,dog,CSN1S1,Unsafe,,CSN1S1,CTA,CTA-MF,Csn1s1,Unsafe,,Divergent somatic / review gate
+CSN2,human|dog,CSN2,CTA,CTA-F,CSN2,CTA,CTA-MF,Csn2,Reproductive Antigen only,RA-MF-only,Conserved multi-species CTA
+CSN3,dog,CSN3,Unsafe,,CSN3,CTA,CTA-MF,Csn3,Other:Review,,Divergent somatic / review gate
+CST9L,human,CST9L,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CT45A1,human,CT45A1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CT45A10,human,CT45A10,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CT45A2,human,CT45A2/8/9,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CT47A1,human,CT47A1/10/11/12/2/3/4/5/6/7/8/9,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CT47B1,human,CT47B1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CT55,human,CT55,CTA,CTA-M,CT55,Other:Review,,Ct55,Unsafe,,Divergent somatic / review gate
+CT83,human,CT83,CTA,CTA-M,CT83,Unsafe,,,absent,,Divergent somatic / review gate
+CTAG1,human,NY-ESO-1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CTAG2,human,CTAG2,CTA,CTA-MF,,absent,,Ctag2,Unsafe,,Divergent somatic / review gate
+CTAGE1,human,CTAGE1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CTAGE6,human,CTAGE6,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CXORF49,human,CXorf49/B,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CXORF51A,human,CXorf51A/B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+CXORF66,human,CXorf66,CTA,CTA-M,CXHXorf66,Unsafe,,,absent,,Divergent somatic / review gate
+CYLC1,dog,CYLC1,Reproductive Antigen only,RA-MF-only,CYLC1,CTA,CTA-M,Cylc1,Unsafe,,CTA + conserved RA-only ortholog
+DAZL,dog,DAZL,Unsafe,,DAZL,CTA,CTA-M,Dazl,Unsafe,,Divergent somatic / review gate
+DCAF4L2,human,DCAF4L2,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DDI1,human,DDI1,CTA,CTA-M,DDI1,Unsafe,,Ddi1,Unsafe,,Divergent somatic / review gate
+DDX43,dog,DDX43,Unsafe,,DDX43,CTA,CTA-M,Ddx43,Unsafe,,Divergent somatic / review gate
+DEFB107A,human,DEFB107A/B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DEFB108B,human,DEFB108B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DEFB112,human,DEFB112,CTA,CTA-M,DEFB112,Unsafe,,Defb12,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+DEFB118,human,DEFB118,CTA,CTA-M,,absent,,Defb18,Unsafe,,Divergent somatic / review gate
+DEFB123,human,DEFB123,CTA,CTA-M,DEFB123,Other:Review,,Defb23,Reproductive Antigen only,RA-MF-only,CTA + conserved RA-only ortholog
+DEFB124,dog,DEFB124,Unsafe,,DEFB124,CTA,CTA-M,,absent,,Divergent somatic / review gate
+DEFB126,human,DEFB126,CTA,CTA-M,DEFB126,Other:Review,,Defb26,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+DEFB129,human,DEFB129,CTA,CTA-M,DEFB129,Reproductive Antigen only,RA-M-only,Defb29,Unsafe,,CTA + conserved RA-only ortholog
+DEFB135,human,DEFB135,CTA,CTA-M,,absent,,Defb35,Unsafe,,Divergent somatic / review gate
+DKKL1,human,DKKL1,CTA,CTA-M,DKKL1,Unsafe,,Dkkl1,Unsafe,,Divergent somatic / review gate
+DMRT1,human,DMRT1,CTA,CTA-M,DMRT1,Reproductive Antigen only,RA-M-only,Dmrt1,Unsafe,,CTA + conserved RA-only ortholog
+DMRTB1,human,DMRTB1,CTA,CTA-MF,,absent,,Dmrtb1,Unsafe,,Divergent somatic / review gate
+DMRTC2,human,DMRTC2,CTA,CTA-MF,DMRTC2,Reproductive Antigen only,RA-M-only,Dmrtc2,Unsafe,,CTA + conserved RA-only ortholog
+DOG:ENSCAFG00000010638,dog,,absent,,ENSCAFG00000010638,CTA,CTA-MF,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000012690,dog,,absent,,ENSCAFG00000012690,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000013406,dog,,absent,,ENSCAFG00000013406,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000013603,dog,,absent,,ENSCAFG00000013603,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000016056,dog,,absent,,ENSCAFG00000016056,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000023133,dog,,absent,,ENSCAFG00000023133,CTA,CTA-MF,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000023625,dog,,absent,,ENSCAFG00000023625,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000028723,dog,,absent,,ENSCAFG00000028723,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DOG:ENSCAFG00000032105,dog,,absent,,ENSCAFG00000032105,CTA,CTA-M,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DPPA2,human,DPPA2,CTA,CTA-M,,absent,,Dppa2,Unsafe,,Divergent somatic / review gate
+DPPA3,human,DPPA3,CTA,CTA-F,,absent,,Dppa3,Unsafe,,Divergent somatic / review gate
+DPPA5,human,DPPA5,CTA,CTA-MF,DPPA5,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+DPRX,human,DPRX,CTA,CTA-M,DPRX,Reproductive Antigen only,RA-F-only,,absent,,CTA + conserved RA-only ortholog
+DUSP21,human,DUSP21,CTA,CTA-M,DUSP21,Reproductive Antigen only,RA-M-only,Dusp21,Unsafe,,CTA + conserved RA-only ortholog
+DUX4,human,DUX4,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+DUXA,human,DUXA,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+EBLN1,human,EBLN1,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+EDDM3A,human,EDDM3A,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+EDDM3B,human,EDDM3B,CTA,CTA-M,EDDM3B,Unsafe,,Eddm3b,Other:Review,,Divergent somatic / review gate
+ENTHD1,dog,ENTHD1,Unsafe,,ENTHD1,CTA,CTA-M,Enthd1,Unsafe,,Divergent somatic / review gate
+ERVV-1,human,ERVV-1,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ERVV-2,human,ERVV-2,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ESX1,human,ESX1,CTA,CTA-M,ESX1,Other:Expression,,Esx1,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+FAM187B,human,FAM187B,CTA,CTA-M,FAM187B,Reproductive Antigen only,RA-M-only,Fam187b,Unsafe,,CTA + conserved RA-only ortholog
+FAM47A,human,FAM47A,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+FAM47C,human,FAM47C,CTA,CTA-M,,absent,,Fam47c,Unsafe,,Divergent somatic / review gate
+FAM90A27P,human,FAM90A27P,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+FAM9A,human,FAM9A,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+FER1L5,dog,FER1L5,Unsafe,,FER1L5,CTA,CTA-M,Fer1l5,Unsafe,,Divergent somatic / review gate
+FMR1NB,human,FMR1NB,CTA,CTA-M,FMR1NB,Reproductive Antigen only,RA-M-only,Fmr1nb,Unsafe,,CTA + conserved RA-only ortholog
+FOXL3,human,FOXL3,CTA,CTA-M,,absent,,Foxl3,Reproductive Antigen only,RA-MF-only,CTA + conserved RA-only ortholog
+FOXR1,human,FOXR1,CTA,CTA-MF,FOXR1,Unsafe,,Foxr1,Unsafe,,Divergent somatic / review gate
+FOXR2,human,FOXR2,CTA,CTA-M,FOXR2,Cancer Antigen only,,Foxr2,Cancer Antigen only,,Divergent somatic / review gate
+FREY1,human,FREY1,CTA,CTA-M,C18H11orf94,Unsafe,,Frey1,Unsafe,,Divergent somatic / review gate
+FSCB,human,FSCB,CTA,CTA-M,FSCB,Reproductive Antigen only,RA-M-only,Fscb,Unsafe,,CTA + conserved RA-only ortholog
+FSCN3,human,FSCN3,CTA,CTA-M,FSCN3,Reproductive Antigen only,RA-M-only,Fscn3,Unsafe,,CTA + conserved RA-only ortholog
+FTHL17,human,FTHL17,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GAGE1,human,GAGE1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GAGE12C,human,GAGE12C/D/E,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GAGE12H,human,GAGE12H,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GAGE12J,human,GAGE12J,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GAGE13,human,GAGE13,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GAGE2A,human,GAGE2A,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GARIN1A,dog,GARIN1A,Unsafe,,FAM71F2,CTA,CTA-M,Garin1a,Unsafe,,Divergent somatic / review gate
+GARIN4,dog,GARIN4,Unsafe,,FAM71A,CTA,CTA-M,Garin4,Unsafe,,Divergent somatic / review gate
+GARIN5B,human,GARIN5B,CTA,CTA-M,FAM71E2,Other:Review,,Garin5b,Unsafe,,Divergent somatic / review gate
+GK2,human,GK2,CTA,CTA-M,GK2,Reproductive Antigen only,RA-M-only,Gk2,Unsafe,,CTA + conserved RA-only ortholog
+GLIPR1L2,dog,GLIPR1L2,Unsafe,,GLIPR1L2,CTA,CTA-M,Glipr1l2,Unsafe,,Divergent somatic / review gate
+GOLGA6A,human,GOLGA6A,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GOLGA6D,human,GOLGA6D,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GOLGA6L1,human,GOLGA6L1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GOLGA6L2,human,GOLGA6L2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+GPAT2,dog,GPAT2,Unsafe,,GPAT2,CTA,CTA-M,Gpat2,Unsafe,,Divergent somatic / review gate
+GPC2,dog,GPC2,Unsafe,,GPC2,CTA,CTA-M,Gpc2,Unsafe,,Divergent somatic / review gate
+GPR50,dog,GPR50,Unsafe,,GPR50,CTA,CTA-P,Gpr50,Other:Review,,Divergent somatic / review gate
+GZMD,mouse,,absent,,,absent,,Gzmd,CTA,CTA-F,Lineage-specific / no 1:1 symbol ortholog
+GZME,mouse,,absent,,,absent,,Gzme,CTA,CTA-MF,Lineage-specific / no 1:1 symbol ortholog
+GZMF,mouse,,absent,,,absent,,Gzmf,CTA,CTA-F,Lineage-specific / no 1:1 symbol ortholog
+GZMG,mouse,,absent,,,absent,,Gzmg,CTA,CTA-F,Lineage-specific / no 1:1 symbol ortholog
+H2AB1,human,H2AB1,CTA,CTA-M,,absent,,H2ab1,Unsafe,,Divergent somatic / review gate
+H2AP,human,H2AP,CTA,CTA-M,,absent,,H2ap,Unsafe,,Divergent somatic / review gate
+H2BC1,human,H2BC1,CTA,CTA-M,HIST1H2BA,Unsafe,,H2bc1,Unsafe,,Divergent somatic / review gate
+H3Y1,human,H3Y1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+HDGFL1,human,HDGFL1,CTA,CTA-M,,absent,,Hdgfl1,Unsafe,,Divergent somatic / review gate
+HMGA2,mouse,HMGA2,Unsafe,,,absent,,Hmga2,CTA,CTA-MF,Divergent somatic / review gate
+HMGB1P1,human,HMGB1P1,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+HMGB4,human,HMGB4,CTA,CTA-M,HMGB4,Unsafe,,Hmgb4,Unsafe,,Divergent somatic / review gate
+HNRNPCL1,human,HNRNPCL1,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+HNRNPCL2,human,HNRNPCL2,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+HNRNPCL3,human,HNRNPCL3/4,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+HORMAD1,dog,HORMAD1,Unsafe,,HORMAD1,CTA,CTA-MF,Hormad1,Unsafe,,Divergent somatic / review gate
+HSFY1,human,HSFY1/2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+HUMAN:ENSG00000283205,human,ENSG00000283205,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+IGF2BP1,dog,IGF2BP1,Unsafe,,IGF2BP1,CTA,CTA-P,Igf2bp1,Unsafe,,Divergent somatic / review gate
+IQCA1L,human,IQCA1L,CTA,CTA-M,IQCA1L,Reproductive Antigen only,RA-M-only,Iqca1l,Unsafe,,CTA + conserved RA-only ortholog
+IRGC,human,IRGC,CTA,CTA-M,IFGGE,Unsafe,,Irgc,Unsafe,,Divergent somatic / review gate
+IZUMO1R,human,IZUMO1R,CTA,CTA-F,IZUMO1R,Unsafe,,Izumo1r,Unsafe,,Divergent somatic / review gate
+KCNU1,human,KCNU1,CTA,CTA-M,KCNU1,Other:Expression,,Kcnu1,Unsafe,,Divergent somatic / review gate
+KHDC3L,human,KHDC3L,CTA,CTA-F,KHDC3L,Other:Expression,,,absent,,Divergent somatic / review gate
+KIAA1210,human,KIAA1210,CTA,CTA-MF,KIAA1210,Unsafe,,,absent,,Divergent somatic / review gate
+KLF18,human,KLF18,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+KRTAP20-4,human,KRTAP20-4,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+LALBA,human,LALBA,CTA,CTA-F,LALBA,Unsafe,,Lalba,Unsafe,,Divergent somatic / review gate
+LCN9,human,LCN9,CTA,CTA-M,LCN9,Reproductive Antigen only,RA-M-only,Lcn9,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+LELP1,human,LELP1,CTA,CTA-M,LELP1,Unsafe,,Lelp1,Unsafe,,Divergent somatic / review gate
+LEUTX,human,LEUTX,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+LGALS16,human,LGALS16,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+LIPI,dog,LIPI,Unsafe,,LIPI,CTA,CTA-M,Lipi,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+LRRC52,human,LRRC52,CTA,CTA-M,LRRC52,Reproductive Antigen only,RA-M-only,Lrrc52,Unsafe,,CTA + conserved RA-only ortholog
+LRRIQ4,human,LRRIQ4,CTA,CTA-M,LRRIQ4,Other:Review,,Lrriq4,Unsafe,,Divergent somatic / review gate
+LUZP4,human|dog,LUZP4,CTA,CTA-M,LUZP4,CTA,CTA-M,Luzp4,Cancer Antigen only,,Conserved multi-species CTA
+LYPD4,human,LYPD4,CTA,CTA-MF,LYPD4,Reproductive Antigen only,RA-M-only,Lypd4,Unsafe,,CTA + conserved RA-only ortholog
+LYZL1,human,LYZL1,CTA,CTA-M,,absent,,Lyzl1,Unsafe,,Divergent somatic / review gate
+LYZL2,human,LYZL2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MAGEA1,human,MAGEA1,CTA,CTA-M,,absent,,Magea1,Other:Expression,,Divergent somatic / review gate
+MAGEA10,human,MAGEA10,CTA,CTA-M,,absent,,Magea10,Other:Expression,,Divergent somatic / review gate
+MAGEA11,human,MAGEA11,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MAGEA2,human,MAGEA2/B,CTA,CTA-M,,absent,,Magea2,Other:Expression,,Divergent somatic / review gate
+MAGEA4,human,MAGEA4,CTA,CTA-M,,absent,,Magea4,Other:Expression,,Divergent somatic / review gate
+MAGEA6,human,MAGEA6,CTA,CTA-M,,absent,,Magea6,Other:Expression,,Divergent somatic / review gate
+MAGEA8,human,MAGEA8,CTA,CTA-M,,absent,,Magea8,Other:Expression,,Divergent somatic / review gate
+MAGEA9,human,MAGEA9/B,CTA,CTA-M,,absent,,Magea9,Unsafe,,Divergent somatic / review gate
+MAGEB1,human,MAGEB1,CTA,CTA-M,,absent,,Mageb1,Other:Expression,,Divergent somatic / review gate
+MAGEB16,human,MAGEB16,CTA,CTA-MF,,absent,,Mageb16,Unsafe,,Divergent somatic / review gate
+MAGEB18,dog,MAGEB18,Reproductive Antigen only,RA-M-only,MAGEB18,CTA,CTA-M,Mageb18,Other:Expression,,CTA + conserved RA-only ortholog
+MAGEB4,human,MAGEB4,CTA,CTA-M,MAGEB4,Other:Review,,Mageb4,Other:Expression,,Divergent somatic / review gate
+MAGEB6,human,MAGEB6,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MAGEB6B,human,MAGEB6B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MAGEC1,human,MAGEC1,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MAGEC2,human,MAGEC2,CTA,CTA-M,,absent,,Magec2,Unsafe,,Divergent somatic / review gate
+MBD3L2,human,MBD3L2,CTA,CTA-P,,absent,,Mbd3l2,Other:Expression,,Divergent somatic / review gate
+MBD3L2B,human,MBD3L2B,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MBD3L3,human,MBD3L3,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MBD3L4,human,MBD3L4,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MBD3L5,human,MBD3L5,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MEIOC,dog,MEIOC,Unsafe,,MEIOC,CTA,CTA-M,Meioc,Unsafe,,Divergent somatic / review gate
+MEIOSIN,human,MEIOSIN,CTA,CTA-M,BHMG1,Reproductive Antigen only,RA-M-only,Meiosin,Other:Expression,,CTA + conserved RA-only ortholog
+MOS,human,MOS,CTA,CTA-MF,,absent,,Mos,Unsafe,,Divergent somatic / review gate
+MPC1L,human,MPC1L,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+MROH2B,human,MROH2B,CTA,CTA-M,MROH2B,Reproductive Antigen only,RA-M-only,Mroh2b,Unsafe,,CTA + conserved RA-only ortholog
+MROH9,dog,MROH9,Unsafe,,MROH9,CTA,CTA-M,Mroh9,Unsafe,,Divergent somatic / review gate
+MSGN1,human,MSGN1,CTA,CTA-P,MSGN1,Other:Expression,,Msgn1,Unsafe,,Divergent somatic / review gate
+NAA11,dog,NAA11,Unsafe,,NAA11,CTA,CTA-M,Naa11,Unsafe,,Divergent somatic / review gate
+NANOGNB,human,NANOGNB,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+NLRP11,human,NLRP11,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+NLRP4,human,NLRP4,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+NUTM1,human,NUTM1,CTA,CTA-M,,absent,,Nutm1,Unsafe,,Divergent somatic / review gate
+ODF1,human,ODF1,CTA,CTA-M,ODF1,Reproductive Antigen only,RA-M-only,Odf1,Unsafe,,CTA + conserved RA-only ortholog
+ODF4,human,ODF4,CTA,CTA-M,ODF4,Reproductive Antigen only,RA-M-only,Odf4,Unsafe,,CTA + conserved RA-only ortholog
+OLIG3,dog,OLIG3,Other:Review,,OLIG3,CTA,CTA-P,Olig3,Reproductive Antigen only,RA-F-only,CTA + conserved RA-only ortholog
+OOSP2,human,OOSP2,CTA,CTA-MF,,absent,,Oosp2,Other:Expression,,Divergent somatic / review gate
+OR10J1,human,OR10J1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+OR1N1,human,OR1N1,CTA,CTA-F,,absent,,Or1n1,Other:Expression,,Divergent somatic / review gate
+OR4M2,human,OR4M2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+OTOG,dog,OTOG,Unsafe,,OTOG,CTA,CTA-M,Otog,Other:Review,,Divergent somatic / review gate
+OTUD6A,human,OTUD6A,CTA,CTA-M,OTUD6A,Cancer Antigen only,,Otud6a,Other:Expression,,Divergent somatic / review gate
+OXTR,dog,OXTR,Unsafe,,OXTR,CTA,CTA-MF,Oxtr,Unsafe,,Divergent somatic / review gate
+PAGE1,human,PAGE1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PAGE2,human,PAGE2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PAGE3,human,PAGE3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PASD1,human|dog,PASD1,CTA,CTA-M,PASD1,CTA,CTA-M,Pasd1,Unsafe,,Conserved multi-species CTA
+PATE1,human,PATE1,CTA,CTA-M,PATE1,Other:Review,,Pate1,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+PATE3,human,PATE3,CTA,CTA-M,PATE3,Other:Review,,Pate3,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+PBSN,mouse,,absent,,,absent,,Pbsn,CTA,CTA-M,Lineage-specific / no 1:1 symbol ortholog
+PFN4,dog,PFN4,Unsafe,,PFN4,CTA,CTA-M,Pfn4,Unsafe,,Divergent somatic / review gate
+PIWIL3,human,PIWIL3,CTA,CTA-MF,PIWIL3,Other:Expression,,,absent,,Divergent somatic / review gate
+PLAC1,human|mouse,PLAC1,CTA,CTA-M,,absent,,Plac1,CTA,CTA-M,Conserved multi-species CTA
+PLD6,dog,PLD6,Unsafe,,PLD6,CTA,CTA-M,Pld6,Unsafe,,Divergent somatic / review gate
+PNMA6E,human,PNMA6E,CTA,CTA-MF,,absent,,Pnma6e,Cancer Antigen only,,Divergent somatic / review gate
+POTEH,human,POTEH,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PPP1R2B,human,PPP1R2B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PPP4R3C,human,PPP4R3C,CTA,CTA-M,PPP4R3C,Other:Expression,,,absent,,Divergent somatic / review gate
+PRAME,human|dog,PRAME,CTA,CTA-MF,PRAME,CTA,CTA-M,,absent,,Conserved multi-species CTA
+PRAMEF1,human,PRAMEF1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF10,human,PRAMEF10,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF14,human,PRAMEF14,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF15,human,PRAMEF15,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF2,human,PRAMEF2,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF20,human,PRAMEF20,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF25,human,PRAMEF25/6,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF4,human,PRAMEF4,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEF6,human,PRAMEF6,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRAMEL13,mouse,,absent,,,absent,,Pramel13,CTA,CTA-P,Lineage-specific / no 1:1 symbol ortholog
+PRDM14,human,PRDM14,CTA,CTA-P,PRDM14,Reproductive Antigen only,RA-M-only,Prdm14,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+PRKACG,human,PRKACG,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRM1,human,PRM1,CTA,CTA-M,,absent,,Prm1,Unsafe,,Divergent somatic / review gate
+PRR20G,human,PRR20G,CTA,CTA-M,PRR20G,Other:Review,,,absent,,Divergent somatic / review gate
+PRR23D1,human,PRR23D1/2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRR23E,human,PRR23E,CTA,CTA-F,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+PRSS37,human,PRSS37,CTA,CTA-M,PRSS37,Reproductive Antigen only,RA-M-only,Prss37,Unsafe,,CTA + conserved RA-only ortholog
+PRSS38,human,PRSS38,CTA,CTA-M,PRSS38,Other:Expression,,Prss38,Unsafe,,Divergent somatic / review gate
+PRSS58,human,PRSS58,CTA,CTA-M,PRSS58,Reproductive Antigen only,RA-M-only,Prss58,Unsafe,,CTA + conserved RA-only ortholog
+PSMA8,human|dog,PSMA8,CTA,CTA-M,PSMA8,CTA,CTA-M,Psma8,Unsafe,,Conserved multi-species CTA
+RBMXL2,human,RBMXL2,CTA,CTA-M,,absent,,Rbmxl2,Unsafe,,Divergent somatic / review gate
+RBMY1A1,human,RBMY1A1,CTA,CTA-M,,absent,,Rbmy/Rbmyf5/Rbmyf7/Rbmyf8,Unsafe,,Divergent somatic / review gate
+RBMY1F,human,RBMY1F/J,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+RFPL4AL1,human,RFPL4AL1,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+RFPL4B,human,RFPL4B,CTA,CTA-M,RFPL4B,Cancer Antigen only,,Rfpl4b,Other:Expression,,Divergent somatic / review gate
+RHOXF2B,human,RHOXF2B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+RLN1,human,RLN1,CTA,CTA-M,,absent,,Rln1,Other:Review,,Divergent somatic / review gate
+RNASE11,human,RNASE11,CTA,CTA-M,,absent,,Rnase11,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+RNASE12,human,RNASE12,CTA,CTA-M,RNASE12,Unsafe,,Rnase12,Unsafe,,Divergent somatic / review gate
+RNF151,human,RNF151,CTA,CTA-M,RNF151,Unsafe,,Rnf151,Unsafe,,Divergent somatic / review gate
+SAGE1,human,SAGE1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SBP,mouse,,absent,,,absent,,Sbp,CTA,CTA-M,Lineage-specific / no 1:1 symbol ortholog
+SCGB1D4,human,SCGB1D4,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SEMG2,human,SEMG2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SERPINB9E,mouse,,absent,,,absent,,Serpinb9e,CTA,CTA-P,Lineage-specific / no 1:1 symbol ortholog
+SLC35G6,human,SLC35G6,CTA,CTA-M,SLC35G6,Unsafe,,,absent,,Divergent somatic / review gate
+SLC36A3,human,SLC36A3,CTA,CTA-M,,absent,,Slc36a3,Unsafe,,Divergent somatic / review gate
+SLC38A11,dog,SLC38A11,Unsafe,,SLC38A11,CTA,CTA-M,Slc38a11,Unsafe,,Divergent somatic / review gate
+SMCP,human,SMCP,CTA,CTA-M,SMCP,Reproductive Antigen only,RA-M-only,Smcp,Unsafe,,CTA + conserved RA-only ortholog
+SPACA1,human,SPACA1,CTA,CTA-M,SPACA1,Unsafe,,Spaca1,Unsafe,,Divergent somatic / review gate
+SPACA3,dog,SPACA3,Unsafe,,SPACA3,CTA,CTA-M,Spaca3,Unsafe,,Divergent somatic / review gate
+SPADH,human,SPADH,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPAG11A,human,SPAG11A,CTA,CTA-M,,absent,,Spag11a,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+SPAG11B,human,SPAG11B,CTA,CTA-M,SPAG11B,Reproductive Antigen only,RA-M-only,Spag11b,Unsafe,,CTA + conserved RA-only ortholog
+SPANXA1,human,SPANXA1/2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPANXB1,human,SPANXB1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPANXC,human,SPANXC,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPANXD,human,SPANXD,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPANXN1,human,SPANXN1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPANXN3,human,SPANXN3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPANXN4,human,SPANXN4,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPATA19,human,SPATA19,CTA,CTA-M,SPATA19,Reproductive Antigen only,RA-M-only,Spata19,Unsafe,,CTA + conserved RA-only ortholog
+SPATA31A3,human,SPATA31A3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPATA31D1,human,SPATA31D1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPATA31D3,human,SPATA31D3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SPATA31F3,human,SPATA31F3,CTA,CTA-MF,,absent,,Spata31f3,Unsafe,,Divergent somatic / review gate
+SPEM2,human,SPEM2,CTA,CTA-M,SPEM2,Reproductive Antigen only,RA-M-only,Spem2,Unsafe,,CTA + conserved RA-only ortholog
+SPMAP1,human,SPMAP1,CTA,CTA-M,C9H17orf98,Unsafe,,Spmap1,Unsafe,,Divergent somatic / review gate
+SPMIP9,human,SPMIP9,CTA,CTA-M,TEX37,Reproductive Antigen only,RA-M-only,Spmip9,Unsafe,,CTA + conserved RA-only ortholog
+SPO11,human,SPO11,CTA,CTA-MF,SPO11,Unsafe,,Spo11,Unsafe,,Divergent somatic / review gate
+SSU72L1,human,SSU72L1,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSU72L2,human,SSU72L2,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSU72L3,human,SSU72L3,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSU72L4,human,SSU72L4,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSU72L5,human,SSU72L5,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSU72L6,human,SSU72L6,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSX1,human,SSX1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSX2,human,SSX2/B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSX3,human,SSX3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+SSX4,human,SSX4/B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+STARD6,human,STARD6,CTA,CTA-M,STARD6,Unsafe,,Stard6,Unsafe,,Divergent somatic / review gate
+SYCP1,human,SYCP1,CTA,CTA-M,SYCP1,Reproductive Antigen only,RA-M-only,Sycp1,Unsafe,,CTA + conserved RA-only ortholog
+TBC1D21,human,TBC1D21,CTA,CTA-M,TBC1D21,Reproductive Antigen only,RA-M-only,Tbc1d21,Unsafe,,CTA + conserved RA-only ortholog
+TBXT,human,TBXT,CTA,CTA-F,TBXT,Other:Expression,,T,Reproductive Antigen only,RA-M-only,CTA + conserved RA-only ortholog
+TCF23,dog,TCF23,Unsafe,,TCF23,CTA,CTA-MF,Tcf23,Unsafe,,Divergent somatic / review gate
+TCP11,human,TCP11,CTA,CTA-MF,TCP11,Unsafe,,Tcp11,Unsafe,,Divergent somatic / review gate
+TCP11X2,human,TCP11X2,CTA,CTA-M,,absent,,Tcp11x2,Unsafe,,Divergent somatic / review gate
+TEKTL1,dog,TEKTL1,Unsafe,,CCDC105,CTA,CTA-M,Tektl1,Unsafe,,Divergent somatic / review gate
+TEX13C,human,TEX13C,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TEX13D,human,TEX13D,CTA,CTA-M,,absent,,Tex13d,Other:Expression,,Divergent somatic / review gate
+TEX19,human|mouse,TEX19,CTA,CTA-M,,absent,,Tex19.1,CTA,CTA-M,Conserved multi-species CTA
+TEX28,human,TEX28,CTA,CTA-M,TEX28,Unsafe,,Tex28,Unsafe,,Divergent somatic / review gate
+TEX38,human,TEX38,CTA,CTA-M,TEX38,Reproductive Antigen only,RA-M-only,Tex38,Unsafe,,CTA + conserved RA-only ortholog
+TEX44,human,TEX44,CTA,CTA-M,TEX44,Reproductive Antigen only,RA-M-only,Tex44,Unsafe,,CTA + conserved RA-only ortholog
+TEX55,human,TEX55,CTA,CTA-M,TEX55,Reproductive Antigen only,RA-M-only,Tex55,Unsafe,,CTA + conserved RA-only ortholog
+TFDP3,human,TFDP3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TGIF2LX,human,TGIF2LX,CTA,CTA-M,TGIF2LX,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+TGIF2LY,human,TGIF2LY,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TGM4,human,TGM4,CTA,CTA-MF,,absent,,Tgm4,Unsafe,,Divergent somatic / review gate
+TMEM202,human,TMEM202,CTA,CTA-M,,absent,,Tmem202,Unsafe,,Divergent somatic / review gate
+TMEM239,human,TMEM239,CTA,CTA-M,TMEM239,Other:Review,,Tmem239,Unsafe,,Divergent somatic / review gate
+TMEM270,human,TMEM270,CTA,CTA-M,TMEM270,Reproductive Antigen only,RA-M-only,Tmem270,Unsafe,,CTA + conserved RA-only ortholog
+TMEM31,human,TMEM31,CTA,CTA-MF,TMEM31,Unsafe,,,absent,,Divergent somatic / review gate
+TMEM89,human,TMEM89,CTA,CTA-M,TMEM89,Unsafe,,Tmem89,Unsafe,,Divergent somatic / review gate
+TMEM95,human,TMEM95,CTA,CTA-M,TMEM95,Other:Review,,Tmem95,Unsafe,,Divergent somatic / review gate
+TNFRSF8,dog,TNFRSF8,Unsafe,,TNFRSF8,CTA,CTA-M,Tnfrsf8,Unsafe,,Divergent somatic / review gate
+TPD52L3,human,TPD52L3,CTA,CTA-M,TPD52L3,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+TPRX1,human,TPRX1,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TPRX2,human,TPRX2,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TPTE,human,TPTE,CTA,CTA-M,,absent,,Tpte,Other:Expression,,Divergent somatic / review gate
+TRIM42,human|dog,TRIM42,CTA,CTA-MF,TRIM42,CTA,CTA-M,Trim42,Unsafe,,Conserved multi-species CTA
+TRIM43,human,TRIM43,CTA,CTA-P,,absent,,Trim43a,Unsafe,,Divergent somatic / review gate
+TRIM43B,human,TRIM43B,CTA,CTA-P,,absent,,Trim43b,Other:Expression,,Divergent somatic / review gate
+TRIM48,human,TRIM48,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TRIM49,human,TRIM49,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TRIM49B,human,TRIM49B,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TRIM49C,human,TRIM49C,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TRIM60,human,TRIM60,CTA,CTA-MF,,absent,,Trim60,Other:Expression,,Divergent somatic / review gate
+TRIML1,human,TRIML1,CTA,CTA-M,TRIML1,Reproductive Antigen only,RA-M-only,Triml1,Unsafe,,CTA + conserved RA-only ortholog
+TRIML2,dog,TRIML2,Unsafe,,TRIML2,CTA,CTA-M,Triml2,Reproductive Antigen only,RA-P-only,CTA + conserved RA-only ortholog
+TSPY1,human,TSPY1,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TSPY10,human,TSPY10/3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TSPY2,human,TSPY2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TSPY4,human,TSPY4,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TSPY8,human,TSPY8,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+TTLL13,human,TTLL13,CTA,CTA-M,,absent,,Ttll13,Unsafe,,Divergent somatic / review gate
+TTLL8,human,TTLL8,CTA,CTA-M,TTLL8,Unsafe,,Ttll8,Unsafe,,Divergent somatic / review gate
+TXNDC8,human,TXNDC8,CTA,CTA-M,,absent,,Txndc8,Unsafe,,Divergent somatic / review gate
+UBQLN3,human,UBQLN3,CTA,CTA-M,UBQLN3,Reproductive Antigen only,RA-M-only,Ubqln3,Unsafe,,CTA + conserved RA-only ortholog
+UBTFL1,human,UBTFL1,CTA,CTA-P,,absent,,Ubtfl1,Other:Expression,,Divergent somatic / review gate
+VCX,human,VCX,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+VCX2,human,VCX2,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+VCX3A,human,VCX3A,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+VCY,human,VCY/1B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+VRTN,human,VRTN,CTA,CTA-F,VRTN,Other:Expression,,Vrtn,Reproductive Antigen only,RA-P-only,CTA + conserved RA-only ortholog
+WFDC10A,human,WFDC10A,CTA,CTA-M,WFDC10A,Reproductive Antigen only,RA-M-only,,absent,,CTA + conserved RA-only ortholog
+XAGE1A,human,XAGE1A/B,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+XAGE3,human,XAGE3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+XAGE5,human,XAGE5,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+XKR3,human,XKR3,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZAN,human,ZAN,CTA,CTA-M,,absent,,Zan,Unsafe,,Divergent somatic / review gate
+ZAR1L,human,ZAR1L,CTA,CTA-F,ZAR1L,Unsafe,,Zar1l,Other:Expression,,Divergent somatic / review gate
+ZC2HC1B,dog,ZC2HC1B,Unsafe,,ZC2HC1B,CTA,CTA-M,Zc2hc1b,Other:Expression,,Divergent somatic / review gate
+ZFP1010,mouse,,absent,,,absent,,Zfp1010,CTA,CTA-M,Lineage-specific / no 1:1 symbol ortholog
+ZNF479,human,ZNF479,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZNF560,human,ZNF560,CTA,CTA-MF,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZNF679,human,ZNF679,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZNF722,human,ZNF722,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZNF723,human,ZNF723,CTA,CTA-M,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZNF729,human,ZNF729,CTA,CTA-P,,absent,,,absent,,Lineage-specific / no 1:1 symbol ortholog
+ZP4,human,ZP4,CTA,CTA-F,ZP4,Unsafe,,,absent,,Divergent somatic / review gate

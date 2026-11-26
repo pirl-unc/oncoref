@@ -53,9 +53,8 @@ def test_declarative_species_policies_cover_all_eight_roles_and_comparative_anat
         assert set(serialized["sex_subset_compartments"]) == {
             "RA-M / CTA-M",
             "RA-F / CTA-F",
-            "RA-E / CTA-E",
-            "RA-MF / CTA-MF",
             "RA-P / CTA-P",
+            "RA-MF / CTA-MF",
         }
     matrix = role_comparison_table()
     assert len(matrix) == len(ROLE_IDS)
@@ -128,9 +127,9 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
     assert len(frozen_computed) == 455
     frozen_by_lbl = frozen_computed.set_index("protein_group_label")
     assert frozen_by_lbl.loc["ZAR1L", "sex_restriction_code"] == "CTA-F"
-    assert frozen_by_lbl.loc["ACCSL", "sex_restriction_code"] == "CTA-E"
+    assert frozen_by_lbl.loc["ACCSL", "sex_restriction_code"] == "CTA-P"
 
-    # Live promoted catalog (#775 + #776 + #779) matches docs/antigen-whitepaper/sex-restricted-antigens.csv
+    # Live promoted catalog (1.52.0) matches docs/antigen-whitepaper/sex-restricted-antigens.csv
     published = pd.read_csv(ROOT / "docs/antigen-whitepaper/sex-restricted-antigens.csv")
     computed = human.sex_restricted_antigens()
     pd.testing.assert_frame_equal(computed, published)
@@ -140,7 +139,6 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "PRM1",
         "SPATA19",
         "CT83",
-        "TGM4",
         "SEMG2",
         "ODF1",
         "ADAM2",
@@ -162,56 +160,68 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "PAGE1",
     ):
         assert by_lbl.loc[rescued_cta_m, "sex_restriction_code"] == "CTA-M"
-    for cta_e_lbl in (
+    for cta_p_lbl in (
         "DUX4",
-        "OR1N1",
         "CER1",
-        "ACCSL",
         "CIROP",
         "CXorf49/B",
-        "IZUMO1R",
         "BTN1A1",
         "ERVV-1",
         "ERVV-2",
         "LGALS16",
     ):
-        assert by_lbl.loc[cta_e_lbl, "sex_restriction_code"] == "CTA-E"
-    for cta_f_lbl in ("CSN2", "LALBA", "DPPA3", "KHDC3L", "ZAR1L", "ZP4", "VRTN", "PRR23E"):
+        assert by_lbl.loc[cta_p_lbl, "sex_restriction_code"] == "CTA-P"
+    for cta_f_lbl in (
+        "CSN2",
+        "LALBA",
+        "DPPA3",
+        "KHDC3L",
+        "ZAR1L",
+        "ZP4",
+        "VRTN",
+        "PRR23E",
+        "CPSF4L",
+        "IZUMO1R",
+        "ACCSL",
+        "OR1N1",
+        "TBXT",
+    ):
         assert by_lbl.loc[cta_f_lbl, "sex_restriction_code"] == "CTA-F"
-    assert by_lbl.loc["PSG7", "sex_restriction_code"] == "RA-E-only"
+    assert by_lbl.loc["PSG7", "sex_restriction_code"] == "RA-P-only"
     assert by_lbl.loc["PABPN1L", "sex_restriction_code"] == "RA-F-only"
+    assert by_lbl.loc["BMP15", "sex_restriction_code"] == "RA-F-only"
     for mra_only_lbl in ("PRM2", "CCDC70", "PGK2", "TSSK2", "CAPZA3"):
         assert by_lbl.loc[mra_only_lbl, "sex_restriction_code"] == "RA-M-only"
     assert by_lbl.loc["NLRP13", "sex_restriction_code"] == "RA-MF-only"
-    for shared_cta_mf in ("PRAME", "SCGB1D4", "CTAG2", "ACTL8", "OOSP2"):
+    for shared_cta_mf in ("PRAME", "SCGB1D4", "CTAG2", "ACTL8", "OOSP2", "MOS"):
         assert by_lbl.loc[shared_cta_mf, "sex_restriction_code"] == "CTA-MF"
 
     cta_m = antigen_sets.proteins("CTA-M")
+    cta_p = antigen_sets.proteins("CTA-P")
     cta_e = antigen_sets.proteins("CTA-E")
     cta_f = antigen_sets.proteins("CTA-F")
     cta_mf = antigen_sets.proteins("CTA-MF")
-    cta_p = antigen_sets.proteins("CTA-P")
     ra_p = antigen_sets.proteins("RA-P")
-    assert len(cta_m) + len(cta_e) + len(cta_f) + len(cta_mf) == len(antigen_sets.proteins("CTA"))
-    assert len(cta_p) == 16 and len(ra_p) == 19
-    assert {"LALBA", "CSN2", "BTN1A1", "ERVV-1", "ERVV-2", "PLAC1", "XAGE3"} <= set(
-        cta_p.protein_group_label
-    )
+    assert len(cta_m) + len(cta_p) + len(cta_f) + len(cta_mf) == len(antigen_sets.proteins("CTA"))
+    assert set(cta_p.entity_id) == set(cta_e.entity_id)
+    assert {"DUX4", "BTN1A1", "ERVV-1", "ERVV-2", "LGALS16"} <= set(cta_p.protein_group_label)
     assert set(ra_p.entity_id) == set(antigen_sets.proteins("PRA").entity_id)
     assert set(cta_m.entity_id) == set(
         published.loc[published.sex_restriction_code.eq("CTA-M"), "entity_id"]
     )
-    assert set(cta_e.entity_id) == set(
-        published.loc[published.sex_restriction_code.eq("CTA-E"), "entity_id"]
+    assert set(cta_p.entity_id) == set(
+        published.loc[published.sex_restriction_code.eq("CTA-P"), "entity_id"]
     )
     assert set(cta_f.entity_id) == set(
         published.loc[published.sex_restriction_code.eq("CTA-F"), "entity_id"]
     )
-    # Symmetric RA-* selectors and legacy MRA/FRA/ERA/SRA aliases match identically:
+    # Symmetric RA-* selectors and legacy MRA/FRA/ERA/PRA/SRA aliases match identically:
     for sym_set, legacy_set, cls_name in (
         ("RA-M", "MRA", "Male-restricted"),
         ("RA-F", "FRA", "Female-restricted"),
-        ("RA-E", "ERA", "Embryo / peripartum-only"),
+        ("RA-P", "PRA", "Pregnancy / peripartum-only"),
+        ("RA-P", "ERA", "Pregnancy / peripartum-only"),
+        ("RA-E", "ERA", "Pregnancy / peripartum-only"),
         ("RA-MF", "SRA", "Shared male & female"),
     ):
         assert set(antigen_sets.proteins(sym_set).entity_id) == set(
@@ -616,7 +626,7 @@ def test_end_to_end_canine_pipeline_gates_sex_subsets_and_peptide_subtraction():
     assert by_label.loc["CTAG_A/CTAG_B", "classification"] == "CTA"
     assert by_label.loc["CTAG_A/CTAG_B", "sex_restriction_code"] == "CTA-M"
     assert by_label.loc["DOG_CTA_E", "classification"] == "CTA"
-    assert by_label.loc["DOG_CTA_E", "sex_restriction_code"] == "CTA-E"
+    assert by_label.loc["DOG_CTA_E", "sex_restriction_code"] == "CTA-P"
     assert by_label.loc["DOG_FRA", "classification"] == "Reproductive Antigen only"
     assert by_label.loc["DOG_FRA", "sex_restriction_code"] == "RA-F-only"
     assert by_label.loc["DOG_CA", "classification"] == "Cancer Antigen only"
@@ -817,10 +827,11 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
         )
 
     dog_rows = canine.target_selection()
-    assert len(dog_rows) == 14
-    assert dog_rows.classification.eq("Other:Review").all()
-    assert not dog_rows.is_target_candidate.any()
-    assert canine.sex_restricted_antigens().empty
+    assert len(dog_rows) > 20000
+    assert int(dog_rows.is_cta.sum()) > 20
+    assert not canine.sex_restricted_antigens().empty
+    assert canine.target_selection("PRAME").iloc[0].classification == "CTA"
+    assert canine.target_selection("PRAME").iloc[0].sex_restriction_code == "CTA-M"
     assert not classify_sex_restriction(species="mouse").empty
 
     mouse_rows = mouse.target_selection("ENSMUSG00000051257")
@@ -838,24 +849,23 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
         )
     for mouse_cta_m in ("Pbsn", "Sbp", "Tex19.1", "Plac1"):
         assert mouse.target_selection(mouse_cta_m).iloc[0].sex_restriction_code == "CTA-M"
-    for mouse_cta_e in ("Serpinb9e", "Pramel13"):
-        assert mouse.target_selection(mouse_cta_e).iloc[0].sex_restriction_code == "CTA-E"
+    for mouse_cta_p in ("Serpinb9e", "Pramel13"):
+        assert mouse.target_selection(mouse_cta_p).iloc[0].sex_restriction_code == "CTA-P"
     for mouse_imm_unsafe in ("Csf3", "Cxcl2", "Peg12"):
         assert mouse.target_selection(mouse_imm_unsafe).iloc[0].classification == "Unsafe"
     assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 3
 
     assert cli.main(["antigens", "funnel", "--species", "dog", "--format", "json"]) == 0
     funnel_rows = json.loads(capsys.readouterr().out)
-    assert funnel_rows[0]["remaining"] == 14
-    assert funnel_rows[-1]["remaining"] == 0
+    assert funnel_rows[0]["remaining"] == len(dog_rows)
+    assert funnel_rows[-1]["remaining"] == int(dog_rows.is_target_candidate.sum())
 
     assert cli.main(["antigens", "explain", "P1A", "--species", "mouse", "--format", "json"]) == 0
     exp = json.loads(capsys.readouterr().out)
     assert len(exp) == 1 and exp[0]["classification"] in {"Other:Review", "Unsafe"}
 
     assert (
-        cli.main(["antigens", "list", "--set", "Other", "--species", "dog", "--format", "json"])
-        == 0
+        cli.main(["antigens", "list", "--set", "CTA", "--species", "dog", "--format", "json"]) == 0
     )
     listed = json.loads(capsys.readouterr().out)
-    assert len(listed) == 14
+    assert len(listed) == int(dog_rows.is_cta.sum())
