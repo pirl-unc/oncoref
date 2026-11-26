@@ -50,8 +50,8 @@ from oncoref import (  # noqa: E402
     unmeasured_home_panels,
 )
 
-PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-26.1"
-PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.1"
+PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-26.2"
+PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.2"
 FROZEN_150_DIR = ROOT / "tests/fixtures/release-1.50-inputs"
 
 
@@ -880,6 +880,7 @@ def main() -> None:
         "category",
         "subtype",
         "classification",
+        "home_tissue",
         "normal_screen_pass",
         "required_coverage_complete",
         "identity_translation_pass",
@@ -922,10 +923,11 @@ def main() -> None:
                     promoted[col] = promoted[col].astype(object)
                 promoted.at[idx, col] = iv
 
-    # Add provenance & sex-restriction columns directly onto promoted table
+    # Add provenance, sex-restriction, activation-mode & cell-line columns directly onto promoted table
     extra_cols = [
         "sex_restriction_class",
         "sex_restriction_code",
+        "tumor_activation_mode",
         "rare_cell_711_requirement",
         "normal_library_712_disposition",
         "home_panel_735_disposition",
@@ -938,6 +940,9 @@ def main() -> None:
     ]
     for col in extra_cols:
         promoted[col] = ic_aligned[col].fillna("").astype(str).to_numpy()
+    promoted["cell_line_max_tpm"] = np.nan
+    promoted["cell_line_top_model"] = ""
+    promoted["qualifying_cell_lines"] = ""
 
     # Reconcile auxiliary display/provenance columns for modified entities
     for idx, row in promoted.iterrows():
@@ -1362,10 +1367,101 @@ def main() -> None:
                 promoted.at[idx, "decision_reason"] = (
                     "Neither positive route reaches 10x over the screened adult normal baseline"
                 )
+            elif cls_now == "Other:Unscreened tissue":
+                promoted.at[idx, "decision_reason"] = (
+                    "Monogenic chemosensory GPCR home tissue lacks single-receptor screening power; cancer-only admission held"
+                )
             elif cls_now == "Other:Review":
                 promoted.at[idx, "decision_reason"] = (
                     "Cleared nuclear snRNA-seq spillover (#765); held pending complete peripheral comparison coverage"
                 )
+
+        # Compute exact multi-cohort tumor_activation_mode across all 135 human tumor cohorts
+        if bool(promoted.at[idx, "is_cancer_antigen"]) and pd.notna(n_tpm):
+            denom_act = max(
+                float(n_tpm),
+                float(promoted.at[idx, "disposable_max_tpm"] or 0.0)
+                if pd.notna(promoted.at[idx, "disposable_max_tpm"])
+                else 0.0,
+                1.0,
+            )
+            thr_act = 10.0 * denom_act
+            qual_cc_set: set[str] = set()
+            if eid in gdna_by_eid:
+                grec_a = gdna_by_eid[eid]
+                c_key_a = (
+                    "clean_non_tgct_top_cancer_code"
+                    if eid in tgct_restr
+                    else "clean_tumor_top_cancer_code"
+                )
+                if str(grec_a.get(c_key_a) or "").strip():
+                    qual_cc_set.add(str(grec_a[c_key_a]).strip())
+                for src_id, samp_id, _part_id, ccs_tup, val_f in tw_by_eid.get(eid, []):
+                    if val_f < thr_act:
+                        continue
+                    if eid in tgct_restr and (
+                        samp_id in tgct_r_samples or "TGCT" in ccs_tup or "TGCT" in src_id
+                    ):
+                        continue
+                    # Only include non-gDNA-excluded cohorts when top clean >= thr
+                    if int(grec_a.get("clean_cancer_types_at_tenfold") or 0) == 1:
+                        continue
+                    qual_cc_set.update(c for c in ccs_tup if c)
+            else:
+                for src_id, samp_id, _part_id, ccs_tup, val_f in tw_by_eid.get(eid, []):
+                    if val_f < thr_act:
+                        continue
+                    if eid in tgct_restr and (
+                        samp_id in tgct_r_samples or "TGCT" in ccs_tup or "TGCT" in src_id
+                    ):
+                        continue
+                    qual_cc_set.update(c for c in ccs_tup if c)
+                for r737 in obs_737_by_eid.get(eid, []):
+                    if float(r737["value"]) >= thr_act:
+                        qual_cc_set.add(str(r737["cancer_code"]))
+                if eid in cleared_obs_by_eid:
+                    for ct in cleared_obs_by_eid[eid].get("top_tumor_observations", []):
+                        if float(ct["value"]) >= thr_act and ct.get("cancer_code"):
+                            qual_cc_set.add(str(ct["cancer_code"]))
+                top_cc_cur = str(promoted.at[idx, "tumor_top_cancer_code"] or "").strip()
+                if top_cc_cur:
+                    qual_cc_set.add(top_cc_cur)
+            # Pigeonhole principle: if distinct qualifying cancer types exceed the entire homologous
+            # cancer-code universe for this entity's compartments (e.g. CSN2 qualifying in 11 cancer
+            # types including OV=75.06 TPM while top-ranked witnesses are all BRCA*), at least one
+            # qualifying cohort is provably ectopic!
+            rq_str_act = str(promoted.at[idx, "reproductive_qualifying_compartments"] or "")
+            ht_str_act = str(promoted.at[idx, "home_tissue"] or "")
+            homol_universe: set[str] = set()
+            for comp_tok in (
+                *(c.strip() for c in rq_str_act.split("|") if c.strip()),
+                *(h.strip().lower() for h in ht_str_act.split(";") if h.strip()),
+            ):
+                homol_universe.update(
+                    species_target_selection.HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT.get(
+                        comp_tok, frozenset()
+                    )
+                )
+            n_c_types = (
+                int(promoted.at[idx, "cancer_types_at_tenfold"] or 0)
+                if pd.notna(promoted.at[idx, "cancer_types_at_tenfold"])
+                else 0
+            )
+            extra_excl = 1 if eid in tgct_restr and "TGCT" not in homol_universe else 0
+            if n_c_types > len(homol_universe) + extra_excl:
+                qual_cc_set.add("__ECTOPIC_COHORT__")
+            promoted.at[idx, "tumor_activation_mode"] = (
+                species_target_selection.classify_tumor_activation_mode(
+                    is_cancer_antigen=True,
+                    qualifying_cancer_codes=qual_cc_set,
+                    reproductive_qualifying_compartments=rq_str_act,
+                    home_tissue=ht_str_act,
+                )
+            )
+        else:
+            promoted.at[idx, "tumor_activation_mode"] = ""
+            if not bool(promoted.at[idx, "is_reproductive_antigen"]):
+                promoted.at[idx, "reproductive_qualifying_compartments"] = ""
 
     # Compute compact 2026-11-20.2 delta JSON so _baseline_2026_11_20_frame() restores base_df byte-accurately
     base_cols = list(base_df.columns)
@@ -1518,6 +1614,14 @@ def main() -> None:
     sex_df = integ_res.sex_restricted_antigens()
     sp_meta["summary"]["sex_restriction_classes"] = {
         k: int(v) for k, v in sorted(sex_df["sex_restriction_class"].value_counts().items())
+    }
+    sp_meta["summary"]["cta_activation_modes"] = {
+        k: int(v)
+        for k, v in sorted(
+            promoted.loc[promoted["is_cta"].astype(bool), "tumor_activation_mode"]
+            .value_counts()
+            .items()
+        )
     }
     sp_human_path.write_text(json.dumps(sp_meta, indent=2) + "\n", encoding="utf-8")
 

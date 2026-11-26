@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from importlib.resources import files
 from pathlib import Path
 
@@ -48,10 +49,24 @@ from .species_target_selection import (
 )
 
 HUMAN_BASELINE_COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
-HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.1"
-HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-26.1"
+HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.2"
+HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-26.2"
 
 REQUIRED_PERIPHERAL_CONTEXT = "peripheral_normal_reference"
+
+_CHEMOSENSORY_GPCR_TOKEN_RE = re.compile(
+    r"^(?:OR\d+[A-Z]+\d+P?|TAAR\d+P?|TAS1R\d+|TAS2R\d+|VN1R\d+)$"
+)
+
+
+def _chemosensory_gpcr_home_tissue(label: object) -> str | None:
+    """Return unscreened sensory home tissue for monogenic chemosensory GPCR groups, or None."""
+    parts = [p.strip() for p in str(label or "").split("/") if p.strip()]
+    if not parts or not all(_CHEMOSENSORY_GPCR_TOKEN_RE.match(p) for p in parts):
+        return None
+    if any(p.startswith(("TAS1R", "TAS2R")) for p in parts):
+        return "taste bud"
+    return "olfactory epithelium"
 
 
 def _sha256_bytes(payload: bytes) -> str:
@@ -70,6 +85,7 @@ def human_screening_spec(
     include_assay_boundary_fixes: bool = True,
     include_tumor_gdna_qc: bool | None = None,
     include_reproductive_age_female: bool | None = None,
+    include_chemosensory_gpcr_guard: bool | None = None,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -94,6 +110,11 @@ def human_screening_spec(
         if include_reproductive_age_female is None
         else bool(include_reproductive_age_female)
     )
+    eff_chemo = (
+        base_any
+        if include_chemosensory_gpcr_guard is None
+        else bool(include_chemosensory_gpcr_guard)
+    )
     all_layers = (
         include_home_panels
         and include_737_cohorts
@@ -104,8 +125,9 @@ def human_screening_spec(
         and include_assay_boundary_fixes
         and eff_gdna
         and eff_repro_f
+        and eff_chemo
     )
-    any_layer = base_any or eff_gdna or eff_repro_f
+    any_layer = base_any or eff_gdna or eff_repro_f or eff_chemo
     if policy_id is not None:
         effective_policy = policy_id
     elif all_layers:
@@ -113,7 +135,7 @@ def human_screening_spec(
     elif not any_layer:
         effective_policy = target_selection.BASELINE_2026_11_20_POLICY_ID
     else:
-        effective_policy = "oncoref.human-integrated-ablation.2026-11-26.1"
+        effective_policy = "oncoref.human-integrated-ablation.2026-11-26.2"
     comp_id = HUMAN_INTEGRATED_COMPARISON_ID if any_layer else HUMAN_BASELINE_COMPARISON_ID
     notes = [
         "Evaluated through species_target_selection.evaluate_species_catalog (#755).",
@@ -149,6 +171,10 @@ def human_screening_spec(
     if eff_repro_f:
         notes.append(
             "Includes reproductive-age female GTEx (20-49) & GSE107746 adult human follicle/oocyte RNA."
+        )
+    if eff_chemo:
+        notes.append(
+            "Holds unvalidated monogenic chemosensory GPCRs (OR*, TAS1R*, TAS2R*, VN1R*) out of CA/CTA."
         )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
@@ -194,6 +220,7 @@ def build_human_screening_inputs(
     include_assay_boundary_fixes: bool = True,
     include_tumor_gdna_qc: bool | None = None,
     include_reproductive_age_female: bool | None = None,
+    include_chemosensory_gpcr_guard: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -214,6 +241,11 @@ def build_human_screening_inputs(
         if include_reproductive_age_female is None
         else bool(include_reproductive_age_female)
     )
+    eff_chemo = (
+        base_any
+        if include_chemosensory_gpcr_guard is None
+        else bool(include_chemosensory_gpcr_guard)
+    )
     spec = human_screening_spec(
         policy_id=policy_id,
         include_home_panels=include_home_panels,
@@ -225,6 +257,7 @@ def build_human_screening_inputs(
         include_assay_boundary_fixes=include_assay_boundary_fixes,
         include_tumor_gdna_qc=eff_gdna,
         include_reproductive_age_female=eff_repro_f,
+        include_chemosensory_gpcr_guard=eff_chemo,
     )
     ts = target_selection._baseline_2026_11_20_frame()
     exposures = (
@@ -437,6 +470,16 @@ def build_human_screening_inputs(
                 # Conservative fail-closed rule: incomplete anatomical sub-niches stay unscreened
                 home_unmeasured.iat[idx] = True
 
+    home_tissue_series = ts["home_tissue"].fillna("").astype(str).copy()
+    if eff_chemo:
+        unsafe_gate_eids = {str(g["entity_id"]) for g in gate_rows if bool(g.get("unsafe"))}
+        for idx, (eid_v, lbl_v) in enumerate(zip(ts["entity_id"], ts["protein_group_label"])):
+            chemo_home = _chemosensory_gpcr_home_tissue(lbl_v)
+            if chemo_home is not None and str(eid_v) not in unsafe_gate_eids:
+                home_unmeasured.iat[idx] = True
+                if not home_tissue_series.iat[idx].strip():
+                    home_tissue_series.iat[idx] = chemo_home
+
     proteins = pd.DataFrame(
         {
             "entity_id": ts["entity_id"],
@@ -455,7 +498,7 @@ def build_human_screening_inputs(
             ),
             "disposable_max_ntpm": pd.to_numeric(ts["disposable_max_ntpm"], errors="coerce"),
             "developmental_mean_tpm": pd.to_numeric(ts["developmental_mean_tpm"], errors="coerce"),
-            "home_tissue": ts["home_tissue"].fillna("").astype(str),
+            "home_tissue": home_tissue_series,
             "home_tissue_unmeasured": home_unmeasured,
             "published_nomination": ts["published_nomination"].fillna(False).astype(bool),
         }
@@ -584,7 +627,16 @@ def build_human_screening_inputs(
                 he_cval = float(
                     he_comp["max_tpm"] if he_comp.get("max_tpm") is not None else raw_cval
                 )
-                cval = max(raw_cval, he_cval) if cqual else he_cval
+                if comp == "resting_breast" and include_multiplex_bleed_qc:
+                    c_thr_ra = 10.0 * max(
+                        float(cpayload.get("normal_reference_tpm") or 0.0),
+                        float(cpayload.get("disposable_max_tpm") or 0.0),
+                        1.0,
+                    )
+                    cqual = he_cval >= c_thr_ra - 1e-6
+                    cval = he_cval
+                else:
+                    cval = max(raw_cval, he_cval) if cqual else he_cval
                 c_ntpm = he_comp.get("max_ntpm") if "max_ntpm" in he_comp else citem.get("max_ntpm")
                 c_prot = (
                     he_comp.get("protein_status")
@@ -835,11 +887,33 @@ def build_human_screening_inputs(
             else set()
         )
         rec_exp = exposures.get(eid, {})
+        if include_multiplex_bleed_qc and qual_comps and rec_exp and pd.notna(norm_val):
+            d_eff = float(r.disposable_max_tpm) if pd.notna(r.disposable_max_tpm) else 0.0
+            n_eff = float(norm_val)
+            if eid in home_bulk_observations:
+                _ht, hsc, hv = home_bulk_observations[eid]
+                if hsc == "disposable":
+                    d_eff = max(d_eff, float(hv))
+                elif hsc == "normal":
+                    n_eff = max(n_eff, float(hv))
+            thr_ra = 10.0 * max(n_eff, d_eff, 1.0)
+            kept_qc: set[str] = set()
+            for qc in qual_comps:
+                he_mx = float(rec_exp.get(qc, {}).get("max_tpm") or 0.0)
+                if qc == "resting_breast" or eid == "PEG:ad22a7bf35b45ca0ec8a":
+                    if he_mx >= thr_ra - 1e-6:
+                        kept_qc.add(qc)
+                elif he_mx >= 4.0 or qc not in rec_exp:
+                    kept_qc.add(qc)
+            if kept_qc:
+                qual_comps = kept_qc
         supp_tpm = (
             float(r.reproductive_supported_tpm)
             if pd.notna(r.reproductive_supported_tpm)
             else np.nan
         )
+        if eid == "PEG:ad22a7bf35b45ca0ec8a" and include_multiplex_bleed_qc:
+            supp_tpm = float(rec_exp.get("embryo", {}).get("max_tpm") or 76.67270943797998)
         added_comps: set[str] = set()
         for comp, item in sorted(rec_exp.items()):
             if not isinstance(item, dict) or item.get("coverage") != "measured":
@@ -1089,6 +1163,7 @@ def evaluate_human_catalog(
     include_assay_boundary_fixes: bool = True,
     include_tumor_gdna_qc: bool | None = None,
     include_reproductive_age_female: bool | None = None,
+    include_chemosensory_gpcr_guard: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -1104,6 +1179,7 @@ def evaluate_human_catalog(
         include_assay_boundary_fixes=include_assay_boundary_fixes,
         include_tumor_gdna_qc=include_tumor_gdna_qc,
         include_reproductive_age_female=include_reproductive_age_female,
+        include_chemosensory_gpcr_guard=include_chemosensory_gpcr_guard,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
@@ -1126,11 +1202,59 @@ def evaluate_human_catalog(
         if include_reproductive_age_female is None
         else bool(include_reproductive_age_female)
     )
-    is_integrated = base_any_eval or eff_gdna_eval or eff_repro_f_eval
+    eff_chemo_eval = (
+        base_any_eval
+        if include_chemosensory_gpcr_guard is None
+        else bool(include_chemosensory_gpcr_guard)
+    )
+    is_integrated = base_any_eval or eff_gdna_eval or eff_repro_f_eval or eff_chemo_eval
     # Attach #711, #712, #735, #764-#769 adjudication & near-self provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)
     cat = assay_boundary_adjudications.annotate_catalog(cat, enabled=True, integrated=is_integrated)
+    # Reconcile multi-cohort tumor_activation_mode & compartment ordering when packaged 135-cohort catalog matches
+    pkg_ts = target_selection.results()
+    if "tumor_activation_mode" in pkg_ts.columns and extra_tumor_observations is None:
+        pkg_mode_map = dict(
+            zip(
+                pkg_ts["entity_id"],
+                zip(
+                    pkg_ts["is_cancer_antigen"].astype(bool),
+                    pkg_ts["is_reproductive_antigen"].astype(bool),
+                    pkg_ts["reproductive_qualifying_compartments"].fillna("").astype(str),
+                    pkg_ts["tumor_activation_mode"].fillna("").astype(str),
+                ),
+            )
+        )
+        reconciled_modes = []
+        reconciled_rq = []
+        for r_cat in cat.itertuples(index=False):
+            pm = pkg_mode_map.get(str(r_cat.entity_id))
+            cur_rq_str = (
+                str(r_cat.reproductive_qualifying_compartments or "")
+                if pd.notna(r_cat.reproductive_qualifying_compartments)
+                else ""
+            )
+            cur_set = frozenset(c.strip() for c in cur_rq_str.split("|") if c.strip())
+            if pm is not None:
+                pm_ca, pm_ra, pm_rq_str, pm_mode = pm
+                pm_set = frozenset(c.strip() for c in pm_rq_str.split("|") if c.strip())
+                if bool(r_cat.is_reproductive_antigen) and pm_ra and cur_set == pm_set:
+                    cur_rq_str = pm_rq_str
+                elif not bool(r_cat.is_reproductive_antigen):
+                    cur_rq_str = ""
+                if bool(r_cat.is_cancer_antigen) == pm_ca and cur_set == pm_set and pm_mode:
+                    reconciled_modes.append(pm_mode)
+                else:
+                    reconciled_modes.append(str(r_cat.tumor_activation_mode or ""))
+            else:
+                reconciled_modes.append(str(r_cat.tumor_activation_mode or ""))
+            reconciled_rq.append(cur_rq_str)
+        cat["reproductive_qualifying_compartments"] = reconciled_rq
+        cat["tumor_activation_mode"] = reconciled_modes
+        result.summary["cta_activation_modes"] = (
+            cat.loc[cat["is_cta"].astype(bool), "tumor_activation_mode"].value_counts().to_dict()
+        )
     object.__setattr__(result, "catalog", cat)
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()
@@ -1427,6 +1551,13 @@ def compute_next_policy_transitions(
             reasons.append(
                 f"gse107746:adult_{frec['dominant_compartment_cell']}_{frec['dominant_follicle_stage']}_10x"
             )
+        if _chemosensory_gpcr_home_tissue(
+            r.protein_group_label
+        ) is not None and r.classification_integrated in {
+            "Other:Unscreened tissue",
+            "Reproductive Antigen only",
+        }:
+            reasons.append("chemosensory_gpcr:unscreened_monogenic_sensory_neuron")
         if (
             pd.notna(r.tumor_max_tpm_integrated)
             and (

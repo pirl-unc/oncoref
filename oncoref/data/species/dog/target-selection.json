@@ -5,7 +5,7 @@
   "scientific_name": "Canis lupus familiaris",
   "selection_status": "evaluated",
   "policy_id": "oncoref.species-screening-policy.2026-11-21.1",
-  "comparison_id": "oncoref.dog-canfam31-tpm.2026-11-26.1",
+  "comparison_id": "oncoref.dog-canfam31-tpm.2026-11-26.2",
   "comparison_unit": "TPM",
   "symbol_index": "species/dog/symbol-index.csv.gz",
   "reference": {
@@ -27,10 +27,10 @@
     },
     "reference_id": "openvax:reference:v1:sha256:48a39792c2bcb345fd9bf5f479c06c9c7e8b25b6258c6544a76505dd2df738c4"
   },
-  "data_sha256": "5857e69388cd057963579837f551de9181ccf38a8d6de91939ad4e76a4617cfa",
-  "data_bytes": 3563927,
-  "host_exposure_sha256": "b12514b0d0a07043d85d7ef582df67212579d245d5dbe7375868cc436926e82d",
-  "host_exposure_bytes": 1848194,
+  "data_sha256": "00e26878b0ea5c76ec15538d3dee591c3b32af87f051323707df502df4d46e15",
+  "data_bytes": 3651714,
+  "host_exposure_sha256": "b85ad5ce5b88d46f20f5fa9788f286ccd849388b2e4cbb73e885ab48e5cd7886",
+  "host_exposure_bytes": 1848200,
   "sequences_sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
   "sequences_bytes": 10609284,
   "required_normal_contexts": [
@@ -83,45 +83,77 @@
     "CMT",
     "HSA",
     "LYM",
-    "DLBCL",
-    "GLIOMA"
+    "GLIOMA",
+    "LYM_CHOP",
+    "GLIOMA_G23",
+    "URO",
+    "STS",
+    "STS_SUB",
+    "COSCC",
+    "CAA",
+    "HS",
+    "MNG",
+    "ACC",
+    "THCA",
+    "LEUK"
   ],
-  "tumor_samples": 571,
+  "tumor_samples": 935,
+  "cell_line_models": [
+    "CLBL-1",
+    "HS_BD",
+    "HS_OD",
+    "HS_PJ",
+    "MGT_122",
+    "MGT_316",
+    "MGT_408",
+    "MGT_414",
+    "MGT_421",
+    "MGT_506",
+    "MGT_612",
+    "MGT_703"
+  ],
+  "cell_line_samples": 20,
   "summary": {
     "proteins": 20082,
     "loci": 20199,
     "sequences": 45036,
     "categories": {
-      "CTA": 54,
-      "Cancer Antigen only": 59,
-      "Reproductive Antigen only": 421,
-      "Other": 2573,
-      "Unsafe": 16975
+      "CTA": 118,
+      "Cancer Antigen only": 127,
+      "Reproductive Antigen only": 313,
+      "Other": 2201,
+      "Unsafe": 17323
     },
     "classifications": {
-      "CTA": 54,
-      "Cancer Antigen only": 59,
-      "Other:Expression": 944,
-      "Other:Review": 1620,
-      "Other:Sequence": 5,
-      "Other:Unscreened tissue": 4,
-      "Reproductive Antigen only": 421,
-      "Unsafe": 16975
+      "CTA": 118,
+      "Cancer Antigen only": 127,
+      "Other:Expression": 628,
+      "Other:Review": 1551,
+      "Other:Sequence": 2,
+      "Other:Unscreened tissue": 20,
+      "Reproductive Antigen only": 313,
+      "Unsafe": 17323
     },
     "sex_restriction_codes": {
-      "CTA-M": 42,
-      "CTA-MF": 8,
-      "CTA-P": 4,
-      "RA-F-only": 6,
-      "RA-M-only": 397,
-      "RA-MF-only": 14,
-      "RA-P-only": 4
+      "CTA-F": 1,
+      "CTA-M": 100,
+      "CTA-MF": 10,
+      "CTA-P": 7,
+      "RA-F-only": 5,
+      "RA-M-only": 300,
+      "RA-MF-only": 7,
+      "RA-P-only": 1
     },
     "sex_restriction_classes": {
       "Female-restricted": 6,
-      "Male-restricted": 439,
+      "Male-restricted": 400,
       "Pregnancy / peripartum-only": 8,
-      "Shared male & female": 22
+      "Shared male & female": 17
+    },
+    "cta_activation_modes": {
+      "ectopic": 112,
+      "ectopic_and_lineage_retained": 2,
+      "lineage_retained": 4
     }
   }
 }

@@ -3,7 +3,13 @@ MC38,MC38 subcutaneous colon adenocarcinoma,syngeneic_graft,C57BL/6,H-2b,GSE3553
 B16F10,B16-F10 subcutaneous melanoma,syngeneic_graft,C57BL/6,H-2b,GSE334005,3,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
 CT26,CT26 subcutaneous colon carcinoma,syngeneic_graft,BALB/c,H-2d,GSE334005,4,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
 LLC,Lewis lung carcinoma (LLC) subcutaneous graft,syngeneic_graft,C57BL/6,H-2b,GSE334005,3,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
-4T1,4T1 triple-negative mammary carcinoma,syngeneic_line,BALB/c,H-2d,GSE332912,3,Ensembl gene (ENSMUSG),author linear TPM
 KP_LUAD,Primary Kras;Trp53 lung adenocarcinoma GEMM,primary_gemm,C57BL/6,H-2b,GSE277076,10,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from raw counts and Ensembl 115 exonic_bp
 BMPC_PRAD,BMPC MYC;Pten primary & metastatic prostate adenocarcinoma GEMM,primary_gemm,FVB,H-2q,GSE287166,6,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from normalized counts and Ensembl 115 exonic_bp
-P815,P815 mastocytoma (native DBA/2 source of P1A/Trap1a),syngeneic_line,DBA/2,H-2d,GSE181773,3,Ensembl gene (ENSMUSG),within-sample linear TPM from FPKM
+EMT6,EMT6 mammary carcinoma in-vivo graft,syngeneic_graft,BALB/c,H-2d,GSE334006,3,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
+RM1,RM1 prostate carcinoma in-vivo graft,syngeneic_graft,C57BL/6,H-2b,GSE334006,3,NCBI Entrez GeneID -> MGI -> ENSMUSG,author linear TPM
+B78_MEL,B78 amelanotic melanoma subcutaneous graft,syngeneic_graft,C57BL/6,H-2b,GSE304809,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from raw counts and Ensembl 115 exonic_bp
+GL261_TUMOR,GL261 orthotopic intracranial glioma,syngeneic_graft,C57BL/6,H-2b,GSE341165,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from STAR raw counts and Ensembl 115 exonic_bp
+CT2A_TUMOR,CT-2A orthotopic high-grade astrocytoma,syngeneic_graft,C57BL/6,H-2b,GSE341165,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from STAR raw counts and Ensembl 115 exonic_bp
+SB28_TUMOR,SB28 orthotopic poorly immunogenic glioblastoma,syngeneic_graft,C57BL/6,H-2b,GSE341165,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from STAR raw counts and Ensembl 115 exonic_bp
+MADR_GLIOMA,MADR-mEGFRvIII autochthonous glioma,primary_gemm,C57BL/6,H-2b,GSE341165,3,MGI/Ensembl official symbol -> ENSMUSG,linear TPM from STAR raw counts and Ensembl 115 exonic_bp
+DEN_HCC,Diethylnitrosamine (DEN) carcinogen-induced primary hepatocellular carcinoma,carcinogen_primary,C57BL/6,H-2b,GSE322844,6,Ensembl gene (ENSMUSG),within-sample linear TPM from FPKM

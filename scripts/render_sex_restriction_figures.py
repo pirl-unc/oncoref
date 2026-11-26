@@ -316,7 +316,7 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
     # Annotate exact CTA-F survivors on the right edge of each row
     ctaf_notes = [
         "CSN2, LALBA (2 CTA-F; BTN1A1 → CTA-P)",
-        "ZP4, DPPA3, KHDC3L, ZAR1L + 4 RA-F-only",
+        "ZP4, DPPA3, KHDC3L, ZAR1L + 3 RA-F-only",
         "0 CTA-F (SYCP1 → CTA-M; MOS, SPO11 → CTA-MF)",
         "0 CTA-F (PRAME, SCGB1D4 → CTA-MF)",
         "0 CTA-F (ERVV-1/2, LGALS16 → CTA-P)",
@@ -435,17 +435,17 @@ def draw_funnel_and_landscape(cat: pd.DataFrame, sex_df: pd.DataFrame, he: dict)
 
     callouts = {
         "LALBA": (-44, 10),
-        "DPPA3": (-44, 6),
+        "DPPA3": (-48, -4),
         "KHDC3L": (-56, 14),
-        "ZAR1L": (-52, -18),
+        "ZAR1L": (-56, -8),
         "CSN2": (-48, -3),
         "ZP4": (-30, -13),
         "CPSF4L": (-48, 8),
         "IZUMO1R": (-54, -8),
         "VRTN": (-38, -9),
-        "PRR23E": (-48, 4),
+        "PRR23E": (-54, -2),
         "BTN1A1": (-48, -4),
-        "ERVV-1": (-48, 8),
+        "ERVV-1": (10, 8),
         "DUX4": (14, -8),
         "MOS": (8, 8),
         "SCGB1D4": (8, -4),

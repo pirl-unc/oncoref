@@ -276,12 +276,20 @@ class SpeciesDataGroup:
         return packaged_species_screening_sources(self.species)
 
     def tumor_cohorts(self) -> pd.DataFrame:
-        """Strain-explicit tumor cohort registry for evaluated non-human target catalogs."""
+        """Strain-explicit in-vivo tumor cohort registry for evaluated non-human target catalogs."""
         if self.name not in {"antigens", "cancer"}:
             raise ValueError("tumor_cohorts() requires the antigens or cancer group")
         from .species_target_selection import packaged_species_tumor_cohorts
 
         return packaged_species_tumor_cohorts(self.species)
+
+    def cell_lines(self) -> pd.DataFrame:
+        """Pure in-vitro cancer cell-line registry for model selection and cancer-intrinsic purity."""
+        if self.name not in {"antigens", "cancer"}:
+            raise ValueError("cell_lines() requires the antigens or cancer group")
+        from .species_target_selection import packaged_species_cell_lines
+
+        return packaged_species_cell_lines(self.species)
 
     def evaluate_target_catalog(self, spec, proteins: pd.DataFrame, **inputs):
         """Run the source-pluggable 3-stage target-selection pipeline for this species."""

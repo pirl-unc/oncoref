@@ -37,10 +37,12 @@ sex_restricted_antigens = antigens.sex_restricted_antigens
 target_selection = antigens.target_selection
 target_selection_coverage = antigens.target_selection_coverage
 tumor_cohorts = cancer.tumor_cohorts
+cell_lines = cancer.cell_lines
 
 __all__ = [
     "antigens",
     "cancer",
+    "cell_lines",
     "cta_candidates",
     "cta_evidence",
     "cta_gene_ids",

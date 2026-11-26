@@ -282,7 +282,7 @@ def test_pandas4_warning_free_canine_target_selection_and_offline_preflight(monk
     assert (nom_only_dog["sex_restriction_code"] == "").all()
     assert dog_cov["taxon_id"] == 9615
     assert dog_cov["selection_status"] == "evaluated"
-    assert human_cov["counts"]["CTA"] == 325
+    assert human_cov["counts"]["CTA"] == 322
 
     # #762: preflight / is_cached / allow_download=False fail fast locally without touching network
     empty_bundled = tmp_path / "no_bundled_data"

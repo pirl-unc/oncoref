@@ -183,10 +183,10 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "CPSF4L",
         "IZUMO1R",
         "ACCSL",
-        "OR1N1",
         "TBXT",
     ):
         assert by_lbl.loc[cta_f_lbl, "sex_restriction_code"] == "CTA-F"
+    assert by_lbl.loc["OR1N1", "sex_restriction_code"] == "RA-F-only"
     assert by_lbl.loc["PSG7", "sex_restriction_code"] == "RA-P-only"
     assert by_lbl.loc["PABPN1L", "sex_restriction_code"] == "RA-F-only"
     assert by_lbl.loc["BMP15", "sex_restriction_code"] == "RA-F-only"
@@ -638,6 +638,55 @@ def test_end_to_end_canine_pipeline_gates_sex_subsets_and_peptide_subtraction():
     assert by_label.loc["DOG_LOW", "classification"] == "Other:Expression"
     assert by_label.loc["DOG_UNTRANS", "classification"] == "Other:Review"
 
+    # Pure in-vitro cell-line observations record cell_line_* purity sidecar fields and NEVER grant CA/CTA
+    cell_lines = pd.DataFrame(
+        [
+            {
+                "entity_id": by_label.loc["DOG_FRA", "entity_id"],
+                "source_id": "synthetic-cell-lines",
+                "sample_id": "CLBL-1_rep1",
+                "model_id": "CLBL-1",
+                "cancer_code": "DLBCL",
+                "value": 950.0,
+                "comparison_id": "canine-tmmcpm-v1",
+                "unit": "TMM-CPM",
+                "qc_pass": True,
+                "identity_resolved": True,
+            },
+            {
+                "entity_id": by_label.loc["CTAG_A/CTAG_B", "entity_id"],
+                "source_id": "synthetic-cell-lines",
+                "sample_id": "CLBL-1_rep1",
+                "model_id": "CLBL-1",
+                "cancer_code": "DLBCL",
+                "value": 120.0,
+                "comparison_id": "canine-tmmcpm-v1",
+                "unit": "TMM-CPM",
+                "qc_pass": True,
+                "identity_resolved": True,
+            },
+        ]
+    )
+    res_with_cl = canine.evaluate_target_catalog(
+        spec,
+        proteins,
+        sequences=seqs,
+        normal_gates=all_gates,
+        comparison_normals=norm_obs["normals"],
+        comparison_reproductive=norm_obs["reproductive"],
+        comparison_tumors=tum_obs["tumors"],
+        comparison_cell_lines=cell_lines,
+    )
+    cl_by_lbl = res_with_cl.catalog.set_index("protein_group_label")
+    assert cl_by_lbl.loc["DOG_FRA", "classification"] == "Reproductive Antigen only"
+    assert not bool(cl_by_lbl.loc["DOG_FRA", "is_cancer_antigen"])
+    assert float(cl_by_lbl.loc["DOG_FRA", "cell_line_max_tpm"]) == 950.0
+    assert cl_by_lbl.loc["DOG_FRA", "cell_line_top_model"] == "CLBL-1"
+    assert cl_by_lbl.loc["DOG_FRA", "qualifying_cell_lines"] == "CLBL-1"
+    assert cl_by_lbl.loc["CTAG_A/CTAG_B", "tumor_activation_mode"] == "ectopic"
+    assert cl_by_lbl.loc["DOG_CA", "tumor_activation_mode"] == "ectopic"
+    assert cl_by_lbl.loc["DOG_FRA", "tumor_activation_mode"] == ""
+
     # Sex-specific selections work identically on the canine result!
     assert res.select("CTA-M").proteins().protein_group_label.tolist() == ["CTAG_A/CTAG_B"]
     assert res.select("CTA-E").proteins().protein_group_label.tolist() == ["DOG_CTA_E"]
@@ -839,21 +888,14 @@ def test_uniform_species_module_surface_cli_and_explicit_unassessed_nominations(
     assert mouse_rows.iloc[0].classification in {"Other:Review", "Unsafe"}
     assert not mouse_rows.iloc[0].is_cta
     assert not mouse.target_selection(category="CTA").empty
-    for mouse_cta_f in ("Gzmg", "Gzmd", "Gzmf"):
-        assert mouse.target_selection(mouse_cta_f).iloc[0].sex_restriction_code == "CTA-F"
-        assert (
-            mouse.sex_restricted_antigens()
-            .set_index("protein_group_label")
-            .loc[mouse_cta_f, "sex_restriction_code"]
-            == "CTA-F"
-        )
-    for mouse_cta_m in ("Pbsn", "Sbp", "Tex19.1", "Plac1"):
+    for mouse_lak_gzm in ("Gzmg", "Gzmd", "Gzmf", "Gzme"):
+        assert mouse.target_selection(mouse_lak_gzm).iloc[0].classification == "Unsafe"
+    for mouse_cta_m in ("Pbsn", "Sbp", "Tex19.1"):
         assert mouse.target_selection(mouse_cta_m).iloc[0].sex_restriction_code == "CTA-M"
     for mouse_cta_p in ("Serpinb9e", "Pramel13"):
         assert mouse.target_selection(mouse_cta_p).iloc[0].sex_restriction_code == "CTA-P"
     for mouse_imm_unsafe in ("Csf3", "Cxcl2", "Peg12"):
         assert mouse.target_selection(mouse_imm_unsafe).iloc[0].classification == "Unsafe"
-    assert mouse.target_selection_coverage()["sex_restricted_counts"]["CTA-F"] == 3
 
     assert cli.main(["antigens", "funnel", "--species", "dog", "--format", "json"]) == 0
     funnel_rows = json.loads(capsys.readouterr().out)

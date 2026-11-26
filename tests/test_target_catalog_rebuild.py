@@ -372,15 +372,15 @@ def test_promoted_integrated_catalog_invariants_and_metadata():
     live_meta = policy.metadata()
     live_path = ROOT / "oncoref/data/target-selection.csv.gz"
     assert hashlib.sha256(live_path.read_bytes()).hexdigest() == live_meta["data_sha256"]
-    assert live_meta["policy_id"] == policy.POLICY_ID == "oncoref.target-selection.2026-11-26.1"
+    assert live_meta["policy_id"] == policy.POLICY_ID == "oncoref.target-selection.2026-11-26.2"
     assert live.policy.eq(policy.POLICY_ID).all()
     assert len(live) == 19893 and live.entity_id.is_unique
     assert live.category.value_counts().to_dict() == {
         "Unsafe": 18249,
-        "Other": 1081,
-        "CTA": 325,
-        "Reproductive Antigen only": 143,
-        "Cancer Antigen only": 95,
+        "Other": 1110,
+        "CTA": 322,
+        "Reproductive Antigen only": 146,
+        "Cancer Antigen only": 66,
     }
     assert live.is_cta.equals(live.is_cancer_antigen & live.is_reproductive_antigen)
     assert live.is_target_candidate.equals(live.is_cancer_antigen | live.is_reproductive_antigen)

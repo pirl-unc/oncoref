@@ -79,6 +79,9 @@ def test_whitepaper_separates_measured_peaks_by_category_and_explains_skipped_co
         path = f"audits/target-selection-20261110/rebuild/{figure}"
         assert f"]({path})" in paper and (DOCS / path).is_file()
     for wp_asset in [
+        "antigen-whitepaper/conceptual-pipeline-architecture.png",
+        "antigen-whitepaper/ectopic-vs-lineage-and-cell-lines.png",
+        "antigen-whitepaper/comparative-species-funnel-and-cohorts.png",
         "antigen-whitepaper/clinical-tcr-gold-standard.png",
         "antigen-whitepaper/clinical-tcr-gold-standard.csv",
         "antigen-whitepaper/sex-restriction-funnel-and-landscape.png",

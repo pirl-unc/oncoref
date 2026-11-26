@@ -89,9 +89,10 @@ def test_reproductive_age_female_promotions_and_single_rule_ablation():
     assert cat.loc["CPSF4L", "classification"] == "CTA"
     assert sex_df.loc["CPSF4L", "sex_restriction_code"] == "CTA-F"
 
-    # Adult oocyte expression expands CTA-F from 8 to 13 and moves BMP15 + OR52D1 into RA-F-only
+    # Adult oocyte expression expands CTA-F from 8 to 12 (with OR1N1 held in RA-F-only by the
+    # monogenic chemosensory GPCR guard) and moves BMP15 + OR52D1 + OR1N1 into RA-F-only
     cta_f = set(antigen_sets.proteins("CTA-F")["protein_group_label"])
-    assert len(cta_f) == 13
+    assert len(cta_f) == 12
     assert {
         "CSN2",
         "LALBA",
@@ -104,16 +105,15 @@ def test_reproductive_age_female_promotions_and_single_rule_ablation():
         "CPSF4L",
         "IZUMO1R",
         "ACCSL",
-        "OR1N1",
         "TBXT",
     } == cta_f
+    assert sex_df.loc["OR1N1", "sex_restriction_code"] == "RA-F-only"
     assert sex_df.loc["BMP15", "sex_restriction_code"] == "RA-F-only"
     assert sex_df.loc["OR52D1", "sex_restriction_code"] == "RA-F-only"
     assert sex_df.loc["CIMIP2A", "sex_restriction_code"] == "CTA-MF"
     assert sex_df.loc["H1-8", "sex_restriction_code"] == "RA-MF-only"
 
-    # Orthogonal single-rule ablation turning off include_reproductive_age_female restores
-    # exact pre-stratification calls (323 CTAs, 8 CTA-F, 236 CTA-M, 52 CTA-P, 27 CTA-MF)
+    # Orthogonal single-rule ablation turning off include_reproductive_age_female (under active GPCR guard)
     ablated = human_screening_inputs.evaluate_human_catalog(
         include_reproductive_age_female=False
     ).catalog.set_index("protein_group_label")
@@ -123,9 +123,16 @@ def test_reproductive_age_female_promotions_and_single_rule_ablation():
     assert ablated.loc["SPATA3", "sex_restriction_code"] == "RA-M-only"
     assert ablated.loc["DEFB123", "sex_restriction_code"] == "CTA-MF"
     assert ablated.loc["TBXT", "sex_restriction_code"] == "CTA-P"
-    assert int(ablated["category"].eq("CTA").sum()) == 323
-    assert ablated.loc[
-        ablated["sex_restriction_code"].ne(""), "sex_restriction_code"
+    assert int(ablated["category"].eq("CTA").sum()) == 320
+
+    # Turning off both reproductive-age female and chemosensory GPCR guard restores exact 1.51.0 counts (323 CTA)
+    ablated_151 = human_screening_inputs.evaluate_human_catalog(
+        include_reproductive_age_female=False,
+        include_chemosensory_gpcr_guard=False,
+    ).catalog.set_index("protein_group_label")
+    assert int(ablated_151["category"].eq("CTA").sum()) == 323
+    assert ablated_151.loc[
+        ablated_151["sex_restriction_code"].ne(""), "sex_restriction_code"
     ].value_counts().to_dict() == {
         "CTA-M": 236,
         "RA-M-only": 123,

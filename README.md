@@ -11,8 +11,8 @@ Reproductive Antigen (`RA`), and Cancer–Testis Antigen (`CTA`) classification 
 behind a Python API and CLI.
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
-[antigen catalog](docs/antigen-whitepaper.md) classifies **325 CTA, 95 Cancer Antigen only, 143 Reproductive Antigen only, 1,081 Other and
-18,249 Unsafe**. `CA` and `RA` share one multi-assay normal-tissue safety and eligibility screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in tumor or reproductive/embryonic samples; `CTA = CA ∩ RA`, and the candidate union `CA ∪ RA` contains **563** protein groups. [Patient-specific filtering](docs/host-selection.md) (`--profile` / `target_filters`) applies downstream, marking reproductive compartments as `Protect`, `Accept loss`, or `Absent` without altering biological categories.
+[antigen catalog](docs/antigen-whitepaper.md) classifies **322 CTA, 66 Cancer Antigen only, 146 Reproductive Antigen only, 1,110 Other and
+18,249 Unsafe**. `CA` and `RA` share one multi-assay normal-tissue safety and eligibility screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in *in vivo* tumor or reproductive/embryonic samples; `CTA = CA ∩ RA` (**311/322 = 96.6%** with ectopic activation outside homologous source organs, plus **11** homologous lineage-retained CTAs tracked via `tumor_activation_mode`), and the candidate union `CA ∪ RA` contains **534** protein groups. [Patient-specific filtering](docs/host-selection.md) (`--profile` / `target_filters`) applies downstream, marking reproductive compartments as `Protect`, `Accept loss`, or `Absent` without altering biological categories.
 
 [Antigen whitepaper](docs/antigen-whitepaper.md) ·
 [Interactive protein catalog](docs/audits/target-selection-20261110/rebuild/report.html) ·

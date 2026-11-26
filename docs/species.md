@@ -394,8 +394,9 @@ sex-restriction partition (`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-P`/`CTA-P`, `RA-M
 cross-species ortholog concordance, and native nomination ledgers.
 
 `oncoref.species_policies` and `oncoref.species_target_selection` harmonize the
-three-stage target-selection process across **human (`9606`, `19,893` PEGs, `325` CTAs)**,
-**dog (`9615`, `20,082` PEGs, `54` CTAs)** and **mouse (`10090`, `21,433` PEGs, `12` CTAs)**
+three-stage target-selection process across **human (`9606`, `19,893` PEGs, `322` CTAs)**,
+**dog (`9615`, `20,082` PEGs, `118` CTAs across `19` spontaneous patient cohorts + `12` cell lines)**
+and **mouse (`10090`, `21,433` PEGs, `8` *in vivo* CTAs across `14` *in vivo* cohorts + `9` cell lines)**
 without transferring human expression, safety verdicts or threshold calibrations by orthology:
 
 1. **Reference proteome & protein-equivalence grouping (`group_reference_proteins`, `group_proteome`):**

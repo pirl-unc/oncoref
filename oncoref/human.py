@@ -35,6 +35,7 @@ inventory = _data.inventory
 # Named dataset modules exposed here; inventory() describes the complete catalog.
 datasets = (gtex, human_protein_atlas, normal_cell_data)
 
+cell_lines = antigens.cell_lines
 cta_selection = antigens.cta_selection
 cta_selection_coverage = antigens.cta_selection_coverage
 cta_selection_audit = antigens.cta_selection_audit
@@ -53,10 +54,12 @@ screening_policy = antigens.screening_policy
 sex_restricted_antigens = antigens.sex_restricted_antigens
 target_selection = antigens.target_selection
 target_selection_coverage = antigens.target_selection_coverage
+tumor_cohorts = antigens.tumor_cohorts
 
 __all__ = [
     "antigens",
     "cancer",
+    "cell_lines",
     "cta_candidates",
     "cta_evidence",
     "cta_gene_ids",
@@ -93,5 +96,6 @@ __all__ = [
     "target_selection",
     "target_selection_coverage",
     "tissue_source_grid",
+    "tumor_cohorts",
     "upgraded_737_tumor_observations",
 ]

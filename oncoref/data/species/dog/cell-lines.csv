@@ -1,0 +1,13 @@
+model_id,cancer_code,label,strain,mhc_haplotype,source_accession,n_samples,native_feature_space,quantification
+CLBL-1,DLBCL,Canine diffuse large B-cell lymphoma line CLBL-1 (vehicle controls),German Shepherd,DLA-88,GSE287971,9,Ensembl gene (ENSCAFG),linear TPM from raw counts and CanFam3.1 exonic_bp
+HS_BD,HS,Canine histiocytic sarcoma cell line HS_BD,Bernese Mountain Dog,DLA,GSE288068,1,Ensembl gene (ENSCAFG),linear TPM from HTSeq raw counts and CanFam3.1 exonic_bp
+HS_OD,HS,Canine histiocytic sarcoma cell line HS_OD,Bernese Mountain Dog,DLA,GSE288068,1,Ensembl gene (ENSCAFG),linear TPM from HTSeq raw counts and CanFam3.1 exonic_bp
+HS_PJ,HS,Canine histiocytic sarcoma cell line HS_PJ,Rottweiler,DLA,GSE288068,1,Ensembl gene (ENSCAFG),linear TPM from HTSeq raw counts and CanFam3.1 exonic_bp
+MGT_122,CMT,Canine mammary gland tumor cell line MGT 122,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_316,CMT,Canine mammary gland tumor cell line MGT 316,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_408,CMT,Canine mammary gland tumor cell line MGT 408#2,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_414,CMT,Canine mammary gland tumor cell line MGT 414#2,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_421,CMT,Canine mammary gland tumor cell line MGT 421#1,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_506,CMT,Canine mammary gland tumor cell line MGT 506#3,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_612,CMT,Canine mammary gland tumor cell line MGT 612,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM
+MGT_703,CMT,Canine mammary gland tumor cell line MGT 703#2,companion dog mammary line,DLA,GSE230271,1,Ensembl gene (ENSCAFG),within-sample linear TPM from FPKM

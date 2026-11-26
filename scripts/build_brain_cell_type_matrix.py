@@ -91,15 +91,24 @@ def collect(out: Path, batch: int = 8) -> None:
                     if n >= 1:
                         rows.append(
                             (
-                                gene, tissue, info.get("name", cell), int(n),
-                                info.get("total_count"), whole.get("total_count"),
+                                gene,
+                                tissue,
+                                info.get("name", cell),
+                                int(n),
+                                info.get("total_count"),
+                                whole.get("total_count"),
                                 summary.get("me"),
                             )
                         )
         pd.DataFrame(
             rows,
             columns=[
-                "gene_id", "tissue", "cell_type", "n_expressing", "n_cells", "tissue_cells",
+                "gene_id",
+                "tissue",
+                "cell_type",
+                "n_expressing",
+                "n_cells",
+                "tissue_cells",
                 "mean_expr_log",
             ],
         ).to_parquet(parts / f"{start:06d}-{chunk[0]}.parquet")
@@ -131,7 +140,9 @@ def summarize(out: Path) -> pd.DataFrame:
             "dominant_n_expressing": best.n_expressing,
             "dominant_n_cells": best.n_cells,
             "top3_neuron_types": top.groupby("gene_id").apply(
-                lambda d: "; ".join(f"{c} ({p:.2f}%)" for c, p in zip(d.cell_type, d.pct_expressing))
+                lambda d: "; ".join(
+                    f"{c} ({p:.2f}%)" for c, p in zip(d.cell_type, d.pct_expressing)
+                )
             ),
             "neuron_types_detected": neurons.groupby("gene_id").cell_type.nunique(),
         }

@@ -78,7 +78,7 @@ def unmeasured_home_protein_adjudications(
     disposition: str | None = None,
     only_ca_cta_gated: bool = False,
 ) -> pd.DataFrame:
-    """Return quantitative home-panel adjudications across all 568 ``home_tissue`` proteins (#735)."""
+    """Return quantitative home-panel adjudications across all 571 ``home_tissue`` proteins (#735)."""
     df = get_data("unmeasured-home-protein-adjudications")
     if home_tissue is not None:
         if home_tissue not in HOME_TISSUES_735:
