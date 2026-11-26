@@ -1945,7 +1945,7 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "cta",
-      "default_version": "2026-11-25",
+      "default_version": "2026-11-26",
       "versions": {
         "2026-11-22": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-target-selection.csv.gz",
@@ -1960,6 +1960,13 @@
           "archive_sha256": "44466cfa1130153d787c7d2f0b73a8955f70c300259aabe9238a1a269bcc1853",
           "bytes": 3335700,
           "taxon_id": 10090
+        },
+        "2026-11-26": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126/mouse-target-selection.csv.gz",
+          "sha256": "f159d6f09f11e432966577197668a186367b4681a186a6e8b3b5da70164cce6b",
+          "archive_sha256": "f159d6f09f11e432966577197668a186367b4681a186a6e8b3b5da70164cce6b",
+          "bytes": 3331934,
+          "taxon_id": 10090
         }
       }
     },
@@ -1969,7 +1976,7 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "cta-evidence",
-      "default_version": "2026-11-25",
+      "default_version": "2026-11-26",
       "versions": {
         "2026-11-22": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-host-exposure.csv.gz",
@@ -1984,6 +1991,13 @@
           "archive_sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
           "bytes": 2535039,
           "taxon_id": 10090
+        },
+        "2026-11-26": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126/mouse-host-exposure.csv.gz",
+          "sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
+          "archive_sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
+          "bytes": 2535039,
+          "taxon_id": 10090
         }
       }
     },
@@ -1993,7 +2007,7 @@
       "archive_format": "file",
       "kind": "reference",
       "category": "protein",
-      "default_version": "2026-11-25",
+      "default_version": "2026-11-26",
       "versions": {
         "2026-11-22": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261122/mouse-proteome-sequences.csv.gz",
@@ -2008,6 +2022,64 @@
           "archive_sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
           "bytes": 11560752,
           "taxon_id": 10090
+        },
+        "2026-11-26": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126/mouse-proteome-sequences.csv.gz",
+          "sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
+          "archive_sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",
+          "bytes": 11560752,
+          "taxon_id": 10090
+        }
+      }
+    },
+    "dog-target-selection": {
+      "description": "genome-wide Ensembl 98 CanFam3.1 Cancer, Reproductive, and Cancer-Testis Antigen catalog for Canis lupus familiaris",
+      "filename": "dog-target-selection.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta",
+      "default_version": "2026-11-26",
+      "versions": {
+        "2026-11-26": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-target-selection.csv.gz",
+          "sha256": "eaae26cace2415366dcd53fbd5ef2923f6243d1f58605aa06cb540e7d28c8ded",
+          "archive_sha256": "eaae26cace2415366dcd53fbd5ef2923f6243d1f58605aa06cb540e7d28c8ded",
+          "bytes": 3593144,
+          "taxon_id": 9615
+        }
+      }
+    },
+    "dog-host-exposure": {
+      "description": "per-compartment adult reproductive, prostate, bicornuate-tract, mammary, placental, and embryonic TPM exposures for Canis lupus familiaris",
+      "filename": "dog-host-exposure.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "cta-evidence",
+      "default_version": "2026-11-26",
+      "versions": {
+        "2026-11-26": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-host-exposure.csv.gz",
+          "sha256": "dd82bfbc0613ae433ca62b7b0592d8bb22e33e9d0bb149ca2b04182507c3a001",
+          "archive_sha256": "dd82bfbc0613ae433ca62b7b0592d8bb22e33e9d0bb149ca2b04182507c3a001",
+          "bytes": 2116204,
+          "taxon_id": 9615
+        }
+      }
+    },
+    "dog-proteome-sequences": {
+      "description": "verified Ensembl 98 CanFam3.1 canine protein occurrence table for PEG grouping and PeptideIndex subtraction",
+      "filename": "dog-proteome-sequences.csv.gz",
+      "archive_format": "file",
+      "kind": "reference",
+      "category": "protein",
+      "default_version": "2026-11-26",
+      "versions": {
+        "2026-11-26": {
+          "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-proteome-sequences.csv.gz",
+          "sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
+          "archive_sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
+          "bytes": 10609284,
+          "taxon_id": 9615
         }
       }
     }

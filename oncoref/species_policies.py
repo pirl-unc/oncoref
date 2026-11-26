@@ -176,7 +176,7 @@ class SpeciesPolicy:
         return ReferenceIdentity.from_dict(reg["identity"])
 
     def sex_subset_compartments(self) -> dict[str, dict[str, tuple[str, ...]]]:
-        """Exact species-applicable compartment sets defining RA-{M,F,E,MF,P} and CTA-*."""
+        """Exact species-applicable compartment sets defining RA-{M,F,P,MF} and CTA-{M,F,P,MF}."""
         a = self.anatomy
         dev = (
             *(c for c in ("embryo", "placenta") if c in a.core_reproductive_compartments),
@@ -191,7 +191,7 @@ class SpeciesPolicy:
                 "expressed_in": (*a.female_sex_compartments, a.resting_mammary_compartment),
                 "must_clear_protected": a.male_adult_protected_compartments,
             },
-            "RA-E / CTA-E": {
+            "RA-P / CTA-P": {
                 "expressed_in": dev,
                 "must_clear_protected": tuple(
                     dict.fromkeys(
@@ -204,10 +204,6 @@ class SpeciesPolicy:
             },
             "RA-MF / CTA-MF": {
                 "expressed_in": a.reproductive_compartments,
-                "must_clear_protected": (),
-            },
-            "RA-P / CTA-P": {
-                "expressed_in": a.peripartum_compartments,
                 "must_clear_protected": (),
             },
         }
@@ -398,8 +394,8 @@ def _policies() -> dict[int, SpeciesPolicy]:
     dog_policy = SpeciesPolicy(
         species=dog_sp,
         policy_id=POLICY_SCHEMA_ID,
-        primary_reference_alias="refseq106",
-        registered_reference_aliases=("refseq106", "ensembl98"),
+        primary_reference_alias="ensembl98",
+        registered_reference_aliases=("ensembl98", "refseq106"),
         anatomy=anatomy_for_species(dog_sp),
         thresholds=SpeciesThresholdConfig(
             comparison_units=("TPM", "TMM-CPM"),
@@ -407,37 +403,39 @@ def _policies() -> dict[int, SpeciesPolicy]:
             cornea_cp10k_scale=None,
         ),
         overview=(
-            "Comparative canine oncology parameterization with two SHA-256-pinned genome "
-            "references, three ingested normal/developmental RNA matrices, pooled 38-tissue "
-            "TMT-iBAQ proteomics, and 14 curated native nominations awaiting reference/tumor reconciliation."
+            "Genome-wide quantitative canine oncology evaluation across the SHA-256-pinned "
+            "Ensembl 98 CanFam3.1 host proteome (20,199 coding genes), 28 adult somatic normal "
+            "contexts (Bgee 15.2 + GSE219045 sex-stratified multi-organ atlas), Pfizer 38-tissue "
+            "quantitative TMT proteomics (MSV000099744), comparative canine reproductive/embryonic "
+            "compartments, and 8 spontaneous canine patient tumor cohorts."
         ),
         datasets=(
             SpeciesDatasetBinding(
                 "reference_proteome",
-                "refseq106 + ensembl98",
-                "Canine NCBI RefSeq 106 (UU_Cfam_GSD_1.0) & Ensembl 98 (CanFam3.1)",
+                "ensembl98 + refseq106",
+                "Canine Ensembl 98 CanFam3.1 (GCA_000002285.2, primary) & NCBI RefSeq 106 (UU_Cfam_GSD_1.0)",
                 "amino-acid sequence",
                 "active_in_catalog",
-                "Complete GTF/FASTA/feature_table pins; identical translations collapse into canine PEG:<sha256>; >=95% canine 9-mer Unsafe containment",
-                "RefSeq 106 and CanFam3.1 Ensembl 98 are distinct assemblies requiring an explicit ReferenceCrosswalk.",
+                "Complete GTF/cDNA/ncRNA/peptide FASTA pins; identical translations collapse into canine PEG:<sha256>; >=95% canine 9-mer Unsafe containment",
+                "CanFam3.1 is a female Boxer assembly; unplaced scaffolds are retained and Y-linked single-copy loci remain unrepresented.",
             ),
             SpeciesDatasetBinding(
                 "healthy_baseline_rna",
-                "bgee-srp009687 + bgee-srp181218 | barkbase",
-                "Bgee 15.2 canine normal RNA-seq (13 + 75 libraries, TPM) & BarkBase (150 libraries, TMM-CPM)",
-                "TPM or TMM-CPM (single-scale panel)",
-                "ingested_pending_crosswalk",
-                "Within-organ donor P95 sets somatic N and canine Disposable D (gallbladder, tonsil, hair follicle, cutaneous melanocyte; no appendix); never pool TPM with TMM-CPM",
-                "Exact source quantification GTFs are unresolved, and BarkBase shares 46 SRA runs with global Bgee.",
+                "bgee_v15_2_dog_25exps + gse219045_dog_atlas",
+                "Bgee 15.2 adult canine multi-organ RNA-seq (SRA-deduplicated) & GSE219045 300-sample sex-stratified organ atlas",
+                "TPM",
+                "active_in_catalog",
+                "Within-organ donor P95 across 28 non-thymic adult somatic contexts sets N and canine Disposable D (gallbladder, tonsil, hair follicle); <=2.5% ectopic OR gDNA QC",
+                "Unmeasured canine dental-pulp and taste-bud home loci remain Other:Unscreened tissue.",
             ),
             SpeciesDatasetBinding(
                 "normal_bulk_and_immune_safety",
-                "bgee-srp009687 + bgee-srp181218 + barkbase + doga + pfizer-dog-rna",
-                "Bgee TPM, BarkBase TMM-CPM & DoGA / Pfizer canine RNA metadata",
-                "TPM; TMM-CPM; STRT2 ERCC (metadata)",
-                "ingested_pending_crosswalk",
-                "Tiered somatic ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) in declared panel unit without negative-IHC inflation",
-                "DoGA (5'-end ERCC) and Pfizer Ensembl-110 Salmon RNA are currently metadata-only.",
+                "bgee_v15_2_dog_somatic + gse219045_dog_atlas",
+                "Bgee 15.2 adult canine somatic/leukocyte RNA & GSE219045 multi-organ whole-blood/marrow/lymph-node atlas",
+                "TPM",
+                "active_in_catalog",
+                "Tiered somatic ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers",
+                "Sorted activated canine immune subset panels are narrower than human DICE/Monaco and murine ImmGen.",
             ),
             SpeciesDatasetBinding(
                 "normal_cell_and_rare_umi",
@@ -445,43 +443,43 @@ def _policies() -> dict[int, SpeciesPolicy]:
                 "Donor-resolved canine normal single-cell UMI atlases",
                 "UMI counts",
                 "identified_analog",
-                "Same assess_rare_cell_rna contract (>=10 cells, >=1% >=2-UMI across >=2 canine studies, 2x in Protected) when single-cell atlases are ingested",
+                "Same assess_rare_cell_rna contract (>=10 cells, >=1% >=2-UMI across >=2 canine studies, 2x in Protected) when multi-organ single-cell atlases are ingested",
                 "No multi-organ adult canine normal single-cell UMI atlas is currently bundled; rare-cell status stays unassessed.",
             ),
             SpeciesDatasetBinding(
                 "normal_protein",
-                "pfizer-dog-protein + pfizer-dog-peptide-evidence",
-                "Pfizer 38-tissue canine quantitative proteomics (MSV000099744, 9,929 groups)",
-                "pooled iBAQ + peptide assignments",
-                "ingested_pending_crosswalk",
-                "Affirmative Vital/Protected tissue-pool protein detection supplies Unsafe/hold review once searched-FASTA groups reconcile to canine genes; never grants negative-IHC RNA credit",
+                "pfizer-dog-protein",
+                "Pfizer 38-tissue canine quantitative proteomics (MSV000099744, 9,929 protein groups)",
+                "within-plex bleed-corrected molar ppm (from rIBAQ)",
+                "active_in_catalog",
+                "Sequence-reconciled Vital (>25 ppm Unsafe, 10-25 ppm hold) & Protected (>50 ppm Unsafe, 20-50 ppm hold) tissue-pool protein gates after 10% same-plex reproductive TMT bleed subtraction; never grants negative-IHC RNA multipliers",
                 "All 38 tissue samples are pooled TMT channels without individual-donor counts or cell-type resolution.",
             ),
             SpeciesDatasetBinding(
                 "reproductive_and_developmental_rna",
-                "bgee_repro + barkbase_repro_embryo",
-                "Bgee & BarkBase canine testis, ovary, oviduct, uterine horn, prostate, mammary & embryonic libraries",
-                "TPM or TMM-CPM",
-                "ingested_pending_crosswalk",
-                "RA qualifies at >=10 x H0 across canine compartments (includes uterine_horn; omits absent seminal vesicle and bulbourethral gland); feeds canine HostContext",
-                "BarkBase embryonic donor IDs and column-to-run provenance remain unresolved.",
+                "bgee_repro_embryo + gse219045_dog_repro + gse119810_normal_mammary + pfizer_fallopian_endometrium",
+                "Bgee 15.2 testis/ovary/placenta/d33-d44 embryos, GSE219045 male/female reproductive tract, GSE119810 normal resting/lactating mammary & Pfizer Fallopian_Tube/Endometrium proteomics",
+                "TPM; molar ppm (Fallopian_Tube)",
+                "active_in_catalog",
+                "RA qualifies at >=10 x H0 across canine compartments (uterine_horn, absent seminal vesicle, milk-operon secretory separation) and populates canine HostContext",
+                "Canine fallopian tube lacks a public RNA-seq atlas and is screened via Pfizer quantitative proteomics (coverage='proteome_only').",
             ),
             SpeciesDatasetBinding(
                 "tumor_rna",
-                "gse304066-osteosarcoma + hindriks2025 + nemec2019",
-                "GSE304066 canine osteosarcoma & published canine tumor RT-qPCR/RNA observations",
-                "blocked raw/FPKM; qualitative study observations",
-                "metadata_or_blocked",
-                "CA requires >=1 QC-passing tumor library at >=10 x H0 on the same reconciled reference and linear unit as the canine normal panel",
-                "GSE304066 raw-count filename conflicts with FPKM metadata; Hindriks 2025 and Nemec 2019 lack genome-wide linear TPM.",
+                "dog_8_spontaneous_cohorts",
+                "8 spontaneous canine tumor cohorts: OSA_NCI (GSE238110), OSA_COTC030 (GSE304066), OSA_CCOGC (GSE239948), CMT (GSE119810), HSA (GSE95183), LYM (GSE95184), DLBCL (GSE287971), GLIOMA (GSE284559)",
+                "TPM",
+                "active_in_catalog",
+                "CA qualifies when >=1 QC-passing (<=2.5% OR gDNA) canine tumor reaches >=10 x H0 on CanFam3.1 linear TPM; replicate tumor samples deduplicate per dog",
+                "Spontaneous oral melanoma and urothelial carcinoma linear-TPM cohorts remain priority expansion targets.",
             ),
             SpeciesDatasetBinding(
                 "curated_literature_and_clinical",
                 "hindriks2025 + nemec2019",
-                "Curated canine CTA nominations and normal/tumor study observations (14 candidates)",
-                "source-native qualitative/semi-quantitative",
-                "native_seed_only",
-                "Retains native canine gene mappings, paralog assay ambiguity, and positive normal somatic observations; packaged rows remain Other:Review until panels reconcile",
+                "Curated canine CTA nominations and normal/tumor RT-qPCR observations (14 candidates)",
+                "curated RT-qPCR & cross-reference index",
+                "active_in_catalog",
+                "Reconciles all 14 published canine nominations onto CanFam3.1 while enforcing somatic RT-PCR counterevidence holds and zero cross-species CTA transfer",
                 "Human CTA labels are never transferred to canine orthologs.",
             ),
         ),

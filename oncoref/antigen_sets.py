@@ -234,14 +234,11 @@ def select(
     sex_ids: frozenset[str] | None = None
     if group in SEX_SETS:
         from .species_target_selection import SEX_SETS as _SEX_SPEC
-        from .species_target_selection import classify_sex_restriction, peripartum_antigen_ids
+        from .species_target_selection import classify_sex_restriction
 
         sex_class, _ = _SEX_SPEC[group]
-        if sex_class == "Peripartum":
-            sex_ids = peripartum_antigen_ids(table, species=resolved, host_evidence=host_evidence)
-        else:
-            sex_df = classify_sex_restriction(table, species=resolved, host_evidence=host_evidence)
-            sex_ids = frozenset(sex_df.loc[sex_df.sex_restriction_class.eq(sex_class), "entity_id"])
+        sex_df = classify_sex_restriction(table, species=resolved, host_evidence=host_evidence)
+        sex_ids = frozenset(sex_df.loc[sex_df.sex_restriction_class.eq(sex_class), "entity_id"])
     base = target_filters.FILTER_MODES[mode] if isinstance(mode, str) else mode
     if host is not None:
         overrides["host"] = host

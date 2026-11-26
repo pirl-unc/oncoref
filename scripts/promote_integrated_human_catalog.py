@@ -6,7 +6,7 @@ Builds:
   reconstruction of the 129-column ``2026-11-20.2`` baseline in ``human_screening_inputs``
   and ablation tests without duplicating a 3.7 MB CSV in the PyPI wheel),
 - ``oncoref/data/target-selection.csv.gz`` and ``oncoref/data/target-selection.json``
-  (``oncoref.target-selection.2026-11-25.1``),
+  (``oncoref.target-selection.2026-11-26.1``),
 - ``oncoref/data/host-exposure.csv.gz`` and ``oncoref/data/host-exposure.json``
   (adding verified 14-compartment reproductive/embryonic + HPA scRNA/IHC exposures
   for newly cleared ``PLAC1``, ``ZAN``, ``DUX4``, ``DKKL1``, ``MAGEB6``, and ``CSN2``),
@@ -42,14 +42,15 @@ from oncoref import (  # noqa: E402
     rare_cell_compartment_qc,
     reference_data,
     repeat_family_equivalence,
+    reproductive_age_female,
     species_target_selection,
     target_selection,
     tgct_localization,
     unmeasured_home_panels,
 )
 
-PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-25.1"
-PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-25.1"
+PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-26.1"
+PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.1"
 FROZEN_150_DIR = ROOT / "tests/fixtures/release-1.50-inputs"
 
 
@@ -330,12 +331,19 @@ def _clean_and_sex_stratify_host_exposures(
                 qset.add(str(citem["compartment"]))
 
     # 2. Compute deconvolved GTEx v11 donor host_exposure & clean max across reproductive & mammary shards
+    # Female adult organs use reproductive-age XX donors (20-49) to avoid ~60% postmenopausal ovarian/uterine atrophy dilution.
+    repro_xx_donors = reproductive_age_female.reproductive_age_female_donor_ids()
+    foll_by_eid = (
+        reproductive_age_female.adult_oocyte_follicle_rna().set_index("entity_id").to_dict("index")
+    )
+
     def _entity_gtex_host_exposure(
         site_name: str,
         *,
         include_samples: set[str] | None = None,
         exclude_samples: set[str] | None = None,
         sex_filter: str | None = None,
+        donor_allowlist: frozenset[str] | None = None,
     ) -> tuple[dict[str, float], dict[str, float]]:
         sdf = gtex.sample_tpm(site_name, genes=wanted_gids, qc="all", cleanup="all", sex=sex_filter)
         s_cols = [
@@ -344,6 +352,10 @@ def _clean_and_sex_stratify_host_exposures(
             if c not in ("Name", "Description")
             and (include_samples is None or c in include_samples)
             and (exclude_samples is None or c not in exclude_samples)
+            and (
+                donor_allowlist is None
+                or gtex_deconv.parse_gtex_sample_barcode(c).donor_id in donor_allowlist
+            )
         ]
         if not s_cols or sdf.empty:
             return {}, {}
@@ -410,19 +422,25 @@ def _clean_and_sex_stratify_host_exposures(
     }
     gtex_he_by_comp: dict[str, dict[str, float]] = {}
     gtex_max_by_comp: dict[str, dict[str, float]] = {}
-    for comp_lbl, site_lbl in (
-        ("testis", "testis"),
-        ("prostate", "prostate"),
-        ("ovary", "ovary"),
-        ("uterus", "uterus"),
-        ("vagina", "vagina"),
-        ("fallopian tube", "fallopian_tube"),
+    for comp_lbl, site_lbl, d_allow, sx_flt in (
+        ("testis", "testis", None, None),
+        ("prostate", "prostate", None, None),
+        ("ovary", "ovary", repro_xx_donors, "XX"),
+        ("uterus", "uterus", repro_xx_donors, "XX"),
+        ("vagina", "vagina", repro_xx_donors, "XX"),
+        ("fallopian tube", "fallopian_tube", repro_xx_donors, "XX"),
     ):
-        he_d, mx_d = _entity_gtex_host_exposure(site_lbl)
+        he_d, mx_d = _entity_gtex_host_exposure(
+            site_lbl, sex_filter=sx_flt, donor_allowlist=d_allow
+        )
         gtex_he_by_comp[comp_lbl] = he_d
         gtex_max_by_comp[comp_lbl] = mx_d
-    ecto, ecto_mx = _entity_gtex_host_exposure("cervix_ectocervix")
-    endo, endo_mx = _entity_gtex_host_exposure("cervix_endocervix")
+    ecto, ecto_mx = _entity_gtex_host_exposure(
+        "cervix_ectocervix", sex_filter="XX", donor_allowlist=repro_xx_donors
+    )
+    endo, endo_mx = _entity_gtex_host_exposure(
+        "cervix_endocervix", sex_filter="XX", donor_allowlist=repro_xx_donors
+    )
     gtex_he_by_comp["cervix"] = {
         eid: max(ecto.get(eid, 0.0), endo.get(eid, 0.0)) for eid in (set(ecto) | set(endo))
     }
@@ -431,7 +449,10 @@ def _clean_and_sex_stratify_host_exposures(
         for eid in (set(ecto_mx) | set(endo_mx))
     }
     gtex_rb_xx, _ = _entity_gtex_host_exposure(
-        "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XX"
+        "breast_mammary_tissue",
+        exclude_samples=secretory_mammary_sids,
+        sex_filter="XX",
+        donor_allowlist=repro_xx_donors,
     )
     gtex_rb_xy, _ = _entity_gtex_host_exposure(
         "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XY"
@@ -551,6 +572,32 @@ def _clean_and_sex_stratify_host_exposures(
             rb_item["max_tpm"] = max(
                 float(rb_item["female_max_tpm"]), float(rb_item["male_max_tpm"])
             )
+
+        # 2b. Fold stage-replicated adult human reproductive-age oocyte & granulosa RNA (GSE107746) into ovary
+        if eid in foll_by_eid:
+            frec = foll_by_eid[eid]
+            f_supp = float(frec["adult_follicle_supported_tpm"])
+            if f_supp >= 1.0:
+                ov_item = e_map.get("ovary")
+                if ov_item is not None:
+                    prev_ov = (
+                        float(ov_item["max_tpm"]) if ov_item.get("max_tpm") is not None else 0.0
+                    )
+                    ov_item["adult_bulk_max_tpm"] = prev_ov
+                    ov_item["max_tpm"] = max(prev_ov, f_supp)
+                    ov_item["coverage"] = "measured"
+                    ov_item["scope_complete"] = True
+                    srcs = list(ov_item.get("sources") or [])
+                    if "gse107746_adult_human_follicle" not in srcs:
+                        srcs.append("gse107746_adult_human_follicle")
+                    ov_item["sources"] = srcs
+                    if (
+                        float(frec["oocyte_supported_tpm"]) >= 8.0
+                        and float(frec["granulosa_supported_tpm"]) < 4.0
+                        and ov_item.get("protein_status") in (None, "not_detected")
+                    ):
+                        # HPA ovarian TMA cores score stromal/follicle cells only and lack oocytes
+                        ov_item["protein_status"] = "unassessed"
 
         # 3. Backfill GTEx-v11-missing female tract compartments (uterus, vagina) when measured
         # in pinned HPA/GTEx v23 references (e.g. TSSK2 ENSG00000206203 lacking GENCODE v47 entry)
@@ -759,6 +806,9 @@ def main() -> None:
         library_qc.tumor_gdna_background_deltas(only_applied=True)
         .set_index("entity_id")
         .to_dict("index")
+    )
+    foll_by_eid = (
+        reproductive_age_female.adult_oocyte_follicle_rna().set_index("entity_id").to_dict("index")
     )
 
     promoted = base_df.copy()
@@ -1195,6 +1245,42 @@ def main() -> None:
                 promoted.at[idx, "target_peak_tpm"] = max(
                     emb_val, float(t_cur) if pd.notna(t_cur) else 0.0
                 )
+
+        # Populate reproductive observations/contexts when newly promoted via GSE107746 adult human follicles
+        if (
+            bool(promoted.at[idx, "is_reproductive_antigen"])
+            and not bool(old_row["is_reproductive_antigen"])
+            and eid in foll_by_eid
+            and pd.notna(n_tpm)
+        ):
+            frec = foll_by_eid[eid]
+            f_supp = float(frec["adult_follicle_supported_tpm"])
+            f_ctx = f"adult {frec['dominant_compartment_cell']} ({frec['dominant_follicle_stage']} follicle)"
+            promoted.at[idx, "reproductive_supported_observations"] = json.dumps(
+                [
+                    {
+                        "source_id": "gse107746_adult_human_follicle",
+                        "tissue": "ovary",
+                        "compartment": "ovary",
+                        "source_context": f_ctx,
+                        "value": f_supp,
+                    }
+                ]
+            )
+            promoted.at[idx, "reproductive_supported_context"] = f_ctx
+            promoted.at[idx, "reproductive_expression_contexts"] = json.dumps(
+                [
+                    {
+                        "tissue": "ovary",
+                        "compartment": "ovary",
+                        "cell_type": "oocyte"
+                        if str(frec["dominant_compartment_cell"]) == "oocyte"
+                        else "granulosa cell",
+                        "stage": "adult",
+                        "value": f_supp,
+                    }
+                ]
+            )
 
         # Update human-readable decision_reason on changed rows
         if cls_now != str(old_row["classification"]):

@@ -15,7 +15,6 @@ from scripts.build_target_filter_audit import FAMILIAR, lookup  # noqa: E402
 
 from oncoref import (  # noqa: E402
     antigen_data,
-    antigen_sets,
     canine,
     catalog,
     cta_selection_policy,
@@ -310,7 +309,11 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         md_rows = []
         for cand in snap.candidates():
             eid = f"nomination:{snap.taxon_id}:{cand['id']}"
-            trow = ts.loc[eid] if eid in ts.index else mod.target_selection(cand["id"]).iloc[0]
+            if eid in ts.index:
+                call_str = str(ts.loc[eid].classification)
+            else:
+                hits = mod.target_selection(cand["id"])
+                call_str = " / ".join(dict.fromkeys(hits["classification"].astype(str)))
             gids = ", ".join(cand["gene_ids"]) or "unresolved"
             n_obs = ev_by_cand.get(cand["id"], 0)
             sources = ", ".join(dict.fromkeys(d["source_id"] for d in cand["derivation"]))
@@ -322,7 +325,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                     cand["mapping"]["status"],
                     sources,
                     n_obs,
-                    f"`{trow.classification}`",
+                    f"`{call_str}`",
                     missing,
                 ]
             )
@@ -339,7 +342,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                         dict.fromkeys(d["source_id"] for d in cand["derivation"])
                     ),
                     "native_observations": n_obs,
-                    "classification": trow.classification,
+                    "classification": call_str,
                     "missing_requirements": missing,
                 }
             )
@@ -393,6 +396,22 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         "dog_nominations_table": nom_tables["dog"],
         "mouse_nominations_table": nom_tables["mouse"],
     }
+    h_cat = human.target_selection()
+    d_cat = canine.target_selection()
+    d_sex = canine.sex_restricted_antigens()
+    d_sex_cta = d_sex[d_sex["is_cta"].astype(bool)] if not d_sex.empty else d_sex
+    d_loci = int(d_cat.member_gene_ids.map(json.loads).map(len).sum())
+    d_ca = d_cat.is_cancer_antigen.astype(bool)
+    d_ra = d_cat.is_reproductive_antigen.astype(bool)
+    d_cohorts = canine.tumor_cohorts()
+    d_top_cta = (
+        d_cat[d_ca & d_ra]
+        .dropna(subset=["tumor_max_tpm"])
+        .sort_values(PEAK, ascending=[False, True, True])
+        .head(12)
+    )
+    prame_dog = canine.target_selection("PRAME").iloc[0]
+
     m_cat = mouse.target_selection()
     m_sex = mouse.sex_restricted_antigens()
     m_sex_cta = m_sex[m_sex["is_cta"].astype(bool)] if not m_sex.empty else m_sex
@@ -407,8 +426,166 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         .head(10)
     )
     p1a_row = mouse.target_selection("P1A").iloc[0]
+
+    # Build cross-species ortholog concordance ledger across human, dog, and mouse CTAs
+    def _norm_orth_key(lbl: str) -> str:
+        raw = str(lbl).split("/")[0].strip().upper()
+        alias_map = {
+            "NY-ESO-1": "CTAG1",
+            "CTAG1A": "CTAG1",
+            "CTAG1B": "CTAG1",
+            "TEX19.1": "TEX19",
+            "TEX19.2": "TEX19",
+            "TRAP1A": "TRAP1A",
+        }
+        return alias_map.get(raw, raw)
+
+    def _index_by_orth(df: pd.DataFrame) -> dict[str, pd.Series]:
+        out_idx: dict[str, pd.Series] = {}
+        rank_cat = {
+            "CTA": 0,
+            "Reproductive Antigen only": 1,
+            "Cancer Antigen only": 2,
+            "Other": 3,
+            "Unsafe": 4,
+        }
+        for _, r in df.iterrows():
+            lbl = str(r["protein_group_label"])
+            if lbl.startswith(("ENSG0", "ENSCAFG0", "ENSMUSG0", "GM")):
+                continue
+            k = _norm_orth_key(lbl)
+            prev = out_idx.get(k)
+            if prev is None or rank_cat.get(str(r["category"]), 9) < rank_cat.get(
+                str(prev["category"]), 9
+            ):
+                out_idx[k] = r
+        return out_idx
+
+    h_orth = _index_by_orth(h_cat)
+    d_orth = _index_by_orth(d_cat)
+    m_orth = _index_by_orth(m_cat)
+    cta_keys = sorted(
+        {
+            *(k for k, r in h_orth.items() if bool(r["is_cta"])),
+            *(k for k, r in d_orth.items() if bool(r["is_cta"])),
+            *(k for k, r in m_orth.items() if bool(r["is_cta"])),
+        }
+    )
+    orth_rows: list[dict] = []
+    for k in cta_keys:
+        hr, dr, mr = h_orth.get(k), d_orth.get(k), m_orth.get(k)
+        cta_sp = [
+            sp
+            for sp, rr in (("human", hr), ("dog", dr), ("mouse", mr))
+            if rr is not None and bool(rr["is_cta"])
+        ]
+        ra_or_cta_sp = [
+            sp
+            for sp, rr in (("human", hr), ("dog", dr), ("mouse", mr))
+            if rr is not None and bool(rr["is_reproductive_antigen"])
+        ]
+        present_sp = [
+            sp for sp, rr in (("human", hr), ("dog", dr), ("mouse", mr)) if rr is not None
+        ]
+        if len(cta_sp) >= 2:
+            regime = "Conserved multi-species CTA"
+        elif len(cta_sp) == 1 and len(ra_or_cta_sp) >= 2:
+            regime = "CTA + conserved RA-only ortholog"
+        elif len(present_sp) >= 2:
+            regime = "Divergent somatic / review gate"
+        else:
+            regime = "Lineage-specific / no 1:1 symbol ortholog"
+        orth_rows.append(
+            {
+                "ortholog_key": k,
+                "cta_species": "|".join(cta_sp),
+                "human_symbol": str(hr["protein_group_label"]) if hr is not None else "",
+                "human_classification": str(hr["classification"]) if hr is not None else "absent",
+                "human_sex_code": str(hr.get("sex_restriction_code", "") or "")
+                if hr is not None
+                else "",
+                "dog_symbol": str(dr["protein_group_label"]) if dr is not None else "",
+                "dog_classification": str(dr["classification"]) if dr is not None else "absent",
+                "dog_sex_code": str(dr.get("sex_restriction_code", "") or "")
+                if dr is not None
+                else "",
+                "mouse_symbol": str(mr["protein_group_label"]) if mr is not None else "",
+                "mouse_classification": str(mr["classification"]) if mr is not None else "absent",
+                "mouse_sex_code": str(mr.get("sex_restriction_code", "") or "")
+                if mr is not None
+                else "",
+                "concordance_regime": regime,
+            }
+        )
+    orth_df = pd.DataFrame(orth_rows)
+    h_cta_orth = orth_df[orth_df["human_classification"].eq("CTA")]
+    conserved_sub = orth_df[
+        orth_df["concordance_regime"].isin(
+            ["Conserved multi-species CTA", "CTA + conserved RA-only ortholog"]
+        )
+    ]
+
     template_vars.update(
         {
+            "dog_n": f"{len(d_cat):,}",
+            "dog_loci": f"{d_loci:,}",
+            "dog_cta": f"{int((d_ca & d_ra).sum()):,}",
+            "dog_ca_only": f"{int((d_ca & ~d_ra).sum()):,}",
+            "dog_ra": f"{int(d_ra.sum()):,}",
+            "dog_ra_only": f"{int((d_ra & ~d_ca).sum()):,}",
+            "dog_union": f"{int((d_ca | d_ra).sum()):,}",
+            "dog_other_n": f"{int(d_cat.category.eq('Other').sum()):,}",
+            "dog_unsafe_n": f"{int(d_cat.category.eq('Unsafe').sum()):,}",
+            "dog_mra_n": f"{int(d_sex.sex_restriction_class.eq('Male-restricted').sum()):,}",
+            "dog_fra_n": f"{int(d_sex.sex_restriction_class.eq('Female-restricted').sum()):,}",
+            "dog_era_n": f"{int(d_sex.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+            "dog_sra_n": f"{int(d_sex.sex_restriction_class.eq('Shared male & female').sum()):,}",
+            "dog_cta_m_n": f"{int(d_sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
+            "dog_cta_f_n": f"{int(d_sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
+            "dog_cta_e_n": f"{int(d_sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+            "dog_cta_mf_n": f"{int(d_sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
+            "dog_cta_p_n": f"{int(d_sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+            "dog_ra_p_n": f"{int(d_sex.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+            "dog_prame_call": prame_dog.classification,
+            "dog_cohorts_table": table(
+                ["Cohort", "Model", "Breeds / DLA", "Accession", "Samples", "Quantification"],
+                [
+                    [
+                        f"`{r.cancer_code}` — {r.label}",
+                        r.model_kind,
+                        f"{r.strain} (`{r.mhc_haplotype}`)",
+                        f"`{r.source_accession}`",
+                        r.n_samples,
+                        r.quantification,
+                    ]
+                    for r in d_cohorts.itertuples(index=False)
+                ],
+            ),
+            "dog_top_cta_table": table(
+                [
+                    "Rank",
+                    "Protein",
+                    "Sex subset",
+                    "Peak cohort",
+                    "Tumor TPM",
+                    "N TPM",
+                    "Reproductive peak TPM",
+                    "Qualifying reproductive compartments",
+                ],
+                [
+                    [
+                        i,
+                        f"`{r.protein_group_label}`",
+                        f"`{r.sex_restriction_code}`",
+                        f"`{r.tumor_top_cancer_code}`",
+                        number(r.tumor_max_tpm),
+                        number(r.normal_reference_tpm),
+                        number(r.reproductive_supported_tpm),
+                        r.reproductive_qualifying_compartments,
+                    ]
+                    for i, r in enumerate(d_top_cta.itertuples(index=False), 1)
+                ],
+            ),
             "mouse_n": f"{len(m_cat):,}",
             "mouse_loci": f"{m_loci:,}",
             "mouse_cta": f"{int((m_ca & m_ra).sum()):,}",
@@ -420,14 +597,14 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
             "mouse_unsafe_n": f"{int(m_cat.category.eq('Unsafe').sum()):,}",
             "mouse_mra_n": f"{int(m_sex.sex_restriction_class.eq('Male-restricted').sum()):,}",
             "mouse_fra_n": f"{int(m_sex.sex_restriction_class.eq('Female-restricted').sum()):,}",
-            "mouse_era_n": f"{int(m_sex.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
+            "mouse_era_n": f"{int(m_sex.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "mouse_sra_n": f"{int(m_sex.sex_restriction_class.eq('Shared male & female').sum()):,}",
             "mouse_cta_m_n": f"{int(m_sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
             "mouse_cta_f_n": f"{int(m_sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
-            "mouse_cta_e_n": f"{int(m_sex_cta.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
+            "mouse_cta_e_n": f"{int(m_sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "mouse_cta_mf_n": f"{int(m_sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
-            "mouse_cta_p_n": f"{len(antigen_sets.proteins('CTA-P', species='mouse')):,}",
-            "mouse_ra_p_n": f"{len(antigen_sets.proteins('RA-P', species='mouse')):,}",
+            "mouse_cta_p_n": f"{int(m_sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+            "mouse_ra_p_n": f"{int(m_sex.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
             "mouse_p1a_call": p1a_row.classification,
             "mouse_cohorts_table": table(
                 ["Cohort", "Model", "Host strain (MHC)", "Accession", "Samples", "Quantification"],
@@ -468,6 +645,74 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                     for i, r in enumerate(m_top_cta.itertuples(index=False), 1)
                 ],
             ),
+            "ortholog_total_keys_n": f"{len(orth_df):,}",
+            "human_cta_with_dog_orth_n": f"{int(h_cta_orth['dog_classification'].ne('absent').sum()):,}",
+            "human_cta_with_mouse_orth_n": f"{int(h_cta_orth['mouse_classification'].ne('absent').sum()):,}",
+            "conserved_cta_pairs_n": f"{int(orth_df['concordance_regime'].eq('Conserved multi-species CTA').sum()):,}",
+            "conserved_cta_or_ra_n": f"{len(conserved_sub):,}",
+            "ortholog_summary_table": table(
+                [
+                    "Cross-species orthology regime (union of human, dog & mouse CTAs)",
+                    "Ortholog families",
+                    "Biological mechanism",
+                ],
+                [
+                    [
+                        "**Conserved multi-species CTA**",
+                        int(orth_df["concordance_regime"].eq("Conserved multi-species CTA").sum()),
+                        "Independently passes Stage 1 somatic safety AND 10× cancer + reproductive enrichment in ≥2 species (`CSN2`, `PRAME`, `PSMA8`, `ANTXRL`, `LUZP4`, `TRIM42`, `PASD1`, `PLAC1`/`Plac1`, `TEX19`/`Tex19.1`)",
+                    ],
+                    [
+                        "**CTA + conserved RA-only ortholog**",
+                        int(
+                            orth_df["concordance_regime"]
+                            .eq("CTA + conserved RA-only ortholog")
+                            .sum()
+                        ),
+                        "Conserved germline/reproductive restriction (`RA`) in ≥2 species, with ≥10× tumor reactivation observed in the broader cohort panel of one species (`DPPA5`, `MAGEB18`, `CYLC1`, `ACTL8`, `ADAM2`, `AKAP4`)",
+                    ],
+                    [
+                        "**Divergent somatic / review gate**",
+                        int(
+                            orth_df["concordance_regime"]
+                            .eq("Divergent somatic / review gate")
+                            .sum()
+                        ),
+                        "1:1 ortholog exists across species, but somatic expression diverges evolutionary or is caught by deeper human single-cell/IHC screens (`HORMAD1`, `DDX43`, `CLDN6`, `IGF2BP1`)",
+                    ],
+                    [
+                        "**Lineage-specific / paralog-diverged CTA**",
+                        int(
+                            orth_df["concordance_regime"]
+                            .eq("Lineage-specific / no 1:1 symbol ortholog")
+                            .sum()
+                        ),
+                        "Primate-amplified CT-X/subtelomeric families (`NY-ESO-1`, `SPANX*`, `VCX/Y`, `GAGE*`, `XAGE*`, `CT45A*`, `CT47A*`, `PRAMEF*`, `DUX4`), canine-specific loci, or murine `Gm*`/`Gzmd-g`/`Pbsn`/`Sbp` expansions",
+                    ],
+                ],
+            ),
+            "conserved_ortholog_ctas_table": table(
+                [
+                    "Ortholog family",
+                    "Human call (subset)",
+                    "Dog call (subset)",
+                    "Mouse call (subset)",
+                    "Regime",
+                ],
+                [
+                    [
+                        f"`{r.ortholog_key}`",
+                        f"`{r.human_classification}`"
+                        + (f" (`{r.human_sex_code}`)" if r.human_sex_code else ""),
+                        f"`{r.dog_classification}`"
+                        + (f" (`{r.dog_sex_code}`)" if r.dog_sex_code else ""),
+                        f"`{r.mouse_classification}`"
+                        + (f" (`{r.mouse_sex_code}`)" if r.mouse_sex_code else ""),
+                        r.concordance_regime,
+                    ]
+                    for r in conserved_sub.itertuples(index=False)
+                ],
+            ),
         }
     )
     csv_outputs = {
@@ -475,6 +720,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         f"{ASSETS}/species-nominations.csv": pd.DataFrame(nom_csv_rows).to_csv(
             index=False, lineterminator="\n"
         ),
+        f"{ASSETS}/cross-species-orthologs.csv": orth_df.to_csv(index=False, lineterminator="\n"),
     }
     return template_vars, csv_outputs
 
@@ -822,7 +1068,7 @@ def build_sex_restriction_interrogation(
                 c_m += 1
             elif sex_class == "Shared male & female":
                 c_mf += 1
-            elif sex_class == "Embryo / peripartum-only":
+            elif sex_class == "Pregnancy / peripartum-only":
                 c_e += 1
             else:
                 c_f += 1
@@ -880,12 +1126,12 @@ def build_sex_restriction_interrogation(
                         f"RA-F-only via {r.reproductive_qualifying_compartments}; "
                         f"no somatic tumor reaches 10× H₀ (peak {number(pan_peak_val)} TPM in {pan_peak_cohort or '—'})"
                     )
-            elif sex_class == "Embryo / peripartum-only":
+            elif sex_class == "Pregnancy / peripartum-only":
                 if bool(r.is_cta):
-                    why = f"Adult-absent in non-pregnant/non-lactating men & women (CTA-E via {r.reproductive_qualifying_compartments})"
+                    why = f"Adult-absent in non-pregnant/non-lactating men & women (CTA-P via {r.reproductive_qualifying_compartments})"
                 else:
                     why = (
-                        f"RA-E-only via {r.reproductive_qualifying_compartments}; "
+                        f"RA-P-only via {r.reproductive_qualifying_compartments}; "
                         f"adult-absent, tumor peak {number(pan_peak_val)} TPM (<10× H₀)"
                     )
             elif sex_class == "Male-restricted":
@@ -949,11 +1195,15 @@ def build_sex_restriction_interrogation(
 
     audit_df = pd.DataFrame(audit_rows)
 
-    # 1. Symmetric 4-way RA-* / CTA-* adult partition + non-exclusive peripartum RA-P / CTA-P
+    # 1. Symmetric 4-way mutually exclusive RA-{M,P,F,MF} / CTA-{M,P,F,MF} physiological partition
     sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
     sex_ra_only = sex_table[~sex_table["is_cta"].astype(bool)]
-    cta_p_df = antigen_sets.proteins("CTA-P")
-    ra_p_df = antigen_sets.proteins("RA-P")
+    peri_cta_n = len(
+        species_target_selection.peripartum_antigen_ids(
+            data[data.is_cta.astype(bool)], species="human"
+        )
+    )
+    peri_ra_n = len(species_target_selection.peripartum_antigen_ids(data, species="human"))
     partition_rows = [
         [
             "**Male-restricted**",
@@ -961,15 +1211,15 @@ def build_sex_restriction_interrogation(
             f"`CTA-M`: **{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}**",
             f"`RA-M-only`: **{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}**",
             "Clears all non-pregnant, non-lactating female adult organs (`ovary`, female tract, `XX resting_breast` < 8; < 16 with `IHC−`)",
-            "`NY-ESO-1`, `MAGEA4`, `XAGE1A/B`, `VCY/1B`, `CT83`, `TGM4`, `SEMG2`, `PLAC1`, `XAGE3`, `DKKL1`, `SYCP1`",
+            "`NY-ESO-1`, `MAGEA4`, `XAGE1A/B`, `VCY/1B`, `CT83`, `SEMG2`, `PLAC1`, `XAGE3`, `DKKL1`, `SYCP1`, `KRTAP20-4`",
         ],
         [
-            "**Embryo / peripartum-only**",
-            f"`RA-E` (`ERA`): **{int(sex_table.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}**",
-            f"`CTA-E`: **{int(sex_cta.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}**",
-            f"`RA-E-only`: **{int(sex_ra_only.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}**",
+            "**Pregnancy / peripartum-only**",
+            f"`RA-P` (`PRA`/`RA-E`): **{int(sex_table.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}**",
+            f"`CTA-P` (`CTA-E`): **{int(sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}**",
+            f"`RA-P-only`: **{int(sex_ra_only.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}**",
             "Clears all non-pregnant, non-lactating adult reproductive and resting-mammary organs in **both** sexes (< 8; < 16 with `IHC−`)",
-            "`DUX4`, `ERVV-1`, `ERVV-2`, `LGALS16`, `BTN1A1`, `TBXT`, `OR1N1`, `CER1`, `PSG7` (`RA-E-only`), `BMP15` (`RA-E-only`)",
+            "`DUX4`, `ERVV-1`, `ERVV-2`, `LGALS16`, `BTN1A1`, `TBXT`, `CER1`, `LEUTX`, `PSG7` (`RA-P-only`), `NLRP8` (`RA-P-only`)",
         ],
         [
             "**Female-restricted**",
@@ -977,7 +1227,7 @@ def build_sex_restriction_interrogation(
             f"`CTA-F`: **{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             f"`RA-F-only`: **{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             "Clears all male adult organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`, non-secretory `XY resting_breast` < 8; < 16 with `IHC−`)",
-            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `PABPN1L` (`RA-F-only`), `WEE2` (`RA-F-only`), `TLE7` (`RA-F-only`)",
+            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `CPSF4L`, `IZUMO1R`, `ACCSL`, `OR1N1`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `BMP15` (`RA-F-only`), `WEE2` (`RA-F-only`), `PABPN1L` (`RA-F-only`)",
         ],
         [
             "**Shared male & female**",
@@ -985,15 +1235,7 @@ def build_sex_restriction_interrogation(
             f"`CTA-MF`: **{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}**",
             f"`RA-MF-only`: **{int(sex_ra_only.sex_restriction_class.eq('Shared male & female').sum()):,}**",
             "≥ 8 TPM/nTPM (or ≥ 16 with `IHC−`, or positive IHC) in adult organs of both sexes",
-            "`PRAME`, `SCGB1D4`, `CTAG2`, `ACTL8`, `NLRP4`, `OOSP2`, `PIWIL3`, `FOXR1`, `NLRP13` (`RA-MF-only`), `H1-8` (`RA-MF-only`)",
-        ],
-        [
-            "**Peripartum / lactation** *(non-exclusive)*",
-            f"`RA-P` (`PRA`): **{len(ra_p_df):,}**",
-            f"`CTA-P`: **{len(cta_p_df):,}**",
-            f"`RA-P \\ CTA-P`: **{len(ra_p_df) - len(cta_p_df):,}**",
-            "Qualifies ≥ 10× or crosses calibrated `HostContext` ceiling in `placenta` or `lactating_breast` across any adult class",
-            "`LALBA`, `CSN2` (`CTA-F`); `BTN1A1`, `ERVV-1/2`, `LGALS16` (`CTA-E`); `PLAC1`, `XAGE3`, `MAGEA4/8/10` (`CTA-M`); `CTAG2` (`CTA-MF`)",
+            "`PRAME`, `SCGB1D4`, `CTAG2`, `MOS`, `ACTL8`, `NLRP4`, `OOSP2`, `SPO11`, `DMRTC2`, `PIWIL3`, `FOXR1`, `NLRP13` (`RA-MF-only`)",
         ],
     ]
 
@@ -1050,22 +1292,25 @@ def build_sex_restriction_interrogation(
     ra_f_cnt = int(sex_table.sex_restriction_class.eq("Female-restricted").sum())
     cta_m_cnt = int(sex_cta.sex_restriction_class.eq("Male-restricted").sum())
     cta_f_cnt = int(sex_cta.sex_restriction_class.eq("Female-restricted").sum())
-    cta_e_cnt = int(sex_cta.sex_restriction_class.eq("Embryo / peripartum-only").sum())
+    cta_p_cnt = int(sex_cta.sex_restriction_class.eq("Pregnancy / peripartum-only").sum())
     extra_vars = {
         "ra_m_n": f"{ra_m_cnt:,}",
         "ra_f_n": f"{ra_f_cnt:,}",
-        "ra_e_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
+        "ra_e_n": f"{int(sex_table.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
         "ra_mf_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
-        "ra_p_n": f"{len(ra_p_df):,}",
-        "cta_p_n": f"{len(cta_p_df):,}",
+        "ra_p_n": f"{int(sex_table.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+        "cta_p_n": f"{cta_p_cnt:,}",
+        "peri_ra_n": f"{peri_ra_n:,}",
+        "peri_cta_n": f"{peri_cta_n:,}",
         "ra_m_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "ra_f_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "ra_e_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
+        "ra_e_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
+        "ra_p_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
         "ra_mf_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Shared male & female').sum()):,}",
-        "cta_female_safe_pct": f"{100.0 * (cta_m_cnt + cta_e_cnt) / max(len(sex_cta), 1):.1f}",
-        "cta_male_safe_pct": f"{100.0 * (cta_f_cnt + cta_e_cnt) / max(len(sex_cta), 1):.1f}",
-        "cta_m_f_ratio": f"{round(cta_m_cnt / max(cta_f_cnt, 1))}",
-        "ra_m_f_ratio": f"{round(ra_m_cnt / max(ra_f_cnt, 1))}",
+        "cta_female_safe_pct": f"{100.0 * (cta_m_cnt + cta_p_cnt) / max(len(sex_cta), 1):.1f}",
+        "cta_male_safe_pct": f"{100.0 * (cta_f_cnt + cta_p_cnt) / max(len(sex_cta), 1):.1f}",
+        "cta_m_f_ratio": f"{cta_m_cnt / max(cta_f_cnt, 1):.1f}",
+        "ra_m_f_ratio": f"{ra_m_cnt / max(ra_f_cnt, 1):.1f}",
         "female_audit_n": f"{len(audit_df):,}",
         "sex_partition_table": table(
             [
@@ -1098,7 +1343,7 @@ def build_sex_restriction_interrogation(
                 "Other / CA-only",
                 "RA-M / CTA-M",
                 "RA-MF / CTA-MF",
-                "RA-E / CTA-E",
+                "RA-P / CTA-P",
                 "RA-F (`CTA-F` / `RA-F-only`)",
             ],
             prog_summary_rows,
@@ -1450,14 +1695,14 @@ def build():
         "pregnant_excluded": f"{int(pregnant_profile.CTA_excluded):,}",
         "mra_n": f"{int(sex_table.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "fra_n": f"{int(sex_table.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "era_n": f"{int(sex_table.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
+        "era_n": f"{int(sex_table.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
         "sra_n": f"{int(sex_table.sex_restriction_class.eq('Shared male & female').sum()):,}",
         "cta_m_n": f"{int(sex_cta.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "cta_f_n": f"{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}",
-        "cta_e_n": f"{int(sex_cta.sex_restriction_class.eq('Embryo / peripartum-only').sum()):,}",
+        "cta_e_n": f"{int(sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",
         "cta_mf_n": f"{int(sex_cta.sex_restriction_class.eq('Shared male & female').sum()):,}",
-        "cta_female_safe_n": f"{int(sex_cta.sex_restriction_code.isin(['CTA-M', 'CTA-E']).sum()):,}",
-        "cta_male_safe_n": f"{int(sex_cta.sex_restriction_code.isin(['CTA-F', 'CTA-E']).sum()):,}",
+        "cta_female_safe_n": f"{int(sex_cta.sex_restriction_code.isin(['CTA-M', 'CTA-P']).sum()):,}",
+        "cta_male_safe_n": f"{int(sex_cta.sex_restriction_code.isin(['CTA-F', 'CTA-P']).sum()):,}",
         "cta_m_sex_only_n": f"{int((sex_cta.female_sex_organ_only_eligible & ~sex_cta.male_all_adult_eligible).sum()):,}",
         "fold": f"{target_selection.ENRICHMENT_FOLD:g}",
         "floor": f"{target_selection.DETECTION_FLOOR:g}",

@@ -233,7 +233,7 @@ def test_mouse_heavy_tables_are_externalized_and_pinned_in_reference_releases():
         assert not bool(audit.loc[stem, "shipped_in_wheel"])
         prov = reference_data.provenance(stem)
         assert prov["sha256"] == expected_sha
-        assert "reference-mouse-20261125" in prov["url"]
+        assert "reference-mouse-20261126" in prov["url"]
         p = data_dir / f"{stem}.csv.gz"
         if p.exists():
             assert hashlib.sha256(p.read_bytes()).hexdigest() == expected_sha

@@ -1,0 +1,129 @@
+{
+  "schema": "oncoref.species-target-selection-metadata.v1",
+  "taxon_id": 9615,
+  "species": "dog",
+  "scientific_name": "Canis lupus familiaris",
+  "selection_status": "evaluated",
+  "policy_id": "oncoref.species-screening-policy.2026-11-21.1",
+  "comparison_id": "oncoref.dog-canfam31-tpm.2026-11-26.1",
+  "comparison_unit": "TPM",
+  "symbol_index": "species/dog/symbol-index.csv.gz",
+  "reference": {
+    "schema": "openvax.reference",
+    "schema_version": 1,
+    "taxon_id": 9615,
+    "assembly_accession": "GCA_000002285.2",
+    "annotation_source": "Ensembl",
+    "annotation_release": "98",
+    "source_version": "Ensembl-98",
+    "identifier_namespaces": {
+      "gene": "Ensembl gene",
+      "protein": "Ensembl protein",
+      "transcript": "Ensembl transcript"
+    },
+    "content_provenance": {
+      "gtf": "5d567adae8bcefef2e21b7d8d47bbb3beb6f0a9d4ae302c074867c3bebfdab2d",
+      "protein": "60ce869e46ff855cee1543b5272b002c8598005c6a0d0ef9774e9a0f9db41515"
+    },
+    "reference_id": "openvax:reference:v1:sha256:48a39792c2bcb345fd9bf5f479c06c9c7e8b25b6258c6544a76505dd2df738c4"
+  },
+  "data_sha256": "eaae26cace2415366dcd53fbd5ef2923f6243d1f58605aa06cb540e7d28c8ded",
+  "data_bytes": 3593144,
+  "host_exposure_sha256": "dd82bfbc0613ae433ca62b7b0592d8bb22e33e9d0bb149ca2b04182507c3a001",
+  "host_exposure_bytes": 2116204,
+  "sequences_sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
+  "sequences_bytes": 10609284,
+  "required_normal_contexts": [
+    "adipose tissue",
+    "adrenal gland",
+    "blood",
+    "bone",
+    "bone marrow",
+    "brain",
+    "colon",
+    "eye",
+    "heart",
+    "kidney",
+    "liver",
+    "lung",
+    "lymph node",
+    "olfactory epithelium",
+    "pancreas",
+    "pituitary gland",
+    "salivary gland",
+    "skeletal muscle",
+    "skin",
+    "small intestine",
+    "spleen",
+    "stomach",
+    "thyroid gland",
+    "urinary bladder"
+  ],
+  "measured_reproductive_compartments": [
+    "cervix",
+    "embryo",
+    "endometrium",
+    "epididymis",
+    "lactating_mammary",
+    "ovary",
+    "placenta",
+    "prostate",
+    "resting_mammary",
+    "testis",
+    "uterine_horn",
+    "uterus",
+    "vagina"
+  ],
+  "proteome_only_reproductive_compartments": [
+    "fallopian tube"
+  ],
+  "tumor_cohorts": [
+    "OSA_NCI",
+    "OSA_COTC030",
+    "OSA_CCOGC",
+    "CMT",
+    "HSA",
+    "LYM",
+    "DLBCL",
+    "GLIOMA"
+  ],
+  "tumor_samples": 571,
+  "summary": {
+    "proteins": 20082,
+    "loci": 20199,
+    "sequences": 45036,
+    "categories": {
+      "CTA": 63,
+      "Cancer Antigen only": 77,
+      "Reproductive Antigen only": 416,
+      "Other": 2496,
+      "Unsafe": 17030
+    },
+    "classifications": {
+      "CTA": 63,
+      "Cancer Antigen only": 77,
+      "Other:Expression": 910,
+      "Other:Review": 1576,
+      "Other:Sequence": 6,
+      "Other:Unscreened tissue": 4,
+      "Reproductive Antigen only": 416,
+      "Unsafe": 17030
+    },
+    "sex_restriction_codes": {
+      "CTA-F": 4,
+      "CTA-M": 45,
+      "CTA-MF": 10,
+      "CTA-P": 4,
+      "RA-F-only": 7,
+      "RA-M-only": 392,
+      "RA-MF-only": 12,
+      "RA-P-only": 5
+    },
+    "sex_restriction_classes": {
+      "Female-restricted": 11,
+      "Male-restricted": 437,
+      "Pregnancy / peripartum-only": 9,
+      "Shared male & female": 22
+    }
+  }
+}

@@ -164,6 +164,10 @@ def write_receipt(root):
         "oncoref/data/tumor-gdna-background-deltas.csv",
         "oncoref/data/tumor-gdna-background-deltas.json",
         "oncoref/data/unmeasured-home-protein-adjudications.csv",
+        "oncoref/reproductive_age_female.py",
+        "oncoref/data/gtex-donor-age.csv",
+        "oncoref/data/human-adult-oocyte-follicle-rna.csv.gz",
+        "oncoref/data/human-adult-oocyte-follicle-rna.json",
         "scripts/replay_cta_selection.py",
     }
     implementation.update(step["argv"][0] for step in spec["steps"].values())

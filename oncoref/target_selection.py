@@ -20,7 +20,7 @@ import pandas as pd
 
 from .load_dataset import _register_derived_cache
 
-POLICY_ID = "oncoref.target-selection.2026-11-25.1"
+POLICY_ID = "oncoref.target-selection.2026-11-26.1"
 BASELINE_2026_11_20_POLICY_ID = "oncoref.target-selection.2026-11-20.2"
 DETECTION_FLOOR = 1.0
 #: Both positive compartments use the same fold over the non-reproductive reference.

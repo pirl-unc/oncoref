@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-25.1`: **323 CTA** · **97 Cancer Antigen only** · **142 Reproductive Antigen only** · **1,082 Other** · **18,249 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-26.1`: **325 CTA** · **95 Cancer Antigen only** · **143 Reproductive Antigen only** · **1,081 Other** · **18,249 Unsafe**.
 
 [Antigen whitepaper](antigen-whitepaper.md) ·
 [Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) ·
@@ -30,9 +30,9 @@ Both CA and RA independently require **≥10 × H₀**, where
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
 | CA | At least one QC-passing tumor sample ≥10 × H₀ | 420 |
-| RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 465 |
-| CTA | Both routes | 323 |
-| CA∪RA | Either route | 562 |
+| RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 468 |
+| CTA | Both routes | 325 |
+| CA∪RA | Either route | 563 |
 
 The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 
@@ -102,7 +102,7 @@ Cleared loci that lack unresolved paralog ambiguity enter normal native-TPM eval
 
 ## Stoichiometric multiplex index-hopping vs. boundary carryover (`#764`, `#776`)
 
-On patterned Illumina flowcells, hyper-abundant reproductive transcripts (`≥ 1,000 TPM`, such as `PRM1` at `58,751 TPM` and `PRM2` at `50,821 TPM` in testis or `KLK3`/`MSMB`/`ACP3` in prostate) hop into co-sequenced somatic and opposite-sex GTEx libraries at `10⁻⁵` to `5 × 10⁻³` of source abundance. `oncoref.normal_library_qc` flags a non-source GTEx biopsy for cross-sample bleed **only** when `≥ 3` source sentinels co-occur at `≥ 0.25 TPM` in stoichiometric proportion (`IQR(log₁₀ α) ≤ 0.5`) **and** orthogonal HPA v23 single-cell clusters, HPA normal IHC, and non-GTEx HPA bulk biopsies confirm absence in that organ. Flagged biopsies are **dropped from the `gtex_donor_p95` denominator** rather than zero-filled (cleaning `PRM1` Thyroid bleed from `8.05` to `5.71 TPM`), whereas anatomic boundary carryover in adjacent pelvic/urogenital organs (`SEMG2` and `TGM4` in `Bladder`) is distinguished and never masked in somatic `N`. In downstream `host-exposure` (`#776`, `#779`), GTEx `Breast_Mammary_Tissue` (`336/514` XY male cadaver biopsies vs. `178` XX female biopsies) is stratified by biological donor sex and secretory state (`female_max_tpm` vs. `male_max_tpm`), GTEx-v11-missing `vagina` and `uterus` measurements (`TSSK2`) are backfilled from pinned `rna_tissue_gtex:v23` and `hpa_tissue_samples:v23`, and `classify_sex_restriction` evaluates `Protected` (`< 8 TPM / < 8 nTPM`) + negative-IHC (`2×` = `< 16`) `HostContext` organ eligibility across symmetric `RA-{M,E,F,MF}` / `CTA-{M,E,F,MF}` sets plus non-exclusive peripartum `RA-P` / `CTA-P` (`236 CTA-M · 52 CTA-E · 8 CTA-F · 27 CTA-MF`, `16 CTA-P`). [Multiplex bleed QC audit](audits/multiplex-bleed-qc-20261123/index.md).
+On patterned Illumina flowcells, hyper-abundant reproductive transcripts (`≥ 1,000 TPM`, such as `PRM1` at `58,751 TPM` and `PRM2` at `50,821 TPM` in testis or `KLK3`/`MSMB`/`ACP3` in prostate) hop into co-sequenced somatic and opposite-sex GTEx libraries at `10⁻⁵` to `5 × 10⁻³` of source abundance. `oncoref.normal_library_qc` flags a non-source GTEx biopsy for cross-sample bleed **only** when `≥ 3` source sentinels co-occur at `≥ 0.25 TPM` in stoichiometric proportion (`IQR(log₁₀ α) ≤ 0.5`) **and** orthogonal HPA v23 single-cell clusters, HPA normal IHC, and non-GTEx HPA bulk biopsies confirm absence in that organ. Flagged biopsies are **dropped from the `gtex_donor_p95` denominator** rather than zero-filled (cleaning `PRM1` Thyroid bleed from `8.05` to `5.71 TPM`), whereas anatomic boundary carryover in adjacent pelvic/urogenital organs (`SEMG2` and `TGM4` in `Bladder`) is distinguished and never masked in somatic `N`. In downstream `host-exposure` (`#776`, `#779`), GTEx `Breast_Mammary_Tissue` (`336/514` XY male cadaver biopsies vs. `178` XX female biopsies) is stratified by biological donor sex, reproductive age (`GTEx AGE 20–49` across female reproductive & mammary organs), and secretory state (`female_max_tpm` vs. `male_max_tpm`), adult human folliculogenesis/oocyte expression (`GSE107746`, `128` QC-passing stages) is integrated into `ovary`, GTEx-v11-missing `vagina` and `uterus` measurements (`TSSK2`) are backfilled from pinned `rna_tissue_gtex:v23` and `hpa_tissue_samples:v23`, and `classify_sex_restriction` partitions all `RA`s and `CTA`s into four mutually exclusive physiological classes—`RA-M` / `CTA-M` (`226 CTA-M`), `RA-F` / `CTA-F` (`12 CTA-F`), `RA-MF` / `CTA-MF` (`38 CTA-MF`), and `RA-P` / `CTA-P` (`49 CTA-P`, pregnancy/peripartum-only across `embryo`, `placenta`, and `lactating_breast`; legacy aliases `CTA-E`/`RA-E`/`ERA`/`PRA`). [Multiplex bleed QC audit](audits/multiplex-bleed-qc-20261123/index.md).
 
 ## Isoform- & epitope-scoped clinical pMHC organ clearance (`#766`)
 
@@ -118,7 +118,7 @@ Tandem repeat arrays and recently duplicated cancer–germline gene clusters (`D
 - **`P_self(g)` (closed self-family homologs):** primary-assembly `protein_coding` and `unprocessed_pseudogene` copies sharing `≥ 85%` CDS 31-mers (or `≥ 90%` amino-acid identity) with zero `Unsafe` somatic expression (`unsafe_sequence_overlap_pct < 5%` and family-summed somatic donor `P95 < 5.0 TPM`).
 - **`P_ext(g)` (external / somatic paralogs):** `Unsafe` coding paralogs (`PSG8 ↔ PSG1`, `POTEC ↔ POTED/E`, `GAGE2E ↔ GAGE12F/G`), `processed_pseudogene` retrocopies, or chimeric somatic hosts, which remain blocked in `Other:Review`.
 
-When `P_ext(g)` is empty, symmetric family-summed expression across `{g} ∪ P_self(g)` tests somatic silence honestly (`DUX4` + `20` `DUX4L*` repeat units = `0.00 TPM` in GTEx Skeletal Muscle and Skin, `0.30 TPM` somatic max, advancing `DUX4 → CTA` [`CTA-E`] jointly with `#765`). Catalog rows also expose `closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, and `closed_self_paralog_ids` so downstream peptide subtraction (`tsarina`) does not self-subtract shared epitopes against co-silenced germline siblings (`CT47C1`, `TSPY9`, `SPANXN2/5`, `CSAG2/3`). [Closed repeat-family audit](audits/repeat-family-equivalence-20261123/index.md).
+When `P_ext(g)` is empty, symmetric family-summed expression across `{g} ∪ P_self(g)` tests somatic silence honestly (`DUX4` + `20` `DUX4L*` repeat units = `0.00 TPM` in GTEx Skeletal Muscle and Skin, `0.30 TPM` somatic max, advancing `DUX4 → CTA` [`CTA-P`] jointly with `#765`). Catalog rows also expose `closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, and `closed_self_paralog_ids` so downstream peptide subtraction (`tsarina`) does not self-subtract shared epitopes against co-silenced germline siblings (`CT47C1`, `TSPY9`, `SPANXN2/5`, `CSAG2/3`). [Closed repeat-family audit](audits/repeat-family-equivalence-20261123/index.md).
 
 ## Protein staining & assay-boundary reconciliations (`#768`)
 

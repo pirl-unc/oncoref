@@ -20,6 +20,7 @@ from oncoref import (
 def test_packaged_species_metadata_and_coverage_are_uniform_across_evaluated_species():
     for sp_name, expected_taxon, expected_n in (
         ("human", 9606, 19893),
+        ("dog", 9615, 20082),
         ("mouse", 10090, 21433),
     ):
         meta = species_target_selection.packaged_species_metadata(sp_name)
@@ -36,14 +37,12 @@ def test_packaged_species_metadata_and_coverage_are_uniform_across_evaluated_spe
         assert cov["counts"] == meta["summary"]["categories"]
         assert cov["sex_restricted_counts"] == meta["summary"]["sex_restriction_codes"]
 
-    assert species_target_selection.packaged_species_metadata("dog") is None
-    assert canine.target_selection_coverage()["selection_status"] == "pending_reconciled_panels"
-
 
 def test_packaged_species_results_and_host_exposure_share_identical_contract():
     h_cat = human.target_selection()
+    d_cat = canine.target_selection()
     m_cat = mouse.target_selection()
-    for df, sp, tid in ((h_cat, "human", 9606), (m_cat, "mouse", 10090)):
+    for df, sp, tid in ((h_cat, "human", 9606), (d_cat, "dog", 9615), (m_cat, "mouse", 10090)):
         assert {"taxon_id", "species", "entity_id", "protein_group_label", "category"} <= set(
             df.columns
         )

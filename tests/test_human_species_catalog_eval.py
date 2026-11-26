@@ -23,9 +23,9 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert cat_default["is_reproductive_antigen"].equals(
         promoted["is_reproductive_antigen"].astype(bool)
     )
-    assert int(promoted["is_cta"].sum()) == 323
+    assert int(promoted["is_cta"].sum()) == 325
 
-    # Exact sex-restriction subset parity across all 465 human RA/CTA proteins
+    # Exact sex-restriction subset parity across all 468 human RA/CTA proteins
     expected_sex = human.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     got_sex = res_default.sex_restricted_antigens().set_index("entity_id")["sex_restriction_code"]
     pd.testing.assert_series_equal(got_sex.sort_index(), expected_sex.sort_index())
@@ -45,9 +45,9 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert res_base.catalog["classification"].equals(baseline_20261120["classification"])
     assert int(res_base.catalog["is_cta"].sum()) == 327
 
-    # Pinned default human catalog matches promoted policy_id (323 CTA)
+    # Pinned default human catalog matches promoted policy_id (325 CTA)
     assert human.target_selection().attrs["policy_id"] == target_selection.POLICY_ID
-    assert int(human.target_selection()["is_cta"].sum()) == 323
+    assert int(human.target_selection()["is_cta"].sum()) == 325
 
     # Orthogonal #768 TGCT Note-R single-rule ablation keeps TGCT-witnessed RAs as CTA
     res_no_768 = human.evaluate_integrated_catalog(include_assay_boundary_fixes=False).catalog

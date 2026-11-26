@@ -65,7 +65,7 @@ DEFAULT_INPUT_DIR = Path(
 )
 
 PRIMARY_CONTIGS = frozenset({*(str(i) for i in range(1, 20)), "X", "Y", "MT"})
-COMPARISON_ID = "oncoref.mouse-grcm39-tpm.2026-11-25.1"
+COMPARISON_ID = "oncoref.mouse-grcm39-tpm.2026-11-26.1"
 
 # 24 adult somatic contexts measured across the 41,233-gene Bgee 15.2 GRCm39 universe
 REQUIRED_BGEE_NORMAL_CONTEXTS = frozenset(
@@ -723,14 +723,31 @@ def _is_adult_healthy_bgee_stage(stage_name: str, scope: str) -> bool:
     return not any(old in s for old in ("18-month", "21-month", "24-month", "27-month"))
 
 
+def _mouse_olfr_gene_ids(symbol_by_gene: dict[str, str]) -> set[str]:
+    return {
+        gid
+        for gid, sym in symbol_by_gene.items()
+        if sym.startswith("Olfr") or re.match(r"^Or\d+[a-z]+\d+", sym, re.IGNORECASE)
+    }
+
+
+def _olfr_share_ge5(gene_tpm: pd.DataFrame, olfr_gids: set[str]) -> pd.Series:
+    olfr_sub = gene_tpm.loc[gene_tpm.index.isin(olfr_gids)]
+    if len(olfr_sub) < 200:
+        return pd.Series(0.0, index=gene_tpm.columns, dtype=float)
+    return (olfr_sub >= 5.0).mean(axis=0)
+
+
 def load_bgee_and_normal_panels(
     input_dir: Path,
     groups_df: pd.DataFrame,
     exonic_bp: dict[str, int],
+    symbol_by_gene: dict[str, str],
     entrez_to_ens: dict[str, str],
     sym_to_ens: dict[str, str],
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict[str, set[str]], list[dict]]:
     """Aggregate normal somatic N, thymic, and all 16 reproductive/developmental compartments."""
+    olfr_gids = _mouse_olfr_gene_ids(symbol_by_gene)
     source_rows = []
     lib_tar = input_dir / "Mus_musculus_RNA-Seq_experiments_libraries.tar.gz"
     source_rows.append(
@@ -830,11 +847,21 @@ def load_bgee_and_normal_panels(
 
         sub = pd.concat(chunks, ignore_index=True)
         piv = sub.pivot(index="Gene ID", columns="Library ID", values="TPM")
-        peg_mat = _project_peg_matrix(piv, groups_df)
+        olfr_sh = _olfr_share_ge5(piv, olfr_gids)
+        qc_keep_cols = [
+            lid
+            for lid, (_sc, t_ctx, _st) in keep_libs.items()
+            if lid in piv.columns
+            and (
+                t_ctx in {"olfactory epithelium", "testis"} or float(olfr_sh.get(lid, 0.0)) <= 0.025
+            )
+        ]
+        if not qc_keep_cols:
+            continue
+        peg_mat = _project_peg_matrix(piv[qc_keep_cols], groups_df)
 
-        for lid, (scope, target_ctx, st) in keep_libs.items():
-            if lid not in peg_mat.columns:
-                continue
+        for lid in qc_keep_cols:
+            scope, target_ctx, st = keep_libs[lid]
             col = peg_mat[lid]
             info = lib_info.get(lid, {})
             strain = str(info.get("Strain") or "mouse").strip('"')
@@ -866,6 +893,7 @@ def load_bgee_and_normal_panels(
     g219_df["GeneID"] = g219_df["GeneID"].astype(str).str.split(".").str[0]
     g219_df = g219_df.set_index("GeneID")
     g219_tpm = _fpkm_to_tpm(g219_df)
+    g219_olfr = _olfr_share_ge5(g219_tpm, olfr_gids)
     g219_peg = _project_peg_matrix(g219_tpm, groups_df)
 
     for col_name in g219_peg.columns:
@@ -875,6 +903,11 @@ def load_bgee_and_normal_panels(
         if mapped is None:
             continue
         scope, target_ctx = mapped
+        if (
+            target_ctx not in {"olfactory epithelium", "testis"}
+            and float(g219_olfr.get(col_name, 0.0)) > 0.025
+        ):
+            continue
         donor_key = f"gse219045:{sex_tag}:{col_name}"
         if scope == "normal":
             somatic_peg_cols[target_ctx][donor_key] = g219_peg[col_name]
@@ -1762,15 +1795,21 @@ def load_mouse_tumor_cohorts(
     input_dir: Path,
     groups_df: pd.DataFrame,
     exonic_bp: dict[str, int],
+    symbol_by_gene: dict[str, str],
     entrez_to_ens: dict[str, str],
     sym_to_ens: dict[str, str],
 ) -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
     """Load 8 strain-explicit murine syngeneic & GEMM tumor cohorts in linear TPM."""
     exonic_series = pd.Series(exonic_bp, dtype=float)
+    olfr_gids = _mouse_olfr_gene_ids(symbol_by_gene)
     cohort_registry = []
     source_rows = []
     per_sample_peg: list[tuple[str, str, str, str, pd.Series]] = []
     # tuple: (source_id, sample_id, participant_id, cancer_code, peg_series)
+
+    def _qc_cols(tpm_frame: pd.DataFrame, cols: list[str]) -> list[str]:
+        sh = _olfr_share_ge5(tpm_frame[cols], olfr_gids)
+        return [c for c in cols if float(sh.get(c, 0.0)) <= 0.025]
 
     # 1. MC38 (C57BL/6 colorectal carcinoma, GSE355313, n=4 in-vivo subcutaneous tumors A1..A4)
     p_mc38 = input_dir / "GSE355313_gene_count.csv.gz"
@@ -1788,10 +1827,11 @@ def load_mouse_tumor_cohorts(
     df_mc38 = pd.read_csv(p_mc38)
     df_mc38["gene_id"] = df_mc38["gene_id"].astype(str).str.split(".").str[0]
     df_mc38 = df_mc38.drop_duplicates("gene_id").set_index("gene_id")
-    mc38_cols = ["A1", "A2", "A3", "A4"]
-    peg_mc38 = _project_peg_matrix(
-        _counts_to_tpm(df_mc38[mc38_cols], df_mc38["gene_length"].astype(float)), groups_df
+    tpm_mc38 = _counts_to_tpm(
+        df_mc38[["A1", "A2", "A3", "A4"]], df_mc38["gene_length"].astype(float)
     )
+    mc38_cols = _qc_cols(tpm_mc38, ["A1", "A2", "A3", "A4"])
+    peg_mc38 = _project_peg_matrix(tpm_mc38[mc38_cols], groups_df)
     for c in mc38_cols:
         per_sample_peg.append(("gse355313", f"MC38_{c}", f"GSE355313:{c}", "MC38", peg_mc38[c]))
     cohort_registry.append(
@@ -1802,7 +1842,7 @@ def load_mouse_tumor_cohorts(
             "strain": "C57BL/6",
             "mhc_haplotype": "H-2b",
             "source_accession": "GSE355313",
-            "n_samples": 4,
+            "n_samples": len(mc38_cols),
             "native_feature_space": "Ensembl gene (ENSMUSG)",
             "quantification": "linear TPM from raw counts and gene_length",
         }
@@ -1824,8 +1864,10 @@ def load_mouse_tumor_cohorts(
     df_334 = pd.read_csv(p_334, sep="\t")
     df_334["_gid"] = df_334["gene_id"].astype(str).map(entrez_to_ens)
     df_334 = df_334.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
-    pbs_cols = [c for c in df_334.columns if "_PBS_" in c]
-    peg_334 = _project_peg_matrix(df_334[pbs_cols].astype(float), groups_df)
+    pbs_raw_cols = [c for c in df_334.columns if "_PBS_" in c]
+    tpm_334 = df_334[pbs_raw_cols].astype(float)
+    pbs_cols = _qc_cols(tpm_334, pbs_raw_cols)
+    peg_334 = _project_peg_matrix(tpm_334[pbs_cols], groups_df)
     for code, prefix, strain, hap, label in [
         ("B16F10", "B16_PBS_", "C57BL/6", "H-2b", "B16-F10 subcutaneous melanoma"),
         ("CT26", "CT26_PBS_", "BALB/c", "H-2d", "CT26 subcutaneous colon carcinoma"),
@@ -1864,8 +1906,10 @@ def load_mouse_tumor_cohorts(
     df_4t1 = pd.read_csv(p_4t1)
     df_4t1["ID"] = df_4t1["ID"].astype(str).str.split(".").str[0]
     df_4t1 = df_4t1.drop_duplicates("ID").set_index("ID")
-    peg_4t1 = _project_peg_matrix(df_4t1[["XW1", "XW2", "XW3"]].astype(float), groups_df)
-    for c in ("XW1", "XW2", "XW3"):
+    tpm_4t1 = df_4t1[["XW1", "XW2", "XW3"]].astype(float)
+    cols_4t1 = _qc_cols(tpm_4t1, ["XW1", "XW2", "XW3"])
+    peg_4t1 = _project_peg_matrix(tpm_4t1[cols_4t1], groups_df)
+    for c in cols_4t1:
         per_sample_peg.append(("gse332912", f"4T1_{c}", f"GSE332912:{c}", "4T1", peg_4t1[c]))
     cohort_registry.append(
         {
@@ -1875,7 +1919,7 @@ def load_mouse_tumor_cohorts(
             "strain": "BALB/c",
             "mhc_haplotype": "H-2d",
             "source_accession": "GSE332912",
-            "n_samples": 3,
+            "n_samples": len(cols_4t1),
             "native_feature_space": "Ensembl gene (ENSMUSG)",
             "quantification": "author linear TPM",
         }
@@ -1898,7 +1942,7 @@ def load_mouse_tumor_cohorts(
     df_kp = pd.read_csv(p_kp, sep="\t", index_col=0)
     df_kp["_gid"] = df_kp.index.astype(str).map(sym_to_ens)
     df_kp = df_kp.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
-    kp_cols = [
+    kp_raw_cols = [
         "AF1567",
         "AH1551",
         "AH1746",
@@ -1910,10 +1954,9 @@ def load_mouse_tumor_cohorts(
         "AS1712",
         "AU1855",
     ]
-    peg_kp = _project_peg_matrix(
-        _counts_to_tpm(df_kp[kp_cols].reindex(sym_universe, fill_value=0.0), exonic_series),
-        groups_df,
-    )
+    tpm_kp = _counts_to_tpm(df_kp[kp_raw_cols].reindex(sym_universe, fill_value=0.0), exonic_series)
+    kp_cols = _qc_cols(tpm_kp, kp_raw_cols)
+    peg_kp = _project_peg_matrix(tpm_kp[kp_cols], groups_df)
     for c in kp_cols:
         per_sample_peg.append(("gse277076", f"KP_{c}", f"GSE277076:{c}", "KP_LUAD", peg_kp[c]))
     cohort_registry.append(
@@ -1934,11 +1977,12 @@ def load_mouse_tumor_cohorts(
     df_bmpc = pd.read_csv(input_dir / "GSE287166_NormalizedCounts.csv.gz", index_col=0)
     df_bmpc["_gid"] = df_bmpc.index.astype(str).map(sym_to_ens)
     df_bmpc = df_bmpc.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
-    bmpc_cols = ["BMPC_Pri1", "BMPC_Pri2", "BMPC_Pri3", "BMPC_Met1", "BMPC_Met2", "BMPC_Met3"]
-    peg_bmpc = _project_peg_matrix(
-        _counts_to_tpm(df_bmpc[bmpc_cols].reindex(sym_universe, fill_value=0.0), exonic_series),
-        groups_df,
+    bmpc_raw_cols = ["BMPC_Pri1", "BMPC_Pri2", "BMPC_Pri3", "BMPC_Met1", "BMPC_Met2", "BMPC_Met3"]
+    tpm_bmpc = _counts_to_tpm(
+        df_bmpc[bmpc_raw_cols].reindex(sym_universe, fill_value=0.0), exonic_series
     )
+    bmpc_cols = _qc_cols(tpm_bmpc, bmpc_raw_cols)
+    peg_bmpc = _project_peg_matrix(tpm_bmpc[bmpc_cols], groups_df)
     for c in bmpc_cols:
         per_sample_peg.append(("gse287166", c, f"GSE287166:{c}", "BMPC_PRAD", peg_bmpc[c]))
     cohort_registry.append(
@@ -1975,8 +2019,10 @@ def load_mouse_tumor_cohorts(
     )
     df_p815["gene_id"] = df_p815["gene_id"].astype(str).str.split(".").str[0]
     df_p815 = df_p815.groupby("gene_id", sort=False)[["FPKM.NC_1", "FPKM.NC_2", "FPKM.NC_3"]].sum()
-    peg_p815 = _project_peg_matrix(_fpkm_to_tpm(df_p815), groups_df)
-    for i, c in enumerate(("FPKM.NC_1", "FPKM.NC_2", "FPKM.NC_3"), start=1):
+    tpm_p815 = _fpkm_to_tpm(df_p815)
+    p815_cols = _qc_cols(tpm_p815, ["FPKM.NC_1", "FPKM.NC_2", "FPKM.NC_3"])
+    peg_p815 = _project_peg_matrix(tpm_p815[p815_cols], groups_df)
+    for i, c in enumerate(p815_cols, start=1):
         # Cell-line replicates of P815 share one biological DBA/2 mastocytoma donor!
         per_sample_peg.append(("gse181773", f"P815_NC_{i}", "DBA2:P815", "P815", peg_p815[c]))
     cohort_registry.append(
@@ -1987,7 +2033,7 @@ def load_mouse_tumor_cohorts(
             "strain": "DBA/2",
             "mhc_haplotype": "H-2d",
             "source_accession": "GSE181773",
-            "n_samples": 3,
+            "n_samples": len(p815_cols),
             "native_feature_space": "Ensembl gene (ENSMUSG)",
             "quantification": "within-sample linear TPM from FPKM",
         }
@@ -2047,7 +2093,9 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         flush=True,
     )
     comp_normals, comp_repro, rna_gates, confirmed_organs, norm_sources = (
-        load_bgee_and_normal_panels(input_dir, groups_df, exonic_bp, entrez_to_ens, sym_to_ens)
+        load_bgee_and_normal_panels(
+            input_dir, groups_df, exonic_bp, symbol_by_gene, entrez_to_ens, sym_to_ens
+        )
     )
     print(
         f"    normal_obs={len(comp_normals):,}, repro_obs={len(comp_repro):,}, rna_gates={len(rna_gates):,}",
@@ -2072,7 +2120,7 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
 
     print("5/6 Loading 8 murine syngeneic & GEMM tumor cohorts...", flush=True)
     comp_tumors, cohort_df, tumor_sources = load_mouse_tumor_cohorts(
-        input_dir, groups_df, exonic_bp, entrez_to_ens, sym_to_ens
+        input_dir, groups_df, exonic_bp, symbol_by_gene, entrez_to_ens, sym_to_ens
     )
     print(f"    tumor_obs={len(comp_tumors):,}, cohorts={len(cohort_df)}", flush=True)
 
@@ -2086,7 +2134,7 @@ def build_all(ens_dir: Path, input_dir: Path, out_root: Path) -> dict:
         reference=ref,
         policy_id=POLICY_SCHEMA_ID,
         comparison_id=COMPARISON_ID,
-        comparability_reference="oncoref.mouse-grcm39-panel.2026-11-25.1",
+        comparability_reference="oncoref.mouse-grcm39-panel.2026-11-26.1",
         comparison_unit="TPM",
         required_normal_contexts=REQUIRED_BGEE_NORMAL_CONTEXTS,
         anatomy=anatomy_for_species("mouse"),

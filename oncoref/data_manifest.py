@@ -539,6 +539,14 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "splash-robust chromosomal sex (XX vs XY) across all 946 GTEx v11 donors (#778)",
     ),
+    "gtex-donor-age": (
+        "cta-evidence",
+        "open-access GTEx v11 donor age brackets (20-29..70-79) and reproductive-age (20-49) indicator",
+    ),
+    "human-adult-oocyte-follicle-rna": (
+        "cta-evidence",
+        "stage-replicated adult human reproductive-age oocyte and granulosa linear TPMs (GSE107746, PMID:30420494)",
+    ),
     "normal-tissue-source-grid": (
         "expression",
         "comprehensive canonical human tissue x normal-source coverage matrix across GTEx, HPA, Census, immune, developmental, and #735 panels (#778)",
@@ -943,6 +951,9 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "mouse-target-selection",
         "mouse-host-exposure",
         "mouse-proteome-sequences",
+        "dog-target-selection",
+        "dog-host-exposure",
+        "dog-proteome-sequences",
     }
 )
 
@@ -1002,6 +1013,18 @@ EXTERNALIZED_ORIGINATED: dict[str, tuple[str, str]] = {
     "mouse-proteome-sequences": (
         "protein",
         "verified Ensembl 115 GRCm39 murine protein occurrence table for PEG grouping and PeptideIndex subtraction (#734)",
+    ),
+    "dog-target-selection": (
+        "cta",
+        "genome-wide Ensembl 98 CanFam3.1 Cancer, Reproductive, and Cancer-Testis Antigen catalog for Canis lupus familiaris",
+    ),
+    "dog-host-exposure": (
+        "cta-evidence",
+        "per-compartment adult reproductive, bicornuate-tract, mammary, placental, and embryonic exposures for Canis lupus familiaris",
+    ),
+    "dog-proteome-sequences": (
+        "protein",
+        "verified Ensembl 98 CanFam3.1 canine protein occurrence table for PEG grouping and PeptideIndex subtraction",
     ),
 }
 

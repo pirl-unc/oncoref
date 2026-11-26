@@ -18,6 +18,7 @@ from . import deconvolution as gtex_deconvolution
 from .loaders import (
     apply_summary_spec,
     coverage_grid,
+    donor_age,
     donor_sex,
     sample_tpm,
     tissue_rna,
@@ -67,6 +68,7 @@ __all__ = [
     "coverage_grid",
     "deconvolution",
     "derived_cache_dir",
+    "donor_age",
     "donor_sex",
     "expand_cleanup_ops",
     "expand_qc_ops",

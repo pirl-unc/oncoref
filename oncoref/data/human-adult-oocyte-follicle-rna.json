@@ -1,0 +1,43 @@
+{
+  "schema": "oncoref.human-adult-oocyte-follicle-rna.v1",
+  "panel_id": "oncoref.human-adult-oocyte-follicle-rna.2026-11-26.1",
+  "study_accession": "GSE107746",
+  "citation": "Zhang et al. 2018 Mol Cell (PMID:30420494)",
+  "anatomical_compartment": "ovary",
+  "developmental_stage": "adult (reproductive-age human ovarian follicles)",
+  "unit": "TPM (normalized within-library from linear Cufflinks FPKM)",
+  "inputs": {
+    "GSE107746_Folliculogenesis_FPKM.log2.txt.gz": {
+      "bytes": 17704611,
+      "sha256": "c2ad0080919345c2b756ef12063cd73d4a7a641421c1ee7f8a3c444a382064e0"
+    },
+    "GSE107746_series_matrix.txt.gz": {
+      "bytes": 7196,
+      "sha256": "6cc183d90f32b427ddccb1785c19b67b8f6a345439303cace652de0299669c00"
+    }
+  },
+  "library_qc": {
+    "rule": "olfactory_share_ge5 <= 0.025",
+    "assayed_olfactory_genes": 378,
+    "libraries_total": 151,
+    "libraries_qc_pass": 128,
+    "libraries_qc_excluded": 23,
+    "qc_pass_by_stage": {
+      "granulosa:antral": 24,
+      "granulosa:preovulatory": 18,
+      "granulosa:primary": 15,
+      "granulosa:primordial": 7,
+      "granulosa:secondary": 6,
+      "oocyte:antral": 13,
+      "oocyte:primary": 19,
+      "oocyte:primordial": 16,
+      "oocyte:secondary": 10
+    }
+  },
+  "identity_mapping": {
+    "uniquely_mapped_low_risk_pegs": 17217,
+    "paralog_kmer_ceiling": 0.05,
+    "reported_rows_ge_0_5_tpm": 14796
+  },
+  "sha256": "c874341199306b8a5bcbec8a1a2a7ffb259e898b1253148cbb1a7148730178cd"
+}

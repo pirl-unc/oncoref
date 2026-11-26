@@ -262,17 +262,27 @@ def test_pandas4_warning_free_canine_target_selection_and_offline_preflight(monk
     empty_cache = tmp_path / "empty_ref_cache"
     monkeypatch.setenv("ONCOREF_CACHE_DIR", str(empty_cache))
 
-    # #761: Canine target_selection() and target_selection_coverage() emit zero Pandas4Warning / FutureWarning
+    # #761: Canine target_selection(), target_selection_coverage(), and empty-RA fallback emit zero Pandas4Warning / FutureWarning
     with warnings.catch_warnings():
         warnings.simplefilter("error")
         dog_cat = oncoref.canine.target_selection()
         dog_cov = oncoref.canine.target_selection_coverage()
         human_cov = oncoref.human.target_selection_coverage(allow_download=False)
-    assert not dog_cat.empty
-    assert (dog_cat["sex_restriction_class"] == "").all()
-    assert (dog_cat["sex_restriction_code"] == "").all()
+        # Also exercise nomination-only fallback when packaged metadata is absent (#761 empty sex_class_by_eid)
+        orig_meta_fn = species_target_selection.packaged_species_metadata
+        monkeypatch.setattr(
+            species_target_selection, "packaged_species_metadata", lambda sp="human": None
+        )
+        nom_only_dog = species_target_selection.packaged_species_results(
+            "dog", allow_download=False
+        )
+        monkeypatch.setattr(species_target_selection, "packaged_species_metadata", orig_meta_fn)
+    assert len(dog_cat) > 20000
+    assert (nom_only_dog["sex_restriction_class"] == "").all()
+    assert (nom_only_dog["sex_restriction_code"] == "").all()
     assert dog_cov["taxon_id"] == 9615
-    assert human_cov["counts"]["CTA"] == 323
+    assert dog_cov["selection_status"] == "evaluated"
+    assert human_cov["counts"]["CTA"] == 325
 
     # #762: preflight / is_cached / allow_download=False fail fast locally without touching network
     empty_bundled = tmp_path / "no_bundled_data"

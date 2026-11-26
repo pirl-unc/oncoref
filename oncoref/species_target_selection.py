@@ -47,26 +47,26 @@ COMPARATIVE_COMPARISON_UNITS = ("TPM", "nTPM", "pTPM", "TMM-CPM")
 SEX_RESTRICTION_CLASSES = (
     "Male-restricted",
     "Female-restricted",
-    "Embryo / peripartum-only",
+    "Pregnancy / peripartum-only",
     "Shared male & female",
 )
 SEX_SETS: dict[str, tuple[str, bool]] = {
     "RA-M": ("Male-restricted", False),
     "RA-F": ("Female-restricted", False),
-    "RA-E": ("Embryo / peripartum-only", False),
+    "RA-P": ("Pregnancy / peripartum-only", False),
     "RA-MF": ("Shared male & female", False),
-    "RA-P": ("Peripartum", False),
     "CTA-M": ("Male-restricted", True),
     "CTA-F": ("Female-restricted", True),
-    "CTA-E": ("Embryo / peripartum-only", True),
+    "CTA-P": ("Pregnancy / peripartum-only", True),
     "CTA-MF": ("Shared male & female", True),
-    "CTA-P": ("Peripartum", True),
     # Legacy shorthand aliases preserved for backward compatibility
+    "RA-E": ("Pregnancy / peripartum-only", False),
+    "CTA-E": ("Pregnancy / peripartum-only", True),
     "MRA": ("Male-restricted", False),
     "FRA": ("Female-restricted", False),
-    "ERA": ("Embryo / peripartum-only", False),
+    "ERA": ("Pregnancy / peripartum-only", False),
+    "PRA": ("Pregnancy / peripartum-only", False),
     "SRA": ("Shared male & female", False),
-    "PRA": ("Peripartum", False),
 }
 
 
@@ -814,13 +814,14 @@ def classify_sex_restriction(
     max_ntpm: float = 8.0,
     negative_ihc_multiplier: float | None = None,
 ) -> pd.DataFrame:
-    """Partition Reproductive Antigens (RA) and CTAs into RA-{M,F,E,MF} and CTA-{M,F,E,MF}.
+    """Partition Reproductive Antigens (RA) and CTAs into RA-{M,F,P,MF} and CTA-{M,F,P,MF}.
 
     Uses the species' own comparative non-pregnant, non-lactating adult reproductive
-    and mammary anatomy from ``anatomy_for_species(species)`` (moving ``placenta``
-    and ``lactating_mammary`` into developmental/peripartum ``E`` alongside ``RA-P`` /
-    ``CTA-P``). Missing opposite-sex organ coverage fails closed (never assuming an
-    unmeasured female or male organ is silent).
+    and mammary anatomy from ``anatomy_for_species(species)`` (grouping ``embryo``,
+    ``placenta``, and ``lactating_mammary`` into the unified ``Pregnancy / peripartum-only``
+    partition ``RA-P`` / ``CTA-P``, with ``RA-E`` / ``CTA-E`` / ``ERA`` / ``PRA`` kept as
+    backward-compatible selector aliases). Missing opposite-sex organ coverage fails closed
+    (never assuming an unmeasured female or male organ is silent).
     """
     from dataclasses import replace
 
@@ -870,15 +871,44 @@ def classify_sex_restriction(
     ra.attrs["species"] = resolved.name
     exposures = packaged_species_host_exposure(resolved) if host_evidence is None else host_evidence
 
+    # Compartments assayed strictly by pooled normal proteomics ("proteome_only", e.g. canine
+    # Fallopian_Tube in MSV000099744 where no public species RNA-seq atlas exists) remain
+    # fail-closed in direct HostContext(protect=...) calls while allowing sex-restriction
+    # partitioning when >=3 female reproductive RNA organs are measured and proteome_only
+    # compartments have no positive/unresolved protein detection.
+    fem_proteome_only: set[str] = set()
+    if exposures:
+        cov_by_comp: dict[str, set[str]] = {
+            c: set() for c in anatomy.female_adult_protected_compartments
+        }
+        for eid in ra["entity_id"]:
+            rec_e = exposures.get(eid, {})
+            for c in anatomy.female_adult_protected_compartments:
+                cov = rec_e.get(c, {}).get("coverage")
+                if cov:
+                    cov_by_comp[c].add(str(cov))
+        measured_fem_rna = [c for c, covs in cov_by_comp.items() if "measured" in covs]
+        if len(measured_fem_rna) >= 3:
+            fem_proteome_only = {
+                c
+                for c, covs in cov_by_comp.items()
+                if "measured" not in covs and "proteome_only" in covs
+            }
+
+    fem_all_prot = tuple(
+        c for c in anatomy.female_adult_protected_compartments if c not in fem_proteome_only
+    )
+    fem_sex_prot = tuple(c for c in anatomy.female_sex_compartments if c not in fem_proteome_only)
+
     f_all_host = host_context.from_legacy(
         "female-patient",
-        protect_tissues=anatomy.female_adult_protected_compartments,
+        protect_tissues=fem_all_prot,
         lactating=False,
         species=resolved,
     )
     f_sex_host = host_context.from_legacy(
         "female-patient",
-        protect_tissues=anatomy.female_sex_compartments,
+        protect_tissues=fem_sex_prot,
         lactating=False,
         species=resolved,
     )
@@ -956,6 +986,14 @@ def classify_sex_restriction(
         ms_all = bool(m_all.at[eid, "host_status"] == "eligible")
         fs_sex = bool(f_sex.at[eid, "host_status"] == "eligible")
         ms_sex = bool(m_sex.at[eid, "host_status"] == "eligible")
+        if fem_proteome_only and (fs_all or fs_sex):
+            rec_eid = exposures.get(eid, {})
+            if any(
+                rec_eid.get(pc, {}).get("protein_status") in {"positive", "unresolved"}
+                for pc in fem_proteome_only
+            ):
+                fs_all = False
+                fs_sex = False
         qraw = getattr(r, "reproductive_qualifying_compartments", "")
         q_comps = (
             {c.strip() for c in str(qraw).split("|") if c.strip()}
@@ -987,8 +1025,8 @@ def classify_sex_restriction(
                         sex_class = "Shared male & female"
                         code = "CTA-MF" if r.is_cta else "RA-MF-only"
                 else:
-                    sex_class = "Embryo / peripartum-only"
-                    code = "CTA-E" if r.is_cta else "RA-E-only"
+                    sex_class = "Pregnancy / peripartum-only"
+                    code = "CTA-P" if r.is_cta else "RA-P-only"
             elif not (q_comps & dev_peri_comps):
                 if q_comps <= male_adult_set:
                     sex_class = "Male-restricted"
@@ -1000,8 +1038,8 @@ def classify_sex_restriction(
                     sex_class = "Shared male & female"
                     code = "CTA-MF" if r.is_cta else "RA-MF-only"
             else:
-                sex_class = "Embryo / peripartum-only"
-                code = "CTA-E" if r.is_cta else "RA-E-only"
+                sex_class = "Pregnancy / peripartum-only"
+                code = "CTA-P" if r.is_cta else "RA-P-only"
         else:
             sex_class = "Shared male & female"
             code = "CTA-MF" if r.is_cta else "RA-MF-only"
@@ -1898,7 +1936,7 @@ def _load_packaged_species_catalog_cached(
         "subtype",
     ):
         if str_col in df.columns:
-            df[str_col] = df[str_col].fillna("").astype(str)
+            df[str_col] = df[str_col].astype("object").fillna("").astype(str)
     for bool_col in (
         "identity_translation_pass",
         "home_tissue_unmeasured",
@@ -1965,12 +2003,18 @@ _SPECIES_SYMBOL_INDEX_CACHE: dict[str, dict[str, tuple[str, ...]]] = {}
 def _symbol_index_for_species(species_name: str, dataset_name: str) -> dict[str, tuple[str, ...]]:
     cached = _SPECIES_SYMBOL_INDEX_CACHE.get(species_name)
     if cached is None:
+        from importlib.resources import files
+
         from .gene_ids import unversioned
         from .load_dataset import get_data
 
-        cat = get_data(dataset_name, copy=False).fillna("")
+        if dataset_name.endswith((".csv", ".csv.gz")):
+            cat = pd.read_csv(files("oncoref").joinpath("data", dataset_name)).fillna("")
+        else:
+            cat = get_data(dataset_name, copy=False).fillna("")
+        gid_col = "ensembl_gene_id" if "ensembl_gene_id" in cat.columns else "gene_id"
         grouped: dict[str, list[str]] = {}
-        for sym, gid in zip(cat["symbol"], cat["ensembl_gene_id"]):
+        for sym, gid in zip(cat["symbol"], cat[gid_col]):
             if isinstance(sym, str) and sym and isinstance(gid, str) and gid:
                 grouped.setdefault(sym, []).append(unversioned(gid))
         cached = {k: tuple(dict.fromkeys(v)) for k, v in grouped.items()}
