@@ -7,10 +7,11 @@ Generates:
    ``GTEx_Analysis_v11_Annotations_SubjectPhenotypesDS.txt`` joined with
    ``oncoref.gtex.donor_sex()`` (recording ``20-29``..``70-79`` age brackets and
    ``is_reproductive_age`` for ages ``20-49``).
-2. ``oncoref/data/human-adult-oocyte-follicle-rna.csv`` and ``.json`` from
-   ``GSE107746`` (Zhang et al. 2018 *Mol Cell*, PMID:30420494), profiling adult
-   human reproductive-age oocytes and granulosa cells across primordial, primary,
-   secondary, antral, and preovulatory stages:
+2. ``oncoref/data/human-adult-oocyte-follicle-rna.csv.gz`` and ``.json`` from
+   ``GSE107746`` (Zhang et al. 2018 *Mol Cell*, PMID:30420494), profiling
+   ``128`` QC-passing adult human reproductive-age libraries across primordial,
+   primary, secondary, and antral oocytes plus primordial-to-preovulatory
+   granulosa cells (`9` cell-type × stage strata):
    - Inverts ``log2(FPKM + 1)`` to linear ``FPKM`` and normalizes within each
      library to linear ``TPM``.
    - Enforces the uniform ``<= 2.5%`` ectopic olfactory-receptor (``>= 5 TPM``)
@@ -233,14 +234,29 @@ def build_adult_oocyte_follicle_panel(
         if "/" not in lbl:
             sym_to_entities[lbl].add(eid)
 
-    # Add unambiguous 1:1 NCBI synonym fallback ONLY when official symbol is absent from matrix
+    # Add unambiguous 1:1 NCBI synonym fallback ONLY when:
+    # (a) the official Ensembl 115 symbol is absent from GSE107746,
+    # (b) the synonym is present in GSE107746,
+    # (c) the synonym is not itself any official symbol, and
+    # (d) the synonym maps to strictly 1 official symbol across the entire NCBI table.
     syn_df = get_data("ncbi-symbol-synonyms")
-    off_to_eid = {sym: next(iter(eids)) for sym, eids in sym_to_entities.items() if len(eids) == 1}
-    syn_candidates: dict[str, set[str]] = defaultdict(set)
+    all_official_symbols = set(syn_df["official_symbol"].astype(str).str.strip()) | set(
+        sym_to_entities
+    )
+    alias_to_all_officials: dict[str, set[str]] = defaultdict(set)
     for r in syn_df.itertuples(index=False):
         syn = str(r.alias).strip()
         off = str(r.official_symbol).strip()
-        if syn and off in off_to_eid and syn not in tpm_df.index:
+        if syn and off:
+            alias_to_all_officials[syn].add(off)
+
+    off_to_eid = {sym: next(iter(eids)) for sym, eids in sym_to_entities.items() if len(eids) == 1}
+    syn_candidates: dict[str, set[str]] = defaultdict(set)
+    for syn, offs in alias_to_all_officials.items():
+        if len(offs) != 1 or syn in all_official_symbols or syn not in tpm_df.index:
+            continue
+        off = next(iter(offs))
+        if off in off_to_eid and off not in tpm_df.index:
             syn_candidates[syn].add(off_to_eid[off])
 
     unique_row_for_eid: dict[str, str] = {}

@@ -54,12 +54,12 @@ The table below aligns all eight canonical screening roles across human, dog, an
 | **Single-cell cluster & donor-resolved rare-cell UMI safety screens** | cellxgene_census + siletti_brain + hpa_single_cell + collin_cornea (UMI counts; nTPM; CP10K) — *active_in_catalog* | canine_normal_scrna_gap (UMI counts) — *identified_analog* | tabula_muris_10x (UMI counts) — *active_in_catalog* |
 | **Normal-tissue protein staining (IHC) or mass-spectrometry proteomics** | hpa_normal_tissue + external_ihc (categorical IHC grade + reliability) — *active_in_catalog* | pfizer-dog-protein (within-plex bleed-corrected molar ppm (from rIBAQ)) — *active_in_catalog* | mgi_gxd_6_27 (curated adult IHC/Immunoblot detections) — *active_in_catalog* |
 | **Adult reproductive & embryonic/placental enrichment (RA) and host exposure** | gtex_repro + hpa_repro + petropoulos + tyser + mole (TPM; UMI/staining context) — *active_in_catalog* | bgee_repro_embryo + gse219045_dog_repro + gse119810_normal_mammary + pfizer_fallopian_endometrium (TPM; molar ppm (Fallopian_Tube)) — *active_in_catalog* | bgee_repro_embryo + gse219045 + accessory_tract_lactation_7gse (TPM) — *active_in_catalog* |
-| **QC-passing tumor cohorts for cancer enrichment (CA)** | oncoref_tumor_union_132_cohorts (TPM) — *active_in_catalog* | dog_8_spontaneous_cohorts (TPM) — *active_in_catalog* | mouse_8_cohorts_syngeneic_gemm (TPM) — *active_in_catalog* |
+| **QC-passing tumor cohorts for cancer enrichment (CA)** | oncoref_tumor_union_132_cohorts (TPM) — *active_in_catalog* | dog_8_tumor_cohorts (TPM) — *active_in_catalog* | mouse_8_cohorts_syngeneic_gemm (TPM) — *active_in_catalog* |
 | **Curated normal counterevidence, unscreened adult homes & published nominations** | normal_expression_literature + rare_cell_attribution_reviews + cta_literature_149 (curated verdicts & citations) — *active_in_catalog* | hindriks2025 + nemec2019 (curated RT-qPCR & cross-reference index) — *active_in_catalog* | vandeneynde1991 + sarma1999 (curated primary-source XMLs & GenBank records) — *active_in_catalog* |
 
 ## *Homo sapiens* (human · taxon 9606)
 
-Human target selection is fully evaluated across **19,893** protein-equivalence groups (**20,099** Ensembl 115 coding loci) under policy `oncoref.target-selection.2026-11-26.1`: **325** <span class="cat cat-cta">CTA</span>, **95** <span class="cat cat-ca">CA only</span>, **143** <span class="cat cat-ra">RA only</span> (**563** total candidates), **1,081** <span class="cat cat-other">Other</span>, and **18,249** <span class="cat cat-unsafe">Unsafe</span>. Stratifying GTEx v11 female reproductive and mammary organs to reproductive-age `XX` women (`ages 20–49`, `gtex.donor_age()`) and integrating stage-replicated adult human folliculogenesis/oocyte RNA-seq (`GSE107746`, `128` QC-passing stages) partitions the **468** Reproductive Antigens (**325** CTAs) into **344** `RA-M` (**226** `CTA-M`), **61** `RA-P` (**49** `CTA-P`), **17** `RA-F` (**12** `CTA-F`), and **46** `RA-MF` (**38** `CTA-MF`). See the [main antigen whitepaper](antigen-whitepaper.md) for full human figures, clinical anchor tables, and edge-case audits.
+Human target selection is fully evaluated across **19,893** protein-equivalence groups (**20,099** Ensembl 115 coding loci) under policy `oncoref.target-selection.2026-11-26.1`: **325** <span class="cat cat-cta">CTA</span>, **95** <span class="cat cat-ca">CA only</span>, **143** <span class="cat cat-ra">RA only</span> (**563** total candidates), **1,081** <span class="cat cat-other">Other</span>, and **18,249** <span class="cat cat-unsafe">Unsafe</span>. Stratifying GTEx v11 female reproductive and mammary organs to reproductive-age `XX` women (`ages 20–49`, `gtex.donor_age()`) and integrating stage-replicated adult human folliculogenesis/oocyte RNA-seq (`GSE107746`, `128` QC-passing libraries across `9` cell-type × stage strata) partitions the **468** Reproductive Antigens (**325** CTAs) into **342** `RA-M` (**224** `CTA-M`), **60** `RA-P` (**48** `CTA-P`), **18** `RA-F` (**13** `CTA-F`), and **48** `RA-MF` (**40** `CTA-MF`). See the [main antigen whitepaper](antigen-whitepaper.md) for full human figures, clinical anchor tables, and edge-case audits.
 
 | Canonical role | Dataset(s) | Native unit | Status | Threshold / screening rule |
 | --- | --- | --- | --- | --- |
@@ -74,28 +74,28 @@ Human target selection is fully evaluated across **19,893** protein-equivalence 
 
 ## *Canis lupus familiaris* (domestic dog · taxon 9615)
 
-Spontaneous canine cancers—appendicular osteosarcoma, multicentric and diffuse large B-cell lymphoma, visceral hemangiosarcoma, mammary carcinoma, and high-grade oligodendroglioma—develop in outbred, immunocompetent companion dogs sharing human environmental exposures. Canine target selection is evaluated genome-wide across **20,082** Ensembl 98 `CanFam3.1` (`GCA_000002285.2`, cross-referenced to NCBI `RefSeq 106` `UU_Cfam_GSD_1.0`) protein-equivalence groups (**20,199** coding loci, **7/8** evidence pillars active): **63** <span class="cat cat-cta">CTA</span>, **77** <span class="cat cat-ca">CA only</span>, **416** <span class="cat cat-ra">RA only</span> (**556** total candidates), **2,496** <span class="cat cat-other">Other</span>, and **17,030** <span class="cat cat-unsafe">Unsafe</span>. Across the **479** canine Reproductive Antigens (**63** CTAs), comparative canine `HostContext` partitioning yields **437** `RA-M` (**45** `CTA-M`), **9** `RA-P` (**4** `CTA-P`), **11** `RA-F` (**4** `CTA-F`), and **22** `RA-MF` (**10** `CTA-MF`).
+Spontaneous canine cancers—appendicular osteosarcoma, multicentric and diffuse large B-cell lymphoma, visceral hemangiosarcoma, mammary carcinoma, and high-grade oligodendroglioma—develop in outbred, immunocompetent companion dogs sharing human environmental exposures. Canine target selection is evaluated genome-wide across **20,082** Ensembl 98 `CanFam3.1` (`GCA_000002285.2`, cross-referenced to NCBI `RefSeq 106` `UU_Cfam_GSD_1.0`) protein-equivalence groups (**20,199** coding loci, **7/8** evidence pillars active): **54** <span class="cat cat-cta">CTA</span>, **59** <span class="cat cat-ca">CA only</span>, **421** <span class="cat cat-ra">RA only</span> (**534** total candidates), **2,573** <span class="cat cat-other">Other</span>, and **16,975** <span class="cat cat-unsafe">Unsafe</span>. Across the **475** canine Reproductive Antigens (**54** CTAs), comparative canine `HostContext` partitioning yields **439** `RA-M` (**42** `CTA-M`), **8** `RA-P` (**4** `CTA-P`), **6** `RA-F` (**0** `CTA-F`), and **22** `RA-MF` (**8** `CTA-MF`).
 
 ### Canine dataset and threshold parameterization
 
 | Canonical role | Dataset(s) | Native unit | Status | Threshold / screening rule |
 | --- | --- | --- | --- | --- |
 | Reference proteome & identical-sequence protein-equivalence groups (PEG) | `ensembl98 + refseq106` — Canine Ensembl 98 CanFam3.1 (GCA_000002285.2, primary) & NCBI RefSeq 106 (UU_Cfam_GSD_1.0) | amino-acid sequence | `active_in_catalog` | Complete GTF/cDNA/ncRNA/peptide FASTA pins; identical translations collapse into canine PEG:<sha256>; >=95% canine 9-mer Unsafe containment |
-| Healthy non-thymic, non-reproductive baseline (N) & Disposable maximum (D) | `bgee_v15_2_dog_25exps + gse219045_dog_atlas` — Bgee 15.2 adult canine multi-organ RNA-seq (SRA-deduplicated) & GSE219045 300-sample sex-stratified organ atlas | TPM | `active_in_catalog` | Within-organ donor P95 across 28 non-thymic adult somatic contexts sets N and canine Disposable D (gallbladder, tonsil, hair follicle); <=2.5% ectopic OR gDNA QC |
+| Healthy non-thymic, non-reproductive baseline (N) & Disposable maximum (D) | `bgee_v15_2_dog_25exps + gse219045_dog_atlas` — Bgee 15.2 adult canine multi-organ RNA-seq (SRA-deduplicated) & GSE219045 300-sample sex-stratified organ atlas | TPM | `active_in_catalog` | Within-organ donor P95 across 24 required (36 evaluated) non-thymic adult somatic contexts sets N and canine Disposable D (gallbladder, tonsil, hair follicle); <=2.5% ectopic OR gDNA QC |
 | Normal somatic bulk & sorted immune RNA safety ceilings | `bgee_v15_2_dog_somatic + gse219045_dog_atlas` — Bgee 15.2 adult canine somatic/leukocyte RNA & GSE219045 multi-organ whole-blood/marrow/lymph-node atlas | TPM | `active_in_catalog` | Tiered somatic ceilings Vital <=4, Protected <=8, Manageable <=16 (Unsafe >128) TPM without negative-IHC multipliers |
 | Single-cell cluster & donor-resolved rare-cell UMI safety screens | `canine_normal_scrna_gap` — Donor-resolved canine normal single-cell UMI atlases | UMI counts | `identified_analog` | Same assess_rare_cell_rna contract (>=10 cells, >=1% >=2-UMI across >=2 canine studies, 2x in Protected) when multi-organ single-cell atlases are ingested |
 | Normal-tissue protein staining (IHC) or mass-spectrometry proteomics | `pfizer-dog-protein` — Pfizer 38-tissue canine quantitative proteomics (MSV000099744, 9,929 protein groups) | within-plex bleed-corrected molar ppm (from rIBAQ) | `active_in_catalog` | Sequence-reconciled Vital (>25 ppm Unsafe, 10-25 ppm hold) & Protected (>50 ppm Unsafe, 20-50 ppm hold) tissue-pool protein gates after 10% same-plex reproductive TMT bleed subtraction; never grants negative-IHC RNA multipliers |
 | Adult reproductive & embryonic/placental enrichment (RA) and host exposure | `bgee_repro_embryo + gse219045_dog_repro + gse119810_normal_mammary + pfizer_fallopian_endometrium` — Bgee 15.2 testis/ovary/placenta/d33-d44 embryos, GSE219045 male/female reproductive tract, GSE119810 normal resting/lactating mammary & Pfizer Fallopian_Tube/Endometrium proteomics | TPM; molar ppm (Fallopian_Tube) | `active_in_catalog` | RA qualifies at >=10 x H0 across canine compartments (uterine_horn, absent seminal vesicle, milk-operon secretory separation) and populates canine HostContext |
-| QC-passing tumor cohorts for cancer enrichment (CA) | `dog_8_spontaneous_cohorts` — 8 spontaneous canine tumor cohorts: OSA_NCI (GSE238110), OSA_COTC030 (GSE304066), OSA_CCOGC (GSE239948), CMT (GSE119810), HSA (GSE95183), LYM (GSE95184), DLBCL (GSE287971), GLIOMA (GSE284559) | TPM | `active_in_catalog` | CA qualifies when >=1 QC-passing (<=2.5% OR gDNA) canine tumor reaches >=10 x H0 on CanFam3.1 linear TPM; replicate tumor samples deduplicate per dog |
+| QC-passing tumor cohorts for cancer enrichment (CA) | `dog_8_tumor_cohorts` — 8 canine tumor cohorts (7 spontaneous patient cohorts + 1 DLBCL line): OSA_NCI (GSE238110), OSA_COTC030 (GSE304066), OSA_CCOGC (GSE239948), CMT (GSE119810), HSA (GSE95183), LYM (GSE95184), DLBCL (GSE287971 CLBL-1), GLIOMA (GSE284559) | TPM | `active_in_catalog` | CA qualifies when >=1 QC-passing (<=2.5% OR gDNA) canine tumor reaches >=10 x H0 on CanFam3.1 linear TPM; replicate tumor samples deduplicate per dog |
 | Curated normal counterevidence, unscreened adult homes & published nominations | `hindriks2025 + nemec2019` — Curated canine CTA nominations and normal/tumor RT-qPCR observations (14 candidates) | curated RT-qPCR & cross-reference index | `active_in_catalog` | Reconciles all 14 published canine nominations onto CanFam3.1 while enforcing somatic RT-PCR counterevidence holds and zero cross-species CTA transfer |
 
 Key canine methodological rules enforced in code (`oncoref.canine`, `oncoref.species_target_selection`, `scripts/build_dog_target_catalog.py`):
 
-- **Single-scale linear `TPM` panels & Cufflinks paralog guard:** `Bgee 15.2` (`25` healthy canine RNA-seq experiments deduplicated by SRA Run ID, routing BarkBase gestational `d33–d44` libraries in `SRP114662` to `embryo`), the **300-sample** sex-stratified Preclinical Species Gene Expression Database (`GSE219045`, normalized within-sample from `FPKM` to exact `TPM`), and **64** normal mammary biopsies (`GSE119810`, split by coordinated 4-gene milk-operon induction into `lactating_mammary` vs. `resting_mammary`) cover all **22** required somatic contexts plus `14` measured reproductive/embryonic compartments under uniform `≤ 2.5%` ectopic olfactory-receptor (`COR*`/`OR*`) gDNA QC. BarkBase `TMM-CPM` (`46` shared SRA runs) is never pooled with `TPM`, and Cufflinks multi-mapping `FPKM` cohorts (`GSE119810`, `GSE95183`, `GSE95184`) mask `≥5%` 31-mer paralog-ambiguous retrocopies so multi-mapped ribosomal reads never inflate `CA` or `RA`.
+- **Single-scale linear `TPM` panels & Cufflinks paralog guard:** `Bgee 15.2` (`25` healthy canine RNA-seq experiments deduplicated by SRA Run ID, routing BarkBase gestational `d33–d44` libraries in `SRP114662` to `embryo` and excluding neonatal/puppy stages), the **300-sample** sex-stratified Preclinical Species Gene Expression Database (`GSE219045`, normalized within-sample from `FPKM` to exact `TPM`), and **64** normal female mammary biopsies (`GSE119810`, split by coordinated 4-gene milk-operon induction into `lactating_mammary` vs. `resting_mammary`, keeping unmeasured male canine `resting_mammary` fail-closed) cover all **24** required (`36` evaluated) somatic contexts plus `13` RNA-measured reproductive/embryonic compartments (`+1` `proteome_only` `fallopian tube`) under uniform `≤ 2.5%` ectopic olfactory-receptor (`COR*`/`OR*`) gDNA QC. BarkBase `TMM-CPM` (`46` shared SRA runs) is never pooled with `TPM`, and Cufflinks multi-mapping `FPKM` cohorts (`GSE119810`, `GSE95183`, `GSE95184`) mask phase-invariant `≥5%` 31-mer paralog-ambiguous loci and single-exon intronless retrogenes sharing `≥50%` `Unsafe` 9-mers so multi-mapped housekeeping/ribosomal reads never inflate `CA` or `RA`.
 - **Pooled 38-tissue proteomics with within-plex TMT bleed subtraction (`pfizer-dog-protein`):** MassIVE `MSV000099744` (`9,929` canine protein groups converted from `rIBAQ` to within-channel molar `ppm`, subtracting `10%` same-plex reproductive reporter-ion bleed) supplies affirmative <span class="cat cat-unsafe">Unsafe</span> (`Vital > 25 ppm`, `Protected > 50 ppm`) and review-hold (`Vital 10–25 ppm`, `Protected 20–50 ppm`) gates with **zero** negative-IHC RNA ceiling multipliers. Because no public canine oviduct RNA-seq dataset exists, `fallopian tube` (`Pool3` `126` in `MSV000099744`) is recorded with `coverage = "proteome_only"`, remaining fail-closed (`unresolved`) when directly protected in `HostContext(protect=("fallopian tube",), species="dog")`.
 - **Explicit single-cell UMI gap (`canine_normal_scrna_gap`):** No multi-organ adult canine single-cell UMI atlas comparable to human CELLxGENE or murine `Tabula Muris` is yet integrated (`7/8` pillars active).
 
-### Spontaneous canine patient tumor cohorts
+### Canine tumor cohorts (7 spontaneous patient cohorts + 1 DLBCL line)
 
 | Cohort | Model | Breeds / DLA | Accession | Samples | Quantification |
 | --- | --- | --- | --- | --- | --- |
@@ -112,18 +112,18 @@ Key canine methodological rules enforced in code (`oncoref.canine`, `oncoref.spe
 
 | Rank | Protein | Sex subset | Peak cohort | Tumor TPM | N TPM | Reproductive peak TPM | Qualifying reproductive compartments |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `CSN3` | `CTA-F` | `CMT` | 65,068.53 | 5 | 60,012.11 | lactating_mammary  /  resting_mammary |
-| 2 | `CSN2` | `CTA-F` | `CMT` | 30,394.7 | 5.43 | 28,450.54 | lactating_mammary  /  resting_mammary |
+| 1 | `CSN3` | `CTA-MF` | `CMT` | 65,068.53 | 5 | 60,012.11 | lactating_mammary  /  resting_mammary |
+| 2 | `CSN2` | `CTA-MF` | `CMT` | 30,394.7 | 5.43 | 28,450.54 | lactating_mammary  /  resting_mammary |
 | 3 | `CSN1S1` | `CTA-MF` | `CMT` | 24,030.79 | 2.51 | 16,753.21 | testis  /  lactating_mammary  /  resting_mammary |
-| 4 | `ENSCAFG00000017286` | `CTA-MF` | `LYM` | 339.34 | 2.92 | 40.19 | lactating_mammary  /  resting_mammary |
-| 5 | `ENSCAFG00000012690` | `CTA-M` | `LYM` | 174.94 | 2.85 | 522.03 | testis |
-| 6 | `ENSCAFG00000013406` | `CTA-MF` | `GLIOMA` | 173.04 | 0.71 | 199.5 | testis  /  lactating_mammary  /  resting_mammary |
-| 7 | `HORMAD1` | `CTA-MF` | `OSA_CCOGC` | 163.11 | 3.44 | 351.1 | placenta  /  testis |
-| 8 | `NAA11` | `CTA-M` | `OSA_COTC030` | 158.54 | 6.57 | 100.7 | testis |
-| 9 | `GPC2` | `CTA-M` | `HSA` | 152.12 | 10.25 | 126.44 | embryo  /  testis |
-| 10 | `PLD6` | `CTA-M` | `OSA_NCI` | 143.72 | 1.64 | 96.42 | testis |
-| 11 | `IGF2BP1` | `CTA-P` | `OSA_COTC030` | 137.67 | 1.42 | 46.65 | embryo |
-| 12 | `GPR50` | `CTA-P` | `OSA_CCOGC` | 135.72 | 0.73 | 12.26 | embryo |
+| 4 | `ENSCAFG00000012690` | `CTA-M` | `LYM` | 174.94 | 2.85 | 522.03 | testis |
+| 5 | `ENSCAFG00000013406` | `CTA-M` | `GLIOMA` | 173.04 | 0.68 | 199.5 | testis |
+| 6 | `HORMAD1` | `CTA-MF` | `OSA_CCOGC` | 163.11 | 3.44 | 351.1 | testis |
+| 7 | `NAA11` | `CTA-M` | `OSA_COTC030` | 158.54 | 6.57 | 100.7 | testis |
+| 8 | `GPC2` | `CTA-M` | `HSA` | 152.12 | 10.25 | 126.44 | embryo  /  testis |
+| 9 | `PLD6` | `CTA-M` | `OSA_NCI` | 143.72 | 1.54 | 96.42 | testis |
+| 10 | `IGF2BP1` | `CTA-P` | `OSA_COTC030` | 137.67 | 1.42 | 46.65 | embryo |
+| 11 | `GPR50` | `CTA-P` | `OSA_CCOGC` | 135.72 | 0.73 | 12.26 | embryo |
+| 12 | `PRAME` | `CTA-M` | `LYM` | 110.71 | 0.97 | 100.82 | testis |
 
 ### Packaged canine nomination ledger (14 literature RT-PCR candidates)
 
@@ -144,7 +144,7 @@ Key canine methodological rules enforced in code (`oncoref.canine`, `oncoref.spe
 | `SSX6` | `612524` | unique | hindriks2025 | 22 | `Reproductive Antigen only` | complete_tissue_panel; independent_sample_total; independent_donor_total; quantification_reference |
 | `TPX2` | `477186` | unique | nemec2019 | 2 | `Unsafe` | complete_tissue_panel; independent_sample_total; independent_donor_total; measured_negative_or_censored_observations; reproductive_observations; quantification_reference |
 
-Evaluating the **14** published canine RT-PCR nominations (`hindriks2025`, `nemec2019`) against genome-wide canine somatic RNA and 38-tissue proteomics shows why quantitative somatic gates are essential: **`PRAME` (`CTA`, `CTA-M`)** is validated as a genuine canine CTA (`110.7 TPM` in spontaneous canine lymphoma, `100.8 TPM` in testis, `0.97 TPM` somatic baseline), `MAGEB10` and `SSX6` qualify as `Reproductive Antigen only`, `CAGE1`, `CTCFL`, and `DDX53` remain held in `Other:Review` on published somatic RT-PCR counterevidence, and **6 of 14 nominations (`AKR1E2`, `IGF2BP3`, `NT5C1B`, `PAGE3-like`, `SPECC1`, `TPX2`) are excluded as `Unsafe`** due to substantial healthy canine blood, bone marrow, lung, brain, or liver expression.
+Evaluating all **14** published canine RT-PCR nominations (`hindriks2025`, `nemec2019`) against genome-wide canine somatic RNA and 38-tissue proteomics shows why quantitative somatic gates are essential: **`PRAME` (`CTA`, `CTA-M`)** is validated as a genuine canine CTA (`110.7 TPM` in spontaneous canine lymphoma, `100.8 TPM` in testis, `0.97 TPM` somatic baseline), `MAGEB10` and `SSX6` qualify as `Reproductive Antigen only`, `MAGEA13P` (`Other:Expression`) and ambiguous `MAGE` (`Other:Expression / Reproductive Antigen only`) stay below `CA`, `CAGE1`, `CTCFL`, and `DDX53` remain held in `Other:Review` on published somatic RT-PCR counterevidence, and **6 of 14 nominations (`AKR1E2`, `IGF2BP3`, `NT5C1B` [mapped to chimeric Ensembl 98 `NT5C1B`+`RDH14` locus `ENSCAFG00000003760`], `PAGE3-like`, `SPECC1`, `TPX2`) are excluded as `Unsafe`** (`1 + 2 + 1 + 1 + 3 + 6 = 14`) due to substantial healthy canine blood, bone marrow, lung, brain, or liver expression.
 
 ## *Mus musculus* (laboratory mouse · taxon 10090)
 
@@ -209,25 +209,25 @@ Key murine methodological rules enforced in code (`oncoref.mouse`, `oncoref.spec
 
 ## Cross-species CTA orthology across human, dog, and mouse
 
-With independent genome-wide catalogs evaluated natively across **human (`325` CTAs)**, **dog (`63` CTAs)**, and **mouse (`12` CTAs)**, OncoRef quantifies directly how often a `CTA` in one mammal maps to a `CTA` in another ([download full `374`-family ortholog concordance table](antigen-whitepaper/cross-species-orthologs.csv)):
+With independent genome-wide catalogs evaluated natively across **human (`325` CTAs)**, **dog (`54` CTAs)**, and **mouse (`12` CTAs)**, OncoRef quantifies directly how often a `CTA` in one mammal maps to a `CTA` in another ([download full `382`-family ortholog concordance table](antigen-whitepaper/cross-species-orthologs.csv)):
 
 | Cross-species orthology regime (union of human, dog & mouse CTAs) | Ortholog families | Biological mechanism |
 | --- | --- | --- |
-| **Conserved multi-species CTA** | 9 | Independently passes Stage 1 somatic safety AND 10× cancer + reproductive enrichment in ≥2 species (`CSN2`, `PRAME`, `PSMA8`, `ANTXRL`, `LUZP4`, `TRIM42`, `PASD1`, `PLAC1`/`Plac1`, `TEX19`/`Tex19.1`) |
-| **CTA + conserved RA-only ortholog** | 62 | Conserved germline/reproductive restriction (`RA`) in ≥2 species, with ≥10× tumor reactivation observed in the broader cohort panel of one species (`DPPA5`, `MAGEB18`, `CYLC1`, `ACTL8`, `ADAM2`, `AKAP4`) |
-| **Divergent somatic / review gate** | 142 | 1:1 ortholog exists across species, but somatic expression diverges evolutionary or is caught by deeper human single-cell/IHC screens (`HORMAD1`, `DDX43`, `CLDN6`, `IGF2BP1`) |
-| **Lineage-specific / paralog-diverged CTA** | 161 | Primate-amplified CT-X/subtelomeric families (`NY-ESO-1`, `SPANX*`, `VCX/Y`, `GAGE*`, `XAGE*`, `CT45A*`, `CT47A*`, `PRAMEF*`, `DUX4`), canine-specific loci, or murine `Gm*`/`Gzmd-g`/`Pbsn`/`Sbp` expansions |
+| **Conserved multi-species CTA** | 9 | Independently passes Stage 1 somatic safety AND 10× cancer + reproductive enrichment in ≥2 species (`ANTXRL`, `CSN2`, `LUZP4`, `PASD1`, `PLAC1`/`Plac1`, `PRAME`, `PSMA8`, `TEX19`/`Tex19.1`, `TRIM42`) |
+| **CTA + conserved RA-only ortholog** | 75 | Conserved germline/reproductive restriction (`RA`) in ≥2 species, with ≥10× tumor reactivation observed in the broader cohort panel of one species (`DPPA5`, `MAGEB18`, `CYLC1`, `ACTL8`, `ADAM2`, `AKAP4`) |
+| **Divergent somatic / review gate** | 143 | 1:1 ortholog exists across species, but somatic expression diverges evolutionary or is caught by deeper human single-cell/IHC screens (`HORMAD1`, `DDX43`, `CLDN6`, `IGF2BP1`) |
+| **Lineage-specific / paralog-diverged CTA** | 155 | Primate-amplified CT-X/subtelomeric families (`NY-ESO-1`, `SPANX*`, `VCX/Y`, `GAGE*`, `XAGE*`, `CT45A*`, `CT47A*`, `PRAMEF*`, `DUX4`), canine-specific loci, or murine `Gm*`/`Gzmd-g`/`Pbsn`/`Sbp` expansions |
 
-Why do only **9** of **374** mammalian `CTA` ortholog families independently qualify as `CTA` in two or more species (and **71** as conserved `CTA` or `RA-only`)? Three evolutionary and experimental mechanisms govern cross-species mapping:
+Why do only **9** of **382** mammalian `CTA` ortholog families independently qualify as `CTA` in two or more species (and **84** as conserved `CTA` or `RA-only`)? Three evolutionary and experimental mechanisms govern cross-species mapping:
 
-1. **Rapid mammalian lineage amplification of CT-X and ZGA arrays:** Nearly half of human CTAs—including `NY-ESO-1` (`CTAG1A/B`), `SPANXA/B/C/D/N`, `VCX/VCY`, `GAGE*`, `XAGE1A/B`, `CT45A*`, `CT47A*`, `DUX4` (`D4Z4`), `PRAMEF1–26`, `MBD3L2–5`, and `SSU72L1–5`—originated or amplified in primates after boreoeutherian divergence and have **no 1:1 coding ortholog** in dog or mouse (`human_cta_with_dog_orth_n = 110 / 325`, `human_cta_with_mouse_orth_n = 152 / 325`), while rodents independently expanded `Pramel*`, `Mageb*`, uterine NK `Gzmd/e/f/g` (`CTA-F` in mouse), and `Sbp`/`Pbsn` (`CTA-M` in mouse).
-2. **Conserved boreoeutherian germline/lactation core (`71` families):** Single-copy autosomal germline, placental, and milk genes conserve reproductive restriction across 95 million years of mammalian evolution—yielding **conserved dual-species CTAs** (`CSN2` [`CTA-F` in human `BRCA` & canine `CMT`], `PRAME` [`CTA` in human & canine `LYM`], `PSMA8`, `ANTXRL`, `LUZP4`, `TRIM42`, `PASD1` [`CTA-M`/`CTA-MF` in human & dog], plus `PLAC1`/`Plac1` and `TEX19`/`Tex19.1` [`CTA-M` in both human & mouse]), alongside conserved `RA`s (`DPPA5`, `MAGEB18`, `CYLC1`, `ACTL8`, `ADAM2`, `AKAP4`) whose tumor reactivation depends on cohort breadth (`132` human cohorts vs. `8` canine patient cohorts vs. `8` murine models).
+1. **Rapid mammalian lineage amplification of CT-X and ZGA arrays:** Nearly half of human CTAs—including `NY-ESO-1` (`CTAG1A/B`), `SPANXA/B/C/D/N`, `VCX/VCY`, `GAGE*`, `XAGE1A/B`, `CT45A*`, `CT47A*`, `DUX4` (`D4Z4`), `PRAMEF1–26`, `MBD3L2–5`, and `SSU72L1–5`—originated or amplified in primates after boreoeutherian divergence and have **no 1:1 coding ortholog** in dog or mouse (`human_cta_with_dog_orth_n = 131 / 325`, `human_cta_with_mouse_orth_n = 161 / 325`), while rodents independently expanded `Pramel*`, `Mageb*`, uterine NK `Gzmd/e/f/g` (`CTA-F` in mouse), and `Sbp`/`Pbsn` (`CTA-M` in mouse).
+2. **Conserved boreoeutherian germline/lactation core (`84` families):** Single-copy autosomal germline, placental, and milk genes conserve reproductive restriction across 95 million years of mammalian evolution—yielding **conserved dual-species CTAs** (`ANTXRL`, `CSN2`, `LUZP4`, `PASD1`, `PLAC1`/`Plac1`, `PRAME`, `PSMA8`, `TEX19`/`Tex19.1`, `TRIM42`), alongside conserved `RA`s (`DPPA5`, `CIMIP4`/`TEX33`, `SPMIP9`/`TEX37`, `MEIOSIN`/`BHMG1`, `TBXT`/`T`, `DEFB123`/`Defb23`, `MAGEB18`, `CYLC1`, `ACTL8`, `ADAM2`, `AKAP4`) whose tumor reactivation depends on cohort breadth (`132` human cohorts vs. `8` canine cohorts vs. `8` murine models).
 3. **Divergent somatic regulation and single-cell resolution:** Several conserved 1:1 orthologs (`HORMAD1`, `DDX43`, `CLDN6`, `IGF2BP1`) qualify in canine bulk RNA + 38-tissue proteomics while failing human single-cell cluster, adult cornea, or sorted-immune gates—underscoring why canine single-cell UMI coverage (`canine_normal_scrna_gap`) is tracked explicitly and why target safety is never inferred across species.
 
 <details markdown="1">
-<summary>Conserved multi-species CTA and RA-ortholog concordance table (71 families; download full CSV)</summary>
+<summary>Conserved multi-species CTA and RA-ortholog concordance table (84 families; download full CSV)</summary>
 
-Download all `374` ortholog families: [`cross-species-orthologs.csv`](antigen-whitepaper/cross-species-orthologs.csv).
+Download all `382` ortholog families: [`cross-species-orthologs.csv`](antigen-whitepaper/cross-species-orthologs.csv).
 
 | Ortholog family | Human call (subset) | Dog call (subset) | Mouse call (subset) | Regime |
 | --- | --- | --- | --- | --- |
@@ -238,6 +238,11 @@ Download all `374` ortholog families: [`cross-species-orthologs.csv`](antigen-wh
 | `ADAM2` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `AKAP4` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `ANTXRL` | `CTA` (`CTA-M`) | `CTA` (`CTA-M`) | `Unsafe` | Conserved multi-species CTA |
+| `C10ORF120` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
+| `C12ORF50` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
+| `C16ORF90` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
+| `C2ORF78` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
+| `C3ORF22` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
 | `CCDC116` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `CCDC166` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `CCDC179` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
@@ -247,9 +252,13 @@ Download all `374` ortholog families: [`cross-species-orthologs.csv`](antigen-wh
 | `CCT8L2` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
 | `CER1` | `CTA` (`CTA-P`) | `Other:Expression` | `Reproductive Antigen only` (`RA-P-only`) | CTA + conserved RA-only ortholog |
 | `CHRNG` | `Unsafe` | `CTA` (`CTA-P`) | `Reproductive Antigen only` (`RA-M-only`) | CTA + conserved RA-only ortholog |
-| `CSN2` | `CTA` (`CTA-F`) | `CTA` (`CTA-F`) | `Reproductive Antigen only` (`RA-MF-only`) | Conserved multi-species CTA |
+| `CIMIP4` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
+| `CSN2` | `CTA` (`CTA-F`) | `CTA` (`CTA-MF`) | `Reproductive Antigen only` (`RA-MF-only`) | Conserved multi-species CTA |
 | `CYLC1` | `Reproductive Antigen only` (`RA-MF-only`) | `CTA` (`CTA-M`) | `Unsafe` | CTA + conserved RA-only ortholog |
-| `DEFB129` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
+| `DEFB112` | `CTA` (`CTA-M`) | `Unsafe` | `Reproductive Antigen only` (`RA-M-only`) | CTA + conserved RA-only ortholog |
+| `DEFB123` | `CTA` (`CTA-M`) | `Other:Review` | `Reproductive Antigen only` (`RA-MF-only`) | CTA + conserved RA-only ortholog |
+| `DEFB126` | `CTA` (`CTA-M`) | `Other:Review` | `Reproductive Antigen only` (`RA-M-only`) | CTA + conserved RA-only ortholog |
+| `DEFB129` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `DMRT1` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `DMRTC2` | `CTA` (`CTA-MF`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `DPPA5` | `CTA` (`CTA-MF`) | `Reproductive Antigen only` (`RA-M-only`) | `absent` | CTA + conserved RA-only ortholog |
@@ -269,6 +278,7 @@ Download all `374` ortholog families: [`cross-species-orthologs.csv`](antigen-wh
 | `LUZP4` | `CTA` (`CTA-M`) | `CTA` (`CTA-M`) | `Cancer Antigen only` | Conserved multi-species CTA |
 | `LYPD4` | `CTA` (`CTA-MF`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `MAGEB18` | `Reproductive Antigen only` (`RA-M-only`) | `CTA` (`CTA-M`) | `Other:Expression` | CTA + conserved RA-only ortholog |
+| `MEIOSIN` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Other:Expression` | CTA + conserved RA-only ortholog |
 | `MROH2B` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `ODF1` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `ODF4` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
@@ -288,7 +298,10 @@ Download all `374` ortholog families: [`cross-species-orthologs.csv`](antigen-wh
 | `SPAG11B` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `SPATA19` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `SPEM2` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
+| `SPMIP9` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
+| `SYCP1` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `TBC1D21` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
+| `TBXT` | `CTA` (`CTA-F`) | `Other:Expression` | `Reproductive Antigen only` (`RA-M-only`) | CTA + conserved RA-only ortholog |
 | `TEX19` | `CTA` (`CTA-M`) | `absent` | `CTA` (`CTA-M`) | Conserved multi-species CTA |
 | `TEX38` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
 | `TEX44` | `CTA` (`CTA-M`) | `Reproductive Antigen only` (`RA-M-only`) | `Unsafe` | CTA + conserved RA-only ortholog |
@@ -320,10 +333,10 @@ mouse.screening_datasets()
 role_comparison_table()
 
 # 2. Query biological sets and the 4-way physiological sex-restriction partition (RA-M/F/P/MF, CTA-M/F/P/MF)
-cta_female_safe = antigen_sets.select("CTA-M")  # 226 male-restricted female-safe human CTAs
-ra_female_only = antigen_sets.select("RA-F")  # 17 female-restricted male-safe human RAs
-pregnancy_only = antigen_sets.select("CTA-P")  # 49 adult-absent pregnancy/peripartum CTAs
-dog_ctas = antigen_sets.select("CTA", species="dog")  # 63 spontaneous canine tumor CTAs
+cta_female_safe = antigen_sets.select("CTA-M")  # 224 male-restricted female-safe human CTAs
+ra_female_only = antigen_sets.select("RA-F")  # 18 female-restricted male-safe human RAs
+pregnancy_only = antigen_sets.select("CTA-P")  # 48 adult-absent pregnancy/peripartum CTAs
+dog_ctas = antigen_sets.select("CTA", species="dog")  # 54 spontaneous canine tumor CTAs
 mouse_ctas = antigen_sets.select("CTA", species="mouse")  # 12 murine GRCm39 CTAs
 
 # 3. Parameterize canine or murine HostContext and subtract host self-proteome peptides

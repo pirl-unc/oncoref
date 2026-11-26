@@ -10,9 +10,10 @@ Resolves two systematic blind spots in bulk postmenopausal reproductive tissue a
    captures active premenopausal physiology without diluting cyclical/follicular signals.
 2. **Adult human folliculogenesis RNA-seq (GSE107746, Zhang et al. 2018, PMID:30420494):**
    Even in premenopausal ovarian cortex, oocytes represent ``<0.1%`` of stromal tissue
-   mass. Stage-replicated linear ``TPM`` across QC-passing (``<= 2.5%`` ectopic ORs)
-   adult human primordial, primary, secondary, antral, and preovulatory oocytes and
-   granulosa cells measures genuine adult female germ-cell expression on unambiguous,
+   mass. Stage-replicated linear ``TPM`` across ``128`` QC-passing (``<= 2.5%`` ectopic ORs)
+   adult human primordial, primary, secondary, and antral oocyte libraries plus
+   primordial-to-preovulatory granulosa libraries (`9` cell-type × stage strata)
+   measures genuine adult female germ-cell expression on unambiguous,
    non-paralog-confounded Ensembl 115 coding loci.
 """
 

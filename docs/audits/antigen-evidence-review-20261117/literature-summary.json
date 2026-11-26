@@ -1,7 +1,7 @@
 {
   "catalog_policy": "oncoref.target-selection.2026-11-26.1",
   "filter_policy": "oncoref.target-filters.2026-11-17.5",
-  "catalog_sha256": "45fbce157a11933f63c52aaead769a80fde0c11b6edb6f802620611a9b3a34f0",
+  "catalog_sha256": "c0cc6d7dbd64174ec693d85cf36f4ae26f999264e387f3def927fc782284ef6e",
   "original_49_sha256": "c406a01018b4c69d9fd644c1baa3c841e9f4be608728301f53fad7baa28094c7",
   "original_zero_counted": 49,
   "with_any_literature": 43,

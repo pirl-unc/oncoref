@@ -1963,9 +1963,9 @@
         },
         "2026-11-26": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-mouse-20261126/mouse-target-selection.csv.gz",
-          "sha256": "f159d6f09f11e432966577197668a186367b4681a186a6e8b3b5da70164cce6b",
-          "archive_sha256": "f159d6f09f11e432966577197668a186367b4681a186a6e8b3b5da70164cce6b",
-          "bytes": 3331934,
+          "sha256": "aed60f484818da8d2f55fc90f9365ce3a269b53460546f78b68d6480b9cef461",
+          "archive_sha256": "aed60f484818da8d2f55fc90f9365ce3a269b53460546f78b68d6480b9cef461",
+          "bytes": 3332061,
           "taxon_id": 10090
         }
       }
@@ -2042,9 +2042,9 @@
       "versions": {
         "2026-11-26": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-target-selection.csv.gz",
-          "sha256": "eaae26cace2415366dcd53fbd5ef2923f6243d1f58605aa06cb540e7d28c8ded",
-          "archive_sha256": "eaae26cace2415366dcd53fbd5ef2923f6243d1f58605aa06cb540e7d28c8ded",
-          "bytes": 3593144,
+          "sha256": "5857e69388cd057963579837f551de9181ccf38a8d6de91939ad4e76a4617cfa",
+          "archive_sha256": "5857e69388cd057963579837f551de9181ccf38a8d6de91939ad4e76a4617cfa",
+          "bytes": 3563927,
           "taxon_id": 9615
         }
       }
@@ -2059,9 +2059,9 @@
       "versions": {
         "2026-11-26": {
           "url": "https://github.com/pirl-unc/oncoref/releases/download/reference-dog-20261126/dog-host-exposure.csv.gz",
-          "sha256": "dd82bfbc0613ae433ca62b7b0592d8bb22e33e9d0bb149ca2b04182507c3a001",
-          "archive_sha256": "dd82bfbc0613ae433ca62b7b0592d8bb22e33e9d0bb149ca2b04182507c3a001",
-          "bytes": 2116204,
+          "sha256": "b12514b0d0a07043d85d7ef582df67212579d245d5dbe7375868cc436926e82d",
+          "archive_sha256": "b12514b0d0a07043d85d7ef582df67212579d245d5dbe7375868cc436926e82d",
+          "bytes": 1848194,
           "taxon_id": 9615
         }
       }

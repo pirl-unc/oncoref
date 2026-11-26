@@ -427,20 +427,62 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
     )
     p1a_row = mouse.target_selection("P1A").iloc[0]
 
-    # Build cross-species ortholog concordance ledger across human, dog, and mouse CTAs
-    def _norm_orth_key(lbl: str) -> str:
-        raw = str(lbl).split("/")[0].strip().upper()
-        alias_map = {
+    # Build complete cross-species ortholog concordance ledger across 100% of human, dog, and mouse CTAs
+    import re
+    from collections import defaultdict
+
+    from oncoref.load_dataset import get_data
+
+    syn_df = get_data("ncbi-symbol-synonyms")
+    human_official_up = set(syn_df["official_symbol"].astype(str).str.strip().str.upper()) | {
+        str(lbl).split("/")[0].strip().upper()
+        for lbl in h_cat["protein_group_label"]
+        if not str(lbl).startswith("ENSG0")
+    }
+    alias_to_officials_up: dict[str, set[str]] = defaultdict(set)
+    for r_syn in syn_df.itertuples(index=False):
+        a_up = str(r_syn.alias).strip().upper()
+        o_up = str(r_syn.official_symbol).strip().upper()
+        if a_up and o_up:
+            alias_to_officials_up[a_up].add(o_up)
+    uniq_syn_to_human = {
+        a_up: next(iter(offs))
+        for a_up, offs in alias_to_officials_up.items()
+        if len(offs) == 1 and a_up not in human_official_up
+    }
+    canine_synteny_re = re.compile(r"^C(?:\d+|X)H(\d+|X)ORF(\d+)$")
+    mouse_defb_re = re.compile(r"^DEFB(\d{1,2})$")
+
+    def _norm_orth_key(lbl: str, sp_tag: str) -> str:
+        raw = str(lbl).split("/")[0].strip()
+        up = raw.upper()
+        if up.startswith(("ENSG0", "ENSCAFG0", "ENSMUSG0")) or re.match(r"^GM\d+$", up):
+            return f"{sp_tag.upper()}:{raw}"
+        # Strip murine .1/.2 tandem paralog suffix when base exists
+        if sp_tag == "mouse" and re.search(r"\.\d+$", up):
+            up = re.sub(r"\.\d+$", "", up)
+        # Normalize canine syntenic ORF symbols C{dog}H{human}orf{n} -> C{human}ORF{n}
+        m_syn = canine_synteny_re.match(up)
+        if m_syn:
+            up = f"C{m_syn.group(1)}ORF{m_syn.group(2)}"
+        # Normalize murine beta-defensins Defb{n} -> DEFB1{n:02d} when human ortholog exists
+        if sp_tag == "mouse":
+            m_db = mouse_defb_re.match(up)
+            if m_db:
+                cand_db = f"DEFB1{int(m_db.group(1)):02d}"
+                if cand_db in human_official_up:
+                    up = cand_db
+        explicit_map = {
             "NY-ESO-1": "CTAG1",
             "CTAG1A": "CTAG1",
             "CTAG1B": "CTAG1",
-            "TEX19.1": "TEX19",
-            "TEX19.2": "TEX19",
             "TRAP1A": "TRAP1A",
         }
-        return alias_map.get(raw, raw)
+        if up in explicit_map:
+            return explicit_map[up]
+        return uniq_syn_to_human.get(up, up)
 
-    def _index_by_orth(df: pd.DataFrame) -> dict[str, pd.Series]:
+    def _index_by_orth(df: pd.DataFrame, sp_tag: str) -> dict[str, pd.Series]:
         out_idx: dict[str, pd.Series] = {}
         rank_cat = {
             "CTA": 0,
@@ -451,9 +493,7 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         }
         for _, r in df.iterrows():
             lbl = str(r["protein_group_label"])
-            if lbl.startswith(("ENSG0", "ENSCAFG0", "ENSMUSG0", "GM")):
-                continue
-            k = _norm_orth_key(lbl)
+            k = _norm_orth_key(lbl, sp_tag)
             prev = out_idx.get(k)
             if prev is None or rank_cat.get(str(r["category"]), 9) < rank_cat.get(
                 str(prev["category"]), 9
@@ -461,9 +501,9 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                 out_idx[k] = r
         return out_idx
 
-    h_orth = _index_by_orth(h_cat)
-    d_orth = _index_by_orth(d_cat)
-    m_orth = _index_by_orth(m_cat)
+    h_orth = _index_by_orth(h_cat, "human")
+    d_orth = _index_by_orth(d_cat, "dog")
+    m_orth = _index_by_orth(m_cat, "mouse")
     cta_keys = sorted(
         {
             *(k for k, r in h_orth.items() if bool(r["is_cta"])),
@@ -519,6 +559,18 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
         )
     orth_df = pd.DataFrame(orth_rows)
     h_cta_orth = orth_df[orth_df["human_classification"].eq("CTA")]
+    conserved_cta_rows = orth_df[orth_df["concordance_regime"].eq("Conserved multi-species CTA")]
+    conserved_cta_examples = ", ".join(
+        f"`{r.human_symbol or r.dog_symbol}`"
+        + (
+            f"/`{r.mouse_symbol}`"
+            if r.mouse_classification == "CTA"
+            and r.mouse_symbol
+            and r.mouse_symbol != (r.human_symbol or r.dog_symbol)
+            else ""
+        )
+        for r in conserved_cta_rows.itertuples(index=False)
+    )
     conserved_sub = orth_df[
         orth_df["concordance_regime"].isin(
             ["Conserved multi-species CTA", "CTA + conserved RA-only ortholog"]
@@ -648,7 +700,8 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
             "ortholog_total_keys_n": f"{len(orth_df):,}",
             "human_cta_with_dog_orth_n": f"{int(h_cta_orth['dog_classification'].ne('absent').sum()):,}",
             "human_cta_with_mouse_orth_n": f"{int(h_cta_orth['mouse_classification'].ne('absent').sum()):,}",
-            "conserved_cta_pairs_n": f"{int(orth_df['concordance_regime'].eq('Conserved multi-species CTA').sum()):,}",
+            "conserved_cta_pairs_n": f"{len(conserved_cta_rows):,}",
+            "conserved_cta_examples": conserved_cta_examples,
             "conserved_cta_or_ra_n": f"{len(conserved_sub):,}",
             "ortholog_summary_table": table(
                 [
@@ -659,8 +712,8 @@ def build_species_sections() -> tuple[dict[str, str], dict[str, str]]:
                 [
                     [
                         "**Conserved multi-species CTA**",
-                        int(orth_df["concordance_regime"].eq("Conserved multi-species CTA").sum()),
-                        "Independently passes Stage 1 somatic safety AND 10× cancer + reproductive enrichment in ≥2 species (`CSN2`, `PRAME`, `PSMA8`, `ANTXRL`, `LUZP4`, `TRIM42`, `PASD1`, `PLAC1`/`Plac1`, `TEX19`/`Tex19.1`)",
+                        len(conserved_cta_rows),
+                        f"Independently passes Stage 1 somatic safety AND 10× cancer + reproductive enrichment in ≥2 species ({conserved_cta_examples})",
                     ],
                     [
                         "**CTA + conserved RA-only ortholog**",
@@ -1198,12 +1251,22 @@ def build_sex_restriction_interrogation(
     # 1. Symmetric 4-way mutually exclusive RA-{M,P,F,MF} / CTA-{M,P,F,MF} physiological partition
     sex_cta = sex_table[sex_table["is_cta"].astype(bool)]
     sex_ra_only = sex_table[~sex_table["is_cta"].astype(bool)]
-    peri_cta_n = len(
-        species_target_selection.peripartum_antigen_ids(
-            data[data.is_cta.astype(bool)], species="human"
-        )
+    peri_cta_ids = species_target_selection.peripartum_antigen_ids(
+        data[data.is_cta.astype(bool)], species="human"
     )
-    peri_ra_n = len(species_target_selection.peripartum_antigen_ids(data, species="human"))
+    peri_ra_ids = species_target_selection.peripartum_antigen_ids(data, species="human")
+    cta_p_eids = set(
+        sex_cta.loc[sex_cta.sex_restriction_class.eq("Pregnancy / peripartum-only"), "entity_id"]
+    )
+    ra_p_eids = set(
+        sex_table.loc[
+            sex_table.sex_restriction_class.eq("Pregnancy / peripartum-only"), "entity_id"
+        ]
+    )
+    peri_cta_n = len(peri_cta_ids)
+    peri_ra_n = len(peri_ra_ids)
+    peri_dual_cta_n = len(peri_cta_ids - cta_p_eids)
+    peri_dual_ra_n = len(peri_ra_ids - ra_p_eids)
     partition_rows = [
         [
             "**Male-restricted**",
@@ -1219,7 +1282,7 @@ def build_sex_restriction_interrogation(
             f"`CTA-P` (`CTA-E`): **{int(sex_cta.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}**",
             f"`RA-P-only`: **{int(sex_ra_only.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}**",
             "Clears all non-pregnant, non-lactating adult reproductive and resting-mammary organs in **both** sexes (< 8; < 16 with `IHC−`)",
-            "`DUX4`, `ERVV-1`, `ERVV-2`, `LGALS16`, `BTN1A1`, `TBXT`, `CER1`, `LEUTX`, `PSG7` (`RA-P-only`), `NLRP8` (`RA-P-only`)",
+            "`DUX4`, `ERVV-1`, `ERVV-2`, `LGALS16`, `BTN1A1`, `CER1`, `LEUTX`, `PSG7` (`RA-P-only`), `NLRP8` (`RA-P-only`)",
         ],
         [
             "**Female-restricted**",
@@ -1227,7 +1290,7 @@ def build_sex_restriction_interrogation(
             f"`CTA-F`: **{int(sex_cta.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             f"`RA-F-only`: **{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}**",
             "Clears all male adult organs (`testis`, `epididymis`, `prostate`, `seminal vesicle`, non-secretory `XY resting_breast` < 8; < 16 with `IHC−`)",
-            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `CPSF4L`, `IZUMO1R`, `ACCSL`, `OR1N1`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `BMP15` (`RA-F-only`), `WEE2` (`RA-F-only`), `PABPN1L` (`RA-F-only`)",
+            "`CSN2`, `LALBA`, `ZP4`, `DPPA3`, `CPSF4L`, `IZUMO1R`, `ACCSL`, `OR1N1`, `TBXT`, `KHDC3L`, `ZAR1L`, `VRTN`, `PRR23E`, `BMP15` (`RA-F-only`), `WEE2` (`RA-F-only`), `PABPN1L` (`RA-F-only`)",
         ],
         [
             "**Shared male & female**",
@@ -1302,6 +1365,8 @@ def build_sex_restriction_interrogation(
         "cta_p_n": f"{cta_p_cnt:,}",
         "peri_ra_n": f"{peri_ra_n:,}",
         "peri_cta_n": f"{peri_cta_n:,}",
+        "peri_dual_ra_n": f"{peri_dual_ra_n:,}",
+        "peri_dual_cta_n": f"{peri_dual_cta_n:,}",
         "ra_m_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Male-restricted').sum()):,}",
         "ra_f_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Female-restricted').sum()):,}",
         "ra_e_only_n": f"{int(sex_ra_only.sex_restriction_class.eq('Pregnancy / peripartum-only').sum()):,}",

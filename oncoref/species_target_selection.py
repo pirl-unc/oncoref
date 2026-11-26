@@ -13,8 +13,9 @@ scales strictly separate:
    symmetric 10 x max(N, D, floor) cancer (CA) and reproductive/developmental (RA)
    enrichment on one declared, reference-compatible expression scale.
 3. Downstream host-anatomy protection (HostContext parameterized by comparative
-   mammalian anatomy from normal-tissue-taxonomy.yaml), sex-restricted antigen
-   subsets (MRA/CTA-M, FRA/CTA-F, ERA/CTA-E, SRA/CTA-MF), and peptide subtraction.
+   mammalian anatomy from normal-tissue-taxonomy.yaml), the 4-way physiological
+   sex-restriction partition (RA-M/CTA-M, RA-F/CTA-F, RA-P/CTA-P, RA-MF/CTA-MF;
+   legacy aliases MRA/FRA/ERA/PRA/SRA), and peptide subtraction.
 
 No human expression, safety call or threshold calibration is transferred across
 species by orthology. Where a species lacks a reference-reconciled normal or
@@ -869,7 +870,9 @@ def classify_sex_restriction(
 
     ra.attrs["taxon_id"] = resolved.taxon_id
     ra.attrs["species"] = resolved.name
-    exposures = packaged_species_host_exposure(resolved) if host_evidence is None else host_evidence
+    exposures = (
+        _packaged_species_host_exposure_ref(resolved) if host_evidence is None else host_evidence
+    )
 
     # Compartments assayed strictly by pooled normal proteomics ("proteome_only", e.g. canine
     # Fallopian_Tube in MSV000099744 where no public species RNA-seq atlas exists) remain
@@ -1091,11 +1094,13 @@ def peripartum_antigen_ids(
 ) -> frozenset[str]:
     """Return entity_ids of Reproductive Antigens active in placenta or lactating mammary.
 
-    Unlike the mutually exclusive 4-way non-pregnant adult partition (``RA-M``,
-    ``RA-F``, ``RA-E``, ``RA-MF``), ``RA-P`` / ``CTA-P`` (legacy alias ``PRA``) is a
-    non-exclusive physiological selector identifying RAs and CTAs that qualify
-    ``>=10x`` in ``placenta`` or ``lactating_mammary`` (``lactating_breast``) or
-    exceed the calibrated ``HostContext`` ceiling in those compartments.
+    Whereas the mutually exclusive 4-way host-physiology partition (``RA-M``, ``RA-F``,
+    ``RA-P``, ``RA-MF`` / ``CTA-M``, ``CTA-F``, ``CTA-P``, ``CTA-MF``) assigns ``RA-P`` /
+    ``CTA-P`` strictly to antigens silent across all non-pregnant, non-lactating adult
+    organs, ``peripartum_antigen_ids()`` returns every RA that qualifies ``>=10x`` or
+    exceeds the calibrated ``HostContext`` ceiling in ``placenta`` or
+    ``lactating_mammary`` (``lactating_breast``), including dual-compartment members in
+    ``CTA-M`` (e.g. ``PLAC1``, ``XAGE3``) or ``CTA-F`` (e.g. ``LALBA``, ``CSN2``).
     """
     from . import host_context
 
@@ -1123,7 +1128,9 @@ def peripartum_antigen_ids(
     anatomy = anatomy_for_species(resolved)
     p_comps = anatomy.peripartum_compartments
     p_set = set(p_comps)
-    exposures = packaged_species_host_exposure(resolved) if host_evidence is None else host_evidence
+    exposures = (
+        _packaged_species_host_exposure_ref(resolved) if host_evidence is None else host_evidence
+    )
     eff_ihc_mult = ref_host.negative_ihc_multiplier
 
     matched: set[str] = set()
@@ -1212,7 +1219,7 @@ class SpeciesScreeningResult:
     summary: dict
 
     def sex_restricted_antigens(self) -> pd.DataFrame:
-        """Partition this species' evaluated RAs and CTAs into MRA/FRA/ERA/SRA and CTA-*."""
+        """Partition this species' evaluated RAs and CTAs into RA-M/F/P/MF and CTA-M/F/P/MF."""
         return classify_sex_restriction(
             self.catalog,
             species=self.spec.species,

@@ -845,8 +845,11 @@ def build_human_screening_inputs(
             if not isinstance(item, dict) or item.get("coverage") != "measured":
                 continue
             val = (
-                item.get("adult_bulk_max_tpm", item.get("max_tpm"))
-                if (comp == "ovary" and not eff_repro_f and "adult_bulk_max_tpm" in item)
+                item.get(
+                    "unstratified_max_tpm",
+                    item.get("adult_bulk_max_tpm", item.get("max_tpm")),
+                )
+                if not eff_repro_f
                 else item.get("max_tpm")
             )
             if val is None or not np.isfinite(val):
@@ -911,12 +914,23 @@ def build_human_screening_inputs(
                         "germline_protamine_diluted_qualified": bool(
                             eid in germline_tf_eids and comp == "testis"
                         ),
-                        "female_max_tpm": item.get("female_max_tpm"),
+                        "female_max_tpm": (
+                            item.get("unstratified_female_max_tpm", item.get("female_max_tpm"))
+                            if not eff_repro_f
+                            else item.get("female_max_tpm")
+                        ),
                         "male_max_tpm": item.get("male_max_tpm"),
                         "female_max_ntpm": item.get("female_max_ntpm"),
                         "male_max_ntpm": item.get("male_max_ntpm"),
                         "max_ntpm": item.get("max_ntpm"),
-                        "protein_status": item.get("protein_status", "not_assessed"),
+                        "protein_status": (
+                            item.get(
+                                "unstratified_protein_status",
+                                item.get("protein_status", "not_assessed"),
+                            )
+                            if not eff_repro_f
+                            else item.get("protein_status", "not_assessed")
+                        ),
                         "scope_complete": bool(item.get("scope_complete", True)),
                         "comparison_id": comp_id,
                         "unit": unit,

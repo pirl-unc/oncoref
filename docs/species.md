@@ -12,8 +12,8 @@ import oncoref
 dog = oncoref.canine
 dog.references.datasets()
 dog.expression.sources(context="normal")
-dog.antigens.coverage()  # partial: curated canine CTA candidate evidence
-dog.cta_candidates()    # same API on oncoref.human and oncoref.mouse
+dog.target_selection_coverage()  # evaluated genome-wide CanFam3.1 catalog (20,082 PEGs)
+dog.cta_candidates()    # 14 curated canine literature nominations (also on human and mouse)
 human = oncoref.human
 human.expression.sources()  # existing human registry
 
@@ -395,7 +395,7 @@ cross-species ortholog concordance, and native nomination ledgers.
 
 `oncoref.species_policies` and `oncoref.species_target_selection` harmonize the
 three-stage target-selection process across **human (`9606`, `19,893` PEGs, `325` CTAs)**,
-**dog (`9615`, `20,082` PEGs, `63` CTAs)** and **mouse (`10090`, `21,433` PEGs, `12` CTAs)**
+**dog (`9615`, `20,082` PEGs, `54` CTAs)** and **mouse (`10090`, `21,433` PEGs, `12` CTAs)**
 without transferring human expression, safety verdicts or threshold calibrations by orthology:
 
 1. **Reference proteome & protein-equivalence grouping (`group_reference_proteins`, `group_proteome`):**

@@ -38,11 +38,11 @@
     "Other:Unscreened tissue": 17
   },
   "integrated_sex_restriction_codes": {
-    "CTA-M": 226,
+    "CTA-M": 224,
     "RA-M-only": 118,
-    "CTA-P": 49,
-    "CTA-MF": 38,
-    "CTA-F": 12,
+    "CTA-P": 48,
+    "CTA-MF": 40,
+    "CTA-F": 13,
     "RA-P-only": 12,
     "RA-MF-only": 8,
     "RA-F-only": 5

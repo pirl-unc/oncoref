@@ -28,8 +28,8 @@
     },
     "reference_id": "openvax:reference:v1:sha256:07ee3be86d747bf6156402b5417204e8274ffda6e2279cfdf841a2941950e31b"
   },
-  "data_sha256": "f159d6f09f11e432966577197668a186367b4681a186a6e8b3b5da70164cce6b",
-  "data_bytes": 3331934,
+  "data_sha256": "aed60f484818da8d2f55fc90f9365ce3a269b53460546f78b68d6480b9cef461",
+  "data_bytes": 3332061,
   "host_exposure_sha256": "974dfb4d4d143d88a32b14cc4dc9918a690ea0be78abb45f666f3239956b8f93",
   "host_exposure_bytes": 2535039,
   "sequences_sha256": "294a9b0ca2b7b89efa829ad2ea2bd4337ac3cb193b51d47a70598920c4d72fe7",

@@ -17,6 +17,7 @@ Builds:
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import json
 import math
@@ -454,6 +455,38 @@ def _clean_and_sex_stratify_host_exposures(
         sex_filter="XX",
         donor_allowlist=repro_xx_donors,
     )
+    # Also compute unstratified all-age XX female exposures so single-rule ablation
+    # (include_reproductive_age_female=False) reproduces pre-stratification calls identically.
+    gtex_unstrat_he_by_comp: dict[str, dict[str, float]] = {}
+    gtex_unstrat_max_by_comp: dict[str, dict[str, float]] = {}
+    for comp_lbl, site_lbl in (
+        ("ovary", "ovary"),
+        ("uterus", "uterus"),
+        ("vagina", "vagina"),
+        ("fallopian tube", "fallopian_tube"),
+    ):
+        u_he, u_mx = _entity_gtex_host_exposure(site_lbl, sex_filter="XX", donor_allowlist=None)
+        gtex_unstrat_he_by_comp[comp_lbl] = u_he
+        gtex_unstrat_max_by_comp[comp_lbl] = u_mx
+    u_ecto, u_ecto_mx = _entity_gtex_host_exposure(
+        "cervix_ectocervix", sex_filter="XX", donor_allowlist=None
+    )
+    u_endo, u_endo_mx = _entity_gtex_host_exposure(
+        "cervix_endocervix", sex_filter="XX", donor_allowlist=None
+    )
+    gtex_unstrat_he_by_comp["cervix"] = {
+        eid: max(u_ecto.get(eid, 0.0), u_endo.get(eid, 0.0)) for eid in (set(u_ecto) | set(u_endo))
+    }
+    gtex_unstrat_max_by_comp["cervix"] = {
+        eid: max(u_ecto_mx.get(eid, 0.0), u_endo_mx.get(eid, 0.0))
+        for eid in (set(u_ecto_mx) | set(u_endo_mx))
+    }
+    gtex_rb_xx_unstrat, _ = _entity_gtex_host_exposure(
+        "breast_mammary_tissue",
+        exclude_samples=secretory_mammary_sids,
+        sex_filter="XX",
+        donor_allowlist=None,
+    )
     gtex_rb_xy, _ = _entity_gtex_host_exposure(
         "breast_mammary_tissue", exclude_samples=secretory_mammary_sids, sex_filter="XY"
     )
@@ -531,6 +564,22 @@ def _clean_and_sex_stratify_host_exposures(
                     item["max_tpm"] = max(base_g, h_val) if h_val is not None else base_g
             elif h_val is not None:
                 item["max_tpm"] = h_val
+            if comp in gtex_unstrat_he_by_comp:
+                ug_val = gtex_unstrat_he_by_comp[comp].get(eid)
+                ug_mx = gtex_unstrat_max_by_comp.get(comp, {}).get(eid)
+                if ug_val is not None:
+                    ubase_g = max(ug_val, ug_mx or 0.0) if comp in q_set else ug_val
+                    u_final = (
+                        (max(ubase_g, h_val) if (h_val is not None and orth_corrob) else ubase_g)
+                        if comp in large_gtex_comps
+                        else (max(ubase_g, h_val) if h_val is not None else ubase_g)
+                    )
+                elif h_val is not None:
+                    u_final = h_val
+                else:
+                    u_final = item.get("max_tpm")
+                if u_final is not None and abs(float(u_final) - float(item["max_tpm"])) > 1e-9:
+                    item["unstratified_max_tpm"] = u_final
 
         # Also refresh HPA-only compartments (placenta, endometrium, epididymis, seminal vesicle, lactating_breast)
         for h_only_comp in ("placenta", "endometrium", "epididymis", "seminal vesicle"):
@@ -551,6 +600,7 @@ def _clean_and_sex_stratify_host_exposures(
         rb_item = e_map.get("resting_breast")
         if rb_item and rb_item.get("coverage") == "measured":
             g_xx = gtex_rb_xx.get(eid)
+            ug_xx = gtex_rb_xx_unstrat.get(eid)
             g_xy = gtex_rb_xy.get(eid)
             h_rb = hpa_max_by_ec.get((eid, "resting_breast"))
             f_ntpm = rb_item.get("female_max_ntpm", rb_item.get("max_ntpm"))
@@ -572,6 +622,13 @@ def _clean_and_sex_stratify_host_exposures(
             rb_item["max_tpm"] = max(
                 float(rb_item["female_max_tpm"]), float(rb_item["male_max_tpm"])
             )
+            if ug_xx is not None:
+                uf_rb = max(ug_xx, h_rb) if (h_rb is not None and orth_rb) else ug_xx
+                umx_rb = max(float(uf_rb), float(rb_item["male_max_tpm"]))
+                if abs(float(uf_rb) - float(rb_item["female_max_tpm"])) > 1e-9:
+                    rb_item["unstratified_female_max_tpm"] = uf_rb
+                if abs(umx_rb - float(rb_item["max_tpm"])) > 1e-9:
+                    rb_item["unstratified_max_tpm"] = umx_rb
 
         # 2b. Fold stage-replicated adult human reproductive-age oocyte & granulosa RNA (GSE107746) into ovary
         if eid in foll_by_eid:
@@ -583,6 +640,8 @@ def _clean_and_sex_stratify_host_exposures(
                     prev_ov = (
                         float(ov_item["max_tpm"]) if ov_item.get("max_tpm") is not None else 0.0
                     )
+                    if "unstratified_max_tpm" not in ov_item:
+                        ov_item["unstratified_max_tpm"] = prev_ov
                     ov_item["adult_bulk_max_tpm"] = prev_ov
                     ov_item["max_tpm"] = max(prev_ov, f_supp)
                     ov_item["coverage"] = "measured"
@@ -597,6 +656,9 @@ def _clean_and_sex_stratify_host_exposures(
                         and ov_item.get("protein_status") in (None, "not_detected")
                     ):
                         # HPA ovarian TMA cores score stromal/follicle cells only and lack oocytes
+                        ov_item["unstratified_protein_status"] = (
+                            ov_item.get("protein_status") or "not_assessed"
+                        )
                         ov_item["protein_status"] = "unassessed"
 
         # 3. Backfill GTEx-v11-missing female tract compartments (uterus, vagina) when measured
@@ -1286,7 +1348,7 @@ def main() -> None:
         if cls_now != str(old_row["classification"]):
             if cls_now == "CTA":
                 promoted.at[idx, "decision_reason"] = (
-                    "Qualifies both cancer and reproductive/developmental 10x routes under integrated 2026-11-25 policy"
+                    "Qualifies both cancer and reproductive/developmental 10x routes under integrated 2026-11-26 policy"
                 )
             elif cls_now == "Cancer Antigen only":
                 promoted.at[idx, "decision_reason"] = (
@@ -1359,10 +1421,14 @@ def main() -> None:
         "baseline_host_exposure_deltas": he_deltas,
         "rows": row_deltas,
     }
-    delta_path = ROOT / "oncoref/data/baseline-2026-11-20-deltas.json"
-    delta_path.write_text(
-        json.dumps(delta_doc, sort_keys=True, separators=(",", ":")) + "\n", encoding="utf-8"
+    delta_path = ROOT / "oncoref/data/baseline-2026-11-20-deltas.json.gz"
+    delta_bytes = (json.dumps(delta_doc, sort_keys=True, separators=(",", ":")) + "\n").encode(
+        "utf-8"
     )
+    delta_path.write_bytes(gzip.compress(delta_bytes, mtime=0))
+    legacy_delta_json = ROOT / "oncoref/data/baseline-2026-11-20-deltas.json"
+    if legacy_delta_json.exists():
+        legacy_delta_json.unlink()
 
     # Write promoted target-selection.csv.gz
     ts_csv_path = ROOT / "oncoref/data/target-selection.csv.gz"

@@ -184,6 +184,7 @@ def test_human_sex_restricted_subsets_match_published_csv_and_selection_api(caps
         "IZUMO1R",
         "ACCSL",
         "OR1N1",
+        "TBXT",
     ):
         assert by_lbl.loc[cta_f_lbl, "sex_restriction_code"] == "CTA-F"
     assert by_lbl.loc["PSG7", "sex_restriction_code"] == "RA-P-only"

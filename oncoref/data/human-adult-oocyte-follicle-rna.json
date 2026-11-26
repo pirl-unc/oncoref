@@ -35,9 +35,9 @@
     }
   },
   "identity_mapping": {
-    "uniquely_mapped_low_risk_pegs": 17217,
+    "uniquely_mapped_low_risk_pegs": 18150,
     "paralog_kmer_ceiling": 0.05,
-    "reported_rows_ge_0_5_tpm": 14796
+    "reported_rows_ge_0_5_tpm": 15627
   },
-  "sha256": "c874341199306b8a5bcbec8a1a2a7ffb259e898b1253148cbb1a7148730178cd"
+  "sha256": "fd36573941992d62cbd5f5e8c3e2585ba2b3a03da7dbb1ffb20de804f9cce777"
 }

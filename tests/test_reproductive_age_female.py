@@ -58,6 +58,8 @@ def test_gse107746_adult_oocyte_follicle_panel_sha256_and_paralog_guards():
 
     # Genuine adult human oocyte transcripts quantified at high stage-replicated TPM
     for ooc_gene in (
+        "H1-8",
+        "PRR23E",
         "MOS",
         "CPSF4L",
         "BMP15",
@@ -87,9 +89,9 @@ def test_reproductive_age_female_promotions_and_single_rule_ablation():
     assert cat.loc["CPSF4L", "classification"] == "CTA"
     assert sex_df.loc["CPSF4L", "sex_restriction_code"] == "CTA-F"
 
-    # Adult oocyte expression expands CTA-F from 8 to 12 and moves BMP15 + OR52D1 into RA-F-only
+    # Adult oocyte expression expands CTA-F from 8 to 13 and moves BMP15 + OR52D1 into RA-F-only
     cta_f = set(antigen_sets.proteins("CTA-F")["protein_group_label"])
-    assert len(cta_f) == 12
+    assert len(cta_f) == 13
     assert {
         "CSN2",
         "LALBA",
@@ -103,15 +105,34 @@ def test_reproductive_age_female_promotions_and_single_rule_ablation():
         "IZUMO1R",
         "ACCSL",
         "OR1N1",
+        "TBXT",
     } == cta_f
     assert sex_df.loc["BMP15", "sex_restriction_code"] == "RA-F-only"
     assert sex_df.loc["OR52D1", "sex_restriction_code"] == "RA-F-only"
+    assert sex_df.loc["CIMIP2A", "sex_restriction_code"] == "CTA-MF"
+    assert sex_df.loc["H1-8", "sex_restriction_code"] == "RA-MF-only"
 
     # Orthogonal single-rule ablation turning off include_reproductive_age_female restores
-    # MOS & CPSF4L to Cancer Antigen only without disturbing the rest of the catalog
+    # exact pre-stratification calls (323 CTAs, 8 CTA-F, 236 CTA-M, 52 CTA-P, 27 CTA-MF)
     ablated = human_screening_inputs.evaluate_human_catalog(
         include_reproductive_age_female=False
     ).catalog.set_index("protein_group_label")
     assert ablated.loc["MOS", "classification"] == "Cancer Antigen only"
     assert ablated.loc["CPSF4L", "classification"] == "Cancer Antigen only"
+    assert ablated.loc["DCAF4L2", "sex_restriction_code"] == "CTA-M"
+    assert ablated.loc["SPATA3", "sex_restriction_code"] == "RA-M-only"
+    assert ablated.loc["DEFB123", "sex_restriction_code"] == "CTA-MF"
+    assert ablated.loc["TBXT", "sex_restriction_code"] == "CTA-P"
     assert int(ablated["category"].eq("CTA").sum()) == 323
+    assert ablated.loc[
+        ablated["sex_restriction_code"].ne(""), "sex_restriction_code"
+    ].value_counts().to_dict() == {
+        "CTA-M": 236,
+        "RA-M-only": 123,
+        "CTA-P": 52,
+        "CTA-MF": 27,
+        "RA-P-only": 13,
+        "CTA-F": 8,
+        "RA-MF-only": 3,
+        "RA-F-only": 3,
+    }

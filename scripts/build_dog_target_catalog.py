@@ -689,6 +689,12 @@ def load_ensembl98_dog_reference(
     groups_df["published_nomination"] = groups_df["member_gene_ids"].map(
         lambda s: bool(set(json.loads(s)) & all_nom_gids)
     )
+    # Flag chimeric readthrough gene models in Ensembl 98 CanFam3.1 (e.g. ENSCAFG00000003760 merging NT5C1B + RDH14)
+    chimeric_readthrough_gids = {"ENSCAFG00000003760"}
+    groups_df["readthrough_locus"] = groups_df["member_gene_ids"].map(
+        lambda s: bool(set(json.loads(s)) & chimeric_readthrough_gids)
+    )
+    single_exon_gids = {gid for gid in gene_meta if len(merged_exons.get(gid, ())) <= 1}
 
     # Build canine symbol-index.csv covering all symbols + 14 curated nominations + RefSeq GeneIDs
     sym_idx_rows: list[tuple[str, str]] = []
@@ -712,66 +718,96 @@ def load_ensembl98_dog_reference(
         .reset_index(drop=True)
     )
 
-    # 31-mer cDNA paralog ambiguity across distinct PEGs
+    # Two-pass phase-invariant 31-mer paralog check across all Ensembl 98 cDNA + ncRNA transcripts:
+    # 1) Sample probe 31-mers (step=4) across protein-coding transcripts per PEG.
+    # 2) Scan EVERY transcript in cdna.all.fa.gz + ncrna.fa.gz at step=1 (every base offset)
+    #    so out-of-phase 5'-UTR shifts and processed pseudogenes/ncRNAs are caught identically.
     gene_to_entity = {
         g: r.entity_id
         for r in groups_df.itertuples(index=False)
         for g in json.loads(r.member_gene_ids)
     }
-    cdna_seqs_by_gene: dict[str, list[str]] = defaultdict(list)
+    cdna_seqs_by_gene: dict[str, list[bytes]] = defaultdict(list)
     c_hdr = ""
     c_parts: list[str] = []
 
-    def _flush_cdna(hdr: str, parts_l: list[str]) -> None:
-        if not hdr:
-            return
-        gid = ""
+    def _extract_gid(hdr: str) -> str:
         for tok in hdr[1:].split():
             if tok.startswith("gene:"):
-                gid = tok.split(":", 1)[1].split(".")[0]
-                break
+                return tok.split(":", 1)[1].split(".")[0]
+        return ""
+
+    def _flush_coding_cdna(hdr: str, parts_l: list[str]) -> None:
+        if not hdr:
+            return
+        gid = _extract_gid(hdr)
         if gid in gene_to_entity:
-            cdna_seqs_by_gene[gid].append("".join(parts_l))
+            cdna_seqs_by_gene[gid].append("".join(parts_l).encode("ascii", errors="ignore"))
 
     with gzip.open(cdna_path, "rt", encoding="utf-8") as fh:
         for line in fh:
             if line.startswith(">"):
-                _flush_cdna(c_hdr, c_parts)
+                _flush_coding_cdna(c_hdr, c_parts)
                 c_hdr = line.rstrip("\n")
                 c_parts = []
             else:
                 c_parts.append(line.strip())
-    _flush_cdna(c_hdr, c_parts)
+    _flush_coding_cdna(c_hdr, c_parts)
 
     k = 31
-    step = 4
+    probe_step = 4
     MULTI = "__MULTI__"
     kmer_owners: dict[bytes, str] = {}
+    probe_by_gene: dict[str, set[bytes]] = {}
     for gid, seqs in cdna_seqs_by_gene.items():
         eid = gene_to_entity[gid]
         seen_for_gene = {
-            s[i : i + k] for s in seqs if len(s) >= k for i in range(0, len(s) - k + 1, step)
+            s[i : i + k] for s in seqs if len(s) >= k for i in range(0, len(s) - k + 1, probe_step)
         }
-        for km_s in seen_for_gene:
-            km_b = km_s.encode("ascii", errors="ignore")
+        probe_by_gene[gid] = seen_for_gene
+        for km_b in seen_for_gene:
             prev = kmer_owners.get(km_b)
             if prev is None:
                 kmer_owners[km_b] = eid
             elif prev != eid and prev != MULTI:
                 kmer_owners[km_b] = MULTI
 
+    def _scan_tx_step1(hdr: str, parts_l: list[str]) -> None:
+        if not hdr:
+            return
+        gid = _extract_gid(hdr)
+        if not gid:
+            return
+        owner = gene_to_entity.get(gid, f"NC:{gid}")
+        s_b = "".join(parts_l).encode("ascii", errors="ignore")
+        if len(s_b) < k:
+            return
+        for i in range(len(s_b) - k + 1):
+            km_b = s_b[i : i + k]
+            prev = kmer_owners.get(km_b)
+            if prev is not None and prev != owner and prev != MULTI:
+                kmer_owners[km_b] = MULTI
+
+    for tx_path in (cdna_path, ncrna_path):
+        if not tx_path.exists():
+            continue
+        t_hdr = ""
+        t_parts: list[str] = []
+        with gzip.open(tx_path, "rt", encoding="utf-8") as fh:
+            for line in fh:
+                if line.startswith(">"):
+                    _scan_tx_step1(t_hdr, t_parts)
+                    t_hdr = line.rstrip("\n")
+                    t_parts = []
+                else:
+                    t_parts.append(line.strip())
+        _scan_tx_step1(t_hdr, t_parts)
+
     risk_rows = []
     for gid in sorted(gene_to_entity):
-        seqs = cdna_seqs_by_gene.get(gid, [])
-        seen_for_gene = {
-            s[i : i + k] for s in seqs if len(s) >= k for i in range(0, len(s) - k + 1, step)
-        }
+        seen_for_gene = probe_by_gene.get(gid, set())
         tot = len(seen_for_gene)
-        amb = sum(
-            1
-            for km_s in seen_for_gene
-            if kmer_owners.get(km_s.encode("ascii", errors="ignore")) == MULTI
-        )
+        amb = sum(1 for km_b in seen_for_gene if kmer_owners.get(km_b) == MULTI)
         shared_frac = (amb / tot) if tot > 0 else 0.0
         has_ov = gid in same_strand_overlap_genes
         risk_rows.append(
@@ -789,6 +825,7 @@ def load_ensembl98_dog_reference(
         exonic_bp,
         symbol_by_gene,
         or_gids,
+        single_exon_gids,
         pd.DataFrame(risk_rows),
         sym_index_df,
         source_rows,
@@ -871,6 +908,13 @@ def load_dog_normal_and_repro_panels(
             ):
                 seen_run_keys.add(run_key)
                 keep_libs[lid] = ("developmental", "embryo", st_auth or st_name, strain, sex)
+                continue
+
+            # Exclude neonatal/puppy/juvenile non-adult stages from adult somatic & reproductive panels
+            if any(
+                k in st_name.lower()
+                for k in ("neonate", "neonatal", "puppy", "juvenile", "immature", "newborn")
+            ):
                 continue
 
             mapped = BGEE_DOG_ANATOMY_MAP.get(anat)
@@ -1212,8 +1256,8 @@ def load_dog_normal_and_repro_panels(
                 "identity_resolved": True,
             }
             if comp == "resting_mammary":
+                # Female mammary biopsies only; male canine mammary RNA is unmeasured (fail-closed None)
                 rec["female_max_tpm"] = h_v
-                rec["male_max_tpm"] = min(h_v, male_skin_p95.get(str(eid), 0.0))
             if scope == "developmental":
                 rec["cells"] = 100
                 rec["positive_cells"] = 100
@@ -1482,14 +1526,13 @@ def load_dog_tumor_cohorts(
     risk_gids: set[str],
     unsafe_eids: set[str],
 ) -> tuple[pd.DataFrame, pd.DataFrame, list[dict]]:
-    """Load 8 spontaneous canine patient tumor cohorts in linear TPM on CanFam3.1."""
+    """Load 8 canine tumor cohorts (7 spontaneous patient cohorts + CLBL-1 DLBCL line) in linear TPM on CanFam3.1."""
     exonic_series = pd.Series(exonic_bp, dtype=float)
     sym_candidates: dict[str, list[str]] = defaultdict(list)
     for gid, sym in symbol_by_gene.items():
         if sym and not sym.startswith("ENSCAFG"):
             sym_candidates[sym.upper()].append(gid)
     sym_to_ens = {k: v[0] for k, v in sym_candidates.items() if len(v) == 1}
-    sym_universe = pd.Index(sorted(set(sym_to_ens.values())), name="_gid")
 
     cohort_registry: list[dict] = []
     source_rows: list[dict] = []
@@ -1524,15 +1567,20 @@ def load_dog_tumor_cohorts(
         for c in df238.columns
         if c != "gene_id" and re.search(r"(?:_tumor$|__Tumor$|_Met_)", str(c), re.IGNORECASE)
     ]
-    tpm238 = _counts_to_tpm(df238[osa238_raw].reindex(sym_universe, fill_value=0.0), exonic_series)
+    tpm238 = _counts_to_tpm(df238[osa238_raw], exonic_series)
     osa238_cols = _qc_cols(tpm238, osa238_raw)
     peg238 = _project_peg_matrix(tpm238[osa238_cols], groups_df)
+    osa238_pids = [
+        "GSE238110:"
+        + re.sub(r"(?:__|_)(?:tumor|Met.*|Primary.*)$", "", str(c), flags=re.IGNORECASE)
+        for c in osa238_cols
+    ]
     cohort_matrices.append(
         (
             "gse238110",
             "OSA_NCI",
             osa238_cols,
-            [f"GSE238110:{c.split('__')[0]}" for c in osa238_cols],
+            osa238_pids,
             peg238,
         )
     )
@@ -1568,7 +1616,7 @@ def load_dog_tumor_cohorts(
     df304["_gid"] = df304["_sym"].map(sym_to_ens)
     df304 = df304.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
     osa304_raw = [c for c in df304.columns if c.startswith("COTC030_")]
-    tpm304 = _counts_to_tpm(df304[osa304_raw].reindex(sym_universe, fill_value=0.0), exonic_series)
+    tpm304 = _counts_to_tpm(df304[osa304_raw], exonic_series)
     osa304_cols = _qc_cols(tpm304, osa304_raw)
     peg304 = _project_peg_matrix(tpm304[osa304_cols], groups_df)
     cohort_matrices.append(
@@ -1611,7 +1659,7 @@ def load_dog_tumor_cohorts(
     df239["_gid"] = df239["Name"].astype(str).str.upper().map(sym_to_ens)
     df239 = df239.dropna(subset=["_gid"]).drop_duplicates("_gid").set_index("_gid")
     osa239_raw = [c for c in df239.columns if c != "Name"]
-    tpm239 = _counts_to_tpm(df239[osa239_raw].reindex(sym_universe, fill_value=0.0), exonic_series)
+    tpm239 = _counts_to_tpm(df239[osa239_raw], exonic_series)
     osa239_cols = _qc_cols(tpm239, osa239_raw)
     peg239 = _project_peg_matrix(tpm239[osa239_cols], groups_df)
     cohort_matrices.append(
@@ -1890,6 +1938,7 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
         exonic_bp,
         symbol_by_gene,
         or_gids,
+        single_exon_gids,
         mapping_risk_df,
         sym_index_df,
         ens_sources,
@@ -1906,7 +1955,7 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
         "2/5 Aggregating Bgee 15.2, GSE219045 & GSE119810 normal/reproductive TPM panels...",
         flush=True,
     )
-    comp_normals, comp_repro, rna_gates, confirmed_organs, male_skin_p95, norm_sources = (
+    comp_normals, comp_repro, rna_gates, confirmed_organs, _male_skin_p95, norm_sources = (
         load_dog_normal_and_repro_panels(scratch_dir, dog_in, groups_df, or_gids, risk_gids)
     )
     print(
@@ -1929,9 +1978,46 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
     all_gates = pd.concat([rna_gates, prot_gates], ignore_index=True)
     unsafe_eids = set(all_gates.loc[all_gates["unsafe"].astype(bool), "entity_id"].astype(str))
 
-    print("4/5 Loading 8 spontaneous canine patient tumor cohorts...", flush=True)
+    # Also mask single-exon intronless retrogenes sharing >=50% 9-mers with Unsafe proteins
+    # on Cufflinks mismatch-tolerant FPKM cohorts (GSE119810, GSE95183, GSE95184)
+    unsafe_9mers: set[str] = set()
+    for useq in seq_df.loc[seq_df["entity_id"].isin(unsafe_eids), "sequence"].astype(str):
+        if len(useq) >= 9:
+            unsafe_9mers.update(useq[i : i + 9] for i in range(len(useq) - 8))
+    single_exon_unsafe50_gids: set[str] = set()
+    single_exon_unsafe50_eids: set[str] = set()
+    seqs_by_eid: dict[str, list[str]] = defaultdict(list)
+    for r_s in seq_df.itertuples(index=False):
+        if r_s.sequence:
+            seqs_by_eid[str(r_s.entity_id)].append(str(r_s.sequence))
+    for r_g in groups_df.itertuples(index=False):
+        eid_s = str(r_g.entity_id)
+        if eid_s in unsafe_eids:
+            continue
+        m_gids = json.loads(r_g.member_gene_ids)
+        if not all(g in single_exon_gids for g in m_gids):
+            continue
+        cand_9mers = {
+            s[i : i + 9]
+            for s in seqs_by_eid.get(eid_s, ())
+            if len(s) >= 9
+            for i in range(len(s) - 8)
+        }
+        if cand_9mers and (len(cand_9mers & unsafe_9mers) / len(cand_9mers)) >= 0.50:
+            single_exon_unsafe50_gids.update(m_gids)
+            single_exon_unsafe50_eids.add(eid_s)
+    if single_exon_unsafe50_eids:
+        comp_repro = comp_repro[
+            ~(
+                comp_repro["entity_id"].isin(single_exon_unsafe50_eids)
+                & comp_repro["source_id"].eq("gse119810-normal-mammary")
+            )
+        ].reset_index(drop=True)
+    cufflinks_mask_gids = risk_gids | single_exon_unsafe50_gids
+
+    print("4/5 Loading 8 canine tumor cohorts (7 spontaneous + CLBL-1 DLBCL)...", flush=True)
     comp_tumors, cohort_df, tumor_sources = load_dog_tumor_cohorts(
-        dog_in, groups_df, exonic_bp, symbol_by_gene, or_gids, risk_gids, unsafe_eids
+        dog_in, groups_df, exonic_bp, symbol_by_gene, or_gids, cufflinks_mask_gids, unsafe_eids
     )
     print(
         f"    tumor_obs={len(comp_tumors):,}, cohorts={len(cohort_df)}, total_tumor_samples={int(cohort_df['n_samples'].sum())}",
@@ -1979,8 +2065,8 @@ def build_all(scratch_dir: Path, out_root: Path) -> dict:
                 "scope_complete": not is_dev,
             }
             if comp == "resting_mammary":
+                # Female mammary biopsies only; male canine mammary RNA is unmeasured (fail-closed None)
                 entry["female_max_tpm"] = round(h_val, 6)
-                entry["male_max_tpm"] = round(min(h_val, male_skin_p95.get(eid, 0.0)), 6)
             full_host_exposure[eid][comp] = entry
 
     # Record honest proteome_only coverage on canine fallopian tube (assayed in Pfizer Pool3 126)

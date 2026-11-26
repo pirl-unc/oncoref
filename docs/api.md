@@ -790,12 +790,13 @@ Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
 
-The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-25.1`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **323 CTA, 97 Cancer Antigen only, 142 Reproductive Antigen only, 1,082 Other and 18,249 Unsafe** (`562` candidate union `CA ∪ RA`):
+The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-26.1`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **325 CTA, 95 Cancer Antigen only, 143 Reproductive Antigen only, 1,081 Other and 18,249 Unsafe** (`563` candidate union `CA ∪ RA`):
 
 ```python
 from oncoref import (
     antigen_sets,
     assay_boundary_adjudications,
+    canine,
     clinical_organ_clearance,
     human,
     mouse,
@@ -812,10 +813,11 @@ changes = target_selection.results(changed_only=True)
 cancer_only = target_selection.results(category="Cancer Antigen only")
 ctag2 = target_selection.results("CTAG2")  # Exact protein label or member Ensembl ID.
 
-# Cross-sex & peripartum subsets (236 CTA-M, 52 CTA-E, 8 CTA-F, 27 CTA-MF, 16 CTA-P; RA-M/F/E/MF/P) & mouse GRCm39 catalog (12 CTA)
+# Disjoint 4-way physiological sex-restriction partition (224 CTA-M, 13 CTA-F, 40 CTA-MF, 48 CTA-P) & canine/murine catalogs
 cta_female_safe = antigen_sets.select("CTA-M").proteins()
 ra_female_only = antigen_sets.select("RA-F").proteins()
-peripartum_ctas = antigen_sets.select("CTA-P").proteins()
+pregnancy_only_ctas = antigen_sets.select("CTA-P").proteins()
+dog_ctas = canine.target_selection(category="CTA")
 mouse_ctas = mouse.target_selection(category="CTA")
 
 # Adjudication & QC ledgers (#764-#769)
@@ -826,7 +828,7 @@ repeat_fams = repeat_family_equivalence.closed_homolog_families()
 near_self = assay_boundary_adjudications.candidate_near_self_1mm()
 ```
 
-`target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()` return Cancer Antigen and Reproductive Antigen memberships, their intersection (`CTA`), sex-restriction codes (`CTA-M`, `CTA-E`, `CTA-F`, `CTA-MF`; plus non-exclusive peripartum `CTA-P`/`RA-P` selectors via `antigen_sets`), structured isoform/epitope clinical clearances (`clinical_clearance_*`, `#766`), closed homolog family sibling IDs (`closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, `#767`), and 1-mismatch Hamming near-self & tryptic-MS paralog metrics (`exact_unique_9mers`, `safe_2mm_9mers`, `unsafe_near_self_1mm_pct`, `unsafe_shared_tryptic_peptides`, `#769`). Reproducible single-rule ablations against the frozen `2026-11-20.2` baseline remain available via `human.evaluate_integrated_catalog(...)` (`oncoref.human_screening_inputs`). `cta_literature.attestations()` preserves paper links and claim scope independently of category.
+`target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()` return Cancer Antigen and Reproductive Antigen memberships, their intersection (`CTA`), mutually exclusive 4-way sex-restriction codes (`CTA-M`, `CTA-F`, `CTA-MF`, `CTA-P` and `RA-{M,F,MF,P}-only`; legacy aliases `CTA-E`, `RA-E`, `MRA`, `FRA`, `ERA`, `PRA`, `SRA` in `antigen_sets`), structured isoform/epitope clinical clearances (`clinical_clearance_*`, `#766`), closed homolog family sibling IDs (`closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, `#767`), and 1-mismatch Hamming near-self & tryptic-MS paralog metrics (`exact_unique_9mers`, `safe_2mm_9mers`, `unsafe_near_self_1mm_pct`, `unsafe_shared_tryptic_peptides`, `#769`). Reproducible single-rule ablations against the frozen `2026-11-20.2` baseline remain available via `human.evaluate_integrated_catalog(...)` (`oncoref.human_screening_inputs`). `cta_literature.attestations()` preserves paper links and claim scope independently of category.
 
 Paper occurrences include `publication_claims` (exact source-table records) and
 `nomination_gene_ids` (the supported member loci). Background-only rows retain their
@@ -848,7 +850,7 @@ mouse.cta_selection_coverage()
 human.cta_sources(category="normal_protein")
 ```
 
-That human `1.36.0` compatibility snapshot (`human.cta_selection()`) selects **607 proteins / 655 loci**, distinct from the active multi-species catalogs (`human.target_selection()` with **323 CTAs**, `mouse.target_selection()` evaluated genome-wide across **21,433 Ensembl 115 GRCm39 protein groups** with **12 CTAs, 22 CA only, and 261 RA only**, and `canine.target_selection()` holding **14** native canine nominations in `Other:Review`; see [Multi-species whitepaper](species-antigen-whitepaper.md)). The
+That human `1.36.0` compatibility snapshot (`human.cta_selection()`) selects **607 proteins / 655 loci**, distinct from the active multi-species catalogs (`human.target_selection()` with **325 CTAs**, `canine.target_selection()` evaluated genome-wide across **20,082 Ensembl 98 CanFam3.1 protein groups** with **54 CTAs, 59 CA only, and 421 RA only**, and `mouse.target_selection()` evaluated genome-wide across **21,433 Ensembl 115 GRCm39 protein groups** with **12 CTAs, 24 CA only, and 305 RA only**; see [Multi-species whitepaper](species-antigen-whitepaper.md)). The
 [selection guide](cta-selection.md) documents common fields, native units,
 source categories, identity gaps and the independent sequence-background policy.
 The [four assessments](cta-evidence-axes.md) separate normal safety, one qualifying

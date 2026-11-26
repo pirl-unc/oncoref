@@ -27,10 +27,10 @@
     },
     "reference_id": "openvax:reference:v1:sha256:48a39792c2bcb345fd9bf5f479c06c9c7e8b25b6258c6544a76505dd2df738c4"
   },
-  "data_sha256": "eaae26cace2415366dcd53fbd5ef2923f6243d1f58605aa06cb540e7d28c8ded",
-  "data_bytes": 3593144,
-  "host_exposure_sha256": "dd82bfbc0613ae433ca62b7b0592d8bb22e33e9d0bb149ca2b04182507c3a001",
-  "host_exposure_bytes": 2116204,
+  "data_sha256": "5857e69388cd057963579837f551de9181ccf38a8d6de91939ad4e76a4617cfa",
+  "data_bytes": 3563927,
+  "host_exposure_sha256": "b12514b0d0a07043d85d7ef582df67212579d245d5dbe7375868cc436926e82d",
+  "host_exposure_bytes": 1848194,
   "sequences_sha256": "7de1bcc85efda5023466730ef0b518cbff8fbd98925bb14c80bbb2417b8b65f7",
   "sequences_bytes": 10609284,
   "required_normal_contexts": [
@@ -66,7 +66,6 @@
     "epididymis",
     "lactating_mammary",
     "ovary",
-    "placenta",
     "prostate",
     "resting_mammary",
     "testis",
@@ -93,36 +92,35 @@
     "loci": 20199,
     "sequences": 45036,
     "categories": {
-      "CTA": 63,
-      "Cancer Antigen only": 77,
-      "Reproductive Antigen only": 416,
-      "Other": 2496,
-      "Unsafe": 17030
+      "CTA": 54,
+      "Cancer Antigen only": 59,
+      "Reproductive Antigen only": 421,
+      "Other": 2573,
+      "Unsafe": 16975
     },
     "classifications": {
-      "CTA": 63,
-      "Cancer Antigen only": 77,
-      "Other:Expression": 910,
-      "Other:Review": 1576,
-      "Other:Sequence": 6,
+      "CTA": 54,
+      "Cancer Antigen only": 59,
+      "Other:Expression": 944,
+      "Other:Review": 1620,
+      "Other:Sequence": 5,
       "Other:Unscreened tissue": 4,
-      "Reproductive Antigen only": 416,
-      "Unsafe": 17030
+      "Reproductive Antigen only": 421,
+      "Unsafe": 16975
     },
     "sex_restriction_codes": {
-      "CTA-F": 4,
-      "CTA-M": 45,
-      "CTA-MF": 10,
+      "CTA-M": 42,
+      "CTA-MF": 8,
       "CTA-P": 4,
-      "RA-F-only": 7,
-      "RA-M-only": 392,
-      "RA-MF-only": 12,
-      "RA-P-only": 5
+      "RA-F-only": 6,
+      "RA-M-only": 397,
+      "RA-MF-only": 14,
+      "RA-P-only": 4
     },
     "sex_restriction_classes": {
-      "Female-restricted": 11,
-      "Male-restricted": 437,
-      "Pregnancy / peripartum-only": 9,
+      "Female-restricted": 6,
+      "Male-restricted": 439,
+      "Pregnancy / peripartum-only": 8,
       "Shared male & female": 22
     }
   }

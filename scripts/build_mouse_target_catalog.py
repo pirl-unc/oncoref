@@ -32,6 +32,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import os
 import re
 import sys
 import tarfile
@@ -58,10 +59,10 @@ from oncoref.species_target_selection import (  # noqa: E402
 )
 
 DEFAULT_ENS_DIR = Path(
-    "/Users/iskander/.gemini/antigravity-cli/brain/3767551e-1d33-4fba-9b4e-91fa9f5de1e0/scratch/ens115_mouse"
+    os.environ.get("ONCOREF_MOUSE_ENS115_DIR", str(ROOT / "tmp" / "ens115_mouse"))
 )
 DEFAULT_INPUT_DIR = Path(
-    "/Users/iskander/.gemini/antigravity-cli/brain/3767551e-1d33-4fba-9b4e-91fa9f5de1e0/scratch/probe_734"
+    os.environ.get("ONCOREF_MOUSE_INPUTS_DIR", str(ROOT / "tmp" / "mouse_catalog_inputs"))
 )
 
 PRIMARY_CONTIGS = frozenset({*(str(i) for i in range(1, 20)), "X", "Y", "MT"})
@@ -552,62 +553,89 @@ def load_ensembl115_mouse_reference(
     ambig_kmer_counts: dict[str, int] = defaultdict(int)
     total_kmer_counts: dict[str, int] = defaultdict(int)
 
-    # First pass: index 31-mers (sampled every 3 bp) per PEG
-    cdna_seqs_by_gene: dict[str, list[str]] = defaultdict(list)
+    # Two-pass phase-invariant 31-mer paralog check across all Ensembl 115 cDNA + ncRNA transcripts:
+    # 1) Sample probe 31-mers (step=4) across protein-coding transcripts per PEG.
+    # 2) Scan EVERY transcript in cdna.all.fa.gz + ncrna.fa.gz at step=1 (every base offset)
+    #    so out-of-phase 5'-UTR shifts and processed pseudogenes/ncRNAs are caught identically.
+    cdna_seqs_by_gene: dict[str, list[bytes]] = defaultdict(list)
     c_hdr = ""
     c_parts: list[str] = []
 
-    def _flush_cdna(hdr: str, parts_l: list[str]) -> None:
-        if not hdr:
-            return
-        gid = ""
+    def _extract_gid(hdr: str) -> str:
         for tok in hdr[1:].split():
             if tok.startswith("gene:"):
-                gid = tok.split(":", 1)[1].split(".")[0]
-                break
+                return tok.split(":", 1)[1].split(".")[0]
+        return ""
+
+    def _flush_coding_cdna(hdr: str, parts_l: list[str]) -> None:
+        if not hdr:
+            return
+        gid = _extract_gid(hdr)
         if gid in gene_to_entity:
-            cdna_seqs_by_gene[gid].append("".join(parts_l))
+            cdna_seqs_by_gene[gid].append("".join(parts_l).encode("ascii", errors="ignore"))
 
     with gzip.open(role_files["rna"], "rt", encoding="utf-8") as fh:
         for line in fh:
             if line.startswith(">"):
-                _flush_cdna(c_hdr, c_parts)
+                _flush_coding_cdna(c_hdr, c_parts)
                 c_hdr = line.rstrip("\n")
                 c_parts = []
             else:
                 c_parts.append(line.strip())
-    _flush_cdna(c_hdr, c_parts)
+    _flush_coding_cdna(c_hdr, c_parts)
 
     k = 31
-    step = 4
+    probe_step = 4
     MULTI = "__MULTI__"
+    probe_by_gene: dict[str, set[bytes]] = {}
     for gid, seqs in cdna_seqs_by_gene.items():
         eid = gene_to_entity[gid]
-        seen_for_gene: set[str] = set()
-        for s in seqs:
-            if len(s) < k:
-                continue
-            for i in range(0, len(s) - k + 1, step):
-                km = s[i : i + k]
-                seen_for_gene.add(km)
-        for km_s in seen_for_gene:
-            km_b = km_s.encode("ascii", errors="ignore")
+        seen_for_gene = {
+            s[i : i + k] for s in seqs if len(s) >= k for i in range(0, len(s) - k + 1, probe_step)
+        }
+        probe_by_gene[gid] = seen_for_gene
+        for km_b in seen_for_gene:
             prev = kmer_owners.get(km_b)
             if prev is None:
                 kmer_owners[km_b] = eid
             elif prev != eid and prev != MULTI:
                 kmer_owners[km_b] = MULTI
 
-    for gid, seqs in cdna_seqs_by_gene.items():
-        seen_for_gene = {
-            s[i : i + k] for s in seqs if len(s) >= k for i in range(0, len(s) - k + 1, step)
-        }
+    def _scan_tx_step1(hdr: str, parts_l: list[str]) -> None:
+        if not hdr:
+            return
+        gid = _extract_gid(hdr)
+        if not gid:
+            return
+        owner = gene_to_entity.get(gid, f"NC:{gid}")
+        s_b = "".join(parts_l).encode("ascii", errors="ignore")
+        if len(s_b) < k:
+            return
+        for i in range(len(s_b) - k + 1):
+            km_b = s_b[i : i + k]
+            prev = kmer_owners.get(km_b)
+            if prev is not None and prev != owner and prev != MULTI:
+                kmer_owners[km_b] = MULTI
+
+    for role_key in ("rna", "ncrna"):
+        tx_path = role_files.get(role_key)
+        if tx_path is None or not tx_path.exists():
+            continue
+        t_hdr = ""
+        t_parts: list[str] = []
+        with gzip.open(tx_path, "rt", encoding="utf-8") as fh:
+            for line in fh:
+                if line.startswith(">"):
+                    _scan_tx_step1(t_hdr, t_parts)
+                    t_hdr = line.rstrip("\n")
+                    t_parts = []
+                else:
+                    t_parts.append(line.strip())
+        _scan_tx_step1(t_hdr, t_parts)
+
+    for gid, seen_for_gene in probe_by_gene.items():
         total_kmer_counts[gid] = len(seen_for_gene)
-        ambig_kmer_counts[gid] = sum(
-            1
-            for km_s in seen_for_gene
-            if kmer_owners.get(km_s.encode("ascii", errors="ignore")) == MULTI
-        )
+        ambig_kmer_counts[gid] = sum(1 for km_b in seen_for_gene if kmer_owners.get(km_b) == MULTI)
 
     risk_rows = []
     for gid in sorted(gene_to_entity):

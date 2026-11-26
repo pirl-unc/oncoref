@@ -138,7 +138,7 @@ are screened separately; protected TPM also enters every off-target limit and ca
 |---|---|---|---|---|---|
 | all | none | 325 | 95 | 143 | 563 |
 | female-patient | none | 325 | 95 | 143 | 563 |
-| female-patient (protect ovary) | ovary | 272 | 93 | 131 | 496 |
+| female-patient (protect ovary) | ovary | 269 | 93 | 131 | 493 |
 | female-patient (lactating) | lactating_breast | 321 | 94 | 142 | 557 |
 | female-patient (pregnant) | embryo, placenta, lactating_breast | 0 | 0 | 0 | 0 |
 | male-patient | none | 325 | 95 | 143 | 563 |

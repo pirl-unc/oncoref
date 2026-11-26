@@ -3,8 +3,9 @@
 
 Human (9606), dog (9615) and mouse (10090) share one mathematical and anatomical
 definition of Cancer Antigens (CA), Reproductive Antigens (RA), Cancer-Testis
-Antigens (CTA = CA & RA), and sex-restricted subsets (MRA/CTA-M, FRA/CTA-F,
-ERA/CTA-E, SRA/CTA-MF). Each species parameterizes that invariant framework with:
+Antigens (CTA = CA & RA), and the 4-way physiological sex-restriction partition
+(RA-M/CTA-M, RA-F/CTA-F, RA-P/CTA-P, RA-MF/CTA-MF; legacy aliases MRA/FRA/ERA/PRA/SRA).
+Each species parameterizes that invariant framework with:
 
 1. Its own verified genome/proteome ReferenceIdentity registrations.
 2. Its own comparative mammalian anatomy from ``normal-tissue-taxonomy.yaml``.
@@ -404,10 +405,11 @@ def _policies() -> dict[int, SpeciesPolicy]:
         ),
         overview=(
             "Genome-wide quantitative canine oncology evaluation across the SHA-256-pinned "
-            "Ensembl 98 CanFam3.1 host proteome (20,199 coding genes), 28 adult somatic normal "
-            "contexts (Bgee 15.2 + GSE219045 sex-stratified multi-organ atlas), Pfizer 38-tissue "
-            "quantitative TMT proteomics (MSV000099744), comparative canine reproductive/embryonic "
-            "compartments, and 8 spontaneous canine patient tumor cohorts."
+            "Ensembl 98 CanFam3.1 host proteome (20,199 coding genes), 24 required (36 evaluated) "
+            "adult somatic normal contexts (Bgee 15.2 + GSE219045 sex-stratified multi-organ atlas), "
+            "Pfizer 38-tissue quantitative TMT proteomics (MSV000099744), comparative canine "
+            "reproductive/embryonic compartments, and 8 canine tumor cohorts (7 spontaneous patient "
+            "cohorts + CLBL-1 DLBCL line)."
         ),
         datasets=(
             SpeciesDatasetBinding(
@@ -425,7 +427,7 @@ def _policies() -> dict[int, SpeciesPolicy]:
                 "Bgee 15.2 adult canine multi-organ RNA-seq (SRA-deduplicated) & GSE219045 300-sample sex-stratified organ atlas",
                 "TPM",
                 "active_in_catalog",
-                "Within-organ donor P95 across 28 non-thymic adult somatic contexts sets N and canine Disposable D (gallbladder, tonsil, hair follicle); <=2.5% ectopic OR gDNA QC",
+                "Within-organ donor P95 across 24 required (36 evaluated) non-thymic adult somatic contexts sets N and canine Disposable D (gallbladder, tonsil, hair follicle); <=2.5% ectopic OR gDNA QC",
                 "Unmeasured canine dental-pulp and taste-bud home loci remain Other:Unscreened tissue.",
             ),
             SpeciesDatasetBinding(
@@ -466,8 +468,8 @@ def _policies() -> dict[int, SpeciesPolicy]:
             ),
             SpeciesDatasetBinding(
                 "tumor_rna",
-                "dog_8_spontaneous_cohorts",
-                "8 spontaneous canine tumor cohorts: OSA_NCI (GSE238110), OSA_COTC030 (GSE304066), OSA_CCOGC (GSE239948), CMT (GSE119810), HSA (GSE95183), LYM (GSE95184), DLBCL (GSE287971), GLIOMA (GSE284559)",
+                "dog_8_tumor_cohorts",
+                "8 canine tumor cohorts (7 spontaneous patient cohorts + 1 DLBCL line): OSA_NCI (GSE238110), OSA_COTC030 (GSE304066), OSA_CCOGC (GSE239948), CMT (GSE119810), HSA (GSE95183), LYM (GSE95184), DLBCL (GSE287971 CLBL-1), GLIOMA (GSE284559)",
                 "TPM",
                 "active_in_catalog",
                 "CA qualifies when >=1 QC-passing (<=2.5% OR gDNA) canine tumor reaches >=10 x H0 on CanFam3.1 linear TPM; replicate tumor samples deduplicate per dog",

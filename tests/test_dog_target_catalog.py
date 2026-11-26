@@ -90,7 +90,14 @@ def test_dog_sources_cohorts_and_all_fourteen_curated_nominations_resolve():
     assert canine.target_selection("SSX6").iloc[0].classification == "Reproductive Antigen only"
     for unsafe_nom in ("AKR1E2", "IGF2BP3", "NT5C1B", "PAGE3-like", "SPECC1", "TPX2"):
         assert canine.target_selection(unsafe_nom).iloc[0].classification == "Unsafe"
-    assert canine.target_selection("ROMO1").iloc[0].classification != "CTA"
+    for retro_or_unsafe in (
+        "ROMO1",
+        "RPL10L",
+        "ENSCAFG00000017286",
+        "ENSCAFG00000007385",
+        "ENSCAFG00000014111",
+    ):
+        assert canine.target_selection(retro_or_unsafe).iloc[0].classification != "CTA"
     for review_nom in ("CAGE1", "CTCFL", "DDX53"):
         assert canine.target_selection(review_nom).iloc[0].classification == "Other:Review"
 
@@ -113,15 +120,18 @@ def test_dog_comparative_anatomy_host_context_and_four_way_sex_subsets(capsys):
     )
     assert ft_res.iloc[0].host_status == "unresolved"
 
-    # Four-way sex-restriction partition sums identically to total canine CTAs
+    # Four-way sex-restriction partition sums identically to total canine CTAs;
+    # unmeasured male canine resting_mammary fails closed (CSN2/CSN3 -> CTA-MF; ovary/tract -> RA-F)
     cta_m = antigen_sets.proteins("CTA-M", species="dog")
     cta_p = antigen_sets.proteins("CTA-P", species="dog")
     cta_f = antigen_sets.proteins("CTA-F", species="dog")
     cta_mf = antigen_sets.proteins("CTA-MF", species="dog")
+    ra_f = antigen_sets.proteins("RA-F", species="dog")
     total_cta = antigen_sets.proteins("CTA", species="dog")
-    assert len(cta_m) + len(cta_p) + len(cta_f) + len(cta_mf) == len(total_cta)
+    assert len(cta_m) + len(cta_p) + len(cta_f) + len(cta_mf) == len(total_cta) == 54
     assert {"PRAME", "NAA11", "PLD6", "PSMA8"} <= set(cta_m.protein_group_label)
-    assert {"CSN2", "CSN3"} <= set(cta_f.protein_group_label)
+    assert {"CSN2", "CSN3"} <= set(cta_mf.protein_group_label)
+    assert {"BMP15", "ZP3", "KPNA7"} <= set(ra_f.protein_group_label)
     assert {"IGF2BP1", "GPR50"} <= set(cta_p.protein_group_label)
     assert set(cta_p.entity_id) == set(antigen_sets.proteins("CTA-E", species="dog").entity_id)
 
