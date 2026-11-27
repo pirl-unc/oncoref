@@ -29,8 +29,8 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "3563d8b2d3a815417d0c389d72dc7593e607aab1a45112facb7530ae773f6a28",
-  "data_bytes": 3682864,
+  "data_sha256": "7ed9c9e7b140e4dc736f4f12a2228233eb8b14db52f89b40569f82834e5f193c",
+  "data_bytes": 3729339,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
   "host_exposure_sha256": "ce265e7a01b180aff496943d6a906fb35fab94356cd9a035e453ee7a0941ce25",

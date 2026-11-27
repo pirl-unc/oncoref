@@ -473,7 +473,7 @@ def _policies() -> dict[int, SpeciesPolicy]:
                 "19 spontaneous companion-dog patient tumor cohorts across 13 histologies (OSA, CMT, HSA, LYM, GLIOMA, URO, STS, COSCC, CAA, HS, MNG, ACC, THCA, LEUK) + 12 canine cancer cell lines (CLBL-1, 8 MGT, 3 HS)",
                 "TPM",
                 "active_in_catalog",
-                "CA qualifies strictly in >=1 QC-passing (<=2.5% OR gDNA) spontaneous in-vivo patient tumor at >=10 x H0; cell lines populate cell_line_* model-selection sidecar only",
+                "CA qualifies strictly in >=1 QC-passing (<=2.5% OR gDNA) spontaneous in-vivo patient tumor at >=10 x H0; cell lines populate cell_line_* model-selection reference only",
                 "Spontaneous oral melanoma linear-TPM patient cohorts remain a priority future histology.",
             ),
             SpeciesDatasetBinding(
@@ -568,7 +568,7 @@ def _policies() -> dict[int, SpeciesPolicy]:
                 "14 strain-explicit in-vivo murine tumor cohorts (MC38, CT26, B16F10, B78_MEL, LLC, EMT6, RM1, GL261_TUMOR, CT2A_TUMOR, SB28_TUMOR, MADR_GLIOMA, KP_LUAD, BMPC_PRAD, DEN_HCC) + 9 pure cancer cell lines (4T1, P815, EO771, Hepa1-6, ID8, GL261_LINE, MB49, MOC1, MOC22)",
                 "TPM",
                 "active_in_catalog",
-                "CA qualifies strictly in >=1 QC-passing in-vivo tumor sample at >=10 x H0 on Ensembl 115 TPM; pure cell lines populate cell_line_* purity/model-selection sidecar only",
+                "CA qualifies strictly in >=1 QC-passing in-vivo tumor sample at >=10 x H0 on Ensembl 115 TPM; pure cell lines populate cell_line_* purity/model-selection reference only",
                 "Covers 14 widely used syngeneic, orthotopic, primary GEMM, and carcinogen-induced models across C57BL/6, BALB/c, and FVB.",
             ),
             SpeciesDatasetBinding(

@@ -1,6 +1,6 @@
 # Multi-species antigen whitepaper: human, canine, and murine parameterization
 
-*[Main antigen whitepaper](antigen-whitepaper.md) · [Species & data groups API](species.md) · [Dataset bindings (CSV)](antigen-whitepaper/species-datasets.csv) · [Non-human nominations (CSV)](antigen-whitepaper/species-nominations.csv) · [Cross-species orthologs (CSV)](antigen-whitepaper/cross-species-orthologs.csv)*
+*[Interactive antigen explorer](antigen-explorer.html) · [Main antigen whitepaper](antigen-whitepaper.md) · [Species & data groups API](species.md) · [Dataset bindings (CSV)](antigen-whitepaper/species-datasets.csv) · [Non-human nominations (CSV)](antigen-whitepaper/species-nominations.csv) · [Cross-species orthologs (CSV)](antigen-whitepaper/cross-species-orthologs.csv)*
 
 <p class="section-nav"><strong>Jump to:</strong> <a href="#goals-and-species-invariant-architecture">Goals &amp; architecture</a> · <a href="#ectopic-activation-in-vivo-purity-and-chemosensory-gpcr-guards">Ectopic, TILs &amp; GPCRs</a> · <a href="#comparative-anatomy-and-sex-restricted-subsets">Anatomy &amp; sex subsets</a> · <a href="#eight-pillar-cross-species-parameterization-matrix">8-pillar matrix</a> · <a href="#homo-sapiens-human-taxon-9606">Human (9606)</a> · <a href="#canis-lupus-familiaris-domestic-dog-taxon-9615">Dog (9615)</a> · <a href="#mus-musculus-laboratory-mouse-taxon-10090">Mouse (10090)</a> · <a href="#cross-species-cta-orthology-across-human-dog-and-mouse">Cross-species orthology</a> · <a href="#programmatic-and-cli-access">API &amp; CLI</a></p>
 
@@ -14,10 +14,10 @@ OncoRef solves comparative antigen discovery by separating **species-invariant m
 
 Within any mammalian species *S* with SHA-256-verified proteome reference `R_S`, comparative anatomy profile `A_S`, and declared single-panel comparison unit `u_S`, every coding locus traverses the identical four-step pipeline:
 
-1. **Stage 0 — Identical-sequence protein-equivalence grouping (`PEG`).** Qualified coding translations within `R_S` collapse into identical-sequence **protein-equivalence groups** (`PEG:<sha256[:20]>`). Within each expression library, complete member-locus abundance is summed before summarizing across donors, while every annotated isoform translation is retained for **≥95% 9-mer containment** against that species' <span class="cat cat-unsafe">Unsafe</span> proteins and downstream `PeptideIndex` self-proteome subtraction.
+1. **Stage 0 — Identical-sequence protein-equivalence grouping.** Qualified coding translations within `R_S` collapse into identical-sequence **protein-equivalence groups**. Within each expression library, complete member-locus abundance is summed before summarizing across donors, while every annotated isoform translation is retained for **≥95% 9-mer containment** against that species' <span class="cat cat-unsafe">Unsafe</span> proteins and downstream host self-proteome subtraction.
 2. **Stage 1 — Multi-modal normal somatic & activated-immune safety (`Unsafe` precedence).** Each normal-tissue dataset is evaluated in its own native unit and assay rule—bulk somatic and sorted/activated immune RNA ceilings (`Vital ≤ 4`, `Protected ≤ 8`, `Manageable ≤ 16` hold / `> 128` <span class="cat cat-unsafe">Unsafe</span>, after uniform `≤ 2.5%` ectopic olfactory-receptor `≥ 5 TPM` genomic-DNA library QC), donor-resolved rare-cell `UMI` screens (`≥10` cells and `≥1%` multi-molecule cells across `≥2` independent studies or `≥5%` in one study; `2×` in `Protected`), normal protein staining or quantitative mass-spectrometry proteomics, and curated adult normal-organ literature. Confirmed Vital/Protected adult somatic expression permanently assigns <span class="cat cat-unsafe">Unsafe</span>.
 3. **Stage 2 — Sequence, unscreened-niche & monogenic chemosensory GPCR eligibility (`Other`).** Surviving proteins with incomplete required normal coverage or unresolved paralog/host attribution enter `Other:Review`; proteins nested `≥95%` in `Unsafe` 9-mers or readthrough loci enter `Other:Sequence`; and proteins residing in unscreened adult micro-niches—including **all unvalidated monogenic chemosensory GPCRs (`OR*`/`COR*`/`Olfr*`, `TAS1R*`, `TAS2R*`, `VN1R*`/`Vmn*r*`)**—carry `home_tissue_unmeasured = True`, blocking <span class="cat cat-ca">CA</span>/<span class="cat cat-cta">CTA</span> admission (`Other:Unscreened tissue` or `Reproductive Antigen only`).
-4. **Stage 3 — Symmetric `10 × H₀` *in vivo* enrichment, `tumor_activation_mode`, and pure cell-line sidecars.** Across non-thymic, non-reproductive somatic baseline `N` (within-organ donor P95), species-applicable non-thymic `Disposable` maximum `D` (capped at `≤ 32`), and detection floor `F_S = 1` in unit `u_S`, let **H₀ = max(N, D, F_S)**:
+4. **Stage 3 — Symmetric `10 × H₀` *in vivo* enrichment, `tumor_activation_mode`, and *in vitro* cell-line references.** Across non-thymic, non-reproductive somatic baseline `N` (within-organ donor P95), species-applicable non-thymic `Disposable` maximum `D` (capped at `≤ 32`), and detection floor `F_S = 1` in unit `u_S`, let **H₀ = max(N, D, F_S)**:
    - <span class="cat cat-ca">Cancer Antigen (CA)</span>: clears shared eligibility, has `home_tissue_unmeasured == False`, and reaches **≥ 10 × H₀** in at least one QC-passing ***in vivo*** patient, syngeneic/orthotopic graft, `GEMM`, or carcinogen-induced tumor sample of species *S*. Pure *in vitro* cancer cell lines (`comparison_cell_lines`) never grant `CA` or `CTA` on their own; instead they populate `cell_line_max_tpm`, `cell_line_top_model`, and `qualifying_cell_lines`.
    - <span class="cat cat-ra">Reproductive Antigen (RA)</span>: clears shared eligibility and reaches **≥ 10 × H₀** in an adult reproductive sample or cell-supported embryonic lineage of species *S*.
    - <span class="cat cat-cta">Cancer–Testis Antigen (CTA)</span>: the intersection **CTA = CA ∩ RA**, annotated with `tumor_activation_mode` (`"ectopic"`, `"ectopic_and_lineage_retained"`, or `"lineage_retained"`).
@@ -34,7 +34,7 @@ Within any mammalian species *S* with SHA-256-verified proteome reference `R_S`,
 Harmonizing target discovery across human, dog, and mouse uncovered three cross-cutting methodological requirements that apply identically across species:
 
 1. **Tracking `tumor_activation_mode` without discarding homologous-organ targets:** Across all three species, **75%–97%** of biological CTAs exhibit true **ectopic** activation in non-homologous somatic cancers (**311/322 = 96.6%** in human; **114/118 = 96.6%** in dog; **6/8 = 75.0%** in mouse). Retaining homologous-organ witnesses (`SEMG2` in human `PRAD`, `CSN2`/`CSN3` in canine `CMT`, `Pbsn`/`Sbp` in murine `BMPC_PRAD`) inside `CTA` with `tumor_activation_mode = "lineage_retained"` preserves valid clinical/preclinical targets for hosts where the homologous organ is absent or expendable (`HostContext`), while letting pan-cancer callers filter directly on `tumor_activation_mode != "lineage_retained"`.
-2. **Separating *in vivo* tumors from pure *in vitro* cancer cell lines diagnoses host `TIL` contamination:** *In vivo* tumors mix malignant cells with host leukocytes, whereas pure *in vitro* cell lines lack host stroma but acquire culture-specific drift. Requiring *in vivo* tumor witnesses for `CA`/`CTA` while evaluating **12** canine and **9** murine pure cancer cell lines as a sidecar immediately unmasks host `LAK`/`NK` cytolytic granzymes (`Gzmd`, `Gzme`, `Gzmf`, `Gzmg`), which reach `443–2,138 TPM` inside *in vivo* `MC38`/`CT26`/`B16F10` grafts (via infiltrating host NK cells) yet collapse to `0.05–2.26 TPM` in pure cultured tumor cells—confirming their exclusion as activated-NK `Unsafe` host transcripts while simultaneously identifying which genuine CTAs (`Hmga2`, `Tex19.1`, `Wfdc13`, `Pramel13`, canine `HORMAD1`) have ready-to-use syngeneic or canine *in vitro* target lines (`qualifying_cell_lines`).
+2. **Separating *in vivo* tumors from pure *in vitro* cancer cell lines diagnoses host `TIL` contamination:** *In vivo* tumors mix malignant cells with host leukocytes, whereas pure *in vitro* cell lines lack host stroma but acquire culture-specific drift. Requiring *in vivo* tumor witnesses for `CA`/`CTA` while evaluating **12** canine and **9** murine pure cancer cell lines separately as an experimental model reference immediately unmasks host `LAK`/`NK` cytolytic granzymes (`Gzmd`, `Gzme`, `Gzmf`, `Gzmg`), which reach `443–2,138 TPM` inside *in vivo* `MC38`/`CT26`/`B16F10` grafts (via infiltrating host NK cells) yet collapse to `0.05–2.26 TPM` in pure cultured tumor cells—confirming their exclusion as activated-NK `Unsafe` host transcripts while simultaneously identifying which genuine CTAs (`Hmga2`, `Tex19.1`, `Wfdc13`, `Pramel13`, canine `HORMAD1`) have ready-to-use syngeneic or canine *in vitro* target lines (`qualifying_cell_lines`).
 3. **Uniform monogenic chemosensory GPCR hold (`0 CA / 0 CTA`):** Singular-receptor choice in `~0.1%` of olfactory sensory neurons and taste/solitary chemosensory cells dilutes `OR*`/`COR*`/`Olfr*`, `TAS1R*`, `TAS2R*`, and `VN1R*`/`Vmn*r*` `~1,000×` in whole-mucosa RNA. Enforcing `home_tissue_unmeasured = True` across all three species prevents `29` human `CA only` GPCRs and `3` human `CTA` ORs (as well as canine `COR*` and murine `Olfr*`/`Vmn*r*` loci) from entering `CA` or `CTA`.
 
 ![Ectopic versus homologous lineage activation, in-vivo versus pure cell-line TIL separation, and chemosensory GPCR guard](antigen-whitepaper/ectopic-vs-lineage-and-cell-lines.png)
@@ -45,10 +45,10 @@ Harmonizing target discovery across human, dog, and mouse uncovered three cross-
 
 Every <span class="cat cat-ra">RA</span> and <span class="cat cat-cta">CTA</span> in every species belongs to **one of four mutually exclusive host-physiology classes**, defined by the **same `HostContext` protection algebra** parameterized by that species' actual reproductive, mammary, thymic, and disposable organs in `normal-tissue-taxonomy.yaml`:
 
-- **`RA-M` (`CTA-M` / `RA-M-only`, legacy alias `MRA` · Male-restricted, non-pregnant female-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every non-pregnant, non-lactating female adult reproductive and resting-mammary compartment of species *S* (`< 8` native RNA units—`< 16` in `human` where routine IHC is `not_detected`—with measured coverage and resolved protein status), while expressed in male organs.
-- **`RA-F` (`CTA-F` / `RA-F-only`, legacy alias `FRA` · Female-restricted, male-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every male adult reproductive compartment (plus resting mammary tissue in species where adult males retain mammary ducts, `human` and `dog`; in `mouse`, fetal androgen regression at E14.5 ablates male mammary buds), while expressed in non-pregnant female reproductive or resting-mammary compartments.
-- **`RA-P` (`CTA-P` / `RA-P-only`, legacy aliases `PRA`, `RA-E`, `CTA-E`, `ERA` · Pregnancy / peripartum-only, adult-absent across non-pregnant, non-lactating men & women):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible under full non-pregnant, non-lactating adult organ protection in **both** sexes—expressed in `embryo`, `placenta`, or `lactating_mammary` (`lactating_breast`) and silent across every adult male and non-pregnant, non-lactating female reproductive and resting-mammary compartment. For male/female CTAs that are additionally active in `placenta` or `lactating_mammary` (`PLAC1`, `XAGE3`, `LALBA`, `CSN2`), `HostContext(pregnant=True)` / `HostContext(lactating=True)` and `peripartum_antigen_ids()` enforce organ-level exclusions.
-- **`RA-MF` (`CTA-MF` / `RA-MF-only`, legacy alias `SRA` · Shared male & female):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) expressed in adult reproductive/resting-mammary organs of both sexes (or lacking measured opposite-sex clearance, failing closed).
+- **`RA-M` (`CTA-M` / `RA-M-only` · Male-restricted, non-pregnant female-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every non-pregnant, non-lactating female adult reproductive and resting-mammary compartment of species *S* (`< 8` native RNA units—`< 16` in `human` where routine IHC is `not_detected`—with measured coverage and resolved protein status), while expressed in male organs.
+- **`RA-F` (`CTA-F` / `RA-F-only` · Female-restricted, male-safe):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible when protecting every male adult reproductive compartment (plus resting mammary tissue in species where adult males retain mammary ducts, `human` and `dog`; in `mouse`, fetal androgen regression at E14.5 ablates male mammary buds), while expressed in non-pregnant female reproductive or resting-mammary compartments.
+- **`RA-P` (`CTA-P` / `RA-P-only` · Pregnancy / peripartum-only, adult-absent across non-pregnant, non-lactating men & women):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) eligible under full non-pregnant, non-lactating adult organ protection in **both** sexes—expressed in `embryo`, `placenta`, or `lactating_mammary` (`lactating_breast`) and silent across every adult male and non-pregnant, non-lactating female reproductive and resting-mammary compartment. For male/female CTAs that are additionally active in `placenta` or `lactating_mammary` (`PLAC1`, `XAGE3`, `LALBA`, `CSN2`), `HostContext(pregnant=True)` / `HostContext(lactating=True)` and `peripartum_antigen_ids()` enforce organ-level exclusions.
+- **`RA-MF` (`CTA-MF` / `RA-MF-only` · Shared male & female):** <span class="cat cat-ra">RA</span> (or <span class="cat cat-cta">CTA</span>) expressed in adult reproductive/resting-mammary organs of both sexes (or lacking measured opposite-sex clearance, failing closed).
 
 | Species | Core reproductive / embryonic | Male accessory | Female tract | Mammary | Non-thymic Disposable (D) |
 | --- | --- | --- | --- | --- | --- |
@@ -110,7 +110,7 @@ Spontaneous canine cancers—appendicular osteosarcoma, multicentric B- and T-ce
 | Single-cell cluster & donor-resolved rare-cell UMI safety screens | `gse225599_healthy_dog_pbmc_10x` — GSE225599 healthy companion-dog circulating leukocyte 10x single-cell UMI atlas (7 healthy donors H_1..H_7) | UMI counts | `active_in_catalog` | Evaluates donor-resolved circulating T/NK lymphocytes, monocytes, neutrophils (Protected) and platelets (Vital) on native CanFam3.1 ENSCAFG IDs via assess_rare_cell_rna |
 | Normal-tissue protein staining (IHC) or mass-spectrometry proteomics | `pfizer-dog-protein` — Pfizer 38-tissue canine quantitative proteomics (MSV000099744, 9,929 protein groups) | within-plex bleed-corrected molar ppm (from rIBAQ) | `active_in_catalog` | Sequence-reconciled Vital (>25 ppm Unsafe, 10-25 ppm hold) & Protected (>50 ppm Unsafe, 20-50 ppm hold) tissue-pool protein gates after 10% same-plex reproductive TMT bleed subtraction; never grants negative-IHC RNA multipliers |
 | Adult reproductive & embryonic/placental enrichment (RA) and host exposure | `bgee_repro_embryo + gse219045_dog_repro + gse119810_normal_mammary + pfizer_fallopian_endometrium` — Bgee 15.2 testis/ovary/placenta/d33-d44 embryos, GSE219045 male/female reproductive tract, GSE119810 normal resting/lactating mammary & Pfizer Fallopian_Tube/Endometrium proteomics | TPM; molar ppm (Fallopian_Tube) | `active_in_catalog` | RA qualifies at >=10 x H0 across canine compartments (uterine_horn, absent seminal vesicle, milk-operon secretory separation) and populates canine HostContext |
-| QC-passing tumor cohorts for cancer enrichment (CA) | `dog_19_spontaneous_cohorts_plus_12_cell_lines` — 19 spontaneous companion-dog patient tumor cohorts across 13 histologies (OSA, CMT, HSA, LYM, GLIOMA, URO, STS, COSCC, CAA, HS, MNG, ACC, THCA, LEUK) + 12 canine cancer cell lines (CLBL-1, 8 MGT, 3 HS) | TPM | `active_in_catalog` | CA qualifies strictly in >=1 QC-passing (<=2.5% OR gDNA) spontaneous in-vivo patient tumor at >=10 x H0; cell lines populate cell_line_* model-selection sidecar only |
+| QC-passing tumor cohorts for cancer enrichment (CA) | `dog_19_spontaneous_cohorts_plus_12_cell_lines` — 19 spontaneous companion-dog patient tumor cohorts across 13 histologies (OSA, CMT, HSA, LYM, GLIOMA, URO, STS, COSCC, CAA, HS, MNG, ACC, THCA, LEUK) + 12 canine cancer cell lines (CLBL-1, 8 MGT, 3 HS) | TPM | `active_in_catalog` | CA qualifies strictly in >=1 QC-passing (<=2.5% OR gDNA) spontaneous in-vivo patient tumor at >=10 x H0; cell lines populate cell_line_* model-selection reference only |
 | Curated normal counterevidence, unscreened adult homes & published nominations | `hindriks2025 + nemec2019 + canine_til_effector_gates` — Curated canine CTA nominations (14 candidates), somatic RT-qPCR holds & essential canine activated-TIL checkpoint/cytokine exclusions | curated RT-qPCR & cross-reference index | `active_in_catalog` | Reconciles all 14 published canine nominations onto CanFam3.1, holds somatic RT-PCR positives, excludes essential TIL checkpoints/cytokines, and enforces zero cross-species CTA transfer |
 
 Key canine methodological rules enforced in code (`oncoref.canine`, `oncoref.species_target_selection`, `scripts/build_dog_target_catalog.py`):
@@ -219,13 +219,13 @@ Murine target selection is evaluated genome-wide across **21,433** Ensembl 115 `
 | Single-cell cluster & donor-resolved rare-cell UMI safety screens | `tabula_muris_10x` — Tabula Muris 10x droplet single-cell UMI atlas across 10 adult Vital/Protected somatic organs | UMI counts | `active_in_catalog` | Enters assess_rare_cell_rna (>=10 cells, >=5% single-study or bulk/GXD-confirmed >=1% >=2-UMI in Vital, 2x in Protected) with Ensembl 115 31-mer/host mapping-risk flags |
 | Normal-tissue protein staining (IHC) or mass-spectrometry proteomics | `mgi_gxd_6_27` — MGI Gene Expression Database (GXD 6.27) TS28 adult Immunohistochemistry (MMO:0000498) & Immunoblot (MMO:0000672) | curated adult IHC/Immunoblot detections | `active_in_catalog` | >=2 independent publications in Vital/Protected adult somatic organs -> Unsafe; 1 publication -> Other:Review hold; never grants negative-IHC RNA ceiling multipliers |
 | Adult reproductive & embryonic/placental enrichment (RA) and host exposure | `bgee_repro_embryo + gse219045 + accessory_tract_lactation_7gse` — Bgee 15.2 & GSE219045 gonads/placenta/embryo plus WT anterior prostate (coagulating_gland), ventral prostate, seminal vesicle, oviduct, uterine horn, endometrium, cervix, vagina & lactating mammary | TPM | `active_in_catalog` | RA qualifies at >=10 x H0 across all 16 murine compartments (including coagulating_gland, seminal vesicle, uterine_horn, lactating_mammary) and populates 16-organ HostContext |
-| QC-passing tumor cohorts for cancer enrichment (CA) | `mouse_14_invivo_cohorts_plus_9_cell_lines` — 14 strain-explicit in-vivo murine tumor cohorts (MC38, CT26, B16F10, B78_MEL, LLC, EMT6, RM1, GL261_TUMOR, CT2A_TUMOR, SB28_TUMOR, MADR_GLIOMA, KP_LUAD, BMPC_PRAD, DEN_HCC) + 9 pure cancer cell lines (4T1, P815, EO771, Hepa1-6, ID8, GL261_LINE, MB49, MOC1, MOC22) | TPM | `active_in_catalog` | CA qualifies strictly in >=1 QC-passing in-vivo tumor sample at >=10 x H0 on Ensembl 115 TPM; pure cell lines populate cell_line_* purity/model-selection sidecar only |
+| QC-passing tumor cohorts for cancer enrichment (CA) | `mouse_14_invivo_cohorts_plus_9_cell_lines` — 14 strain-explicit in-vivo murine tumor cohorts (MC38, CT26, B16F10, B78_MEL, LLC, EMT6, RM1, GL261_TUMOR, CT2A_TUMOR, SB28_TUMOR, MADR_GLIOMA, KP_LUAD, BMPC_PRAD, DEN_HCC) + 9 pure cancer cell lines (4T1, P815, EO771, Hepa1-6, ID8, GL261_LINE, MB49, MOC1, MOC22) | TPM | `active_in_catalog` | CA qualifies strictly in >=1 QC-passing in-vivo tumor sample at >=10 x H0 on Ensembl 115 TPM; pure cell lines populate cell_line_* purity/model-selection reference only |
 | Curated normal counterevidence, unscreened adult homes & published nominations | `vandeneynde1991 + sarma1999 + lak_granzyme_counterevidence` — Van den Eynde 1991 (P1A DBA/2 P815 clone 211), Sarma 1999 normal-tissue follow-up & IL-2/IL-12/IL-18 LAK granzyme counterevidence | curated primary-source XMLs & GenBank records | `active_in_catalog` | Preserves exact 224-aa AAA40475.1 / ENSMUSP00000059448.4 protein equivalence alongside BALB/c somatic counterevidence and host TIL granzyme exclusions |
 
 Key murine methodological rules enforced in code (`oncoref.mouse`, `oncoref.species_target_selection`, `scripts/build_mouse_target_catalog.py`):
 
 - **Complete pinned Ensembl 115 GRCm39 host proteome:** `mouse.references.ensure_reference("ensembl115")` verifies SHA-256-pinned GTF, cDNA, ncRNA, and protein FASTAs (**66,037** qualified primary-assembly coding translations across **21,433** `PEG`s and **21,760** coding loci), enabling full murine `PEG` grouping, 9-mer <span class="cat cat-unsafe">Unsafe</span> containment, and offline `PeptideIndex` self-proteome subtraction (`mouse-proteome-sequences`).
-- ***In vivo* tumor cohorts vs. pure *in vitro* murine cancer cell lines:** Reference coordinates belong to **C57BL/6J** (`GRCm39`), while **14** *in vivo* cohorts (`57` samples) span **C57BL/6 (`H-2b`)** (`MC38`, `B16F10`, `B78_MEL`, `LLC`, `RM1`, `KP_LUAD`, `GL261_TUMOR`, `CT2A_TUMOR`, `SB28_TUMOR`, `MADR_GLIOMA`, `DEN_HCC`), **BALB/c (`H-2d`)** (`CT26`, `EMT6`), and **FVB (`H-2q`)** (`BMPC_PRAD`), paired with **9** pure *in vitro* cancer cell lines (`4T1`, `P815`, `EO771`, `Hepa1-6`, `ID8`, `GL261_LINE`, `MB49`, `MOC1`, `MOC22` in `mouse.cell_lines()`). Importantly, whereas expanding outbred spontaneous companion-dog cohorts (`7 → 19` cohorts, `935` patients) more than doubled canine CTAs (`54 → 118`), expanding *in vivo* murine models (`6 → 14` cohorts) while stripping out `4` host `TIL` NK granzymes (`Gzmd–g`) and moving pure *in vitro* `4T1`/`P815` to the cell-line sidecar yields **8** *in vivo* murine CTAs—reflecting both the absence of primate `CT-X` gene arrays in rodents and the rapid single-oncogene kinetics of inbred `GEMM`/syngeneic models compared with multi-year epigenetic hypomethylation in spontaneous human and canine cancers.
+- ***In vivo* tumor cohorts vs. pure *in vitro* murine cancer cell lines:** Reference coordinates belong to **C57BL/6J** (`GRCm39`), while **14** *in vivo* cohorts (`57` samples) span **C57BL/6 (`H-2b`)** (`MC38`, `B16F10`, `B78_MEL`, `LLC`, `RM1`, `KP_LUAD`, `GL261_TUMOR`, `CT2A_TUMOR`, `SB28_TUMOR`, `MADR_GLIOMA`, `DEN_HCC`), **BALB/c (`H-2d`)** (`CT26`, `EMT6`), and **FVB (`H-2q`)** (`BMPC_PRAD`), paired with **9** pure *in vitro* cancer cell lines (`4T1`, `P815`, `EO771`, `Hepa1-6`, `ID8`, `GL261_LINE`, `MB49`, `MOC1`, `MOC22` in `mouse.cell_lines()`). Importantly, whereas expanding outbred spontaneous companion-dog cohorts (`7 → 19` cohorts, `935` patients) more than doubled canine CTAs (`54 → 118`), expanding *in vivo* murine models (`6 → 14` cohorts) while stripping out `4` host `TIL` NK granzymes (`Gzmd–g`) and evaluating pure *in vitro* `4T1`/`P815` separately in `mouse.cell_lines()` yields **8** *in vivo* murine CTAs—reflecting both the absence of primate `CT-X` gene arrays in rodents and the rapid single-oncogene kinetics of inbred `GEMM`/syngeneic models compared with multi-year epigenetic hypomethylation in spontaneous human and canine cancers.
 - **Multi-modal normal & cytokine-activated NK/Treg/macrophage safety without negative-IHC inflation:** Adult somatic bulk RNA (`Bgee 15.2` + `GSE219045` + `GSE322844` untreated WT liver), sorted & activated immune populations (`ImmGen` ULI `GSE109125`, `ImmGen` MNP `GSE122108`, WT `LPS`/`IL-4` primary BMDMs `GSE181223`, splenic/IL-15 NK `GSE287306`, IL-2/ionomycin Treg `GSE336796`, splenic CD4/B `GSE302070`, and curated `IL-2`/`IL-12`/`IL-18` `LAK`/`NK` cytolytic granzymes `Gzmd–g`), `Tabula Muris` 10x droplet UMI (`assess_rare_cell_rna`), and `MGI GXD 6.27` adult `TS28` immunohistochemistry/immunoblot detections gate safety in their native units with zero negative-IHC RNA ceiling multipliers, while mapped-universe zero-count completion resolves all 16 murine `HostContext` compartments.
 
 ### Murine *in vivo* syngeneic, GEMM, and carcinogen tumor cohorts (14 cohorts, 57 samples)
@@ -402,52 +402,46 @@ Download all `433` ortholog families: [`cross-species-orthologs.csv`](antigen-wh
 
 ## Programmatic and CLI access
 
-Every species exposes the identical policy, dataset-binding, catalog, activation-mode, cell-line sidecar, sex-subset, and evaluation surface:
+Every species exposes the identical plain-language `oncoref.antigens` front door alongside per-species dataset, cohort, cell-line, and policy modules:
 
 ```python
-from oncoref import antigen_sets, canine, host_context, human, mouse
+from oncoref import antigens, canine, human, mouse
 from oncoref.species_policies import role_comparison_table
 
-# 1. Inspect declarative per-species thresholds, 8/8 dataset bindings, cohorts, and cell lines
+# 1. Cross-species summary and plain-keyword queries across human, dog, and mouse
+antigens.summary()
+female_safe_ctas = antigens.table(
+    "CTA", sex="female", ectopic_only=True
+)  # ectopic subset of 222 CTA-M + 48 CTA-P
+pregnancy_only = antigens.table("CTA-P")  # 48 adult-absent pregnancy/peripartum CTAs
+dog_ctas = antigens.table("CTA", species="dog", ectopic_only=True, replicated_only=True)
+mouse_ctas = antigens.table("CTA", species="mouse")
+
+# 2. Spayed/castrated or organ-protected host queries and self-proteome peptide subtraction
+spayed_female_dog_ctas = antigens.table(
+    "CTA",
+    species="dog",
+    sex="female",
+    absent=("ovary", "uterus", "uterine_horn", "endometrium"),
+)
+antigens.explain("PRAME", species="dog", sex="female")
+canine_unique_9mers = antigens.subtract("PRAME", species="dog", sex="female", lengths=[9])
+
+# 3. Inspect declarative per-species thresholds, 8/8 dataset bindings, cohorts, and cell lines
 human.screening_policy()
 canine.tumor_cohorts()  # 19 spontaneous companion-dog tumor cohorts
 canine.cell_lines()  # 12 pure canine cancer cell lines
 mouse.tumor_cohorts()  # 14 in-vivo syngeneic / GEMM / carcinogen cohorts
 mouse.cell_lines()  # 9 pure murine cancer cell lines
 role_comparison_table()
-
-# 2. Query biological sets, ectopic activation mode, and the 4-way sex-restriction partition
-cta_female_safe = antigen_sets.select("CTA-M")  # 222 male-restricted female-safe human CTAs
-ra_female_only = antigen_sets.select("RA-F")  # 18 female-restricted male-safe human RAs
-pregnancy_only = antigen_sets.select("CTA-P")  # 48 adult-absent pregnancy/peripartum CTAs
-dog_ctas = antigen_sets.select("CTA", species="dog").proteins()
-ectopic_dog_ctas = dog_ctas[dog_ctas["tumor_activation_mode"] != "lineage_retained"]
-mouse_ctas = antigen_sets.select("CTA", species="mouse").proteins()
-
-# 3. Parameterize canine or murine HostContext and subtract host self-proteome peptides
-spayed_bitch = host_context.HostContext(
-    absent=(
-        "testis",
-        "epididymis",
-        "prostate",
-        "ovary",
-        "uterus",
-        "uterine_horn",
-        "endometrium",
-        "lactating_mammary",
-    ),
-    protect=("cervix", "vagina", "resting_mammary"),
-    species="dog",
-)
-canine_selection = antigen_sets.select("CTA", species="dog", host=spayed_bitch)
-canine_bg = canine_selection.background_index("Unsafe|Other")
 ```
 
 ```sh
-# CLI queries across human, dog, and mouse, including sex-restricted subsets
-oncoref antigens list --set CTA-M --format table
+# CLI queries across human, dog, and mouse, including --sex, --ectopic-only, and --replicated
+oncoref antigens summary
+oncoref antigens list --sex female --ectopic-only
 oncoref antigens list --set CTA-P --format json
-oncoref antigens list --set CTA --species dog --format table
-oncoref antigens explain PRAME --species dog --format table
-oncoref antigens explain P1A --species mouse --format table
+oncoref antigens list --set CTA --species dog --replicated
+oncoref antigens explain PRAME --species dog --sex female
+oncoref antigens explain P1A --species mouse
 ```

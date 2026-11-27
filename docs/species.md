@@ -387,50 +387,49 @@ sensitivity analyses, outside admitted normalized expression cohorts.
 
 ## Cross-species target selection and comparative host contexts
 
-See the [multi-species antigen whitepaper](species-antigen-whitepaper.md) for the
-complete per-species parameterization of human (`9606`), canine (`9615`), and
-murine (`10090`) datasets, comparative anatomy, the mutually exclusive 4-way
-sex-restriction partition (`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-P`/`CTA-P`, `RA-MF`/`CTA-MF`; legacy aliases `MRA`/`FRA`/`ERA`/`PRA`/`SRA`/`CTA-E`/`RA-E`),
-cross-species ortholog concordance, and native nomination ledgers.
+See the [multi-species antigen whitepaper](species-antigen-whitepaper.md) and the
+[interactive antigen explorer](antigen-explorer.html) for the complete per-species
+parameterization of human (`9606`), canine (`9615`), and murine (`10090`) datasets,
+comparative anatomy, the mutually exclusive 4-way sex-restriction partition
+(`RA-M`/`CTA-M`, `RA-F`/`CTA-F`, `RA-P`/`CTA-P`, `RA-MF`/`CTA-MF`), cross-species
+ortholog concordance, and native nomination ledgers.
 
-`oncoref.species_policies` and `oncoref.species_target_selection` harmonize the
-three-stage target-selection process across **human (`9606`, `19,893` PEGs, `322` CTAs)**,
-**dog (`9615`, `20,082` PEGs, `118` CTAs across `19` spontaneous patient cohorts + `12` cell lines)**
-and **mouse (`10090`, `21,433` PEGs, `8` *in vivo* CTAs across `14` *in vivo* cohorts + `9` cell lines)**
-without transferring human expression, safety verdicts or threshold calibrations by orthology:
+`oncoref.antigens`, `oncoref.species_policies`, and `oncoref.species_target_selection`
+apply one mathematical three-stage process across **human (`9606`, `19,893` protein groups, `322` CTAs)**,
+**dog (`9615`, `20,082` protein groups, `118` CTAs across `19` spontaneous patient cohorts + `12` cell lines)**
+and **mouse (`10090`, `21,433` protein groups, `8` *in vivo* CTAs across `14` *in vivo* cohorts + `9` cell lines)**
+without transferring human expression, safety verdicts, or threshold calibrations by orthology:
 
-1. **Reference proteome & protein-equivalence grouping (`group_reference_proteins`, `group_proteome`):**
-   Collapses identical qualified amino-acid translations within one verified
-   `ReferenceIdentity` into `PEG:<sha256[:20]>` protein-equivalence groups while
-   preserving every annotated isoform sequence for 9-mer `Unsafe` containment
-   (`>=95%`) and `PeptideIndex` subtraction.
-2. **Pluggable normal-tissue safety & symmetric enrichment (`SpeciesScreeningSpec`, `observations_from_expression_dataset`, `evaluate_species_catalog`):**
-   Projects native `ExpressionDataset` matrices onto protein-equivalence groups
-   (summing complete member-locus values per library before donor summarization,
-   mapping tissues via `resolve_normal_tissue`, and keeping pooled libraries out
-   of independent-patient counts), grades optional donor-resolved rare-cell UMI
-   counts via `assess_rare_cell_rna`, and evaluates symmetric `10 x max(N, D, floor)`
-   cancer (`CA`) and reproductive/developmental (`RA`) enrichment on one declared
-   expression scale (`TPM`, `nTPM`, `pTPM`, or `TMM-CPM`).
-3. **Comparative-anatomy host protection (`anatomy_for_species`, `HostContext`, `TargetFilter`, `AntigenSelection`):**
-   Derives species-applicable reproductive, mammary, thymic and disposable
+1. **Reference proteome & identical-sequence protein grouping:**
+   Collapses identical qualified amino-acid translations within one verified genome
+   reference into protein-equivalence groups while preserving every annotated isoform
+   sequence for 9-mer `Unsafe` containment (`>=95%`) and host self-proteome subtraction.
+2. **Multi-modal normal-tissue safety & symmetric `10×` *in vivo* enrichment:**
+   Evaluates native expression, single-cell UMI, and protein assays in their own units,
+   enforces uniform `<= 2.5%` olfactory-receptor gDNA library QC and monogenic chemosensory
+   GPCR holds, and requires symmetric `>= 10 × max(Normal N, Disposable D, 1)` *in vivo*
+   tumor (`CA`) and reproductive/embryonic (`RA`) enrichment, while tracking pure *in vitro*
+   cancer cell lines separately as an experimental model reference.
+3. **Comparative-anatomy host protection:**
+   Derives species-applicable reproductive, mammary, thymic, and disposable
    compartments from `normal-tissue-taxonomy.yaml` (for example, canine lacks
    seminal vesicles and appendix and includes `uterine_horn`; mouse includes
    `coagulating_gland` and `uterine_horn` and lacks appendix and palatine tonsil).
 
 ```python
-from oncoref import antigen_sets, canine, host_context, human, mouse
+from oncoref import antigens, canine, human, mouse
+
+antigens.summary()  # Cross-species overview across human, dog, and mouse
+dog_ctas = antigens.table("CTA", species="dog", sex="female", absent=("ovary", "uterus"))
+mouse_ctas = antigens.table("CTA", species="mouse", ectopic_only=True)
+antigens.explain("PRAME", species="dog")
 
 human.target_selection_coverage()
 canine.target_selection_coverage()
 mouse.target_selection_coverage()
-
-dog_host = host_context.HostContext(protect=("testis", "uterus"), species="dog")
-dog_ctas = antigen_sets.select("CTA", species="dog", host=dog_host)
-dog_bg = dog_ctas.background_index("Unsafe|Other")
 ```
 
-On the CLI, `oncoref antigens list`, `explain`, and `funnel` accept `--species`
-(`human`, `dog`/`canine`, or `mouse`). All three species evaluate native genome-wide
-catalogs (`target-selection.csv.gz`, `dog-target-selection.csv.gz`, `mouse-target-selection.csv.gz`)
-without borrowing expression or safety calls across species.
+On the CLI, `oncoref antigens summary`, `list`, `explain`, `funnel`, and `subtract`
+accept `--species` (`human`, `dog`/`canine`, or `mouse`) and `--sex {female,male}`.
+All three species evaluate native genome-wide catalogs without borrowing expression or
+safety calls across species.

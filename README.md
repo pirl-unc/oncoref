@@ -12,24 +12,25 @@ behind a Python API and CLI.
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
 [antigen catalog](docs/antigen-whitepaper.md) classifies **322 CTA, 66 Cancer Antigen only, 146 Reproductive Antigen only, 1,110 Other and
-18,249 Unsafe**. `CA` and `RA` share one multi-assay normal-tissue safety and eligibility screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in *in vivo* tumor or reproductive/embryonic samples; `CTA = CA ∩ RA` (**311/322 = 96.6%** with ectopic activation outside homologous source organs, plus **11** homologous lineage-retained CTAs tracked via `tumor_activation_mode`), and the candidate union `CA ∪ RA` contains **534** protein groups. [Patient-specific filtering](docs/host-selection.md) (`--profile` / `target_filters`) applies downstream, marking reproductive compartments as `Protect`, `Accept loss`, or `Absent` without altering biological categories.
+18,249 Unsafe**—alongside native genome-wide catalogs for **domestic dog** (**20,082** groups, **118** CTAs) and **laboratory mouse** (**21,433** groups, **8** *in vivo* CTAs). `CA` and `RA` share one multi-assay normal-tissue safety screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in *in vivo* tumor or reproductive/embryonic samples; `CTA = CA ∩ RA` (**311/322 = 96.6%** with ectopic activation outside homologous source organs). [Patient-specific filtering](docs/host-selection.md) (`antigens.table(..., sex="female" | "male")` or `oncoref antigens list --sex female`) protects relevant reproductive and mammary organs downstream without altering biological categories.
 
+[Interactive antigen explorer](https://pirl-unc.github.io/oncoref/antigen-explorer.html) ·
 [Antigen whitepaper](docs/antigen-whitepaper.md) ·
-[Interactive protein catalog](docs/audits/target-selection-20261110/rebuild/report.html) ·
+[Multi-species whitepaper](docs/species-antigen-whitepaper.md) ·
 [Classification rules](docs/target-selection.md) ·
 [Patient profiles & filters](docs/target-filters.md) ·
 [Sequences & peptide subtraction](docs/antigen-sequences.md) ·
 [CLI & curation builds](docs/curation.md)
 
 ```python
-from oncoref import antigen_sets, target_selection
+from oncoref import antigens
 
-all_ctas = antigen_sets.proteins("CTA")
-selection = antigen_sets.select("CTA", mode="standard")
-proteins = selection.proteins()
-decisions = selection.decisions()
-background = antigen_sets.proteins("Unsafe|Other")
-catalog_df = target_selection.results()
+antigens.summary()  # Cross-species overview (human, dog, mouse)
+female_safe_ctas = antigens.table("CTA", sex="female", ectopic_only=True)
+male_safe_ctas = antigens.table("CTA", sex="male")
+dog_ctas = antigens.table("CTA", species="dog", replicated_only=True)
+antigens.explain("PRAME", sex="female")
+unique_peptides = antigens.subtract("MAGEA4", sex="female", max_mismatches=1)
 ```
 
 ## Role in the stack
@@ -168,7 +169,7 @@ od.within_sample_top_fraction("PRAD")     # per-gene frac of samples top-5% (wit
 | How is expression normalized or filtered? | `oncoref.normalization`, `oncoref.gene_families` |
 | What is the canonical gene identity? | `oncoref.gene_ids`, `oncoref.genome`, `oncoref.proteoforms` |
 | What is the TMB, burden, or ICI response evidence? | `oncoref.tmb`, `oncoref.incidence`, `oncoref.ici_response` |
-| Which proteins are classified as `CA`, `RA`, `CTA`, `Other`, or `Unsafe`? | `oncoref.antigen_sets`, `oncoref.target_selection`, `oncoref.target_filters`, `oncoref.peptide_subtraction` |
+| Which proteins are classified as `CA`, `RA`, `CTA`, `Other`, or `Unsafe`? | `oncoref.antigens`, `oncoref.antigen_sets`, `oncoref.target_selection`, `oncoref.peptide_subtraction` |
 | What are the organ and cell-type injury tiers? | `oncoref.tissue_tiers`, `oncoref.antigen_data` |
 | Where is a dataset cached or downloaded? | `oncoref.catalog`, `oncoref.data_bundle`, `oncoref.hpa` |
 
@@ -182,14 +183,15 @@ See the [TMB/ICI/aPD1 curation audit](docs/curation-audit.md) for corrected valu
 evidence gaps, and the complete row-by-row review ledger.
 
 ```bash
+oncoref antigens summary         # cross-species CTA / CA / RA summary (human, dog, mouse)
+oncoref antigens list --sex female --ectopic-only
+oncoref antigens explain PRAME --sex female
 oncoref cancer-type prostate     # registry info as JSON
-oncoref tmb FL                  # 5.05
-oncoref ici SKCM                # 43.7 (--regimen to pin, --all-regimens to compare)
+oncoref tmb FL                   # 5.05
+oncoref ici SKCM                 # 43.7 (--regimen to pin, --all-regimens to compare)
 oncoref burden pancreas --metric us_mortality_pct
-oncoref cta --count             # number of expressed CTAs
 oncoref plot apd1-vs-tmb --out apd1_vs_tmb.png
 oncoref plot patient-coverage --gene-set cta --out coverage_out
-oncoref plot cta-curation --out cta_curation_out
 ```
 
 ### Data cache

@@ -63,7 +63,18 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     assert by_prom.loc["PRAME", "tumor_activation_mode"] == "ectopic_and_lineage_retained"
     assert by_prom.loc["NY-ESO-1", "tumor_activation_mode"] == "ectopic_and_lineage_retained"
     assert cat_default["tumor_activation_mode"].equals(promoted["tumor_activation_mode"])
+    assert cat_default["tumor_support"].equals(promoted["tumor_support"])
+    assert cat_default["reproductive_qualifying_compartments"].equals(
+        promoted["reproductive_qualifying_compartments"]
+    )
     assert hasattr(human, "tumor_cohorts") and hasattr(human, "cell_lines")
+
+    # CSN2 retains multi-cohort ectopic_and_lineage_retained under single-rule ablations
+    res_no_737 = human.evaluate_integrated_catalog(include_737_cohorts=False).catalog
+    assert (
+        res_no_737.set_index("protein_group_label").loc["CSN2", "tumor_activation_mode"]
+        == "ectopic_and_lineage_retained"
+    )
 
     # Orthogonal #768 TGCT Note-R single-rule ablation keeps TGCT-witnessed RAs as CTA
     res_no_768 = human.evaluate_integrated_catalog(include_assay_boundary_fixes=False).catalog

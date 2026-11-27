@@ -11,9 +11,9 @@ extra_css:
 nav:
   - Home: index.md
   - Antigens:
+      - Interactive antigen explorer: antigen-explorer.html
       - Antigen whitepaper: antigen-whitepaper.md
       - Multi-species whitepaper: species-antigen-whitepaper.md
-      - Interactive protein catalog: audits/target-selection-20261110/rebuild/report.html
       - Classification rules: target-selection.md
       - Patient profiles & organ filters: target-filters.md
       - Patient-anatomy rules & limits: host-selection.md
@@ -23,15 +23,6 @@ nav:
       - Summary figures: audits/target-selection-20261110/rebuild/summary.md
       - Normal RNA tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
       - Donor-level rare-cell RNA: audits/normal-cell-atlas-20261110/rare-cell/index.md
-      - "Normal library & cell attribution (#711, #712)": audits/normal-attribution-20261122/index.md
-      - Multiplex bleed QC (#764): audits/multiplex-bleed-qc-20261123/index.md
-      - Holistic GTEx deconvolution (#778): audits/gtex-holistic-deconvolution-20261124/index.md
-      - Nuclear RNA & spillover QC (#765): audits/nuclear-rna-spillover-20261123/index.md
-      - Clinical organ-safety tier (#766): audits/clinical-organ-clearance-20261123/index.md
-      - Closed repeat-family equivalence (#767): audits/repeat-family-equivalence-20261123/index.md
-      - "Assay boundaries & 1-mm near-self (#768, #769)": audits/assay-boundary-near-self-20261123/index.md
-      - Unmeasured home-tissue panels (#735): audits/unmeasured-home-panels-20261122/index.md
-      - TGCT localization audit (#713): audits/tgct-aafl-localization-20261122/index.md
       - CTpedia comparison: ctpedia-filtering.md
   - Tissues & Safety:
       - Tissue injury tiers: tissue-tiers.md
@@ -43,9 +34,7 @@ nav:
       - API guide: api.md
       - GTEx reference & deconvolution: gtex.md
       - Species & data groups: species.md
-      - Murine antigen catalog (#734): audits/mouse-target-catalog-20261122/index.md
       - Data versions & reproducibility: data-versions.md
-      - THYMCA & GSE125285 cohort upgrades (#737): audits/thym-histology.md
       - HPA cancer reference: hpa-cancer-reference.md
       - SRA expression sources: sra-expression-integration.md
       - Reference gene identities: cta-gene-identities.md
