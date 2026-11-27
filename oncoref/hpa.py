@@ -19,8 +19,8 @@ These fetch (once, cached) and parse the HPA tables registered in
   ``Tissue``, ``nTPM``).
 - ``hpa_normal_tissue`` — IHC protein detection (``Gene``, ``Gene name``,
   ``Tissue``, ``Cell type``, ``Level``, ``Reliability``).
-- ``hpa_single_cell`` — single-cell-type RNA nTPM (``Gene``, ``Gene name``,
-  ``Cell type``, ``nTPM``).
+- ``hpa_single_cell`` — single-cell-type RNA expression (``Gene``, ``Gene name``,
+  ``Cell type``, ``nCPM`` in v25.1+ / ``nTPM`` in v23).
 
 This is the normal-tissue expression evidence behind the cancer-testis-antigen
 tissue-restriction definition and protein-level / single-cell comparisons.
@@ -668,32 +668,59 @@ def _hpa_single_cell_for_version(version: str) -> pd.DataFrame:
     return _read_hpa("hpa_single_cell", version)
 
 
+def _single_cell_value_col(df: pd.DataFrame) -> str:
+    """Resolve the HPA single-cell expression column ('nCPM' in v25.1+, 'nTPM' in v23)."""
+    for col in ("nCPM", "nTPM"):
+        if col in df.columns:
+            return col
+    raise KeyError(
+        f"HPA single-cell table lacks an 'nCPM' or 'nTPM' column; got {list(df.columns)}"
+    )
+
+
 def hpa_single_cell(version: str | None = None) -> pd.DataFrame:
-    """HPA cell-type nTPM; newest registered release unless explicitly pinned."""
+    """HPA cell-type RNA (``nCPM`` in v25.1+, ``nTPM`` in v23); newest release unless pinned."""
     return _hpa_single_cell_for_version(reference_data.resolve_version("hpa_single_cell", version))
 
 
-@lru_cache(maxsize=1)
-def hpa_cell_type_expression() -> pd.DataFrame:
-    """Wide per-gene HPA single-cell-type nTPM matrix.
-
-    Returns ``Ensembl_Gene_ID``, ``Symbol``, then one numeric column per HPA
-    single-cell type. This is the analysis-facing companion to the raw long-form
-    :func:`hpa_single_cell` table.
-    """
-    df = hpa_single_cell()
+@lru_cache(maxsize=4)
+def _hpa_cell_type_expression_for_version(version: str) -> pd.DataFrame:
+    df = hpa_single_cell(version)
     if df.empty:
-        return pd.DataFrame(columns=["Ensembl_Gene_ID", "Symbol"])
+        out = pd.DataFrame(columns=["Ensembl_Gene_ID", "Symbol"])
+        out.attrs.update(df.attrs)
+        return out
+    value_col = _single_cell_value_col(df)
     wide = df.pivot_table(
         index=["Gene", "Gene name"],
         columns="Cell type",
-        values="nTPM",
+        values=value_col,
         aggfunc="sum",
         fill_value=0.0,
     )
     wide = wide.reset_index().rename(columns={"Gene": "Ensembl_Gene_ID", "Gene name": "Symbol"})
     wide.columns.name = None
+    wide.attrs.update(df.attrs, value_column=value_col)
     return wide
+
+
+def hpa_cell_type_expression(version: str | None = None) -> pd.DataFrame:
+    """Wide per-gene HPA single-cell-type expression matrix (``nCPM`` in v25.1+, ``nTPM`` in v23).
+
+    Returns ``Ensembl_Gene_ID``, ``Symbol``, then one numeric column per HPA
+    single-cell type. This is the analysis-facing companion to the raw long-form
+    :func:`hpa_single_cell` table.
+    """
+    concrete = reference_data.resolve_version("hpa_single_cell", version)
+    cached = _hpa_cell_type_expression_for_version(concrete)
+    out = cached.copy()
+    out.attrs.update(cached.attrs)
+    return out
+
+
+hpa_cell_type_expression.cache_clear = _hpa_cell_type_expression_for_version.cache_clear  # type: ignore[attr-defined]
+hpa_cell_type_expression.cache_info = _hpa_cell_type_expression_for_version.cache_info  # type: ignore[attr-defined]
+_register_derived_cache(_hpa_cell_type_expression_for_version.cache_clear)
 
 
 @lru_cache(maxsize=1)
@@ -900,12 +927,15 @@ def gene_tissue_ntpm(gene_id: str) -> dict[str, float]:
     return {str(t).strip().lower(): float(v) for t, v in zip(sub["Tissue"], sub["nTPM"])}
 
 
-def gene_cell_type_ntpm(gene_id: str) -> dict[str, float]:
-    """``{cell_type (lowercased): nTPM}`` of single-cell RNA for one gene."""
+def gene_cell_type_ntpm(gene_id: str, *, version: str | None = None) -> dict[str, float]:
+    """``{cell_type (lowercased): value}`` of HPA single-cell RNA for one gene (``nCPM`` in v25.1+, ``nTPM`` in v23)."""
     gid = _strip_version(gene_id)
-    df = hpa_single_cell()
+    df = hpa_single_cell(version)
+    if df.empty:
+        return {}
+    value_col = _single_cell_value_col(df)
     sub = df[df["Gene"].astype(str).map(_strip_version) == gid]
-    return {str(t).strip().lower(): float(v) for t, v in zip(sub["Cell type"], sub["nTPM"])}
+    return {str(t).strip().lower(): float(v) for t, v in zip(sub["Cell type"], sub[value_col])}
 
 
 def gene_protein_tissues(gene_id: str, *, levels=("Low", "Medium", "High")) -> set[str]:

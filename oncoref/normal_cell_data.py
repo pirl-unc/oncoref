@@ -343,7 +343,7 @@ def observations(source: str, *, genes=None, version=None) -> pd.DataFrame:
         raise ValueError(
             "Use iter_tables() for developmental/culture count matrices; do not pool with adult normal tissue"
         )
-    if not {"TPM", "nTPM", "Level"}.intersection(native.columns):
+    if not {"TPM", "nTPM", "nCPM", "Level"}.intersection(native.columns):
         raise ValueError(
             "This source has native study-specific columns. Use catalog.ensure() or catalog.read_table()."
         )
@@ -375,7 +375,7 @@ def observations(source: str, *, genes=None, version=None) -> pd.DataFrame:
     unit = (
         "TPM"
         if source in native_bulk
-        else next((u for u in ("nTPM", "TPM") if u in native), "staining")
+        else next((u for u in ("nCPM", "nTPM", "TPM") if u in native), "staining")
     )
     if "TPM" in native and "nTPM" in native:
         out["native_tpm"] = pd.to_numeric(native["TPM"])

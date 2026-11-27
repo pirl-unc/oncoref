@@ -69,7 +69,7 @@
           "sha256": "93a9cddda40e886d2fd85136a531b4525bbb882cf24722091fe9dcf56fe831cc",
           "archive_sha256": "2ddd3d90fb050a8efea508792ba7741c510fb5aa3d89f352aab99794ec2c9d64",
           "bytes": 148795332,
-          "unit": "nTPM",
+          "unit": "nCPM",
           "taxon_id": 9606,
           "reference": "Ensembl 109",
           "retrieved_at": "2026-10-28",
