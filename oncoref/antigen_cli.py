@@ -22,6 +22,23 @@ def emit(frame, output_format):
 
 
 def _host_overrides(args) -> dict:
+    sex = getattr(args, "sex", None)
+    if sex is not None and getattr(args, "profile", "all") != "all":
+        raise ValueError("Use --sex or legacy --profile, not both")
+    if sex is not None:
+        from . import antigens
+
+        host = antigens._build_host_context(
+            species=getattr(args, "species", "human"),
+            sex=sex,
+            pregnant=bool(getattr(args, "pregnant", False)),
+            lactating=bool(getattr(args, "lactating", False)),
+            protect=tuple(getattr(args, "protect_tissues", None) or ()),
+            accept_loss=tuple(getattr(args, "allow_tissues", None) or ()),
+            absent=tuple(getattr(args, "absent_tissues", None) or ()),
+        )
+        return {"host": host} if host is not None else {}
+
     overrides = {}
     if getattr(args, "profile", "all") != "all":
         overrides["host_profile"] = args.profile
@@ -38,6 +55,13 @@ def _host_overrides(args) -> dict:
     return overrides
 
 
+def summary_antigens(args):
+    from . import antigens
+
+    emit(antigens.summary(species=getattr(args, "species", "all")), args.format)
+    return 0
+
+
 def list_antigens(args):
     from .species import resolve_species
 
@@ -48,14 +72,30 @@ def list_antigens(args):
         if getattr(args, name) is not None
     }
     overrides.update(_host_overrides(args))
+    ectopic_only = bool(getattr(args, "ectopic_only", False))
+    replicated = bool(getattr(args, "replicated", False))
     if args.set in antigen_sets.EXCLUSION_CATEGORIES:
-        if args.mode != "all" or overrides:
+        if args.mode != "all" or overrides or ectopic_only or replicated:
             raise ValueError("Candidate filters do not apply to Unsafe/Other backgrounds")
         rows = antigen_sets.proteins(args.set, species=resolved)
     else:
         selection = antigen_sets.select(args.set, mode=args.mode, species=resolved, **overrides)
         rows = selection.proteins()
-        print(json.dumps(selection.metadata), file=sys.stderr)
+        if ectopic_only and "tumor_activation_mode" in rows.columns:
+            rows = rows[
+                rows["tumor_activation_mode"].isin(["ectopic", "ectopic_and_lineage_retained"])
+            ].reset_index(drop=True)
+        if replicated:
+            if "tumor_support" in rows.columns:
+                rows = rows[rows["tumor_support"].eq("replicated")].reset_index(drop=True)
+            else:
+                p_cnt = rows.get(
+                    "independent_patients_at_tenfold", pd.Series(0, index=rows.index)
+                ).fillna(0)
+                s_cnt = rows.get("samples_at_tenfold", pd.Series(0, index=rows.index)).fillna(0)
+                rows = rows[(p_cnt >= 2) | (s_cnt >= 2)].reset_index(drop=True)
+        if args.format == "json":
+            print(json.dumps(selection.metadata), file=sys.stderr)
     if args.ids:
         ids = sorted({gene for members in rows.member_gene_ids for gene in json.loads(members)})
         if args.format == "table":
@@ -63,25 +103,28 @@ def list_antigens(args):
         else:
             emit(pd.DataFrame({"gene_id": ids}), args.format)
     else:
-        emit(
-            rows[
-                [
-                    "protein_group_label",
-                    "entity_id",
-                    "category",
-                    "reproductive_qualifying_compartments",
-                    "tumor_fold",
-                    "reproductive_fold",
-                    "independent_patients_at_tenfold",
-                    *(
-                        ["host_status", "effective_off_target_tpm", "effective_tumor_fold"]
-                        if "host_status" in rows
-                        else []
-                    ),
-                ]
-            ],
-            args.format,
-        )
+        cols = [
+            c
+            for c in (
+                "protein_group_label",
+                "entity_id",
+                "category",
+                "sex_restriction_code",
+                "tumor_activation_mode",
+                "tumor_support",
+                "reproductive_qualifying_compartments",
+                "tumor_fold",
+                "reproductive_fold",
+                "independent_patients_at_tenfold",
+                *(
+                    ("host_status", "effective_off_target_tpm", "effective_tumor_fold")
+                    if "host_status" in rows
+                    else ()
+                ),
+            )
+            if c in rows.columns
+        ]
+        emit(rows[cols], args.format)
     return 0
 
 
@@ -102,6 +145,9 @@ def explain(args):
             "protein_group_label",
             "entity_id",
             "classification",
+            "sex_restriction_code",
+            "tumor_activation_mode",
+            "tumor_support",
             "decision_reason",
             "normal_reference_tpm",
             "normal_reference_contexts",
@@ -115,6 +161,8 @@ def explain(args):
             "reproductive_supported_tpm",
             "reproductive_supported_context",
             "reproductive_top_context",
+            "cell_line_max_tpm",
+            "qualifying_cell_lines",
             "rare_cell_status",
             "rare_cell_basis",
             "rare_cell_mapping_notes",
@@ -186,7 +234,8 @@ def explain(args):
             "keep",
         ):
             output[column] = selected[column].to_numpy()
-        print(json.dumps(selected.attrs), file=sys.stderr)
+        if args.format == "json":
+            print(json.dumps(selected.attrs), file=sys.stderr)
     if args.format == "table":
         for record in output.to_dict("records"):
             for name, value in record.items():
@@ -221,7 +270,37 @@ def funnel(args):
     filt = replace(target_filters.FILTER_MODES[args.mode], **_host_overrides(args))
     filtered = target_filters.funnel(filt, table).rename(columns={"layer": "stage"})
     filtered["kind"] = "sequential filter"
-    emit(pd.concat([shared, categories, filtered], ignore_index=True), args.format)
+    extra_steps = []
+    if getattr(args, "ectopic_only", False) or getattr(args, "replicated", False):
+        cur = target_filters.apply(filt, table)
+        cur = cur[cur["keep"]]
+        if getattr(args, "ectopic_only", False) and "tumor_activation_mode" in cur.columns:
+            nxt = cur[
+                cur["tumor_activation_mode"].isin(["ectopic", "ectopic_and_lineage_retained"])
+            ]
+            extra_steps.append(
+                {
+                    "stage": "ectopic_only",
+                    "remaining": len(nxt),
+                    "removed": len(cur) - len(nxt),
+                    "kind": "sequential filter",
+                }
+            )
+            cur = nxt
+        if getattr(args, "replicated", False) and "tumor_support" in cur.columns:
+            nxt = cur[cur["tumor_support"].eq("replicated")]
+            extra_steps.append(
+                {
+                    "stage": "replicated",
+                    "remaining": len(nxt),
+                    "removed": len(cur) - len(nxt),
+                    "kind": "sequential filter",
+                }
+            )
+    parts = [shared, categories, filtered]
+    if extra_steps:
+        parts.append(pd.DataFrame(extra_steps))
+    emit(pd.concat(parts, ignore_index=True), args.format)
     return 0
 
 
@@ -326,10 +405,16 @@ def subtract(args):
 
 def _add_host_options(parser):
     parser.add_argument(
+        "--sex",
+        choices=["female", "male"],
+        default=None,
+        help="Patient biological sex: protects all adult reproductive & resting mammary organs of that sex",
+    )
+    parser.add_argument(
         "--profile",
         choices=list(target_filters.HOST_PROFILES),
         default="all",
-        help="Assumed anatomy: all (no host screen), male-patient, or female-patient",
+        help="Legacy host profile: all (no host screen), male-patient, or female-patient",
     )
     parser.add_argument(
         "--lactating",
@@ -370,12 +455,32 @@ def register(subparsers):
         "antigens", help="Current antigen catalog, filters and peptide subtraction"
     )
     commands = group.add_subparsers(dest="antigen_command", required=True)
+    overview = commands.add_parser(
+        "summary", help="Cross-species antigen catalog summary (human, dog, mouse)"
+    )
+    overview.add_argument(
+        "--species",
+        default="all",
+        help="Species name, taxonomy ID, or 'all' (default: all)",
+    )
+    overview.add_argument("--format", choices=["table", "csv", "json"], default="table")
+    overview.set_defaults(func=summary_antigens)
     listing = commands.add_parser(
         "list", help="List current catalog members after optional filtering"
     )
     listing.add_argument("--set", choices=list(antigen_sets.ALL_SETS), default="CTA")
     listing.add_argument("--mode", choices=list(target_filters.FILTER_MODES), default="all")
     _add_host_options(listing)
+    listing.add_argument(
+        "--ectopic-only",
+        action="store_true",
+        help="Keep only antigens with confirmed ectopic tumor activation outside homologous source organs",
+    )
+    listing.add_argument(
+        "--replicated",
+        action="store_true",
+        help="Keep only antigens supported by >=2 independent patients or tumor samples",
+    )
     listing.add_argument("--min-tumor-fold", type=float)
     listing.add_argument("--min-reproductive-fold", type=float)
     listing.add_argument("--min-patients", dest="min_tumor_patients", type=int)
@@ -400,6 +505,8 @@ def register(subparsers):
     )
     counts.add_argument("--mode", choices=list(target_filters.FILTER_MODES), default="all")
     _add_host_options(counts)
+    counts.add_argument("--ectopic-only", action="store_true")
+    counts.add_argument("--replicated", action="store_true")
     counts.add_argument("--published-only", action="store_true")
     counts.set_defaults(func=funnel)
     peptides = commands.add_parser(

@@ -1762,8 +1762,16 @@ def build():
 
     def concise_gate(r):
         if r.category == "Unsafe":
-            raw_parts = [p.strip() for p in str(r.Unsafe_reasons).split(" | ") if p.strip()]
-            mapped = list(dict.fromkeys(gate_labels.get(p, p) for p in raw_parts))
+            raw_parts = [
+                re.sub(r"^#\d+\s+", "", p.strip())
+                for p in str(r.Unsafe_reasons).split(" | ")
+                if p.strip()
+            ]
+            mapped = list(
+                dict.fromkeys(
+                    gate_labels.get(p, p[:1].upper() + p[1:] if p else p) for p in raw_parts
+                )
+            )
             if raw_parts == ["Established rare normal-cell RNA"] and pd.notna(r.rare_cell_basis):
                 note = rare_basis_short.get(r.rare_cell_basis, r.rare_cell_basis)
                 return f"Donor rare-cell RNA ({note})"

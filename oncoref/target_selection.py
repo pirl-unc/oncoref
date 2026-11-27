@@ -401,26 +401,40 @@ def metadata() -> dict:
 
 @lru_cache(maxsize=1)
 def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
-    from . import (
-        assay_boundary_adjudications,
-        clinical_organ_clearance,
-        repeat_family_equivalence,
-    )
-
     with files("oncoref").joinpath("data/target-selection.csv.gz").open("rb") as handle:
         base = pd.read_csv(handle, compression="gzip", low_memory=False)
     for _str_col in (
+        "reproductive_qualifying_compartments",
         "sex_restriction_class",
         "sex_restriction_code",
         "tumor_activation_mode",
+        "tumor_support",
+        "qualifying_cancer_codes",
         "cell_line_top_model",
         "qualifying_cell_lines",
+        "clinical_clearance_scope",
+        "clinical_cleared_organs",
+        "clinical_cleared_epitopes",
+        "clinical_hla_alleles",
+        "clinical_cleared_transcripts",
+        "clinical_unverified_isoforms",
+        "clinical_trial_source_ids",
+        "closed_homolog_family_id",
+        "co_silenced_coding_sibling_ids",
+        "closed_self_paralog_ids",
     ):
         if _str_col in base.columns:
             base[_str_col] = base[_str_col].astype("object").fillna("").astype(str)
-    base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
-    base = repeat_family_equivalence.annotate_catalog(base, enabled=True)
-    base = assay_boundary_adjudications.annotate_catalog(base, enabled=True, integrated=True)
+    if "clinical_clearance_scope" not in base.columns:
+        from . import (
+            assay_boundary_adjudications,
+            clinical_organ_clearance,
+            repeat_family_equivalence,
+        )
+
+        base = clinical_organ_clearance.annotate_catalog(base, enabled=True)
+        base = repeat_family_equivalence.annotate_catalog(base, enabled=True)
+        base = assay_boundary_adjudications.annotate_catalog(base, enabled=True, integrated=True)
     gene_index: dict[str, list[int]] = {}
     for idx, (lbl, raw_ids) in enumerate(zip(base["protein_group_label"], base["member_gene_ids"])):
         gene_index.setdefault(str(lbl), []).append(idx)

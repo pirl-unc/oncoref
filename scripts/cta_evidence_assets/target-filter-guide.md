@@ -1,14 +1,17 @@
 # Patient profiles and candidate filters
 
 Catalog `$catalog_policy`; filter policy `$filter_policy`.
-Filters narrow the biological candidate sets (`CA`, `RA`, `CTA`) across six explicit layers, while patient-anatomy constraints evaluate reproductive and mammary exposure independently without relabeling biological categories. [Antigen whitepaper](antigen-whitepaper.md) · [Interactive catalog](audits/target-selection-20261110/rebuild/report.html) · [Filter sweep tables](audits/target-filters-20261112/index.md).
+Filters narrow the biological candidate sets (`CA`, `RA`, `CTA`) across six explicit layers, while patient-anatomy constraints evaluate reproductive and mammary exposure independently without relabeling biological categories. [Antigen whitepaper](antigen-whitepaper.md) · [Interactive antigen explorer](antigen-explorer.html) · [Filter sweep tables](audits/target-filters-20261112/index.md).
 
 ```python
-from oncoref import antigen_sets, target_filters as tf
+from oncoref import antigen_sets, antigens, target_filters as tf
 from oncoref.host_context import HostContext
 
+# Plain-language front door (protects all adult female reproductive & resting mammary organs):
+female_ctas = antigens.table("CTA", sex="female", ectopic_only=True, min_patients=2, min_fold=30)
+
+# Lower-level filter & HostContext objects:
 selection = antigen_sets.select("CA", min_tumor_patients=2, min_tumor_fold=30)
-# No reproductive protection by default; request the smaller protected-tissue set.
 host = HostContext(protect=("testis",))
 with_host = antigen_sets.select("CTA", mode="strict", host=host)
 decisions = with_host.decisions()

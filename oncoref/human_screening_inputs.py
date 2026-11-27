@@ -616,6 +616,27 @@ def build_human_screening_inputs(
                             "identity_resolved": True,
                         }
                     )
+                # Ensure cleared candidates (e.g. CSN2 qualifying in 11 cancer types incl. OV)
+                # carry their homologous-universe ectopic flag across all ablations
+                c_n_types = (
+                    int(r.cancer_types_at_tenfold or 0)
+                    if pd.notna(r.cancer_types_at_tenfold)
+                    else 0
+                )
+                if c_n_types > 0 and tumor_rows and tumor_rows[-1]["entity_id"] == eid:
+                    c_homol: set[str] = set()
+                    for citem_h in cpayload.get("reproductive_compartments", []):
+                        if bool(citem_h.get("qualifies_tenfold")):
+                            c_homol.update(
+                                species_target_selection.HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT.get(
+                                    str(citem_h["compartment"]), frozenset()
+                                )
+                            )
+                    if c_n_types > len(c_homol):
+                        prev_cc_c = str(tumor_rows[-1].get("cancer_code") or "").strip()
+                        tumor_rows[-1]["qualifying_cancer_codes"] = (
+                            f"{prev_cc_c}|__ECTOPIC_COHORT__" if prev_cc_c else "__ECTOPIC_COHORT__"
+                        )
             supp_val = cpayload.get("reproductive_supported_tpm")
             he_eid = exposures.get(eid, {})
             for citem in cpayload.get("reproductive_compartments", []):
@@ -900,7 +921,7 @@ def build_human_screening_inputs(
             kept_qc: set[str] = set()
             for qc in qual_comps:
                 he_mx = float(rec_exp.get(qc, {}).get("max_tpm") or 0.0)
-                if qc == "resting_breast" or eid == "PEG:ad22a7bf35b45ca0ec8a":
+                if qc in {"resting_breast", "lactating_breast"}:
                     if he_mx >= thr_ra - 1e-6:
                         kept_qc.add(qc)
                 elif he_mx >= 4.0 or qc not in rec_exp:
@@ -912,8 +933,51 @@ def build_human_screening_inputs(
             if pd.notna(r.reproductive_supported_tpm)
             else np.nan
         )
-        if eid == "PEG:ad22a7bf35b45ca0ec8a" and include_multiplex_bleed_qc:
-            supp_tpm = float(rec_exp.get("embryo", {}).get("max_tpm") or 76.67270943797998)
+        if (
+            include_multiplex_bleed_qc
+            and qual_comps == {"embryo"}
+            and "embryo" in rec_exp
+            and rec_exp["embryo"].get("max_tpm") is not None
+        ):
+            supp_tpm = float(rec_exp["embryo"]["max_tpm"])
+
+        # Attach multi-cohort ectopic witness flag when distinct qualifying tumor cohorts
+        # exceed the entity's homologous compartment cancer-code universe
+        if tumor_rows and tumor_rows[-1]["entity_id"] == eid:
+            homol_universe: set[str] = set()
+            ht_cur = str(home_tissue_series.loc[ts["entity_id"].eq(eid)].iloc[0] or "")
+            for comp_tok in (
+                *qual_comps,
+                *(h.strip().lower() for h in ht_cur.split(";") if h.strip()),
+            ):
+                homol_universe.update(
+                    species_target_selection.HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT.get(
+                        comp_tok, frozenset()
+                    )
+                )
+            if eid in gdna_clean_by_eid:
+                grec_c = gdna_clean_by_eid[eid]
+                c_key_n = (
+                    "clean_non_tgct_cancer_types_at_tenfold"
+                    if eid in admixture_non_tgct_map
+                    else "clean_cancer_types_at_tenfold"
+                )
+                n_c_types = int(grec_c.get(c_key_n) or 0)
+                extra_excl = 0
+            else:
+                n_c_types = (
+                    int(r.cancer_types_at_tenfold or 0)
+                    if pd.notna(r.cancer_types_at_tenfold)
+                    else 0
+                )
+                extra_excl = (
+                    1 if eid in admixture_non_tgct_map and "TGCT" not in homol_universe else 0
+                )
+            if n_c_types > len(homol_universe) + extra_excl:
+                prev_cc = str(tumor_rows[-1].get("cancer_code") or "").strip()
+                tumor_rows[-1]["qualifying_cancer_codes"] = (
+                    f"{prev_cc}|__ECTOPIC_COHORT__" if prev_cc else "__ECTOPIC_COHORT__"
+                )
         added_comps: set[str] = set()
         for comp, item in sorted(rec_exp.items()):
             if not isinstance(item, dict) or item.get("coverage") != "measured":
@@ -1135,6 +1199,44 @@ def build_human_screening_inputs(
                 }
             )
 
+    # Propagate 135-cohort tumor witness replication & multi-cohort codes onto matching summary rows
+    if extra_tumor_observations is None:
+        ws_res = files("oncoref").joinpath("data/human-tumor-witness-summary.json")
+        if ws_res.is_file():
+            ws_map: dict[str, dict] = json.loads(ws_res.read_text(encoding="utf-8"))
+            norm_max_by_eid: dict[str, float] = {}
+            disp_max_by_eid: dict[str, float] = {}
+            for nrow in normal_rows:
+                neid = str(nrow["entity_id"])
+                nval_f = float(nrow.get("value") or 0.0)
+                if nrow.get("scope") == "disposable":
+                    disp_max_by_eid[neid] = max(disp_max_by_eid.get(neid, 0.0), nval_f)
+                else:
+                    norm_max_by_eid[neid] = max(norm_max_by_eid.get(neid, 0.0), nval_f)
+            best_trow_by_eid: dict[str, dict] = {}
+            for trow in tumor_rows:
+                teid = str(trow["entity_id"])
+                prev = best_trow_by_eid.get(teid)
+                if prev is None or float(trow.get("value") or 0.0) > float(
+                    prev.get("value") or 0.0
+                ):
+                    best_trow_by_eid[teid] = trow
+            for weid, wrec in ws_map.items():
+                trow = best_trow_by_eid.get(weid)
+                if trow is None:
+                    continue
+                eff_thr = 10.0 * max(
+                    norm_max_by_eid.get(weid, 0.0), disp_max_by_eid.get(weid, 0.0), 1.0
+                )
+                if abs(eff_thr - float(wrec.get("threshold_tpm") or 0.0)) < 1e-4:
+                    trow["witness_samples_at_tenfold"] = int(wrec.get("samples_at_tenfold") or 0)
+                    trow["witness_patients_at_tenfold"] = int(
+                        wrec.get("independent_patients_at_tenfold") or 0
+                    )
+                    q_codes = list(wrec.get("qualifying_cancer_codes") or [])
+                    if q_codes:
+                        trow["qualifying_cancer_codes"] = "|".join(q_codes)
+
     if extra_tumor_observations is not None and not extra_tumor_observations.empty:
         extra = extra_tumor_observations.copy()
         extra["comparison_id"] = comp_id
@@ -1208,53 +1310,10 @@ def evaluate_human_catalog(
         else bool(include_chemosensory_gpcr_guard)
     )
     is_integrated = base_any_eval or eff_gdna_eval or eff_repro_f_eval or eff_chemo_eval
-    # Attach #711, #712, #735, #764-#769 adjudication & near-self provenance columns
+    # Attach clinical-clearance, closed-homolog, and near-self 9-mer provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)
     cat = assay_boundary_adjudications.annotate_catalog(cat, enabled=True, integrated=is_integrated)
-    # Reconcile multi-cohort tumor_activation_mode & compartment ordering when packaged 135-cohort catalog matches
-    pkg_ts = target_selection.results()
-    if "tumor_activation_mode" in pkg_ts.columns and extra_tumor_observations is None:
-        pkg_mode_map = dict(
-            zip(
-                pkg_ts["entity_id"],
-                zip(
-                    pkg_ts["is_cancer_antigen"].astype(bool),
-                    pkg_ts["is_reproductive_antigen"].astype(bool),
-                    pkg_ts["reproductive_qualifying_compartments"].fillna("").astype(str),
-                    pkg_ts["tumor_activation_mode"].fillna("").astype(str),
-                ),
-            )
-        )
-        reconciled_modes = []
-        reconciled_rq = []
-        for r_cat in cat.itertuples(index=False):
-            pm = pkg_mode_map.get(str(r_cat.entity_id))
-            cur_rq_str = (
-                str(r_cat.reproductive_qualifying_compartments or "")
-                if pd.notna(r_cat.reproductive_qualifying_compartments)
-                else ""
-            )
-            cur_set = frozenset(c.strip() for c in cur_rq_str.split("|") if c.strip())
-            if pm is not None:
-                pm_ca, pm_ra, pm_rq_str, pm_mode = pm
-                pm_set = frozenset(c.strip() for c in pm_rq_str.split("|") if c.strip())
-                if bool(r_cat.is_reproductive_antigen) and pm_ra and cur_set == pm_set:
-                    cur_rq_str = pm_rq_str
-                elif not bool(r_cat.is_reproductive_antigen):
-                    cur_rq_str = ""
-                if bool(r_cat.is_cancer_antigen) == pm_ca and cur_set == pm_set and pm_mode:
-                    reconciled_modes.append(pm_mode)
-                else:
-                    reconciled_modes.append(str(r_cat.tumor_activation_mode or ""))
-            else:
-                reconciled_modes.append(str(r_cat.tumor_activation_mode or ""))
-            reconciled_rq.append(cur_rq_str)
-        cat["reproductive_qualifying_compartments"] = reconciled_rq
-        cat["tumor_activation_mode"] = reconciled_modes
-        result.summary["cta_activation_modes"] = (
-            cat.loc[cat["is_cta"].astype(bool), "tumor_activation_mode"].value_counts().to_dict()
-        )
     object.__setattr__(result, "catalog", cat)
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()

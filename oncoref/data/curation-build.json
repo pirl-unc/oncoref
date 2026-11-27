@@ -140,6 +140,15 @@
         "scripts/render_antigen_whitepaper.py"
       ]
     },
+    "explorer": {
+      "needs": [
+        "catalog",
+        "host_exposure"
+      ],
+      "argv": [
+        "scripts/render_antigen_explorer.py"
+      ]
+    },
     "tissue_gates": {
       "needs": [],
       "argv": [
@@ -166,6 +175,7 @@
     "docs/target-filters.md",
     "oncoref/data/host-exposure.csv.gz",
     "oncoref/data/host-exposure.json",
+    "docs/antigen-explorer.html",
     "docs/antigen-whitepaper.md",
     "docs/species-antigen-whitepaper.md",
     "docs/tissue-hierarchy.md"

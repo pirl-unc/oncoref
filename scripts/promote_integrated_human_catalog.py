@@ -923,11 +923,12 @@ def main() -> None:
                     promoted[col] = promoted[col].astype(object)
                 promoted.at[idx, col] = iv
 
-    # Add provenance, sex-restriction, activation-mode & cell-line columns directly onto promoted table
+    # Add provenance, sex-restriction, activation-mode, replication & sequence columns directly onto promoted table
     extra_cols = [
         "sex_restriction_class",
         "sex_restriction_code",
         "tumor_activation_mode",
+        "tumor_support",
         "rare_cell_711_requirement",
         "normal_library_712_disposition",
         "home_panel_735_disposition",
@@ -937,12 +938,34 @@ def main() -> None:
         "clinical_clearance_766_disposition",
         "repeat_family_767_disposition",
         "assay_boundary_768_disposition",
+        "clinical_clearance_scope",
+        "clinical_cleared_organs",
+        "clinical_cleared_epitopes",
+        "clinical_hla_alleles",
+        "clinical_cleared_transcripts",
+        "clinical_unverified_isoforms",
+        "clinical_trial_source_ids",
+        "closed_homolog_family_id",
+        "co_silenced_coding_sibling_ids",
+        "closed_self_paralog_ids",
     ]
     for col in extra_cols:
-        promoted[col] = ic_aligned[col].fillna("").astype(str).to_numpy()
+        if col in ic_aligned.columns:
+            promoted[col] = ic_aligned[col].fillna("").astype(str).to_numpy()
+    for num_col in (
+        "exact_unique_9mers",
+        "safe_2mm_9mers",
+        "unsafe_near_self_1mm_pct",
+        "unsafe_shared_tryptic_peptides",
+    ):
+        if num_col in ic_aligned.columns:
+            promoted[num_col] = pd.to_numeric(ic_aligned[num_col], errors="coerce").to_numpy()
     promoted["cell_line_max_tpm"] = np.nan
     promoted["cell_line_top_model"] = ""
     promoted["qualifying_cell_lines"] = ""
+    promoted["qualifying_cancer_codes"] = ""
+    anat_repro_order = integ_res.spec.anatomy.reproductive_compartments
+    witness_summary_by_eid: dict[str, dict[str, object]] = {}
 
     # Reconcile auxiliary display/provenance columns for modified entities
     for idx, row in promoted.iterrows():
@@ -957,6 +980,7 @@ def main() -> None:
                 promoted.at[idx, "normal_screen_pass"] = False
                 promoted.at[idx, "decision_reason"] = str(row["Unsafe_reasons"])
                 promoted.at[idx, "expression_bounds_status"] = "unassessed"
+                promoted.at[idx, "reproductive_qualifying_compartments"] = ""
                 for clear_num in (
                     "normal_reference_tpm",
                     "single_tumor_threshold_tpm",
@@ -1282,36 +1306,48 @@ def main() -> None:
                 kept_q = []
                 for qc in qcomps_cur:
                     he_mx = float(e_he.get(qc, {}).get("max_tpm") or 0.0)
-                    # For resting_breast and HPA-only/embryo compartments, host_exposure holds the
-                    # cleaned secretory-separated / protein-coding peak; keep GTEx single-sample
-                    # qualifying compartments unless cleaned peak fell below 4 TPM (splash artifact).
-                    if qc == "resting_breast" or eid == "PEG:ad22a7bf35b45ca0ec8a":
+                    # For mammary compartments separated & protein-coding-filtered in host_exposure,
+                    # require the cleaned coding peak to meet the 10x threshold; for other GTEx bulk
+                    # compartments, retain single-sample qualifiers unless cleaned peak fell <4 TPM.
+                    if qc in {"resting_breast", "lactating_breast"}:
                         if he_mx >= thr_ra - 1e-6:
                             kept_q.append(qc)
                     elif he_mx >= 4.0 or qc not in e_he:
                         kept_q.append(qc)
-                if kept_q and kept_q != qcomps_cur:
-                    promoted.at[idx, "reproductive_qualifying_compartments"] = " | ".join(kept_q)
-            if eid == "PEG:ad22a7bf35b45ca0ec8a":
-                emb_val = float(e_he.get("embryo", {}).get("max_tpm") or 76.67270943797998)
-                promoted.at[idx, "reproductive_supported_tpm"] = emb_val
-                promoted.at[idx, "reproductive_fold"] = emb_val / denom_ra
-                promoted.at[idx, "reproductive_supported_observations"] = json.dumps(
-                    [
-                        {
-                            "source_id": "petropoulos_E-MTAB-3929",
-                            "tissue": "embryo",
-                            "compartment": "embryo",
-                            "source_context": "7 day / primitive endoderm",
-                            "value": emb_val,
-                        }
-                    ]
-                )
-                promoted.at[idx, "reproductive_supported_context"] = "7 day / primitive endoderm"
-                t_cur = promoted.at[idx, "tumor_max_tpm"]
-                promoted.at[idx, "target_peak_tpm"] = max(
-                    emb_val, float(t_cur) if pd.notna(t_cur) else 0.0
-                )
+                kept_set = set(kept_q)
+                kept_ordered = [c for c in anat_repro_order if c in kept_set] or sorted(kept_set)
+                if kept_ordered:
+                    promoted.at[idx, "reproductive_qualifying_compartments"] = " | ".join(
+                        kept_ordered
+                    )
+                    if (
+                        kept_ordered == ["embryo"]
+                        and "embryo" in e_he
+                        and e_he["embryo"].get("max_tpm") is not None
+                        and "embryo" in qcomps_cur
+                        and len(qcomps_cur) > 1
+                    ):
+                        emb_val = float(e_he["embryo"]["max_tpm"])
+                        promoted.at[idx, "reproductive_supported_tpm"] = emb_val
+                        promoted.at[idx, "reproductive_fold"] = emb_val / denom_ra
+                        promoted.at[idx, "reproductive_supported_observations"] = json.dumps(
+                            [
+                                {
+                                    "source_id": "petropoulos_E-MTAB-3929",
+                                    "tissue": "embryo",
+                                    "compartment": "embryo",
+                                    "source_context": "7 day / primitive endoderm",
+                                    "value": emb_val,
+                                }
+                            ]
+                        )
+                        promoted.at[idx, "reproductive_supported_context"] = (
+                            "7 day / primitive endoderm"
+                        )
+                        t_cur = promoted.at[idx, "tumor_max_tpm"]
+                        promoted.at[idx, "target_peak_tpm"] = max(
+                            emb_val, float(t_cur) if pd.notna(t_cur) else 0.0
+                        )
 
         # Populate reproductive observations/contexts when newly promoted via GSE107746 adult human follicles
         if (
@@ -1450,6 +1486,26 @@ def main() -> None:
             extra_excl = 1 if eid in tgct_restr and "TGCT" not in homol_universe else 0
             if n_c_types > len(homol_universe) + extra_excl:
                 qual_cc_set.add("__ECTOPIC_COHORT__")
+            promoted.at[idx, "qualifying_cancer_codes"] = " | ".join(
+                sorted(c for c in qual_cc_set if c and c != "__ECTOPIC_COHORT__")
+            )
+            s_cur_10x = (
+                int(promoted.at[idx, "samples_at_tenfold"] or 0)
+                if pd.notna(promoted.at[idx, "samples_at_tenfold"])
+                else 0
+            )
+            p_cur_10x = (
+                int(promoted.at[idx, "independent_patients_at_tenfold"] or 0)
+                if pd.notna(promoted.at[idx, "independent_patients_at_tenfold"])
+                else 0
+            )
+            witness_summary_by_eid[eid] = {
+                "threshold_tpm": round(float(thr_act), 6),
+                "samples_at_tenfold": s_cur_10x,
+                "independent_patients_at_tenfold": p_cur_10x,
+                "cancer_types_at_tenfold": n_c_types,
+                "qualifying_cancer_codes": sorted(c for c in qual_cc_set if c),
+            }
             promoted.at[idx, "tumor_activation_mode"] = (
                 species_target_selection.classify_tumor_activation_mode(
                     is_cancer_antigen=True,
@@ -1458,8 +1514,15 @@ def main() -> None:
                     home_tissue=ht_str_act,
                 )
             )
+            promoted.at[idx, "tumor_support"] = species_target_selection.classify_tumor_support(
+                is_cancer_antigen=True,
+                samples_at_tenfold=promoted.at[idx, "samples_at_tenfold"],
+                independent_patients_at_tenfold=promoted.at[idx, "independent_patients_at_tenfold"],
+            )
         else:
+            promoted.at[idx, "qualifying_cancer_codes"] = ""
             promoted.at[idx, "tumor_activation_mode"] = ""
+            promoted.at[idx, "tumor_support"] = ""
             if not bool(promoted.at[idx, "is_reproductive_antigen"]):
                 promoted.at[idx, "reproductive_qualifying_compartments"] = ""
 
@@ -1525,6 +1588,13 @@ def main() -> None:
     legacy_delta_json = ROOT / "oncoref/data/baseline-2026-11-20-deltas.json"
     if legacy_delta_json.exists():
         legacy_delta_json.unlink()
+
+    # Write compact 135-cohort tumor witness summary provenance for build_human_screening_inputs
+    witness_json_path = ROOT / "oncoref/data/human-tumor-witness-summary.json"
+    witness_json_path.write_text(
+        json.dumps(witness_summary_by_eid, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
 
     # Write promoted target-selection.csv.gz
     ts_csv_path = ROOT / "oncoref/data/target-selection.csv.gz"

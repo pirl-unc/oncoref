@@ -13,14 +13,18 @@ does not assert absent normal expression. `Unsafe|Other` is the conservative
 background for screening shared peptides against both categories.
 
 ```python
-from oncoref import antigen_sets
+from oncoref import antigen_sets, antigens
 
-ctas = antigen_sets.proteins("CTA")
-cancer_antigens = antigen_sets.proteins("CA")
-candidates = antigen_sets.proteins("CA|RA")
-unsafe_gene_ids = antigen_sets.gene_ids("Unsafe")
-other = antigen_sets.proteins("Other")
-conservative_background = antigen_sets.sequences("Unsafe|Other")
+# Direct one-call subtraction (accepts a gene symbol or amino-acid sequence):
+unique_9mers = antigens.subtract("MAGEA4", sex="female", max_mismatches=1, lengths=[9])
+
+# Underlying set & sequence tables:
+ctas = antigens.table("CTA")
+cancer_antigens = antigens.table("CA")
+candidates = antigens.table("CA|RA")
+unsafe_gene_ids = antigens.gene_ids("Unsafe")
+other = antigens.table("Other")
+conservative_background = antigens.sequences("Unsafe|Other")
 ```
 
 For host-specific work, select once and use that object's views and background:
@@ -117,11 +121,11 @@ it is not a validated universal equivalence relation. TCR recognition also depen
 on peptide position, HLA and receptor. Neither a retained sequence nor a low
 distance establishes presentation, cross-reactivity or therapeutic safety.
 
-## 1-mismatch Hamming near-self risk and tryptic-MS paralog auditing (`#769`)
+## 1-mismatch Hamming near-self risk and tryptic-MS paralog auditing
 
 Exact 9-mer uniqueness against `Unsafe` proteins (`unsafe_sequence_overlap_pct < 95%`) prevents targeting identical self-peptides, but paralogous cancer–germline families (`MAGE-A`, `PAGE`, `GAGE`) frequently differ from `Unsafe` somatic paralogs by only **one amino acid**—the exact mechanism behind fatal clinical TCR cross-reactivity (`MAGEA3` / `MAGEA12` `KMAELVHFL` vs. `KVAELVHFL`). Conversely, bottom-up healthy-tissue mass spectrometry digests proteins with trypsin and cannot distinguish isobaric isoleucine (`I`) from leucine (`L`), causing peptides shared with ubiquitous `Unsafe` paralogs to masquerade as healthy somatic translation of a CTA.
 
-`oncoref.assay_boundary_adjudications` exposes both pure 1-substitution Hamming screening (`insertion_cost=2.0, deletion_cost=2.0`, forbidding indel window shifts at `max_distance=1.0`) and precomputed `tsarina` columns on `target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()`:
+`oncoref.assay_boundary_adjudications` exposes both pure 1-substitution Hamming screening (`insertion_cost=2.0, deletion_cost=2.0`, forbidding indel window shifts at `max_distance=1.0`) and precomputed columns on `antigens.table()`, `target_selection.results()`, `antigen_sets.proteins()`, and `sequence_bundle.target_selection_dispositions()`:
 
 - `exact_unique_9mers`: distinct candidate 9-mers absent at `0` mismatches from every `Unsafe` Ensembl 115 protein.
 - `safe_2mm_9mers`: distinct candidate 9-mers at Hamming distance **≥ 2** from every `Unsafe` protein (`0` exact and `0` 1-mismatch `Unsafe` neighbors).
@@ -156,12 +160,12 @@ ctas.loc[
 ms_audit = assay_boundary_adjudications.tryptic_ms_paralog_audit()
 ```
 
-## Downstream `tsarina` contracts: closed coding families (`#767`) & isoform clearances (`#766`)
+## Downstream epitope-selection contracts: closed coding families & isoform clearances
 
 Downstream epitope-selection pipelines (`tsarina`) subtract non-target human translations when building `cta_exclusive_peptides()`. Two structured column sets prevent false peptide subtraction and over-broad clinical safety claims:
 
-1. **Closed coding-family sibling preservation (`#767`):** Coding gene families whose non-identical paralogs split across `CTA` and `RA only` / `CA only` (`CT47A1..12` + `CT47B1` vs. `RA only` `CT47C1`; `TSPY1..10` vs. `RA only` `TSPY9`; `SPANXN1..5`; `CSAG1` vs. `CA only` `CSAG2/3`; `NY-ESO-1` vs. `CTAG2`) carry `closed_homolog_family_id` and JSON-encoded Ensembl gene IDs in `co_silenced_coding_sibling_ids` (plus `closed_self_paralog_ids` for `unprocessed_pseudogene` arrays like `DUX4` / `DUX4L*`). Every gene in `co_silenced_coding_sibling_ids` is verified somatically silent (`CTA`, `CA only`, or `RA only`)—never `Unsafe` (`TSPYL1..6` are excluded) and never `Other:Review`—so downstream selectors can exempt co-silenced germline siblings from self-subtraction.
-2. **Isoform- and epitope-scoped clinical clearance (`#766`):** `CTAG2` (`LAGE-1`) encodes `SLLMWITQC` on `ENST00000369585` (`LAGE-1a`, `180 aa`) but **not** on `ENST00000247306` (`LAGE-1b`, `210 aa`). Catalog and `sequence_bundle.target_selection_dispositions()` rows carry `clinical_clearance_scope`, `clinical_cleared_epitopes`, `clinical_hla_alleles`, `clinical_cleared_organs`, `clinical_cleared_transcripts`, and `clinical_unverified_isoforms` so epitope callers only apply clinical lung/bladder clearance to verified pMHC complexes.
+1. **Closed coding-family sibling preservation:** Coding gene families whose non-identical paralogs split across `CTA` and `RA only` / `CA only` (`CT47A1..12` + `CT47B1` vs. `RA only` `CT47C1`; `TSPY1..10` vs. `RA only` `TSPY9`; `SPANXN1..5`; `CSAG1` vs. `CA only` `CSAG2/3`; `NY-ESO-1` vs. `CTAG2`) carry `closed_homolog_family_id` and JSON-encoded Ensembl gene IDs in `co_silenced_coding_sibling_ids` (plus `closed_self_paralog_ids` for `unprocessed_pseudogene` arrays like `DUX4` / `DUX4L*`). Every gene in `co_silenced_coding_sibling_ids` is verified somatically silent (`CTA`, `CA only`, or `RA only`)—never `Unsafe` (`TSPYL1..6` are excluded) and never `Other:Review`—so downstream selectors can exempt co-silenced germline siblings from self-subtraction.
+2. **Isoform- and epitope-scoped clinical clearance:** `CTAG2` (`LAGE-1`) encodes `SLLMWITQC` on `ENST00000369585` (`LAGE-1a`, `180 aa`) but **not** on `ENST00000247306` (`LAGE-1b`, `210 aa`). Catalog and `sequence_bundle.target_selection_dispositions()` rows carry `clinical_clearance_scope`, `clinical_cleared_epitopes`, `clinical_hla_alleles`, `clinical_cleared_organs`, `clinical_cleared_transcripts`, and `clinical_unverified_isoforms` so epitope callers only apply clinical lung/bladder clearance to verified pMHC complexes.
 
 ```python
 import json

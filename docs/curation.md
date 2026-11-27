@@ -5,42 +5,40 @@ maintainer command rebuilds the catalog, figures, and reports from the declared
 evidence inputs in topological order.
 
 ```sh
-# Default CTA membership across all reproductive compartments
-oncoref antigens list --set CTA
+# Cross-species overview across human, dog, and mouse
+oncoref antigens summary
 
-# Host anatomy & tissue-tolerance profiles
-oncoref antigens list --set CTA --profile male-patient
-oncoref antigens list --set CTA --profile male-patient --absent-tissue prostate --absent-tissue "seminal vesicle"
-oncoref antigens list --set CTA --profile female-patient
-oncoref antigens list --set CTA --profile female-patient --lactating
-oncoref antigens list --set CTA --profile female-patient --protect-tissue ovary
+# Default CTA membership and patient-sex protection (--sex protects same-sex reproductive & mammary organs)
+oncoref antigens list --set CTA
+oncoref antigens list --set CTA --sex female --ectopic-only
+oncoref antigens list --set CTA --sex female --lactating
+oncoref antigens list --set CTA --sex male --absent-tissue prostate
+oncoref antigens list --set CTA --species dog --replicated
 
 # Combine with filter modes, fold cutoffs, or patient replication
-oncoref antigens list --set CTA --profile female-patient --mode standard
+oncoref antigens list --set CTA --sex female --mode standard
 oncoref antigens list --set CA --min-tumor-fold 30 --min-patients 2 --format csv
 
 # Inspect every gate, mode, and host profile for one gene
-oncoref antigens explain LALBA --loss
+oncoref antigens explain LALBA --sex female --loss
 oncoref antigens explain CTAG2 --format json
 
 # Sequential catalog + filter attrition funnel
-oncoref antigens funnel --profile male-patient --mode standard
+oncoref antigens funnel --sex female --mode standard
 
-# Exact or bounded-distance peptide subtraction against Unsafe|Other
-oncoref antigens subtract protein.fa --background 'Unsafe|Other' --format csv
+# Exact or bounded-distance peptide subtraction against Unsafe|Other (+ host-excluded CTAs)
+oncoref antigens subtract protein.fa --sex female --background 'Unsafe|Other' --format csv
 oncoref antigens subtract protein.fa --equiv ILV --max-distance 1
 ```
 
-`--set` accepts `CTA`, `CA`, `RA`, `CA|RA`, `Unsafe`, `Other`, and `Unsafe|Other`.
-`--profile` accepts `all` (no host screen), `female-patient` and `male-patient`
-(assumed anatomy, with no reproductive tissue protected by default). Select
-`--protect-tissue testis` or `--protect-tissue ovary` to request smaller sets.
+`--set` accepts `CTA`, `CA`, `RA`, `CA|RA`, `CTA-M`, `CTA-F`, `CTA-P`, `CTA-MF`, `RA-M`, `RA-F`, `RA-P`, `RA-MF`, `Unsafe`, `Other`, and `Unsafe|Other`.
+`--sex {female,male}` protects all non-pregnant, non-lactating adult reproductive and resting mammary organs of that sex in `--species`. Legacy `--profile` (`all`, `female-patient`, `male-patient`) remains available for backward compatibility and marks opposite-sex organs absent without protecting same-sex reproductive tissue unless `--protect-tissue` is added.
+`--ectopic-only` restricts results to confirmed ectopic tumor activation outside homologous source organs; `--replicated` restricts to `>=2` independent patients or tumor samples.
 `--accept-loss` (legacy alias
 `--allow-tissue`) explicitly accepts tissue loss; `--absent-tissue` records absent
 anatomy/state; `--protect-tissue` overrides an exception. `breast` expands to both
 mammary states. `--pregnant` also protects the milk-secretory state, and pregnancy
-remains unresolved because developmental coverage is incomplete. The old `core`
-host shortcut is rejected. [Concepts and exact rules](host-selection.md).
+remains unresolved because developmental coverage is incomplete. [Concepts and exact rules](host-selection.md).
 
 `--ids` exports gene IDs. Background sets remain global when listed directly;
 `subtract --profile ...` adds candidates excluded or unresolved under that host

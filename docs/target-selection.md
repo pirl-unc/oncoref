@@ -6,8 +6,8 @@ presentation or clinical safety.
 
 Catalog `oncoref.target-selection.2026-11-26.2`: **322 CTA** · **66 Cancer Antigen only** · **146 Reproductive Antigen only** · **1,110 Other** · **18,249 Unsafe**.
 
+[Interactive antigen explorer](antigen-explorer.html) ·
 [Antigen whitepaper](antigen-whitepaper.md) ·
-[Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) ·
 [Summary figures](audits/target-selection-20261110/rebuild/summary.md) ·
 [Patient-anatomy rules](host-selection.md) · [Patient profiles & filters](target-filters.md)
 
@@ -89,7 +89,7 @@ A mapping-risk flag is not proof of read misassignment. Strong unresolved signal
 remain Other:Review; low bulk expression alone cannot erase them.
 [Donor records and rationale](audits/normal-cell-atlas-20261110/rare-cell/index.md).
 
-### Nuclear snRNA-seq compartment & transcriptional spillover (`#765`)
+### Nuclear snRNA-seq compartment & transcriptional spillover
 
 Single-nucleus RNA-seq (`snRNA-seq`, `assay_compartment == "nucleus"`) captures unspliced pre-mRNA across long non-coding 5'-UTR introns (`PLAC1`: `197.7 kb` 5'-UTR span, `0.32%` CDS), same-strand termination readthrough downstream of active somatic genes (`PABIR2 → PLAC1`, `EPO → ZAN`, `ERCC5 → METTL21EP`), and divergent promoter-upstream transcripts (`NOP10 ↔ NUTM1` across a `135 bp` head-to-head CpG island at `4,501 TPM` in neutrophils). Because pMHC presentation requires cytoplasmic translation of a coding reading frame, a replicated rare-cell flag clears to `rare_cell_status = "nuclear_only"` (`nuclear_rna_caution = "snrnaseq_intronic_spillover_cleared"`) **only** when all four guardrails hold simultaneously:
 
@@ -100,33 +100,33 @@ Single-nucleus RNA-seq (`snRNA-seq`, `assay_compartment == "nucleus"`) captures 
 
 Cleared loci that lack unresolved paralog ambiguity enter normal native-TPM evaluation directly (`PLAC1 → CTA`, `ZAN → CTA`, `TENT5D → RA only`). [Full nuclear spillover audit](audits/nuclear-rna-spillover-20261123/index.md).
 
-## Stoichiometric multiplex index-hopping vs. boundary carryover (`#764`, `#776`)
+## Stoichiometric multiplex index-hopping vs. boundary carryover
 
-On patterned Illumina flowcells, hyper-abundant reproductive transcripts (`≥ 1,000 TPM`, such as `PRM1` at `58,751 TPM` and `PRM2` at `50,821 TPM` in testis or `KLK3`/`MSMB`/`ACP3` in prostate) hop into co-sequenced somatic and opposite-sex GTEx libraries at `10⁻⁵` to `5 × 10⁻³` of source abundance. `oncoref.normal_library_qc` flags a non-source GTEx biopsy for cross-sample bleed **only** when `≥ 3` source sentinels co-occur at `≥ 0.25 TPM` in stoichiometric proportion (`IQR(log₁₀ α) ≤ 0.5`) **and** orthogonal HPA v23 single-cell clusters, HPA normal IHC, and non-GTEx HPA bulk biopsies confirm absence in that organ. Flagged biopsies are **dropped from the `gtex_donor_p95` denominator** rather than zero-filled (cleaning `PRM1` Thyroid bleed from `8.05` to `5.71 TPM`), whereas anatomic boundary carryover in adjacent pelvic/urogenital organs (`SEMG2` and `TGM4` in `Bladder`) is distinguished and never masked in somatic `N`. In downstream `host-exposure` (`#776`, `#779`), GTEx `Breast_Mammary_Tissue` (`336/514` XY male cadaver biopsies vs. `178` XX female biopsies) is stratified by biological donor sex, reproductive age (`GTEx AGE 20–49` across female reproductive & mammary organs), and secretory state (`female_max_tpm` vs. `male_max_tpm`), adult human folliculogenesis/oocyte expression (`GSE107746`, `128` QC-passing single-cell/follicle libraries across `9` cell-type × stage strata) is integrated into `ovary`, GTEx-v11-missing `vagina` and `uterus` measurements (`TSSK2`) are backfilled from pinned `rna_tissue_gtex:v23` and `hpa_tissue_samples:v23`, and `classify_sex_restriction` partitions all `RA`s and `CTA`s into four mutually exclusive physiological classes—`RA-M` / `CTA-M` (`222 CTA-M`), `RA-F` / `CTA-F` (`12 CTA-F`), `RA-MF` / `CTA-MF` (`40 CTA-MF`), and `RA-P` / `CTA-P` (`48 CTA-P`, pregnancy/peripartum-only across `embryo`, `placenta`, and `lactating_breast`; legacy aliases `CTA-E`/`RA-E`/`ERA`/`PRA`). [Multiplex bleed QC audit](audits/multiplex-bleed-qc-20261123/index.md).
+On patterned Illumina flowcells, hyper-abundant reproductive transcripts (`≥ 1,000 TPM`, such as `PRM1` at `58,751 TPM` and `PRM2` at `50,821 TPM` in testis or `KLK3`/`MSMB`/`ACP3` in prostate) hop into co-sequenced somatic and opposite-sex GTEx libraries at `10⁻⁵` to `5 × 10⁻³` of source abundance. `oncoref.normal_library_qc` flags a non-source GTEx biopsy for cross-sample bleed **only** when `≥ 3` source sentinels co-occur at `≥ 0.25 TPM` in stoichiometric proportion (`IQR(log₁₀ α) ≤ 0.5`) **and** orthogonal HPA v23 single-cell clusters, HPA normal IHC, and non-GTEx HPA bulk biopsies confirm absence in that organ. Flagged biopsies are **dropped from the `gtex_donor_p95` denominator** rather than zero-filled (cleaning `PRM1` Thyroid bleed from `8.05` to `5.71 TPM`), whereas anatomic boundary carryover in adjacent pelvic/urogenital organs (`SEMG2` and `TGM4` in `Bladder`) is distinguished and never masked in somatic `N`. In downstream `host-exposure`, GTEx `Breast_Mammary_Tissue` (`336/514` XY male cadaver biopsies vs. `178` XX female biopsies) is stratified by biological donor sex, reproductive age (`GTEx AGE 20–49` across female reproductive & mammary organs), and secretory state (`female_max_tpm` vs. `male_max_tpm`), adult human folliculogenesis/oocyte expression (`GSE107746`, `128` QC-passing single-cell/follicle libraries across `9` cell-type × stage strata) is integrated into `ovary`, GTEx-v11-missing `vagina` and `uterus` measurements (`TSSK2`) are backfilled from pinned `rna_tissue_gtex:v23` and `hpa_tissue_samples:v23`, and `classify_sex_restriction` partitions all `RA`s and `CTA`s into four mutually exclusive physiological classes—`RA-M` / `CTA-M` (`222 CTA-M`), `RA-F` / `CTA-F` (`12 CTA-F`), `RA-MF` / `CTA-MF` (`40 CTA-MF`), and `RA-P` / `CTA-P` (`48 CTA-P`, pregnancy/peripartum-only across `embryo`, `placenta`, and `lactating_breast`). [Multiplex bleed QC audit](audits/multiplex-bleed-qc-20261123/index.md).
 
-## Isoform- & epitope-scoped clinical pMHC organ clearance (`#766`)
+## Isoform- & epitope-scoped clinical pMHC organ clearance
 
 Human adoptive TCR-T trials (`lete-cel` targeting `HLA-A*02:01 / SLLMWITQC` on `NY-ESO-1` and `CTAG2/LAGE-1a`; `afami-cel` on `MAGEA4`; `IMA203` on `PRAME`) directly test whether vascularly perfused organs present lethal levels of a specific pMHC complex *in vivo*, while fatal clinical toxicities (`MAGEA3` titin cardiotoxicity, `MAGEA3/A12` necrotizing leukoencephalopathy) remain permanent `Unsafe` negative controls. Clinical clearance (`oncoref.clinical_organ_clearance`) is strictly **epitope-, HLA-, and Ensembl-115-isoform-scoped**:
 
 - **Isoform specificity (`CTAG2`):** `ENST00000369585` (`LAGE-1a`, `180 aa`) encodes `SLLMWITQC` (`aa 157–165`), whereas `ENST00000247306` (`LAGE-1b`, `210 aa`) retains intron-2 sequence and **lacks `SLLMWITQC`**. `CTAG2` advances from `Other:Review → CTA` (`604.3 TPM` in `OV` vs. `6.92 TPM` GTEx Urinary Bladder baseline, `87.3×`), while `clinical_clearance_scope = "epitope"`, `clinical_cleared_transcripts = ["ENST00000369585"]`, and `clinical_unverified_isoforms = ["ENST00000247306"]` warn downstream epitope selectors (`tsarina`) not to generalize lung/bladder safety to unverified `LAGE-1b` peptides or other HLA alleles.
-- **Barrier & modality guardrails:** Systemic IV TCR-T never clears blood–brain/retina/testis barrier-protected organs (`brain` on `CTAG2` is resolved separately by `#711` Xq28 31-mer attribution) and never clears `heart` when confounded cardiac events exist; peptide/protein vaccines cannot grant organ clearance. [Clinical organ-clearance audit](audits/clinical-organ-clearance-20261123/index.md).
+- **Barrier & modality guardrails:** Systemic IV TCR-T never clears blood–brain/retina/testis barrier-protected organs (`brain` on `CTAG2` is resolved separately by Xq28 31-mer attribution) and never clears `heart` when confounded cardiac events exist; peptide/protein vaccines cannot grant organ clearance. [Clinical organ-clearance audit](audits/clinical-organ-clearance-20261123/index.md).
 
-## Closed homologous repeat-family sequence equivalence (`#767`)
+## Closed homologous repeat-family sequence equivalence
 
 Tandem repeat arrays and recently duplicated cancer–germline gene clusters (`DUX4` across `D4Z4` on `4q35`/`10q26`, `CT47A*`, `TSPY*`, `SPANX*`, `CSAG*`, `CTAG*`) trigger `paralog_ambiguous = True` in single-gene aligners even when every sequence-sharing copy in the human genome is equally silent across healthy adult somatic organs. `oncoref.repeat_family_equivalence` partitions sequence partners of each paralog-flagged locus `g` into:
 
 - **`P_self(g)` (closed self-family homologs):** primary-assembly `protein_coding` and `unprocessed_pseudogene` copies sharing `≥ 85%` CDS 31-mers (or `≥ 90%` amino-acid identity) with zero `Unsafe` somatic expression (`unsafe_sequence_overlap_pct < 5%` and family-summed somatic donor `P95 < 5.0 TPM`).
 - **`P_ext(g)` (external / somatic paralogs):** `Unsafe` coding paralogs (`PSG8 ↔ PSG1`, `POTEC ↔ POTED/E`, `GAGE2E ↔ GAGE12F/G`), `processed_pseudogene` retrocopies, or chimeric somatic hosts, which remain blocked in `Other:Review`.
 
-When `P_ext(g)` is empty, symmetric family-summed expression across `{g} ∪ P_self(g)` tests somatic silence honestly (`DUX4` + `20` `DUX4L*` repeat units = `0.00 TPM` in GTEx Skeletal Muscle and Skin, `0.30 TPM` somatic max, advancing `DUX4 → CTA` [`CTA-P`] jointly with `#765`). Catalog rows also expose `closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, and `closed_self_paralog_ids` so downstream peptide subtraction (`tsarina`) does not self-subtract shared epitopes against co-silenced germline siblings (`CT47C1`, `TSPY9`, `SPANXN2/5`, `CSAG2/3`). [Closed repeat-family audit](audits/repeat-family-equivalence-20261123/index.md).
+When `P_ext(g)` is empty, symmetric family-summed expression across `{g} ∪ P_self(g)` tests somatic silence honestly (`DUX4` + `20` `DUX4L*` repeat units = `0.00 TPM` in GTEx Skeletal Muscle and Skin, `0.30 TPM` somatic max, advancing `DUX4 → CTA` [`CTA-P`] jointly with nuclear-spillover clearance). Catalog rows also expose `closed_homolog_family_id`, `co_silenced_coding_sibling_ids`, and `closed_self_paralog_ids` so downstream peptide subtraction (`tsarina`) does not self-subtract shared epitopes against co-silenced germline siblings (`CT47C1`, `TSPY9`, `SPANXN2/5`, `CSAG2/3`). [Closed repeat-family audit](audits/repeat-family-equivalence-20261123/index.md).
 
-## Protein staining & assay-boundary reconciliations (`#768`)
+## Protein staining & assay-boundary reconciliations
 
 Identity-resolved, reliable normal protein evidence can independently mark a protein
 Unsafe under the tissue-tier policy. Antibody reliability, specificity, cell type and
 source scope remain part of each finding. Four explicit assay-boundary reconciliations (`oncoref.assay_boundary_adjudications`) prevent single-assay artifacts from misclassifying targets:
 
-1. **Non-admixed tumor witness requirement (`#713` Note `R` `TCGA-TGCT`):** `11` post-meiotic spermatid markers (`PRM2`, `CETN1`, `PGK2`, `BOD1L2`, `CCDC70`, `TSSK2`, `PRR30`, `ZNRF4`, `IQCF5`, `BPIFA3`, `CYLC2`) whose `≥ 10×` cancer signal rested solely on `library_qc` Note `R` seminiferous-parenchyma-admixed `TCGA-TGCT` biopsies reclassify to `Reproductive Antigen only`, whereas `PRM1` (`58.97 TPM` in female `BRCA`) and `SPATA19` (`13.28 TPM` in `#737` `cSCC`) retain independent somatic tumor witnesses and remain `CTA`.
+1. **Non-admixed tumor witness requirement (seminiferous-parenchyma-admixed `TCGA-TGCT`):** `11` post-meiotic spermatid markers (`PRM2`, `CETN1`, `PGK2`, `BOD1L2`, `CCDC70`, `TSSK2`, `PRR30`, `ZNRF4`, `IQCF5`, `BPIFA3`, `CYLC2`) whose `≥ 10×` cancer signal rested solely on seminiferous-parenchyma-admixed `TCGA-TGCT` biopsies reclassify to `Reproductive Antigen only`, whereas `PRM1` (`58.97 TPM` in female `BRCA`) and `SPATA19` (`13.28 TPM` in `cSCC`) retain independent somatic tumor witnesses and remain `CTA`.
 2. **RNA-zero single-antibody HPA IHC (`cta-ihc-unreliable.csv`):** Single-antibody staining contradicted by `100%` complete required somatic RNA silence (`< 0.5 TPM` and `< 1.0 nTPM`, e.g. `MAGEB6` at `0.012 TPM` somatic max) clears to `CTA`, whereas loci with somatic RNA (`NLRP9` at `2.32 TPM`) remain `Unsafe`.
 3. **Adult cornea (`GSE155683`) multi-UMI support floor:** Requires `≥ 10` adult corneal cells with `≥ 2` UMIs, matching the rare-cell screen's minimum support (`DKKL1` with `8 / 21,343` cells advances `Unsafe → CTA`; `INSL4`, `GPHB5`, `QRFP`, `C20orf202` with `24–64` cells stay `Unsafe`).
 4. **Protamine-diluted germline transcription factors:** Nuclear germ-cell regulators compressed below `10 TPM` in whole-testis bulk RNA by `> 100,000 TPM` late-spermatid protamines qualify on `RA` when somatic normal expression is silent (`≤ 0.10 TPM`, `0.0 nTPM` somatic scRNA), germline bulk reaches `≥ 5.0 TPM` (`≥ 50×` over somatic) across `≥ 2` GTEx Testis donors `≥ 3.0 TPM`, and HPA germ-cell `scRNA-seq` confirms germline lineage expression (`≥ 1.0 nTPM`), advancing `FOXR2`, `SPATA31A3`, and `PPP4R3C` from `CA only → CTA` (`CTA-M`). [Assay-boundary & 1-mm near-self audit](audits/assay-boundary-near-self-20261123/index.md).
@@ -140,7 +140,7 @@ retains sources, adjudication and supersession history.
 ## Home tissue the panels do not resolve
 
 Olfactory epithelium, nasal mucosa, taste buds, hair follicle, dental pulp and mineralized
-bone are not resolved by the standard GTEx/HPA bulk native-TPM panels. `oncoref.unmeasured_home_panels` integrates SHA-256-pinned adult human bulk TPM and donor-resolved single-cell UMI panels across these six tissues (`#735`): proteins exceeding their home-tissue injury-tier ceiling (`SP7` and `PANX3` in bone, `GFY` and `BPIFB3` in olfactory epithelium, `GLYATL3`) become `Unsafe`, proteins clearing adult home panels or Disposable follicle bounds (`4` `KRTAP*` hair-shaft proteins in `CA only` under clean tumor QC—`KRTAP20-3`, `KRTAP21-2`, `KRTAP21-3`, `KRTAP6-2`—plus `KRTAP20-4` promoted to `CTA`) enter the candidate sets, while monogenic chemosensory GPCRs (`OR*`, `TAAR*`, `TAS1R*`, `TAS2R*`, `VN1R*`—expressed in `~0.1%` singular olfactory sensory neurons or solitary chemosensory/taste receptor cells diluted `1,000×` in bulk tissue) and proteins whose sub-niche remains unmeasured (`DSPP` odontoblast process, `CALHM3` type II taste cells) stay held out of `CA` (`Other:Unscreened tissue` when `RA` is negative, e.g. `OR8K5`, `TAS1R2`, `OR7C2`, `OR2D2`; or `Reproductive Antigen only` when `RA` independently qualifies, e.g. `OR10J1`, `OR1N1`, `OR4M2`). A protein with a documented home in an unmeasured niche can still qualify as `RA`.
+bone are not resolved by the standard GTEx/HPA bulk native-TPM panels. `oncoref.unmeasured_home_panels` integrates SHA-256-pinned adult human bulk TPM and donor-resolved single-cell UMI panels across these six tissues: proteins exceeding their home-tissue injury-tier ceiling (`SP7` and `PANX3` in bone, `GFY` and `BPIFB3` in olfactory epithelium, `GLYATL3`) become `Unsafe`, proteins clearing adult home panels or Disposable follicle bounds (`4` `KRTAP*` hair-shaft proteins in `CA only` under clean tumor QC—`KRTAP20-3`, `KRTAP21-2`, `KRTAP21-3`, `KRTAP6-2`—plus `KRTAP20-4` promoted to `CTA`) enter the candidate sets, while monogenic chemosensory GPCRs (`OR*`, `TAAR*`, `TAS1R*`, `TAS2R*`, `VN1R*`—expressed in `~0.1%` singular olfactory sensory neurons or solitary chemosensory/taste receptor cells diluted `1,000×` in bulk tissue) and proteins whose sub-niche remains unmeasured (`DSPP` odontoblast process, `CALHM3` type II taste cells) stay held out of `CA` (`Other:Unscreened tissue` when `RA` is negative, e.g. `OR8K5`, `TAS1R2`, `OR7C2`, `OR2D2`; or `Reproductive Antigen only` when `RA` independently qualifies, e.g. `OR10J1`, `OR1N1`, `OR4M2`). A protein with a documented home in an unmeasured niche can still qualify as `RA`.
 
 ## Tumor quality and replication
 
@@ -166,22 +166,22 @@ samples from one known patient count once. Unknown donors do not count as known 
 
 ![Host choices and outcomes](audits/target-selection-20261110/rebuild/summary/cta-tiers-and-profiles.png)
 
-## One selection API and downstream `tsarina` columns
+## Unified `oncoref.antigens` API and pre-baked downstream columns
 
 ```python
-from oncoref import antigen_sets, target_selection
+from oncoref import antigens, target_selection
 
-selection = antigen_sets.select("CTA", mode="standard")
-proteins = selection.proteins()
-genes = selection.gene_ids()
-sequences = selection.sequences()  # offline sequence_bundle or local Ensembl 115
-background = selection.background_index("Unsafe|Other")
+female_safe = antigens.table("CTA", sex="female", ectopic_only=True)
+antigens.explain("CTAG2", sex="female")
+unique_9mers = antigens.subtract("MAGEA4", sex="female", max_mismatches=1, lengths=[9])
 
-# Inspect structured clinical clearance, closed-family sibling, and 1-mm near-self columns
+# Pre-baked clinical clearance, closed-family sibling, replication, and 1-mm near-self columns
 cols = [
     "protein_group_label",
     "classification",
     "sex_restriction_code",
+    "tumor_activation_mode",
+    "tumor_support",
     "clinical_clearance_scope",
     "clinical_cleared_transcripts",
     "closed_homolog_family_id",

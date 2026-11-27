@@ -18,7 +18,21 @@ loss, repair and management** separately through
 `tissue_tiers.consequences(...)` and `antigen_sets.loss_consequences(...)`.
 Anatomy and tissue-loss choices do not override global Unsafe or Other findings.
 
-## One explicit host object
+## Plain-language sex protection vs. explicit `HostContext`
+
+For standard patient queries, `antigens.table(..., sex="female" | "male")` (or `oncoref antigens list --sex female|male` on the CLI) automatically protects **all** non-pregnant, non-lactating adult reproductive and resting mammary organs of that biological sex in the chosen species and enforces `>=10×` tumor fold above protected-organ exposure (`258` of `270` `CTA-M + CTA-P` human CTAs for `sex="female"`; `58` of `60` `CTA-F + CTA-P` human CTAs for `sex="male"`), while letting you declare surgical absences (`absent=("ovary", "uterus")`) or accepted organ loss (`accept_loss=("prostate",)`):
+
+```python
+from oncoref import antigens
+
+# Protects ovary, uterus, endometrium, fallopian tube, cervix, vagina, and resting_breast:
+female_ctas = antigens.table("CTA", sex="female", ectopic_only=True)
+pregnant_ctas = antigens.table("CTA", sex="female", pregnant=True)
+antigens.explain("LALBA", sex="female")  # excluded (resting_breast >= 8 nTPM)
+antigens.explain("MAGEA4", sex="female")  # pass_host=True (CTA-M)
+```
+
+For custom RNA/nTPM thresholds (`max_tpm`, `max_ntpm`, `negative_ihc_multiplier`), construct `HostContext` directly:
 
 ```python
 from oncoref import antigen_sets
@@ -36,17 +50,12 @@ decisions = selection.decisions()
 assumptions = selection.metadata
 ```
 
-Every unspecified compartment is **not protected**. `HostContext()` and both
-anatomy presets retain the full candidate set at the chosen evidence mode.
+When constructing `HostContext` directly, every unspecified compartment is **not protected**.
 `protect`, `absent` and `accept_loss` must be explicit, disjoint tuples.
 Host protection can include vagina and either mammary state. `breast` expands to both. These conditional compartments
 supplement the catalog's shared normal screen; they do not represent every organ.
 
-Compatibility presets `male-patient` and `female-patient` encode **assumed anatomy**,
-not anatomy inferred from sex or chromosomes. They protect no reproductive tissue by default, assume no
-current pregnancy or lactation, and return those assumptions in metadata. Override
-actual organs with `absent_tissues`, `protect_tissues` and `allow_tissues` (the legacy
-name for accepting loss). Surgery must be represented by verified absence, not by
+Legacy compatibility presets `--profile male-patient` and `--profile female-patient` encode **assumed absent opposite-sex anatomy only**—unlike `--sex`, they protect **no** reproductive tissue by default. Prefer `--sex female` / `--sex male` (or `antigens.table(..., sex=...)`) when you want same-sex reproductive and mammary organs protected automatically. Surgery must be represented by verified absence (`absent=...`), not by
 an automatic promise that no residual tissue exists. `all` means no host screen.
 
 Use `reproductive_qualifying_compartments` for biological origin and `host_status` for the patient-profile decision.

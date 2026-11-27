@@ -6,8 +6,9 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 <span class="cat cat-ca">CA</span>, <span class="cat cat-ra">RA</span>, and
 <span class="cat cat-cta">CTA</span> classification.
 
+[Interactive antigen explorer](antigen-explorer.html) ·
 [Antigen whitepaper](antigen-whitepaper.md) ·
-[Interactive catalog](audits/target-selection-20261110/rebuild/report.html) ·
+[Multi-species whitepaper](species-antigen-whitepaper.md) ·
 [Classification rules](target-selection.md) ·
 [Patient profiles & filters](target-filters.md) ·
 [CLI & builds](curation.md) ·
@@ -19,33 +20,33 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), OncoRef
 classifies **322 CTA, 66 Cancer Antigen only, 146 Reproductive Antigen only, 1,110 Other and
-18,249 Unsafe**:
+18,249 Unsafe**—using the same mathematical screening architecture across **human**, **domestic dog** (**118** CTAs), and **laboratory mouse** (**8** *in vivo* CTAs):
 
-1. **Normal-tissue safety screen:** Bulk RNA (GTEx v11, HPA v23), sorted immune subsets (HPA, DICE, Monaco),
+1. **Normal-tissue safety screen:** Bulk RNA (GTEx v11, HPA v23), sorted and activated immune subsets,
    single-cell clusters, donor-resolved rare-cell UMI atlases (CELLxGENE + Siletti), adult cornea scRNA,
    normal protein staining (HPA IHC), and reviewed normal-tissue literature exclude proteins expressed in healthy
    adult organs as <span class="cat cat-unsafe">Unsafe</span>. Proteins with missing coverage, unresolved paralog signals,
-   or `Unsafe` sequence overlap land in <span class="cat cat-other">Other</span> rather than being treated as safe.
+   unscreened sensory micro-niches, or `Unsafe` sequence overlap land in <span class="cat cat-other">Other</span> rather than being treated as safe.
 2. **Symmetric 10× enrichment:** Against one shared non-thymic healthy baseline
    **H₀ = max(Normal N, Disposable D, 1 TPM)**,
-   <span class="cat cat-ca">Cancer Antigens (CA)</span> require **≥ 10 × H₀** in a QC-passing tumor sample and
+   <span class="cat cat-ca">Cancer Antigens (CA)</span> require **≥ 10 × H₀** in a QC-passing *in vivo* tumor sample and
    <span class="cat cat-ra">Reproductive Antigens (RA)</span> require **≥ 10 × H₀** in a reproductive or embryonic sample.
-   Proteins passing both routes form the <span class="cat cat-cta">CTA</span> set.
+   Proteins passing both routes form the <span class="cat cat-cta">CTA</span> set (**311/322 = 96.6%** with ectopic activation outside homologous source organs).
 3. **Patient-specific & cross-sex filtering:** Biological <span class="cat cat-cta">CTA</span>, <span class="cat cat-ca">CA</span>,
    and <span class="cat cat-ra">RA</span> labels record where a protein is expressed, not what a particular patient can
-   safely lose. Downstream patient profiles (`--profile` / `target_filters`) mark reproductive compartments as
+   safely lose. Downstream patient protection (`antigens.table("CTA", sex="female" | "male")` or `--sex female|male`) marks reproductive compartments as
    <span class="cat cat-protect">Protect</span>, <span class="cat cat-loss">Accept loss</span>, or
    <span class="cat cat-absent">Absent</span>—partitioning all **322** human CTAs into four mutually exclusive host-physiology classes:
    **222** `CTA-M` (`270` non-pregnant female-safe `CTA-M + CTA-P`), **12** `CTA-F` (`60` male-safe `CTA-F + CTA-P`),
-   **48** adult-absent pregnancy/peripartum `CTA-P`, and **40** shared `CTA-MF` under calibrated `Protected` + `IHC−` organ protection
+   **48** adult-absent pregnancy/peripartum `CTA-P`, and **40** shared `CTA-MF`
    ([cross-sex CTAs](antigen-whitepaper.md#sex-restricted-reproductive-antigens-and-cross-sex-ctas),
    [multi-species whitepaper](species-antigen-whitepaper.md),
    [rules and limits](host-selection.md)).
 
 ![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
 
+[Interactive antigen explorer](antigen-explorer.html) ·
 [Antigen whitepaper](antigen-whitepaper.md) ·
-[Interactive protein catalog](audits/target-selection-20261110/rebuild/report.html) ·
 [Summary figures](audits/target-selection-20261110/rebuild/summary.md) ·
 [Data & downloads](antigen-data.md) ·
 [Donor-level rare-cell RNA](audits/normal-cell-atlas-20261110/rare-cell/index.md)
@@ -57,13 +58,14 @@ pip install oncoref
 ```
 
 ```python
-from oncoref import antigen_sets, cancer_ontology, ici_response
+from oncoref import antigens, cancer_ontology, ici_response
 
-# Biological selection and consistent decision / sequence views
-selection = antigen_sets.select("CTA", mode="standard")
-ctas = selection.proteins()
-decisions = selection.decisions()
-forbidden_bg = antigen_sets.proteins("Unsafe|Other")
+# Cross-species summary, patient-safe antigen filtering, and peptide subtraction
+antigens.summary()
+female_safe_ctas = antigens.table("CTA", sex="female", ectopic_only=True)
+dog_ctas = antigens.table("CTA", species="dog", replicated_only=True)
+antigens.explain("PRAME", sex="female")
+unique_peptides = antigens.subtract("MAGEA4", sex="female", max_mismatches=1)
 
 # Cancer ontology and ICI response
 crc_msi = cancer_ontology.cancer_type_records(subtype_group="MSI", under="CRC")
@@ -84,7 +86,7 @@ ici_response.best_available_ici_response("COAD_MSI")
 
 | Domain | Preferred modules | Use for |
 | --- | --- | --- |
-| Antigen classification | `oncoref.target_selection`, `oncoref.target_filters`, `oncoref.antigen_sets`, `oncoref.peptide_subtraction` | Proteome-wide `CA`, `RA`, `CTA`, `Other`, `Unsafe` calls, patient-specific organ filters, Ensembl 115 sequences, exact/edit-distance peptide subtraction |
+| Antigen classification | `oncoref.antigens`, `oncoref.antigen_sets`, `oncoref.target_selection`, `oncoref.peptide_subtraction` | Cross-species `CA`, `RA`, `CTA`, `Other`, `Unsafe` discovery, patient sex/organ protection, Ensembl sequences, exact/edit-distance peptide subtraction |
 | Tissue injury tiers | `oncoref.tissue_tiers`, `oncoref.target_curation` | Cited bulk and cell-level injury tiers (`Vital`, `Protected`, `Manageable`, `Disposable`), acute/persistent loss consequences, curated normal-tissue homes |
 | Cancer vocabulary | `oncoref.cancer_ontology`, `oncoref.cohorts` | Registry records, aliases, hierarchy, subtype axes, MMR/MSI status, cohort IDs, matched normal tissues |
 | Expression & QC | `oncoref.expression`, `oncoref.normalization`, `oncoref.library_qc`, `oncoref.samples` | Source-matrix ingestion, percentiles, clean TPM, housekeeping normalization, library-contamination screens, patient/donor deduplication |

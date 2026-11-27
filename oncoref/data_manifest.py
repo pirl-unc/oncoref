@@ -447,6 +447,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "QC-passing, identity-harmonized per-sample linear-TPM observations across #737 upgraded tumor cohorts (THYMCA, BCC, cSCC)",
     ),
+    "human-tumor-witness-summary": (
+        "cta-evidence",
+        "135-cohort per-entity qualifying tumor sample, independent patient, and cancer-code witness counts for human evaluate_species_catalog",
+    ),
     "human-integrated-policy-preview": (
         "cta-evidence",
         "protein-level category and classification transitions when folding #735, #711/#712, #737, and #764-#768 into evaluate_species_catalog (#755)",

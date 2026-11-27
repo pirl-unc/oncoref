@@ -73,7 +73,7 @@ layer 3 has tightened Cancer Antigens.
 | `min_tumor_fold` | 100.0 | 474 | 109 | 6 | 359 |
 | `min_reproductive_fold` | 20.0 | 500 | 279 | 109 | 112 |
 | `min_reproductive_fold` | 30.0 | 486 | 254 | 134 | 98 |
-| `min_reproductive_fold` | 50.0 | 467 | 207 | 181 | 79 |
+| `min_reproductive_fold` | 50.0 | 466 | 207 | 181 | 78 |
 | `min_reproductive_fold` | 100.0 | 446 | 168 | 220 | 58 |
 | `min_tumor_patients` | 1 | 516 | 284 | 48 | 184 |
 | `min_tumor_patients` | 2 | 498 | 218 | 30 | 250 |

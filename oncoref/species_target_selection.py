@@ -77,6 +77,12 @@ TUMOR_ACTIVATION_MODES = (
     "ectopic_and_lineage_retained",
 )
 
+TUMOR_SUPPORT_TIERS = (
+    "",
+    "replicated",
+    "single_sample",
+)
+
 HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT: dict[str, frozenset[str]] = {
     "testis": frozenset({"TGCT"}),
     "embryo": frozenset({"TGCT"}),
@@ -118,7 +124,39 @@ HOMOLOGOUS_CANCER_CODES_BY_COMPARTMENT: dict[str, frozenset[str]] = {
     "lactating_mammary": frozenset({"CMT", "EMT6", "4T1", "EO771"}),
     "cutaneous_melanocyte": frozenset({"SKCM", "UVM", "B16F10", "B78_MEL"}),
     "thyroid gland": frozenset({"THCA"}),
+    "hair follicle": frozenset({"BCC", "cSCC"}),
+    "bone": frozenset({"SARC_OS", "OSA"}),
+    "dental pulp": frozenset(),
+    "taste bud": frozenset({"HNSC"}),
+    "buccal mucosa": frozenset({"HNSC"}),
+    "olfactory epithelium": frozenset(),
+    "nasal mucosa": frozenset({"HNSC"}),
+    "urinary bladder": frozenset({"BLCA", "UC", "MB49"}),
+    "brain": frozenset({"GBM", "LGG", "MBL", "EPN", "DIPG", "GL261", "CANINE_GLIOMA"}),
+    "liver": frozenset({"LIHC", "HEPA1_6"}),
+    "lung": frozenset({"LUAD", "LUSC", "LLC"}),
+    "colon": frozenset({"COAD", "READ", "MC38", "CT26"}),
 }
+
+
+def classify_tumor_support(
+    *,
+    is_cancer_antigen: bool,
+    samples_at_tenfold: object = 0,
+    independent_patients_at_tenfold: object = 0,
+) -> str:
+    """Classify tumor replication support as ``replicated``, ``single_sample``, or ``""``."""
+    if not is_cancer_antigen:
+        return ""
+    patients = (
+        int(independent_patients_at_tenfold)
+        if pd.notna(independent_patients_at_tenfold) and independent_patients_at_tenfold != ""
+        else 0
+    )
+    samples = (
+        int(samples_at_tenfold) if pd.notna(samples_at_tenfold) and samples_at_tenfold != "" else 0
+    )
+    return "replicated" if (patients >= 2 or samples >= 2) else "single_sample"
 
 
 def classify_tumor_activation_mode(
@@ -192,11 +230,17 @@ class SpeciesAnatomyProfile:
 
     @property
     def lactating_mammary_compartment(self) -> str:
-        return self.mammary_compartments[0]
+        return next(
+            (c for c in self.mammary_compartments if c.startswith("lactating_")),
+            self.mammary_compartments[0],
+        )
 
     @property
     def resting_mammary_compartment(self) -> str:
-        return self.mammary_compartments[-1]
+        return next(
+            (c for c in self.mammary_compartments if c.startswith("resting_")),
+            self.mammary_compartments[-1],
+        )
 
     @property
     def male_sex_compartments(self) -> tuple[str, ...]:
@@ -1701,17 +1745,29 @@ def evaluate_species_catalog(
         t_peak = float(valid_t.value.max()) if not valid_t.empty else np.nan
         t_code = (
             str(valid_t.sort_values("value", ascending=False).iloc[0].get("cancer_code", ""))
+            .split("|")[0]
+            .strip()
             if not valid_t.empty
             else ""
         )
         t_ratio = t_peak / denom if pd.notna(t_peak) else np.nan
         t_threshold = spec.enrichment_fold * denom
         if not valid_t.empty and "cancer_code" in valid_t.columns:
-            tum_qual_codes_by_eid[eid] = {
-                str(cc).strip()
-                for cc in valid_t.loc[valid_t["value"] >= t_threshold, "cancer_code"]
-                if pd.notna(cc) and str(cc).strip()
-            }
+            qual_codes_eid: set[str] = set()
+            for raw_cc in valid_t.loc[valid_t["value"] >= t_threshold, "cancer_code"]:
+                if pd.notna(raw_cc):
+                    for part in str(raw_cc).split("|"):
+                        if part.strip():
+                            qual_codes_eid.add(part.strip())
+            if "qualifying_cancer_codes" in valid_t.columns:
+                for raw_qcc in valid_t.loc[
+                    valid_t["value"] >= t_threshold, "qualifying_cancer_codes"
+                ]:
+                    if pd.notna(raw_qcc):
+                        for part in str(raw_qcc).split("|"):
+                            if part.strip():
+                                qual_codes_eid.add(part.strip())
+            tum_qual_codes_by_eid[eid] = qual_codes_eid
 
         cl_df = cl_by_entity.get(eid)
         if cl_df is not None and not cl_df.empty:
@@ -1883,8 +1939,25 @@ def evaluate_species_catalog(
         tum_max.append(t_peak)
         tum_top_code.append(t_code)
         tum_fold.append(t_ratio)
-        samples_10x.append(ca_rec["samples_at_tenfold"])
-        patients_10x.append(ca_rec["independent_participants_at_tenfold"])
+        s_10x_val = int(ca_rec["samples_at_tenfold"])
+        p_10x_val = int(ca_rec["independent_participants_at_tenfold"])
+        if not valid_t.empty:
+            passing_t = valid_t[valid_t["value"] >= t_threshold]
+            if not passing_t.empty:
+                if "witness_samples_at_tenfold" in passing_t.columns:
+                    ws = pd.to_numeric(
+                        passing_t["witness_samples_at_tenfold"], errors="coerce"
+                    ).dropna()
+                    if not ws.empty:
+                        s_10x_val = max(s_10x_val, int(ws.max()))
+                if "witness_patients_at_tenfold" in passing_t.columns:
+                    wp = pd.to_numeric(
+                        passing_t["witness_patients_at_tenfold"], errors="coerce"
+                    ).dropna()
+                    if not wp.empty:
+                        p_10x_val = max(p_10x_val, int(wp.max()))
+        samples_10x.append(s_10x_val)
+        patients_10x.append(p_10x_val)
         patient_folds_json.append(json.dumps(ca_rec["independent_participant_folds"]))
         rep_max.append(r_peak)
         rep_supp.append(r_supp if r_supp is not None else np.nan)
@@ -1925,6 +1998,14 @@ def evaluate_species_catalog(
             qualifying_cancer_codes=tum_qual_codes_by_eid.get(r.entity_id, set()),
             reproductive_qualifying_compartments=str(r.reproductive_qualifying_compartments or ""),
             home_tissue=str(r.home_tissue or ""),
+        )
+        for r in classified.itertuples(index=False)
+    ]
+    classified["tumor_support"] = [
+        classify_tumor_support(
+            is_cancer_antigen=bool(r.is_cancer_antigen),
+            samples_at_tenfold=getattr(r, "samples_at_tenfold", 0),
+            independent_patients_at_tenfold=getattr(r, "independent_patients_at_tenfold", 0),
         )
         for r in classified.itertuples(index=False)
     ]
@@ -2096,12 +2177,24 @@ def _load_packaged_species_catalog_cached(
         "sex_restriction_class",
         "sex_restriction_code",
         "tumor_activation_mode",
+        "tumor_support",
+        "qualifying_cancer_codes",
         "cell_line_top_model",
         "qualifying_cell_lines",
         "cta_tier",
         "tumor_top_sample",
         "rare_cell_basis",
         "subtype",
+        "clinical_clearance_scope",
+        "clinical_cleared_organs",
+        "clinical_cleared_epitopes",
+        "clinical_hla_alleles",
+        "clinical_cleared_transcripts",
+        "clinical_unverified_isoforms",
+        "clinical_trial_source_ids",
+        "closed_homolog_family_id",
+        "co_silenced_coding_sibling_ids",
+        "closed_self_paralog_ids",
     ):
         if str_col in df.columns:
             df[str_col] = df[str_col].astype("object").fillna("").astype(str)
@@ -2122,21 +2215,34 @@ def _load_packaged_species_catalog_cached(
     ):
         if bool_col in df.columns:
             df[bool_col] = df[bool_col].fillna(False).astype(bool)
-    from . import (
-        assay_boundary_adjudications,
-        clinical_organ_clearance,
-        repeat_family_equivalence,
-    )
+    if "tumor_support" not in df.columns and "is_cancer_antigen" in df.columns:
+        df["tumor_support"] = [
+            classify_tumor_support(
+                is_cancer_antigen=bool(ca_flag),
+                samples_at_tenfold=s_cnt,
+                independent_patients_at_tenfold=p_cnt,
+            )
+            for ca_flag, s_cnt, p_cnt in zip(
+                df["is_cancer_antigen"],
+                df.get("samples_at_tenfold", pd.Series(0, index=df.index)),
+                df.get("independent_patients_at_tenfold", pd.Series(0, index=df.index)),
+            )
+        ]
+    # Fallback only for older un-materialized CSVs lacking pre-baked columns
+    if "clinical_clearance_scope" not in df.columns:
+        from . import (
+            assay_boundary_adjudications,
+            clinical_organ_clearance,
+            repeat_family_equivalence,
+        )
 
-    is_human = resolved.taxon_id == 9606
-    df = clinical_organ_clearance.annotate_catalog(df, enabled=is_human)
-    df = repeat_family_equivalence.annotate_catalog(df, enabled=is_human)
-    df = assay_boundary_adjudications.annotate_catalog(df, enabled=is_human)
+        has_human_clearances = resolved.name == "human"
+        df = clinical_organ_clearance.annotate_catalog(df, enabled=has_human_clearances)
+        df = repeat_family_equivalence.annotate_catalog(df, enabled=has_human_clearances)
+        df = assay_boundary_adjudications.annotate_catalog(df, enabled=has_human_clearances)
     if (
-        not is_human
-        and "is_reproductive_antigen" in df.columns
-        and df["is_reproductive_antigen"].any()
-    ):
+        "sex_restriction_code" not in df.columns or not df["sex_restriction_code"].ne("").any()
+    ) and df.get("is_reproductive_antigen", pd.Series(False, index=df.index)).any():
         try:
             he_ref = _packaged_species_host_exposure_ref(resolved, allow_download=allow_download)
             if he_ref:
