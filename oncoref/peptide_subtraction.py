@@ -333,21 +333,23 @@ class PeptideIndex:
             raise ValueError("Every record requires a sequence string")
         self._records = records.copy()
         self.metadata = dict(records.attrs)
+        self._non_seq_columns = [column for column in records.columns if column != "sequence"]
+        self._col_values = {col: records[col].tolist() for col in self._non_seq_columns}
         self._result_columns = list(
             dict.fromkeys(
-                [column for column in records.columns if column != "sequence"]
-                + ["query", "matched_peptide", "start", "end", "distance"]
+                [*self._non_seq_columns, "query", "matched_peptide", "start", "end", "distance"]
             )
         )
         self._segments, self._starts, chunks = [], [], []
         offset = 0
-        # Group identical sequences once while retaining every occurrence.
-        for sequence, occurrences in records.groupby("sequence", sort=False):
+        # Group identical sequences in a single pass while retaining every occurrence (#789).
+        grouped_indices: dict[str, list[int]] = {}
+        for row_idx, sequence in enumerate(records["sequence"].tolist()):
+            grouped_indices.setdefault(sequence, []).append(row_idx)
+        for sequence, row_indices in grouped_indices.items():
             for segment in SEGMENTS.finditer(sequence):
                 self._starts.append(offset)
-                self._segments.append(
-                    (segment.group(), segment.start(), occurrences.to_dict("records"))
-                )
+                self._segments.append((segment.group(), segment.start(), row_indices))
                 chunk = self.policy.normalize(segment.group()) + "|"
                 chunks.append(chunk)
                 offset += len(chunk)
@@ -358,6 +360,7 @@ class PeptideIndex:
         cls,
         bundle=None,
         *,
+        species: str | int | None = None,
         background: str = "Unsafe|Other",
         host=None,
         roles: tuple[str, ...] | None = None,
@@ -367,39 +370,65 @@ class PeptideIndex:
         cache_dir=None,
         download: bool = False,
     ) -> PeptideIndex:
-        """Construct a ``PeptideIndex`` directly from ``sequence_bundle`` without ``pyensembl``.
+        """Construct a ``PeptideIndex`` directly from offline sequence assets without ``pyensembl``.
 
         When ``roles`` is omitted, builds the catalog-aligned ``antigen_sets.forbidden_background``
         (``Unsafe``, ``Other``, or ``Unsafe|Other``, plus any ``HostContext`` exclusions) over the
-        verified bundle occurrences and verifies zero missing gene translations. When ``roles`` is
-        supplied (e.g. ``roles=('exclude', 'review')``), indexes every bundle record matching those
+        verified human ``sequence_bundle`` or packaged species proteome occurrences (``dog``,
+        ``mouse``) and verifies zero missing gene translations. When ``roles`` is supplied (e.g.
+        ``roles=('exclude', 'review')``), indexes every ``SequenceBundle`` record matching those
         roles directly, including alternate-locus Ensembl records outside the primary gene catalog.
         """
         from . import antigen_sets, sequence_bundle
+        from .species import resolve_species
+        from .species_target_selection import packaged_species_metadata, packaged_species_sequences
 
-        loaded_bundle = (
-            bundle
-            if bundle is not None
-            else sequence_bundle.load(path)
-            if path is not None
-            else sequence_bundle.load(
-                sequence_bundle.ensure(cache_dir=cache_dir, download=download)
+        if bundle is not None or path is not None:
+            loaded_bundle = bundle if bundle is not None else sequence_bundle.load(path)
+            if roles is not None:
+                if host is not None:
+                    raise ValueError(
+                        "HostContext filtering requires catalog background mode (roles=None)"
+                    )
+                records = loaded_bundle.to_sequences_table(roles=roles)
+                return cls(records, policy=policy, lengths=lengths)
+            table = loaded_bundle.to_sequences_table()
+            inferred_species = (
+                resolve_species(species)
+                if species is not None
+                else resolve_species(int(table.attrs.get("taxon_id", 9606)))
             )
-        )
-        if roles is not None:
-            if host is not None:
-                raise ValueError(
-                    "HostContext filtering requires catalog background mode (roles=None)"
+            seq_source = "sequence_bundle" if inferred_species.taxon_id == 9606 else "auto"
+        else:
+            inferred_species = resolve_species("human" if species is None else species)
+            meta = packaged_species_metadata(inferred_species)
+            if meta is not None and meta.get("sequence_provider") != "sequence_bundle":
+                if roles is not None:
+                    raise ValueError(
+                        f"roles={roles!r} requires a SequenceBundle (human or explicit bundle=/path=), "
+                        f"not {inferred_species.name!r} packaged proteome"
+                    )
+                table = packaged_species_sequences(inferred_species, allow_download=download)
+                seq_source = "auto"
+            else:
+                loaded_bundle = sequence_bundle.load(
+                    sequence_bundle.ensure(cache_dir=cache_dir, download=download)
                 )
-            records = loaded_bundle.to_sequences_table(roles=roles)
-            return cls(records, policy=policy, lengths=lengths)
+                if roles is not None:
+                    if host is not None:
+                        raise ValueError(
+                            "HostContext filtering requires catalog background mode (roles=None)"
+                        )
+                    records = loaded_bundle.to_sequences_table(roles=roles)
+                    return cls(records, policy=policy, lengths=lengths)
+                table = loaded_bundle.to_sequences_table()
+                seq_source = "sequence_bundle"
 
-        table = loaded_bundle.to_sequences_table()
         records = antigen_sets.forbidden_background(
             background,
             host=host,
-            species="human",
-            sequence_source="sequence_bundle",
+            species=inferred_species.name,
+            sequence_source=seq_source,
             sequences_table=table,
         )
         if records.attrs.get("missing_gene_ids"):
@@ -442,7 +471,7 @@ class PeptideIndex:
             }
         rows = []
         for i, start in sorted(candidates):
-            sequence, offset, occurrences = self._segments[i]
+            sequence, offset, row_indices = self._segments[i]
             for k in self.lengths:
                 lower_bound = (
                     (k - len(peptide)) * self.policy.insertion_cost
@@ -454,13 +483,12 @@ class PeptideIndex:
                 window = sequence[start : start + k]
                 distance = edit_distance(peptide, window, policy=self.policy)
                 if distance <= self.policy.max_distance + 1e-12:
-                    for occurrence in occurrences:
+                    for row_idx in row_indices:
                         rows.append(
                             {
                                 **{
-                                    key: value
-                                    for key, value in occurrence.items()
-                                    if key != "sequence"
+                                    col: self._col_values[col][row_idx]
+                                    for col in self._non_seq_columns
                                 },
                                 "query": peptide,
                                 "matched_peptide": window,

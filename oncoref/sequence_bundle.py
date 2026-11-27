@@ -471,6 +471,37 @@ def cache_root(cache_dir=None) -> Path:
     )
 
 
+def is_cached(*, cache_dir=None) -> bool:
+    """Return True when the current pinned sequence bundle is staged locally (#789).
+
+    Performs zero network calls and creates no directories on disk.
+    """
+    pin = descriptor()
+    destination = cache_root(cache_dir) / pin["bundle_id"].rsplit(":", 1)[-1]
+    manifest_path = destination / "manifest.json"
+    if not manifest_path.is_file():
+        return False
+    try:
+        manifest = json.loads(manifest_path.read_bytes())
+    except (ValueError, OSError):
+        return False
+    if (manifest.get("schema"), manifest.get("schema_version")) != (SCHEMA, 1):
+        return False
+    if (
+        manifest.get("bundle_id") != pin["bundle_id"]
+        or content_id(manifest) != pin["bundle_id"]
+        or set(manifest.get("payloads", ())) != PAYLOADS
+    ):
+        return False
+    try:
+        return all(
+            (destination / name).is_file() and (destination / name).stat().st_size == entry["bytes"]
+            for name, entry in manifest["payloads"].items()
+        )
+    except (KeyError, OSError, TypeError):
+        return False
+
+
 def ensure(*, cache_dir=None, download=False) -> Path:
     """Acquire only the one pinned ZIP, bounded by its declared byte limits.
 
