@@ -409,7 +409,7 @@ def group_reference_proteins(
     else:
         frame["is_qualified"] = frame["is_qualified"].astype(bool) & frame.sequence.str.len().gt(0)
 
-    rep_by_gene: dict[str, tuple[str, str, bool]] = {}
+    rep_by_gene: dict[str, tuple[str, str, str, bool]] = {}
     symbols_by_gene: dict[str, str] = {}
     for gid, group in frame.groupby("gene_id", sort=True):
         if not isinstance(gid, str) or not gid.strip():
@@ -418,28 +418,32 @@ def group_reference_proteins(
         symbols_by_gene[gid] = sym
         qual = group[group.is_qualified].copy()
         if qual.empty:
-            rep_by_gene[gid] = ("", "", False)
+            rep_by_gene[gid] = ("", "", "", False)
         else:
             qual["_seq_len"] = qual.sequence.str.len()
             best = qual.sort_values(
                 ["_seq_len", "transcript_id", "protein_id"], ascending=[False, True, True]
             ).iloc[0]
             digest = hashlib.sha256(best.sequence.encode("utf-8")).hexdigest()
-            rep_by_gene[gid] = (best.sequence, digest, True)
+            rep_tid = str(best.transcript_id or gid)
+            rep_by_gene[gid] = (best.sequence, digest, rep_tid, True)
 
     grouped_genes: dict[str, list[str]] = {}
     rep_digest_by_entity: dict[str, list[str]] = {}
+    rep_tx_by_entity: dict[str, list[str]] = {}
     qual_by_entity: dict[str, bool] = {}
-    for gid, (_seq, digest, ok) in sorted(rep_by_gene.items()):
+    for gid, (_seq, digest, rep_tid, ok) in sorted(rep_by_gene.items()):
         if ok:
             eid = "PEG:" + digest[:20]
             grouped_genes.setdefault(eid, []).append(gid)
             rep_digest_by_entity[eid] = [digest]
+            rep_tx_by_entity.setdefault(eid, []).append(rep_tid)
             qual_by_entity[eid] = True
         else:
             eid = f"UNTRANSLATED:{resolved.taxon_id}:{gid}"
             grouped_genes[eid] = [gid]
             rep_digest_by_entity[eid] = []
+            rep_tx_by_entity[eid] = []
             qual_by_entity[eid] = False
 
     gene_to_entity = {gid: eid for eid, gids in grouped_genes.items() for gid in gids}
@@ -458,6 +462,7 @@ def group_reference_proteins(
                 "member_gene_ids": json.dumps(gids),
                 "member_count": len(gids),
                 "representative_sequence_sha256s": json.dumps(rep_digest_by_entity[eid]),
+                "representative_transcripts": json.dumps(sorted(set(rep_tx_by_entity[eid]))),
                 "identity_translation_pass": qual_by_entity[eid],
             }
         )
@@ -2140,6 +2145,63 @@ def _resolve_packaged_species_asset(
     return reference_data.bundled_or_managed_path(default_stem, allow_download=allow_download)
 
 
+def _derive_representative_transcripts_column(
+    df: pd.DataFrame,
+    resolved: Species,
+    meta: dict,
+    *,
+    allow_download: bool = True,
+) -> list[str]:
+    """Populate deterministic ``representative_transcripts`` JSON arrays (#791).
+
+    Uses the wheel-bundled ``species/<name>/representative-transcripts.json.gz``
+    sidecar when SHA-256-matched to ``meta['data_sha256']`` (fast, offline), or
+    derives one deterministic transcript per member gene from
+    ``packaged_species_sequences(resolved)`` ``matches_representative_sequence``.
+    """
+    import gzip
+    from importlib.resources import files
+
+    from . import reference_data
+
+    sidecar = files("oncoref").joinpath(
+        f"data/species/{resolved.name}/representative-transcripts.json.gz"
+    )
+    if sidecar.is_file():
+        doc = json.loads(gzip.decompress(sidecar.read_bytes()).decode("utf-8"))
+        rows_list = doc.get("rows")
+        if (
+            doc.get("catalog_data_sha256") == meta.get("data_sha256")
+            and isinstance(rows_list, list)
+            and len(rows_list) == len(df)
+        ):
+            return [json.dumps(tids) for tids in rows_list]
+
+    try:
+        seq_df = packaged_species_sequences(resolved, allow_download=allow_download)
+    except (FileNotFoundError, reference_data.ReferenceDataError):
+        return ["[]"] * len(df)
+
+    if seq_df.empty or "matches_representative_sequence" not in seq_df.columns:
+        return ["[]"] * len(df)
+    matched = seq_df[seq_df["matches_representative_sequence"].fillna(False).astype(bool)].copy()
+    if matched.empty:
+        return ["[]"] * len(df)
+    matched["transcript_id"] = matched["transcript_id"].fillna("").astype(str)
+    if "protein_id" in matched.columns:
+        matched["protein_id"] = matched["protein_id"].fillna("").astype(str)
+        matched = matched.sort_values(["entity_id", "gene_id", "transcript_id", "protein_id"])
+    else:
+        matched = matched.sort_values(["entity_id", "gene_id", "transcript_id"])
+    best_per_gene = matched.drop_duplicates(["entity_id", "gene_id"], keep="first")
+    tx_by_eid = (
+        best_per_gene.groupby("entity_id")["transcript_id"]
+        .apply(lambda s: sorted({t for t in s if t}))
+        .to_dict()
+    )
+    return [json.dumps(tx_by_eid.get(str(eid), [])) for eid in df["entity_id"]]
+
+
 def _load_packaged_species_catalog_cached(
     species_name: str, *, allow_download: bool = True
 ) -> pd.DataFrame:
@@ -2195,9 +2257,14 @@ def _load_packaged_species_catalog_cached(
         "closed_homolog_family_id",
         "co_silenced_coding_sibling_ids",
         "closed_self_paralog_ids",
+        "representative_transcripts",
     ):
         if str_col in df.columns:
             df[str_col] = df[str_col].astype("object").fillna("").astype(str)
+    if "representative_transcripts" not in df.columns:
+        df["representative_transcripts"] = _derive_representative_transcripts_column(
+            df, resolved, meta, allow_download=allow_download
+        )
     for bool_col in (
         "identity_translation_pass",
         "home_tissue_unmeasured",

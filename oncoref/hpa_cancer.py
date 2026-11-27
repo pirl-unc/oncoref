@@ -14,10 +14,44 @@ import numpy as np
 import pandas as pd
 
 from . import reference_data
+from .gene_ids import canonical_gene_symbols
+from .load_dataset import _register_derived_cache
 
 _DATA = Path(__file__).parent / "data"
 THRESHOLDS = (0.1, 1.0, 2.0, 5.0)
 _IHC_COUNTS = ["high", "medium", "low", "not_detected"]
+_IHC_PREVALENCE_CACHE: dict[tuple[str, int, int], pd.DataFrame] = {}
+_RNA_PREVALENCE_CACHE: dict[tuple[str, int, int], pd.DataFrame] = {}
+
+
+def _clear_cache() -> None:
+    _IHC_PREVALENCE_CACHE.clear()
+    _RNA_PREVALENCE_CACHE.clear()
+
+
+_register_derived_cache(_clear_cache)
+
+
+def _file_cache_key(path: Path) -> tuple[str, int, int]:
+    resolved = Path(path)
+    st = resolved.stat()
+    return (str(resolved), st.st_mtime_ns, st.st_size)
+
+
+def _attach_canonical_symbol(frame: pd.DataFrame) -> pd.DataFrame:
+    if "symbol" in frame.columns:
+        return frame
+    out = frame.copy()
+    if out.empty:
+        insert_at = list(out.columns).index("gene_id") + 1 if "gene_id" in out.columns else 0
+        out.insert(insert_at, "symbol", pd.Series(dtype="object"))
+        return out
+    unique_gids = [str(g) for g in pd.unique(out["gene_id"]) if pd.notna(g)]
+    resolved_syms = canonical_gene_symbols(unique_gids)
+    sym_map = {gid: (sym or "") for gid, sym in zip(unique_gids, resolved_syms)}
+    insert_at = list(out.columns).index("gene_id") + 1
+    out.insert(insert_at, "symbol", out["gene_id"].map(sym_map).fillna(""))
+    return out
 
 
 def _threshold_suffix(threshold: float) -> str:
@@ -26,12 +60,18 @@ def _threshold_suffix(threshold: float) -> str:
     return f"{threshold:g}".replace(".", "_")
 
 
-def _select_genes(frame: pd.DataFrame, gene_ids) -> pd.DataFrame:
+def _select_genes(frame: pd.DataFrame, gene_ids, *, include_symbol: bool = True) -> pd.DataFrame:
+    if not isinstance(include_symbol, bool):
+        raise ValueError("include_symbol must be a boolean")
     if gene_ids is None:
-        return frame.copy()
-    if isinstance(gene_ids, str):
-        gene_ids = [gene_ids]
-    return frame.loc[frame["gene_id"].isin(gene_ids)].copy()
+        out = frame.copy()
+    else:
+        if isinstance(gene_ids, str):
+            gene_ids = [gene_ids]
+        out = frame.loc[frame["gene_id"].isin(gene_ids)].copy()
+    if not include_symbol and "symbol" in out.columns:
+        out = out.drop(columns=["symbol"])
+    return out
 
 
 def hpa_cancer_sources() -> dict:
@@ -127,18 +167,28 @@ def _summarize_ihc(raw: pd.DataFrame) -> pd.DataFrame:
     return frame
 
 
-def hpa_cancer_ihc_prevalence(gene_ids=None) -> pd.DataFrame:
+def hpa_cancer_ihc_prevalence(gene_ids=None, *, include_symbol: bool = True) -> pd.DataFrame:
     """Genome-wide scored-patient counts and any / medium-high IHC fractions.
 
     Unknown categories and zero denominators have missing fractions. A measured
-    zero positive count remains zero. Gene names are the HPA source labels.
+    zero positive count remains zero. ``hpa_gene_name`` retains HPA's source label,
+    while ``symbol`` (when ``include_symbol=True``, the default) provides OncoRef's
+    canonical gene symbol. Parsed tables are cached in-process and detached via ``.copy()``.
     """
-    raw = pd.read_csv(reference_data.ensure("hpa_cancer_ihc"), sep="\t")
-    frame = _summarize_ihc(raw)
-    unknown = set(frame["cancer"]) - set(hpa_cancer_crosswalk()["cancer"])
-    if unknown:
-        raise ValueError(f"unmapped HPA IHC groups: {sorted(unknown)}")
-    return _select_genes(frame, gene_ids)
+    path = Path(reference_data.ensure("hpa_cancer_ihc"))
+    cache_key = _file_cache_key(path)
+    frame = _IHC_PREVALENCE_CACHE.get(cache_key)
+    if frame is None:
+        raw = pd.read_csv(path, sep="\t")
+        summarized = _summarize_ihc(raw)
+        unknown = set(summarized["cancer"]) - set(hpa_cancer_crosswalk()["cancer"])
+        if unknown:
+            raise ValueError(f"unmapped HPA IHC groups: {sorted(unknown)}")
+        frame = _attach_canonical_symbol(summarized)
+        if len(_IHC_PREVALENCE_CACHE) >= 4:
+            _IHC_PREVALENCE_CACHE.clear()
+        _IHC_PREVALENCE_CACHE[cache_key] = frame
+    return _select_genes(frame, gene_ids, include_symbol=include_symbol)
 
 
 def _summarize_rna_rows(raw: pd.DataFrame, cohorts: pd.DataFrame) -> pd.DataFrame:
@@ -184,20 +234,33 @@ def _summarize_rna_rows(raw: pd.DataFrame, cohorts: pd.DataFrame) -> pd.DataFram
     return summary
 
 
-def hpa_cancer_rna_prevalence(gene_ids=None, *, cohort: str | None = None) -> pd.DataFrame:
+def hpa_cancer_rna_prevalence(
+    gene_ids=None, *, cohort: str | None = None, include_symbol: bool = True
+) -> pd.DataFrame:
     """Genome-wide RNA counts at 0.1, 1, 2 and 5 native pTPM, plus mean/max.
 
     ``samples`` counts finite measurements; ``missing_samples`` counts explicit
     missing measurements. ``source_samples`` can be smaller than the cohort's
     ``nominal_samples``. Absent gene/cohort rows are not filled with negatives.
     TCGA and validation are always separate rows, including when cohort=None.
+    Attaches canonical ``symbol`` when ``include_symbol=True`` (default) and
+    caches the parsed table in-process (returning ``.copy()``).
     """
     if cohort not in (None, "TCGA", "validation"):
         raise ValueError("cohort must be 'TCGA', 'validation', or None")
-    frame = pd.read_csv(reference_data.ensure("hpa_cancer_rna"), sep="\t")
-    if cohort is not None:
-        frame = frame.loc[frame["cohort"] == cohort]
-    return _select_genes(frame, gene_ids)
+    if not isinstance(include_symbol, bool):
+        raise ValueError("include_symbol must be a boolean")
+    path = Path(reference_data.ensure("hpa_cancer_rna"))
+    cache_key = _file_cache_key(path)
+    frame = _RNA_PREVALENCE_CACHE.get(cache_key)
+    if frame is None:
+        loaded = pd.read_csv(path, sep="\t")
+        frame = _attach_canonical_symbol(loaded)
+        if len(_RNA_PREVALENCE_CACHE) >= 4:
+            _RNA_PREVALENCE_CACHE.clear()
+        _RNA_PREVALENCE_CACHE[cache_key] = frame
+    sub = frame.loc[frame["cohort"] == cohort] if cohort is not None else frame
+    return _select_genes(sub, gene_ids, include_symbol=include_symbol)
 
 
 def _compare(ihc, rna, crosswalk, *, cohort, threshold):
@@ -265,7 +328,12 @@ def _include_rna_only_ihc_rows(ihc, rna, crosswalk):
 
 
 def hpa_cancer_rna_ihc_comparison(
-    gene_ids=None, *, cohort="TCGA", threshold=1.0, include_missing_ihc=False
+    gene_ids=None,
+    *,
+    cohort="TCGA",
+    threshold=1.0,
+    include_missing_ihc=False,
+    include_symbol: bool = True,
 ) -> pd.DataFrame:
     """Descriptive unpaired comparisons, retaining unmapped and incomplete rows.
 
@@ -284,11 +352,13 @@ def hpa_cancer_rna_ihc_comparison(
     """
     if cohort not in ("TCGA", "validation"):
         raise ValueError("select one cohort: 'TCGA' or 'validation'")
+    if not isinstance(include_symbol, bool):
+        raise ValueError("include_symbol must be a boolean")
     _threshold_suffix(threshold)
     if gene_ids is not None and not isinstance(gene_ids, str):
         gene_ids = list(gene_ids)
-    ihc = hpa_cancer_ihc_prevalence(gene_ids)
-    rna = hpa_cancer_rna_prevalence(gene_ids, cohort=cohort)
+    ihc = hpa_cancer_ihc_prevalence(gene_ids, include_symbol=False)
+    rna = hpa_cancer_rna_prevalence(gene_ids, cohort=cohort, include_symbol=False)
     crosswalk = hpa_cancer_crosswalk()
     if include_missing_ihc:
         ihc = _include_rna_only_ihc_rows(ihc, rna, crosswalk)
@@ -302,4 +372,4 @@ def hpa_cancer_rna_ihc_comparison(
     missing_ihc = result.measurement_status.eq("missing_ihc")
     otherwise_comparable = result.comparison_status.eq("missing_ihc_categories")
     result.loc[missing_ihc & otherwise_comparable, "comparison_status"] = "missing_ihc"
-    return result
+    return _attach_canonical_symbol(result) if include_symbol else result
