@@ -17,13 +17,27 @@ from . import target_selection as catalog
 
 POLICY_ID = "oncoref.host-selection.2026-11-25.1"
 COMPARTMENTS = catalog.REPRODUCTIVE_COMPARTMENTS
+SEX_RESTRICTION_CODES: tuple[str, ...] = (
+    "CTA-M",
+    "CTA-F",
+    "CTA-MF",
+    "CTA-P",
+    "RA-M-only",
+    "RA-F-only",
+    "RA-MF-only",
+    "RA-P-only",
+)
 
 
-def _compartments_for_species(species="human") -> tuple[str, ...]:
+def compartments(species="human") -> tuple[str, ...]:
+    """Return canonical reproductive and mammary HostContext compartments for ``species``."""
     from .species import resolve_species
     from .species_target_selection import anatomy_for_species
 
     return anatomy_for_species(resolve_species(species)).reproductive_compartments
+
+
+_compartments_for_species = compartments
 
 
 def normalize(values, *, species="human") -> tuple[str, ...]:
@@ -40,6 +54,22 @@ class HostContext:
     The RNA limits are independent research cutoffs in their native units. They
     do not convert nTPM to TPM or establish tolerability. A generic compartment
     label always retains whole-organ scope, including endocrine/support cells.
+
+    Pregnancy & developmental completeness (#790)
+    ---------------------------------------------
+    Protecting ``"embryo"`` (including via ``for_host(..., pregnant=True)``) is
+    intentionally fail-closed (0 eligible candidates across human, dog, and mouse)
+    by default because ``embryo`` carries ``scope_complete=False`` on every entity:
+    integrated blastocyst/gastrulation/early-embryo libraries do not cover 1st–3rd
+    trimester fetal organogenesis. Callers have two explicit screening options:
+
+    1. Screen the adult maternal-fetal & lactational interface directly via
+       ``HostContext(protect=("placenta", "lactating_breast"))`` (or
+       ``"lactating_mammary"`` in dog/mouse), where ``scope_complete=True``.
+    2. Opt in via ``allow_incomplete_scope=True`` to evaluate measured early-embryo,
+       placenta, and lactating-mammary expression (``< max_tpm`` / ``< max_ntpm``)
+       without failing on ``sampled scope incomplete`` (unmeasured ``coverage !=
+       "measured"`` and unresolved/positive protein findings still fail closed).
     """
 
     absent: tuple[str, ...] = ()
@@ -50,12 +80,15 @@ class HostContext:
     protect: tuple[str, ...] = ()
     species: str = "human"
     negative_ihc_multiplier: float | None = None
+    allow_incomplete_scope: bool = False
 
     def __post_init__(self):
         from .species import resolve_species
 
         resolved_species = resolve_species(self.species)
         object.__setattr__(self, "species", resolved_species.name)
+        if not isinstance(self.allow_incomplete_scope, bool):
+            raise ValueError("allow_incomplete_scope must be a boolean")
         if self.negative_ihc_multiplier is None:
             from .species_policies import species_policy
 
@@ -92,6 +125,37 @@ class HostContext:
         ):
             raise ValueError("assumptions must be a tuple of strings")
 
+    @classmethod
+    def for_host(
+        cls,
+        profile="all",
+        *,
+        pregnant: bool = False,
+        lactating: bool = False,
+        allow_tissues=(),
+        protect_tissues=(),
+        absent_tissues=(),
+        species="human",
+        allow_incomplete_scope: bool = False,
+        max_tpm: float = 8.0,
+        max_ntpm: float = 8.0,
+        negative_ihc_multiplier: float | None = None,
+    ) -> HostContext | None:
+        """Build a species-aware ``HostContext`` from host profile and state choices (#790)."""
+        return for_host(
+            profile,
+            pregnant=pregnant,
+            lactating=lactating,
+            allow_tissues=allow_tissues,
+            protect_tissues=protect_tissues,
+            absent_tissues=absent_tissues,
+            species=species,
+            allow_incomplete_scope=allow_incomplete_scope,
+            max_tpm=max_tpm,
+            max_ntpm=max_ntpm,
+            negative_ihc_multiplier=negative_ihc_multiplier,
+        )
+
     @property
     def protected(self) -> tuple[str, ...]:
         return self.protect
@@ -108,23 +172,36 @@ class HostContext:
             else "Protect"
             if c in self.protect
             else "Not protected"
-            for c in _compartments_for_species(self.species)
+            for c in compartments(self.species)
         }
 
 
-def from_legacy(
+def for_host(
     profile="all",
     *,
-    pregnant=False,
-    lactating=False,
+    pregnant: bool = False,
+    lactating: bool = False,
     allow_tissues=(),
     protect_tissues=(),
     absent_tissues=(),
     species="human",
-):
-    """Translate compatibility arguments; retain every anatomy/state assumption."""
+    allow_incomplete_scope: bool = False,
+    max_tpm: float = 8.0,
+    max_ntpm: float = 8.0,
+    negative_ihc_multiplier: float | None = None,
+) -> HostContext | None:
+    """Build a species-aware ``HostContext`` from profile/physiological arguments (#790).
+
+    Retains every anatomy and physiological-state assumption on ``HostContext.assumptions``.
+    When ``pregnant=True``, protects ``("embryo", "placenta", <lactating_mammary>)``;
+    because ``embryo`` carries ``scope_complete=False`` (no 1st–3rd trimester fetal
+    organogenesis panel), ``assess()`` fails closed (0 eligible) unless
+    ``allow_incomplete_scope=True`` is explicitly requested or ``embryo`` is omitted.
+    """
     from .species import resolve_species
 
+    if not isinstance(allow_incomplete_scope, bool):
+        raise ValueError("allow_incomplete_scope must be a boolean")
     resolved_species = resolve_species(species)
     allow, protect, absent_override = (
         normalize(values, species=resolved_species)
@@ -186,13 +263,26 @@ def from_legacy(
     absent.update(absent_override)
     accepted.update(allow)
     protected.difference_update((*allow, *absent_override))
+    if allow_incomplete_scope:
+        notes.append(
+            "allow_incomplete_scope=True: waives sampled-scope completeness holds (e.g. early-embryo "
+            "atlases lack 1st-3rd trimester fetal organogenesis coverage)"
+        )
     return HostContext(
         absent=tuple(absent),
         accept_loss=tuple(accepted),
         protect=tuple(protected),
         assumptions=tuple(notes),
         species=resolved_species.name,
+        max_tpm=max_tpm,
+        max_ntpm=max_ntpm,
+        negative_ihc_multiplier=negative_ihc_multiplier,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
+
+
+#: Non-deprecated compatibility alias for :func:`for_host`.
+from_legacy = for_host
 
 
 def _evidence(species="human") -> dict:
@@ -209,7 +299,15 @@ def exposure_evidence(species="human") -> dict:
 
 
 def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
-    """Evaluate protection independently of target-set membership and paper counts."""
+    """Evaluate protection independently of target-set membership and paper counts.
+
+    Protected compartments require ``coverage == "measured"``, finite RNA below
+    ``max_tpm`` / ``max_ntpm`` (scaled by ``negative_ihc_multiplier`` when routine
+    IHC is ``not_detected``), no positive/unresolved protein finding, and
+    ``scope_complete is True`` (unless ``host.allow_incomplete_scope=True`` is
+    explicitly set, e.g. to screen measured early-embryo stages despite missing
+    1st–3rd trimester fetal organogenesis coverage).
+    """
     if host is not None and not isinstance(host, HostContext):
         raise ValueError("host must be a HostContext")
     if host is not None and host.protected and evidence is None:
@@ -222,7 +320,7 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
     is_female_host = False
     is_male_host = False
     if host is not None:
-        species_comps = set(_compartments_for_species(host.species))
+        species_comps = set(compartments(host.species))
         fem_tract = tuple(
             c
             for c in ("uterus", "uterine_horn", "vagina", "cervix", "endometrium", "fallopian tube")
@@ -321,7 +419,7 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
                 )
                 if not female_only_mammary_ihc:
                     unknown.append(tissue + ": protein finding requires host-specific review")
-            if item.get("scope_complete") is not True:
+            if item.get("scope_complete") is not True and not host.allow_incomplete_scope:
                 unknown.append(tissue + ": sampled scope incomplete")
         maximum, limiting = max(observed, default=(0.0, ""))
         status = (
@@ -357,3 +455,17 @@ def assess(table, host: HostContext | None, *, evidence=None) -> pd.DataFrame:
             "pass_host",
         ],
     )
+
+
+__all__ = [
+    "COMPARTMENTS",
+    "POLICY_ID",
+    "SEX_RESTRICTION_CODES",
+    "HostContext",
+    "assess",
+    "compartments",
+    "exposure_evidence",
+    "for_host",
+    "from_legacy",
+    "normalize",
+]
