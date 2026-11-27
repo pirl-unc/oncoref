@@ -36,6 +36,7 @@ def _host_overrides(args) -> dict:
             protect=tuple(getattr(args, "protect_tissues", None) or ()),
             accept_loss=tuple(getattr(args, "allow_tissues", None) or ()),
             absent=tuple(getattr(args, "absent_tissues", None) or ()),
+            allow_incomplete_scope=bool(getattr(args, "allow_incomplete_scope", False)),
         )
         return {"host": host} if host is not None else {}
 
@@ -46,6 +47,8 @@ def _host_overrides(args) -> dict:
         overrides["lactating"] = True
     if getattr(args, "pregnant", False):
         overrides["pregnant"] = True
+    if getattr(args, "allow_incomplete_scope", False):
+        overrides["allow_incomplete_scope"] = True
     if getattr(args, "allow_tissues", None):
         overrides["allow_tissues"] = tuple(args.allow_tissues)
     if getattr(args, "absent_tissues", None):
@@ -425,6 +428,11 @@ def _add_host_options(parser):
         "--pregnant",
         action="store_true",
         help="Protect embryo, placenta and milk-secretory state; developmental coverage remains incomplete",
+    )
+    parser.add_argument(
+        "--allow-incomplete-scope",
+        action="store_true",
+        help="Waive sampled-scope completeness holds (e.g. screen measured early-embryo RNA despite missing fetal organogenesis stages)",
     )
     parser.add_argument(
         "--accept-loss",

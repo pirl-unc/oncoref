@@ -18,6 +18,7 @@ from dataclasses import replace
 import pandas as pd
 
 from . import antigen_sets, host_context, target_filters
+from .host_context import SEX_RESTRICTION_CODES
 from .species import available_species, resolve_species
 from .species_target_selection import (
     anatomy_for_species,
@@ -37,8 +38,11 @@ def _build_host_context(
     protect: Iterable[str] = (),
     accept_loss: Iterable[str] = (),
     absent: Iterable[str] = (),
+    allow_incomplete_scope: bool = False,
 ) -> host_context.HostContext | None:
     """Construct a species-aware HostContext from plain-language sex and organ arguments."""
+    if not isinstance(allow_incomplete_scope, bool):
+        raise ValueError("allow_incomplete_scope must be a boolean")
     resolved = resolve_species(species)
     anat = anatomy_for_species(resolved)
     protect_t = anat.normalize_compartments(tuple(protect))
@@ -100,12 +104,19 @@ def _build_host_context(
 
     if not (eff_protect or eff_absent or eff_allow or assumptions):
         return None
+    if allow_incomplete_scope:
+        assumptions = (
+            *assumptions,
+            "allow_incomplete_scope=True: waives sampled-scope completeness holds "
+            "(early-embryo atlases lack 1st-3rd trimester fetal organogenesis coverage)",
+        )
     return host_context.HostContext(
         protect=tuple(sorted(eff_protect)),
         accept_loss=tuple(sorted(eff_allow)),
         absent=tuple(sorted(eff_absent)),
         assumptions=assumptions,
         species=resolved.name,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
 
 
@@ -119,6 +130,7 @@ def table(
     protect: Iterable[str] = (),
     accept_loss: Iterable[str] = (),
     absent: Iterable[str] = (),
+    allow_incomplete_scope: bool = False,
     ectopic_only: bool = False,
     replicated_only: bool = False,
     min_fold: float = 10.0,
@@ -139,6 +151,12 @@ def table(
         ``"female"`` protects all non-pregnant, non-lactating adult female reproductive
         and resting mammary organs of ``species``; ``"male"`` protects all adult male
         reproductive and resting mammary organs (minus any ``absent`` or ``accept_loss``).
+    pregnant
+        Protects ``("embryo", "placenta", <lactating_mammary>)``. Fails closed (0 rows)
+        by default because ``embryo`` lacks 1st–3rd trimester fetal organogenesis
+        coverage (``scope_complete=False``); pass ``allow_incomplete_scope=True`` to
+        screen measured early-embryo + placenta + lactating expression, or pass
+        ``protect=("placenta", "lactating_breast")`` for the maternal-fetal interface.
     ectopic_only
         Keep only rows with confirmed ectopic tumor activation outside homologous
         source organs (``tumor_activation_mode != "lineage_retained"``).
@@ -154,6 +172,7 @@ def table(
         protect=protect,
         accept_loss=accept_loss,
         absent=absent,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
     if group == "all":
         if (
@@ -218,6 +237,7 @@ def explain(
     protect: Iterable[str] = (),
     accept_loss: Iterable[str] = (),
     absent: Iterable[str] = (),
+    allow_incomplete_scope: bool = False,
 ) -> dict[str, object]:
     """Return a plain-language, structured explanation for a gene symbol or Ensembl ID."""
     resolved = resolve_species(species)
@@ -233,6 +253,7 @@ def explain(
         protect=protect,
         accept_loss=accept_loss,
         absent=absent,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
     host_info: dict[str, object] = {"status": "not_requested", "protected_organs": ()}
     if host is not None:
@@ -416,6 +437,7 @@ def funnel(
     protect: Iterable[str] = (),
     accept_loss: Iterable[str] = (),
     absent: Iterable[str] = (),
+    allow_incomplete_scope: bool = False,
     ectopic_only: bool = False,
     replicated_only: bool = False,
 ) -> pd.DataFrame:
@@ -430,6 +452,7 @@ def funnel(
         protect=protect,
         accept_loss=accept_loss,
         absent=absent,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
     filt = target_filters.FILTER_MODES[mode] if isinstance(mode, str) else mode
     if host is not None:
@@ -515,6 +538,7 @@ def sequences(
     protect: Iterable[str] = (),
     accept_loss: Iterable[str] = (),
     absent: Iterable[str] = (),
+    allow_incomplete_scope: bool = False,
     sequence_source: str = "auto",
 ) -> pd.DataFrame:
     """Return annotated protein sequences for ``group`` under the requested host constraints."""
@@ -527,6 +551,7 @@ def sequences(
         protect=protect,
         accept_loss=accept_loss,
         absent=absent,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
     if group in antigen_sets.EXCLUSION_CATEGORIES:
         if host is not None:
@@ -549,6 +574,7 @@ def subtract(
     protect: Iterable[str] = (),
     accept_loss: Iterable[str] = (),
     absent: Iterable[str] = (),
+    allow_incomplete_scope: bool = False,
     background: str = "Unsafe|Other",
     max_mismatches: float = 0.0,
     lengths: Iterable[int] = range(8, 12),
@@ -597,6 +623,7 @@ def subtract(
         protect=protect,
         accept_loss=accept_loss,
         absent=absent,
+        allow_incomplete_scope=allow_incomplete_scope,
     )
     policy = MatchPolicy(max_distance=float(max_mismatches))
     if host is not None:
@@ -619,6 +646,7 @@ def subtract(
 
 
 __all__ = [
+    "SEX_RESTRICTION_CODES",
     "explain",
     "funnel",
     "gene_ids",

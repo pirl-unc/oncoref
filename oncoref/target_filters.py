@@ -37,10 +37,7 @@ FILTER_POLICY_ID = "oncoref.target-filters.2026-11-17.5"
 #: Compatibility names describe assumed anatomy, never accepted organ loss.
 HOST_PROFILES = {
     "all": (),
-    **{
-        name: host_context.from_legacy(name).protected
-        for name in ("male-patient", "female-patient")
-    },
+    **{name: host_context.for_host(name).protected for name in ("male-patient", "female-patient")},
 }
 
 
@@ -99,6 +96,7 @@ class TargetFilter:
     host_profile: str = "all"  # "all" | "male-patient" | "female-patient"
     lactating: bool = False
     pregnant: bool = False
+    allow_incomplete_scope: bool = False
     allow_tissues: tuple[str, ...] = ()
     protect_tissues: tuple[str, ...] = ()
     #: 4. Distinct papers that nominate the protein or report it in tumors.
@@ -111,10 +109,10 @@ class TargetFilter:
         if self.membership not in MEMBERSHIPS:
             raise ValueError(f"membership must be one of {sorted(MEMBERSHIPS)}")
         if self.host_profile == "core":
-            host_context.from_legacy("core")
+            host_context.for_host("core")
         if self.host_profile not in HOST_PROFILES:
             raise ValueError(f"host_profile must be one of {list(HOST_PROFILES)}")
-        for flag in ("lactating", "pregnant"):
+        for flag in ("lactating", "pregnant", "allow_incomplete_scope"):
             if not isinstance(getattr(self, flag), bool):
                 raise ValueError(f"{flag} must be a boolean")
         for field in (
@@ -165,6 +163,7 @@ def context(f, *, species=None):
                 f.host_profile != "all",
                 f.pregnant,
                 f.lactating,
+                f.allow_incomplete_scope,
                 f.allow_tissues,
                 f.protect_tissues,
                 f.absent_tissues,
@@ -180,7 +179,7 @@ def context(f, *, species=None):
                     f"HostContext species {f.host.species!r} disagrees with catalog species {expected!r}"
                 )
         return f.host
-    return host_context.from_legacy(
+    return host_context.for_host(
         f.host_profile,
         pregnant=f.pregnant,
         lactating=f.lactating,
@@ -188,6 +187,7 @@ def context(f, *, species=None):
         protect_tissues=f.protect_tissues,
         absent_tissues=f.absent_tissues,
         species="human" if species is None else species,
+        allow_incomplete_scope=f.allow_incomplete_scope,
     )
 
 
@@ -478,6 +478,11 @@ def describe(f: TargetFilter | str) -> str:
                 else "."
             )
             + " Missing protected-tissue coverage and unresolved protein findings fail; membership stays biological."
+            + (
+                " Sampled-scope completeness holds are waived (allow_incomplete_scope=True)."
+                if host.allow_incomplete_scope
+                else ""
+            )
         )
     if f.min_tumor_fold > 10.0:
         lines.append(
