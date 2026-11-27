@@ -471,6 +471,150 @@ def forbidden_background(
     return records
 
 
+_SPECIES_PYENSEMBL_DEFAULTS: dict[int, tuple[str, tuple[str, ...], str]] = {
+    9606: ("human", ("homo_sapiens",), "GRCh38"),
+    9615: ("dog", ("canis_familiaris", "canis_lupus_familiaris"), "CanFam3.1"),
+    10090: ("mouse", ("mus_musculus",), "GRCm39"),
+}
+
+
+def _iter_protein_row_fields(protein_rows: pd.DataFrame):
+    """Yield ``(entity_id, member_gids, representatives, cat_cat, sel_cat, bg_reason)`` fast."""
+    n = len(protein_rows)
+    if n == 0:
+        return
+    eids = protein_rows["entity_id"].tolist()
+    members_raw = protein_rows["member_gene_ids"].tolist()
+    reps_raw = (
+        protein_rows["representative_sequence_sha256s"].tolist()
+        if "representative_sequence_sha256s" in protein_rows.columns
+        else [None] * n
+    )
+    sel_cats = protein_rows["category"].tolist() if "category" in protein_rows.columns else [""] * n
+    cat_cats = (
+        protein_rows["catalog_category"].tolist()
+        if "catalog_category" in protein_rows.columns
+        else sel_cats
+    )
+    bg_reasons = (
+        protein_rows["background_reason"].tolist()
+        if "background_reason" in protein_rows.columns
+        else [""] * n
+    )
+    for eid, m_raw, r_raw, c_cat, s_cat, bg_r in zip(
+        eids, members_raw, reps_raw, cat_cats, sel_cats, bg_reasons
+    ):
+        reps = None if r_raw is None or pd.isna(r_raw) else set(json.loads(r_raw))
+        yield str(eid), json.loads(m_raw), reps, c_cat, s_cat, bg_r
+
+
+def _species_ensembl_spec(resolved) -> tuple[int, str, tuple[str, ...], str] | None:
+    """Return ``(release, py_species, expected_latins, expected_ref)`` for ``resolved`` (#789)."""
+    from .species_target_selection import packaged_species_metadata
+
+    defaults = _SPECIES_PYENSEMBL_DEFAULTS.get(resolved.taxon_id)
+    if defaults is None:
+        return None
+    py_species, expected_latins, assembly_label = defaults
+    meta = packaged_species_metadata(resolved)
+    ref = (meta or {}).get("reference") or {}
+    if ref.get("annotation_source", "Ensembl") != "Ensembl":
+        return None
+    release = int(ref.get("annotation_release", ENSEMBL_RELEASE))
+    expected_ref = f"{expected_latins[0]}:{assembly_label}:Ensembl:{release}"
+    return release, py_species, expected_latins, expected_ref
+
+
+def _pyensembl_translations_by_gene(
+    genome,
+    needed_gene_ids: set[str],
+) -> dict[str, list[tuple[str, str, str]]] | None:
+    """Bulk-load ``gene_id -> [(transcript_id, transcript_biotype, sequence), ...]`` (#789).
+
+    Replaces ~18k per-gene ``genome.gene_by_id(gid).transcripts`` SQLite round-trips
+    with a single query over ``genome.db`` joined against ``genome.protein_sequences``.
+    Returns ``None`` for lightweight mock genomes that lack ``.db`` / ``.protein_sequences``.
+    """
+    if not (hasattr(genome, "db") and hasattr(genome, "protein_sequences")):
+        return None
+    if not needed_gene_ids:
+        return {}
+    db = genome.db
+    pseq = genome.protein_sequences
+    if not (
+        hasattr(db, "column_exists")
+        and hasattr(db, "run_sql_query")
+        and hasattr(pseq, "fasta_dictionary")
+    ):
+        return None
+    if not db.column_exists("CDS", "protein_id"):
+        return None
+
+    has_tbio = db.column_exists("CDS", "transcript_biotype")
+    has_pver = db.column_exists("CDS", "protein_version")
+    select_cols = ["gene_id", "transcript_id", "protein_id"]
+    if has_tbio:
+        select_cols.append("transcript_biotype")
+    if has_pver:
+        select_cols.append("protein_version")
+    col_sql = ", ".join(select_cols)
+
+    if len(needed_gene_ids) <= 900:
+        ordered_genes = sorted(needed_gene_ids)
+        placeholders = ", ".join("?" for _ in ordered_genes)
+        sql_rows = db.run_sql_query(
+            f"SELECT DISTINCT {col_sql} FROM CDS WHERE protein_id != '' AND gene_id IN ({placeholders})",
+            query_params=ordered_genes,
+        )
+    else:
+        sql_rows = db.run_sql_query(f"SELECT DISTINCT {col_sql} FROM CDS WHERE protein_id != ''")
+
+    tbio_by_tid: dict[str, str] = {}
+    if not has_tbio and db.column_exists("transcript", "transcript_biotype"):
+        for tid, tbio in db.run_sql_query(
+            "SELECT transcript_id, transcript_biotype FROM transcript"
+        ):
+            tbio_by_tid[str(tid)] = str(tbio)
+
+    fdict = pseq.fasta_dictionary
+    stripped_index = getattr(pseq, "_stripped_index", None)
+    by_gene: dict[str, list[tuple[str, str, str]]] = {}
+    seen_tids: set[str] = set()
+    for row in sql_rows:
+        gid = row[0]
+        if gid not in needed_gene_ids:
+            continue
+        tid = row[1]
+        if tid in seen_tids:
+            continue
+        seen_tids.add(tid)
+        pid = row[2]
+        if not pid:
+            continue
+        idx = 3
+        tbio = row[idx] if has_tbio else tbio_by_tid.get(tid, "protein_coding")
+        if has_tbio:
+            idx += 1
+        pver = row[idx] if has_pver else None
+
+        seq = None
+        if pver:
+            seq = fdict.get(f"{pid}.{pver}")
+        if seq is None:
+            seq = fdict.get(pid)
+        if seq is None and pid.startswith("ENS") and "." in pid:
+            bare, ver_tail = pid.rsplit(".", 1)
+            if ver_tail.isdigit():
+                seq = fdict.get(bare)
+        if seq is None and stripped_index:
+            ver_key = stripped_index.get(pid)
+            if ver_key is not None:
+                seq = fdict.get(ver_key)
+        if seq:
+            by_gene.setdefault(gid, []).append((str(tid), str(tbio or "protein_coding"), str(seq)))
+    return by_gene
+
+
 def _sequences(
     protein_rows,
     group,
@@ -482,12 +626,13 @@ def _sequences(
 ) -> pd.DataFrame:
     """All annotated protein translations, one row per transcript occurrence.
 
-    Uses an explicit ``sequences_table``, the verified offline ``sequence_bundle``
-    (when ``sequence_source='sequence_bundle'`` or ``'auto'`` with a staged local
-    human bundle), or a local Ensembl 115 reference (``oncoref[genome]``); never
-    downloads assets implicitly. Missing genes/translations are recorded in
-    ``attrs['missing_gene_ids']``. Stops/ambiguous residues remain in originals;
-    peptide matching splits at them.
+    Uses an explicit ``sequences_table``, the verified offline ``sequence_bundle`` /
+    packaged species proteome (when ``sequence_source='sequence_bundle'`` or ``'auto'``
+    with a locally staged table), or the species' pinned Ensembl reference via
+    ``pyensembl`` (``oncoref[genome]``: Ensembl 115 for human/mouse, Ensembl 98 for dog);
+    never triggers an implicit ``oncoref`` asset download under ``sequence_source='auto'``.
+    Missing genes/translations are recorded in ``attrs['missing_gene_ids']``.
+    Stops/ambiguous residues remain in originals; peptide matching splits at them.
     """
     from .species import resolve_species
 
@@ -515,6 +660,7 @@ def _sequences(
                 )
             sequences_table = _load_bundle_sequences_table()
         elif sequence_source == "auto":
+            from . import reference_data
             from .species_target_selection import (
                 packaged_species_metadata,
                 packaged_species_sequences,
@@ -522,70 +668,92 @@ def _sequences(
 
             if packaged_species_metadata(resolved) is not None:
                 try:
-                    sequences_table = packaged_species_sequences(resolved)
-                except FileNotFoundError:
+                    sequences_table = packaged_species_sequences(resolved, allow_download=False)
+                except (FileNotFoundError, reference_data.ReferenceDataError):
                     sequences_table = None
     elif sequence_source == "sequence_bundle":
         raise ValueError("Cannot pass both genome=... and sequence_source='sequence_bundle'")
     if sequences_table is not None:
-        by_gene = (
-            dict(iter(sequences_table.groupby("gene_id")))
-            if not sequences_table.empty and "gene_id" in sequences_table
-            else {}
+        by_gene: dict[str, list[tuple[str, str, str]]] = {}
+        if not sequences_table.empty and "gene_id" in sequences_table:
+            gids_col = sequences_table["gene_id"].tolist()
+            seqs_col = sequences_table["sequence"].tolist()
+            tids_col = (
+                sequences_table["transcript_id"].tolist()
+                if "transcript_id" in sequences_table
+                else gids_col
+            )
+            tbios_col = (
+                sequences_table["transcript_biotype"].tolist()
+                if "transcript_biotype" in sequences_table
+                else ["protein_coding"] * len(gids_col)
+            )
+            for gid_val, tid_val, tbio_val, seq_val in zip(gids_col, tids_col, tbios_col, seqs_col):
+                seq_str = "" if pd.isna(seq_val) else str(seq_val)
+                if not seq_str:
+                    continue
+                gid_str = str(gid_val)
+                tid_str = gid_str if pd.isna(tid_val) or not str(tid_val) else str(tid_val)
+                tbio_str = (
+                    "protein_coding" if pd.isna(tbio_val) or not str(tbio_val) else str(tbio_val)
+                )
+                by_gene.setdefault(gid_str, []).append((tid_str, tbio_str, seq_str))
+        digest_cache: dict[str, str] = {}
+        c_eid, c_gid, c_tid, c_tbio, c_seq, c_sha, c_match, c_cat, c_sel, c_bg = (
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
         )
-        rows, missing = [], []
-        for protein in protein_rows.itertuples():
-            raw_hashes = getattr(protein, "representative_sequence_sha256s", None)
-            representatives = None if pd.isna(raw_hashes) else set(json.loads(raw_hashes))
-            for gene_id in json.loads(protein.member_gene_ids):
+        missing = []
+        for (
+            eid,
+            member_gids,
+            representatives,
+            cat_cat,
+            sel_cat,
+            bg_reason,
+        ) in _iter_protein_row_fields(protein_rows):
+            for gene_id in member_gids:
                 sub = by_gene.get(gene_id)
-                if sub is None or sub.empty:
+                if not sub:
                     missing.append(gene_id)
                     continue
-                for rec in sub.itertuples(index=False):
-                    sequence = str(rec.sequence)
-                    if not sequence:
-                        continue
-                    digest = hashlib.sha256(sequence.encode()).hexdigest()
-                    rows.append(
-                        {
-                            "entity_id": protein.entity_id,
-                            "gene_id": gene_id,
-                            "transcript_id": str(getattr(rec, "transcript_id", gene_id)),
-                            "transcript_biotype": str(
-                                getattr(rec, "transcript_biotype", "protein_coding")
-                            ),
-                            "sequence": sequence,
-                            "sequence_sha256": digest,
-                            "matches_representative_sequence": (
-                                pd.NA if representatives is None else digest in representatives
-                            ),
-                            "set": group,
-                            "catalog_category": getattr(
-                                protein, "catalog_category", getattr(protein, "category", "")
-                            ),
-                            "selection_category": getattr(protein, "category", ""),
-                            "background_reason": getattr(protein, "background_reason", ""),
-                        }
-                    )
+                for tid_str, tbio_str, sequence in sub:
+                    digest = digest_cache.get(sequence)
+                    if digest is None:
+                        digest = hashlib.sha256(sequence.encode()).hexdigest()
+                        digest_cache[sequence] = digest
+                    c_eid.append(eid)
+                    c_gid.append(gene_id)
+                    c_tid.append(tid_str)
+                    c_tbio.append(tbio_str)
+                    c_seq.append(sequence)
+                    c_sha.append(digest)
+                    c_match.append(pd.NA if representatives is None else digest in representatives)
+                    c_cat.append(cat_cat)
+                    c_sel.append(sel_cat)
+                    c_bg.append(bg_reason)
         result = pd.DataFrame(
-            rows,
-            columns=[
-                "entity_id",
-                "gene_id",
-                "transcript_id",
-                "transcript_biotype",
-                "sequence",
-                "sequence_sha256",
-                "matches_representative_sequence",
-                "set",
-                "catalog_category",
-                "selection_category",
-                "background_reason",
-            ],
-        )
-        result["matches_representative_sequence"] = result.matches_representative_sequence.astype(
-            "boolean"
+            {
+                "entity_id": c_eid,
+                "gene_id": c_gid,
+                "transcript_id": c_tid,
+                "transcript_biotype": c_tbio,
+                "sequence": c_seq,
+                "sequence_sha256": c_sha,
+                "matches_representative_sequence": pd.array(c_match, dtype="boolean"),
+                "set": [group] * len(c_eid),
+                "catalog_category": c_cat,
+                "selection_category": c_sel,
+                "background_reason": c_bg,
+            }
         )
         result.attrs.update(protein_rows.attrs)
         result.attrs.update(
@@ -609,31 +777,65 @@ def _sequences(
         )
         return result
 
-    expected_latin = {9606: "homo_sapiens", 10090: "mus_musculus"}.get(resolved.taxon_id)
-    expected_ref = {
-        9606: "homo_sapiens:GRCh38:Ensembl:115",
-        10090: "mus_musculus:GRCm39:Ensembl:115",
-    }.get(resolved.taxon_id)
+    ensembl_spec = _species_ensembl_spec(resolved)
     if genome is None:
-        if expected_latin is None:
+        if ensembl_spec is None:
             raise ValueError(
                 f"Species {resolved.name!r} requires an explicit sequences_table or genome"
             )
         from pyensembl import EnsemblRelease
 
-        py_species = "human" if resolved.taxon_id == 9606 else "mouse"
-        genome = EnsemblRelease(ENSEMBL_RELEASE, species=py_species)
-    if (
-        expected_latin is None
-        or genome.release != ENSEMBL_RELEASE
-        or genome.species.latin_name != expected_latin
-    ):
-        raise ValueError(f"Current antigen sets require {resolved.name} Ensembl 115")
-    rows, missing = [], []
-    for protein in protein_rows.itertuples():
-        raw_hashes = getattr(protein, "representative_sequence_sha256s", None)
-        representatives = None if pd.isna(raw_hashes) else set(json.loads(raw_hashes))
-        for gene_id in json.loads(protein.member_gene_ids):
+        expected_release, py_species, expected_latins, expected_ref = ensembl_spec
+        genome = EnsemblRelease(expected_release, species=py_species)
+    else:
+        if ensembl_spec is None:
+            raise ValueError(f"Species {resolved.name!r} requires an explicit sequences_table")
+        expected_release, _py_species, expected_latins, expected_ref = ensembl_spec
+    if genome.release != expected_release or genome.species.latin_name not in expected_latins:
+        raise ValueError(f"Current antigen sets require {resolved.name} Ensembl {expected_release}")
+
+    row_specs = list(_iter_protein_row_fields(protein_rows))
+    needed_gene_ids = {gid for _eid, gids, *_ in row_specs for gid in gids}
+    bulk_by_gene = _pyensembl_translations_by_gene(genome, needed_gene_ids)
+
+    digest_cache = {}
+    c_eid, c_gid, c_tid, c_tbio, c_seq, c_sha, c_match, c_cat, c_sel, c_bg = (
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    )
+    missing = []
+    for eid, member_gids, representatives, cat_cat, sel_cat, bg_reason in row_specs:
+        for gene_id in member_gids:
+            if bulk_by_gene is not None:
+                entries = bulk_by_gene.get(gene_id)
+                if not entries:
+                    missing.append(gene_id)
+                    continue
+                for tid_str, tbio_str, sequence in entries:
+                    digest = digest_cache.get(sequence)
+                    if digest is None:
+                        digest = hashlib.sha256(sequence.encode()).hexdigest()
+                        digest_cache[sequence] = digest
+                    c_eid.append(eid)
+                    c_gid.append(gene_id)
+                    c_tid.append(tid_str)
+                    c_tbio.append(tbio_str)
+                    c_seq.append(sequence)
+                    c_sha.append(digest)
+                    c_match.append(pd.NA if representatives is None else digest in representatives)
+                    c_cat.append(cat_cat)
+                    c_sel.append(sel_cat)
+                    c_bg.append(bg_reason)
+                continue
+
             found = False
             try:
                 transcripts = genome.gene_by_id(gene_id).transcripts
@@ -644,46 +846,36 @@ def _sequences(
                 if not sequence:
                     continue
                 found = True
-                digest = hashlib.sha256(sequence.encode()).hexdigest()
-                rows.append(
-                    {
-                        "entity_id": protein.entity_id,
-                        "gene_id": gene_id,
-                        "transcript_id": transcript.id,
-                        "transcript_biotype": transcript.biotype,
-                        "sequence": sequence,
-                        "sequence_sha256": digest,
-                        "matches_representative_sequence": (
-                            pd.NA if representatives is None else digest in representatives
-                        ),
-                        "set": group,
-                        "catalog_category": getattr(
-                            protein, "catalog_category", getattr(protein, "category", "")
-                        ),
-                        "selection_category": getattr(protein, "category", ""),
-                        "background_reason": getattr(protein, "background_reason", ""),
-                    }
-                )
+                digest = digest_cache.get(sequence)
+                if digest is None:
+                    digest = hashlib.sha256(sequence.encode()).hexdigest()
+                    digest_cache[sequence] = digest
+                c_eid.append(eid)
+                c_gid.append(gene_id)
+                c_tid.append(transcript.id)
+                c_tbio.append(transcript.biotype)
+                c_seq.append(sequence)
+                c_sha.append(digest)
+                c_match.append(pd.NA if representatives is None else digest in representatives)
+                c_cat.append(cat_cat)
+                c_sel.append(sel_cat)
+                c_bg.append(bg_reason)
             if not found:
                 missing.append(gene_id)
     result = pd.DataFrame(
-        rows,
-        columns=[
-            "entity_id",
-            "gene_id",
-            "transcript_id",
-            "transcript_biotype",
-            "sequence",
-            "sequence_sha256",
-            "matches_representative_sequence",
-            "set",
-            "catalog_category",
-            "selection_category",
-            "background_reason",
-        ],
-    )
-    result["matches_representative_sequence"] = result.matches_representative_sequence.astype(
-        "boolean"
+        {
+            "entity_id": c_eid,
+            "gene_id": c_gid,
+            "transcript_id": c_tid,
+            "transcript_biotype": c_tbio,
+            "sequence": c_seq,
+            "sequence_sha256": c_sha,
+            "matches_representative_sequence": pd.array(c_match, dtype="boolean"),
+            "set": [group] * len(c_eid),
+            "catalog_category": c_cat,
+            "selection_category": c_sel,
+            "background_reason": c_bg,
+        }
     )
     result.attrs.update(protein_rows.attrs)
     result.attrs.update(

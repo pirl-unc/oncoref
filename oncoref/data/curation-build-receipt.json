@@ -21,7 +21,7 @@
     "docs/audits/normal-cell-atlas-20261110/rare-cell/findings.csv": "12bf3fdb4eee4dad8b5f1f7a4032cca1a9acd296720ab3b8124cbcd70d687680",
     "oncoref/antigen_cli.py": "99de9c45c14d5e781fbcef038ab30c8bca21a34c0233d35c077cadc2057813a7",
     "oncoref/antigen_data.py": "3a78d73290bff910d49820ee3425abcfe44933ddec6672fec8e490ace6656647",
-    "oncoref/antigen_sets.py": "fdec823de6fda66bb2133d9e4803ec0da964aed226ccd082a44810a56338d58a",
+    "oncoref/antigen_sets.py": "b01efe1755e4128a7b977e536b06667fa85306850cf529d6639b2c1183b56d2e",
     "oncoref/antigens.py": "8239388896ed34a5f2730fc7275efe6acc0d02b5cbbbd738ce1f9ac4d28d4596",
     "oncoref/catalog.py": "5207af812fdb3ef74879cd0b67f1b30c88b96f97af2b538bd0d31734b517d551",
     "oncoref/cta_literature.py": "45d937b7d7d0d06753d8dcbaa376af416a77878c8c75adcb8ea69fe389eaf68a",
