@@ -37,7 +37,7 @@
     "oncoref/data/marcinkowski2019-ct83-expression.csv": "cd9df6fbe3eaa6f743b47d0244eefa80cae8dfe82f9904444ddb12194ba7b3cb",
     "oncoref/data/normal-cell-sources.json": "b471f0c37257fed9bf8f68b5f2f8aab748efb052893f8d42e13ff6d04c9f9c76",
     "oncoref/data/rare-cell-attribution-reviews.json": "bc0e0d5dd53d03866f02656d3c64a5aa84d4b3ef8f3c1f1a391645d037bdab75",
-    "oncoref/data/reference-releases.json": "781db6bda288095928e9fedefa1f9b926e5d898c452c2dda519db834e957ea52",
+    "oncoref/data/reference-releases.json": "02f4acb7b28aa88617359156c3b9d39486aeeca2b225702ed36f61a7289ac0a4",
     "oncoref/data/tcr-clinical-gold-standard.csv": "82a97c2ae1ceae78ed20db4f640f3dc18440587604eba8fb7d10d59729a7173d",
     "oncoref/data/tumor-gdna-background-deltas.csv": "b2c1a743ec11914b53cf10c96138ab8d647d223788bc891a171c773327037598",
     "oncoref/data/tumor-gdna-background-deltas.json": "1c0741e3782f6ab482c10ce5cdb6ec18084c170277a467099b9d0b5af276a3c3",
