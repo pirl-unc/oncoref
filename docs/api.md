@@ -37,7 +37,7 @@ schema, provenance, fallback, and migration contracts follow.
 
 ## Species and Datasets
 
-Use `oncoref.human` and `oncoref.canine` for explicit species entry points.
+Use `oncoref.human`, `oncoref.dog` (alias `oncoref.canine`), and `oncoref.mouse` for explicit species entry points.
 Each exposes named dataset modules and conceptual groups such as `references`,
 `expression`, `cancer`, `antigens` and `normalization`.
 

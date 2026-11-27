@@ -1,15 +1,15 @@
 # Species and data groups
 
-Species is the first data boundary. Start with the explicit `oncoref.human` and
-`oncoref.canine` modules, then use a named dataset or a conceptual collection.
-Human, canine and mouse expose the same groups: `references`,
-`expression`, `cancer`, `antigens`, `normalization`, `governance`, and `legacy`.
+Species is the first data boundary. Start with the explicit `oncoref.human`,
+`oncoref.dog` (alias `oncoref.canine`), and `oncoref.mouse` modules, then use a named dataset or a conceptual collection.
+Human, dog/canine, and mouse expose the same groups: `references`,
+`expression`, `cancer`, `antigens`, `normalization`, `governance`, and `legacy`, and all three `target_selection()` catalogs expose deterministic `representative_transcripts`.
 A known species does not imply that every group has data or complete coverage.
 
 ```python
 import oncoref
 
-dog = oncoref.canine
+dog = oncoref.dog  # symmetric alias for oncoref.canine
 dog.references.datasets()
 dog.expression.sources(context="normal")
 dog.target_selection_coverage()  # evaluated genome-wide CanFam3.1 catalog (20,082 PEGs)

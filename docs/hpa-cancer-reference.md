@@ -31,9 +31,12 @@ sources = od.hpa_cancer_sources()
 limitations = od.hpa_cancer_assay_limitations()
 ```
 
-Accessors accept one gene ID or an iterable. IDs are not remapped to oncoref's
-newer canonical gene space. `hpa_gene_name` is the IHC source label; RNA-only
-genes can have a missing name rather than one guessed from another release.
+Accessors accept one gene ID or an iterable and cache parsed tables in-process
+(returning defensive `.copy()` DataFrames). Source `gene_id` values remain in
+HPA's native Ensembl 109 space, while canonical OncoRef `symbol` is attached
+immediately after `gene_id` by default (`include_symbol=True`, or `""` when
+unmapped; pass `include_symbol=False` to omit). `hpa_gene_name` retains HPA's
+IHC source label.
 
 IHC `high`, `medium`, `low`, and `not_detected` are scored-patient counts.
 `total` sums them only when all four categories are known. `detected` sums

@@ -27,16 +27,26 @@ from oncoref import antigens
 
 # Protects ovary, uterus, endometrium, fallopian tube, cervix, vagina, and resting_breast:
 female_ctas = antigens.table("CTA", sex="female", ectopic_only=True)
-pregnant_ctas = antigens.table("CTA", sex="female", pregnant=True)
+
+# Maternal-fetal interface (scope_complete=True; 306/322 human CTAs pass):
+maternal_interface = antigens.table("CTA", protect=("placenta", "lactating_breast"))
+
+# Full pregnancy shortcut fails closed (0 rows) by default because embryo lacks 1st-3rd trimester coverage;
+# pass allow_incomplete_scope=True to screen measured early-embryo + placenta + lactating RNA:
+pregnant_default = antigens.table("CTA", sex="female", pregnant=True)
+pregnant_screened = antigens.table("CTA", sex="female", pregnant=True, allow_incomplete_scope=True)
 antigens.explain("LALBA", sex="female")  # excluded (resting_breast >= 8 nTPM)
 antigens.explain("MAGEA4", sex="female")  # pass_host=True (CTA-M)
 ```
 
-For custom RNA/nTPM thresholds (`max_tpm`, `max_ntpm`, `negative_ihc_multiplier`), construct `HostContext` directly:
+For custom RNA/nTPM thresholds (`max_tpm`, `max_ntpm`, `negative_ihc_multiplier`) or cross-species compartment inspection, use `HostContext`, `HostContext.for_host(...)`, `host_context.compartments(species)`, and `SEX_RESTRICTION_CODES`:
 
 ```python
-from oncoref import antigen_sets
-from oncoref.host_context import HostContext
+from oncoref import antigen_sets, host_context
+from oncoref.host_context import HostContext, SEX_RESTRICTION_CODES
+
+dog_compartments = host_context.compartments("dog")
+host_preset = HostContext.for_host("female-patient", lactating=True, species="dog")
 
 # Illustrative declarations, not a patient recommendation.
 host = HostContext(

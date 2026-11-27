@@ -49,10 +49,7 @@ Rows carry the current policy and evidence. The older `target_sets` and
 
 ## Sequences, occurrences and retained peptides
 
-Human sequence lookups automatically use the verified offline `sequence_bundle` when
-staged locally (`sequence_source="auto"` or `sequence_source="sequence_bundle"`),
-requiring neither `oncoref[genome]` nor `pyensembl`, and fall back to local Ensembl
-115 (`oncoref[genome]`, `sequence_source="pyensembl"`) otherwise. Translation
+Sequence lookups automatically use the verified offline `sequence_bundle` (human) or packaged species proteome (`dog`, `mouse`) when staged locally (`sequence_source="auto"` or `sequence_source="sequence_bundle"`, probeable via `sequence_bundle.is_cached()`), requiring neither `oncoref[genome]` nor `pyensembl` and never triggering implicit downloads under `sequence_source="auto"`. Otherwise they fall back to the species' pinned Ensembl reference via `pyensembl` (`oncoref[genome]`, `sequence_source="pyensembl"`: Ensembl 115 for human/mouse, Ensembl 98 for dog). Translation
 extraction preserves every annotated protein translation, including loss-of-function
 and decay-associated transcripts and multiple occurrences of the same sequence.
 `transcript_biotype` records the annotation for each occurrence. It inherits gene-level evidence, without
@@ -63,8 +60,9 @@ claiming isoform-specific expression. Missing translations appear in
 from oncoref import antigen_sets
 from oncoref.peptide_subtraction import MatchPolicy, PeptideIndex, near_self_contract
 
-# Direct bundle-backed index without pyensembl:
+# Direct offline index without pyensembl (supports species="human", "dog", or "mouse"):
 background = PeptideIndex.from_sequence_bundle(background="Unsafe|Other")
+dog_background = PeptideIndex.from_sequence_bundle(species="dog", background="Unsafe|Other")
 contract = near_self_contract()
 
 # Or explicit forbidden-background table with provenance & uncertainty attrs:
