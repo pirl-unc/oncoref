@@ -3182,6 +3182,24 @@ def build_all(scratch_dir: Path, out_root: Path, extra_dir: Path | None = None) 
     cat_sha = _sha256(cat_path)
     exp_sha = _sha256(exp_path)
     seq_sha = _sha256(seq_path)
+    if "representative_transcripts" in cat.columns:
+        import gzip
+
+        rep_doc = {
+            "schema": "oncoref.species-representative-transcripts.v1",
+            "species": "dog",
+            "taxon_id": 9615,
+            "catalog_data_sha256": cat_sha,
+            "sequences_sha256": seq_sha,
+            "rows": [json.loads(raw) for raw in cat["representative_transcripts"]],
+        }
+        (dog_dir / "representative-transcripts.json.gz").write_bytes(
+            gzip.compress(
+                json.dumps(rep_doc, separators=(",", ":")).encode("utf-8"),
+                compresslevel=9,
+                mtime=0,
+            )
+        )
     loci_count = int(cat["member_gene_ids"].map(json.loads).map(len).sum())
 
     summary_payload = {

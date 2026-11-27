@@ -10,7 +10,9 @@ from oncoref import hpa, hpa_cancer, species_expression
 from oncoref.species import DATA_GROUPS
 
 
-@pytest.mark.parametrize("name,taxon", [("human", 9606), ("canine", 9615), ("mouse", 10090)])
+@pytest.mark.parametrize(
+    "name,taxon", [("human", 9606), ("canine", 9615), ("dog", 9615), ("mouse", 10090)]
+)
 def test_species_modules_are_importable_and_groups_stay_scoped(name, taxon):
     module = importlib.import_module(f"oncoref.{name}")
     assert isinstance(module, ModuleType)
