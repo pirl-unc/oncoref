@@ -120,6 +120,15 @@ def test_pregnant_fail_closed_default_and_explicit_allow_incomplete_scope(capsys
         "CTA", host_profile="female-patient", pregnant=True, allow_incomplete_scope=True
     )
     assert len(sel.proteins()) > 0
+    conv_proteins = antigen_sets.proteins(
+        "CTA", profile="female-patient", pregnant=True, allow_incomplete_scope=True
+    )
+    assert list(conv_proteins["entity_id"]) == list(sel.proteins()["entity_id"])
+    assert len(
+        antigen_sets.gene_ids(
+            "CTA", profile="female-patient", pregnant=True, allow_incomplete_scope=True
+        )
+    ) >= len(conv_proteins)
 
     first_lbl = str(fem_preg_tbl.iloc[0]["protein_group_label"])
     exp_default = antigens.explain(first_lbl, sex="female", pregnant=True)
