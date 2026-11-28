@@ -15,6 +15,7 @@ Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
 18,256 Unsafe**—alongside native genome-wide catalogs for **domestic dog** (**20,082** groups, **118** CTAs) and **laboratory mouse** (**21,433** groups, **8** *in vivo* CTAs). `CA` and `RA` share one multi-assay normal-tissue safety screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in *in vivo* tumor or reproductive/embryonic samples; `CTA = CA ∩ RA` (**311/322 = 96.6%** with ectopic activation outside homologous source organs). [Patient-specific filtering](docs/host-selection.md) (`antigens.table(..., sex="female" | "male")` or `oncoref antigens list --sex female`) protects relevant reproductive and mammary organs downstream without altering biological categories.
 
 [Interactive antigen explorer](https://pirl-unc.github.io/oncoref/antigen-explorer.html) ·
+[Antigen preprint (Markdown & PDF)](docs/preprint/index.md) ·
 [Antigen whitepaper](docs/antigen-whitepaper.md) ·
 [Multi-species whitepaper](docs/species-antigen-whitepaper.md) ·
 [Classification rules](docs/target-selection.md) ·

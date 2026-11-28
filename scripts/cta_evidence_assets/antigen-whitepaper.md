@@ -1,6 +1,6 @@
 # Cancer-selective and cancer–testis antigens in OncoRef
 
-*[Interactive antigen explorer](antigen-explorer.html) · [Multi-species whitepaper](species-antigen-whitepaper.md) · [Tissue injury hierarchy](tissue-hierarchy.md) · [Data & downloads](antigen-data.md)*
+*[Interactive antigen explorer](antigen-explorer.html) · [Antigen preprint (full paper & PDF)](preprint/index.md) · [Multi-species whitepaper](species-antigen-whitepaper.md) · [Tissue injury hierarchy](tissue-hierarchy.md) · [Data & downloads](antigen-data.md)*
 
 <p class="section-nav"><strong>Jump to:</strong> <a href="#goals-and-high-level-conceptual-architecture">Goals &amp; architecture</a> · <a href="#categories">Categories</a> · <a href="#why-bulk-rna-alone-is-insufficient">Multi-assay safety</a> · <a href="#clinical-toxicity-gold-standard-potency-proven-tcr-t-and-tcr-bispecific-trials">Clinical TCR gold standard</a> · <a href="#decision-tree-attrition-and-the-10-enrichment-rule">Decision tree, 10× &amp; purity</a> · <a href="#published-cta-oncofetal-and-placental-lists">Published lists</a> · <a href="#peak-tumor-expression-and-edge-cases">Top tumor targets</a> · <a href="#tissue-injury-tiers-patient-profiles-and-sex-restricted-ctas">Sex-restricted CTAs</a> · <a href="#comparative-multi-species-framework-human-dog-and-mouse">Multi-species</a> · <a href="#methods-protein-grouping-sources-and-thresholds">Methods</a> · <a href="#reproducing-the-catalog-and-downloads">Reproducibility &amp; downloads</a></p>
 
