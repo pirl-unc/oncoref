@@ -947,8 +947,8 @@
     ],
     "tumor_matrix_cache_sha256": "8f0bb3074e1b3c3ccfe53a3037242f9cffc28dfb07828c562d28393e8b7eec4b"
   },
-  "data_sha256": "acff278628a60e9afb4f9b25a65c859531d37b4ae3def94f4b016a4ebe91b205",
+  "data_sha256": "02329cf4fa491542fef6e93291c55e8d7d3b8997cedd9dd3db7a383c7592e2f2",
   "report_url": "https://pirl-unc.github.io/oncoref/audits/target-selection-20261110/rebuild/report.html",
   "policy_id": "oncoref.target-selection.2026-11-27.1",
-  "data_bytes": 3732495
+  "data_bytes": 3732412
 }

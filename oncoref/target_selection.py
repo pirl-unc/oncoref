@@ -385,6 +385,7 @@ def definition() -> dict:
             "assay_boundary_adjudications_768": "oncoref/data/assay-boundary-adjudications.csv",
             "near_self_1mm_and_ms_audit_769": "oncoref/data/candidate-near-self-1mm.csv",
             "tumor_gdna_background_qc_785": "oncoref/data/tumor-gdna-background-deltas.csv",
+            "ca_only_functional_review_20261127": "oncoref/data/ca-only-functional-review.csv",
         },
     }
 
@@ -422,6 +423,8 @@ def _cached_results_bundle() -> tuple[pd.DataFrame, dict[str, list[int]]]:
         "closed_homolog_family_id",
         "co_silenced_coding_sibling_ids",
         "closed_self_paralog_ids",
+        "ca_only_review_disposition",
+        "ca_only_functional_class",
     ):
         if _str_col in base.columns:
             base[_str_col] = base[_str_col].astype("object").fillna("").astype(str)

@@ -492,7 +492,6 @@ def build_human_screening_inputs(
     home_tissue_series = ts["home_tissue"].fillna("").astype(str).copy()
     if eff_ca_niche and files("oncoref").joinpath("data/ca-only-functional-review.csv").is_file():
         ca_adj_df = ca_only_review.ca_only_niche_adjudications()
-        eid_to_idx_ca = {str(eid): idx for idx, eid in enumerate(ts["entity_id"])}
         for r_ca in ca_adj_df.itertuples(index=False):
             ca_eid = str(r_ca.entity_id)
             if str(r_ca.adjudication_disposition) == "adjudicated_unsafe_adult_human":
@@ -515,9 +514,6 @@ def build_human_screening_inputs(
                         "reason": str(r_ca.adjudication_rationale),
                     }
                 )
-            idx_ca = eid_to_idx_ca.get(ca_eid)
-            if idx_ca is not None and not home_tissue_series.iat[idx_ca].strip():
-                home_tissue_series.iat[idx_ca] = str(r_ca.adjudication_tissue)
     if eff_chemo:
         unsafe_gate_eids = {str(g["entity_id"]) for g in gate_rows if bool(g.get("unsafe"))}
         for idx, (eid_v, lbl_v) in enumerate(zip(ts["entity_id"], ts["protein_group_label"])):
