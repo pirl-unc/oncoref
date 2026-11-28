@@ -11,8 +11,8 @@ Reproductive Antigen (`RA`), and Cancer–Testis Antigen (`CTA`) classification 
 behind a Python API and CLI.
 
 Across **19,893** human protein groups (**20,099** Ensembl 115 coding loci), the
-[antigen catalog](docs/antigen-whitepaper.md) classifies **322 CTA, 66 Cancer Antigen only, 146 Reproductive Antigen only, 1,110 Other and
-18,249 Unsafe**—alongside native genome-wide catalogs for **domestic dog** (**20,082** groups, **118** CTAs) and **laboratory mouse** (**21,433** groups, **8** *in vivo* CTAs). `CA` and `RA` share one multi-assay normal-tissue safety screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in *in vivo* tumor or reproductive/embryonic samples; `CTA = CA ∩ RA` (**311/322 = 96.6%** with ectopic activation outside homologous source organs). [Patient-specific filtering](docs/host-selection.md) (`antigens.table(..., sex="female" | "male")` or `oncoref antigens list --sex female`) protects relevant reproductive and mammary organs downstream without altering biological categories.
+[antigen catalog](docs/antigen-whitepaper.md) classifies **322 CTA, 53 Cancer Antigen only, 146 Reproductive Antigen only, 1,116 Other and
+18,256 Unsafe**—alongside native genome-wide catalogs for **domestic dog** (**20,082** groups, **118** CTAs) and **laboratory mouse** (**21,433** groups, **8** *in vivo* CTAs). `CA` and `RA` share one multi-assay normal-tissue safety screen and independently require **≥10 × max(Normal N, Disposable D, 1 TPM)** (excluding thymus from both denominators) in *in vivo* tumor or reproductive/embryonic samples; `CTA = CA ∩ RA` (**311/322 = 96.6%** with ectopic activation outside homologous source organs). [Patient-specific filtering](docs/host-selection.md) (`antigens.table(..., sex="female" | "male")` or `oncoref antigens list --sex female`) protects relevant reproductive and mammary organs downstream without altering biological categories.
 
 [Interactive antigen explorer](https://pirl-unc.github.io/oncoref/antigen-explorer.html) ·
 [Antigen whitepaper](docs/antigen-whitepaper.md) ·

@@ -372,15 +372,15 @@ def test_promoted_integrated_catalog_invariants_and_metadata():
     live_meta = policy.metadata()
     live_path = ROOT / "oncoref/data/target-selection.csv.gz"
     assert hashlib.sha256(live_path.read_bytes()).hexdigest() == live_meta["data_sha256"]
-    assert live_meta["policy_id"] == policy.POLICY_ID == "oncoref.target-selection.2026-11-26.2"
+    assert live_meta["policy_id"] == policy.POLICY_ID == "oncoref.target-selection.2026-11-27.1"
     assert live.policy.eq(policy.POLICY_ID).all()
     assert len(live) == 19893 and live.entity_id.is_unique
     assert live.category.value_counts().to_dict() == {
-        "Unsafe": 18249,
-        "Other": 1110,
+        "Unsafe": 18256,
+        "Other": 1116,
         "CTA": 322,
         "Reproductive Antigen only": 146,
-        "Cancer Antigen only": 66,
+        "Cancer Antigen only": 53,
     }
     assert live.is_cta.equals(live.is_cancer_antigen & live.is_reproductive_antigen)
     assert live.is_target_candidate.equals(live.is_cancer_antigen | live.is_reproductive_antigen)
@@ -405,8 +405,25 @@ def test_promoted_integrated_catalog_invariants_and_metadata():
         assert by_lbl.loc[cta_lbl, "classification"] == "CTA"
     for ra_lbl in ("PRM2", "CETN1", "PGK2", "TSSK2", "CAPZA3", "DNAJB8", "IQCF2", "MAGEB18"):
         assert by_lbl.loc[ra_lbl, "classification"] == "Reproductive Antigen only"
-    for unsafe_lbl in ("SP7", "GFY", "PANX3", "BPIFB3", "GLYATL3", "DAZL", "MAGEA12"):
+    for unsafe_lbl in (
+        "SP7",
+        "GFY",
+        "PANX3",
+        "BPIFB3",
+        "GLYATL3",
+        "DAZL",
+        "MAGEA12",
+        "GALP",
+        "BHLHE23",
+        "IL36B",
+        "ZACN",
+        "HES3",
+        "OCSTAMP",
+        "PROKR1",
+    ):
         assert by_lbl.loc[unsafe_lbl, "classification"] == "Unsafe"
+    for review_lbl in ("SRMS", "OCM2", "CIB3", "OTOP1", "GFRA4", "MRGPRG"):
+        assert by_lbl.loc[review_lbl, "classification"] == "Other:Review"
 
 
 def test_report_provenance_manifest():

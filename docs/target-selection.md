@@ -4,7 +4,7 @@
 Cancer Antigens. These are research screening memberships, not demonstrated antigen
 presentation or clinical safety.
 
-Catalog `oncoref.target-selection.2026-11-26.2`: **322 CTA** · **66 Cancer Antigen only** · **146 Reproductive Antigen only** · **1,110 Other** · **18,249 Unsafe**.
+Catalog `oncoref.target-selection.2026-11-27.1`: **322 CTA** · **53 Cancer Antigen only** · **146 Reproductive Antigen only** · **1,116 Other** · **18,256 Unsafe**.
 
 [Interactive antigen explorer](antigen-explorer.html) ·
 [Antigen whitepaper](antigen-whitepaper.md) ·
@@ -29,10 +29,10 @@ Both CA and RA independently require **≥10 × H₀**, where
 
 | Set | Positive RNA evidence | Proteins |
 |---|---|---:|
-| CA | At least one QC-passing tumor sample ≥10 × H₀ | 388 |
+| CA | At least one QC-passing tumor sample ≥10 × H₀ | 375 |
 | RA | Reproductive sample or supported embryo-lineage mean ≥10 × H₀ | 468 |
 | CTA | Both routes | 322 |
-| CA∪RA | Either route | 534 |
+| CA∪RA | Either route | 521 |
 
 The adult whole thymus is Disposable under the catalog’s loss allowance. Defined immune cell populations retain their own injury tiers. A matched observational study associated adult thymectomy with increased mortality and cancer incidence. [Adult thymectomy study](https://pubmed.ncbi.nlm.nih.gov/37530823/) Medullary thymic epithelial cells express tissue-restricted antigens during central tolerance. Bulk thymus is retained in the healthy ledger under the `thymic` scope and excluded from both enrichment denominators. The independent normal-expression and protein screens still apply. [Human thymic epithelial-cell study](https://pmc.ncbi.nlm.nih.gov/articles/PMC2211762/)
 

@@ -5,7 +5,12 @@ Dataset modules are shared with their top-level imports, for example
 ``human.human_protein_atlas`` is ``oncoref.human_protein_atlas``.
 """
 
-from . import gtex, human_protein_atlas, human_screening_inputs, normal_cell_data
+from . import ca_only_review, gtex, human_protein_atlas, human_screening_inputs, normal_cell_data
+from .ca_only_review import (
+    ca_only_class_summary,
+    ca_only_functional_review,
+    ca_only_niche_adjudications,
+)
 from .human_screening_inputs import (
     build_human_screening_inputs as screening_inputs,
 )
@@ -58,6 +63,10 @@ tumor_cohorts = antigens.tumor_cohorts
 
 __all__ = [
     "antigens",
+    "ca_only_class_summary",
+    "ca_only_functional_review",
+    "ca_only_niche_adjudications",
+    "ca_only_review",
     "cancer",
     "cell_lines",
     "cta_candidates",

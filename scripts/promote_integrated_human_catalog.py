@@ -35,6 +35,7 @@ from build_host_exposure import catalog_compartments, protein_evidence  # noqa: 
 
 from oncoref import (  # noqa: E402
     assay_boundary_adjudications,
+    ca_only_review,
     curation,
     host_context,
     human_screening_inputs,
@@ -50,8 +51,8 @@ from oncoref import (  # noqa: E402
     unmeasured_home_panels,
 )
 
-PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-26.2"
-PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.2"
+PROMOTED_POLICY_ID = "oncoref.target-selection.2026-11-27.1"
+PROMOTED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-27.1"
 FROZEN_150_DIR = ROOT / "tests/fixtures/release-1.50-inputs"
 
 
@@ -938,6 +939,8 @@ def main() -> None:
         "clinical_clearance_766_disposition",
         "repeat_family_767_disposition",
         "assay_boundary_768_disposition",
+        "ca_only_review_disposition",
+        "ca_only_functional_class",
         "clinical_clearance_scope",
         "clinical_cleared_organs",
         "clinical_cleared_epitopes",
@@ -966,6 +969,9 @@ def main() -> None:
     promoted["qualifying_cancer_codes"] = ""
     anat_repro_order = integ_res.spec.anatomy.reproductive_compartments
     witness_summary_by_eid: dict[str, dict[str, object]] = {}
+    ca_only_adj_by_eid = (
+        ca_only_review.ca_only_niche_adjudications().set_index("entity_id").to_dict("index")
+    )
 
     # Reconcile auxiliary display/provenance columns for modified entities
     for idx, row in promoted.iterrows():
@@ -975,10 +981,15 @@ def main() -> None:
         cls_now = str(row["classification"])
 
         if cat_now == "Unsafe":
-            # Newly Unsafe (#735 SP7/GFY/PANX3/BPIFB3/GLYATL3 or #711 DAZL)
+            # Newly Unsafe (#735 SP7/GFY/PANX3/BPIFB3/GLYATL3, #711 DAZL, or CA-only niche review)
             if str(old_row["category"]) != "Unsafe":
                 promoted.at[idx, "normal_screen_pass"] = False
-                promoted.at[idx, "decision_reason"] = str(row["Unsafe_reasons"])
+                if eid in ca_only_adj_by_eid:
+                    promoted.at[idx, "decision_reason"] = str(
+                        ca_only_adj_by_eid[eid]["adjudication_rationale"]
+                    )
+                else:
+                    promoted.at[idx, "decision_reason"] = str(row["Unsafe_reasons"])
                 promoted.at[idx, "expression_bounds_status"] = "unassessed"
                 promoted.at[idx, "reproductive_qualifying_compartments"] = ""
                 for clear_num in (
@@ -1408,9 +1419,14 @@ def main() -> None:
                     "Monogenic chemosensory GPCR home tissue lacks single-receptor screening power; cancer-only admission held"
                 )
             elif cls_now == "Other:Review":
-                promoted.at[idx, "decision_reason"] = (
-                    "Cleared nuclear snRNA-seq spillover (#765); held pending complete peripheral comparison coverage"
-                )
+                if eid in ca_only_adj_by_eid:
+                    promoted.at[idx, "decision_reason"] = str(
+                        ca_only_adj_by_eid[eid]["adjudication_rationale"]
+                    )
+                else:
+                    promoted.at[idx, "decision_reason"] = (
+                        "Cleared nuclear snRNA-seq spillover (#765); held pending complete peripheral comparison coverage"
+                    )
 
         # Compute exact multi-cohort tumor_activation_mode across all 135 human tumor cohorts
         if bool(promoted.at[idx, "is_cancer_antigen"]) and pd.notna(n_tpm):

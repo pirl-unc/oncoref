@@ -507,6 +507,10 @@ CANCERDATA_ORIGINATED: dict[str, tuple[str, str]] = {
         "cta-evidence",
         "verified native-TPM normal, reproductive, and tumor observations for cleared #768 former-Unsafe candidates",
     ),
+    "ca-only-functional-review": (
+        "cta-evidence",
+        "primary-source functional biology and adult normal micro-niche literature review across all 66 baseline CA-only proteins",
+    ),
     "candidate-near-self-1mm": (
         "cta-evidence",
         "exact 9-mer unique, >=2-mismatch safe, 1-mismatch Hamming near-self percentage, and shared Unsafe tryptic peptide counts across candidate antigens (#769)",
@@ -947,6 +951,7 @@ _CALIBRATION_OR_AUDIT_STEMS: frozenset[str] = frozenset(
         "repeat-family-comparison-observations",
         "assay-boundary-adjudications",
         "assay-boundary-comparison-observations",
+        "ca-only-functional-review",
         "tryptic-ms-paralog-audit",
         "baseline-2026-11-20-deltas",
         "gtex-deconvolution-tissue-summary",
