@@ -7,6 +7,7 @@ cancer-type ontology, RNA-seq cohorts, clean-TPM normalization, tumor mutational
 <span class="cat cat-cta">CTA</span> classification.
 
 [Interactive antigen explorer](antigen-explorer.html) ·
+[Antigen preprint (PDF)](preprint/index.md) ·
 [Antigen whitepaper](antigen-whitepaper.md) ·
 [Multi-species whitepaper](species-antigen-whitepaper.md) ·
 [Classification rules](target-selection.md) ·
@@ -46,6 +47,7 @@ classifies **322 CTA, 53 Cancer Antigen only, 146 Reproductive Antigen only, 1,1
 ![Antigen classification overview](audits/target-selection-20261110/rebuild/summary/source-to-tiers-architecture.png)
 
 [Interactive antigen explorer](antigen-explorer.html) ·
+[Antigen preprint (PDF)](preprint/index.md) ·
 [Antigen whitepaper](antigen-whitepaper.md) ·
 [Summary figures](audits/target-selection-20261110/rebuild/summary.md) ·
 [Data & downloads](antigen-data.md) ·

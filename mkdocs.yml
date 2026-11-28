@@ -12,6 +12,7 @@ nav:
   - Home: index.md
   - Antigens:
       - Interactive antigen explorer: antigen-explorer.html
+      - Antigen preprint (full paper & PDF): preprint/index.md
       - Antigen whitepaper: antigen-whitepaper.md
       - Multi-species whitepaper: species-antigen-whitepaper.md
       - Classification rules: target-selection.md
