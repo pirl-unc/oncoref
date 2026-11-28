@@ -790,7 +790,7 @@ Both use released evidence; accepted pending curations are applied by the next
 selection build. [The full-inventory curation replay](audits/cta-candidate-evidence-20261108/index.md)
 contains 600 CTA after seven normal-evidence holds; it is not yet a release.
 
-The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-26.2`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **322 CTA, 66 Cancer Antigen only, 146 Reproductive Antigen only, 1,110 Other and 18,249 Unsafe** (`534` candidate union `CA ∪ RA`), alongside native genome-wide canine (`118` CTAs) and murine (`8` *in vivo* CTAs) catalogs.
+The active [Cancer and Reproductive Antigen catalog](target-selection.md) (`oncoref.target-selection.2026-11-27.1`) classifies **19,893** human Ensembl 115 protein-equivalence groups (**20,099** coding loci) into **322 CTA, 53 Cancer Antigen only, 146 Reproductive Antigen only, 1,116 Other and 18,256 Unsafe** (`521` candidate union `CA ∪ RA`), alongside native genome-wide canine (`118` CTAs) and murine (`8` *in vivo* CTAs) catalogs.
 
 For everyday queries, start with `oncoref.antigens` (the unified plain-language front door across human, dog, and mouse):
 

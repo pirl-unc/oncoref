@@ -4,8 +4,8 @@
   "species": "human",
   "scientific_name": "Homo sapiens",
   "selection_status": "evaluated",
-  "policy_id": "oncoref.target-selection.2026-11-26.2",
-  "comparison_id": "oncoref.human-grch38-integrated-tpm.2026-11-26.2",
+  "policy_id": "oncoref.target-selection.2026-11-27.1",
+  "comparison_id": "oncoref.human-grch38-integrated-tpm.2026-11-27.1",
   "comparison_unit": "TPM",
   "reference": {
     "schema": "openvax.reference",
@@ -29,8 +29,8 @@
     "reference_id": "openvax:reference:v1:sha256:ba6f6186a301a3ef9217ea0199ec3b851f9da2eb43558b7ba7e0d6fcd9cd85e9"
   },
   "data_path": "target-selection.csv.gz",
-  "data_sha256": "7ed9c9e7b140e4dc736f4f12a2228233eb8b14db52f89b40569f82834e5f193c",
-  "data_bytes": 3729339,
+  "data_sha256": "acff278628a60e9afb4f9b25a65c859531d37b4ae3def94f4b016a4ebe91b205",
+  "data_bytes": 3732495,
   "host_exposure_path": "host-exposure.csv.gz",
   "host_exposure_receipt_path": "host-exposure.json",
   "host_exposure_sha256": "ce265e7a01b180aff496943d6a906fb35fab94356cd9a035e453ee7a0941ce25",
@@ -41,19 +41,19 @@
     "proteins": 19893,
     "loci": 20099,
     "categories": {
-      "Unsafe": 18249,
-      "Other": 1110,
+      "Unsafe": 18256,
+      "Other": 1116,
       "CTA": 322,
       "Reproductive Antigen only": 146,
-      "Cancer Antigen only": 66
+      "Cancer Antigen only": 53
     },
     "classifications": {
-      "Unsafe": 18249,
-      "Other:Review": 731,
+      "Unsafe": 18256,
+      "Other:Review": 737,
       "CTA": 322,
       "Other:Expression": 285,
       "Reproductive Antigen only": 146,
-      "Cancer Antigen only": 66,
+      "Cancer Antigen only": 53,
       "Other:Sequence": 48,
       "Other:Unscreened tissue": 46
     },

@@ -23,6 +23,7 @@ nav:
       - Summary figures: audits/target-selection-20261110/rebuild/summary.md
       - Normal RNA tissue coverage: audits/target-selection-20261110/rebuild/normal-rna/index.md
       - Donor-level rare-cell RNA: audits/normal-cell-atlas-20261110/rare-cell/index.md
+      - CA-only functional review: audits/ca-only-functional-review-20261127/index.md
       - CTpedia comparison: ctpedia-filtering.md
   - Tissues & Safety:
       - Tissue injury tiers: tissue-tiers.md

@@ -34,6 +34,11 @@ def test_human_evaluate_species_catalog_achieves_exact_19893_baseline_parity():
     res_no_gpcr = human.evaluate_integrated_catalog(include_chemosensory_gpcr_guard=False)
     assert int(res_no_gpcr.catalog["is_cta"].sum()) == 325
 
+    # Orthogonal single-rule ablation turning off CA-only niche review restores 66 CA-only (2026-11-26.2)
+    res_no_ca_niche = human.evaluate_integrated_catalog(include_ca_only_niche_adjudications=False)
+    assert int(res_no_ca_niche.catalog["classification"].eq("Cancer Antigen only").sum()) == 66
+    assert int(res_default.catalog["classification"].eq("Cancer Antigen only").sum()) == 53
+
     # Disabling all integrated layers reproduces the frozen 2026-11-20.2 baseline (327 CTA)
     baseline_20261120 = target_selection._baseline_2026_11_20_frame()
     res_base = human.evaluate_integrated_catalog(

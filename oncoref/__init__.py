@@ -27,6 +27,7 @@ from . import (
     bgee_srp009687,
     bgee_srp181218,
     bulk_qc,
+    ca_only_review,
     cache_retention,
     cancer_ontology,
     canine,
@@ -632,6 +633,7 @@ __all__ = [
     "burden_category",
     "burden_category_overlaps",
     "burden_scope",
+    "ca_only_review",
     "cache_retention",
     # anti-PD-1 response
     "cancer_apd1_response",

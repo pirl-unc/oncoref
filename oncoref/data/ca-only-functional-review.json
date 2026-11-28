@@ -1,0 +1,21 @@
+{
+  "schema": "oncoref.ca-only-functional-review.v1",
+  "policy_id": "oncoref.ca-only-functional-review.2026-11-27.1",
+  "pre_adjudication_policy_id": "oncoref.target-selection.2026-11-26.2",
+  "promoted_policy_id": "oncoref.target-selection.2026-11-27.1",
+  "total_reviewed_proteins": 66,
+  "disposition_counts": {
+    "retained_ca_only": 53,
+    "adjudicated_unsafe_adult_human": 7,
+    "adjudicated_review_niche_or_paralog": 6
+  },
+  "functional_class_counts": {
+    "sub_10x_male_germline_and_spermatogenic": 24,
+    "pericentromeric_macrosatellite_duplication_or_retrogene": 15,
+    "adult_neuroendocrine_sensory_or_somatic_niche": 13,
+    "post_gastrulation_fetal_morphogen_or_homeobox": 6,
+    "sub_10x_ctx_cancer_germline_paralog": 4,
+    "disposable_hair_cortex_keratin": 4
+  },
+  "sha256": "c656e5df51446590909968deccb223e9103409d47b75e0a4b2437b82dbd56173"
+}

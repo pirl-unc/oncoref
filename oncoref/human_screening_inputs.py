@@ -25,6 +25,7 @@ import pandas as pd
 
 from . import (
     assay_boundary_adjudications,
+    ca_only_review,
     clinical_organ_clearance,
     library_qc,
     normal_adjudications,
@@ -49,8 +50,8 @@ from .species_target_selection import (
 )
 
 HUMAN_BASELINE_COMPARISON_ID = "oncoref.native-gene-tpm-normal-reference.2026-11-20.1"
-HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-26.2"
-HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-26.2"
+HUMAN_INTEGRATED_COMPARISON_ID = "oncoref.human-grch38-integrated-tpm.2026-11-27.1"
+HUMAN_INTEGRATED_POLICY_PREVIEW_ID = "oncoref.target-selection.2026-11-27.1"
 
 REQUIRED_PERIPHERAL_CONTEXT = "peripheral_normal_reference"
 
@@ -86,6 +87,7 @@ def human_screening_spec(
     include_tumor_gdna_qc: bool | None = None,
     include_reproductive_age_female: bool | None = None,
     include_chemosensory_gpcr_guard: bool | None = None,
+    include_ca_only_niche_adjudications: bool | None = None,
 ) -> SpeciesScreeningSpec:
     """Construct the declarative ``SpeciesScreeningSpec`` for human Ensembl 115 GRCh38."""
     pol = species_policy("human")
@@ -115,6 +117,11 @@ def human_screening_spec(
         if include_chemosensory_gpcr_guard is None
         else bool(include_chemosensory_gpcr_guard)
     )
+    eff_ca_niche = (
+        base_any
+        if include_ca_only_niche_adjudications is None
+        else bool(include_ca_only_niche_adjudications)
+    )
     all_layers = (
         include_home_panels
         and include_737_cohorts
@@ -126,8 +133,9 @@ def human_screening_spec(
         and eff_gdna
         and eff_repro_f
         and eff_chemo
+        and eff_ca_niche
     )
-    any_layer = base_any or eff_gdna or eff_repro_f or eff_chemo
+    any_layer = base_any or eff_gdna or eff_repro_f or eff_chemo or eff_ca_niche
     if policy_id is not None:
         effective_policy = policy_id
     elif all_layers:
@@ -135,7 +143,7 @@ def human_screening_spec(
     elif not any_layer:
         effective_policy = target_selection.BASELINE_2026_11_20_POLICY_ID
     else:
-        effective_policy = "oncoref.human-integrated-ablation.2026-11-26.2"
+        effective_policy = "oncoref.human-integrated-ablation.2026-11-27.1"
     comp_id = HUMAN_INTEGRATED_COMPARISON_ID if any_layer else HUMAN_BASELINE_COMPARISON_ID
     notes = [
         "Evaluated through species_target_selection.evaluate_species_catalog (#755).",
@@ -175,6 +183,10 @@ def human_screening_spec(
     if eff_chemo:
         notes.append(
             "Holds unvalidated monogenic chemosensory GPCRs (OR*, TAS1R*, TAS2R*, VN1R*) out of CA/CTA."
+        )
+    if eff_ca_niche:
+        notes.append(
+            "Includes 66-protein CA-only functional & adult micro-niche literature adjudications (7 Unsafe, 6 Other:Review)."
         )
     return SpeciesScreeningSpec(
         species=resolve_species("human"),
@@ -221,6 +233,7 @@ def build_human_screening_inputs(
     include_tumor_gdna_qc: bool | None = None,
     include_reproductive_age_female: bool | None = None,
     include_chemosensory_gpcr_guard: bool | None = None,
+    include_ca_only_niche_adjudications: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> dict:
@@ -246,6 +259,11 @@ def build_human_screening_inputs(
         if include_chemosensory_gpcr_guard is None
         else bool(include_chemosensory_gpcr_guard)
     )
+    eff_ca_niche = (
+        base_any
+        if include_ca_only_niche_adjudications is None
+        else bool(include_ca_only_niche_adjudications)
+    )
     spec = human_screening_spec(
         policy_id=policy_id,
         include_home_panels=include_home_panels,
@@ -258,6 +276,7 @@ def build_human_screening_inputs(
         include_tumor_gdna_qc=eff_gdna,
         include_reproductive_age_female=eff_repro_f,
         include_chemosensory_gpcr_guard=eff_chemo,
+        include_ca_only_niche_adjudications=eff_ca_niche,
     )
     ts = target_selection._baseline_2026_11_20_frame()
     exposures = (
@@ -471,6 +490,34 @@ def build_human_screening_inputs(
                 home_unmeasured.iat[idx] = True
 
     home_tissue_series = ts["home_tissue"].fillna("").astype(str).copy()
+    if eff_ca_niche and files("oncoref").joinpath("data/ca-only-functional-review.csv").is_file():
+        ca_adj_df = ca_only_review.ca_only_niche_adjudications()
+        eid_to_idx_ca = {str(eid): idx for idx, eid in enumerate(ts["entity_id"])}
+        for r_ca in ca_adj_df.itertuples(index=False):
+            ca_eid = str(r_ca.entity_id)
+            if str(r_ca.adjudication_disposition) == "adjudicated_unsafe_adult_human":
+                gate_rows.append(
+                    {
+                        "entity_id": ca_eid,
+                        "layer": "ca_only_niche_review_20261127",
+                        "unsafe": True,
+                        "hold": False,
+                        "reason": "Reviewed normal-cell knowledge",
+                    }
+                )
+            else:
+                gate_rows.append(
+                    {
+                        "entity_id": ca_eid,
+                        "layer": "ca_only_niche_review_20261127",
+                        "unsafe": False,
+                        "hold": True,
+                        "reason": str(r_ca.adjudication_rationale),
+                    }
+                )
+            idx_ca = eid_to_idx_ca.get(ca_eid)
+            if idx_ca is not None and not home_tissue_series.iat[idx_ca].strip():
+                home_tissue_series.iat[idx_ca] = str(r_ca.adjudication_tissue)
     if eff_chemo:
         unsafe_gate_eids = {str(g["entity_id"]) for g in gate_rows if bool(g.get("unsafe"))}
         for idx, (eid_v, lbl_v) in enumerate(zip(ts["entity_id"], ts["protein_group_label"])):
@@ -1266,6 +1313,7 @@ def evaluate_human_catalog(
     include_tumor_gdna_qc: bool | None = None,
     include_reproductive_age_female: bool | None = None,
     include_chemosensory_gpcr_guard: bool | None = None,
+    include_ca_only_niche_adjudications: bool | None = None,
     extra_tumor_observations: pd.DataFrame | None = None,
     policy_id: str | None = None,
 ) -> SpeciesScreeningResult:
@@ -1282,6 +1330,7 @@ def evaluate_human_catalog(
         include_tumor_gdna_qc=include_tumor_gdna_qc,
         include_reproductive_age_female=include_reproductive_age_female,
         include_chemosensory_gpcr_guard=include_chemosensory_gpcr_guard,
+        include_ca_only_niche_adjudications=include_ca_only_niche_adjudications,
         extra_tumor_observations=extra_tumor_observations,
         policy_id=policy_id,
     )
@@ -1309,11 +1358,19 @@ def evaluate_human_catalog(
         if include_chemosensory_gpcr_guard is None
         else bool(include_chemosensory_gpcr_guard)
     )
-    is_integrated = base_any_eval or eff_gdna_eval or eff_repro_f_eval or eff_chemo_eval
-    # Attach clinical-clearance, closed-homolog, and near-self 9-mer provenance columns
+    eff_ca_niche_eval = (
+        base_any_eval
+        if include_ca_only_niche_adjudications is None
+        else bool(include_ca_only_niche_adjudications)
+    )
+    is_integrated = (
+        base_any_eval or eff_gdna_eval or eff_repro_f_eval or eff_chemo_eval or eff_ca_niche_eval
+    )
+    # Attach clinical-clearance, closed-homolog, near-self 9-mer, and CA-only review provenance columns
     cat = clinical_organ_clearance.annotate_catalog(result.catalog, enabled=True)
     cat = repeat_family_equivalence.annotate_catalog(cat, enabled=True)
     cat = assay_boundary_adjudications.annotate_catalog(cat, enabled=True, integrated=is_integrated)
+    cat = ca_only_review.annotate_catalog(cat, enabled=eff_ca_niche_eval)
     object.__setattr__(result, "catalog", cat)
     rc_map = (
         normal_adjudications.rare_cell_candidate_adjudications()
@@ -1470,6 +1527,8 @@ _PREVIEW_STRING_COLS = (
     "clinical_clearance_766_disposition",
     "repeat_family_767_disposition",
     "assay_boundary_768_disposition",
+    "ca_only_review_disposition",
+    "ca_only_functional_class",
     "closed_homolog_family_id",
     "co_silenced_coding_sibling_ids",
     "closed_self_paralog_ids",
@@ -1537,6 +1596,8 @@ def compute_next_policy_transitions(
                 "clinical_clearance_766_disposition",
                 "repeat_family_767_disposition",
                 "assay_boundary_768_disposition",
+                "ca_only_review_disposition",
+                "ca_only_functional_class",
                 "closed_homolog_family_id",
                 "co_silenced_coding_sibling_ids",
                 "closed_self_paralog_ids",
@@ -1599,6 +1660,11 @@ def compute_next_policy_transitions(
             "sc_soup_and_cis_spillover_cleared",
         }:
             reasons.append(f"#768:{r.assay_boundary_768_disposition}")
+        if r.ca_only_review_disposition in {
+            "adjudicated_unsafe_adult_human",
+            "adjudicated_review_niche_or_paralog",
+        }:
+            reasons.append(f"ca_only_review:{r.ca_only_review_disposition}")
         if r.entity_id in gdna_lost:
             reasons.append("library_qc:tumor_gdna_background_excluded")
         if (

@@ -65,7 +65,7 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     assert ctas.representative_sequence_sha256s.map(bool).all()
 
     ca_only = dispositions[dispositions.category.eq("Cancer Antigen only")]
-    assert len(ca_only) == 66
+    assert len(ca_only) == 53
     assert (ca_only.shared_sequence == "allow").all()
     assert (~ca_only.direct_target_candidate).all()
     assert ca_only.cancer_antigen_candidate.all()
@@ -96,9 +96,24 @@ def test_target_selection_dispositions_cover_all_candidates_and_exclude_unsafe()
     ):
         assert by_label.loc[rescued, "shared_sequence"] == "allow"
         assert bool(by_label.loc[rescued, "direct_target_candidate"])
-    for newly_unsafe in ("OBP2A", "SLCO6A1", "SPATA45", "COX7B2", "SP7", "GFY", "DAZL"):
+    for newly_unsafe in (
+        "OBP2A",
+        "SLCO6A1",
+        "SPATA45",
+        "COX7B2",
+        "SP7",
+        "GFY",
+        "DAZL",
+        "GALP",
+        "BHLHE23",
+        "IL36B",
+        "ZACN",
+        "HES3",
+        "OCSTAMP",
+        "PROKR1",
+    ):
         assert by_label.loc[newly_unsafe, "shared_sequence"] == "exclude"
-    for unscreened in ("DSPP", "CALHM3"):
+    for unscreened in ("DSPP", "CALHM3", "SRMS", "OCM2", "CIB3", "OTOP1", "GFRA4", "MRGPRG"):
         assert by_label.loc[unscreened, "shared_sequence"] == "review"
 
 
