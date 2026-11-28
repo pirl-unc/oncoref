@@ -168,9 +168,8 @@ def classify_topology(entry: dict | None, rep_seqs: list[str], all_iso_seqs: lis
             is_gpi = True
         elif ftype in ("Glycosylation", "Disulfide bond"):
             has_nglyc_or_ss = True
-        elif ftype == "Topological domain" and desc.lower().startswith("extracellular"):
-            if sp:
-                ecd_raw_spans.append(sp)
+        elif ftype == "Topological domain" and desc.lower().startswith("extracellular") and sp:
+            ecd_raw_spans.append(sp)
 
     mature_len = max(0, up_len - len(cleaved_pos))
     mature_ecd_spans: list[tuple[int, int]] = []
